@@ -1,0 +1,73 @@
+========================================================================
+		Haskell Source Extensions
+========================================================================
+
+haskell-src-exts is a package for handling and manipulating Haskell source 
+code. It is based on the haskell-src package that is part of the standard 
+libraries, but extends this to support a number of syntactic 
+extensions, e.g. MPTCs, fundeps, GADTs, TH etc. It is intended as a direct
+replacement for the standard haskell-src package, and exports the same
+functions and data types, plus some more.
+
+Apart from the more standard extensions supported by e.g. GHC, 
+haskell-src-exts also provides support for HaRP (Haskell Regular Patterns) 
+and HSX (Haskell Source with XML) syntax.
+
+------------------------------------------------------------------------
+Package structure:
+
+The modules that comprise haskell-src-exts all reside in the hierarchic 
+namespace Language.Haskell.Exts. The exposed modules are:
+
+* Language.Haskell.Exts.Syntax - The abstract syntax tree that the other 
+  modules work on.
+* Language.Haskell.Exts.Build - Combinators for building abstract syntax.
+* Language.Haskell.Exts.Parser - Functions for parsing Haskell source 
+  code into an abstract syntax representation.
+* Language.Haskell.Exts.Pretty - Pretty-printer for the abstract syntax.
+
+* Language.Haskell.Exts - Imports and re-exports all the above, and
+  also defines some functions that combine functionality from several
+  modules.
+
+------------------------------------------------------------------------
+Supported extensions:
+
+* Multi-parameter type classes (MPTCs)
+* Functional dependencies
+* Liberal class and instance heads
+* Implicit parameters (ghc and hugs)
+* Pattern guards
+* Generalized algebraic data types (GADTs)
+* Template Haskell (TH)
+* Universal and existential quantification (forall)
+* Empty data type declarations
+* Unboxed tuples (# #)
+* Regular patterns
+* Haskell XML, HSX style
+
+As-of-yet unsupported extensions:
+
+* Pragmas. These can exist in the code but are treated as comments.
+* Unboxed functions ( ident# )
+* Associated 
+
+Any other out there..?
+
+Unsupported:
+
+* n+k patterns
+
+------------------------------------------------------------------------
+Portability and dependencies:
+
+The package itself is Haskell98-compliant and should build with any
+Haskell compiler. 
+
+------------------------------------------------------------------------
+License:
+
+The haskell-src-exts Package is distributed under a derived BSD-style license. It 
+derives from several sources, all of which are distributable under 
+BSD-style or compatible licenses. See the file LICENSE for the complete 
+license text.
