@@ -35,7 +35,7 @@ Flag splitBase
   Description:          Choose the new smaller, split-up base package.
 
 Library
-  Build-Tools:          happy
+  Build-Tools:          happy >= 1.17
   Build-Depends:        base
   if flag(splitBase)
     Build-Depends:      base >= 3, array >= 0.1, pretty >= 1.0
