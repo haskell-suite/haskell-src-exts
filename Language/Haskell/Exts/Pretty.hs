@@ -319,29 +319,63 @@ instance Pretty HsDecl where
                         ++ map pretty nameList
                         ++ [equals, pretty htype])
 
-        pretty (HsDataDecl loc context name nameList constrList derives) =
+        pretty (HsDataDecl loc don context name nameList constrList derives) =
                 blankline $
                 markLine loc $
-                mySep ( [text "data", ppHsContext context, pretty name]
+                mySep ( [pretty don, ppHsContext context, pretty name]
                         ++ map pretty nameList)
                         <+> (myVcat (zipWith (<+>) (equals : repeat (char '|'))
                                                    (map pretty constrList))
                         $$$ ppHsDeriving derives)
 
-        pretty (HsGDataDecl loc context name nameList gadtList) =
+        pretty (HsGDataDecl loc don context name nameList optkind gadtList) =
                 blankline $
                 markLine loc $
-                mySep ( [text "data", ppHsContext context, pretty name]
-                        ++ map pretty nameList ++ [text "where"])
+                mySep ( [pretty don, ppHsContext context, pretty name]
+                        ++ map pretty nameList ++ ppOptKind optkind ++ [text "where"])
                         $$$ ppBody classIndent (map pretty gadtList)
 
-        pretty (HsNewTypeDecl pos context name nameList constr derives) =
+        pretty (HsTypeFamDecl loc name nameList optkind) =
+                blankline $
+                markLine loc $
+                mySep ([text "type", text "family", pretty name]
+                        ++ map pretty nameList
+                        ++ ppOptKind optkind)
+        
+        pretty (HsDataFamDecl loc context name nameList optkind) =
+                blankline $
+                markLine loc $
+                mySep ( [text "data", text "family", ppHsContext context, pretty name]
+                        ++ map pretty nameList ++ ppOptKind optkind)
+
+        pretty (HsTypeInsDecl loc ntype htype) =
+                blankline $
+                markLine loc $
+                mySep [text "type", text "instance", pretty ntype, equals, pretty htype]
+        
+        pretty (HsDataInsDecl loc don ntype constrList derives) =
+                blankline $
+                markLine loc $
+                mySep [pretty don, text "instance", pretty ntype]
+                        <+> (myVcat (zipWith (<+>) (equals : repeat (char '|'))
+                                                   (map pretty constrList))
+                              $$$ ppHsDeriving derives)
+
+        pretty (HsGDataInsDecl loc don ntype optkind gadtList) =
+                blankline $
+                markLine loc $
+                mySep ( [pretty don, text "instance", pretty ntype]
+                        ++ ppOptKind optkind ++ [text "where"])
+                        $$$ ppBody classIndent (map pretty gadtList)
+
+
+{-        pretty (HsNewTypeDecl pos context name nameList constr derives) =
                 blankline $
                 markLine pos $
                 mySep ( [text "newtype", ppHsContext context, pretty name]
                         ++ map pretty nameList)
                         <+> equals <+> (pretty constr $$$ ppHsDeriving derives)
-
+-}
         --m{spacing=False}
         -- special case for empty class declaration
         pretty (HsClassDecl pos context name nameList fundeps []) =
@@ -370,6 +404,11 @@ instance Pretty HsDecl where
                         ++ map ppHsAType args ++ [text "where"])
                 $$$ ppBody classIndent (map pretty declList)
 
+        pretty (HsDerivDecl pos context name args) =
+                blankline $
+                markLine pos $
+                mySep ( [text "deriving", text "instance", ppHsContext context, pretty name]
+                        ++ map ppHsAType args)
         pretty (HsDefaultDecl pos htypes) =
                 blankline $
                 markLine pos $
@@ -411,6 +450,10 @@ instance Pretty HsDecl where
                 mySep [text "foreign export", pretty cconv,
                        text (show str), pretty name, text "::", pretty typ]
 
+instance Pretty DataOrNew where
+        pretty DataType = text "data"
+        pretty NewType  = text "newtype"
+
 instance Pretty HsAssoc where
         pretty HsAssocNone  = text "infix"
         pretty HsAssocLeft  = text "infixl"
@@ -433,6 +476,45 @@ ppWhere :: HsBinds -> Doc
 ppWhere (HsBDecls []) = empty
 ppWhere (HsBDecls l)  = nest 2 (text "where" $$$ ppBody whereIndent (map pretty l))
 ppWhere (HsIPBinds b) = nest 2 (text "where" $$$ ppBody whereIndent (map pretty b))
+
+
+instance Pretty HsClassDecl where
+	pretty (HsClsDecl decl) = pretty decl
+
+	pretty (HsClsDataFam loc context name nameList optkind) =
+                markLine loc $
+                mySep ( [text "data", ppHsContext context, pretty name]
+                        ++ map pretty nameList ++ ppOptKind optkind)
+
+	pretty (HsClsTyFam loc name nameList optkind) =
+                markLine loc $
+                mySep ( [text "type", pretty name]
+                        ++ map pretty nameList ++ ppOptKind optkind)
+	
+	pretty (HsClsTyDef loc ntype htype) =
+                markLine loc $
+                mySep [text "type", pretty ntype, equals, pretty htype]	
+
+instance Pretty HsInstDecl where
+	pretty (HsInsDecl decl) = pretty decl
+
+        pretty (HsInsType loc ntype htype) =
+                markLine loc $
+                mySep [text "type", pretty ntype, equals, pretty htype]
+
+        pretty (HsInsData loc don ntype constrList derives) =
+                markLine loc $
+                mySep [pretty don, pretty ntype]
+                        <+> (myVcat (zipWith (<+>) (equals : repeat (char '|'))
+                                                   (map pretty constrList))
+                              $$$ ppHsDeriving derives)
+
+        pretty (HsInsGData loc don ntype optkind gadtList) =
+                markLine loc $
+                mySep ( [pretty don, pretty ntype]
+                        ++ ppOptKind optkind ++ [text "where"])
+                        $$$ ppBody classIndent (map pretty gadtList)
+
 
 ------------------------- FFI stuff -------------------------------------
 instance Pretty HsSafety where
@@ -512,12 +594,28 @@ instance Pretty HsType where
         prettyPrec _ (HsTyCon name) = pretty name
         prettyPrec _ (HsTyPred asst) = pretty asst
         prettyPrec _ (HsTyInfix a op b) = parens (myFsep [pretty op, pretty a, pretty b])
+        prettyPrec _ (HsTyKind t k) = parens (myFsep [pretty t, text "::", pretty k])
 
 
-ppForall :: Maybe [HsName] -> Doc
+instance Pretty HsTyVarBind where
+        pretty (HsKindedVar var kind) = myFsep [pretty var, text "::", pretty kind]
+        pretty (HsUnkindedVar var)    = pretty var
+
+ppForall :: Maybe [HsTyVarBind] -> Doc
 ppForall Nothing   = empty
 ppForall (Just []) = empty
 ppForall (Just vs) =    myFsep (text "forall" : map pretty vs ++ [char '.'])
+
+---------------------------- Kinds ----------------------------
+
+instance Pretty HsKind where
+        pretty HsKindStar     = text "*"
+        pretty HsKindBang     = text "!"
+        pretty (HsKindFn a b) = myFsep [pretty a, text "->", pretty b]
+
+ppOptKind :: Maybe HsKind -> [Doc]
+ppOptKind Nothing = []
+ppOptKind (Just k) = [text "::", pretty k]
 
 ------------------- Functional Dependencies -------------------
 instance Pretty HsFunDep where

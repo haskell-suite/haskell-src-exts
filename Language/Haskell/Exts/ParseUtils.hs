@@ -27,9 +27,14 @@ module Language.Haskell.Exts.ParseUtils (
 	, checkPattern		-- HsExp -> P HsPat
 	, checkExpr		-- HsExp -> P HsExp
 	, checkValDef		-- SrcLoc -> HsExp -> HsRhs -> [HsDecl] -> P HsDecl
-	, checkClassBody	-- [HsDecl] -> P [HsDecl]
+	, checkClassBody	-- [HsClassDecl] -> P [HsClassDecl]
+	, checkInstBody		-- [HsInstDecl] -> P [HsInstDecl]
 	, checkUnQual		-- HsQName -> P HsName
 	, checkRevDecls		-- [HsDecl] -> P [HsDecl]
+	, checkRevClsDecls	-- [HsClassDecl] -> P [HsClassDecl]
+	, checkRevInstDecls	-- [HsInstDecl] -> P [HsInstDecl]
+	, checkDataOrNew	-- DataOrNew -> [HsDecl] -> P ()
+	, checkSimpleType	-- HsType -> P ()
 	, getGConName		-- HsExp -> P HsQName
 	, mkHsTyForall		-- Maybe [HsName] -> HsContext -> HsType -> HsType 
 	-- HaRP
@@ -418,10 +423,19 @@ isFunLhs _ _ = Nothing
 -----------------------------------------------------------------------------
 -- In a class or instance body, a pattern binding must be of a variable.
 
-checkClassBody :: [HsDecl] -> P [HsDecl]
+checkClassBody :: [HsClassDecl] -> P [HsClassDecl]
 checkClassBody decls = do
-	mapM_ checkMethodDef decls
+	mapM_ checkClassMethodDef decls
 	return decls
+  where checkClassMethodDef (HsClsDecl decl) = checkMethodDef decl
+  	checkClassMethodDef _ = return ()
+
+checkInstBody :: [HsInstDecl] -> P [HsInstDecl]
+checkInstBody decls = do
+	mapM_ checkInstMethodDef decls
+	return decls
+  where checkInstMethodDef (HsInsDecl decl) = checkMethodDef decl
+  	checkInstMethodDef _ = return ()
 
 checkMethodDef :: HsDecl -> P ()
 checkMethodDef (HsPatBind _ (HsPVar _) _ _) = return ()
@@ -486,6 +500,51 @@ checkRevDecls = mergeFunBinds []
 		mergeMatches ms' ds = mergeFunBinds (HsFunBind ms':revDs) ds
 	mergeFunBinds revDs (d:ds) = mergeFunBinds (d:revDs) ds
 
+checkRevClsDecls :: [HsClassDecl] -> P [HsClassDecl]
+checkRevClsDecls = mergeClsFunBinds []
+    where
+	mergeClsFunBinds revDs [] = return revDs
+	mergeClsFunBinds revDs (HsClsDecl (HsFunBind ms1@(HsMatch _ name ps _ _:_)):ds1) =
+		mergeMatches ms1 ds1
+	    where
+		arity = length ps
+		mergeMatches ms' (HsClsDecl (HsFunBind ms@(HsMatch loc name' ps' _ _:_)):ds)
+		    | name' == name =
+			if length ps' /= arity
+			then fail ("arity mismatch for '" ++ prettyPrint name ++ "'")
+			     `atSrcLoc` loc
+			else mergeMatches (ms++ms') ds
+		mergeMatches ms' ds = mergeClsFunBinds (HsClsDecl (HsFunBind ms'):revDs) ds
+	mergeClsFunBinds revDs (d:ds) = mergeClsFunBinds (d:revDs) ds
+
+checkRevInstDecls :: [HsInstDecl] -> P [HsInstDecl]
+checkRevInstDecls = mergeInstFunBinds []
+    where
+	mergeInstFunBinds revDs [] = return revDs
+	mergeInstFunBinds revDs (HsInsDecl (HsFunBind ms1@(HsMatch _ name ps _ _:_)):ds1) =
+		mergeMatches ms1 ds1
+	    where
+		arity = length ps
+		mergeMatches ms' (HsInsDecl (HsFunBind ms@(HsMatch loc name' ps' _ _:_)):ds)
+		    | name' == name =
+			if length ps' /= arity
+			then fail ("arity mismatch for '" ++ prettyPrint name ++ "'")
+			     `atSrcLoc` loc
+			else mergeMatches (ms++ms') ds
+		mergeMatches ms' ds = mergeInstFunBinds (HsInsDecl (HsFunBind ms'):revDs) ds
+	mergeInstFunBinds revDs (d:ds) = mergeInstFunBinds (d:revDs) ds
+
+----------------------------------------------------------------
+-- Check that newtype declarations have
+-- the right number (1) of constructors
+
+checkDataOrNew :: DataOrNew -> [a] -> P ()
+checkDataOrNew NewType [x] = return ()
+checkDataOrNew DataType _  = return ()
+checkDataOrNew _        _  = fail "newtype declaration must have exactly one constructor."
+
+checkSimpleType :: HsType -> P (HsName, [HsName])
+checkSimpleType t = checkSimple "test" t []
 
 ---------------------------------------
 -- Converting a complete page
@@ -528,7 +587,7 @@ mkDVarExpr = foldl1 (\x y -> infixApp x (op $ sym "-") y) . map (var . name)
 --
 -- A valid type must have one for-all at the top of the type, or of the fn arg types
 
-mkHsTyForall :: Maybe [HsName] -> HsContext -> HsType -> HsType
+mkHsTyForall :: Maybe [HsTyVarBind] -> HsContext -> HsType -> HsType
 mkHsTyForall mtvs []   ty = mk_forall_ty mtvs ty
 mkHsTyForall mtvs ctxt ty = HsTyForall mtvs ctxt ty
 

@@ -75,6 +75,7 @@ data Token
 	| DoubleArrow
 	| Minus
 	| Exclamation
+	| Star
 	
 -- Template Haskell
 	| THExpQuote 		-- [| or [e|
@@ -123,6 +124,7 @@ data Token
 	| KW_Do
 	| KW_MDo
 	| KW_Else
+	| KW_Family		-- indexed type families
 	| KW_Forall		-- universal/existential types
         | KW_Hiding
 	| KW_If
@@ -167,7 +169,8 @@ reserved_ops = [
  ( "->", RightArrow ),
  ( "@",  At ),
  ( "~",  Tilde ),
- ( "=>", DoubleArrow )
+ ( "=>", DoubleArrow ),
+ ( "*",  Star )
  ]
 
 special_varops :: [(String,Token)]
@@ -187,6 +190,7 @@ reserved_ids = [
  ( "dlet",	KW_DLet ),		-- implicit parameters (hugs)
  ( "do",        KW_Do ),
  ( "else",      KW_Else ),
+ ( "family",	KW_Family ),		-- indexed type families
  ( "forall",	KW_Forall ),		-- universal/existential quantification
  ( "if",    	KW_If ),
  ( "import",    KW_Import ),

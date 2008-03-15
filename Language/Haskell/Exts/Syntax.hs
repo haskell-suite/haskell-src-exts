@@ -45,12 +45,13 @@ module Language.Haskell.Exts.Syntax (
     HsImportDecl(..), HsImportSpec(..), HsAssoc(..),
     -- * Declarations
     HsDecl(..), HsBinds(..), HsIPBind(..), 
+    HsClassDecl(..), HsInstDecl(..),
     HsGadtDecl(..), HsConDecl(..), HsQualConDecl(..), HsBangType(..),
-    HsMatch(..), HsRhs(..), HsGuardedRhs(..),
+    HsMatch(..), HsRhs(..), HsGuardedRhs(..), DataOrNew(..),
     -- * Class Assertions and Contexts
     HsContext, HsFunDep(..), HsAsst(..),
     -- * Types
-    HsType(..), HsBoxed(..),
+    HsType(..), HsBoxed(..), HsKind(..), HsTyVarBind(..),
     -- * Expressions
     HsExp(..), HsStmt(..), HsFieldUpdate(..),
     HsAlt(..), HsGuardedAlts(..), HsGuardedAlt(..), 
@@ -84,7 +85,7 @@ module Language.Haskell.Exts.Syntax (
     unit_con_name, tuple_con_name, list_cons_name,
     unit_con, tuple_con,
     -- ** Special identifiers
-    as_name, qualified_name, hiding_name, minus_name, pling_name, dot_name,
+    as_name, qualified_name, hiding_name, minus_name, pling_name, dot_name, star_name,
     export_name, safe_name, unsafe_name, threadsafe_name, stdcall_name, ccall_name,
     -- ** Type constructors
     unit_tycon_name, fun_tycon_name, list_tycon_name, tuple_tycon_name,
@@ -276,20 +277,33 @@ data HsAssoc
 #endif
 
 data HsDecl
-	 = HsTypeDecl	 SrcLoc HsName [HsName] HsType
-	 | HsDataDecl	 SrcLoc HsContext HsName [HsName] [HsQualConDecl] [HsQName]
-	 | HsGDataDecl 	 SrcLoc HsContext HsName [HsName] [HsGadtDecl] {-no deriving-}
-	 | HsInfixDecl   SrcLoc HsAssoc Int [HsOp]
-	 | HsNewTypeDecl SrcLoc HsContext HsName [HsName] HsQualConDecl [HsQName]
-	 | HsClassDecl	 SrcLoc HsContext HsName [HsName] [HsFunDep] [HsDecl]
-	 | HsInstDecl	 SrcLoc HsContext HsQName [HsType] [HsDecl]
-	 | HsDefaultDecl SrcLoc [HsType]
-         | HsSpliceDecl  SrcLoc HsSplice
-	 | HsTypeSig	 SrcLoc [HsName] HsType
-	 | HsFunBind     [HsMatch]
-	 | HsPatBind	 SrcLoc HsPat HsRhs {-where-} HsBinds
-	 | HsForImp	 SrcLoc HsCallConv HsSafety String HsName HsType
-	 | HsForExp	 SrcLoc HsCallConv          String HsName HsType
+	 = HsTypeDecl	  SrcLoc HsName [HsName] HsType
+	 | HsDataDecl	  SrcLoc DataOrNew HsContext HsName [HsName] [HsQualConDecl] [HsQName]
+	 | HsGDataDecl 	  SrcLoc DataOrNew HsContext HsName [HsName] (Maybe HsKind) [HsGadtDecl] {-no deriving-}
+	 | HsTypeFamDecl  SrcLoc HsName [HsName] (Maybe HsKind)
+	 | HsDataFamDecl  SrcLoc HsContext HsName [HsName] (Maybe HsKind)
+	 | HsTypeInsDecl  SrcLoc HsType HsType
+         | HsDataInsDecl  SrcLoc DataOrNew HsType [HsQualConDecl] [HsQName]
+	 | HsGDataInsDecl SrcLoc DataOrNew HsType (Maybe HsKind) [HsGadtDecl] {-no deriving-}
+	 | HsInfixDecl    SrcLoc HsAssoc Int [HsOp]
+--	 | HsNewTypeDecl  SrcLoc HsContext HsName [HsName] HsQualConDecl [HsQName]
+	 | HsClassDecl	  SrcLoc HsContext HsName [HsName] [HsFunDep] [HsClassDecl]
+	 | HsInstDecl	  SrcLoc HsContext HsQName [HsType] [HsInstDecl]
+         | HsDerivDecl    SrcLoc HsContext HsQName [HsType]
+	 | HsDefaultDecl  SrcLoc [HsType]
+         | HsSpliceDecl   SrcLoc HsSplice
+	 | HsTypeSig	  SrcLoc [HsName] HsType
+	 | HsFunBind      [HsMatch]
+	 | HsPatBind	  SrcLoc HsPat HsRhs {-where-} HsBinds
+	 | HsForImp	  SrcLoc HsCallConv HsSafety String HsName HsType
+	 | HsForExp	  SrcLoc HsCallConv          String HsName HsType
+#ifdef __GLASGOW_HASKELL__
+  deriving (Eq,Show,Typeable,Data)
+#else
+  deriving (Eq,Show)
+#endif
+
+data DataOrNew = DataType | NewType
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -323,7 +337,7 @@ data HsMatch
 
 data HsQualConDecl
 	= HsQualConDecl SrcLoc 
-	    {-forall-} [HsName] {- . -} HsContext
+	    {-forall-} [HsTyVarBind] {- . -} HsContext
 		{- => -} HsConDecl
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
@@ -345,6 +359,30 @@ data HsConDecl
 				-- ^ ordinary data constructor
 	 | HsRecDecl HsName [([HsName],HsBangType)]
 				-- ^ record constructor
+#ifdef __GLASGOW_HASKELL__
+  deriving (Eq,Show,Typeable,Data)
+#else
+  deriving (Eq,Show)
+#endif
+
+-- | Declarations inside a class declaration
+data HsClassDecl
+	= HsClsDecl    HsDecl
+	| HsClsDataFam SrcLoc HsContext HsName [HsName] (Maybe HsKind)
+	| HsClsTyFam   SrcLoc           HsName [HsName] (Maybe HsKind)
+	| HsClsTyDef   SrcLoc HsType    HsType
+#ifdef __GLASGOW_HASKELL__
+  deriving (Eq,Show,Typeable,Data)
+#else
+  deriving (Eq,Show)
+#endif
+
+-- | Declarations inside an instance declaration
+data HsInstDecl
+	= HsInsDecl   HsDecl
+	| HsInsType   SrcLoc HsType HsType
+	| HsInsData   SrcLoc DataOrNew HsType [HsQualConDecl] [HsQName]
+	| HsInsGData  SrcLoc DataOrNew HsType (Maybe HsKind) [HsGadtDecl] {-no deriving-}
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -387,7 +425,7 @@ data HsGuardedRhs
 
 data HsType
 	 = HsTyForall 
-	 	(Maybe [HsName])
+	 	(Maybe [HsTyVarBind])
 	 	HsContext
 	 	HsType
 	 | HsTyFun   HsType HsType	-- ^ function type
@@ -397,6 +435,7 @@ data HsType
 	 | HsTyCon   HsQName		-- ^ named type or type constructor
 	 | HsTyPred  HsAsst 		-- ^ assertion of an implicit parameter
 	 | HsTyInfix HsType HsQName HsType -- ^ infix type constructor
+	 | HsTyKind  HsType HsKind	-- ^ type with explicit kind signature
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -410,6 +449,25 @@ data HsBoxed = Boxed | Unboxed
   deriving (Eq,Show)
 #endif
 
+data HsTyVarBind 
+	= HsKindedVar HsName HsKind
+	| HsUnkindedVar HsName
+#ifdef __GLASGOW_HASKELL__
+  deriving (Eq,Show,Typeable,Data)
+#else
+  deriving (Eq,Show)
+#endif
+
+data HsKind
+	= HsKindStar
+	| HsKindBang
+	| HsKindFn HsKind HsKind
+#ifdef __GLASGOW_HASKELL__
+  deriving (Eq,Show,Typeable,Data)
+#else
+  deriving (Eq,Show)
+#endif
+	
 
 -- | A functional dependency, given on the form
 --   l1 l2 ... ln -> r2 r3 .. rn
@@ -761,13 +819,14 @@ unit_con	      = HsCon unit_con_name
 tuple_con :: Int -> HsExp
 tuple_con i	      = HsCon (tuple_con_name i)
 
-as_name, qualified_name, hiding_name, minus_name, pling_name, dot_name :: HsName
+as_name, qualified_name, hiding_name, minus_name, pling_name, dot_name, star_name :: HsName
 as_name	              = HsIdent "as"
 qualified_name        = HsIdent "qualified"
 hiding_name	      = HsIdent "hiding"
 minus_name	      = HsSymbol "-"
 pling_name	      = HsSymbol "!"
 dot_name	      = HsSymbol "."
+star_name             = HsSymbol "*"
 
 export_name, safe_name, unsafe_name, threadsafe_name, stdcall_name, ccall_name :: HsName
 export_name		= HsIdent "export"
