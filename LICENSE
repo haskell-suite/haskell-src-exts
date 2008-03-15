@@ -12,7 +12,8 @@ The full text of these licenses is reproduced below.  All of the
 licenses are BSD-style or compatible. 
 
 -----------------------------------------------------------------------------
-The HSX library itself is distributable under the modified BSD license:
+The haskell-src-exts package itself is distributable under the 
+modified BSD license:
 
 Copyright (c) 2005, Niklas Broberg
 All rights reserved.
