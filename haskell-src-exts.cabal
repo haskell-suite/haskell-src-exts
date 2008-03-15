@@ -6,11 +6,13 @@ Author:                 Niklas Broberg
 Maintainer:             Niklas Broberg <nibro@cs.chalmers.se>
 Category:               Language
 Synopsis:               Manipulating Haskell source: abstract syntax, lexer, parser, and pretty-printer
-Description:            Haskell-Source with eXtensions (HSX, haskell-src-exts)
+Description:            Haskell-Source with Extensions (HSE, haskell-src-exts)
                         is an extension of the standard haskell-src package,
                         and handles most common syntactic extensions to Haskell, including:
                         .
                         * Multi-parameter type classes with functional dependencies
+                        .
+                        * Fully general indexed types (including associated types)
                         .
                         * Empty data declarations
                         .
@@ -22,7 +24,7 @@ Description:            Haskell-Source with eXtensions (HSX, haskell-src-exts)
                         .
                         and a few more. Apart from these standard extensions,
                         it also handles regular patterns as per the HaRP extension
-                        as well as HSP-style embedded XML syntax (HSP release imminent).
+                        as well as HSP-style embedded XML syntax (new HSP release imminent).
                         .
                         For details on usage, please see the website.
 Homepage:               http://www.cs.chalmers.se/~d00nibro/haskell-src-exts
