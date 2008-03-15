@@ -35,14 +35,17 @@ Supported extensions:
 
 * Multi-parameter type classes (MPTCs)
 * Functional dependencies
+* Associated types, type families
 * Liberal class and instance heads
 * Implicit parameters (ghc and hugs)
+* Explicit kind signatures
 * Pattern guards
 * Generalized algebraic data types (GADTs)
 * Template Haskell (TH)
 * Universal and existential quantification (forall)
 * Empty data type declarations
 * Unboxed tuples (# #)
+* Standalone deriving
 * Regular patterns
 * Haskell XML, HSX style
 
@@ -50,7 +53,6 @@ As-of-yet unsupported extensions:
 
 * Pragmas. These can exist in the code but are treated as comments.
 * Unboxed functions ( ident# )
-* Associated 
 
 Any other out there..?
 
