@@ -286,7 +286,6 @@ data HsDecl
          | HsDataInsDecl  SrcLoc DataOrNew HsType [HsQualConDecl] [HsQName]
 	 | HsGDataInsDecl SrcLoc DataOrNew HsType (Maybe HsKind) [HsGadtDecl] {-no deriving-}
 	 | HsInfixDecl    SrcLoc HsAssoc Int [HsOp]
---	 | HsNewTypeDecl  SrcLoc HsContext HsName [HsName] HsQualConDecl [HsQName]
 	 | HsClassDecl	  SrcLoc HsContext HsName [HsName] [HsFunDep] [HsClassDecl]
 	 | HsInstDecl	  SrcLoc HsContext HsQName [HsType] [HsInstDecl]
          | HsDerivDecl    SrcLoc HsContext HsQName [HsType]

@@ -24,7 +24,7 @@ Description:            Haskell-Source with Extensions (HSE, haskell-src-exts)
                         .
                         and a few more. Apart from these standard extensions,
                         it also handles regular patterns as per the HaRP extension
-                        as well as HSP-style embedded XML syntax (new HSP release imminent).
+                        as well as HSX-style embedded XML syntax (new HSP/HSX release imminent).
                         .
                         For details on usage, please see the website.
 Homepage:               http://www.cs.chalmers.se/~d00nibro/haskell-src-exts
