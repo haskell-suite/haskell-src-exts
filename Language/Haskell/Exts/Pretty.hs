@@ -979,8 +979,9 @@ ppHsContext context = mySep [parenList (map pretty context), text "=>"]
 
 -- hacked for multi-parameter type classes
 instance Pretty HsAsst where
-        pretty (HsClassA a ts) = myFsep $ ppHsQName a : map ppHsAType ts
-        pretty (HsIParam i t)  = myFsep $ [pretty i, text "::", pretty t]
+        pretty (HsClassA a ts)  = myFsep $ ppHsQName a : map ppHsAType ts
+        pretty (HsIParam i t)   = myFsep $ [pretty i, text "::", pretty t]
+        pretty (HsEqualP t1 t2) = myFsep $ [pretty t1, text "~", pretty t2]
 
 ------------------------- pp utils -------------------------
 maybePP :: (a -> Doc) -> Maybe a -> Doc

@@ -77,7 +77,8 @@ checkContext t = do
 -- Further changed for implicit parameters.
 
 checkAssertion :: HsType -> P HsAsst
-checkAssertion (HsTyPred p@(HsIParam n t)) = return p
+checkAssertion (HsTyPred p@(HsIParam _ _)) = return p
+checkAssertion (HsTyPred p@(HsEqualP _ _)) = return p
 checkAssertion t = checkAssertion' [] t
 	where	checkAssertion' ts (HsTyCon c) = return $ HsClassA c ts
 		checkAssertion' ts (HsTyApp a t) = checkAssertion' (t:ts) a
