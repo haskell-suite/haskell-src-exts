@@ -12,7 +12,7 @@ Description:            Haskell-Source with Extensions (HSE, haskell-src-exts)
                         .
                         * Multi-parameter type classes with functional dependencies
                         .
-                        * Fully general indexed types (including associated types)
+                        * Indexed type families (including associated types)
                         .
                         * Empty data declarations
                         .
@@ -20,14 +20,14 @@ Description:            Haskell-Source with Extensions (HSE, haskell-src-exts)
                         .
                         * Implicit parameters (ghc and hugs style)
                         .
-                        * Template Haskell (broken for 6.4, needs redoing)
+                        * Template Haskell (broken for 6.4+, needs redoing)
                         .
                         and a few more. Apart from these standard extensions,
                         it also handles regular patterns as per the HaRP extension
                         as well as HSX-style embedded XML syntax (new HSP/HSX release imminent).
                         .
                         For details on usage, please see the website.
-Homepage:               http://www.cs.chalmers.se/~d00nibro/haskell-src-exts
+Homepage:               http://code.haskell.org/HSP/haskell-src-exts
 Stability:              Experimental
 Tested-with:            GHC==6.8.2
 Build-Type:             Simple
