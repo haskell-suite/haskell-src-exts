@@ -484,9 +484,10 @@ type HsContext = [HsAsst]
 -- | Class assertions.
 --   In Haskell 98, the argument would be a /tyvar/, but this definition
 --   allows multiple parameters, and allows them to be /type/s.
---   Also extended with support for implicit parameters.
+--   Also extended with support for implicit parameters and equality constraints.
 data HsAsst    	= HsClassA HsQName [HsType]
 		| HsIParam HsIPName HsType
+		| HsEqualP HsType   HsType
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else

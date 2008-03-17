@@ -476,6 +476,7 @@ Types
 >       | btype qtyconop dtype          { HsTyInfix $1 $2 $3 }
 >       | btype qtyvarop dtype          { HsTyInfix $1 $2 $3 }
 >       | btype '->' dtype              { HsTyFun $1 $3 }
+>	| btype '~' btype		{ HsTyPred $ HsEqualP $1 $3 }
 
 Implicit parameters can occur in normal types, as well as in contexts.
 
@@ -529,6 +530,7 @@ C a, or (C1 a, C2 b, ... Cn z) and convert it into a context.  Blaach!
 
 > context :: { HsContext }
 >       : btype                         {% checkContext $1 }
+>	| btype '~' btype		{% checkContext (HsTyPred $ HsEqualP $1 $3) }
 
 > types :: { [HsType] }
 >       : types1 ',' type               { $3 : $1 }
