@@ -21,5 +21,5 @@ parseFileContents = parseFileContentsWithMode defaultParseMode
 
 parseFileContentsWithMode :: ParseMode -> String -> ParseResult HsModule
 parseFileContentsWithMode p rawStr =
-	let cleanStr = unlines [ s | s@(c:_) <- lines rawStr, c /= '#' ]
+	let cleanStr = unlines [ s | s <- lines rawStr, null s || head s /= '#' ]
 	 in parseModuleWithMode p cleanStr
