@@ -479,24 +479,24 @@ ppWhere (HsIPBinds b) = nest 2 (text "where" $$$ ppBody whereIndent (map pretty 
 
 
 instance Pretty HsClassDecl where
-	pretty (HsClsDecl decl) = pretty decl
+    pretty (HsClsDecl decl) = pretty decl
 
-	pretty (HsClsDataFam loc context name nameList optkind) =
+    pretty (HsClsDataFam loc context name nameList optkind) =
                 markLine loc $
                 mySep ( [text "data", ppHsContext context, pretty name]
                         ++ map pretty nameList ++ ppOptKind optkind)
 
-	pretty (HsClsTyFam loc name nameList optkind) =
+    pretty (HsClsTyFam loc name nameList optkind) =
                 markLine loc $
                 mySep ( [text "type", pretty name]
                         ++ map pretty nameList ++ ppOptKind optkind)
-	
-	pretty (HsClsTyDef loc ntype htype) =
+    
+    pretty (HsClsTyDef loc ntype htype) =
                 markLine loc $
-                mySep [text "type", pretty ntype, equals, pretty htype]	
+                mySep [text "type", pretty ntype, equals, pretty htype] 
 
 instance Pretty HsInstDecl where
-	pretty (HsInsDecl decl) = pretty decl
+        pretty (HsInsDecl decl) = pretty decl
 
         pretty (HsInsType loc ntype htype) =
                 markLine loc $
@@ -720,18 +720,12 @@ instance Pretty HsExp where
         pretty (HsBracketExp b) = pretty b
         pretty (HsSpliceExp s) = pretty s
         -- regular patterns
-        pretty (HsRPats _ rs) =
-                myFsep $ text "[/" : map pretty rs ++ [text "/]"]
         pretty (HsSeqRP rs) =
                 myFsep $ text "(/" : map pretty rs ++ [text "/)"]
-        pretty (HsStarRP r) = pretty r <> char '*'
-        pretty (HsStarGRP r) = pretty r <> text "*!"
-        pretty (HsPlusRP r) = pretty r <> char '+'
-        pretty (HsPlusGRP r) = pretty r <> text "+!"
-        pretty (HsOptRP r) = pretty r <> char '?'
-        pretty (HsOptGRP r) = pretty r <> text "?!"
         pretty (HsEitherRP r1 r2) = parens . myFsep $
                 [pretty r1, char '|', pretty r2]
+        pretty (HsGuardRP r gs) = 
+                myFsep $ text "(|" : pretty r : char '|' : map pretty gs ++ [text "|)"]
         -- special case that would otherwise be buggy
         pretty (HsCAsRP n (HsIrrPat e)) =
                 myFsep [pretty n <> text "@:", char '~' <> pretty e]
@@ -748,6 +742,8 @@ instance Pretty HsExp where
         pretty (HsXPcdata s) = text s
         pretty (HsXExpTag e) =
                 myFsep $ [text "<%", pretty e, text "%>"]
+        pretty (HsXRPats es) =
+                myFsep $ text "<[" : map pretty es ++ [text "]>"]
 
 instance Pretty HsXAttr where
         pretty (HsXAttr n v) =
@@ -809,24 +805,28 @@ instance Pretty HsPat where
                 hcat [pretty name, char '@', pretty pat]
         prettyPrec _ HsPWildCard = char '_'
         prettyPrec _ (HsPIrrPat pat) = char '~' <> pretty pat
-        prettyPrec _ (HsPRPat _ rs) =
-                myFsep $ text "[/" : map pretty rs ++ [text "/]"]
         prettyPrec _ (HsPatTypeSig _pos pat ty) =
                 myFsep [pretty pat, text "::", pretty ty]
 
+        -- HaRP
+        prettyPrec _ (HsPRPat rs) = 
+                bracketList . punctuate comma . map pretty $ rs
         -- Hsx
         prettyPrec _ (HsPXTag _ n attrs mattr cp) =
-                let ap = maybe [] (return . pretty) mattr
-                 in hcat $ -- TODO: should not introduce blanks
-                      (myFsep $ (char '<' <> pretty n): map pretty attrs ++ ap ++ [char '>']):
-                        prettyChildren cp ++ [myFsep $ [text "</" <> pretty n, char '>']]
+            let ap = maybe [] (return . pretty) mattr
+             in hcat $ -- TODO: should not introduce blanks
+                  (myFsep $ (char '<' <> pretty n): map pretty attrs ++ ap ++ [char '>']):
+                    map pretty cp ++ [myFsep $ [text "</" <> pretty n, char '>']]
         prettyPrec _ (HsPXETag _ n attrs mattr) =
                 let ap = maybe [] (return . pretty) mattr
                  in myFsep $ (char '<' <> pretty n): map pretty attrs ++ ap ++ [text "/>"]
         prettyPrec _ (HsPXPcdata s) = text s
         prettyPrec _ (HsPXPatTag p) =
                 myFsep $ [text "<%", pretty p, text "%>"]
+        prettyPrec _ (HsPXRPats ps) =
+                myFsep $ text "<[" : map pretty ps ++ [text "%>"]
 
+{-
 prettyChildren :: HsPat -> [Doc]
 prettyChildren p = case p of
         HsPList ps  -> map prettyChild ps
@@ -841,6 +841,7 @@ prettyChild p = case p of
         HsPXPatTag _      -> pretty p
         HsPXPcdata _      -> pretty p
         _                 -> pretty $ HsPXPatTag p
+-}
 
 instance Pretty HsPXAttr where
         pretty (HsPXAttr n p) =
@@ -853,16 +854,13 @@ instance Pretty HsPatField where
 --------------------- Regular Patterns -------------------------
 
 instance Pretty HsRPat where
-        pretty (HsRPStar r) = pretty r <> char '*'
-        pretty (HsRPStarG r) = pretty r <> text "*!"
-        pretty (HsRPPlus r) = pretty r <> char '+'
-        pretty (HsRPPlusG r) = pretty r <> text "+!"
-        pretty (HsRPOpt r) = pretty r <> char '?'
-        pretty (HsRPOptG r) = pretty r <> text "?!"
+        pretty (HsRPOp r op) = pretty r <> pretty op
         pretty (HsRPEither r1 r2) = parens . myFsep $
                 [pretty r1, char '|', pretty r2]
         pretty (HsRPSeq rs) =
                 myFsep $ text "(/" : map pretty rs ++ [text "/)"]
+        pretty (HsRPGuard r gs) =
+                myFsep $ text "(|" : pretty r : char '|' : map pretty gs ++ [text "|)"]
         -- special case that would otherwise be buggy
         pretty (HsRPCAs n (HsRPPat (HsPIrrPat p))) =
                 myFsep [pretty n <> text "@:", char '~' <> pretty p]
@@ -873,6 +871,14 @@ instance Pretty HsRPat where
         pretty (HsRPAs n r) = hcat [pretty n, char '@', pretty r]
         pretty (HsRPPat p) = pretty p
         pretty (HsRPParen rp) = parens . pretty $ rp
+
+instance Pretty HsRPatOp where
+        pretty HsRPStar  = char '*'
+        pretty HsRPStarG = text "*!"
+        pretty HsRPPlus  = char '+'
+        pretty HsRPPlusG = text "+!"
+        pretty HsRPOpt   = char '?'
+        pretty HsRPOptG  = text "?!"
 
 ------------------------- Case bodies  -------------------------
 instance Pretty HsAlt where

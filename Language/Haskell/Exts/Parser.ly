@@ -110,17 +110,10 @@ Reserved operators
 
 Harp
 
->       '[/'    { RPOpen }
->       '/]'    { RPClose }
 >       '(/'    { RPSeqOpen }
 >       '/)'    { RPSeqClose }
->       'rp*'   { RPStar }      -- '*' already taken
->       '*!'    { RPStarG }
->       '+'     { RPPlus }
->       '+!'    { RPPlusG }
->       '?'     { RPOpt }
->       '?!'    { RPOptG }
->       'rp|'   { RPEither } -- '|' already taken
+>       '(|'    { RPGuardOpen }
+>       '|)'    { RPGuardClose }
 >       '@:'    { RPCAt }
 
 Template Haskell
@@ -145,6 +138,8 @@ Hsx
 >       '>'             { XStdTagClose }
 >       '/>'            { XEmptyTagClose }
 >       '%>'            { XCodeTagClose }
+>       '<['            { XRPatOpen }
+>       ']>'            { XRPatClose }
 
 FFI
 
@@ -200,7 +195,7 @@ HSP Pages
 > page :: { HsModule }
 >       : topxml                                {% mkPageModule $1 }
 >       | '<%' module '%>' srcloc topxml        {% mkPage $2 $4 $5 }
->       | module                { $1 }
+>       | module                                { $1 }
 
 > topxml :: { HsExp }
 >       : srcloc '<' name attrs mattr '>' children '</' name '>'        {% do { n <- checkEqNames $3 $9;
@@ -476,7 +471,7 @@ Types
 >       | btype qtyconop dtype          { HsTyInfix $1 $2 $3 }
 >       | btype qtyvarop dtype          { HsTyInfix $1 $2 $3 }
 >       | btype '->' dtype              { HsTyFun $1 $3 }
->	| btype '~' btype		{ HsTyPred $ HsEqualP $1 $3 }
+>   | btype '~' btype       { HsTyPred $ HsEqualP $1 $3 }
 
 Implicit parameters can occur in normal types, as well as in contexts.
 
@@ -530,7 +525,7 @@ C a, or (C1 a, C2 b, ... Cn z) and convert it into a context.  Blaach!
 
 > context :: { HsContext }
 >       : btype                         {% checkContext $1 }
->	| btype '~' btype		{% checkContext (HsTyPred $ HsEqualP $1 $3) }
+>   | btype '~' btype       {% checkContext (HsTyPred $ HsEqualP $1 $3) }
 
 > types :: { [HsType] }
 >       : types1 ',' type               { $3 : $1 }
@@ -774,6 +769,7 @@ the exp0 productions to distinguish these from the others (exp0a).
 >       : exp0b '::' srcloc ctype       { HsExpTypeSig $3 $1 $4 }
 >       | exp0b 'with' ipbinding        { HsWith $1 $3 }  -- implicit parameters
 >       | exp0                          { $1 }
+>       | exp0b qop                     { HsPostOp $1 $2 } -- for HaRP's sake
 
 > exp0 :: { HsExp }
 >       : exp0a                         { $1 }
@@ -836,12 +832,6 @@ updates: they could be labeled constructions.
 > aexp1 :: { HsExp }
 >       : aexp1 '{' '}'                 {% mkRecConstrOrUpdate $1 [] }
 >       | aexp1 '{' fbinds '}'          {% mkRecConstrOrUpdate $1 (reverse $3) }
->       | aexp1 'rp*'                   { HsStarRP $1 }
->       | aexp1 '*!'                    { HsStarGRP $1 }
->       | aexp1 '+'                     { HsPlusRP $1 }
->       | aexp1 '+!'                    { HsPlusGRP $1 }
->       | aexp1 '?'                     { HsOptRP $1 }
->       | aexp1 '?!'                    { HsOptGRP $1 }
 >       | aexp2                         { $1 }
 
 According to the Report, the left section (e op) is legal iff (e op x)
@@ -856,12 +846,12 @@ An implicit parameter can be used as an expression.
 >       | '(' exp ')'                   { HsParen $2 }
 >       | '(' texps ')'                 { HsTuple (reverse $2) }
 >       | '[' list ']'                  { $2 }
->       | '(' exp0b qop ')'             { HsLeftSection $2 $3  }
+        | '(' exp0b rqop ')'            { HsLeftSection $2 $3  }
 >       | '(' qopm exp0 ')'             { HsRightSection $2 $3 }
 >       | '_'                           { HsWildCard }
 >       | '(' erpats ')'                { $2 }
->       | '(/' rpats '/)'               { HsSeqRP $ reverse $2 }
->       | srcloc '[/' rpats '/]'        { HsRPats $1 $ reverse $3 }
+>       | '(/' sexps '/)'               { HsSeqRP $ reverse $2 }
+>       | '(|' exp '|' quals '|)'       { HsGuardRP $2 $ reverse $4 }
 >       | xml                           { $1 }
 
 Template Haskell
@@ -897,18 +887,14 @@ End Template Haskell
 -----------------------------------------------------------------------------
 Harp Extensions
 
-> rpats :: { [HsExp] }
->       : rpats ',' rpat                { $3 : $1 }
->       | rpat                          { [$1] }
-
-> rpat :: { HsExp }
->       : erpats                        { $1 }
->       | exp                           { $1 }
+> sexps :: { [HsExp] }
+>       : sexps ',' exp                 { $3 : $1 }
+>       | exp                           { [$1] }
 
 Either patterns are left associative
 > erpats :: { HsExp }
->       : exp 'rp|' erpats              { HsEitherRP $1 $3 }
->       | exp 'rp|' exp                 { HsEitherRP $1 $3 }
+>       : exp '|' erpats              { HsEitherRP $1 $3 }
+>       | exp '|' exp                 { HsEitherRP $1 $3 }
 
 -----------------------------------------------------------------------------
 Hsx Extensions
@@ -927,7 +913,7 @@ Hsx Extensions
 
 > child :: { HsExp }
 >       : PCDATA                        { HsXPcdata $1 }
->       | srcloc '[/' rpats '/]'        { HsRPats $1 $ reverse $3 }
+>       | '<[' sexps ']>'               { HsXRPats $ reverse $2 }
 >       | xml                           { $1 }
 
 > name :: { HsXName }
