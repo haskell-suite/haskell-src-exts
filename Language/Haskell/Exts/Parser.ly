@@ -39,7 +39,7 @@ Most of the code is blatantly stolen from the GHC module Language.Haskell.Parser
 Some of the code for extensions is greatly influenced by GHC's internal parser
 library, ghc/compiler/parser/Parser.y. 
 -----------------------------------------------------------------------------
-Conflicts: 3 shift/reduce
+Conflicts: 5 shift/reduce
 
 2 for ambiguity in 'case x of y | let z = y in z :: Bool -> b'
         (don't know whether to reduce 'Bool' as a btype or shift the '->'.
@@ -54,6 +54,16 @@ Conflicts: 3 shift/reduce
         the parser can't tell whether the ?x is the lhs of a normal binding or
         an implicit binding. Fortunately resolving as shift gives it the only
         sensible meaning, namely the lhs of an implicit binding.
+
+1 for ambiguity using hybrid modules
+        For HSP pages that start with a <% %> block, the parser cannot tell whether
+        to reduce a srcloc or shift the starting <%. Since any other body could not
+        start with <%, shifting is the only sensible thing to do.
+
+1 for ambiguity using toplevel xml modules
+        For HSP xml pages starting with a <, the parser cannot tell whether to shift
+        that < or reduce an implicit 'open'. Since no other body could possibly start
+        with <, shifting is the only sensible thing to do.
 
 -----------------------------------------------------------------------------
 
@@ -187,6 +197,7 @@ Reserved Ids
 > %lexer { lexer } { EOF }
 > %name parse
 > %tokentype { Token }
+> %expect 5
 > %%
 
 -----------------------------------------------------------------------------
