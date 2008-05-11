@@ -120,8 +120,8 @@ Reserved operators
 
 Harp
 
->       '(/'    { RPSeqOpen }
->       '/)'    { RPSeqClose }
+       '(/'    { RPSeqOpen }
+       '/)'    { RPSeqClose }
 >       '(|'    { RPGuardOpen }
 >       '|)'    { RPGuardClose }
 >       '@:'    { RPCAt }
@@ -861,7 +861,7 @@ An implicit parameter can be used as an expression.
 >       | '(' qopm exp0 ')'             { HsRightSection $2 $3 }
 >       | '_'                           { HsWildCard }
 >       | '(' erpats ')'                { $2 }
->       | '(/' sexps '/)'               { HsSeqRP $ reverse $2 }
+>       | '(|' sexps '|)'               { HsSeqRP $ reverse $2 }
 >       | '(|' exp '|' quals '|)'       { HsGuardRP $2 $ reverse $4 }
 >       | xml                           { $1 }
 

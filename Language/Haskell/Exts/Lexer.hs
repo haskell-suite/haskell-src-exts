@@ -90,8 +90,8 @@ data Token
         | THReifyFixity
 
 -- HaRP
-        | RPSeqOpen         -- (/
-        | RPSeqClose        -- /)
+--        | RPSeqOpen         -- (/
+--        | RPSeqClose        -- /)
         | RPGuardOpen       -- (|
         | RPGuardClose      -- |)
         | RPCAt             -- @:
@@ -468,10 +468,10 @@ lexStdToken = do
         -- end implicit parameters
 
         -- harp
-        '(':'/':_ -> do discard 2
-                        return RPSeqOpen
-        '/':')':_ -> do discard 2
-                        return RPSeqClose
+--        '(':'/':_ -> do discard 2
+--                        return RPSeqOpen
+--        '/':')':_ -> do discard 2
+--                        return RPSeqClose
         '(':'|':_ -> do discard 2
                         return RPGuardOpen
         '|':')':_ -> do discard 2
