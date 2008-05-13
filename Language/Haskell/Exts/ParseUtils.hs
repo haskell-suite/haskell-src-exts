@@ -264,7 +264,7 @@ checkRPatOp o@(HsQVarOp (UnQual (HsSymbol sym))) =
      "?"  -> return HsRPOpt
      "?!" -> return HsRPOptG
      _    -> rpOpFail o
-checkRPOp o = rpOpFail o
+checkRPatOp o = rpOpFail o
 
 rpOpFail sym = fail $ "Unrecognized regular pattern operator: " ++ show sym
 
