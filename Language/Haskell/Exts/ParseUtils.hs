@@ -159,7 +159,7 @@ checkPat e [] = case e of
                   ps <- mapM checkRPattern es
                   return $ if all isStdPat ps
                             then HsPList $ map stripRP ps
-                            else HsPRPat ps
+                            else HsPRPat $ map fixRPOpPrec ps
             where isStdPat :: HsRPat -> Bool
                   isStdPat (HsRPPat _) = True
                   isStdPat _           = False
@@ -208,7 +208,7 @@ checkPat e [] = case e of
             return $ HsPXPatTag p
     HsXRPats es -> do
             rps <- mapM checkRPattern es
-            return (HsPXRPats rps)
+            return (HsPXRPats $ map fixRPOpPrec rps)
     e -> patFail $ show e
 
 checkPat e _ = patFail $ show e
@@ -267,6 +267,26 @@ checkRPatOp o@(HsQVarOp (UnQual (HsSymbol sym))) =
 checkRPOp o = rpOpFail o
 
 rpOpFail sym = fail $ "Unrecognized regular pattern operator: " ++ show sym
+
+fixRPOpPrec :: HsRPat -> HsRPat
+fixRPOpPrec rp = case rp of
+    HsRPOp rp rpop      -> fPrecOp rp (flip HsRPOp rpop)
+    HsRPEither rp1 rp2  -> HsRPEither (fixRPOpPrec rp1) (fixRPOpPrec rp2)
+    HsRPSeq rps         -> HsRPSeq $ map fixRPOpPrec rps
+    HsRPCAs n rp        -> HsRPCAs n $ fixRPOpPrec rp
+    HsRPAs n rp         -> HsRPAs n $ fixRPOpPrec rp
+    HsRPParen rp        -> HsRPParen $ fixRPOpPrec rp
+    _                   -> rp
+
+  where fPrecOp :: HsRPat -> (HsRPat -> HsRPat) -> HsRPat
+        fPrecOp (HsRPOp rp rpop) f = fPrecOp rp (f . flip HsRPOp rpop)
+        fPrecOp (HsRPCAs n rp) f = fPrecAs rp f (HsRPCAs n)
+        fPrecOp (HsRPAs  n rp) f = fPrecAs rp f (HsRPAs  n)
+        fPrecOp rp f = f $ fixRPOpPrec rp
+        fPrecAs :: HsRPat -> (HsRPat -> HsRPat) -> (HsRPat -> HsRPat) -> HsRPat
+        fPrecAs (HsRPCAs n rp) f g = fPrecAs rp f (g . HsRPCAs n)
+        fPrecAs (HsRPAs  n rp) f g = fPrecAs rp f (g . HsRPAs  n)
+        fPrecAs rp f g = g . f $ fixRPOpPrec rp
 
 
 mkChildrenPat :: [HsPat] -> [HsPat]
