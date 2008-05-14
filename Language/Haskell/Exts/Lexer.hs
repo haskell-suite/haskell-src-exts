@@ -362,13 +362,13 @@ lexPCDATA = do
                  XPcdata p -> return $ XPcdata $ '\n':p
                  EOF -> return EOF
             '<':_ -> return $ XPcdata ""
-            '[':'/':_ -> return $ XPcdata ""
-            '[':s' -> do discard 1
-                         pcd <- lexPCDATA
-                         case pcd of
-                          XPcdata pcd' -> return $ XPcdata $ '[':pcd'
-                          EOF -> return EOF
-            _ -> do let pcd = takeWhile (\c -> not $ elem c "<[\n") s
+  --          '[':'/':_ -> return $ XPcdata ""
+  --          '[':s' -> do discard 1
+  --                       pcd <- lexPCDATA
+  --                       case pcd of
+  --                        XPcdata pcd' -> return $ XPcdata $ '[':pcd'
+  --                        EOF -> return EOF
+            _ -> do let pcd = takeWhile (\c -> not $ elem c "<\n") s
                         l = length pcd
                     discard l
                     x <- lexPCDATA
