@@ -128,16 +128,19 @@ Harp
 
 Template Haskell
 
->       IDSPLICE        { THIdEscape $$ }
+>       IDSPLICE        { THIdEscape $$ }   -- $x
 >       '$('            { THParenEscape }
 >       '[|'            { THExpQuote }
 >       '[p|'           { THPatQuote }
 >       '[t|'           { THTypQuote }
 >       '[d|'           { THDecQuote }
 >       '|]'            { THCloseQuote }
->       'reifyDecl'     { THReifyDecl }
->       'reifyType'     { THReifyType }
->       'reifyFixity'   { THReifyFixity }
+>       VARQUOTE        { THVarQuote }      -- 'x
+>       TYPQUOTE        { THTyQuote }       -- ''T
+
+       'reifyDecl'     { THReifyDecl }
+       'reifyType'     { THReifyType }
+       'reifyFixity'   { THReifyFixity }
 
 Hsx
 
@@ -807,7 +810,7 @@ A let may bind implicit parameters
 >       | '-' fexp                      { HsNegApp $2 }
 >       | 'do' stmtlist                 { HsDo $2 }
 >       | 'mdo' stmtlist                { HsMDo $2 }
->       | reifyexp                      { HsReifyExp $1 }
+       | reifyexp                      { HsReifyExp $1 }
 >       | fexp                          { $1 }
 
 > fexp :: { HsExp }
@@ -875,16 +878,22 @@ Template Haskell
 >                                               return $ HsBracketExp $ HsPatBracket p } }
 >       | '[t|' ctype '|]'              { HsBracketExp $ HsTypeBracket $2 }
 >       | '[d|' open topdecls close '|]'        { HsBracketExp $ HsDeclBracket $3 }
+>       | VARQUOTE qvar                 { HsVarQuote $2 }
+>       | VARQUOTE qcon                 { HsVarQuote $2 }
+>       | TYPQUOTE tyvar                { HsTypQuote (UnQual $2) }
+>       | TYPQUOTE gtycon               { HsTypQuote $2 }
 
-> reifyexp :: { HsReify }
->       : 'reifyDecl' gtycon            { HsReifyDecl $2 }
->       | 'reifyDecl' qvar              { HsReifyDecl $2 }
->       | 'reifyType' qcname            { HsReifyType $2 }
->       | 'reifyFixity' qcname          { HsReifyFixity $2 }
 
-> qcname :: { HsQName }
->       : qvar                          { $1 }
->       | gcon                          {% getGConName $1 }
+ reifyexp :: { HsReify }
+       : 'reifyDecl' gtycon            { HsReifyDecl $2 }
+       | 'reifyDecl' qvar              { HsReifyDecl $2 }
+       | 'reifyType' qcname            { HsReifyType $2 }
+       | 'reifyFixity' qcname          { HsReifyFixity $2 }
+
+
+ qcname :: { HsQName }
+       : qvar                          { $1 }
+       | gcon                          {% getGConName $1 }
 End Template Haskell
 
 > commas :: { Int }

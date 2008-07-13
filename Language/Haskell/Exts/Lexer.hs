@@ -85,9 +85,12 @@ data Token
         | THCloseQuote      -- |]
         | THIdEscape (String)   -- $x
         | THParenEscape     -- $( 
-        | THReifyType
-        | THReifyDecl
-        | THReifyFixity
+        | THVarQuote        -- 'x (but without the x)
+        | THTyQuote         -- ''T (but without the T)
+
+--        | THReifyType
+--        | THReifyDecl
+--        | THReifyFixity
 
 -- HaRP
 --        | RPSeqOpen         -- (/
@@ -203,10 +206,11 @@ reserved_ids = [
  ( "where",     KW_Where ),
  ( "with",      KW_With ),      -- implicit parameters
 
--- Template Haskell
+{-- Template Haskell
  ( "reifyDecl", THReifyDecl ),
  ( "reifyType", THReifyType ),
  ( "reifyFixity", THReifyFixity ),
+--}
 
 -- FFI
  ( "foreign",   KW_Foreign )
@@ -561,11 +565,7 @@ lexStdToken = do
                             popContextL "lexStdToken"
                             return RightCurly
 
-                        '\'' -> do
-                            c2 <- lexChar
-                            matchChar '\'' "Improperly terminated character constant"
-                            return (Character c2)
-
+                        '\'' -> lexCharacter
                         '"' ->  lexString
 
                         _ ->    fail ("Illegal character \'" ++ show c ++ "\'\n")
@@ -656,6 +656,23 @@ lexConIdOrQual qual = do
 
           _ ->  return conid -- not a qualified thing
 
+lexCharacter :: Lex a Token
+lexCharacter = do   -- We need to keep track of not only character constants but also TH 'x and ''T
+        -- We've seen ' so far
+        s <- getInput
+        case s of
+         '\'':_ -> discard 1 >> return THTyQuote
+         '\\':_ -> do 
+                    c <- lexEscape 
+                    matchQuote
+                    return (Character c)
+         c:'\'':_ -> discard 2 >> return (Character c)
+         _ -> return THVarQuote                    
+
+    where matchQuote = matchChar '\'' "Improperly terminated character constant"
+
+
+{-
 lexChar :: Lex a Char
 lexChar = do
     r <- getInput
@@ -663,6 +680,7 @@ lexChar = do
         '\\':_  -> lexEscape
         c:_ -> discard 1 >> return c
         []  -> fail "Incomplete character constant"
+-}
 
 lexString :: Lex a Token
 lexString = loop ""
