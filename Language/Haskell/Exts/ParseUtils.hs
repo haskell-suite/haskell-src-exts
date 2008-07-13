@@ -358,9 +358,11 @@ checkExpr e = case e of
                      return (HsExpTypeSig loc e ty)
     
     --Template Haskell
-    HsReifyExp _          -> return e
+--    HsReifyExp _          -> return e
     HsBracketExp _        -> return e
     HsSpliceExp _         -> return e
+    HsTypQuote _          -> return e
+    HsVarQuote _          -> return e
     
     -- Hsx
     HsXTag s n attrs mattr cs -> do attrs <- mapM checkAttr attrs

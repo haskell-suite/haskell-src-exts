@@ -716,9 +716,11 @@ instance Pretty HsExp where
         pretty (HsExpTypeSig _pos e ty) =
                 myFsep [pretty e, text "::", pretty ty]
         -- Template Haskell
-        pretty (HsReifyExp r) = pretty r
+--        pretty (HsReifyExp r) = pretty r
         pretty (HsBracketExp b) = pretty b
         pretty (HsSpliceExp s) = pretty s
+        pretty (HsTypQuote t)  = text "\'\'" <> pretty t
+        pretty (HsVarQuote x)  = text "\'" <> pretty x
         -- regular patterns
         pretty (HsSeqRP rs) =
                 myFsep $ text "(/" : map pretty rs ++ [text "/)"]
@@ -761,12 +763,14 @@ ppWith binds = nest 2 (text "with" $$$ ppBody withIndent (map pretty binds))
 withIndent = whereIndent
 
 --------------------- Template Haskell -------------------------
+{-
 instance Pretty HsReify where
         pretty (HsReifyDecl name) = ppReify "reifyDecl" name
         pretty (HsReifyType name) = ppReify "reifyType" name
         pretty (HsReifyFixity name) = ppReify "reifyFixity" name
 
 ppReify t n = myFsep [text t, pretty n]
+--}
 
 instance Pretty HsBracket where
         pretty (HsExpBracket e) = ppBracket "[|" e

@@ -64,7 +64,8 @@ module Language.Haskell.Exts.Syntax (
     HsSpecialCon(..), HsCName(..), HsIPName(..),
     
     -- * Template Haskell
-    HsReify(..), HsBracket(..), HsSplice(..),
+    -- HsReify(..), 
+    HsBracket(..), HsSplice(..),
     
     -- * HaRP
     HsRPat(..), HsRPatOp(..),
@@ -583,7 +584,9 @@ data HsExp
     | HsCAsRP HsName HsExp          -- ^ regular patterns only
     
 -- Template Haskell
-    | HsReifyExp HsReify
+--    | HsReifyExp HsReify
+    | HsVarQuote HsQName            -- ^ 'x
+    | HsTypQuote HsQName            -- ^ ''T
     | HsBracketExp HsBracket
     | HsSpliceExp HsSplice
     
@@ -615,6 +618,7 @@ data HsXAttr = HsXAttr HsXName HsExp
   deriving (Eq,Show)
 #endif
 
+{-
 data HsReify 
     = HsReifyType HsQName
     | HsReifyDecl HsQName
@@ -624,6 +628,7 @@ data HsReify
 #else
   deriving (Eq,Show)
 #endif
+-}
  
 data HsBracket
     = HsExpBracket HsExp
