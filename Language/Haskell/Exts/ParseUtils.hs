@@ -162,9 +162,11 @@ checkPat e [] = case e of
                             else HsPRPat $ map fixRPOpPrec ps
             where isStdPat :: HsRPat -> Bool
                   isStdPat (HsRPPat _) = True
+                  isStdPat (HsRPAs _ p) = isStdPat p
                   isStdPat _           = False
                   stripRP :: HsRPat -> HsPat
-                  stripRP (HsRPPat p) = p
+                  stripRP (HsRPPat  p) = p
+                  stripRP (HsRPAs n p) = HsPAsPat n (stripRP p)
                   stripRP _           = error "cannot strip RP wrapper if not all patterns are base"
 
     HsParen e      -> do
