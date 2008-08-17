@@ -18,14 +18,15 @@
 module Language.Haskell.Exts.ParseUtils (
       splitTyConApp     -- HsType -> P (HsName,[HsType])
     , mkRecConstrOrUpdate   -- HsExp -> [HsFieldUpdate] -> P HsExp
-    , checkPrec     -- Integer -> P Int
+    , checkPrec         -- Integer -> P Int
     , checkContext      -- HsType -> P HsContext
     , checkAssertion    -- HsType -> P HsAsst
     , checkDataHeader   -- HsType -> P (HsContext,HsName,[HsName])
     , checkClassHeader  -- HsType -> P (HsContext,HsName,[HsName])
     , checkInstHeader   -- HsType -> P (HsContext,HsQName,[HsType])
     , checkPattern      -- HsExp -> P HsPat
-    , checkExpr     -- HsExp -> P HsExp
+    , checkExpr         -- HsExp -> P HsExp
+    , checkStmt         -- HsStmt -> P HsStmt
     , checkValDef       -- SrcLoc -> HsExp -> HsRhs -> [HsDecl] -> P HsDecl
     , checkClassBody    -- [HsClassDecl] -> P [HsClassDecl]
     , checkInstBody     -- [HsInstDecl] -> P [HsInstDecl]
