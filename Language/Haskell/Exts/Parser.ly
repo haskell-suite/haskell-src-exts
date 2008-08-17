@@ -985,7 +985,10 @@ avoiding another shift/reduce-conflict.
 List comprehensions
 
 > quals :: { [HsStmt] }
->       : quals ',' qual                { $3 : $1 }
+>       : quals1                        {% mapM checkStmt $1 }
+
+> quals1 :: { [HsStmt] }
+>       : quals1 ',' qual               { $3 : $1 }
 >       | qual                          { [$1] }
 
 > qual  :: { HsStmt }
