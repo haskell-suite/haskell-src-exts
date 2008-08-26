@@ -581,7 +581,7 @@ lexStdToken = do
                 ident <- lexWhile isIdent
                 s <- getInput
                 case s of
-                 '-':c:_ | isIdent c -> do 
+                 '-':c:_ | isAlpha c -> do 
                         discard 1
                         idents <- lexIdents
                         return $ ident : idents
