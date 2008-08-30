@@ -482,6 +482,7 @@ lexStdToken = do
 --                        return RPSeqOpen
 --        '/':')':_ -> do discard 2
 --                        return RPSeqClose
+        '(':'|':c:_  | isHSymbol c -> discard 1 >> return LeftParen
         '(':'|':_ -> do discard 2
                         return RPGuardOpen
         '|':')':_ -> do discard 2
