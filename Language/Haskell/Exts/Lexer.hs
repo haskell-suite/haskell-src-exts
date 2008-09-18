@@ -236,7 +236,7 @@ isIdent, isHSymbol :: Char -> Bool
 isIdent   c = isAlpha c || isDigit c || c == '\'' || c == '_'
 
 --isHSymbol c = elem c ":!#$%&*+./<=>?@\\^|-~"
-isHSymbol c = c `elem` ":!#%&*./?@\\-" || (isSymbol c && not (c `elem` "(),;[]`{}_\"'"))
+isHSymbol c = c `elem` ":!#%&*./?@\\-" || ((isSymbol c || isPunctuation c) && not (c `elem` "(),;[]`{}_\"'"))
 
 matchChar :: Char -> String -> Lex a ()
 matchChar c msg = do
