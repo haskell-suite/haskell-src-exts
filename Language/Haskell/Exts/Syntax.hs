@@ -98,8 +98,12 @@ module Language.Haskell.Exts.Syntax (
 
 
 #ifdef __GLASGOW_HASKELL__
+#if __GLASGOW_HASKELL__ >= 610
+import Data.Data
+#else
 import Data.Generics.Basics
 import Data.Generics.Instances
+#endif
 #endif
 
 -- | A position in the source.
