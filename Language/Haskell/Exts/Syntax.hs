@@ -545,8 +545,8 @@ data HsExp
     | HsNegApp HsExp                -- ^ negation expression @-@ /exp/
     | HsLambda SrcLoc [HsPat] HsExp -- ^ lambda expression
     | HsLet HsBinds HsExp           -- ^ local declarations with @let@
-    | HsDLet [HsIPBind] HsExp       -- ^ local declarations of implicit parameters (hugs)
-    | HsWith HsExp [HsIPBind]       -- ^ local declarations of implicit parameters
+--    | HsDLet [HsIPBind] HsExp       -- ^ local declarations of implicit parameters (hugs)
+--    | HsWith HsExp [HsIPBind]       -- ^ local declarations of implicit parameters
     | HsIf HsExp HsExp HsExp        -- ^ @if@ /exp/ @then@ /exp/ @else@ /exp/
     | HsCase HsExp [HsAlt]          -- ^ @case@ /exp/ @of@ /alts/
     | HsDo [HsStmt]                 -- ^ @do@-expression:

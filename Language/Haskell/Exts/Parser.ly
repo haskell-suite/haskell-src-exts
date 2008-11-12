@@ -172,7 +172,7 @@ Reserved Ids
 >       'data'          { KW_Data }
 >       'default'       { KW_Default }
 >       'deriving'      { KW_Deriving }
->       'dlet'          { KW_DLet }     -- implicit parameter binding clause
+       'dlet'          { KW_DLet }     -- implicit parameter binding clause, no longer supported from 0.3.11
 >       'do'            { KW_Do }
 >       'else'          { KW_Else }
 >       'family'        { KW_Family }   -- indexed type families
@@ -193,7 +193,7 @@ Reserved Ids
 >       'then'          { KW_Then }
 >       'type'          { KW_Type }
 >       'where'         { KW_Where }
->       'with'          { KW_With }     -- implicit parameter binding clause
+       'with'          { KW_With }     -- implicit parameter binding clause, no longer supported from 0.3.11
 >       'qualified'     { KW_Qualified }
 
 > %monad { P }
@@ -781,7 +781,7 @@ the exp0 productions to distinguish these from the others (exp0a).
 
 > exp   :: { HsExp }
 >       : exp0b '::' srcloc ctype       { HsExpTypeSig $3 $1 $4 }
->       | exp0b 'with' ipbinding        { HsWith $1 $3 }  -- implicit parameters
+       | exp0b 'with' ipbinding        { HsWith $1 $3 }  -- implicit parameters (hugs), no longer supported
 >       | exp0                          { $1 }
 >       | exp0b qop                     { HsPostOp $1 $2 } -- for HaRP's sake
 
@@ -802,7 +802,7 @@ the exp0 productions to distinguish these from the others (exp0a).
 >       : '\\' srcloc apats '->' exp    { HsLambda $2 (reverse $3) $5 }
 A let may bind implicit parameters
 >       | 'let' binds 'in' exp          { HsLet $2 $4 }
->       | 'dlet' ipbinding 'in' exp     { HsDLet $2 $4 }
+       | 'dlet' ipbinding 'in' exp     { HsDLet $2 $4 } -- no longer supported
 >       | 'if' exp 'then' exp 'else' exp { HsIf $2 $4 $6 }
 
 > exp10b :: { HsExp }

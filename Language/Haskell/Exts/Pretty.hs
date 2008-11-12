@@ -662,11 +662,14 @@ instance Pretty HsExp where
                 ppLetExp declList letBody
         pretty (HsLet (HsIPBinds bindList) letBody) =
                 ppLetExp bindList letBody
+
+{-  No longer supported.
         pretty (HsDLet bindList letBody) =
                 myFsep [text "dlet" <+> ppBody letIndent (map pretty bindList),
                         text "in", pretty letBody]
         pretty (HsWith exp bindList) =
-                pretty exp $$$ ppWith bindList
+                pretty exp $$$ ppWith bindList 
+-}
         pretty (HsIf cond thenexp elsexp) =
                 myFsep [text "if", pretty cond,
                         text "then", pretty thenexp,
