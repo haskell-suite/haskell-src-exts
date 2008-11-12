@@ -184,7 +184,7 @@ reserved_ids = [
  ( "data",      KW_Data ),
  ( "default",   KW_Default ),
  ( "deriving",  KW_Deriving ),
- ( "dlet",      KW_DLet ),      -- implicit parameters (hugs)
+-- ( "dlet",      KW_DLet ),      -- implicit parameters (hugs), no longer supported in 0.3.11
  ( "do",        KW_Do ),
  ( "else",      KW_Else ),
  ( "family",    KW_Family ),        -- indexed type families
@@ -204,7 +204,7 @@ reserved_ids = [
  ( "then",      KW_Then ),
  ( "type",      KW_Type ),
  ( "where",     KW_Where ),
- ( "with",      KW_With ),      -- implicit parameters
+-- ( "with",      KW_With ),      -- implicit parameters in Hugs, no longer supported in 0.3.11
 
 {-- Template Haskell
  ( "reifyDecl", THReifyDecl ),

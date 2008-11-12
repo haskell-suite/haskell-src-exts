@@ -320,8 +320,8 @@ checkExpr e = case e of
     HsNegApp e            -> check1Expr e HsNegApp
     HsLambda loc ps e     -> check1Expr e (HsLambda loc ps)
     HsLet bs e            -> check1Expr e (HsLet bs)
-    HsDLet bs e           -> check1Expr e (HsDLet bs)
-    HsWith e bs           -> check1Expr e (flip HsWith bs)
+--    HsDLet bs e           -> check1Expr e (HsDLet bs)
+--    HsWith e bs           -> check1Expr e (flip HsWith bs)
     HsIf e1 e2 e3         -> check3Exprs e1 e2 e3 HsIf
     HsCase e alts         -> do
                      alts <- mapM checkAlt alts
