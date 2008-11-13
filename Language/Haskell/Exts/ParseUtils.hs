@@ -353,7 +353,7 @@ checkExpr e = case e of
     HsEnumFromThen e1 e2      -> check2Exprs e1 e2 HsEnumFromThen
     HsEnumFromThenTo e1 e2 e3 -> check3Exprs e1 e2 e3 HsEnumFromThenTo
     HsListComp e stmts        -> do
-                     stmts <- mapM checkStmt stmts
+                     --stmts <- mapM checkStmt stmts
                      e <- checkExpr e
                      return (HsListComp e stmts)
     HsExpTypeSig loc e ty     -> do
