@@ -1,5 +1,5 @@
 Name:                   haskell-src-exts
-Version:                0.3.9
+Version:                0.3.11
 License:                BSD3
 License-File:           LICENSE
 Author:                 Niklas Broberg
@@ -29,7 +29,7 @@ Description:            Haskell-Source with Extensions (HSE, haskell-src-exts)
                         For details on usage, please see the website.
 Homepage:               http://code.haskell.org/HSP/haskell-src-exts
 Stability:              Experimental
-Tested-with:            GHC==6.8.2
+Tested-with:            GHC==6.10.1
 Build-Type:             Simple
 Cabal-Version:          >= 1.2
 
@@ -38,11 +38,7 @@ Flag splitBase
 
 Library
   Build-Tools:          happy >= 1.17
-  Build-Depends:        base
-  if flag(splitBase)
-    Build-Depends:      base >= 3, array >= 0.1, pretty >= 1.0
-  else
-    Build-Depends:      base < 3
+  Build-Depends:        base >= 4, array >= 0.1, pretty >= 1.0
 
   Exposed-modules:      Language.Haskell.Exts,
                         Language.Haskell.Exts.Parser,
