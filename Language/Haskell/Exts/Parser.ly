@@ -1061,9 +1061,9 @@ Record Field Update/Construction
 -----------------------------------------------------------------------------
 Implicit parameter bindings
 
-> ipbinding :: { [HsIPBind] }
->       : '{' ipbinds '}'               { $2 }
->       | open ipbinds close            { $2 }
+ ipbinding :: { [HsIPBind] }
+       : '{' ipbinds '}'               { $2 }
+       | open ipbinds close            { $2 }
 
 > ipbinds :: { [HsIPBind] }
 >       : optsemis ipbinds1 optsemis    { reverse $2 }
