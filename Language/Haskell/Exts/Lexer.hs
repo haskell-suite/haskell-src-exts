@@ -586,6 +586,9 @@ lexStdToken = do
                         discard 1
                         idents <- lexIdents
                         return $ ident : idents
+                 '#':_ -> do
+                        discard 1
+                        return [ident ++ "#"]
                  _ -> return [ident]
 
 
@@ -642,10 +645,14 @@ lexConIdOrQual qual = do
              | isLower c || c == '_' -> do  -- qualified varid?
                     discard 1
                     ident <- lexWhile isIdent
-                    case lookup ident reserved_ids of
+                    s <- getInput
+                    ident' <- case s of
+                               '#':_ -> discard 1 >> return (ident ++ "#")
+                               _ -> return ident
+                    case lookup ident' reserved_ids of
                        -- cannot qualify a reserved word
                        Just _  -> just_a_conid
-                       Nothing -> return (QVarId (qual', ident))
+                       Nothing -> return (QVarId (qual', ident'))
 
              | isUpper c -> do      -- qualified conid?
                     discard 1
@@ -661,6 +668,12 @@ lexConIdOrQual qual = do
                                               ':' -> QConSym (qual', sym)
                                               _   -> QVarSym (qual', sym)
 
+          '#':c:_ 
+            | isSpace c -> do
+                discard 1
+                case conid of
+                 ConId con -> return $ ConId $ con ++ "#"
+                 QConId (q,con) -> return $ QConId (q,con ++ "#")
           _ ->  return conid -- not a qualified thing
 
 lexCharacter :: Lex a Token
