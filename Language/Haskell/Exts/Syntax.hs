@@ -41,40 +41,40 @@
 
 module Language.Haskell.Exts.Syntax (
     -- * Modules
-    HsModule(..), HsExportSpec(..),
-    HsImportDecl(..), HsImportSpec(..), HsAssoc(..),
+    Module(..), ExportSpec(..),
+    ImportDecl(..), ImportSpec(..), Assoc(..),
     -- * Declarations
-    HsDecl(..), HsBinds(..), HsIPBind(..), 
-    HsClassDecl(..), HsInstDecl(..),
-    HsGadtDecl(..), HsConDecl(..), HsQualConDecl(..), HsBangType(..),
-    HsMatch(..), HsRhs(..), HsGuardedRhs(..), DataOrNew(..),
+    Decl(..), Binds(..), IPBind(..), 
+    ClassDecl(..), InstDecl(..),
+    GadtDecl(..), ConDecl(..), QualConDecl(..), BangType(..),
+    Match(..), Rhs(..), GuardedRhs(..), DataOrNew(..),
     -- * Class Assertions and Contexts
-    HsContext, HsFunDep(..), HsAsst(..),
+    Context, FunDep(..), Asst(..),
     -- * Types
-    HsType(..), HsBoxed(..), HsKind(..), HsTyVarBind(..),
+    Type(..), Boxed(..), Kind(..), TyVarBind(..),
     -- * Expressions
-    HsExp(..), HsStmt(..), HsFieldUpdate(..),
-    HsAlt(..), HsGuardedAlts(..), HsGuardedAlt(..), 
+    Exp(..), Stmt(..), FieldUpdate(..),
+    Alt(..), GuardedAlts(..), GuardedAlt(..), 
     -- * Patterns
-    HsPat(..), HsPatField(..),
+    Pat(..), PatField(..),
     -- * Literals
-    HsLiteral(..),
+    Literal(..),
     -- * Variables, Constructors and Operators
-    Module(..), HsQName(..), HsName(..), HsQOp(..), HsOp(..),
-    HsSpecialCon(..), HsCName(..), HsIPName(..),
+    ModuleName(..), QName(..), Name(..), QOp(..), Op(..),
+    SpecialCon(..), CName(..), IPName(..),
     
     -- * Template Haskell
     -- HsReify(..), 
-    HsBracket(..), HsSplice(..),
+    Bracket(..), Splice(..),
     
     -- * HaRP
-    HsRPat(..), HsRPatOp(..),
+    RPat(..), RPatOp(..),
     
     -- * Hsx
-    HsXAttr(..), HsXName(..), HsPXAttr(..),
+    XAttr(..), XName(..), PXAttr(..),
 
     -- * FFI
-    HsSafety(..), HsCallConv(..),
+    Safety(..), CallConv(..),
 
     -- * Builtin names
 
@@ -114,7 +114,7 @@ data SrcLoc = SrcLoc {
 #endif
   
 -- | The name of a Haskell module.
-newtype Module = Module String
+newtype ModuleName = ModuleName String
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
@@ -125,13 +125,13 @@ newtype Module = Module String
 -- These names are never qualified, and always refer to builtin type or
 -- data constructors.
 
-data HsSpecialCon
-    = HsUnitCon     -- ^ unit type and data constructor @()@
-    | HsListCon     -- ^ list type constructor @[]@
-    | HsFunCon      -- ^ function type constructor @->@
-    | HsTupleCon Int    -- ^ /n/-ary tuple type and data
+data SpecialCon
+    = UnitCon     -- ^ unit type and data constructor @()@
+    | ListCon     -- ^ list type constructor @[]@
+    | FunCon      -- ^ function type constructor @->@
+    | TupleCon Int    -- ^ /n/-ary tuple type and data
                 --   constructors @(,)@ etc
-    | HsCons        -- ^ list data constructor @(:)@
+    | Cons        -- ^ list data constructor @(:)@
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
@@ -140,10 +140,10 @@ data HsSpecialCon
 
 -- | This type is used to represent qualified variables, and also
 -- qualified constructors.
-data HsQName
-    = Qual Module HsName    -- ^ name qualified with a module name
-    | UnQual HsName     -- ^ unqualified name
-    | Special HsSpecialCon  -- ^ built-in constructor with special syntax
+data QName
+    = Qual ModuleName Name    -- ^ name qualified with a module name
+    | UnQual Name     -- ^ unqualified name
+    | Special SpecialCon  -- ^ built-in constructor with special syntax
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
@@ -151,9 +151,9 @@ data HsQName
 #endif
 
 -- | This type is used to represent variables, and also constructors.
-data HsName
-    = HsIdent String    -- ^ /varid/ or /conid/.
-    | HsSymbol String   -- ^ /varsym/ or /consym/
+data Name
+    = Ident String    -- ^ /varid/ or /conid/.
+    | Symbol String   -- ^ /varsym/ or /consym/
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
@@ -161,9 +161,9 @@ data HsName
 #endif
 
 -- | This type is used to represent implicit parameter names.
-data HsIPName
-    = HsIPDup String -- ?x
-    | HsIPLin String -- %x
+data IPName
+    = IPDup String -- ?x
+    | IPLin String -- %x
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
@@ -171,9 +171,9 @@ data HsIPName
 #endif
 
 -- | Possibly qualified infix operators (/qop/), appearing in expressions.
-data HsQOp
-    = HsQVarOp HsQName  -- ^ variable operator (/qvarop/)
-    | HsQConOp HsQName  -- ^ constructor operator (/qconop/)
+data QOp
+    = QVarOp QName  -- ^ variable operator (/qvarop/)
+    | QConOp QName  -- ^ constructor operator (/qconop/)
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
@@ -181,9 +181,9 @@ data HsQOp
 #endif
 
 -- | Operators, appearing in @infix@ declarations.
-data HsOp
-    = HsVarOp HsName    -- ^ variable operator (/varop/)
-    | HsConOp HsName    -- ^ constructor operator (/conop/)
+data Op
+    = VarOp Name    -- ^ variable operator (/varop/)
+    | ConOp Name    -- ^ constructor operator (/conop/)
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
@@ -192,9 +192,9 @@ data HsOp
 
 -- | A name (/cname/) of a component of a class or data type in an @import@
 -- or export specification.
-data HsCName
-    = HsVarName HsName  -- ^ name of a method or field
-    | HsConName HsName  -- ^ name of a data constructor
+data CName
+    = VarName Name  -- ^ name of a method or field
+    | ConName Name  -- ^ name of a data constructor
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
@@ -202,8 +202,8 @@ data HsCName
 #endif
 
 -- | A Haskell source module.
-data HsModule = HsModule SrcLoc Module (Maybe [HsExportSpec])
-                         [HsImportDecl] [HsDecl]
+data Module = Module SrcLoc ModuleName (Maybe [ExportSpec])
+                         [ImportDecl] [Decl]
 #ifdef __GLASGOW_HASKELL__
   deriving (Show,Typeable,Data)
 #else
@@ -211,18 +211,18 @@ data HsModule = HsModule SrcLoc Module (Maybe [HsExportSpec])
 #endif
 
 -- | Export specification.
-data HsExportSpec
-     = HsEVar HsQName           -- ^ variable
-     | HsEAbs HsQName           -- ^ @T@:
+data ExportSpec
+     = EVar QName           -- ^ variable
+     | EAbs QName           -- ^ @T@:
             -- a class or datatype exported abstractly,
             -- or a type synonym.
-     | HsEThingAll HsQName          -- ^ @T(..)@:
+     | EThingAll QName          -- ^ @T(..)@:
             -- a class exported with all of its methods, or
             -- a datatype exported with all of its constructors.
-     | HsEThingWith HsQName [HsCName]   -- ^ @T(C_1,...,C_n)@:
+     | EThingWith QName [CName]   -- ^ @T(C_1,...,C_n)@:
             -- a class exported with some of its methods, or
             -- a datatype exported with some of its constructors.
-     | HsEModuleContents Module     -- ^ @module M@:
+     | EModuleContents ModuleName     -- ^ @module M@:
             -- re-export a module.
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
@@ -231,13 +231,13 @@ data HsExportSpec
 #endif
 
 -- | Import declaration.
-data HsImportDecl = HsImportDecl
-    { importLoc :: SrcLoc       -- ^ position of the @import@ keyword.
-    , importModule :: Module    -- ^ name of the module imported.
-    , importQualified :: Bool   -- ^ imported @qualified@?
-    , importAs :: Maybe Module  -- ^ optional alias name in an
+data ImportDecl = ImportDecl
+    { importLoc :: SrcLoc           -- ^ position of the @import@ keyword.
+    , importModule :: ModuleName    -- ^ name of the module imported.
+    , importQualified :: Bool       -- ^ imported @qualified@?
+    , importAs :: Maybe ModuleName  -- ^ optional alias name in an
                     -- @as@ clause.
-    , importSpecs :: Maybe (Bool,[HsImportSpec])
+    , importSpecs :: Maybe (Bool,[ImportSpec])
             -- ^ optional list of import specifications.
             -- The 'Bool' is 'True' if the names are excluded
             -- by @hiding@.
@@ -249,14 +249,14 @@ data HsImportDecl = HsImportDecl
 #endif
 
 -- | Import specification.
-data HsImportSpec
-     = HsIVar HsName            -- ^ variable
-     | HsIAbs HsName            -- ^ @T@:
+data ImportSpec
+     = IVar Name            -- ^ variable
+     | IAbs Name            -- ^ @T@:
             -- the name of a class, datatype or type synonym.
-     | HsIThingAll HsName           -- ^ @T(..)@:
+     | IThingAll Name           -- ^ @T(..)@:
             -- a class imported with all of its methods, or
             -- a datatype imported with all of its constructors.
-     | HsIThingWith HsName [HsCName]    -- ^ @T(C_1,...,C_n)@:
+     | IThingWith Name [CName]    -- ^ @T(C_1,...,C_n)@:
             -- a class imported with some of its methods, or
             -- a datatype imported with some of its constructors.
 #ifdef __GLASGOW_HASKELL__
@@ -266,36 +266,36 @@ data HsImportSpec
 #endif
 
 -- | Associativity of an operator.
-data HsAssoc
-     = HsAssocNone  -- ^ non-associative operator (declared with @infix@)
-     | HsAssocLeft  -- ^ left-associative operator (declared with @infixl@).
-     | HsAssocRight -- ^ right-associative operator (declared with @infixr@)
+data Assoc
+     = AssocNone  -- ^ non-associative operator (declared with @infix@)
+     | AssocLeft  -- ^ left-associative operator (declared with @infixl@).
+     | AssocRight -- ^ right-associative operator (declared with @infixr@)
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
   deriving (Eq,Show)
 #endif
 
-data HsDecl
-     = HsTypeDecl     SrcLoc HsName [HsName] HsType
-     | HsDataDecl     SrcLoc DataOrNew HsContext HsName [HsName] [HsQualConDecl] [HsQName]
-     | HsGDataDecl    SrcLoc DataOrNew HsContext HsName [HsName] (Maybe HsKind) [HsGadtDecl] {-no deriving-}
-     | HsTypeFamDecl  SrcLoc HsName [HsName] (Maybe HsKind)
-     | HsDataFamDecl  SrcLoc HsContext HsName [HsName] (Maybe HsKind)
-     | HsTypeInsDecl  SrcLoc HsType HsType
-     | HsDataInsDecl  SrcLoc DataOrNew HsType [HsQualConDecl] [HsQName]
-     | HsGDataInsDecl SrcLoc DataOrNew HsType (Maybe HsKind) [HsGadtDecl] {-no deriving-}
-     | HsInfixDecl    SrcLoc HsAssoc Int [HsOp]
-     | HsClassDecl    SrcLoc HsContext HsName [HsName] [HsFunDep] [HsClassDecl]
-     | HsInstDecl     SrcLoc HsContext HsQName [HsType] [HsInstDecl]
-     | HsDerivDecl    SrcLoc HsContext HsQName [HsType]
-     | HsDefaultDecl  SrcLoc [HsType]
-     | HsSpliceDecl   SrcLoc HsSplice
-     | HsTypeSig      SrcLoc [HsName] HsType
-     | HsFunBind      [HsMatch]
-     | HsPatBind      SrcLoc HsPat HsRhs {-where-} HsBinds
-     | HsForImp   SrcLoc HsCallConv HsSafety String HsName HsType
-     | HsForExp   SrcLoc HsCallConv          String HsName HsType
+data Decl
+     = TypeDecl     SrcLoc Name [Name] Type
+     | DataDecl     SrcLoc DataOrNew Context Name [Name] [QualConDecl] [QName]
+     | GDataDecl    SrcLoc DataOrNew Context Name [Name] (Maybe Kind) [GadtDecl] {-no deriving-}
+     | TypeFamDecl  SrcLoc Name [Name] (Maybe Kind)
+     | DataFamDecl  SrcLoc Context Name [Name] (Maybe Kind)
+     | TypeInsDecl  SrcLoc Type Type
+     | DataInsDecl  SrcLoc DataOrNew Type [QualConDecl] [QName]
+     | GDataInsDecl SrcLoc DataOrNew Type (Maybe Kind) [GadtDecl] {-no deriving-}
+     | InfixDecl    SrcLoc Assoc Int [Op]
+     | ClassDecl    SrcLoc Context Name [Name] [FunDep] [ClassDecl]
+     | InstDecl     SrcLoc Context QName [Type] [InstDecl]
+     | DerivDecl    SrcLoc Context QName [Type]
+     | DefaultDecl  SrcLoc [Type]
+     | SpliceDecl   SrcLoc Splice
+     | TypeSig      SrcLoc [Name] Type
+     | FunBind      [Match]
+     | PatBind      SrcLoc Pat Rhs {-where-} Binds
+     | ForImp   SrcLoc CallConv Safety String Name Type
+     | ForExp   SrcLoc CallConv          String Name Type
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -309,16 +309,16 @@ data DataOrNew = DataType | NewType
   deriving (Eq,Show)
 #endif
 
-data HsBinds
-    = HsBDecls [HsDecl]
-    | HsIPBinds [HsIPBind]
+data Binds
+    = BDecls [Decl]
+    | IPBinds [IPBind]
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
   deriving (Eq,Show)
 #endif
 
-data HsIPBind = HsIPBind SrcLoc HsIPName HsExp
+data IPBind = IPBind SrcLoc IPName Exp
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -326,26 +326,26 @@ data HsIPBind = HsIPBind SrcLoc HsIPName HsExp
 #endif
 
 -- | Clauses of a function binding.
-data HsMatch
-     = HsMatch SrcLoc HsName [HsPat] HsRhs {-where-} HsBinds
+data Match
+     = Match SrcLoc Name [Pat] Rhs {-where-} Binds
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
   deriving (Eq,Show)
 #endif
 
-data HsQualConDecl
-    = HsQualConDecl SrcLoc 
-        {-forall-} [HsTyVarBind] {- . -} HsContext
-        {- => -} HsConDecl
+data QualConDecl
+    = QualConDecl SrcLoc 
+        {-forall-} [TyVarBind] {- . -} Context
+        {- => -} ConDecl
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
   deriving (Eq,Show)
 #endif
 
-data HsGadtDecl 
-    = HsGadtDecl SrcLoc HsName HsType
+data GadtDecl 
+    = GadtDecl SrcLoc Name Type
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -353,10 +353,10 @@ data HsGadtDecl
 #endif
 
 -- | Declaration of a data constructor.
-data HsConDecl
-     = HsConDecl HsName [HsBangType]
+data ConDecl
+     = ConDecl Name [BangType]
                 -- ^ ordinary data constructor
-     | HsRecDecl HsName [([HsName],HsBangType)]
+     | RecDecl Name [([Name],BangType)]
                 -- ^ record constructor
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
@@ -365,11 +365,11 @@ data HsConDecl
 #endif
 
 -- | Declarations inside a class declaration
-data HsClassDecl
-    = HsClsDecl    HsDecl
-    | HsClsDataFam SrcLoc HsContext HsName [HsName] (Maybe HsKind)
-    | HsClsTyFam   SrcLoc           HsName [HsName] (Maybe HsKind)
-    | HsClsTyDef   SrcLoc HsType    HsType
+data ClassDecl
+    = ClsDecl    Decl
+    | ClsDataFam SrcLoc Context Name [Name] (Maybe Kind)
+    | ClsTyFam   SrcLoc         Name [Name] (Maybe Kind)
+    | ClsTyDef   SrcLoc Type    Type
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -377,11 +377,11 @@ data HsClassDecl
 #endif
 
 -- | Declarations inside an instance declaration
-data HsInstDecl
-    = HsInsDecl   HsDecl
-    | HsInsType   SrcLoc HsType HsType
-    | HsInsData   SrcLoc DataOrNew HsType [HsQualConDecl] [HsQName]
-    | HsInsGData  SrcLoc DataOrNew HsType (Maybe HsKind) [HsGadtDecl] {-no deriving-}
+data InstDecl
+    = InsDecl   Decl
+    | InsType   SrcLoc Type Type
+    | InsData   SrcLoc DataOrNew Type [QualConDecl] [QName]
+    | InsGData  SrcLoc DataOrNew Type (Maybe Kind) [GadtDecl] {-no deriving-}
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -390,9 +390,9 @@ data HsInstDecl
 
 -- | The type of a constructor argument or field, optionally including
 -- a strictness annotation.
-data HsBangType
-     = HsBangedTy   HsType  -- ^ strict component, marked with \"@!@\"
-     | HsUnBangedTy HsType  -- ^ non-strict component
+data BangType
+     = BangedTy   Type  -- ^ strict component, marked with \"@!@\"
+     | UnBangedTy Type  -- ^ non-strict component
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -400,9 +400,9 @@ data HsBangType
 #endif
 
 -- | The right hand side of a function or pattern binding.
-data HsRhs
-     = HsUnGuardedRhs HsExp -- ^ unguarded right hand side (/exp/)
-     | HsGuardedRhss  [HsGuardedRhs]
+data Rhs
+     = UnGuardedRhs Exp -- ^ unguarded right hand side (/exp/)
+     | GuardedRhss  [GuardedRhs]
                 -- ^ guarded right hand side (/gdrhs/)
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
@@ -411,8 +411,8 @@ data HsRhs
 #endif
 -- | A guarded right hand side @|@ /exp/ @=@ /exp/.
 -- The first expression will be Boolean-valued.
-data HsGuardedRhs
-     = HsGuardedRhs SrcLoc [HsStmt] HsExp
+data GuardedRhs
+     = GuardedRhs SrcLoc [Stmt] Exp
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -422,45 +422,45 @@ data HsGuardedRhs
 -- | A type qualified with a context.
 --   An unqualified type has an empty context.
 
-data HsType
-     = HsTyForall 
-        (Maybe [HsTyVarBind])
-        HsContext
-        HsType
-     | HsTyFun   HsType HsType  -- ^ function type
-     | HsTyTuple HsBoxed [HsType]   -- ^ tuple type, possibly boxed
-     | HsTyApp   HsType HsType  -- ^ application of a type constructor
-     | HsTyVar   HsName     -- ^ type variable
-     | HsTyCon   HsQName        -- ^ named type or type constructor
-     | HsTyPred  HsAsst         -- ^ assertion of an implicit parameter
-     | HsTyInfix HsType HsQName HsType -- ^ infix type constructor
-     | HsTyKind  HsType HsKind  -- ^ type with explicit kind signature
+data Type
+     = TyForall 
+        (Maybe [TyVarBind])
+        Context
+        Type
+     | TyFun   Type Type  -- ^ function type
+     | TyTuple Boxed [Type]   -- ^ tuple type, possibly boxed
+     | TyApp   Type Type  -- ^ application of a type constructor
+     | TyVar   Name     -- ^ type variable
+     | TyCon   QName        -- ^ named type or type constructor
+     | TyPred  Asst         -- ^ assertion of an implicit parameter
+     | TyInfix Type QName Type -- ^ infix type constructor
+     | TyKind  Type Kind  -- ^ type with explicit kind signature
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
   deriving (Eq,Show)
 #endif
 
-data HsBoxed = Boxed | Unboxed
+data Boxed = Boxed | Unboxed
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
   deriving (Eq,Show)
 #endif
 
-data HsTyVarBind 
-    = HsKindedVar HsName HsKind
-    | HsUnkindedVar HsName
+data TyVarBind 
+    = KindedVar Name Kind
+    | UnkindedVar Name
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
   deriving (Eq,Show)
 #endif
 
-data HsKind
-    = HsKindStar
-    | HsKindBang
-    | HsKindFn HsKind HsKind
+data Kind
+    = KindStar
+    | KindBang
+    | KindFn Kind Kind
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -470,8 +470,8 @@ data HsKind
 
 -- | A functional dependency, given on the form
 --   l1 l2 ... ln -> r2 r3 .. rn
-data HsFunDep
-    = HsFunDep [HsName] [HsName]
+data FunDep
+    = FunDep [Name] [Name]
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -479,15 +479,15 @@ data HsFunDep
 #endif
 
 
-type HsContext = [HsAsst]
+type Context = [Asst]
 
 -- | Class assertions.
 --   In Haskell 98, the argument would be a /tyvar/, but this definition
 --   allows multiple parameters, and allows them to be /type/s.
 --   Also extended with support for implicit parameters and equality constraints.
-data HsAsst     = HsClassA HsQName [HsType]
-        | HsIParam HsIPName HsType
-        | HsEqualP HsType   HsType
+data Asst     = ClassA QName [Type]
+        | IParam IPName Type
+        | EqualP Type   Type
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -498,16 +498,16 @@ data HsAsst     = HsClassA HsQName [HsType]
 -- Values of this type hold the abstract value of the literal, not the
 -- precise string representation used.  For example, @10@, @0o12@ and @0xa@
 -- have the same representation.
-data HsLiteral
-    = HsChar    Char        -- ^ character literal
-    | HsString  String      -- ^ string literal
-    | HsInt     Integer     -- ^ integer literal
-    | HsFrac    Rational    -- ^ floating point literal
-    | HsCharPrim    Char        -- ^ GHC unboxed character literal
-    | HsStringPrim  String      -- ^ GHC unboxed string literal
-    | HsIntPrim Integer     -- ^ GHC unboxed integer literal
-    | HsFloatPrim   Rational    -- ^ GHC unboxed float literal
-    | HsDoublePrim  Rational    -- ^ GHC unboxed double literal
+data Literal
+    = Char    Char        -- ^ character literal
+    | String  String      -- ^ string literal
+    | Int     Integer     -- ^ integer literal
+    | Frac    Rational    -- ^ floating point literal
+    | CharPrim    Char        -- ^ GHC unboxed character literal
+    | StringPrim  String      -- ^ GHC unboxed string literal
+    | IntPrim Integer     -- ^ GHC unboxed integer literal
+    | FloatPrim   Rational    -- ^ GHC unboxed float literal
+    | DoublePrim  Rational    -- ^ GHC unboxed double literal
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -525,92 +525,92 @@ data HsLiteral
 --   checks, these constructors should not be used.
 --
 -- * The parser does not take precedence and associativity into account,
---   so it will leave 'HsInfixApp's associated to the left.
+--   so it will leave 'InfixApp's associated to the left.
 --
--- * The 'Language.Haskell.Pretty.Pretty' instance for 'HsExp' does not
+-- * The 'Language.Haskell.Pretty.Pretty' instance for 'Exp' does not
 --   add parentheses in printing.
 
-data HsExp
-    = HsVar HsQName                 -- ^ variable
-    | HsIPVar HsIPName              -- ^ implicit parameter variable
-    | HsCon HsQName                 -- ^ data constructor
-    | HsLit HsLiteral               -- ^ literal constant
-    | HsInfixApp HsExp HsQOp HsExp  -- ^ infix application
-    | HsApp HsExp HsExp             -- ^ ordinary application
-    | HsNegApp HsExp                -- ^ negation expression @-@ /exp/
-    | HsLambda SrcLoc [HsPat] HsExp -- ^ lambda expression
-    | HsLet HsBinds HsExp           -- ^ local declarations with @let@
---    | HsDLet [HsIPBind] HsExp       -- ^ local declarations of implicit parameters (hugs)
---    | HsWith HsExp [HsIPBind]       -- ^ local declarations of implicit parameters
-    | HsIf HsExp HsExp HsExp        -- ^ @if@ /exp/ @then@ /exp/ @else@ /exp/
-    | HsCase HsExp [HsAlt]          -- ^ @case@ /exp/ @of@ /alts/
-    | HsDo [HsStmt]                 -- ^ @do@-expression:
+data Exp
+    = Var QName                 -- ^ variable
+    | IPVar IPName              -- ^ implicit parameter variable
+    | Con QName                 -- ^ data constructor
+    | Lit Literal               -- ^ literal constant
+    | InfixApp Exp QOp Exp  -- ^ infix application
+    | App Exp Exp             -- ^ ordinary application
+    | NegApp Exp                -- ^ negation expression @-@ /exp/
+    | Lambda SrcLoc [Pat] Exp -- ^ lambda expression
+    | Let Binds Exp           -- ^ local declarations with @let@
+--    | DLet [IPBind] Exp       -- ^ local declarations of implicit parameters (hugs)
+--    | With Exp [IPBind]       -- ^ local declarations of implicit parameters
+    | If Exp Exp Exp        -- ^ @if@ /exp/ @then@ /exp/ @else@ /exp/
+    | Case Exp [Alt]          -- ^ @case@ /exp/ @of@ /alts/
+    | Do [Stmt]                 -- ^ @do@-expression:
                                     -- the last statement in the list
                                     -- should be an expression.
-    | HsMDo [HsStmt]                -- ^ @mdo@-expression
-    | HsTuple [HsExp]               -- ^ tuple expression
-    | HsList [HsExp]                -- ^ list expression
-    | HsParen HsExp                 -- ^ parenthesized expression
-    | HsLeftSection HsExp HsQOp     -- ^ left section @(@/exp/ /qop/@)@
-    | HsRightSection HsQOp HsExp    -- ^ right section @(@/qop/ /exp/@)@
-    | HsRecConstr HsQName [HsFieldUpdate]
+    | MDo [Stmt]                -- ^ @mdo@-expression
+    | Tuple [Exp]               -- ^ tuple expression
+    | List [Exp]                -- ^ list expression
+    | Paren Exp                 -- ^ parenthesized expression
+    | LeftSection Exp QOp     -- ^ left section @(@/exp/ /qop/@)@
+    | RightSection QOp Exp    -- ^ right section @(@/qop/ /exp/@)@
+    | RecConstr QName [FieldUpdate]
                                     -- ^ record construction expression
-    | HsRecUpdate HsExp [HsFieldUpdate]
+    | RecUpdate Exp [FieldUpdate]
                                     -- ^ record update expression
-    | HsEnumFrom HsExp              -- ^ unbounded arithmetic sequence,
+    | EnumFrom Exp              -- ^ unbounded arithmetic sequence,
                                     -- incrementing by 1
-    | HsEnumFromTo HsExp HsExp      -- ^ bounded arithmetic sequence,
+    | EnumFromTo Exp Exp      -- ^ bounded arithmetic sequence,
                                     -- incrementing by 1
-    | HsEnumFromThen HsExp HsExp    -- ^ unbounded arithmetic sequence,
+    | EnumFromThen Exp Exp    -- ^ unbounded arithmetic sequence,
                                     -- with first two elements given
-    | HsEnumFromThenTo HsExp HsExp HsExp
+    | EnumFromThenTo Exp Exp Exp
                                     -- ^ bounded arithmetic sequence,
                                     -- with first two elements given
-    | HsListComp HsExp [HsStmt]     -- ^ list comprehension
-    | HsExpTypeSig SrcLoc HsExp HsType
+    | ListComp Exp [Stmt]     -- ^ list comprehension
+    | ExpTypeSig SrcLoc Exp Type
                                     -- ^ expression type signature
-    | HsAsPat HsName HsExp          -- ^ patterns only
-    | HsWildCard                    -- ^ patterns only
-    | HsIrrPat HsExp                -- ^ patterns only
+    | AsPat Name Exp          -- ^ patterns only
+    | WildCard                    -- ^ patterns only
+    | IrrPat Exp                -- ^ patterns only
 
 -- Post-ops for parsing left sections and regular patterns. Not to be left in the final tree.
-    | HsPostOp HsExp HsQOp          -- ^ post-ops
+    | PostOp Exp QOp          -- ^ post-ops
 
 -- HaRP
-    | HsSeqRP [HsExp]               -- ^ regular patterns only
-    | HsGuardRP HsExp [HsStmt]      -- ^ regular patterns only
-    | HsEitherRP HsExp HsExp        -- ^ regular patterns only
-    | HsCAsRP HsName HsExp          -- ^ regular patterns only
+    | SeqRP [Exp]               -- ^ regular patterns only
+    | GuardRP Exp [Stmt]      -- ^ regular patterns only
+    | EitherRP Exp Exp        -- ^ regular patterns only
+    | CAsRP Name Exp          -- ^ regular patterns only
     
 -- Template Haskell
---    | HsReifyExp HsReify
-    | HsVarQuote HsQName            -- ^ 'x
-    | HsTypQuote HsQName            -- ^ ''T
-    | HsBracketExp HsBracket
-    | HsSpliceExp HsSplice
+--    | ReifyExp Reify
+    | VarQuote QName            -- ^ 'x
+    | TypQuote QName            -- ^ ''T
+    | BracketExp Bracket
+    | SpliceExp Splice
     
 -- Hsx
-    | HsXTag SrcLoc HsXName [HsXAttr] (Maybe HsExp) [HsExp]
-    | HsXETag SrcLoc HsXName [HsXAttr] (Maybe HsExp)
-    | HsXPcdata String
-    | HsXExpTag HsExp
-    | HsXRPats [HsExp]
+    | XTag SrcLoc XName [XAttr] (Maybe Exp) [Exp]
+    | XETag SrcLoc XName [XAttr] (Maybe Exp)
+    | XPcdata String
+    | XExpTag Exp
+    | XRPats [Exp]
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
   deriving (Eq,Show)
 #endif
 
-data HsXName 
-    = HsXName String        -- <name ...
-    | HsXDomName String String  -- <dom:name ...
+data XName 
+    = XName String        -- <name ...
+    | XDomName String String  -- <dom:name ...
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
   deriving (Eq,Show)
 #endif
 
-data HsXAttr = HsXAttr HsXName HsExp
+data XAttr = XAttr XName Exp
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -629,20 +629,20 @@ data HsReify
 #endif
 -}
  
-data HsBracket
-    = HsExpBracket HsExp
-    | HsPatBracket HsPat
-    | HsTypeBracket HsType
-    | HsDeclBracket [HsDecl]
+data Bracket
+    = ExpBracket Exp
+    | PatBracket Pat
+    | TypeBracket Type
+    | DeclBracket [Decl]
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
   deriving (Eq,Show)
 #endif
 
-data HsSplice
-    = HsIdSplice String
-    | HsParenSplice HsExp
+data Splice
+    = IdSplice String
+    | ParenSplice Exp
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -651,7 +651,7 @@ data HsSplice
 
 
 -- FFI stuff
-data HsSafety
+data Safety
     = PlayRisky
     | PlaySafe Bool
 #ifdef __GLASGOW_HASKELL__
@@ -660,7 +660,7 @@ data HsSafety
   deriving (Eq,Show)
 #endif
 
-data HsCallConv
+data CallConv
     = StdCall
     | CCall
 #ifdef __GLASGOW_HASKELL__
@@ -672,35 +672,35 @@ data HsCallConv
 
 
 -- | A pattern, to be matched against a value.
-data HsPat
-    = HsPVar HsName                 -- ^ variable
-    | HsPLit HsLiteral              -- ^ literal constant
-    | HsPNeg HsPat                  -- ^ negated pattern
-    | HsPInfixApp HsPat HsQName HsPat
+data Pat
+    = PVar Name                 -- ^ variable
+    | PLit Literal              -- ^ literal constant
+    | PNeg Pat                  -- ^ negated pattern
+    | PInfixApp Pat QName Pat
                                     -- ^ pattern with infix data constructor
-    | HsPApp HsQName [HsPat]        -- ^ data constructor and argument
+    | PApp QName [Pat]        -- ^ data constructor and argument
                                     -- patterns
-    | HsPTuple [HsPat]              -- ^ tuple pattern
-    | HsPList [HsPat]               -- ^ list pattern
-    | HsPParen HsPat                -- ^ parenthesized pattern
-    | HsPRec HsQName [HsPatField]   -- ^ labelled pattern
-    | HsPAsPat HsName HsPat         -- ^ @\@@-pattern
-    | HsPWildCard                   -- ^ wildcard pattern (@_@)
-    | HsPIrrPat HsPat               -- ^ irrefutable pattern (@~@)
-    | HsPatTypeSig SrcLoc HsPat HsType
+    | PTuple [Pat]              -- ^ tuple pattern
+    | PList [Pat]               -- ^ list pattern
+    | PParen Pat                -- ^ parenthesized pattern
+    | PRec QName [PatField]   -- ^ labelled pattern
+    | PAsPat Name Pat         -- ^ @\@@-pattern
+    | PWildCard                   -- ^ wildcard pattern (@_@)
+    | PIrrPat Pat               -- ^ irrefutable pattern (@~@)
+    | PatTypeSig SrcLoc Pat Type
                                     -- ^ pattern type signature
 -- HaRP
-    | HsPRPat [HsRPat]              -- ^ regular pattern (HaRP)
+    | PRPat [RPat]              -- ^ regular pattern (HaRP)
 -- Hsx
-    | HsPXTag SrcLoc HsXName [HsPXAttr] (Maybe HsPat) [HsPat]
+    | PXTag SrcLoc XName [PXAttr] (Maybe Pat) [Pat]
                                     -- ^ XML tag pattern
-    | HsPXETag SrcLoc HsXName [HsPXAttr] (Maybe HsPat)
+    | PXETag SrcLoc XName [PXAttr] (Maybe Pat)
                                     -- ^ XML singleton tag pattern
-    | HsPXPcdata String
+    | PXPcdata String
                                     -- ^ XML PCDATA pattern
-    | HsPXPatTag HsPat
+    | PXPatTag Pat
                                     -- ^ XML embedded pattern
-    | HsPXRPats [HsRPat]
+    | PXRPats [RPat]
                                     -- ^ XML regular list pattern
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
@@ -709,7 +709,7 @@ data HsPat
 #endif
 
 -- | An XML attribute in an XML tag pattern 
-data HsPXAttr = HsPXAttr HsXName HsPat
+data PXAttr = PXAttr XName Pat
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -717,13 +717,13 @@ data HsPXAttr = HsPXAttr HsXName HsPat
 #endif
 
 -- | A regular pattern operator (HaRP)
-data HsRPatOp
-        = HsRPStar
-    | HsRPStarG
-    | HsRPPlus
-    | HsRPPlusG
-    | HsRPOpt
-    | HsRPOptG
+data RPatOp
+        = RPStar
+    | RPStarG
+    | RPPlus
+    | RPPlusG
+    | RPOpt
+    | RPOptG
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -731,15 +731,15 @@ data HsRPatOp
 #endif
         
 -- | An entity in a regular pattern (HaRP)
-data HsRPat
-    = HsRPOp HsRPat HsRPatOp
-    | HsRPEither HsRPat HsRPat
-    | HsRPSeq [HsRPat]
-    | HsRPGuard HsPat [HsStmt]
-    | HsRPCAs HsName HsRPat
-    | HsRPAs HsName HsRPat
-    | HsRPParen HsRPat
-    | HsRPPat HsPat
+data RPat
+    = RPOp RPat RPatOp
+    | RPEither RPat RPat
+    | RPSeq [RPat]
+    | RPGuard Pat [Stmt]
+    | RPCAs Name RPat
+    | RPAs Name RPat
+    | RPParen RPat
+    | RPPat Pat
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -747,8 +747,8 @@ data HsRPat
 #endif
 
 -- | An /fpat/ in a labeled record pattern.
-data HsPatField
-    = HsPFieldPat HsQName HsPat
+data PatField
+    = PFieldPat QName Pat
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -758,13 +758,13 @@ data HsPatField
 -- | This type represents both /stmt/ in a @do@-expression,
 --   and /qual/ in a list comprehension, as well as /stmt/
 --   in a pattern guard.
-data HsStmt
-    = HsGenerator SrcLoc HsPat HsExp
+data Stmt
+    = Generator SrcLoc Pat Exp
                 -- ^ a generator /pat/ @<-@ /exp/
-    | HsQualifier HsExp -- ^ an /exp/ by itself: in a @do@-expression,
+    | Qualifier Exp -- ^ an /exp/ by itself: in a @do@-expression,
                 -- an action whose result is discarded;
                 -- in a list comprehension, a guard expression
-    | HsLetStmt HsBinds -- ^ local bindings
+    | LetStmt Binds -- ^ local bindings
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -772,8 +772,8 @@ data HsStmt
 #endif
 
 -- | An /fbind/ in a labeled construction or update.
-data HsFieldUpdate
-    = HsFieldUpdate HsQName HsExp
+data FieldUpdate
+    = FieldUpdate QName Exp
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -781,17 +781,17 @@ data HsFieldUpdate
 #endif
 
 -- | An /alt/ in a @case@ expression.
-data HsAlt
-    = HsAlt SrcLoc HsPat HsGuardedAlts HsBinds
+data Alt
+    = Alt SrcLoc Pat GuardedAlts Binds
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
   deriving (Eq,Show)
 #endif
 
-data HsGuardedAlts
-    = HsUnGuardedAlt HsExp      -- ^ @->@ /exp/
-    | HsGuardedAlts  [HsGuardedAlt] -- ^ /gdpat/
+data GuardedAlts
+    = UnGuardedAlt Exp      -- ^ @->@ /exp/
+    | GuardedAlts  [GuardedAlt] -- ^ /gdpat/
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -799,8 +799,8 @@ data HsGuardedAlts
 #endif
 
 -- | A guarded alternative @|@ /stmt/, ... , /stmt/ @->@ /exp/.
-data HsGuardedAlt
-    = HsGuardedAlt SrcLoc [HsStmt] HsExp
+data GuardedAlt
+    = GuardedAlt SrcLoc [Stmt] Exp
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -810,57 +810,57 @@ data HsGuardedAlt
 -----------------------------------------------------------------------------
 -- Builtin names.
 
-prelude_mod, main_mod :: Module
-prelude_mod       = Module "Prelude"
-main_mod          = Module "Main"
+prelude_mod, main_mod :: ModuleName
+prelude_mod       = ModuleName "Prelude"
+main_mod          = ModuleName "Main"
 
-main_name :: HsName
-main_name         = HsIdent "main"
+main_name :: Name
+main_name         = Ident "main"
 
-unit_con_name :: HsQName
-unit_con_name         = Special HsUnitCon
+unit_con_name :: QName
+unit_con_name         = Special UnitCon
 
-tuple_con_name :: Int -> HsQName
-tuple_con_name i      = Special (HsTupleCon (i+1))
+tuple_con_name :: Int -> QName
+tuple_con_name i      = Special (TupleCon (i+1))
 
-list_cons_name :: HsQName
-list_cons_name        = Special HsCons
+list_cons_name :: QName
+list_cons_name        = Special Cons
 
-unit_con :: HsExp
-unit_con          = HsCon unit_con_name
+unit_con :: Exp
+unit_con          = Con unit_con_name
 
-tuple_con :: Int -> HsExp
-tuple_con i       = HsCon (tuple_con_name i)
+tuple_con :: Int -> Exp
+tuple_con i       = Con (tuple_con_name i)
 
-as_name, qualified_name, hiding_name, minus_name, pling_name, dot_name, star_name :: HsName
-as_name               = HsIdent "as"
-qualified_name        = HsIdent "qualified"
-hiding_name       = HsIdent "hiding"
-minus_name        = HsSymbol "-"
-pling_name        = HsSymbol "!"
-dot_name          = HsSymbol "."
-star_name             = HsSymbol "*"
+as_name, qualified_name, hiding_name, minus_name, pling_name, dot_name, star_name :: Name
+as_name               = Ident "as"
+qualified_name        = Ident "qualified"
+hiding_name       = Ident "hiding"
+minus_name        = Symbol "-"
+pling_name        = Symbol "!"
+dot_name          = Symbol "."
+star_name             = Symbol "*"
 
-export_name, safe_name, unsafe_name, threadsafe_name, stdcall_name, ccall_name :: HsName
-export_name     = HsIdent "export"
-safe_name       = HsIdent "safe"
-unsafe_name     = HsIdent "unsafe"
-threadsafe_name     = HsIdent "threadsafe"
-stdcall_name        = HsIdent "stdcall"
-ccall_name      = HsIdent "ccall"
+export_name, safe_name, unsafe_name, threadsafe_name, stdcall_name, ccall_name :: Name
+export_name     = Ident "export"
+safe_name       = Ident "safe"
+unsafe_name     = Ident "unsafe"
+threadsafe_name     = Ident "threadsafe"
+stdcall_name        = Ident "stdcall"
+ccall_name      = Ident "ccall"
 
-unit_tycon_name, fun_tycon_name, list_tycon_name :: HsQName
+unit_tycon_name, fun_tycon_name, list_tycon_name :: QName
 unit_tycon_name       = unit_con_name
-fun_tycon_name        = Special HsFunCon
-list_tycon_name       = Special HsListCon
+fun_tycon_name        = Special FunCon
+list_tycon_name       = Special ListCon
 
-tuple_tycon_name :: Int -> HsQName
+tuple_tycon_name :: Int -> QName
 tuple_tycon_name i    = tuple_con_name i
 
-unit_tycon, fun_tycon, list_tycon :: HsType
-unit_tycon        = HsTyCon unit_tycon_name
-fun_tycon         = HsTyCon fun_tycon_name
-list_tycon        = HsTyCon list_tycon_name
+unit_tycon, fun_tycon, list_tycon :: Type
+unit_tycon        = TyCon unit_tycon_name
+fun_tycon         = TyCon fun_tycon_name
+list_tycon        = TyCon list_tycon_name
 
-tuple_tycon :: Int -> HsType
-tuple_tycon i         = HsTyCon (tuple_tycon_name i)
+tuple_tycon :: Int -> Type
+tuple_tycon i         = TyCon (tuple_tycon_name i)

@@ -15,54 +15,54 @@
 module Language.Haskell.Exts.Build (
 
     -- * Syntax building functions
-    name,		-- :: String -> HsName
-    sym,		-- :: String -> HsName
-    var,		-- :: HsName -> HsExp
-    op,			-- :: HsName -> HsQOp
-    qvar,		-- :: Module -> HsName -> HsExp
-    pvar,		-- :: HsName -> HsPat
-    app,		-- :: HsExp -> HsExp -> HsExp
-    infixApp,		-- :: HsExp -> HsQOp -> HsExp -> HsExp
-    appFun,		-- :: HsExp -> [HsExp] -> HsExp
-    pApp,		-- :: HsName -> [HsPat] -> HsPat
-    tuple,		-- :: [HsExp] -> HsExp
-    pTuple,		-- :: [HsPat] -> HsPat
-    varTuple,		-- :: [HsName] -> HsExp
-    pvarTuple,		-- :: [HsName] -> HsPat
-    function,		-- :: String -> HsExp
-    strE,		-- :: String -> HsExp
-    charE,		-- :: Char -> HsExp
-    intE,		-- :: Integer -> HsExp
-    strP,		-- :: String -> HsPat
-    charP,		-- :: Char -> HsPat
-    intP,		-- :: Integer -> HsPat
-    doE,		-- :: [HsStmt] -> HsExp
-    lamE,		-- :: SrcLoc -> [HsPat] -> HsExp -> HsExp
-    letE,		-- :: [HsDecl] -> HsExp -> HsExp
-    caseE,		-- :: HsExp -> [HsAlt] -> HsExp
-    alt,		-- :: SrcLoc -> HsPat -> HsExp -> HsAlt
-    altGW,		-- :: SrcLoc -> HsPat -> [HsStmt] -> HsExp -> HsBinds -> HsAlt
-    listE,		-- :: [HsExp] -> HsExp
-    eList,		-- :: HsExp
-    peList,		-- :: HsPat
-    paren,		-- :: HsExp -> HsExp
-    pParen,		-- :: HsPat -> HsPat
-    qualStmt,		-- :: HsExp -> HsStmt
-    genStmt,		-- :: SrcLoc -> HsPat -> HsExp -> HsStmt
-    letStmt,		-- :: [HsDecl] -> HsStmt
-    binds,		-- :: [HsDecl] -> HsBinds
-    noBinds,		-- :: HsBinds
-    wildcard,		-- :: HsPat
-    genNames,		-- :: String -> Int -> [HsName]
+    name,       -- :: String -> Name
+    sym,        -- :: String -> Name
+    var,        -- :: Name -> Exp
+    op,         -- :: Name -> QOp
+    qvar,       -- :: Module -> Name -> Exp
+    pvar,       -- :: Name -> Pat
+    app,        -- :: Exp -> Exp -> Exp
+    infixApp,       -- :: Exp -> QOp -> Exp -> Exp
+    appFun,     -- :: Exp -> [Exp] -> Exp
+    pApp,       -- :: Name -> [Pat] -> Pat
+    tuple,      -- :: [Exp] -> Exp
+    pTuple,     -- :: [Pat] -> Pat
+    varTuple,       -- :: [Name] -> Exp
+    pvarTuple,      -- :: [Name] -> Pat
+    function,       -- :: String -> Exp
+    strE,       -- :: String -> Exp
+    charE,      -- :: Char -> Exp
+    intE,       -- :: Integer -> Exp
+    strP,       -- :: String -> Pat
+    charP,      -- :: Char -> Pat
+    intP,       -- :: Integer -> Pat
+    doE,        -- :: [Stmt] -> Exp
+    lamE,       -- :: SrcLoc -> [Pat] -> Exp -> Exp
+    letE,       -- :: [Decl] -> Exp -> Exp
+    caseE,      -- :: Exp -> [Alt] -> Exp
+    alt,        -- :: SrcLoc -> Pat -> Exp -> Alt
+    altGW,      -- :: SrcLoc -> Pat -> [Stmt] -> Exp -> Binds -> Alt
+    listE,      -- :: [Exp] -> Exp
+    eList,      -- :: Exp
+    peList,     -- :: Pat
+    paren,      -- :: Exp -> Exp
+    pParen,     -- :: Pat -> Pat
+    qualStmt,       -- :: Exp -> Stmt
+    genStmt,        -- :: SrcLoc -> Pat -> Exp -> Stmt
+    letStmt,        -- :: [Decl] -> Stmt
+    binds,      -- :: [Decl] -> Binds
+    noBinds,        -- :: Binds
+    wildcard,       -- :: Pat
+    genNames,       -- :: String -> Int -> [Name]
     
     -- * More advanced building
-    sfun,		-- :: SrcLoc -> HsName -> [HsName] -> HsRhs -> HsBinds -> HsDecl
-    simpleFun,		-- :: SrcLoc -> HsName -> HsName -> HsExp -> HsDecl
-    patBind,		-- :: SrcLoc -> HsPat -> HsExp -> HsDecl
-    patBindWhere,	-- :: SrcLoc -> HsPat -> HsExp -> [HsDecl] -> HsDecl
-    nameBind,		-- :: SrcLoc -> HsName -> HsExp -> HsDecl
-    metaFunction,	-- :: String -> [HsExp] -> HsExp
-    metaConPat		-- :: String -> [HsPat] -> HsPat
+    sfun,       -- :: SrcLoc -> Name -> [Name] -> Rhs -> Binds -> Decl
+    simpleFun,      -- :: SrcLoc -> Name -> Name -> Exp -> Decl
+    patBind,        -- :: SrcLoc -> Pat -> Exp -> Decl
+    patBindWhere,   -- :: SrcLoc -> Pat -> Exp -> [Decl] -> Decl
+    nameBind,       -- :: SrcLoc -> Name -> Exp -> Decl
+    metaFunction,   -- :: String -> [Exp] -> Exp
+    metaConPat      -- :: String -> [Pat] -> Pat
   ) where
 
 import Language.Haskell.Exts.Syntax
@@ -70,166 +70,166 @@ import Language.Haskell.Exts.Syntax
 -----------------------------------------------------------------------------
 -- Help functions for Abstract syntax 
 
-name :: String -> HsName
-name = HsIdent
+name :: String -> Name
+name = Ident
 
-sym :: String -> HsName
-sym = HsSymbol
+sym :: String -> Name
+sym = Symbol
 
-var :: HsName -> HsExp
-var = HsVar . UnQual
+var :: Name -> Exp
+var = Var . UnQual
 
-op :: HsName -> HsQOp
-op = HsQVarOp . UnQual
+op :: Name -> QOp
+op = QVarOp . UnQual
 
-qvar :: Module -> HsName -> HsExp
-qvar m n = HsVar $ Qual m n
+qvar :: ModuleName -> Name -> Exp
+qvar m n = Var $ Qual m n
 
-pvar :: HsName -> HsPat
-pvar = HsPVar
+pvar :: Name -> Pat
+pvar = PVar
 
-app :: HsExp -> HsExp -> HsExp
-app = HsApp
+app :: Exp -> Exp -> Exp
+app = App
 
-infixApp :: HsExp -> HsQOp -> HsExp -> HsExp
-infixApp = HsInfixApp
+infixApp :: Exp -> QOp -> Exp -> Exp
+infixApp = InfixApp
 
-appFun :: HsExp -> [HsExp] -> HsExp
+appFun :: Exp -> [Exp] -> Exp
 appFun f [] = f
 appFun f (a:as) = appFun (app f a) as
 
-pApp :: HsName -> [HsPat] -> HsPat
-pApp n ps = HsPApp (UnQual n) ps
+pApp :: Name -> [Pat] -> Pat
+pApp n ps = PApp (UnQual n) ps
 
-tuple :: [HsExp] -> HsExp
-tuple = HsTuple
+tuple :: [Exp] -> Exp
+tuple = Tuple
 
-pTuple :: [HsPat] -> HsPat
-pTuple = HsPTuple
+pTuple :: [Pat] -> Pat
+pTuple = PTuple
 
-varTuple :: [HsName] -> HsExp
+varTuple :: [Name] -> Exp
 varTuple ns = tuple $ map var ns
 
-pvarTuple :: [HsName] -> HsPat
+pvarTuple :: [Name] -> Pat
 pvarTuple ns = pTuple $ map pvar ns
 
-function :: String -> HsExp
-function = var . HsIdent
+function :: String -> Exp
+function = var . Ident
 
-strE :: String -> HsExp
-strE = HsLit . HsString
+strE :: String -> Exp
+strE = Lit . String
 
-charE :: Char -> HsExp
-charE = HsLit . HsChar
+charE :: Char -> Exp
+charE = Lit . Char
 
-intE :: Integer -> HsExp
-intE = HsLit . HsInt
+intE :: Integer -> Exp
+intE = Lit . Int
 
-strP :: String -> HsPat
-strP = HsPLit . HsString
+strP :: String -> Pat
+strP = PLit . String
 
-charP :: Char -> HsPat
-charP = HsPLit . HsChar
+charP :: Char -> Pat
+charP = PLit . Char
 
-intP :: Integer -> HsPat
-intP = HsPLit . HsInt
+intP :: Integer -> Pat
+intP = PLit . Int
 
-doE :: [HsStmt] -> HsExp
-doE = HsDo
+doE :: [Stmt] -> Exp
+doE = Do
 
-lamE :: SrcLoc -> [HsPat] -> HsExp -> HsExp
-lamE = HsLambda
+lamE :: SrcLoc -> [Pat] -> Exp -> Exp
+lamE = Lambda
 
-letE :: [HsDecl] -> HsExp -> HsExp
-letE ds e = HsLet (binds ds) e
+letE :: [Decl] -> Exp -> Exp
+letE ds e = Let (binds ds) e
 
-caseE :: HsExp -> [HsAlt] -> HsExp
-caseE = HsCase
+caseE :: Exp -> [Alt] -> Exp
+caseE = Case
 
-alt :: SrcLoc -> HsPat -> HsExp -> HsAlt
-alt s p e = HsAlt s p (HsUnGuardedAlt e) noBinds
+alt :: SrcLoc -> Pat -> Exp -> Alt
+alt s p e = Alt s p (UnGuardedAlt e) noBinds
 
-altGW :: SrcLoc -> HsPat -> [HsStmt] -> HsExp -> HsBinds -> HsAlt
-altGW s p gs e w = HsAlt s p (gAlt s gs e) w
+altGW :: SrcLoc -> Pat -> [Stmt] -> Exp -> Binds -> Alt
+altGW s p gs e w = Alt s p (gAlt s gs e) w
 
-unGAlt :: HsExp -> HsGuardedAlts
-unGAlt = HsUnGuardedAlt
+unGAlt :: Exp -> GuardedAlts
+unGAlt = UnGuardedAlt
 
-gAlts :: SrcLoc -> [([HsStmt],HsExp)] -> HsGuardedAlts
-gAlts s as = HsGuardedAlts $ map (\(gs,e) -> HsGuardedAlt s gs e) as
+gAlts :: SrcLoc -> [([Stmt],Exp)] -> GuardedAlts
+gAlts s as = GuardedAlts $ map (\(gs,e) -> GuardedAlt s gs e) as
 
-gAlt :: SrcLoc -> [HsStmt] -> HsExp -> HsGuardedAlts
+gAlt :: SrcLoc -> [Stmt] -> Exp -> GuardedAlts
 gAlt s gs e = gAlts s [(gs,e)]
 
-listE :: [HsExp] -> HsExp
-listE = HsList
+listE :: [Exp] -> Exp
+listE = List
 
-eList :: HsExp
-eList = HsList []
+eList :: Exp
+eList = List []
 
-peList :: HsPat
-peList = HsPList []
+peList :: Pat
+peList = PList []
 
-paren :: HsExp -> HsExp
-paren = HsParen
+paren :: Exp -> Exp
+paren = Paren
 
-pParen :: HsPat -> HsPat
-pParen = HsPParen
+pParen :: Pat -> Pat
+pParen = PParen
 
-qualStmt :: HsExp -> HsStmt
-qualStmt = HsQualifier
+qualStmt :: Exp -> Stmt
+qualStmt = Qualifier
 
-genStmt :: SrcLoc -> HsPat -> HsExp -> HsStmt
-genStmt = HsGenerator
+genStmt :: SrcLoc -> Pat -> Exp -> Stmt
+genStmt = Generator
 
-letStmt :: [HsDecl] -> HsStmt
-letStmt ds = HsLetStmt $ binds ds
+letStmt :: [Decl] -> Stmt
+letStmt ds = LetStmt $ binds ds
 
-binds :: [HsDecl] -> HsBinds
-binds = HsBDecls
+binds :: [Decl] -> Binds
+binds = BDecls
 
-noBinds :: HsBinds
+noBinds :: Binds
 noBinds = binds []
 
-wildcard :: HsPat
-wildcard = HsPWildCard
+wildcard :: Pat
+wildcard = PWildCard
 
-genNames :: String -> Int -> [HsName]
-genNames s k = [ HsIdent $ s ++ show i | i <- [1..k] ]
+genNames :: String -> Int -> [Name]
+genNames s k = [ Ident $ s ++ show i | i <- [1..k] ]
 
 -------------------------------------------------------------------------------
 -- Some more specialised help functions 
 
 -- | A function with a single "match"
-sfun :: SrcLoc -> HsName -> [HsName] -> HsRhs -> HsBinds -> HsDecl
-sfun s f pvs rhs bs = HsFunBind [HsMatch s f (map pvar pvs) rhs bs]
+sfun :: SrcLoc -> Name -> [Name] -> Rhs -> Binds -> Decl
+sfun s f pvs rhs bs = FunBind [Match s f (map pvar pvs) rhs bs]
 
 -- | A function with a single "match", a single argument, no guards
 -- and no where declarations
-simpleFun :: SrcLoc -> HsName -> HsName -> HsExp -> HsDecl
-simpleFun s f a e = let rhs = HsUnGuardedRhs e
-		     in sfun s f [a] rhs noBinds
+simpleFun :: SrcLoc -> Name -> Name -> Exp -> Decl
+simpleFun s f a e = let rhs = UnGuardedRhs e
+             in sfun s f [a] rhs noBinds
 
 -- | A pattern bind where the pattern is a variable, and where
 -- there are no guards and no 'where' clause.
-patBind :: SrcLoc -> HsPat -> HsExp -> HsDecl
-patBind s p e = let rhs = HsUnGuardedRhs e
-		 in HsPatBind s p rhs noBinds
+patBind :: SrcLoc -> Pat -> Exp -> Decl
+patBind s p e = let rhs = UnGuardedRhs e
+         in PatBind s p rhs noBinds
 
-patBindWhere :: SrcLoc -> HsPat -> HsExp -> [HsDecl] -> HsDecl
-patBindWhere s p e ds = let rhs = HsUnGuardedRhs e
-			 in HsPatBind s p rhs (binds ds)
+patBindWhere :: SrcLoc -> Pat -> Exp -> [Decl] -> Decl
+patBindWhere s p e ds = let rhs = UnGuardedRhs e
+             in PatBind s p rhs (binds ds)
 
-nameBind :: SrcLoc -> HsName -> HsExp -> HsDecl
+nameBind :: SrcLoc -> Name -> Exp -> Decl
 nameBind s n e = patBind s (pvar n) e
 
 -- meta-level functions, i.e. functions that represent functions, 
 -- and that take arguments representing arguments... whew!
-metaFunction :: String -> [HsExp] -> HsExp
+metaFunction :: String -> [Exp] -> Exp
 metaFunction s es = mf s (reverse es)
   where mf s []     = var $ name s
-	mf s (e:es) = app (mf s es) e
+        mf s (e:es) = app (mf s es) e
 
 
-metaConPat :: String -> [HsPat] -> HsPat
+metaConPat :: String -> [Pat] -> Pat
 metaConPat s ps = pApp (name s) ps
