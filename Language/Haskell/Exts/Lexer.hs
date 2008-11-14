@@ -105,7 +105,7 @@ data Token
         | XStdTagClose      -- >
         | XCloseTagOpen     -- </
         | XEmptyTagClose    -- />
-        | XPcdata String
+        | XPCDATA String
         | XRPatOpen             -- <[
         | XRPatClose            -- ]>
 
@@ -256,7 +256,7 @@ lexer = runL $ do
     case ec of
      -- if there was no linebreak, and we are lexing PCDATA,
      -- then we want to care about the whitespace
-     Just ChildCtxt | not bol && ws -> return $ XPcdata " "
+     Just ChildCtxt | not bol && ws -> return $ XPCDATA " "
      _ -> do startToken
              if bol then lexBOL else lexToken 
 
@@ -369,21 +369,21 @@ lexPCDATA = do
             '\n':_ -> do
                 x <- lexNewline >> lexPCDATA
                 case x of
-                 XPcdata p -> return $ XPcdata $ '\n':p
+                 XPCDATA p -> return $ XPCDATA $ '\n':p
                  EOF -> return EOF
-            '<':_ -> return $ XPcdata ""
-  --          '[':'/':_ -> return $ XPcdata ""
+            '<':_ -> return $ XPCDATA ""
+  --          '[':'/':_ -> return $ XPCDATA ""
   --          '[':s' -> do discard 1
   --                       pcd <- lexPCDATA
   --                       case pcd of
-  --                        XPcdata pcd' -> return $ XPcdata $ '[':pcd'
+  --                        XPCDATA pcd' -> return $ XPCDATA $ '[':pcd'
   --                        EOF -> return EOF
             _ -> do let pcd = takeWhile (\c -> not $ elem c "<\n") s
                         l = length pcd
                     discard l
                     x <- lexPCDATA
                     case x of
-                     XPcdata pcd' -> return $ XPcdata $ pcd ++ pcd'
+                     XPCDATA pcd' -> return $ XPCDATA $ pcd ++ pcd'
                      EOF -> return EOF
 
 
