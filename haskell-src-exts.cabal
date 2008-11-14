@@ -18,9 +18,9 @@ Description:            Haskell-Source with Extensions (HSE, haskell-src-exts)
                         .
                         * GADTs
                         .
-                        * Implicit parameters (ghc and hugs style)
+                        * Implicit parameters
                         .
-                        * Template Haskell (now works with GHC 6.4+ syntax)
+                        * Template Haskell
                         .
                         and a few more. Apart from these standard extensions,
                         it also handles regular patterns as per the HaRP extension
