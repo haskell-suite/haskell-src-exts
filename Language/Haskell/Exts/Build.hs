@@ -12,6 +12,7 @@
 --
 -----------------------------------------------------------------------------
 
+-- This module badly needs Haddock documentation.
 module Language.Haskell.Exts.Build (
 
     -- * Syntax building functions
