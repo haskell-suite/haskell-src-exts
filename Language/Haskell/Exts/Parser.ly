@@ -848,8 +848,8 @@ An implicit parameter can be used as an expression.
 >       | qvar                          { Var $1 }
 >       | gcon                          { $1 }
 >       | literal                       { Lit $1 }
->       | '(' exp ')'                   { Paren $2 }
->       | '(' texps ')'                 { Tuple (reverse $2) }
+>       | '(' texp ')'                  { Paren $2 }
+>       | '(' texp ',' texps ')'        { Tuple ($2 : reverse $4) }
 >       | '[' list ']'                  { $2 }
 We parse left sections as PostOp instead, and post-mangle them, see above
         | '(' exp0b rqop ')'            { LeftSection $2 $3  } 
@@ -879,8 +879,12 @@ End Template Haskell
 >       | ','                           { 1 }
 
 > texps :: { [PExp] }
->       : texps ',' exp                 { $3 : $1 }
->       | exp ',' exp                   { [$3,$1] }
+>       : texps ',' texp                { $3 : $1 }
+>       | texp                          { [$1] }
+
+> texp :: { PExp }
+>       : exp                           { $1 }
+>       | exp '->' exp                  { ViewPat $1 $3 }
 
 -----------------------------------------------------------------------------
 Harp Extensions
@@ -947,17 +951,17 @@ The rules below are little bit contorted to keep lexps left-recursive while
 avoiding another shift/reduce-conflict.
 
 > list :: { PExp }
->       : exp                           { List [$1] }
+>       : texp                          { List [$1] }
 >       | lexps                         { List (reverse $1) }
->       | exp '..'                      { EnumFrom $1 }
->       | exp ',' exp '..'              { EnumFromThen $1 $3 }
->       | exp '..' exp                  { EnumFromTo $1 $3 }
->       | exp ',' exp '..' exp          { EnumFromThenTo $1 $3 $5 }
->       | exp '|' quals                 { ListComp $1 (reverse $3) }
+>       | texp '..'                     { EnumFrom $1 }
+>       | texp ',' exp '..'             { EnumFromThen $1 $3 }
+>       | texp '..' exp                 { EnumFromTo $1 $3 }
+>       | texp ',' exp '..' exp         { EnumFromThenTo $1 $3 $5 }
+>       | texp '|' quals                { ListComp $1 (reverse $3) }
 
 > lexps :: { [PExp] }
->       : lexps ',' exp                 { $3 : $1 }
->       | exp ',' exp                   { [$3,$1] }
+>       : lexps ',' texp                { $3 : $1 }
+>       | texp ',' texp                 { [$3,$1] }
 
 -----------------------------------------------------------------------------
 List comprehensions

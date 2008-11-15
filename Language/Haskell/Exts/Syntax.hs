@@ -675,6 +675,7 @@ data Pat
     | PIrrPat Pat               -- ^ irrefutable pattern (@~@)
     | PatTypeSig SrcLoc Pat Type
                                     -- ^ pattern type signature
+    | PViewPat Exp Pat          -- ^ view patterns of the form (e -> p)
 -- HaRP
     | PRPat [RPat]              -- ^ regular pattern (HaRP)
 -- Hsx
