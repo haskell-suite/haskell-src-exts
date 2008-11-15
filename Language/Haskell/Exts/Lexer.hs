@@ -88,16 +88,11 @@ data Token
         | THVarQuote        -- 'x (but without the x)
         | THTyQuote         -- ''T (but without the T)
 
---        | THReifyType
---        | THReifyDecl
---        | THReifyFixity
-
 -- HaRP
---        | RPSeqOpen         -- (/
---        | RPSeqClose        -- /)
         | RPGuardOpen       -- (|
         | RPGuardClose      -- |)
         | RPCAt             -- @:
+
 -- Hsx
         | XCodeTagOpen      -- <%
         | XCodeTagClose     -- %>
@@ -117,7 +112,6 @@ data Token
         | KW_Data
         | KW_Default
         | KW_Deriving
-        | KW_DLet       -- implictit parameter binding
         | KW_Do
         | KW_MDo
         | KW_Else
@@ -138,7 +132,6 @@ data Token
         | KW_Then
         | KW_Type
         | KW_Where
-        | KW_With       -- implicit parameter binding
         | KW_Qualified
 
                 -- FFI
@@ -184,7 +177,6 @@ reserved_ids = [
  ( "data",      KW_Data ),
  ( "default",   KW_Default ),
  ( "deriving",  KW_Deriving ),
--- ( "dlet",      KW_DLet ),      -- implicit parameters (hugs), no longer supported in 0.3.11
  ( "do",        KW_Do ),
  ( "else",      KW_Else ),
  ( "family",    KW_Family ),        -- indexed type families
@@ -204,13 +196,6 @@ reserved_ids = [
  ( "then",      KW_Then ),
  ( "type",      KW_Type ),
  ( "where",     KW_Where ),
--- ( "with",      KW_With ),      -- implicit parameters in Hugs, no longer supported in 0.3.11
-
-{-- Template Haskell
- ( "reifyDecl", THReifyDecl ),
- ( "reifyType", THReifyType ),
- ( "reifyFixity", THReifyFixity ),
---}
 
 -- FFI
  ( "foreign",   KW_Foreign )
@@ -235,7 +220,6 @@ special_varids = [
 isIdent, isHSymbol :: Char -> Bool
 isIdent   c = isAlpha c || isDigit c || c == '\'' || c == '_'
 
---isHSymbol c = elem c ":!#$%&*+./<=>?@\\^|-~"
 isHSymbol c = c `elem` ":!#%&*./?@\\-" || ((isSymbol c || isPunctuation c) && not (c `elem` "(),;[]`{}_\"'"))
 
 matchChar :: Char -> String -> Lex a ()
@@ -372,12 +356,6 @@ lexPCDATA = do
                  XPCDATA p -> return $ XPCDATA $ '\n':p
                  EOF -> return EOF
             '<':_ -> return $ XPCDATA ""
-  --          '[':'/':_ -> return $ XPCDATA ""
-  --          '[':s' -> do discard 1
-  --                       pcd <- lexPCDATA
-  --                       case pcd of
-  --                        XPCDATA pcd' -> return $ XPCDATA $ '[':pcd'
-  --                        EOF -> return EOF
             _ -> do let pcd = takeWhile (\c -> not $ elem c "<\n") s
                         l = length pcd
                     discard l
@@ -422,32 +400,9 @@ lexHarpToken :: Lex a Token
 lexHarpToken = do
     s <- getInput
     case s of
-{-        '[':'/':_ -> do discard 2
-                        pushExtContextL HarpCtxt
-                        return RPOpen -}
         ']':'>':_ -> do discard 2
                         popExtContextL "lexHarpToken"
                         return XRPatClose
-{-        '(':'/':_ -> do discard 2
-                        return RPSeqOpen
-        '/':')':_ -> do discard 2
-                        return RPSeqClose
-        '*':'!':_ -> do discard 2
-                        return RPStarG
-        '*':_     -> do discard 1
-                        return RPStar
-        '+':'!':_ -> do discard 2
-                        return RPPlusG
-        '+':_     -> do discard 1
-                        return RPPlus
-        '|':_     -> do discard 1
-                        return RPEither
-        '?':'!':_ -> do discard 2
-                        return RPOptG
-        '?':_     -> do discard 1
-                        return RPOpt
-        '@':':':_ -> do discard 2
-                        return RPCAt -}
         _     -> lexStdToken
 
 lexStdToken :: Lex a Token
@@ -478,10 +433,6 @@ lexStdToken = do
         -- end implicit parameters
 
         -- harp
---        '(':'/':_ -> do discard 2
---                        return RPSeqOpen
---        '/':')':_ -> do discard 2
---                        return RPSeqClose
         '(':'|':c:_  | isHSymbol c -> discard 1 >> return LeftParen
         '(':'|':_ -> do discard 2
                         return RPGuardOpen
@@ -691,16 +642,6 @@ lexCharacter = do   -- We need to keep track of not only character constants but
 
     where matchQuote = matchChar '\'' "Improperly terminated character constant"
 
-
-{-
-lexChar :: Lex a Char
-lexChar = do
-    r <- getInput
-    case r of
-        '\\':_  -> lexEscape
-        c:_ -> discard 1 >> return c
-        []  -> fail "Incomplete character constant"
--}
 
 lexString :: Lex a Token
 lexString = loop ""
