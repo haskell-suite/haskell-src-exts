@@ -179,6 +179,10 @@ checkPat e [] = case e of
     IrrPat e     -> do
                   p <- checkPat e []
                   return (PIrrPat p)
+    ViewPat e p  -> do
+                  e <- checkExpr e
+                  p <- checkPat p []
+                  return (PViewPat e p)
     RecConstr c fs   -> do
                   fs <- mapM checkPatField fs
                   return (PRec c fs)
@@ -682,6 +686,9 @@ data PExp
 
 -- Post-ops for parsing left sections and regular patterns. Not to be left in the final tree.
     | PostOp PExp QOp           -- ^ post-ops
+
+-- View patterns
+    | ViewPat PExp PExp         -- ^ patterns only
 
 -- HaRP
     | SeqRP [PExp]              -- ^ regular patterns only

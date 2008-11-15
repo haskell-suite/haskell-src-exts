@@ -788,7 +788,8 @@ instance Pretty Pat where
         prettyPrec _ (PIrrPat pat) = char '~' <> pretty pat
         prettyPrec _ (PatTypeSig _pos pat ty) =
                 myFsep [pretty pat, text "::", pretty ty]
-
+        prettyPrec _ (PViewPat e p) =
+                myFsep [pretty e, text "->", pretty p]
         -- HaRP
         prettyPrec _ (PRPat rs) = 
                 bracketList . punctuate comma . map pretty $ rs
