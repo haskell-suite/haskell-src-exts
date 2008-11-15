@@ -22,14 +22,14 @@ module Language.Haskell.Exts.Build (
     qvar,       -- :: Module -> Name -> Exp
     pvar,       -- :: Name -> Pat
     app,        -- :: Exp -> Exp -> Exp
-    infixApp,       -- :: Exp -> QOp -> Exp -> Exp
+    infixApp,   -- :: Exp -> QOp -> Exp -> Exp
     appFun,     -- :: Exp -> [Exp] -> Exp
     pApp,       -- :: Name -> [Pat] -> Pat
     tuple,      -- :: [Exp] -> Exp
     pTuple,     -- :: [Pat] -> Pat
-    varTuple,       -- :: [Name] -> Exp
-    pvarTuple,      -- :: [Name] -> Pat
-    function,       -- :: String -> Exp
+    varTuple,   -- :: [Name] -> Exp
+    pvarTuple,  -- :: [Name] -> Pat
+    function,   -- :: String -> Exp
     strE,       -- :: String -> Exp
     charE,      -- :: Char -> Exp
     intE,       -- :: Integer -> Exp
@@ -47,16 +47,16 @@ module Language.Haskell.Exts.Build (
     peList,     -- :: Pat
     paren,      -- :: Exp -> Exp
     pParen,     -- :: Pat -> Pat
-    qualStmt,       -- :: Exp -> Stmt
-    genStmt,        -- :: SrcLoc -> Pat -> Exp -> Stmt
-    letStmt,        -- :: [Decl] -> Stmt
+    qualStmt,   -- :: Exp -> Stmt
+    genStmt,    -- :: SrcLoc -> Pat -> Exp -> Stmt
+    letStmt,    -- :: [Decl] -> Stmt
     binds,      -- :: [Decl] -> Binds
-    noBinds,        -- :: Binds
-    wildcard,       -- :: Pat
-    genNames,       -- :: String -> Int -> [Name]
+    noBinds,    -- :: Binds
+    wildcard,   -- :: Pat
+    genNames,   -- :: String -> Int -> [Name]
     
     -- * More advanced building
-    sfun,       -- :: SrcLoc -> Name -> [Name] -> Rhs -> Binds -> Decl
+    sfun,           -- :: SrcLoc -> Name -> [Name] -> Rhs -> Binds -> Decl
     simpleFun,      -- :: SrcLoc -> Name -> Name -> Exp -> Decl
     patBind,        -- :: SrcLoc -> Pat -> Exp -> Decl
     patBindWhere,   -- :: SrcLoc -> Pat -> Exp -> [Decl] -> Decl

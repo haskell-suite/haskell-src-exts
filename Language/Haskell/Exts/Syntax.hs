@@ -527,7 +527,7 @@ data Literal
 -- * The parser does not take precedence and associativity into account,
 --   so it will leave 'InfixApp's associated to the left.
 --
--- * The 'Language.Haskell.Pretty.Pretty' instance for 'Exp' does not
+-- * The 'Language.Haskell.Exts.Pretty.Pretty' instance for 'Exp' does not
 --   add parentheses in printing.
 
 data Exp
@@ -540,8 +540,6 @@ data Exp
     | NegApp Exp                -- ^ negation expression @-@ /exp/
     | Lambda SrcLoc [Pat] Exp -- ^ lambda expression
     | Let Binds Exp           -- ^ local declarations with @let@
---    | DLet [IPBind] Exp       -- ^ local declarations of implicit parameters (hugs)
---    | With Exp [IPBind]       -- ^ local declarations of implicit parameters
     | If Exp Exp Exp        -- ^ @if@ /exp/ @then@ /exp/ @else@ /exp/
     | Case Exp [Alt]          -- ^ @case@ /exp/ @of@ /alts/
     | Do [Stmt]                 -- ^ @do@-expression:
@@ -569,10 +567,11 @@ data Exp
     | ListComp Exp [Stmt]     -- ^ list comprehension
     | ExpTypeSig SrcLoc Exp Type
                                     -- ^ expression type signature
-    | AsPat Name Exp          -- ^ patterns only
-    | WildCard                    -- ^ patterns only
-    | IrrPat Exp                -- ^ patterns only
+--    | AsPat Name Exp          -- ^ patterns only
+--    | WildCard                    -- ^ patterns only
+--    | IrrPat Exp                -- ^ patterns only
 
+{-
 -- Post-ops for parsing left sections and regular patterns. Not to be left in the final tree.
     | PostOp Exp QOp          -- ^ post-ops
 
@@ -581,9 +580,8 @@ data Exp
     | GuardRP Exp [Stmt]      -- ^ regular patterns only
     | EitherRP Exp Exp        -- ^ regular patterns only
     | CAsRP Name Exp          -- ^ regular patterns only
-    
+-}    
 -- Template Haskell
---    | ReifyExp Reify
     | VarQuote QName            -- ^ 'x
     | TypQuote QName            -- ^ ''T
     | BracketExp Bracket
@@ -594,7 +592,7 @@ data Exp
     | XETag SrcLoc XName [XAttr] (Maybe Exp)
     | XPcdata String
     | XExpTag Exp
-    | XRPats [Exp]
+--    | XRPats [Exp]
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -602,8 +600,8 @@ data Exp
 #endif
 
 data XName 
-    = XName String        -- <name ...
-    | XDomName String String  -- <dom:name ...
+    = XName String              -- <name ...
+    | XDomName String String    -- <dom:name ...
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -617,18 +615,6 @@ data XAttr = XAttr XName Exp
   deriving (Eq,Show)
 #endif
 
-{-
-data HsReify 
-    = HsReifyType HsQName
-    | HsReifyDecl HsQName
-    | HsReifyFixity HsQName
-#ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
-#else
-  deriving (Eq,Show)
-#endif
--}
- 
 data Bracket
     = ExpBracket Exp
     | PatBracket Pat

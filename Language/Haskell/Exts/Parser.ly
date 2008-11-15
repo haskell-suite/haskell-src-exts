@@ -18,7 +18,8 @@
 >               parseModule, parseModuleWithMode,
 >               ParseMode(..), defaultParseMode, ParseResult(..)) where
 > 
-> import Language.Haskell.Exts.Syntax
+> import Language.Haskell.Exts.Syntax hiding ( Exp(..), XAttr(..), FieldUpdate(..) )
+> import Language.Haskell.Exts.Syntax ( Exp )
 > import Language.Haskell.Exts.ParseMonad
 > import Language.Haskell.Exts.Lexer
 > import Language.Haskell.Exts.ParseUtils
@@ -120,8 +121,6 @@ Reserved operators
 
 Harp
 
-       '(/'    { RPSeqOpen }
-       '/)'    { RPSeqClose }
 >       '(|'    { RPGuardOpen }
 >       '|)'    { RPGuardClose }
 >       '@:'    { RPCAt }
@@ -137,10 +136,6 @@ Template Haskell
 >       '|]'            { THCloseQuote }
 >       VARQUOTE        { THVarQuote }      -- 'x
 >       TYPQUOTE        { THTyQuote }       -- ''T
-
-       'reifyDecl'     { THReifyDecl }
-       'reifyType'     { THReifyType }
-       'reifyFixity'   { THReifyFixity }
 
 Hsx
 
@@ -172,7 +167,6 @@ Reserved Ids
 >       'data'          { KW_Data }
 >       'default'       { KW_Default }
 >       'deriving'      { KW_Deriving }
-       'dlet'          { KW_DLet }     -- implicit parameter binding clause, no longer supported from 0.3.11
 >       'do'            { KW_Do }
 >       'else'          { KW_Else }
 >       'family'        { KW_Family }   -- indexed type families
@@ -193,7 +187,6 @@ Reserved Ids
 >       'then'          { KW_Then }
 >       'type'          { KW_Type }
 >       'where'         { KW_Where }
-       'with'          { KW_With }     -- implicit parameter binding clause, no longer supported from 0.3.11
 >       'qualified'     { KW_Qualified }
 
 > %monad { P }
@@ -207,11 +200,11 @@ Reserved Ids
 HSP Pages
 
 > page :: { Module }
->       : topxml                                {% mkPageModule $1 }
->       | '<%' module '%>' srcloc topxml        {% mkPage $2 $4 $5 }
+>       : topxml                                {% checkExpr $1 >>= mkPageModule }
+>       | '<%' module '%>' srcloc topxml        {% checkExpr $5 >>= \x -> mkPage $2 $4 x }
 >       | module                                { $1 }
 
-> topxml :: { Exp }
+> topxml :: { PExp }
 >       : srcloc '<' name attrs mattr '>' children '</' name '>'        {% do { n <- checkEqNames $3 $9;
 >                                                                               let { cn = reverse $7;
 >                                                                                     as = reverse $4; };
@@ -396,9 +389,8 @@ shift/reduce-conflict, so we don't handle this case here, but in bodyaux.
 >                               return (DerivDecl $1 cs c ts) } }
 >       | srcloc 'default' '(' typelist ')'
 >                       { DefaultDecl $1 $4 }
->       | srcloc '$(' exp ')'
->                        {% do { e <- checkExpr $3;
->                                return $ SpliceDecl $1 $ ParenSplice e } }
+>       | srcloc '$(' trueexp ')'
+>                        { SpliceDecl $1 $ ParenSplice $3 }
 >
 >       | srcloc 'foreign' 'import' callconv safety fspec
 >                       { let (s,n,t) = $6 in ForImp $1 $4 $5 s n t }
@@ -547,9 +539,6 @@ C a, or (C1 a, C2 b, ... Cn z) and convert it into a context.  Blaach!
 > types1 :: { [Type] }
 >       : type                          { [$1] }
 >       | types1 ',' type               { $3 : $1 }
-
- simpletype :: { (Name, [Name]) }
-        : tycon tyvars                  { ($1,reverse $2) }
 
 > ktyvars :: { [TyVarBind] }
 >       : ktyvars ktyvar                { $2 : $1 }
@@ -754,8 +743,7 @@ May bind implicit parameters
 >       | {- empty -}                   { BDecls [] }
 
 > rhs   :: { Rhs }
->       : '=' exp                       {% do { e <- checkExpr $2;
->                                               return (UnGuardedRhs e) } }
+>       : '=' trueexp                   { UnGuardedRhs $2 }
 >       | gdrhs                         { GuardedRhss  (reverse $1) }
 
 > gdrhs :: { [GuardedRhs] }
@@ -764,8 +752,7 @@ May bind implicit parameters
 
 Guards may contain patterns, hence quals instead of exp.
 > gdrh :: { GuardedRhs }
->       : srcloc '|' quals '=' exp      {% do { e <- checkExpr $5;
->                                               return (GuardedRhs $1 (reverse $3) e) } }
+>       : srcloc '|' quals '=' trueexp  { GuardedRhs $1 (reverse $3) $5 }
 
 -----------------------------------------------------------------------------
 Expressions
@@ -779,41 +766,45 @@ conflicts, we split exp10 into these expressions (exp10a) and the others
 can followed by a type signature or infix application.  So we duplicate
 the exp0 productions to distinguish these from the others (exp0a).
 
-> exp   :: { Exp }
->       : exp0b '::' srcloc ctype       { ExpTypeSig $3 $1 $4 }
-       | exp0b 'with' ipbinding        { With $1 $3 }  -- implicit parameters (hugs), no longer supported
->       | exp0                          { $1 }
->       | exp0b qop                     { PostOp $1 $2 } -- for HaRP's sake
+Ugly: We need non-parenthesized post-operators for HaRP, and to parse both
+these and normal left sections, we parse both as PostOp and let the post pass
+mangle them into the correct form depending on context.
 
-> exp0 :: { Exp }
+> trueexp :: { Exp }
+>         : exp                 {% checkExpr $1 }
+
+> exp   :: { PExp }
+>       : exp0b '::' srcloc ctype       { ExpTypeSig $3 $1 $4 }
+>       | exp0                          { $1 }
+>       | exp0b qop                     { PostOp $1 $2 }
+
+> exp0 :: { PExp }
 >       : exp0a                         { $1 }
 >       | exp0b                         { $1 }
 
-> exp0a :: { Exp }
+> exp0a :: { PExp }
 >       : exp0b qop exp10a              { InfixApp $1 $2 $3 }
 >       | exp10a                        { $1 }
 
-> exp0b :: { Exp }
+> exp0b :: { PExp }
 >       : exp0b qop exp10b              { InfixApp $1 $2 $3 }
 >       | dvarexp                       { $1 }
 >       | exp10b                        { $1 }
 
-> exp10a :: { Exp }
+> exp10a :: { PExp }
 >       : '\\' srcloc apats '->' exp    { Lambda $2 (reverse $3) $5 }
 A let may bind implicit parameters
 >       | 'let' binds 'in' exp          { Let $2 $4 }
-       | 'dlet' ipbinding 'in' exp     { DLet $2 $4 } -- no longer supported
 >       | 'if' exp 'then' exp 'else' exp { If $2 $4 $6 }
 
-> exp10b :: { Exp }
+> exp10b :: { PExp }
 >       : 'case' exp 'of' altslist      { Case $2 $4 }
 >       | '-' fexp                      { NegApp $2 }
 >       | 'do' stmtlist                 { Do $2 }
 >       | 'mdo' stmtlist                { MDo $2 }
-       | reifyexp                      { ReifyExp $1 }
 >       | fexp                          { $1 }
 
-> fexp :: { Exp }
+> fexp :: { PExp }
 >       : fexp aexp                     { App $1 $2 }
 >       | aexp                          { $1 }
 
@@ -832,7 +823,7 @@ Even though the variable in an as-pattern cannot be qualified, we use
 qvar here to avoid a shift/reduce conflict, and then check it ourselves
 (as for vars above).
 
-> aexp  :: { Exp }
+> aexp  :: { PExp }
 >       : qvar '@' aexp                 {% do { n <- checkUnQual $1;
 >                                               return (AsPat n $3) } }
 >       | qvar '@:' aexp                {% do { n <- checkUnQual $1;
@@ -843,7 +834,7 @@ qvar here to avoid a shift/reduce conflict, and then check it ourselves
 Note: The first two alternatives of aexp1 are not necessarily record
 updates: they could be labeled constructions.
 
-> aexp1 :: { Exp }
+> aexp1 :: { PExp }
 >       : aexp1 '{' '}'                 {% mkRecConstrOrUpdate $1 [] }
 >       | aexp1 '{' fbinds '}'          {% mkRecConstrOrUpdate $1 (reverse $3) }
 >       | aexp2                         { $1 }
@@ -852,7 +843,7 @@ According to the Report, the left section (e op) is legal iff (e op x)
 parses equivalently to ((e) op x).  Thus e must be an exp0b.
 An implicit parameter can be used as an expression.
 
-> aexp2 :: { Exp }
+> aexp2 :: { PExp }
 >       : ivar                          { IPVar $1 }
 >       | qvar                          { Var $1 }
 >       | gcon                          { $1 }
@@ -860,7 +851,8 @@ An implicit parameter can be used as an expression.
 >       | '(' exp ')'                   { Paren $2 }
 >       | '(' texps ')'                 { Tuple (reverse $2) }
 >       | '[' list ']'                  { $2 }
-        | '(' exp0b rqop ')'            { LeftSection $2 $3  }
+We parse left sections as PostOp instead, and post-mangle them, see above
+        | '(' exp0b rqop ')'            { LeftSection $2 $3  } 
 >       | '(' qopm exp0 ')'             { RightSection $2 $3 }
 >       | '_'                           { WildCard }
 >       | '(' erpats ')'                { $2 }
@@ -870,10 +862,8 @@ An implicit parameter can be used as an expression.
 
 Template Haskell
 >       | IDSPLICE                      { SpliceExp $ IdSplice $1 }
->       | '$(' exp ')'                  {% do { e <- checkExpr $2;
->                                               return $ SpliceExp $ ParenSplice e } }
->       | '[|' exp '|]'                 {% do { e <- checkExpr $2;
->                                               return $ BracketExp $ ExpBracket e } }
+>       | '$(' trueexp ')'              { SpliceExp $ ParenSplice $2 }
+>       | '[|' trueexp '|]'             { BracketExp $ ExpBracket $2 }
 >       | '[p|' exp0 '|]'               {% do { p <- checkPattern $2;
 >                                               return $ BracketExp $ PatBracket p } }
 >       | '[t|' ctype '|]'              { BracketExp $ TypeBracket $2 }
@@ -882,44 +872,32 @@ Template Haskell
 >       | VARQUOTE qcon                 { VarQuote $2 }
 >       | TYPQUOTE tyvar                { TypQuote (UnQual $2) }
 >       | TYPQUOTE gtycon               { TypQuote $2 }
-
-
- reifyexp :: { Reify }
-       : 'reifyDecl' gtycon            { ReifyDecl $2 }
-       | 'reifyDecl' qvar              { ReifyDecl $2 }
-       | 'reifyType' qcname            { ReifyType $2 }
-       | 'reifyFixity' qcname          { ReifyFixity $2 }
-
-
- qcname :: { QName }
-       : qvar                          { $1 }
-       | gcon                          {% getGConName $1 }
 End Template Haskell
 
 > commas :: { Int }
 >       : commas ','                    { $1 + 1 }
 >       | ','                           { 1 }
 
-> texps :: { [Exp] }
+> texps :: { [PExp] }
 >       : texps ',' exp                 { $3 : $1 }
 >       | exp ',' exp                   { [$3,$1] }
 
 -----------------------------------------------------------------------------
 Harp Extensions
 
-> sexps :: { [Exp] }
+> sexps :: { [PExp] }
 >       : sexps ',' exp                 { $3 : $1 }
 >       | exp                           { [$1] }
 
 Either patterns are left associative
-> erpats :: { Exp }
+> erpats :: { PExp }
 >       : exp '|' erpats              { EitherRP $1 $3 }
 >       | exp '|' exp                 { EitherRP $1 $3 }
 
 -----------------------------------------------------------------------------
 Hsx Extensions
 
-> xml :: { Exp }
+> xml :: { PExp }
 >       : srcloc '<' name attrs mattr '>' children '</' name '>'        {% do { n <- checkEqNames $3 $9;
 >                                                                               let { cn = reverse $7;
 >                                                                                     as = reverse $4; };
@@ -927,11 +905,11 @@ Hsx Extensions
 >       | srcloc '<' name attrs mattr '/>'                              { XETag $1 $3 (reverse $4) $5 }
 >       | '<%' exp '%>'                                                 { XExpTag $2 }
 
-> children :: { [Exp] }
+> children :: { [PExp] }
 >       : children child                { $2 : $1 }
 >       | {- empty -}                   { [] }
 
-> child :: { Exp }
+> child :: { PExp }
 >       : PCDATA                        { XPcdata $1 }
 >       | '<[' sexps ']>'               { XRPats $ reverse $2 }
 >       | xml                           { $1 }
@@ -947,19 +925,19 @@ Hsx Extensions
 >       | 'type'                        { "type" }
 >       | 'class'                       { "class" }
 
-> attrs :: { [XAttr] }
+> attrs :: { [ParseXAttr] }
 >       : attrs attr                    { $2 : $1 }
 >       | {- empty -}                   { [] }
 
-> attr :: { XAttr }
+> attr :: { ParseXAttr }
 >       : name '=' aexp                 { XAttr $1 $3 }
 
-> mattr :: { Maybe Exp }
+> mattr :: { Maybe PExp }
 >       : aexp                          { Just $1 }
 >       | {-empty-}                     { Nothing }
 
 Turning dash variables into infix expressions with '-'
-> dvarexp :: { Exp }
+> dvarexp :: { PExp }
 >         : DVARID                      { mkDVarExpr $1 }
 
 -----------------------------------------------------------------------------
@@ -968,7 +946,7 @@ List expressions
 The rules below are little bit contorted to keep lexps left-recursive while
 avoiding another shift/reduce-conflict.
 
-> list :: { Exp }
+> list :: { PExp }
 >       : exp                           { List [$1] }
 >       | lexps                         { List (reverse $1) }
 >       | exp '..'                      { EnumFrom $1 }
@@ -977,23 +955,23 @@ avoiding another shift/reduce-conflict.
 >       | exp ',' exp '..' exp          { EnumFromThenTo $1 $3 $5 }
 >       | exp '|' quals                 { ListComp $1 (reverse $3) }
 
-> lexps :: { [Exp] }
+> lexps :: { [PExp] }
 >       : lexps ',' exp                 { $3 : $1 }
 >       | exp ',' exp                   { [$3,$1] }
 
 -----------------------------------------------------------------------------
 List comprehensions
 
-> quals :: { [Stmt] }
->       : quals1                        {% mapM checkStmt $1 }
+ quals :: { [Stmt] }
+       : quals1                        {% mapM checkStmt $1 }
 
-> quals1 :: { [Stmt] }
->       : quals1 ',' qual               { $3 : $1 }
+> quals :: { [Stmt] }
+>       : quals ',' qual                { $3 : $1 }
 >       | qual                          { [$1] }
 
 > qual  :: { Stmt }
->       : pat srcloc '<-' exp           { Generator $2 $1 $4 }
->       | exp                           { Qualifier $1 }
+>       : pat srcloc '<-' trueexp       { Generator $2 $1 $4 }
+>       | trueexp                       { Qualifier $1 }
 >       | 'let' binds                   { LetStmt $2 }
 
 -----------------------------------------------------------------------------
@@ -1014,7 +992,7 @@ Case alternatives
 >       : srcloc pat ralt optwhere      { Alt $1 $2 $3 $4 }
 
 > ralt :: { GuardedAlts }
->       : '->' exp                      { UnGuardedAlt $2 }
+>       : '->' trueexp                  { UnGuardedAlt $2 }
 >       | gdpats                        { GuardedAlts (reverse $1) }
 
 > gdpats :: { [GuardedAlt] }
@@ -1023,7 +1001,7 @@ Case alternatives
 
 A guard can be a pattern guard, hence quals instead of exp0.
 > gdpat :: { GuardedAlt }
->       : srcloc '|' quals '->' exp     { GuardedAlt $1 (reverse $3) $5 }
+>       : srcloc '|' quals '->' trueexp { GuardedAlt $1 (reverse $3) $5 }
 
 > pat :: { Pat }
 >       : exp0b                         {% checkPattern $1 }
@@ -1041,29 +1019,25 @@ an expression.
 
 A let statement may bind implicit parameters.
 > stmts :: { [Stmt] }
->       : 'let' binds ';' stmts         { LetStmt $2 : $4 }
->       | pat srcloc '<-' exp ';' stmts { Generator $2 $1 $4 : $6 }
->       | exp ';' stmts                 { Qualifier $1 : $3 }
->       | ';' stmts                     { $2 }
->       | exp ';'                       { [Qualifier $1] }
->       | exp                           { [Qualifier $1] }
+>       : 'let' binds ';' stmts             { LetStmt $2 : $4 }
+>       | pat srcloc '<-' trueexp ';' stmts { Generator $2 $1 $4 : $6 }
+>       | trueexp ';' stmts                 { Qualifier $1 : $3 }
+>       | ';' stmts                         { $2 }
+>       | trueexp ';'                       { [Qualifier $1] }
+>       | trueexp                           { [Qualifier $1] }
 
 -----------------------------------------------------------------------------
 Record Field Update/Construction
 
-> fbinds :: { [FieldUpdate] }
+> fbinds :: { [PFieldUpdate] }
 >       : fbinds ',' fbind              { $3 : $1 }
 >       | fbind                         { [$1] }
 
-> fbind :: { FieldUpdate }
+> fbind :: { PFieldUpdate }
 >       : qvar '=' exp                  { FieldUpdate $1 $3 }
 
 -----------------------------------------------------------------------------
 Implicit parameter bindings
-
- ipbinding :: { [IPBind] }
-       : '{' ipbinds '}'               { $2 }
-       | open ipbinds close            { $2 }
 
 > ipbinds :: { [IPBind] }
 >       : optsemis ipbinds1 optsemis    { reverse $2 }
@@ -1073,15 +1047,15 @@ Implicit parameter bindings
 >       | ipbind                        { [$1] }
 
 > ipbind :: { IPBind }
->       : srcloc ivar '=' exp           { IPBind $1 $2 $4 }
+>       : srcloc ivar '=' trueexp       { IPBind $1 $2 $4 }
 
 -----------------------------------------------------------------------------
 Variables, Constructors and Operators.
 
-> gcon :: { Exp }
->       : '(' ')'               { unit_con }
+> gcon :: { PExp }
+>       : '(' ')'               { p_unit_con }
 >       | '[' ']'               { List [] }
->       | '(' commas ')'        { tuple_con $2 }
+>       | '(' commas ')'        { p_tuple_con $2 }
 >       | qcon                  { Con $1 }
 
 > var   :: { Name }

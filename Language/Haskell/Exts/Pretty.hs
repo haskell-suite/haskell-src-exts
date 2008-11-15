@@ -368,14 +368,6 @@ instance Pretty Decl where
                         ++ ppOptKind optkind ++ [text "where"])
                         $$$ ppBody classIndent (map pretty gadtList)
 
-
-{-        pretty (NewTypeDecl pos context name nameList constr derives) =
-                blankline $
-                markLine pos $
-                mySep ( [text "newtype", ppContext context, pretty name]
-                        ++ map pretty nameList)
-                        <+> equals <+> (pretty constr $$$ ppDeriving derives)
--}
         --m{spacing=False}
         -- special case for empty class declaration
         pretty (ClassDecl pos context name nameList fundeps []) =
@@ -559,11 +551,6 @@ ppDeriving [d] = text "deriving" <+> ppQName d
 ppDeriving ds  = text "deriving" <+> parenList (map ppQName ds)
 
 ------------------------- Types -------------------------
-{-
-instance Pretty QualType where
-        pretty (QualType context htype) =
-                myFsep [ppContext context, pretty htype]
--}
 ppBType :: Type -> Doc
 ppBType = prettyPrec prec_btype
 
@@ -663,13 +650,6 @@ instance Pretty Exp where
         pretty (Let (IPBinds bindList) letBody) =
                 ppLetExp bindList letBody
 
-{-  No longer supported.
-        pretty (DLet bindList letBody) =
-                myFsep [text "dlet" <+> ppBody letIndent (map pretty bindList),
-                        text "in", pretty letBody]
-        pretty (With exp bindList) =
-                pretty exp $$$ ppWith bindList 
--}
         pretty (If cond thenexp elsexp) =
                 myFsep [text "if", pretty cond,
                         text "then", pretty thenexp,
@@ -696,11 +676,12 @@ instance Pretty Exp where
                 pretty e <> (braceList . map pretty $ fieldList)
         -- patterns
         -- special case that would otherwise be buggy
-        pretty (AsPat name (IrrPat e)) =
+{-        pretty (AsPat name (IrrPat e)) =
                 myFsep [pretty name <> char '@', char '~' <> pretty e]
         pretty (AsPat name e) = hcat [pretty name, char '@', pretty e]
         pretty WildCard = char '_'
         pretty (IrrPat e) = char '~' <> pretty e
+-}
         -- Lists
         pretty (List list) =
                 bracketList . punctuate comma . map pretty $ list
@@ -719,12 +700,11 @@ instance Pretty Exp where
         pretty (ExpTypeSig _pos e ty) =
                 myFsep [pretty e, text "::", pretty ty]
         -- Template Haskell
---        pretty (ReifyExp r) = pretty r
         pretty (BracketExp b) = pretty b
         pretty (SpliceExp s) = pretty s
         pretty (TypQuote t)  = text "\'\'" <> pretty t
         pretty (VarQuote x)  = text "\'" <> pretty x
-        -- regular patterns
+{-        -- regular patterns
         pretty (SeqRP rs) =
                 myFsep $ text "(/" : map pretty rs ++ [text "/)"]
         pretty (EitherRP r1 r2) = parens . myFsep $
@@ -735,6 +715,7 @@ instance Pretty Exp where
         pretty (CAsRP n (IrrPat e)) =
                 myFsep [pretty n <> text "@:", char '~' <> pretty e]
         pretty (CAsRP n r) = hcat [pretty n, text "@:", pretty r]
+-}
         -- Hsx
         pretty (XTag _ n attrs mattr cs) =
                 let ax = maybe [] (return . pretty) mattr
@@ -747,8 +728,9 @@ instance Pretty Exp where
         pretty (XPcdata s) = text s
         pretty (XExpTag e) =
                 myFsep $ [text "<%", pretty e, text "%>"]
-        pretty (XRPats es) =
+{-        pretty (XRPats es) =
                 myFsep $ text "<[" : map pretty es ++ [text "]>"]
+-}
 
 instance Pretty XAttr where
         pretty (XAttr n v) =
@@ -766,14 +748,6 @@ ppWith binds = nest 2 (text "with" $$$ ppBody withIndent (map pretty binds))
 withIndent = whereIndent
 
 --------------------- Template Haskell -------------------------
-{-
-instance Pretty Reify where
-        pretty (ReifyDecl name) = ppReify "reifyDecl" name
-        pretty (ReifyType name) = ppReify "reifyType" name
-        pretty (ReifyFixity name) = ppReify "reifyFixity" name
-
-ppReify t n = myFsep [text t, pretty n]
---}
 
 instance Pretty Bracket where
         pretty (ExpBracket e) = ppBracket "[|" e
@@ -818,7 +792,7 @@ instance Pretty Pat where
         -- HaRP
         prettyPrec _ (PRPat rs) = 
                 bracketList . punctuate comma . map pretty $ rs
-        -- x
+        -- Hsx
         prettyPrec _ (PXTag _ n attrs mattr cp) =
             let ap = maybe [] (return . pretty) mattr
              in hcat $ -- TODO: should not introduce blanks
@@ -832,23 +806,6 @@ instance Pretty Pat where
                 myFsep $ [text "<%", pretty p, text "%>"]
         prettyPrec _ (PXRPats ps) =
                 myFsep $ text "<[" : map pretty ps ++ [text "%>"]
-
-{-
-prettyChildren :: Pat -> [Doc]
-prettyChildren p = case p of
-        PList ps  -> map prettyChild ps
-        PRPat _ _ -> [pretty p]
-        _           -> error "The pattern representing the children of an xml pattern \
-                                \ should always be a list."
-
-prettyChild :: Pat -> Doc
-prettyChild p = case p of
-        PXTag _ _ _ _ _ -> pretty p
-        PXETag _ _ _ _  -> pretty p
-        PXPatTag _      -> pretty p
-        PXPcdata _      -> pretty p
-        _                 -> pretty $ PXPatTag p
--}
 
 instance Pretty PXAttr where
         pretty (PXAttr n p) =

@@ -16,39 +16,45 @@
 -----------------------------------------------------------------------------
 
 module Language.Haskell.Exts.ParseUtils (
-      splitTyConApp     -- Type -> P (Name,[Type])
-    , mkRecConstrOrUpdate   -- Exp -> [FieldUpdate] -> P Exp
-    , checkPrec         -- Integer -> P Int
-    , checkContext      -- Type -> P Context
-    , checkAssertion    -- Type -> P Asst
-    , checkDataHeader   -- Type -> P (Context,Name,[Name])
-    , checkClassHeader  -- Type -> P (Context,Name,[Name])
-    , checkInstHeader   -- Type -> P (Context,QName,[Type])
-    , checkPattern      -- Exp -> P Pat
-    , checkExpr         -- Exp -> P Exp
-    , checkStmt         -- Stmt -> P Stmt
-    , checkValDef       -- SrcLoc -> Exp -> Rhs -> [Decl] -> P Decl
-    , checkClassBody    -- [ClassDecl] -> P [ClassDecl]
-    , checkInstBody     -- [InstDecl] -> P [InstDecl]
-    , checkUnQual       -- QName -> P Name
-    , checkRevDecls     -- [Decl] -> P [Decl]
-    , checkRevClsDecls  -- [ClassDecl] -> P [ClassDecl]
-    , checkRevInstDecls -- [InstDecl] -> P [InstDecl]
-    , checkDataOrNew    -- DataOrNew -> [Decl] -> P ()
-    , checkSimpleType   -- Type -> P ()
-    , getGConName       -- Exp -> P QName
-    , mkTyForall      -- Maybe [Name] -> Context -> Type -> Type 
+      splitTyConApp         -- Type -> P (Name,[Type])
+    , mkRecConstrOrUpdate   -- Exp -> [FieldUpdate] -> P S.Exp
+    , checkPrec             -- Integer -> P Int
+    , checkContext          -- Type -> P Context
+    , checkAssertion        -- Type -> P Asst
+    , checkDataHeader       -- Type -> P (Context,Name,[Name])
+    , checkClassHeader      -- Type -> P (Context,Name,[Name])
+    , checkInstHeader       -- Type -> P (Context,QName,[Type])
+    , checkPattern          -- PExp -> P Pat
+    , checkExpr             -- PExp -> P Exp
+--    , checkStmt             -- Stmt -> P Stmt
+    , checkValDef           -- SrcLoc -> S.Exp -> Rhs -> [Decl] -> P Decl
+    , checkClassBody        -- [ClassDecl] -> P [ClassDecl]
+    , checkInstBody         -- [InstDecl] -> P [InstDecl]
+    , checkUnQual           -- QName -> P Name
+    , checkRevDecls         -- [Decl] -> P [Decl]
+    , checkRevClsDecls      -- [ClassDecl] -> P [ClassDecl]
+    , checkRevInstDecls     -- [InstDecl] -> P [InstDecl]
+    , checkDataOrNew        -- DataOrNew -> [Decl] -> P ()
+    , checkSimpleType       -- Type -> P ()
+    , getGConName           -- S.Exp -> P QName
+    , mkTyForall            -- Maybe [Name] -> Context -> Type -> Type 
     -- HaRP
-    , checkRPattern     -- Exp -> P RPat
+    , checkRPattern         -- PExp -> P RPat
     -- Hsx
-    , checkEqNames      -- XName -> XName -> P XName
-    , mkPageModule      -- Exp -> P Module
-    , mkPage        -- Module -> SrcLoc -> Exp -> P Module
-    , mkDVar        -- [String] -> String
-    , mkDVarExpr        -- [String] -> Exp
+    , checkEqNames          -- XName -> XName -> P XName
+    , mkPageModule          -- S.Exp -> P Module
+    , mkPage                -- Module -> SrcLoc -> S.Exp -> P Module
+    , mkDVar                -- [String] -> String
+    , mkDVarExpr            -- [String] -> ParseExp
+    
+    -- Parsed expressions
+    , PExp(..), PFieldUpdate(..), ParseXAttr(..)
+    , p_unit_con            -- PExp
+    , p_tuple_con           -- Int -> PExp
     ) where
 
-import Language.Haskell.Exts.Syntax
+import Language.Haskell.Exts.Syntax hiding ( Exp(..), FieldUpdate(..), XAttr(..) )
+import qualified Language.Haskell.Exts.Syntax as S ( Exp(..), FieldUpdate(..), XAttr(..) ) 
 import Language.Haskell.Exts.ParseMonad
 import Language.Haskell.Exts.Pretty
 import Language.Haskell.Exts.Build
@@ -123,23 +129,16 @@ checkInsts (TyApp l t) ts = checkInsts l (t:ts)
 checkInsts (TyCon c)   ts = return (c,ts)
 checkInsts _ _ = fail "Illegal instance declaration"
 
-{-
-checkInst :: Type -> P ()
-checkInst (TyApp l _) = checkInst l
-checkInst (TyVar _)   = fail "Illegal instance declaration"
-checkInst _             = return ()
--}
-
 -----------------------------------------------------------------------------
 -- Checking Patterns.
 
 -- We parse patterns as expressions and check for valid patterns below,
 -- converting the expression into a pattern at the same time.
 
-checkPattern :: Exp -> P Pat
+checkPattern :: PExp -> P Pat
 checkPattern e = checkPat e []
 
-checkPat :: Exp -> [Pat] -> P Pat
+checkPat :: PExp -> [Pat] -> P Pat
 checkPat (Con c) args = return (PApp c args)
 checkPat (App f x) args = do
     x <- checkPat x []
@@ -216,19 +215,19 @@ checkPat e [] = case e of
 
 checkPat e _ = patFail $ show e
 
-checkPatField :: FieldUpdate -> P PatField
+checkPatField :: PFieldUpdate -> P PatField
 checkPatField (FieldUpdate n e) = do
     p <- checkPat e []
     return (PFieldPat n p)
 
-checkPAttr :: XAttr -> P PXAttr
+checkPAttr :: ParseXAttr -> P PXAttr
 checkPAttr (XAttr n v) = do p <- checkPat v []
                             return $ PXAttr n p
 
 patFail :: String -> P a
 patFail s = fail $ "Parse error in pattern: " ++ s
 
-checkRPattern :: Exp -> P RPat
+checkRPattern :: PExp -> P RPat
 checkRPattern e = case e of
     SeqRP es -> do 
         rps <- mapM checkRPattern es
@@ -309,63 +308,59 @@ mkChildrenPat ps = mkCPAux ps []
 -----------------------------------------------------------------------------
 -- Check Expression Syntax
 
-checkExpr :: Exp -> P Exp
+checkExpr :: PExp -> P S.Exp
 checkExpr e = case e of
-    Var _               -> return e
-    IPVar _             -> return e
-    Con _               -> return e
-    Lit _               -> return e
-    InfixApp e1 op e2   -> check2Exprs e1 e2 (flip InfixApp op)
-    App e1 e2           -> check2Exprs e1 e2 App
-    NegApp e            -> check1Expr e NegApp
-    Lambda loc ps e     -> check1Expr e (Lambda loc ps)
-    Let bs e            -> check1Expr e (Let bs)
---    DLet bs e           -> check1Expr e (DLet bs)
---    With e bs           -> check1Expr e (flip With bs)
-    If e1 e2 e3         -> check3Exprs e1 e2 e3 If
+    Var v               -> return $ S.Var v
+    IPVar v             -> return $ S.IPVar v
+    Con c               -> return $ S.Con c
+    Lit l               -> return $ S.Lit l
+    InfixApp e1 op e2   -> check2Exprs e1 e2 (flip S.InfixApp op)
+    App e1 e2           -> check2Exprs e1 e2 S.App
+    NegApp e            -> check1Expr e S.NegApp
+    Lambda loc ps e     -> check1Expr e (S.Lambda loc ps)
+    Let bs e            -> check1Expr e (S.Let bs)
+    If e1 e2 e3         -> check3Exprs e1 e2 e3 S.If
     Case e alts         -> do
-                     alts <- mapM checkAlt alts
+--                     alts <- mapM checkAlt alts
                      e <- checkExpr e
-                     return (Case e alts)
+                     return (S.Case e alts)
     Do stmts        -> do
-                     stmts <- mapM checkStmt stmts
-                     return (Do stmts)
+--                     stmts <- mapM checkStmt stmts
+                     return (S.Do stmts)
     MDo stmts       -> do
-                     stmts <- mapM checkStmt stmts
-                     return (MDo stmts)
-    Tuple es        -> checkManyExprs es Tuple
-    List es         -> checkManyExprs es List
+--                     stmts <- mapM checkStmt stmts
+                     return (S.MDo stmts)
+    Tuple es        -> checkManyExprs es S.Tuple
+    List es         -> checkManyExprs es S.List
     -- Since we don't parse things as left sections, we need to mangle them into that.
     Paren e         -> case e of
-                          PostOp e1 op -> check1Expr e1 (flip LeftSection op)
-                          _              -> check1Expr e Paren
-    --LeftSection e op    -> check1Expr e (flip LeftSection op)
-    RightSection op e   -> check1Expr e (RightSection op)
+                          PostOp e1 op -> check1Expr e1 (flip S.LeftSection op)
+                          _            -> check1Expr e S.Paren
+    RightSection op e   -> check1Expr e (S.RightSection op)
     RecConstr c fields      -> do
                      fields <- mapM checkField fields
-                     return (RecConstr c fields)
+                     return (S.RecConstr c fields)
     RecUpdate e fields      -> do
                      fields <- mapM checkField fields
                      e <- checkExpr e
-                     return (RecUpdate e fields)
-    EnumFrom e          -> check1Expr e EnumFrom
-    EnumFromTo e1 e2    -> check2Exprs e1 e2 EnumFromTo
-    EnumFromThen e1 e2      -> check2Exprs e1 e2 EnumFromThen
-    EnumFromThenTo e1 e2 e3 -> check3Exprs e1 e2 e3 EnumFromThenTo
+                     return (S.RecUpdate e fields)
+    EnumFrom e          -> check1Expr e S.EnumFrom
+    EnumFromTo e1 e2    -> check2Exprs e1 e2 S.EnumFromTo
+    EnumFromThen e1 e2      -> check2Exprs e1 e2 S.EnumFromThen
+    EnumFromThenTo e1 e2 e3 -> check3Exprs e1 e2 e3 S.EnumFromThenTo
     ListComp e stmts        -> do
                      --stmts <- mapM checkStmt stmts
                      e <- checkExpr e
-                     return (ListComp e stmts)
+                     return (S.ListComp e stmts)
     ExpTypeSig loc e ty     -> do
                      e <- checkExpr e
-                     return (ExpTypeSig loc e ty)
+                     return (S.ExpTypeSig loc e ty)
     
     --Template Haskell
---    ReifyExp _          -> return e
-    BracketExp _        -> return e
-    SpliceExp _         -> return e
-    TypQuote _          -> return e
-    VarQuote _          -> return e
+    BracketExp e        -> return $ S.BracketExp e
+    SpliceExp e         -> return $ S.SpliceExp e
+    TypQuote q          -> return $ S.TypQuote q
+    VarQuote q          -> return $ S.VarQuote q
     
     -- Hsx
     XTag s n attrs mattr cs -> do attrs <- mapM checkAttr attrs
@@ -373,45 +368,46 @@ checkExpr e = case e of
                                   mattr <- maybe (return Nothing) 
                                               (\e -> checkExpr e >>= return . Just) 
                                               mattr                 
-                                  return $ XTag s n attrs mattr cs
+                                  return $ S.XTag s n attrs mattr cs
     XETag s n attrs mattr   -> do attrs <- mapM checkAttr attrs
                                   mattr <- maybe (return Nothing) 
                                               (\e -> checkExpr e >>= return . Just) 
                                               mattr                 
-                                  return $ XETag s n attrs mattr 
-    XPcdata _       -> return e
+                                  return $ S.XETag s n attrs mattr 
+    XPcdata p       -> return $ S.XPcdata p
     XExpTag e       -> do e <- checkExpr e
-                          return $ XExpTag e
+                          return $ S.XExpTag e
     _             -> fail $ "Parse error in expression: " ++ show e
 
-checkAttr :: XAttr -> P XAttr
+checkAttr :: ParseXAttr -> P S.XAttr
 checkAttr (XAttr n v) = do v <- checkExpr v
-                           return $ XAttr n v
+                           return $ S.XAttr n v
 
 -- type signature for polymorphic recursion!!
-check1Expr :: Exp -> (Exp -> a) -> P a
+check1Expr :: PExp -> (S.Exp -> a) -> P a
 check1Expr e1 f = do
     e1 <- checkExpr e1
     return (f e1)
 
-check2Exprs :: Exp -> Exp -> (Exp -> Exp -> a) -> P a
+check2Exprs :: PExp -> PExp -> (S.Exp -> S.Exp -> a) -> P a
 check2Exprs e1 e2 f = do
     e1 <- checkExpr e1
     e2 <- checkExpr e2
     return (f e1 e2)
 
-check3Exprs :: Exp -> Exp -> Exp -> (Exp -> Exp -> Exp -> a) -> P a
+check3Exprs :: PExp -> PExp -> PExp -> (S.Exp -> S.Exp -> S.Exp -> a) -> P a
 check3Exprs e1 e2 e3 f = do
     e1 <- checkExpr e1
     e2 <- checkExpr e2
     e3 <- checkExpr e3
     return (f e1 e2 e3)
 
-checkManyExprs :: [Exp] -> ([Exp] -> a) -> P a
+checkManyExprs :: [PExp] -> ([S.Exp] -> a) -> P a
 checkManyExprs es f = do
     es <- mapM checkExpr es
     return (f es)
 
+{-
 checkAlt :: Alt -> P Alt
 checkAlt (Alt loc p galts bs) = do
     galts <- checkGAlts galts
@@ -430,19 +426,19 @@ checkStmt :: Stmt -> P Stmt
 checkStmt (Generator loc p e) = check1Expr e (Generator loc p)
 checkStmt (Qualifier e) = check1Expr e Qualifier
 checkStmt s@(LetStmt _) = return s
+-}
+checkField :: PFieldUpdate -> P S.FieldUpdate
+checkField (FieldUpdate n e) = check1Expr e (S.FieldUpdate n)
 
-checkField :: FieldUpdate -> P FieldUpdate
-checkField (FieldUpdate n e) = check1Expr e (FieldUpdate n)
-
-getGConName :: Exp -> P QName
-getGConName (Con n) = return n
-getGConName (List []) = return list_cons_name
+getGConName :: S.Exp -> P QName
+getGConName (S.Con n) = return n
+getGConName (S.List []) = return list_cons_name
 getGConName _ = fail "Expression in reification is not a name"
 
 -----------------------------------------------------------------------------
 -- Check Equation Syntax
 
-checkValDef :: SrcLoc -> Exp -> Rhs -> Binds -> P Decl
+checkValDef :: SrcLoc -> PExp -> Rhs -> Binds -> P Decl
 checkValDef srcloc lhs rhs whereBinds =
     case isFunLhs lhs [] of
      Just (f,es) -> do
@@ -454,7 +450,7 @@ checkValDef srcloc lhs rhs whereBinds =
 
 -- A variable binding is parsed as an PatBind.
 
-isFunLhs :: Exp -> [Exp] -> Maybe (Name, [Exp])
+isFunLhs :: PExp -> [PExp] -> Maybe (Name, [PExp])
 isFunLhs (InfixApp l (QVarOp (UnQual op)) r) es = Just (op, l:r:es)
 isFunLhs (App (Var (UnQual f)) e) es = Just (f, e:es)
 isFunLhs (App (Paren f) e) es = isFunLhs f (e:es)
@@ -515,7 +511,7 @@ checkPrec :: Integer -> P Int
 checkPrec i | 0 <= i && i <= 9 = return (fromInteger i)
 checkPrec i | otherwise        = fail ("Illegal precedence " ++ show i)
 
-mkRecConstrOrUpdate :: Exp -> [FieldUpdate] -> P Exp
+mkRecConstrOrUpdate :: PExp -> [PFieldUpdate] -> P PExp
 mkRecConstrOrUpdate (Con c) fs       = return (RecConstr c fs)
 mkRecConstrOrUpdate e       fs@(_:_) = return (RecUpdate e fs)
 mkRecConstrOrUpdate _       _        = fail "Empty record update"
@@ -590,24 +586,24 @@ checkSimpleType t = checkSimple "test" t []
 ---------------------------------------
 -- Converting a complete page
 
-pageFun :: SrcLoc -> Exp -> Decl
+pageFun :: SrcLoc -> S.Exp -> Decl
 pageFun loc e = PatBind loc namePat rhs (BDecls [])
     where namePat = PVar $ Ident "page"
           rhs = UnGuardedRhs e
 
-mkPage :: Module -> SrcLoc -> Exp -> P Module
+mkPage :: Module -> SrcLoc -> S.Exp -> P Module
 mkPage (Module src md exps imps decls) loc xml = do
     let page = pageFun loc xml
     return $ Module src md exps imps (decls ++ [page])
     
-mkPageModule :: Exp -> P Module
+mkPageModule :: S.Exp -> P Module
 mkPageModule xml = do 
     do loc <- case xml of 
-           XTag l _ _ _ _ -> return l
-           XETag l _ _ _  -> return l
+           S.XTag l _ _ _ _ -> return l
+           S.XETag l _ _ _  -> return l
            _ -> fail "Will not happen since mkPageModule is only called on XML expressions"
        mod <- getModuleName
-       return $ (Module 
+       return $ (Module
               loc
               (ModuleName mod)
               (Just [EVar $ UnQual $ Ident "page"])
@@ -620,8 +616,8 @@ mkPageModule xml = do
 mkDVar :: [String] -> String
 mkDVar = concat . intersperse "-"
 
-mkDVarExpr :: [String] -> Exp
-mkDVarExpr = foldl1 (\x y -> infixApp x (op $ sym "-") y) . map (var . name)
+mkDVarExpr :: [String] -> PExp
+mkDVarExpr = foldl1 (\x y -> InfixApp x (op $ sym "-") y) . map (Var . UnQual . name)
 
 ---------------------------------------
 -- Combine adjacent for-alls. 
@@ -640,3 +636,82 @@ mk_forall_ty mtvs1     ty             = TyForall mtvs1 [] ty
 mtvs1       `plus` Nothing     = mtvs1
 Nothing     `plus` mtvs2       = mtvs2 
 (Just tvs1) `plus` (Just tvs2) = Just (tvs1 ++ tvs2)
+
+---------------------------------------
+-- Expressions as we parse them (and patters, and regular patterns)
+
+data PExp
+    = Var QName                 -- ^ variable
+    | IPVar IPName              -- ^ implicit parameter variable
+    | Con QName                 -- ^ data constructor
+    | Lit Literal               -- ^ literal constant
+    | InfixApp PExp QOp PExp    -- ^ infix application
+    | App PExp PExp             -- ^ ordinary application
+    | NegApp PExp               -- ^ negation expression @-@ /exp/
+    | Lambda SrcLoc [Pat] PExp  -- ^ lambda expression
+    | Let Binds PExp            -- ^ local declarations with @let@
+    | If PExp PExp PExp         -- ^ @if@ /exp/ @then@ /exp/ @else@ /exp/
+    | Case PExp [Alt]           -- ^ @case@ /exp/ @of@ /alts/
+    | Do [Stmt]                 -- ^ @do@-expression:
+                                    -- the last statement in the list
+                                    -- should be an expression.
+    | MDo [Stmt]                -- ^ @mdo@-expression
+    | Tuple [PExp]              -- ^ tuple expression
+    | List [PExp]               -- ^ list expression
+    | Paren PExp                -- ^ parenthesized expression
+    | RightSection QOp PExp     -- ^ right section @(@/qop/ /exp/@)@
+    | RecConstr QName [PFieldUpdate]
+                                -- ^ record construction expression
+    | RecUpdate PExp [PFieldUpdate]
+                                -- ^ record update expression
+    | EnumFrom PExp             -- ^ unbounded arithmetic sequence,
+                                    -- incrementing by 1
+    | EnumFromTo PExp PExp      -- ^ bounded arithmetic sequence,
+                                    -- incrementing by 1
+    | EnumFromThen PExp PExp    -- ^ unbounded arithmetic sequence,
+                                    -- with first two elements given
+    | EnumFromThenTo PExp PExp PExp
+                                -- ^ bounded arithmetic sequence,
+                                    -- with first two elements given
+    | ListComp PExp [Stmt]      -- ^ list comprehension
+    | ExpTypeSig SrcLoc PExp Type
+                                -- ^ expression type signature
+    | AsPat Name PExp           -- ^ patterns only
+    | WildCard                  -- ^ patterns only
+    | IrrPat PExp               -- ^ patterns only
+
+-- Post-ops for parsing left sections and regular patterns. Not to be left in the final tree.
+    | PostOp PExp QOp           -- ^ post-ops
+
+-- HaRP
+    | SeqRP [PExp]              -- ^ regular patterns only
+    | GuardRP PExp [Stmt]       -- ^ regular patterns only
+    | EitherRP PExp PExp        -- ^ regular patterns only
+    | CAsRP Name PExp           -- ^ regular patterns only
+    
+-- Template Haskell
+    | VarQuote QName            -- ^ 'x
+    | TypQuote QName            -- ^ ''T
+    | BracketExp Bracket
+    | SpliceExp Splice
+    
+-- Hsx
+    | XTag SrcLoc XName [ParseXAttr] (Maybe PExp) [PExp]
+    | XETag SrcLoc XName [ParseXAttr] (Maybe PExp)
+    | XPcdata String
+    | XExpTag PExp
+    | XRPats [PExp]
+  deriving (Eq,Show)
+
+data PFieldUpdate = 
+    FieldUpdate QName PExp
+  deriving (Eq,Show)
+
+data ParseXAttr = XAttr XName PExp
+  deriving (Eq,Show)
+
+p_unit_con :: PExp
+p_unit_con          = Con unit_con_name
+
+p_tuple_con :: Int -> PExp
+p_tuple_con i       = Con (tuple_con_name i)
