@@ -1,0 +1,21 @@
+* 0.4.2
+=========
+
+- Support for view patterns
+(http://www.haskell.org/ghc/docs/latest/html/users_guide/syntax-extns.html#view-patterns)
+
+
+* 0.4.1
+=========
+New major branch:
+
+- The AST has been cleaned up, by splitting Haskell expressions in
+the AST from the "expressions" used while parsing to represent both
+expressions and patterns.
+
+- The ugly Hs prefixes on datatypes in the AST have been removed.
+Datatypes are now named Exp, Pat, Module (former Module is now ModuleName),
+Type and QOp etc, instead of HsExp, HsPat... .
+
+- Support for magic hash identifiers 
+(http://www.haskell.org/ghc/docs/latest/html/users_guide/syntax-extns.html#magic-hash)
