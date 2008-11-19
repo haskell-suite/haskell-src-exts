@@ -928,6 +928,7 @@ Hsx Extensions
 >       | DVARID                        { mkDVar $1 }
 >       | 'type'                        { "type" }
 >       | 'class'                       { "class" }
+>       | 'data'                        { "data" }
 
 > attrs :: { [ParseXAttr] }
 >       : attrs attr                    { $2 : $1 }
