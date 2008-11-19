@@ -1,3 +1,9 @@
+* 0.4.3
+=========
+
+- Support for literate source files, courtesy of Neil Mitchell.
+- Support for using the word 'data' as a HSX literal attribute name.
+
 * 0.4.2
 =========
 
