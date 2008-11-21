@@ -1,8 +1,15 @@
+* 0.4.4 (planned)
+
+- Support for operator fixities.
+
 * 0.4.3
 =========
 
 - Support for literate source files, courtesy of Neil Mitchell.
 - Support for using the word 'data' as a HSX literal attribute name.
+
+- 0.4.3.1 is a bugfix release since some of the upcoming, but unfinished, fixity stuff
+  ended up in the 0.4.3 release making it incompilable.
 
 * 0.4.2
 =========
