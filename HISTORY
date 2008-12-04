@@ -1,6 +1,10 @@
-* 0.4.4 (planned)
+* 0.4.5 (planned)
 
 - Support for operator fixities.
+
+* 0.4.4
+
+- Support for non-option level pragmas. 
 
 * 0.4.3
 =========
