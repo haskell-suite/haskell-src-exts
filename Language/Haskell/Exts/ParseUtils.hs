@@ -46,6 +46,8 @@ module Language.Haskell.Exts.ParseUtils (
     , mkPage                -- Module -> SrcLoc -> S.Exp -> P Module
     , mkDVar                -- [String] -> String
     , mkDVarExpr            -- [String] -> ParseExp
+    -- Pragmas
+    , checkRuleExpr         -- PExp -> P Exp
     
     -- Parsed expressions
     , PExp(..), PFieldUpdate(..), ParseXAttr(..)
@@ -411,6 +413,10 @@ checkManyExprs es f = do
     es <- mapM checkExpr es
     return (f es)
 
+
+checkRuleExpr :: PExp -> P S.Exp
+checkRuleExpr = checkExpr
+
 {-
 checkAlt :: Alt -> P Alt
 checkAlt (Alt loc p galts bs) = do
@@ -596,9 +602,9 @@ pageFun loc e = PatBind loc namePat rhs (BDecls [])
           rhs = UnGuardedRhs e
 
 mkPage :: Module -> SrcLoc -> S.Exp -> P Module
-mkPage (Module src md exps imps decls) loc xml = do
+mkPage (Module src md warn exps imps decls) loc xml = do
     let page = pageFun loc xml
-    return $ Module src md exps imps (decls ++ [page])
+    return $ Module src md warn exps imps (decls ++ [page])
     
 mkPageModule :: S.Exp -> P Module
 mkPageModule xml = do 
@@ -610,6 +616,7 @@ mkPageModule xml = do
        return $ (Module
               loc
               (ModuleName mod)
+              Nothing
               (Just [EVar $ UnQual $ Ident "page"])
               []
               [pageFun loc xml])
@@ -708,6 +715,11 @@ data PExp
     | XPcdata String
     | XExpTag PExp
     | XRPats [PExp]
+
+-- Pragmas
+    | CorePragma        String
+    | SCCPragma         String
+    | GenPragma         String (Int, Int) (Int, Int)
   deriving (Eq,Show)
 
 data PFieldUpdate = 

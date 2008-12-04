@@ -189,11 +189,36 @@ Reserved Ids
 >       'where'         { KW_Where }
 >       'qualified'     { KW_Qualified }
 
+Pragmas
+
+>       '{-# INLINE'            { INLINE $$ }
+>       '{-# SPECIALISE'        { SPECIALISE }
+>       '{-# SPECIALISE_INLINE' { SPECIALISE_INLINE $$ }
+>       '{-# SOURCE'            { SOURCE }
+>       '{-# RULES'             { RULES }
+>       '{-# CORE'              { CORE }
+>       '{-# SCC'               { SCC }
+>       '{-# GENERATED'         { GENERATED }
+>       '{-# DEPRECATED'        { DEPRECATED }
+>       '{-# WARNING'           { WARNING }
+>       '{-# UNPACK'            { UNPACK }
+       '{-# OPTIONS'           { OPTIONS }
+       '{-# OPTIONS_GHC'       { OPTIONS_GHC }
+       '{-# OPTIONS_HUGS'      { OPTIONS_HUGS }
+       '{-# OPTIONS_NHC98'     { OPTIONS_NHC98 }
+       '{-# OPTIONS_JHC'       { OPTIONS_JHC }
+       '{-# OPTIONS_HADDOCK'   { OPTIONS_HADDOCK }
+       '{-# CFILES'            { CFILES }
+       '{-# LANGUAGE'          { LANGUAGE }
+       '{-# INCLUDE'           { INCLUDE }
+>       '#-}'                   { PragmaEnd }
+
+
 > %monad { P }
 > %lexer { lexer } { EOF }
 > %name parse
 > %tokentype { Token }
-> %expect 5
+> %expect 6
 > %%
 
 -----------------------------------------------------------------------------
@@ -212,15 +237,30 @@ HSP Pages
 >       | srcloc '<' name attrs mattr '/>'                              { XETag $1 $3 (reverse $4) $5 }
 
 
+ toppragmas :: { [OptionPragma] }
+ toppragmas    : toppragma toppragmas          { $1 : $2 }
+               | {- nothing -}                 { [] }
+
+ toppragma :: { OptionPragma }
+           : '{-# LANGUAGE' conids '#-}'       { LanguagePragma $2 }
+
+ conids    :: { [Name] }
+           : conid conids                      { $1 : $2 }
+
 -----------------------------------------------------------------------------
 Module Header
 
 > module :: { Module }
->       : srcloc 'module' modid maybeexports 'where' body
->               { Module $1 $3 $4 (fst $6) (snd $6) }
+>       : srcloc 'module' modid maybemodwarning maybeexports 'where' body
+>               { Module $1 $3 $4 $5 (fst $7) (snd $7) }
 >       | srcloc body
->               { Module $1 main_mod (Just [EVar (UnQual main_name)])
+>               { Module $1 main_mod Nothing (Just [EVar (UnQual main_name)])
 >                                                       (fst $2) (snd $2) }
+
+> maybemodwarning ::  { Maybe WarningText }
+>       : '{-# DEPRECATED' STRING '#-}'         { Just $ DeprText $2 }
+>       | '{-# WARNING' STRING '#-}'            { Just $ WarnText $2 }
+>       | {- empty -}                           { Nothing }
 
 > body :: { ([ImportDecl],[Decl]) }
 >       : '{'  bodyaux '}'                      { $2 }
@@ -274,8 +314,12 @@ Import Declarations
 >       | impdecl                               { [$1] }
 
 > impdecl :: { ImportDecl }
->       : srcloc 'import' optqualified modid maybeas maybeimpspec
->                               { ImportDecl $1 $4 $3 $5 $6 }
+>       : srcloc 'import' optsrc optqualified modid maybeas maybeimpspec
+>                               { ImportDecl $1 $5 $4 $3 $6 $7 }
+
+> optsrc :: { Bool }
+>       : '{-# SOURCE' '#-}'                    { True }
+>       | {- empty -}                           { False }
 
 > optqualified :: { Bool }
 >       : 'qualified'                           { True  }
@@ -396,6 +440,9 @@ shift/reduce-conflict, so we don't handle this case here, but in bodyaux.
 >                       { let (s,n,t) = $6 in ForImp $1 $4 $5 s n t }
 >       | srcloc 'foreign' 'export' callconv fspec
 >                       { let (s,n,t) = $5 in ForExp $1 $4 s n t }
+>       | srcloc '{-# RULES' rules '#-}'               { RulePragmaDecl $1 $ reverse $3 }
+>       | srcloc '{-# DEPRECATED' warndeprs '#-}'      { DeprPragmaDecl $1 $ reverse $3 }
+>       | srcloc '{-# WARNING' warndeprs '#-}'         { WarnPragmaDecl $1 $ reverse $3 }
 >       | decl          { $1 }
 
 > data_or_newtype :: { DataOrNew }
@@ -425,7 +472,20 @@ shift/reduce-conflict, so we don't handle this case here, but in bodyaux.
 >       | open decls close              { $2 }
 
 > signdecl :: { Decl }
->       : srcloc vars '::' ctype        { TypeSig $1 (reverse $2) $4 }
+>       : srcloc vars '::' ctype                                { TypeSig $1 (reverse $2) $4 }
+>       | srcloc '{-# INLINE' activation qvar '#-}'             { InlineSig $1 $2 $3 $4 }
+>       | srcloc '{-# SPECIALISE' qvar '::' sigtypes '#-}'      { SpecSig $1 $3 $5 }
+>       | srcloc '{-# SPECIALISE_INLINE' activation qvar '::' sigtypes '#-}'   
+>                                                       { SpecInlineSig $1 $2 $3 $4 $6 }
+>       | srcloc '{-# SPECIALISE' 'instance' ctype '#-}'        {% do { (cs,c,ts) <- checkInstHeader $4;
+>                                                                       return $ InstSig $1 cs c ts } }
+
+> sigtypes :: { [Type] }
+>       : sigtype                           { [ $1 ] }
+>       | sigtype ',' sigtypes              { $1 : $3 }
+
+> sigtype :: { Type }
+>       : ctype                             { mkTyForall Nothing [] $1 }
 
 Binding can be either of implicit parameters, or it can be a normal sequence
 of declarations. The two kinds cannot be mixed within the same block of
@@ -468,6 +528,53 @@ FFI
 > fspec :: { (String, Name, Type) }
 >       : STRING var_no_safety '::' dtype               { ($1, $2, $4) }
 >       |        var_no_safety '::' dtype               { ("", $1, $3) }
+
+-----------------------------------------------------------------------------
+Pragmas
+
+> rules :: { [Rule] }
+>       : rules ';'rule         { $3 : $1 }
+>       | rules ';'             { $1 }
+>       | rule                  { [$1] }
+>       | {- empty -}           { [] }
+
+> rule :: { Rule }
+>      : STRING activation ruleforall exp0 '=' trueexp      {% do { e <- checkRuleExpr $4;
+>                                                                   return $ Rule $1 $2 $3 e $6 } }
+
+> activation :: { Activation }
+>        : {- empty -}                  { AlwaysActive }
+>        | '[' INT ']'                  { ActiveFrom (fromInteger $2) }
+>        | '[' '~' INT ']'              { ActiveUntil (fromInteger $3) }
+
+> ruleforall :: { Maybe [RuleVar] }
+>       : {- empty -}                           { Nothing }
+>       | 'forall' rulevars '.'                 { Just $2 }
+
+> rulevars :: { [RuleVar] }
+>       : rulevar                       { [$1] }
+>       | rulevar rulevars              { $1 : $2 }
+
+> rulevar :: { RuleVar }
+>       : varid                         { RuleVar $1 }
+>       | '(' varid '::' ctype ')'      { TypedRuleVar $2 $4 }
+
+> warndeprs :: { [([Name],String)] }
+>   : warndeprs ';' warndepr        { $3 : $1 }
+>   | warndeprs ';'                 { $1 }
+>   | warndepr                      { [$1] }
+>   | {- empty -}                   { [] }
+
+> warndepr :: { ([Name], String) }
+>       : namevars STRING       { ($1,$2) }
+
+> namevars :: { [Name] }
+>           : namevar                   { [$1] }
+>           | namevar ',' namevars      { $1 : $3 }
+
+> namevar :: { Name }
+>         : con                         { $1 }
+>         | var                         { $1 }
 
 -----------------------------------------------------------------------------
 Types
@@ -615,18 +722,23 @@ GADTs
 >       | scontype1                     { $1 }
 
 > scontype1 :: { (Name, [BangType]) }
->       : btype '!' atype               {% do { (c,ts) <- splitTyConApp $1;
->                                               return (c,map UnBangedTy ts++
->                                                       [BangedTy $3]) } }
+>       : btype '!' atype                       {% do { (c,ts) <- splitTyConApp $1;
+>                                                       return (c,map UnBangedTy ts++
+>                                                               [BangedTy $3]) } }
+>       | btype '{-# UNPACK' '#-}' '!' atype    {% do { (c,ts) <- splitTyConApp $1;
+>                                                       return (c,map UnBangedTy ts++
+>                                                               [UnpackedTy $5]) } }
 >       | scontype1 satype              { (fst $1, snd $1 ++ [$2] ) }
 
 > satype :: { BangType }
 >       : atype                         { UnBangedTy $1 }
 >       | '!' atype                     { BangedTy   $2 }
+>       | '{-# UNPACK' '#-}' '!' atype  { UnpackedTy $4 }
 
 > sbtype :: { BangType }
 >       : btype                         { UnBangedTy $1 }
 >       | '!' atype                     { BangedTy   $2 }
+>       | '{-# UNPACK' '#-}' '!' atype  { UnpackedTy $4 }
 
 > fielddecls :: { [([Name],BangType)] }
 >       : fielddecls ',' fielddecl      { $3 : $1 }
@@ -638,6 +750,7 @@ GADTs
 > stype :: { BangType }
 >       : ctype                         { UnBangedTy $1 }     
 >       | '!' atype                     { BangedTy   $2 }
+>       | '{-# UNPACK' '#-}' '!' atype  { UnpackedTy $4 }
 
 > deriving :: { [QName] }
 >       : {- empty -}                   { [] }
@@ -802,7 +915,15 @@ A let may bind implicit parameters
 >       | '-' fexp                      { NegApp $2 }
 >       | 'do' stmtlist                 { Do $2 }
 >       | 'mdo' stmtlist                { MDo $2 }
+>       | exppragma                     { $1 }
 >       | fexp                          { $1 }
+
+> exppragma :: { PExp }
+>       : '{-# CORE' STRING '#-}'       { CorePragma $2 }
+>       | '{-# SCC' STRING '#-}'        { SCCPragma $2 }
+>       | '{-# GENERATED' STRING INT ':' INT '-' INT ':' INT '#-}'
+>                                       { GenPragma $2 (fromInteger $3, fromInteger $5) 
+>                                                      (fromInteger $7, fromInteger $9) }
 
 > fexp :: { PExp }
 >       : fexp aexp                     { App $1 $2 }
