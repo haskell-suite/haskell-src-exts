@@ -580,20 +580,6 @@ data Exp
     | ListComp Exp [Stmt]     -- ^ list comprehension
     | ExpTypeSig SrcLoc Exp Type
                                     -- ^ expression type signature
---    | AsPat Name Exp          -- ^ patterns only
---    | WildCard                    -- ^ patterns only
---    | IrrPat Exp                -- ^ patterns only
-
-{-
--- Post-ops for parsing left sections and regular patterns. Not to be left in the final tree.
-    | PostOp Exp QOp          -- ^ post-ops
-
--- HaRP
-    | SeqRP [Exp]               -- ^ regular patterns only
-    | GuardRP Exp [Stmt]      -- ^ regular patterns only
-    | EitherRP Exp Exp        -- ^ regular patterns only
-    | CAsRP Name Exp          -- ^ regular patterns only
--}    
 -- Template Haskell
     | VarQuote QName            -- ^ 'x
     | TypQuote QName            -- ^ ''T

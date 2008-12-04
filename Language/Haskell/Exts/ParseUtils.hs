@@ -26,7 +26,6 @@ module Language.Haskell.Exts.ParseUtils (
     , checkInstHeader       -- Type -> P (Context,QName,[Type])
     , checkPattern          -- PExp -> P Pat
     , checkExpr             -- PExp -> P Exp
---    , checkStmt             -- Stmt -> P Stmt
     , checkValDef           -- SrcLoc -> S.Exp -> Rhs -> [Decl] -> P Decl
     , checkClassBody        -- [ClassDecl] -> P [ClassDecl]
     , checkInstBody         -- [InstDecl] -> P [InstDecl]

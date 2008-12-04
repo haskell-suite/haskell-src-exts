@@ -745,14 +745,6 @@ instance Pretty Exp where
                 pretty c <> (braceList . map pretty $ fieldList)
         pretty (RecUpdate e fieldList) =
                 pretty e <> (braceList . map pretty $ fieldList)
-        -- patterns
-        -- special case that would otherwise be buggy
-{-        pretty (AsPat name (IrrPat e)) =
-                myFsep [pretty name <> char '@', char '~' <> pretty e]
-        pretty (AsPat name e) = hcat [pretty name, char '@', pretty e]
-        pretty WildCard = char '_'
-        pretty (IrrPat e) = char '~' <> pretty e
--}
         -- Lists
         pretty (List list) =
                 bracketList . punctuate comma . map pretty $ list
@@ -775,18 +767,6 @@ instance Pretty Exp where
         pretty (SpliceExp s) = pretty s
         pretty (TypQuote t)  = text "\'\'" <> pretty t
         pretty (VarQuote x)  = text "\'" <> pretty x
-{-        -- regular patterns
-        pretty (SeqRP rs) =
-                myFsep $ text "(/" : map pretty rs ++ [text "/)"]
-        pretty (EitherRP r1 r2) = parens . myFsep $
-                [pretty r1, char '|', pretty r2]
-        pretty (GuardRP r gs) = 
-                myFsep $ text "(|" : pretty r : char '|' : map pretty gs ++ [text "|)"]
-        -- special case that would otherwise be buggy
-        pretty (CAsRP n (IrrPat e)) =
-                myFsep [pretty n <> text "@:", char '~' <> pretty e]
-        pretty (CAsRP n r) = hcat [pretty n, text "@:", pretty r]
--}
         -- Hsx
         pretty (XTag _ n attrs mattr cs) =
                 let ax = maybe [] (return . pretty) mattr
