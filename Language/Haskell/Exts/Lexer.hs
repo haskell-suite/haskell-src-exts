@@ -103,6 +103,33 @@ data Token
         | XPCDATA String
         | XRPatOpen             -- <[
         | XRPatClose            -- ]>
+        
+-- Pragmas
+
+        | PragmaEnd                 -- #-}
+        | PragmaUnknown String      -- Any pragma not recognized
+        | RULES
+        | INLINE Bool
+        | SPECIALISE
+        | SPECIALISE_INLINE Bool
+        | SOURCE
+        | DEPRECATED
+        | WARNING
+        | SCC
+        | GENERATED
+        | CORE
+        | UNPACK
+-- These are not yet implemented
+--        | OPTIONS
+--        | OPTIONS_GHC
+--        | OPTIONS_HUGS
+--        | OPTIONS_NHC98
+--        | OPTIONS_JHC
+--        | OPTIONS_HADDOCK
+--        | CFILES
+--        | LANGUAGE
+--        | INCLUDE
+--        | LINE
 
 -- Reserved Ids
 
@@ -217,6 +244,32 @@ special_varids = [
  ( "ccall",      KW_CCall)
  ]
 
+pragmas :: [(String,Token)]
+pragmas = [
+ ( "rules",             RULES           ),
+ ( "inline",            INLINE True     ),
+ ( "noinline",          INLINE False    ),
+ ( "notinline",         INLINE False    ),
+ ( "specialise",        SPECIALISE      ),
+ ( "specialize",        SPECIALISE      ),
+ ( "source",            SOURCE          ),
+ ( "deprecated",        DEPRECATED      ),
+ ( "warning",           WARNING         ),
+ ( "scc",               SCC             ),
+ ( "generated",         GENERATED       ),
+ ( "core",              CORE            ),
+ ( "unpack",            UNPACK          )--,
+-- ( "options",           OPTIONS         ),
+-- ( "options_ghc",       OPTIONS_GHC     ),
+-- ( "options_hugs",      OPTIONS_HUGS    ),
+-- ( "options_nhc98",     OPTIONS_NHC98   ),
+-- ( "options_jhc",       OPTIONS_JHC     ),
+-- ( "options_haddock",   OPTIONS_HADDOCK ),
+-- ( "cfiles",            CFILES          ),
+-- ( "language",          LANGUAGE        ),
+-- ( "include",           INCLUDE         )
+ ]
+
 isIdent, isHSymbol :: Char -> Bool
 isIdent   c = isAlpha c || isDigit c || c == '\'' || c == '_'
 
@@ -248,6 +301,8 @@ lexWhiteSpace :: Bool -> Lex a (Bool, Bool)
 lexWhiteSpace bol = do
     s <- getInput
     case s of
+        '{':'-':'#':_ -> do
+            return (bol, False)
         '{':'-':_ -> do
             discard 2
             bol <- lexNestedComment bol
@@ -483,6 +538,12 @@ lexStdToken = do
         '(':'#':_ -> do discard 2 >> return LeftHashParen
     
         '#':')':_ -> do discard 2 >> return RightHashParen
+        
+        -- pragmas
+        
+        '{':'-':'#':_ -> do discard 3 >> lexPragmaStart
+        
+        '#':'-':'}':_ -> do discard 3 >> return PragmaEnd
     
         c:_ | isDigit c -> lexDecimalOrFloat
 
@@ -542,6 +603,31 @@ lexStdToken = do
                         return [ident ++ "#"]
                  _ -> return [ident]
 
+
+lexPragmaStart :: Lex a Token
+lexPragmaStart = do
+    lexWhile isSpace
+    pr <- lexWhile isAlphaNum
+    case lookup (map toLower pr) pragmas of
+     Just SPECIALISE -> do
+            s <- getInput
+            case dropWhile isSpace $ map toLower s of
+             'i':'n':'l':'i':'n':'e':_ -> do
+                      lexWhile isSpace
+                      discard 6
+                      return $ SPECIALISE_INLINE True
+             'n':'o':'i':'n':'l':'i':'n':'e':_ -> do
+                        lexWhile isSpace
+                        discard 8
+                        return $ SPECIALISE_INLINE False
+             'n':'o':'t':'i':'n':'l':'i':'n':'e':_ -> do
+                        lexWhile isSpace
+                        discard 9
+                        return $ SPECIALISE_INLINE False
+             _ -> return SPECIALISE
+              
+     Just p ->  return p
+     _      -> fail $ "Unknown pragma: " ++ pr    
 
 
 lexDecimalOrFloat :: Lex a Token

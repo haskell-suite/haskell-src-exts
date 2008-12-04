@@ -76,6 +76,9 @@ module Language.Haskell.Exts.Syntax (
     -- * FFI
     Safety(..), CallConv(..),
 
+    -- * Pragmas
+    WarningText(..), Rule(..), RuleVar(..), Activation(..),
+
     -- * Builtin names
 
     -- ** Modules
@@ -202,8 +205,8 @@ data CName
 #endif
 
 -- | A Haskell source module.
-data Module = Module SrcLoc ModuleName (Maybe [ExportSpec])
-                         [ImportDecl] [Decl]
+data Module = Module SrcLoc ModuleName (Maybe WarningText) 
+                        (Maybe [ExportSpec]) [ImportDecl] [Decl]
 #ifdef __GLASGOW_HASKELL__
   deriving (Show,Typeable,Data)
 #else
@@ -235,6 +238,7 @@ data ImportDecl = ImportDecl
     { importLoc :: SrcLoc           -- ^ position of the @import@ keyword.
     , importModule :: ModuleName    -- ^ name of the module imported.
     , importQualified :: Bool       -- ^ imported @qualified@?
+    , importSrc :: Bool             -- ^ imported with {-# SOURCE #-}
     , importAs :: Maybe ModuleName  -- ^ optional alias name in an
                     -- @as@ clause.
     , importSpecs :: Maybe (Bool,[ImportSpec])
@@ -296,6 +300,14 @@ data Decl
      | PatBind      SrcLoc Pat Rhs {-where-} Binds
      | ForImp   SrcLoc CallConv Safety String Name Type
      | ForExp   SrcLoc CallConv          String Name Type
+-- Pragmas
+     | RulePragmaDecl   SrcLoc [Rule]
+     | DeprPragmaDecl   SrcLoc [([Name], String)]
+     | WarnPragmaDecl   SrcLoc [([Name], String)]
+     | InlineSig        SrcLoc Bool Activation QName
+     | SpecSig          SrcLoc                 QName [Type]
+     | SpecInlineSig    SrcLoc Bool Activation QName [Type]
+     | InstSig          SrcLoc Context         QName [Type]
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -393,6 +405,7 @@ data InstDecl
 data BangType
      = BangedTy   Type  -- ^ strict component, marked with \"@!@\"
      | UnBangedTy Type  -- ^ non-strict component
+     | UnpackedTy Type  -- ^ unboxed component
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -592,7 +605,12 @@ data Exp
     | XETag SrcLoc XName [XAttr] (Maybe Exp)
     | XPcdata String
     | XExpTag Exp
---    | XRPats [Exp]
+
+-- Pragmas
+    | CorePragma        String
+    | SCCPragma         String
+    | GenPragma         String (Int, Int) (Int, Int)
+
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -655,6 +673,42 @@ data CallConv
   deriving (Eq,Show)
 #endif
 
+-- Pragma stuff
+data Activation
+    = AlwaysActive
+    | ActiveFrom  Int
+    | ActiveUntil Int
+#ifdef __GLASGOW_HASKELL__
+  deriving (Eq,Show,Typeable,Data)
+#else
+  deriving (Eq,Show)
+#endif
+
+data Rule
+    = Rule String Activation (Maybe [RuleVar]) Exp Exp
+#ifdef __GLASGOW_HASKELL__
+  deriving (Eq,Show,Typeable,Data)
+#else
+  deriving (Eq,Show)
+#endif
+
+data RuleVar
+    = RuleVar Name
+    | TypedRuleVar Name Type
+#ifdef __GLASGOW_HASKELL__
+  deriving (Eq,Show,Typeable,Data)
+#else
+  deriving (Eq,Show)
+#endif
+
+data WarningText
+    = DeprText String
+    | WarnText String
+#ifdef __GLASGOW_HASKELL__
+  deriving (Eq,Show,Typeable,Data)
+#else
+  deriving (Eq,Show)
+#endif
 
 
 -- | A pattern, to be matched against a value.
