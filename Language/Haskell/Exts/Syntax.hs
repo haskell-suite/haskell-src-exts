@@ -77,7 +77,8 @@ module Language.Haskell.Exts.Syntax (
     Safety(..), CallConv(..),
 
     -- * Pragmas
-    WarningText(..), Rule(..), RuleVar(..), Activation(..),
+    OptionPragma(..), Tool(..), WarningText(..), 
+    Rule(..), RuleVar(..), Activation(..),
 
     -- * Builtin names
 
@@ -205,7 +206,7 @@ data CName
 #endif
 
 -- | A Haskell source module.
-data Module = Module SrcLoc ModuleName (Maybe WarningText) 
+data Module = Module SrcLoc ModuleName [OptionPragma] (Maybe WarningText) 
                         (Maybe [ExportSpec]) [ImportDecl] [Decl]
 #ifdef __GLASGOW_HASKELL__
   deriving (Show,Typeable,Data)
@@ -308,6 +309,7 @@ data Decl
      | SpecSig          SrcLoc                 QName [Type]
      | SpecInlineSig    SrcLoc Bool Activation QName [Type]
      | InstSig          SrcLoc Context         QName [Type]
+     | UnknownDeclPragma SrcLoc String String
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -596,7 +598,7 @@ data Exp
     | CorePragma        String
     | SCCPragma         String
     | GenPragma         String (Int, Int) (Int, Int)
-
+    | UnknownExpPragma  String String
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -660,6 +662,25 @@ data CallConv
 #endif
 
 -- Pragma stuff
+data OptionPragma
+    = LanguagePragma   SrcLoc [Name]
+    | IncludePragma    SrcLoc String
+    | CFilesPragma     SrcLoc String
+    | OptionsPragma    SrcLoc (Maybe Tool) String
+    | UnknownTopPragma SrcLoc String String
+#ifdef __GLASGOW_HASKELL__
+  deriving (Eq,Show,Typeable,Data)
+#else
+  deriving (Eq,Show)
+#endif
+
+data Tool = GHC | HUGS | NHC98 | YHC | HADDOCK | UnknownTool String
+#ifdef __GLASGOW_HASKELL__
+  deriving (Eq,Show,Typeable,Data)
+#else
+  deriving (Eq,Show)
+#endif
+
 data Activation
     = AlwaysActive
     | ActiveFrom  Int

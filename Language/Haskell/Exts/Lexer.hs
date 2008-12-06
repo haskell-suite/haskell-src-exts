@@ -106,8 +106,8 @@ data Token
         
 -- Pragmas
 
-        | PragmaEnd                 -- #-}
-        | PragmaUnknown String      -- Any pragma not recognized
+        | PragmaEnd                     -- #-}
+        | PragmaUnknown (String,String)   -- Any pragma not recognized
         | RULES
         | INLINE Bool
         | SPECIALISE
@@ -119,16 +119,11 @@ data Token
         | GENERATED
         | CORE
         | UNPACK
+        | OPTIONS (Maybe String,String)
+        | CFILES  String
+        | LANGUAGE
+        | INCLUDE String
 -- These are not yet implemented
---        | OPTIONS
---        | OPTIONS_GHC
---        | OPTIONS_HUGS
---        | OPTIONS_NHC98
---        | OPTIONS_JHC
---        | OPTIONS_HADDOCK
---        | CFILES
---        | LANGUAGE
---        | INCLUDE
 --        | LINE
 
 -- Reserved Ids
@@ -258,16 +253,11 @@ pragmas = [
  ( "scc",               SCC             ),
  ( "generated",         GENERATED       ),
  ( "core",              CORE            ),
- ( "unpack",            UNPACK          )--,
--- ( "options",           OPTIONS         ),
--- ( "options_ghc",       OPTIONS_GHC     ),
--- ( "options_hugs",      OPTIONS_HUGS    ),
--- ( "options_nhc98",     OPTIONS_NHC98   ),
--- ( "options_jhc",       OPTIONS_JHC     ),
--- ( "options_haddock",   OPTIONS_HADDOCK ),
--- ( "cfiles",            CFILES          ),
--- ( "language",          LANGUAGE        ),
--- ( "include",           INCLUDE         )
+ ( "unpack",            UNPACK          ),
+ ( "language",          LANGUAGE        ),
+ ( "options",           OPTIONS undefined ), -- we'll tweak it before use - promise!
+ ( "cfiles",            CFILES  undefined ), -- same here...
+ ( "include",           INCLUDE undefined )  -- ...and here!
  ]
 
 isIdent, isHSymbol :: Char -> Bool
@@ -626,9 +616,42 @@ lexPragmaStart = do
                         return $ SPECIALISE_INLINE False
              _ -> return SPECIALISE
               
+     Just (OPTIONS _) -> do     -- see, I promised we'd mask out the 'undefined'
+            s <- getInput
+            case s of
+             '_':_  -> do
+                discard 1
+                com <- lexWhile isIdent
+                rest <- lexRawPragma
+                return $ OPTIONS (Just com, rest)
+             x:_ | isSpace x -> do
+                rest <- lexRawPragma
+                return $ OPTIONS (Nothing, rest)
+             _ -> fail "Malformed Options pragma"
+     Just (CFILES _) -> do
+            rest <- lexRawPragma
+            return $ CFILES rest
+     Just (INCLUDE _) -> do
+            rest <- lexRawPragma
+            return $ INCLUDE rest
      Just p ->  return p
-     _      -> fail $ "Unknown pragma: " ++ pr    
 
+     _      -> do rawStr <- lexRawPragma
+                  return $ PragmaUnknown (pr, rawStr)
+
+lexRawPragma :: Lex a String
+lexRawPragma = do
+    rpr <- lexRawPragmaAux
+    return $ dropWhile isSpace rpr
+ where lexRawPragmaAux = do
+        rpr <- lexWhile (/='#')
+        s <- getInput
+        case s of
+         '#':'-':'}':_  -> return rpr
+         _ -> do 
+            discard 1
+            rpr' <- lexRawPragma
+            return $ rpr ++ '#':rpr'
 
 lexDecimalOrFloat :: Lex a Token
 lexDecimalOrFloat = do

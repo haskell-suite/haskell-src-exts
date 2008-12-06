@@ -42,7 +42,7 @@ library, ghc/compiler/parser/Parser.y.
 -----------------------------------------------------------------------------
 Conflicts: 5 shift/reduce
 
-2 for ambiguity in 'case x of y | let z = y in z :: Bool -> b'  [State 181, 197]
+2 for ambiguity in 'case x of y | let z = y in z :: Bool -> b'  [State 204, 220]
         (don't know whether to reduce 'Bool' as a btype or shift the '->'.
          Similarly lambda and if. The default resolution in favour of the
          shift means that a guard can never end with a type signature.
@@ -51,22 +51,22 @@ Conflicts: 5 shift/reduce
         There are 2 conflicts rather than one because contexts are parsed
         as btypes (cf ctype).
         
-1 for ambiguity in 'let ?x ...'                     [State 714]
+1 for ambiguity in 'let ?x ...'                     [State 737]
         the parser can't tell whether the ?x is the lhs of a normal binding or
         an implicit binding. Fortunately resolving as shift gives it the only
         sensible meaning, namely the lhs of an implicit binding.
 
-1 for ambiguity using hybrid modules                [State 0]
+1 for ambiguity using hybrid modules                [State 7]
         For HSP pages that start with a <% %> block, the parser cannot tell whether
         to reduce a srcloc or shift the starting <%. Since any other body could not
         start with <%, shifting is the only sensible thing to do.
 
-1 for ambiguity using toplevel xml modules          [State 6]
+1 for ambiguity using toplevel xml modules          [State 26]
         For HSP xml pages starting with a <, the parser cannot tell whether to shift
         that < or reduce an implicit 'open'. Since no other body could possibly start
         with <, shifting is the only sensible thing to do. 
 
-1 for ambiguity in '{-# RULES "name" [ ... #-}      [State 130]
+1 for ambiguity in '{-# RULES "name" [ ... #-}      [State 196]
     we don't know whether the '[' starts the activation or not: it
     might be the start of the declaration with the activation being
     empty. Resolving with shift means the declaration cannot start with '['.
@@ -206,15 +206,11 @@ Pragmas
 >       '{-# DEPRECATED'        { DEPRECATED }
 >       '{-# WARNING'           { WARNING }
 >       '{-# UNPACK'            { UNPACK }
-       '{-# OPTIONS'           { OPTIONS }
-       '{-# OPTIONS_GHC'       { OPTIONS_GHC }
-       '{-# OPTIONS_HUGS'      { OPTIONS_HUGS }
-       '{-# OPTIONS_NHC98'     { OPTIONS_NHC98 }
-       '{-# OPTIONS_JHC'       { OPTIONS_JHC }
-       '{-# OPTIONS_HADDOCK'   { OPTIONS_HADDOCK }
-       '{-# CFILES'            { CFILES }
-       '{-# LANGUAGE'          { LANGUAGE }
-       '{-# INCLUDE'           { INCLUDE }
+>       '{-# OPTIONS'           { OPTIONS $$ }
+>       '{-# CFILES'            { CFILES  $$ }
+>       '{-# INCLUDE'           { INCLUDE $$ }
+>       '{-# LANGUAGE'          { LANGUAGE }
+>      '{-# unknown'            { PragmaUnknown $$ }
 >       '#-}'                   { PragmaEnd }
 
 
@@ -229,9 +225,9 @@ Pragmas
 HSP Pages
 
 > page :: { Module }
->       : topxml                                {% checkExpr $1 >>= mkPageModule }
->       | '<%' module '%>' srcloc topxml        {% checkExpr $5 >>= \x -> mkPage $2 $4 x }
->       | module                                { $1 }
+>       : toppragmas ';' topxml                            {% checkExpr $3 >>= mkPageModule $1 }
+>       | toppragmas ';' '<%' module '%>' srcloc topxml    {% checkExpr $7 >>= \x -> mkPage ($4 $1) $6 x }
+>       | toppragmas ';' module                            { $3 $1 }
 
 > topxml :: { PExp }
 >       : srcloc '<' name attrs mattr '>' children '</' name '>'        {% do { n <- checkEqNames $3 $9;
@@ -241,24 +237,28 @@ HSP Pages
 >       | srcloc '<' name attrs mattr '/>'                              { XETag $1 $3 (reverse $4) $5 }
 
 
- toppragmas :: { [OptionPragma] }
- toppragmas    : toppragma toppragmas          { $1 : $2 }
-               | {- nothing -}                 { [] }
+> toppragmas :: { [OptionPragma] }
+> toppragmas    : toppragma ';' toppragmas      { $1 : $3 }
+>               | {- nothing -}                 { [] }
 
- toppragma :: { OptionPragma }
-           : '{-# LANGUAGE' conids '#-}'       { LanguagePragma $2 }
+> toppragma :: { OptionPragma }
+>           : srcloc '{-# LANGUAGE' conids '#-}'       { LanguagePragma $1 $3 }
+>           | srcloc '{-# INCLUDE' '#-}'               { IncludePragma  $1 $2 }
+>           | srcloc '{-# OPTIONS' '#-}'               { let (mc, s) = $2 in OptionsPragma $1 (readTool mc) s }
+>           | srcloc '{-# CFILES'  '#-}'               { CFilesPragma   $1 $2 }
+>           | srcloc '{-# unknown' '#-}'               { let (n, s) = $2 in UnknownTopPragma $1 n s }
 
- conids    :: { [Name] }
-           : conid conids                      { $1 : $2 }
+> conids    :: { [Name] }
+>          : conid conids                      { $1 : $2 }
 
 -----------------------------------------------------------------------------
 Module Header
 
-> module :: { Module }
+> module :: { [OptionPragma] -> Module }
 >       : srcloc 'module' modid maybemodwarning maybeexports 'where' body
->               { Module $1 $3 $4 $5 (fst $7) (snd $7) }
+>               { \os -> Module $1 $3 os $4 $5 (fst $7) (snd $7) }
 >       | srcloc body
->               { Module $1 main_mod Nothing (Just [EVar (UnQual main_name)])
+>               { \os -> Module $1 main_mod os Nothing (Just [EVar (UnQual main_name)])
 >                                                       (fst $2) (snd $2) }
 
 > maybemodwarning ::  { Maybe WarningText }
@@ -447,6 +447,7 @@ shift/reduce-conflict, so we don't handle this case here, but in bodyaux.
 >       | srcloc '{-# RULES' rules '#-}'               { RulePragmaDecl $1 $ reverse $3 }
 >       | srcloc '{-# DEPRECATED' warndeprs '#-}'      { DeprPragmaDecl $1 $ reverse $3 }
 >       | srcloc '{-# WARNING' warndeprs '#-}'         { WarnPragmaDecl $1 $ reverse $3 }
+>       | srcloc '{-# unknown' '#-}'                   { let (n, s) = $2 in UnknownDeclPragma $1 n s }
 >       | decl          { $1 }
 
 > data_or_newtype :: { DataOrNew }
@@ -928,6 +929,7 @@ A let may bind implicit parameters
 >       | '{-# GENERATED' STRING INT ':' INT '-' INT ':' INT '#-}'
 >                                       { GenPragma $2 (fromInteger $3, fromInteger $5) 
 >                                                      (fromInteger $7, fromInteger $9) }
+>       | '{-# unknown' '#-}'           { let (n, s) = $1 in UnknownExpPragma n s }
 
 > fexp :: { PExp }
 >       : fexp aexp                     { App $1 $2 }
