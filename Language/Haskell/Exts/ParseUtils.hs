@@ -41,12 +41,13 @@ module Language.Haskell.Exts.ParseUtils (
     , checkRPattern         -- PExp -> P RPat
     -- Hsx
     , checkEqNames          -- XName -> XName -> P XName
-    , mkPageModule          -- S.Exp -> P Module
-    , mkPage                -- Module -> SrcLoc -> S.Exp -> P Module
+    , mkPageModule          -- [OptionPragma] -> S.Exp -> P Module
+    , mkPage                -- [OptionPragma] -> Module -> SrcLoc -> S.Exp -> P Module
     , mkDVar                -- [String] -> String
     , mkDVarExpr            -- [String] -> ParseExp
     -- Pragmas
     , checkRuleExpr         -- PExp -> P Exp
+    , readTool              -- Maybe String -> Maybe Tool
     
     -- Parsed expressions
     , PExp(..), PFieldUpdate(..), ParseXAttr(..)
@@ -382,6 +383,12 @@ checkExpr e = case e of
     XPcdata p       -> return $ S.XPcdata p
     XExpTag e       -> do e <- checkExpr e
                           return $ S.XExpTag e
+    -- Pragmas
+    CorePragma s    -> return $ S.CorePragma s
+    SCCPragma s     -> return $ S.SCCPragma s
+    GenPragma s xx yy -> return $ S.GenPragma s xx yy
+    UnknownExpPragma n s -> return $ S.UnknownExpPragma n s
+    
     _             -> fail $ "Parse error in expression: " ++ show e
 
 checkAttr :: ParseXAttr -> P S.XAttr
@@ -415,6 +422,16 @@ checkManyExprs es f = do
 
 checkRuleExpr :: PExp -> P S.Exp
 checkRuleExpr = checkExpr
+
+readTool :: Maybe String -> Maybe Tool
+readTool = fmap readC
+ where readC str = case str of
+        "GHC" -> GHC
+        "HUGS" -> HUGS
+        "NHC98" -> NHC98
+        "YHC" -> YHC
+        "HADDOCK" -> HADDOCK
+        _ -> UnknownTool str
 
 {-
 checkAlt :: Alt -> P Alt
@@ -601,12 +618,12 @@ pageFun loc e = PatBind loc namePat rhs (BDecls [])
           rhs = UnGuardedRhs e
 
 mkPage :: Module -> SrcLoc -> S.Exp -> P Module
-mkPage (Module src md warn exps imps decls) loc xml = do
+mkPage (Module src md os warn exps imps decls) loc xml = do
     let page = pageFun loc xml
-    return $ Module src md warn exps imps (decls ++ [page])
+    return $ Module src md os warn exps imps (decls ++ [page])
     
-mkPageModule :: S.Exp -> P Module
-mkPageModule xml = do 
+mkPageModule :: [OptionPragma] -> S.Exp -> P Module
+mkPageModule os xml = do 
     do loc <- case xml of 
            S.XTag l _ _ _ _ -> return l
            S.XETag l _ _ _  -> return l
@@ -615,6 +632,7 @@ mkPageModule xml = do
        return $ (Module
               loc
               (ModuleName mod)
+              os
               Nothing
               (Just [EVar $ UnQual $ Ident "page"])
               []
@@ -719,6 +737,7 @@ data PExp
     | CorePragma        String
     | SCCPragma         String
     | GenPragma         String (Int, Int) (Int, Int)
+    | UnknownExpPragma  String String
   deriving (Eq,Show)
 
 data PFieldUpdate = 

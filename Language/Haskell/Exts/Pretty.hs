@@ -266,10 +266,11 @@ fullRender = fullRenderWithMode defaultMode
 
 -------------------------  Pretty-Print a Module --------------------
 instance Pretty Module where
-        pretty (Module pos m mbWarn mbExports imp decls) =
+        pretty (Module pos m os mbWarn mbExports imp decls) =
                 markLine pos $
-                topLevel (ppModuleHeader m mbWarn mbExports)
-                         (map pretty imp ++ map pretty decls)
+                myVcat $ map pretty os ++
+                            [topLevel (ppModuleHeader m mbWarn mbExports)
+                                     (map pretty imp ++ map pretty decls)]
 
 --------------------------  Module Header ------------------------------
 ppModuleHeader :: ModuleName -> Maybe WarningText -> Maybe [ExportSpec] -> Doc
@@ -487,6 +488,10 @@ instance Pretty Decl where
                 mySep $ [text "{-# SPECIALISE", text "instance", ppContext context, pretty name]
                             ++ map ppAType args ++ [text "#-}"]
 
+        pretty (UnknownDeclPragma pos n s) =
+                blankline $
+                markLine pos $
+                mySep $ [text "{-#", text n, text s, text "#-}"]
 
 
 instance Pretty DataOrNew where
@@ -586,6 +591,24 @@ instance Pretty Activation where
 instance Pretty RuleVar where
     pretty (RuleVar n) = pretty n
     pretty (TypedRuleVar n t) = mySep [pretty n, text "::", pretty t]
+
+instance Pretty OptionPragma where
+    pretty (LanguagePragma _ ns) =
+        myFsep $ text "{-# LANGUAGE" : map pretty ns ++ [text "#-}"]
+    pretty (IncludePragma _ s) =
+        myFsep $ [text "{-# INCLUDE", text s, text "#-}"]
+    pretty (CFilesPragma _ s) =
+        myFsep $ [text "{-# CFILES", text s, text "#-}"]
+    pretty (OptionsPragma _ (Just tool) s) =
+        myFsep $ [text "{-# OPTIONS_" <> pretty tool, text s, text "#-}"]
+    pretty (OptionsPragma _ _ s) =
+        myFsep $ [text "{-# OPTIONS", text s, text "#-}"]
+    pretty (UnknownTopPragma _ n s) =
+        myFsep $ map text ["{-#", n, s, "#-}"]
+
+instance Pretty Tool where
+    pretty (UnknownTool s) = text s
+    pretty t               = text $ show t
 
 ------------------------- Data & Newtype Bodies -------------------------
 instance Pretty QualConDecl where
@@ -786,6 +809,8 @@ instance Pretty Exp where
                 myFsep $ [text "{-# GENERATED", text $ show s, 
                             int a, char ':', int b, char '-', 
                             int c, char ':', int d, text "#-}"]
+        pretty (UnknownExpPragma n s) = 
+                myFsep $ [text "{-#", text n, text s, text "#-}"]
 
 instance Pretty XAttr where
         pretty (XAttr n v) =
