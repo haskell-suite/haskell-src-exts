@@ -252,7 +252,7 @@ HSP Pages
 >           | srcloc '{-# unknown' '#-}'               { let (n, s) = $2 in UnknownTopPragma $1 n s }
 
 > conids    :: { [Name] }
->          : conid conids                      { $1 : $2 }
+>          : conid ',' conids                  { $1 : $3 }
 >          | conid                             { [$1] }
 
 -----------------------------------------------------------------------------
