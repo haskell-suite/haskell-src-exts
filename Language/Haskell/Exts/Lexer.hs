@@ -2,7 +2,6 @@
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Language.Haskell.Exts.Lexer
--- Original    :  Language.Haskell.Lexer
 -- Copyright   :  (c) The GHC Team, 1997-2000
 --        (c) Niklas Broberg, 2004
 -- License     :  BSD-style (see the file LICENSE.txt)
@@ -83,8 +82,8 @@ data Token
         | THDecQuote        -- [d|
         | THTypQuote        -- [t|         
         | THCloseQuote      -- |]
-        | THIdEscape (String)   -- $x
-        | THParenEscape     -- $( 
+        | THIdEscape (String)   -- dollar x
+        | THParenEscape     -- dollar ( 
         | THVarQuote        -- 'x (but without the x)
         | THTyQuote         -- ''T (but without the T)
 

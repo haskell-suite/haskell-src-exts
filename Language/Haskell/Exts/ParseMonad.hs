@@ -2,7 +2,6 @@
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Language.Haskell.Exts.ParseMonad
--- Original    :  Language.Haskell.ParseMonad
 -- Copyright   :  (c) The GHC Team, 1997-2000
 -- License     :  BSD-style (see the file libraries/base/LICENSE)
 -- 

@@ -2,7 +2,6 @@
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Language.Haskell.Exts.Pretty
--- Original    :  Language.Haskell.Pretty
 -- Copyright   :  (c) Niklas Broberg 2004,
 --                (c) The GHC Team, Noel Winstanley 1997-2000
 -- License     :  BSD-style (see the file LICENSE.txt)
