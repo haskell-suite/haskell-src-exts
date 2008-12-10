@@ -2,7 +2,6 @@
 > -----------------------------------------------------------------------------
 > -- |
 > -- Module      :  Language.Haskell.Exts.Parser
-> -- Original    :  Language.Haskell.Parser
 > -- Copyright   :  (c) Niklas Broberg 2004,
 > --                Original (c) Simon Marlow, Sven Panne 1997-2000
 > -- License     :  BSD-style (see the file LICENSE.txt)

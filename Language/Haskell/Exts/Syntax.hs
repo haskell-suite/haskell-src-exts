@@ -2,7 +2,6 @@
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Language.Haskell.Exts.Syntax
--- Original    :  Language.Haskell.Syntax
 -- Copyright   :  (c) Niklas Broberg 2004,
 --                (c) The GHC Team, 1997-2000
 -- License     :  BSD-style (see the file LICENSE.txt)
