@@ -414,10 +414,10 @@ shift/reduce-conflict, so we don't handle this case here, but in bodyaux.
 >                       {% do { (cs,c,t) <- checkDataHeader $3;
 >                               checkDataOrNew $2 $4;
 >                               return (DataDecl $1 $2 cs c t (reverse $4) $5) } }
->       | srcloc data_or_newtype ctype optkind 'where' gadtlist
+>       | srcloc data_or_newtype ctype optkind 'where' gadtlist deriving
 >                       {% do { (cs,c,t) <- checkDataHeader $3;
 >                               checkDataOrNew $2 $6;
->                               return (GDataDecl $1 $2 cs c t $4 (reverse $6)) } }
+>                               return (GDataDecl $1 $2 cs c t $4 (reverse $6) $7) } }
 >       | srcloc 'data' 'family' ctype optkind
 >                       {% do { (cs,c,t) <- checkDataHeader $4;
 >                               return (DataFamDecl $1 cs c t $5) } }
@@ -425,10 +425,10 @@ shift/reduce-conflict, so we don't handle this case here, but in bodyaux.
 >                       {% do { -- (cs,c,t) <- checkDataHeader $4;
 >                               checkDataOrNew $2 $5;
 >                               return (DataInsDecl $1 $2 $4 (reverse $5) $6) } }
->       | srcloc data_or_newtype 'instance' ctype optkind 'where' gadtlist
+>       | srcloc data_or_newtype 'instance' ctype optkind 'where' gadtlist deriving
 >                       {% do { -- (cs,c,t) <- checkDataHeader $4;
 >                               checkDataOrNew $2 $7;
->                               return (GDataInsDecl $1 $2 $4 $5 (reverse $7)) } }
+>                               return (GDataInsDecl $1 $2 $4 $5 (reverse $7) $8) } }
 >       | srcloc 'class' ctype fds optcbody
 >                       {% do { (cs,c,vs) <- checkClassHeader $3;
 >                               return (ClassDecl $1 cs c vs $4 $5) } }

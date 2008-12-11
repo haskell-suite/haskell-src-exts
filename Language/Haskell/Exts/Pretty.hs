@@ -334,12 +334,13 @@ instance Pretty Decl where
                                                    (map pretty constrList))
                         $$$ ppDeriving derives)
 
-        pretty (GDataDecl loc don context name nameList optkind gadtList) =
+        pretty (GDataDecl loc don context name nameList optkind gadtList derives) =
                 blankline $
                 markLine loc $
                 mySep ( [pretty don, ppContext context, pretty name]
                         ++ map pretty nameList ++ ppOptKind optkind ++ [text "where"])
                         $$$ ppBody classIndent (map pretty gadtList)
+                        $$$ ppDeriving derives
 
         pretty (TypeFamDecl loc name nameList optkind) =
                 blankline $
@@ -367,12 +368,13 @@ instance Pretty Decl where
                                                    (map pretty constrList))
                               $$$ ppDeriving derives)
 
-        pretty (GDataInsDecl loc don ntype optkind gadtList) =
+        pretty (GDataInsDecl loc don ntype optkind gadtList derives) =
                 blankline $
                 markLine loc $
                 mySep ( [pretty don, text "instance", pretty ntype]
                         ++ ppOptKind optkind ++ [text "where"])
                         $$$ ppBody classIndent (map pretty gadtList)
+                        $$$ ppDeriving derives
 
         --m{spacing=False}
         -- special case for empty class declaration
