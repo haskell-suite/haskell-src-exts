@@ -1,0 +1,12 @@
+Name:            hse-examples
+Version:         0.1
+License:         GPL
+Author:          hse
+Synopsis:        Some small examples of using the haskell-src-exts library
+Build-type:      Simple
+
+Executable:      prettify
+Main-is:         Prettify.hs
+Build-depends:   base, haskell-src-exts
+Ghc-options:     -Wall
+
