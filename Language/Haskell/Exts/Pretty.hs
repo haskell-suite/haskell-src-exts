@@ -1135,3 +1135,13 @@ markLine loc doc = do
               text ("{-# LINE " ++ show l ++ " \"" ++ srcFilename loc ++ "\" #-}")
         if linePragmas e then layoutChoice (line y $$) (line (y+1) <+>) doc
               else doc
+
+-- Pretty print a source location, useful for printing out error messages
+instance Pretty SrcLoc where
+  pretty srcLoc = 
+    return $ P.hsep [ colonFollow (P.text $ srcFilename srcLoc)
+                    , colonFollow (P.int  $ srcLine     srcLoc)
+                    , P.int $ srcColumn srcLoc
+                    ]
+    where
+    colonFollow p = P.hcat [ p, P.colon ]
