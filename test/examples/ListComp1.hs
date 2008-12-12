@@ -1,0 +1,1 @@
+copyFiles =  [a | f ('.':)]
