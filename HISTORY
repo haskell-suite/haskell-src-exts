@@ -1,10 +1,16 @@
-* 0.4.5 (planned)
+* 0.4.6
 
-- Support for operator fixities.
+- Support for magic hash literals.
+- Bugfix to allow scoped type variables in monadic bindings.
+
+* 0.4.5
+
+- Support for GADT deriving clauses.
 
 * 0.4.4
 
 - Support for non-option level pragmas. 
+- 0.4.4.1 adds support for option level pragmas too.
 
 * 0.4.3
 =========
