@@ -1139,7 +1139,7 @@ A guard can be a pattern guard, hence quals instead of exp0.
 >       : srcloc '|' quals '->' trueexp { GuardedAlt $1 (reverse $3) $5 }
 
 > pat :: { Pat }
->       : exp0b                         {% checkPattern $1 }
+>       : exp                           {% checkPattern $1 }
 
 -----------------------------------------------------------------------------
 Statement sequences
