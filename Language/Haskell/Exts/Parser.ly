@@ -88,6 +88,13 @@ Conflicts: 5 shift/reduce
 >       CHAR     { Character $$ }
 >       STRING   { StringTok $$ }
 
+>       PRIMINT     { IntTokHash $$ }
+>       PRIMWORD    { WordTokHash $$ }
+>       PRIMFLOAT   { FloatTokHash $$ }
+>       PRIMDOUBLE  { DoubleTokHash $$ }
+>       PRIMCHAR    { CharacterHash $$ }
+>       PRIMSTRING  { StringHash $$ }
+
 Symbols
 
 >       '('     { LeftParen }
@@ -1324,6 +1331,13 @@ Implicit parameter
 >       | CHAR                  { Char $1 }
 >       | RATIONAL              { Frac $1 }
 >       | STRING                { String $1 }
+>       | PRIMINT               { PrimInt $1 }
+>       | PRIMWORD              { PrimWord $1 }
+>       | PRIMFLOAT             { PrimFloat $1 }
+>       | PRIMDOUBLE            { PrimDouble $1 }
+>       | PRIMCHAR              { PrimChar $1 }
+>       | PRIMSTRING            { PrimString $1 }
+
 
 > srcloc :: { SrcLoc }  :       {% getSrcLoc }
  

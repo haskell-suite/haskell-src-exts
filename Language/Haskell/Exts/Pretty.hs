@@ -724,11 +724,12 @@ instance Pretty Literal where
         pretty (String s)     = text (show s)
         pretty (Frac r)       = double (fromRational r)
         -- GHC unboxed literals:
-        pretty (CharPrim c)   = text (show c)           <> char '#'
-        pretty (StringPrim s) = text (show s)           <> char '#'
-        pretty (IntPrim i)    = integer i               <> char '#'
-        pretty (FloatPrim r)  = float  (fromRational r) <> char '#'
-        pretty (DoublePrim r) = double (fromRational r) <> text "##"
+        pretty (PrimChar c)   = text (show c)           <> char '#'
+        pretty (PrimString s) = text (show s)           <> char '#'
+        pretty (PrimInt i)    = integer i               <> char '#'
+        pretty (PrimWord w)   = integer w               <> text "##"
+        pretty (PrimFloat r)  = float  (fromRational r) <> char '#'
+        pretty (PrimDouble r) = double (fromRational r) <> text "##"
 
 instance Pretty Exp where
         pretty (Lit l) = pretty l

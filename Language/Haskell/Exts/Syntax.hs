@@ -513,15 +513,16 @@ data Asst     = ClassA QName [Type]
 -- precise string representation used.  For example, @10@, @0o12@ and @0xa@
 -- have the same representation.
 data Literal
-    = Char    Char        -- ^ character literal
-    | String  String      -- ^ string literal
-    | Int     Integer     -- ^ integer literal
-    | Frac    Rational    -- ^ floating point literal
-    | CharPrim    Char        -- ^ GHC unboxed character literal
-    | StringPrim  String      -- ^ GHC unboxed string literal
-    | IntPrim Integer     -- ^ GHC unboxed integer literal
-    | FloatPrim   Rational    -- ^ GHC unboxed float literal
-    | DoublePrim  Rational    -- ^ GHC unboxed double literal
+    = Char    Char          -- ^ character literal
+    | String  String        -- ^ string literal
+    | Int     Integer       -- ^ integer literal
+    | Frac    Rational      -- ^ floating point literal
+    | PrimInt    Integer    -- ^ GHC unboxed integer literal
+    | PrimWord   Integer    -- ^ GHC unboxed word literal
+    | PrimFloat  Rational   -- ^ GHC unboxed float literal
+    | PrimDouble Rational   -- ^ GHC unboxed double literal
+    | PrimChar   Char       -- ^ GHC unboxed character literal
+    | PrimString String     -- ^ GHC unboxed string literal
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else

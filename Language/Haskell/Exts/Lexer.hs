@@ -41,6 +41,12 @@ data Token
         | FloatTok Rational
         | Character Char
         | StringTok String
+        | IntTokHash Integer        -- 1#
+        | WordTokHash Integer       -- 1##
+        | FloatTokHash Rational     -- 1.0#
+        | DoubleTokHash Rational    -- 1.0##
+        | CharacterHash Char        -- c#
+        | StringHash String         -- "Hello world!"#
 
 -- Symbols
 
@@ -77,15 +83,15 @@ data Token
         | Star
     
 -- Template Haskell
-        | THExpQuote        -- [| or [e|
-        | THPatQuote        -- [p|
-        | THDecQuote        -- [d|
-        | THTypQuote        -- [t|         
-        | THCloseQuote      -- |]
+        | THExpQuote            -- [| or [e|
+        | THPatQuote            -- [p|
+        | THDecQuote            -- [d|
+        | THTypQuote            -- [t|         
+        | THCloseQuote          -- |]
         | THIdEscape (String)   -- dollar x
-        | THParenEscape     -- dollar ( 
-        | THVarQuote        -- 'x (but without the x)
-        | THTyQuote         -- ''T (but without the T)
+        | THParenEscape         -- dollar ( 
+        | THVarQuote            -- 'x (but without the x)
+        | THTyQuote             -- ''T (but without the T)
 
 -- HaRP
         | RPGuardOpen       -- (|
@@ -668,11 +674,15 @@ lexDecimalOrFloat = do
                         'e':_ -> lexExponent
                         'E':_ -> lexExponent
                         _     -> return 0
-                return (FloatTok ((num%1) * 10^^(exponent - decimals)))
+                con <- lexHash FloatTok FloatTokHash (Right DoubleTokHash)
+                return $ con ((num%1) * 10^^(exponent - decimals))
         e:_ | toLower e == 'e' -> do
                 exponent <- lexExponent
-                return (FloatTok ((parseInteger 10 ds%1) * 10^^exponent))
-        _ -> return (IntTok (parseInteger 10 ds))
+                con <- lexHash FloatTok FloatTokHash (Right DoubleTokHash)
+                return $ con ((parseInteger 10 ds%1) * 10^^exponent)
+        '#':'#':_ -> discard 2 >> return (WordTokHash (parseInteger 10 ds))
+        '#':_     -> discard 1 >> return (IntTokHash  (parseInteger 10 ds))
+        _         ->              return (IntTok      (parseInteger 10 ds))
 
     where
     lexExponent :: Lex a Integer
@@ -689,6 +699,16 @@ lexDecimalOrFloat = do
             return (negate n)
          d:_ | isDigit d -> lexDecimal
          _ -> fail "Float with missing exponent"
+    
+lexHash :: (b -> Token) -> (b -> Token) -> Either String (b -> Token) -> Lex a (b -> Token)
+lexHash a b c = do
+    r <- getInput
+    case r of
+     '#':'#':_ -> case c of
+                   Right c -> discard 2 >> return c
+                   Left s  -> fail s
+     '#':_     -> discard 1 >> return b
+     _         ->              return a
 
 lexConIdOrQual :: String -> Lex a Token
 lexConIdOrQual qual = do
@@ -744,8 +764,14 @@ lexCharacter = do   -- We need to keep track of not only character constants but
          '\\':_ -> do 
                     c <- lexEscape 
                     matchQuote
-                    return (Character c)
-         c:'\'':_ -> discard 2 >> return (Character c)
+                    con <- lexHash Character CharacterHash 
+                            (Left "Double hash not available for character literals") 
+                    return (con c)
+         c:'\'':_ -> do 
+                    discard 2 
+                    con <- lexHash Character CharacterHash 
+                            (Left "Double hash not available for character literals") 
+                    return (con c)
          _ -> return THVarQuote                    
 
     where matchQuote = matchChar '\'' "Improperly terminated character constant"
@@ -768,6 +794,9 @@ lexString = loop ""
                      | otherwise -> do
                         ce <- lexEscape
                         loop (ce:s)
+            '"':'#':_ -> do
+                        discard 2
+                        return (StringHash (reverse s))
             '"':_ -> do
                 discard 1
                 return (StringTok (reverse s))
