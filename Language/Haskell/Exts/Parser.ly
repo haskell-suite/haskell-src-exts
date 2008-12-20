@@ -1358,13 +1358,13 @@ Miscellaneous (mostly renamings)
 >       | QCONID                { ModuleName (fst $1 ++ '.':snd $1) }
 
 > tyconorcls :: { Name }
->       : conid                 { $1 }
+>       : con                   { $1 }
 
  tycon :: { Name }
         : conid                 { $1 }
 
 > qtyconorcls :: { QName }
->       : qconid                { $1 }
+>       : qcon                  { $1 }
 
 > qtycls :: { QName }
 >       : qconid                { $1 }
