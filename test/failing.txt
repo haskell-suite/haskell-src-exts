@@ -4,3 +4,6 @@ Hyphen.hs
 ImportSymbol.hs
 Pragma.hs
 Unicode.hs
+NPlusK.hs
+Rank2Types.hs
+ScopedTypeVariables.hs
