@@ -299,8 +299,8 @@ instance Pretty ImportDecl where
         pretty (ImportDecl pos m qual src mbName mbSpecs) =
                 markLine pos $
                 mySep [text "import",
-                       if qual then text "qualified" else empty,
                        if src  then text "{-# SOURCE #-}" else empty,
+                       if qual then text "qualified" else empty,
                        pretty m,
                        maybePP (\m' -> text "as" <+> pretty m') mbName,
                        maybePP exports mbSpecs]
