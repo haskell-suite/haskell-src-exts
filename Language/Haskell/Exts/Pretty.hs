@@ -268,8 +268,9 @@ instance Pretty Module where
         pretty (Module pos m os mbWarn mbExports imp decls) =
                 markLine pos $
                 myVcat $ map pretty os ++
-                            [topLevel (ppModuleHeader m mbWarn mbExports)
-                                     (map pretty imp ++ map pretty decls)]
+                    (if m == ModuleName "" then id
+                     else \x -> [topLevel (ppModuleHeader m mbWarn mbExports) x])
+                    (map pretty imp ++ map pretty decls)
 
 --------------------------  Module Header ------------------------------
 ppModuleHeader :: ModuleName -> Maybe WarningText -> Maybe [ExportSpec] -> Doc
