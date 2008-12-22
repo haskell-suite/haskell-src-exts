@@ -1,1 +1,6 @@
 RecordWildcards.hs
+GhcDeriving.hs
+Hyphen.hs
+ImportSymbol.hs
+Pragma.hs
+Unicode.hs
