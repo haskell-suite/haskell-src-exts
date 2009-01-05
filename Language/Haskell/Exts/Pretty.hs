@@ -873,6 +873,8 @@ instance Pretty Pat where
                 myFsep [pretty pat, text "::", pretty ty]
         prettyPrec _ (PViewPat e p) =
                 myFsep [pretty e, text "->", pretty p]
+        prettyPrec _ (PNPlusK n k) =
+                myFsep [pretty n, text "+", text $ show k]
         -- HaRP
         prettyPrec _ (PRPat rs) = 
                 bracketList . punctuate comma . map pretty $ rs

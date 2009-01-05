@@ -723,6 +723,7 @@ data Pat
     = PVar Name                 -- ^ variable
     | PLit Literal              -- ^ literal constant
     | PNeg Pat                  -- ^ negated pattern
+    | PNPlusK Name Integer      -- ^ n+k pattern
     | PInfixApp Pat QName Pat
                                     -- ^ pattern with infix data constructor
     | PApp QName [Pat]        -- ^ data constructor and argument
