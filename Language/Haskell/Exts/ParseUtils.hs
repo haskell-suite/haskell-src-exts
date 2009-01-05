@@ -34,6 +34,7 @@ module Language.Haskell.Exts.ParseUtils (
     , checkRevInstDecls     -- [InstDecl] -> P [InstDecl]
     , checkDataOrNew        -- DataOrNew -> [Decl] -> P ()
     , checkSimpleType       -- Type -> P ()
+    , checkSigVar           -- PExp -> P Name
     , getGConName           -- S.Exp -> P QName
     , mkTyForall            -- Maybe [Name] -> Context -> Type -> Type 
     -- HaRP
@@ -468,15 +469,15 @@ getGConName _ = fail "Expression in reification is not a name"
 -----------------------------------------------------------------------------
 -- Check Equation Syntax
 
-checkValDef :: SrcLoc -> PExp -> Rhs -> Binds -> P Decl
-checkValDef srcloc lhs rhs whereBinds =
+checkValDef :: SrcLoc -> PExp -> Maybe Type -> Rhs -> Binds -> P Decl
+checkValDef srcloc lhs optsig rhs whereBinds =
     case isFunLhs lhs [] of
      Just (f,es) -> do
             ps <- mapM checkPattern es
-            return (FunBind [Match srcloc f ps rhs whereBinds])
+            return (FunBind [Match srcloc f ps optsig rhs whereBinds])
      Nothing     -> do
             lhs <- checkPattern lhs
-            return (PatBind srcloc lhs rhs whereBinds)
+            return (PatBind srcloc lhs optsig rhs whereBinds)
 
 -- A variable binding is parsed as an PatBind.
 
@@ -486,6 +487,13 @@ isFunLhs (App (Var (UnQual f)) e) es = Just (f, e:es)
 isFunLhs (App (Paren f) e) es = isFunLhs f (e:es)
 isFunLhs (App f e) es = isFunLhs f (e:es)
 isFunLhs _ _ = Nothing
+
+-- Separating between signature declarations and value definitions in
+-- a post-processing step
+
+checkSigVar :: PExp -> P Name
+checkSigVar (Var (UnQual n)) = return n
+checkSigVar _ = fail "Left-hand side of type signature is not a variable"
 
 -----------------------------------------------------------------------------
 -- In a class or instance body, a pattern binding must be of a variable.
@@ -505,8 +513,8 @@ checkInstBody decls = do
         checkInstMethodDef _ = return ()
 
 checkMethodDef :: Decl -> P ()
-checkMethodDef (PatBind _ (PVar _) _ _) = return ()
-checkMethodDef (PatBind loc _ _ _) =
+checkMethodDef (PatBind _ (PVar _) _ _ _) = return ()
+checkMethodDef (PatBind loc _ _ _ _) =
     fail "illegal method definition" `atSrcLoc` loc
 checkMethodDef _ = return ()
 
@@ -554,11 +562,11 @@ checkRevDecls :: [Decl] -> P [Decl]
 checkRevDecls = mergeFunBinds []
     where
     mergeFunBinds revDs [] = return revDs
-    mergeFunBinds revDs (FunBind ms1@(Match _ name ps _ _:_):ds1) =
+    mergeFunBinds revDs (FunBind ms1@(Match _ name ps _ _ _:_):ds1) =
         mergeMatches ms1 ds1
         where
         arity = length ps
-        mergeMatches ms' (FunBind ms@(Match loc name' ps' _ _:_):ds)
+        mergeMatches ms' (FunBind ms@(Match loc name' ps' _ _ _:_):ds)
             | name' == name =
             if length ps' /= arity
             then fail ("arity mismatch for '" ++ prettyPrint name ++ "'")
@@ -571,11 +579,11 @@ checkRevClsDecls :: [ClassDecl] -> P [ClassDecl]
 checkRevClsDecls = mergeClsFunBinds []
     where
     mergeClsFunBinds revDs [] = return revDs
-    mergeClsFunBinds revDs (ClsDecl (FunBind ms1@(Match _ name ps _ _:_)):ds1) =
+    mergeClsFunBinds revDs (ClsDecl (FunBind ms1@(Match _ name ps _ _ _:_)):ds1) =
         mergeMatches ms1 ds1
         where
         arity = length ps
-        mergeMatches ms' (ClsDecl (FunBind ms@(Match loc name' ps' _ _:_)):ds)
+        mergeMatches ms' (ClsDecl (FunBind ms@(Match loc name' ps' _ _ _:_)):ds)
             | name' == name =
             if length ps' /= arity
             then fail ("arity mismatch for '" ++ prettyPrint name ++ "'")
@@ -588,11 +596,11 @@ checkRevInstDecls :: [InstDecl] -> P [InstDecl]
 checkRevInstDecls = mergeInstFunBinds []
     where
     mergeInstFunBinds revDs [] = return revDs
-    mergeInstFunBinds revDs (InsDecl (FunBind ms1@(Match _ name ps _ _:_)):ds1) =
+    mergeInstFunBinds revDs (InsDecl (FunBind ms1@(Match _ name ps _ _ _:_)):ds1) =
         mergeMatches ms1 ds1
         where
         arity = length ps
-        mergeMatches ms' (InsDecl (FunBind ms@(Match loc name' ps' _ _:_)):ds)
+        mergeMatches ms' (InsDecl (FunBind ms@(Match loc name' ps' _ _ _:_)):ds)
             | name' == name =
             if length ps' /= arity
             then fail ("arity mismatch for '" ++ prettyPrint name ++ "'")
@@ -617,7 +625,7 @@ checkSimpleType t = checkSimple "test" t []
 -- Converting a complete page
 
 pageFun :: SrcLoc -> S.Exp -> Decl
-pageFun loc e = PatBind loc namePat rhs (BDecls [])
+pageFun loc e = PatBind loc namePat Nothing rhs (BDecls [])
     where namePat = PVar $ Ident "page"
           rhs = UnGuardedRhs e
 

@@ -297,7 +297,7 @@ data Decl
      | SpliceDecl   SrcLoc Splice
      | TypeSig      SrcLoc [Name] Type
      | FunBind      [Match]
-     | PatBind      SrcLoc Pat Rhs {-where-} Binds
+     | PatBind      SrcLoc Pat (Maybe Type) Rhs {-where-} Binds
      | ForImp   SrcLoc CallConv Safety String Name Type
      | ForExp   SrcLoc CallConv          String Name Type
 -- Pragmas
@@ -340,7 +340,7 @@ data IPBind = IPBind SrcLoc IPName Exp
 
 -- | Clauses of a function binding.
 data Match
-     = Match SrcLoc Name [Pat] Rhs {-where-} Binds
+     = Match SrcLoc Name [Pat] (Maybe Type) Rhs {-where-} Binds
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else

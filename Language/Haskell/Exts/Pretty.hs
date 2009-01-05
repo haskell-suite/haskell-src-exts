@@ -429,9 +429,9 @@ instance Pretty Decl where
         pretty (FunBind matches) =
                 foldr ($$$) empty (map pretty matches)
 
-        pretty (PatBind pos pat rhs whereBinds) =
+        pretty (PatBind pos pat optsig rhs whereBinds) =
                 markLine pos $
-                myFsep [pretty pat, pretty rhs] $$$ ppWhere whereBinds
+                myFsep [pretty pat, maybePP ppSig optsig, pretty rhs] $$$ ppWhere whereBinds
 
         pretty (InfixDecl pos assoc prec opList) =
                 blankline $
@@ -506,9 +506,9 @@ instance Pretty Assoc where
         pretty AssocRight = text "infixr"
 
 instance Pretty Match where
-        pretty (Match pos f ps rhs whereBinds) =
+        pretty (Match pos f ps optsig rhs whereBinds) =
                 markLine pos $
-                myFsep (lhs ++ [pretty rhs])
+                myFsep (lhs ++ [maybePP ppSig optsig, pretty rhs])
                 $$$ ppWhere whereBinds
             where
                 lhs = case ps of
@@ -523,6 +523,8 @@ ppWhere (BDecls []) = empty
 ppWhere (BDecls l)  = nest 2 (text "where" $$$ ppBody whereIndent (map pretty l))
 ppWhere (IPBinds b) = nest 2 (text "where" $$$ ppBody whereIndent (map pretty b))
 
+ppSig :: Type -> Doc
+ppSig t = text "::" <+> pretty t
 
 instance Pretty ClassDecl where
     pretty (ClsDecl decl) = pretty decl
