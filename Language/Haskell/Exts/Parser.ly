@@ -487,7 +487,9 @@ shift/reduce-conflict, so we don't handle this case here, but in bodyaux.
 >       | open decls close              { $2 }
 
 > signdecl :: { Decl }
->       : srcloc vars '::' ctype                                { TypeSig $1 (reverse $2) $4 }
+>       : srcloc exp0b '::' ctype                                {% do { v <- checkSigVar $2;
+>                                                                        return $ TypeSig $1 [v] $4 } }
+>       | srcloc var ',' vars '::' ctype                        { TypeSig $1 ($2 : reverse $4) $6 }
 >       | srcloc '{-# INLINE' activation qvar '#-}'             { InlineSig $1 $2 $3 $4 }
 >       | srcloc '{-# SPECIALISE' qvar '::' sigtypes '#-}'      { SpecSig $1 $3 $5 }
 >       | srcloc '{-# SPECIALISE_INLINE' activation qvar '::' sigtypes '#-}'   
@@ -863,12 +865,16 @@ Instance declarations
 Value definitions
 
 > valdef :: { Decl }
->       : srcloc exp0b rhs optwhere     {% checkValDef $1 $2 $3 $4 }
+>       : srcloc exp0b optsig rhs optwhere     {% checkValDef $1 $2 $3 $4 $5 }
 
 May bind implicit parameters
 > optwhere :: { Binds }
 >       : 'where' binds                 { $2 }
 >       | {- empty -}                   { BDecls [] }
+
+> optsig :: { Maybe Type }
+>       : '::' ctype                    { Just $2 }
+>       | {- empty -}                   { Nothing }
 
 > rhs   :: { Rhs }
 >       : '=' trueexp                   { UnGuardedRhs $2 }

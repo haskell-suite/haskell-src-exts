@@ -202,7 +202,7 @@ genNames s k = [ Ident $ s ++ show i | i <- [1..k] ]
 
 -- | A function with a single "match"
 sfun :: SrcLoc -> Name -> [Name] -> Rhs -> Binds -> Decl
-sfun s f pvs rhs bs = FunBind [Match s f (map pvar pvs) rhs bs]
+sfun s f pvs rhs bs = FunBind [Match s f (map pvar pvs) Nothing rhs bs]
 
 -- | A function with a single "match", a single argument, no guards
 -- and no where declarations
@@ -214,11 +214,11 @@ simpleFun s f a e = let rhs = UnGuardedRhs e
 -- there are no guards and no 'where' clause.
 patBind :: SrcLoc -> Pat -> Exp -> Decl
 patBind s p e = let rhs = UnGuardedRhs e
-         in PatBind s p rhs noBinds
+         in PatBind s p Nothing rhs noBinds
 
 patBindWhere :: SrcLoc -> Pat -> Exp -> [Decl] -> Decl
 patBindWhere s p e ds = let rhs = UnGuardedRhs e
-             in PatBind s p rhs (binds ds)
+             in PatBind s p Nothing rhs (binds ds)
 
 nameBind :: SrcLoc -> Name -> Exp -> Decl
 nameBind s n e = patBind s (pvar n) e
