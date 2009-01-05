@@ -39,7 +39,7 @@ Most of the code is blatantly stolen from the GHC module Language.Haskell.Parser
 Some of the code for extensions is greatly influenced by GHC's internal parser
 library, ghc/compiler/parser/Parser.y. 
 -----------------------------------------------------------------------------
-Conflicts: 5 shift/reduce
+Conflicts: 7 shift/reduce
 
 2 for ambiguity in 'case x of y | let z = y in z :: Bool -> b'  [State 220, 236]
         (don't know whether to reduce 'Bool' as a btype or shift the '->'.
@@ -65,10 +65,16 @@ Conflicts: 5 shift/reduce
         that < or reduce an implicit 'open'. Since no other body could possibly start
         with <, shifting is the only sensible thing to do. 
 
-1 for ambiguity in '{-# RULES "name" [ ... #-}      [State 212]
+1 for ambiguity in '{-# RULES "name" [ ... #-}'     [State 212]
     we don't know whether the '[' starts the activation or not: it
     might be the start of the declaration with the activation being
     empty. Resolving with shift means the declaration cannot start with '['.
+    
+1 for ambiguity in 'x :: Int = ...'
+    we don't know if we should reduce the lefthand side to a type signature
+    declaration, or shift the '=' and treat the lefthand side as a pattern with
+    a scoped type variable. Since a type signature declaration couldn't be followed
+    by a '=', shifting is the only sensible thing to do.
 -----------------------------------------------------------------------------
 
 > %token
@@ -224,7 +230,7 @@ Pragmas
 > %lexer { lexer } { EOF }
 > %name parse
 > %tokentype { Token }
-> %expect 6
+> %expect 7
 > %%
 
 -----------------------------------------------------------------------------
