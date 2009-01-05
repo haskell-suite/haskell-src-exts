@@ -147,12 +147,17 @@ checkPat (App f x) args = do
 checkPat e [] = case e of
     Var (UnQual x)   -> return (PVar x)
     Lit l            -> return (PLit l)
-    InfixApp l op r  -> do
-                  l <- checkPat l []
-                  r <- checkPat r []
-                  case op of
-                    QConOp c -> return (PInfixApp l c r)
-                    _ -> patFail ""
+    InfixApp l op r  -> 
+        case op of
+            QConOp c -> do
+                    l <- checkPat l []
+                    r <- checkPat r []
+                    return (PInfixApp l c r)
+            QVarOp (UnQual (Symbol "+")) -> do
+                    case (l,r) of
+                        (Var (UnQual n@(Ident _)), Lit (Int k)) -> return (PNPlusK n k)
+                        _ -> patFail ""
+            _ -> patFail ""
     Tuple es         -> do
                   ps <- mapM (\e -> checkPat e []) es
                   return (PTuple ps)
