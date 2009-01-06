@@ -7,6 +7,6 @@ Build-type:      Simple
 
 Executable:      prettify
 Main-is:         Prettify.hs
-Build-depends:   base, haskell-src-exts
+Build-depends:   base, directory, filepath, haskell-src-exts
 Ghc-options:     -Wall
 
