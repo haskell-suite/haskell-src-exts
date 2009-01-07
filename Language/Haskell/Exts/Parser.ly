@@ -607,7 +607,7 @@ Types
 >       | btype qtyconop dtype          { TyInfix $1 $2 $3 }
 >       | btype qtyvarop dtype          { TyInfix $1 $2 $3 }
 >       | btype '->' dtype              { TyFun $1 $3 }
->   | btype '~' btype       { TyPred $ EqualP $1 $3 }
+>       | btype '~' btype       { TyPred $ EqualP $1 $3 }
 
 Implicit parameters can occur in normal types, as well as in contexts.
 
@@ -775,15 +775,31 @@ GADTs
 >       | '!' atype                     { BangedTy   $2 }
 >       | '{-# UNPACK' '#-}' '!' atype  { UnpackedTy $4 }
 
-> deriving :: { [QName] }
+> deriving :: { [Deriving] }
 >       : {- empty -}                   { [] }
->       | 'deriving' qtycls             { [$2] }
+>       | 'deriving' qtycls1            { [($2, [])] }
 >       | 'deriving' '('          ')'   { [] }
 >       | 'deriving' '(' dclasses ')'   { reverse $3 }
 
-> dclasses :: { [QName] }
+> dclasses :: { [Deriving] }
 >       : dclasses ',' qtycls           { $3 : $1 }
 >       | qtycls                        { [$1] }
+
+> qtycls :: { Deriving }
+>       : qtycls1               { ($1, []) }
+>       | qconid tyconvars      { ($1, reverse $2) }
+
+> tyconvars :: { [QName] }
+>       : tyconvars tyconvar    { $2 : $1 }
+>       | tyconvar              { [$1] }
+
+> tyconvar :: { QName }
+>       : qconid                { $1 }
+>       | qvarid                { $1 }
+
+> qtycls1 :: { QName }
+>       : qconid                { $1 }
+
 
 -----------------------------------------------------------------------------
 Kinds
@@ -862,10 +878,10 @@ Instance declarations
 >                       {% do { -- (cs,c,t) <- checkDataHeader $4;
 >                               checkDataOrNew $2 $4;
 >                               return (InsData $1 $2 $3 (reverse $4) $5) } }
->       | srcloc data_or_newtype ctype optkind 'where' gadtlist
+>       | srcloc data_or_newtype ctype optkind 'where' gadtlist deriving
 >                       {% do { -- (cs,c,t) <- checkDataHeader $4;
 >                               checkDataOrNew $2 $6;
->                               return (InsGData $1 $2 $3 $4 (reverse $6)) } }
+>                               return (InsGData $1 $2 $3 $4 (reverse $6) $7) } }
 
 -----------------------------------------------------------------------------
 Value definitions
@@ -1377,9 +1393,6 @@ Miscellaneous (mostly renamings)
 
 > qtyconorcls :: { QName }
 >       : qcon                  { $1 }
-
-> qtycls :: { QName }
->       : qconid                { $1 }
 
 > tyvar :: { Name }
 >       : varid                 { $1 }

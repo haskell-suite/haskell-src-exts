@@ -44,7 +44,7 @@ module Language.Haskell.Exts.Syntax (
     ImportDecl(..), ImportSpec(..), Assoc(..),
     -- * Declarations
     Decl(..), Binds(..), IPBind(..), 
-    ClassDecl(..), InstDecl(..),
+    ClassDecl(..), InstDecl(..), Deriving,
     GadtDecl(..), ConDecl(..), QualConDecl(..), BangType(..),
     Match(..), Rhs(..), GuardedRhs(..), DataOrNew(..),
     -- * Class Assertions and Contexts
@@ -280,15 +280,17 @@ data Assoc
   deriving (Eq,Show)
 #endif
 
+type Deriving = (QName, [QName])
+
 data Decl
      = TypeDecl     SrcLoc Name [Name] Type
-     | DataDecl     SrcLoc DataOrNew Context Name [Name] [QualConDecl] [QName]
-     | GDataDecl    SrcLoc DataOrNew Context Name [Name] (Maybe Kind) [GadtDecl] [QName]
+     | DataDecl     SrcLoc DataOrNew Context Name [Name] [QualConDecl] [Deriving]
+     | GDataDecl    SrcLoc DataOrNew Context Name [Name] (Maybe Kind) [GadtDecl] [Deriving]
      | TypeFamDecl  SrcLoc Name [Name] (Maybe Kind)
      | DataFamDecl  SrcLoc Context Name [Name] (Maybe Kind)
      | TypeInsDecl  SrcLoc Type Type
-     | DataInsDecl  SrcLoc DataOrNew Type [QualConDecl] [QName]
-     | GDataInsDecl SrcLoc DataOrNew Type (Maybe Kind) [GadtDecl] [QName]
+     | DataInsDecl  SrcLoc DataOrNew Type [QualConDecl] [Deriving]
+     | GDataInsDecl SrcLoc DataOrNew Type (Maybe Kind) [GadtDecl] [Deriving]
      | InfixDecl    SrcLoc Assoc Int [Op]
      | ClassDecl    SrcLoc Context Name [Name] [FunDep] [ClassDecl]
      | InstDecl     SrcLoc Context QName [Type] [InstDecl]
@@ -393,8 +395,8 @@ data ClassDecl
 data InstDecl
     = InsDecl   Decl
     | InsType   SrcLoc Type Type
-    | InsData   SrcLoc DataOrNew Type [QualConDecl] [QName]
-    | InsGData  SrcLoc DataOrNew Type (Maybe Kind) [GadtDecl] {-no deriving-}
+    | InsData   SrcLoc DataOrNew Type [QualConDecl] [Deriving]
+    | InsGData  SrcLoc DataOrNew Type (Maybe Kind) [GadtDecl] [Deriving]
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
