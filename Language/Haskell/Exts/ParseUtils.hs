@@ -334,15 +334,10 @@ checkExpr e = case e of
     Let bs e            -> check1Expr e (S.Let bs)
     If e1 e2 e3         -> check3Exprs e1 e2 e3 S.If
     Case e alts         -> do
---                     alts <- mapM checkAlt alts
                      e <- checkExpr e
                      return (S.Case e alts)
-    Do stmts        -> do
---                     stmts <- mapM checkStmt stmts
-                     return (S.Do stmts)
-    MDo stmts       -> do
---                     stmts <- mapM checkStmt stmts
-                     return (S.MDo stmts)
+    Do stmts        -> return (S.Do stmts)
+    MDo stmts       -> return (S.MDo stmts)
     Tuple es        -> checkManyExprs es S.Tuple
     List es         -> checkManyExprs es S.List
     -- Since we don't parse things as left sections, we need to mangle them into that.
@@ -362,7 +357,6 @@ checkExpr e = case e of
     EnumFromThen e1 e2      -> check2Exprs e1 e2 S.EnumFromThen
     EnumFromThenTo e1 e2 e3 -> check3Exprs e1 e2 e3 S.EnumFromThenTo
     ListComp e stmts        -> do
-                     --stmts <- mapM checkStmt stmts
                      e <- checkExpr e
                      return (S.ListComp e stmts)
     ExpTypeSig loc e ty     -> do
