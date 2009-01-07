@@ -557,11 +557,12 @@ instance Pretty InstDecl where
                                                    (map pretty constrList))
                               $$$ ppDeriving derives)
 
-        pretty (InsGData loc don ntype optkind gadtList) =
+        pretty (InsGData loc don ntype optkind gadtList derives) =
                 markLine loc $
                 mySep ( [pretty don, pretty ntype]
                         ++ ppOptKind optkind ++ [text "where"])
                         $$$ ppBody classIndent (map pretty gadtList)
+                        $$$ ppDeriving derives
 
 
 ------------------------- FFI stuff -------------------------------------
@@ -643,10 +644,12 @@ instance Pretty BangType where
         prettyPrec p (UnBangedTy ty) = prettyPrec p ty
         prettyPrec p (UnpackedTy ty) = text "{-# UNPACK #-}" <+> char '!' <> prettyPrec p ty
 
-ppDeriving :: [QName] -> Doc
+ppDeriving :: [Deriving] -> Doc
 ppDeriving []  = empty
-ppDeriving [d] = text "deriving" <+> ppQName d
-ppDeriving ds  = text "deriving" <+> parenList (map ppQName ds)
+ppDeriving [(d, [])] = text "deriving" <+> ppQName d
+ppDeriving ds  = text "deriving" <+> parenList (map ppDer ds)
+    where ppDer :: (QName, [QName]) -> Doc
+          ppDer (x, xs) = mySep (map pretty (x:xs))
 
 ------------------------- Types -------------------------
 ppBType :: Type -> Doc
