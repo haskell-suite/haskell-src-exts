@@ -230,6 +230,8 @@ checkPatField :: PFieldUpdate -> P PatField
 checkPatField (FieldUpdate n e) = do
     p <- checkPat e []
     return (PFieldPat n p)
+checkPatField (FieldPun n) = return (PFieldPun n)
+checkPatField (FieldWildcard) = return PFieldWildcard
 
 checkPAttr :: ParseXAttr -> P PXAttr
 checkPAttr (XAttr n v) = do p <- checkPat v []
@@ -460,6 +462,8 @@ checkStmt s@(LetStmt _) = return s
 -}
 checkField :: PFieldUpdate -> P S.FieldUpdate
 checkField (FieldUpdate n e) = check1Expr e (S.FieldUpdate n)
+checkField (FieldPun n) = return $ S.FieldPun n
+checkField (FieldWildcard) = return S.FieldWildcard
 
 getGConName :: S.Exp -> P QName
 getGConName (S.Con n) = return n
@@ -752,8 +756,10 @@ data PExp
     | UnknownExpPragma  String String
   deriving (Eq,Show)
 
-data PFieldUpdate = 
-    FieldUpdate QName PExp
+data PFieldUpdate 
+    = FieldUpdate QName PExp
+    | FieldPun Name
+    | FieldWildcard
   deriving (Eq,Show)
 
 data ParseXAttr = XAttr XName PExp

@@ -1,5 +1,5 @@
-{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE RecordWildCards, NamedFieldPuns #-}
 
-data Foo = Foo {a :: Int}
+data Foo = Foo {a :: Int, b :: Int}
 
-foo Foo{..} = a
+foo Foo{b, ..} = a

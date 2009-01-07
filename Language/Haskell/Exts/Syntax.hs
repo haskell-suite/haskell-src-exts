@@ -800,6 +800,8 @@ data RPat
 -- | An /fpat/ in a labeled record pattern.
 data PatField
     = PFieldPat QName Pat
+    | PFieldPun Name
+    | PFieldWildcard
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -825,6 +827,8 @@ data Stmt
 -- | An /fbind/ in a labeled construction or update.
 data FieldUpdate
     = FieldUpdate QName Exp
+    | FieldPun Name
+    | FieldWildcard
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
