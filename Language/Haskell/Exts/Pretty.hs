@@ -564,6 +564,10 @@ instance Pretty InstDecl where
                         $$$ ppBody classIndent (map pretty gadtList)
                         $$$ ppDeriving derives
 
+        pretty (InsInline loc inl activ name) =
+                markLine loc $
+                mySep [text (if inl then "{-# INLINE" else "{-# NOINLINE"), pretty activ, pretty name, text "#-}"]
+
 
 ------------------------- FFI stuff -------------------------------------
 instance Pretty Safety where

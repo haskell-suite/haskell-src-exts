@@ -869,6 +869,10 @@ Instance declarations
 > insvaldef :: { InstDecl }
 >       : valdef                        { InsDecl $1 }
 >       | atinst                        { $1 }
+>       | inlinst                       { $1 }
+
+> inlinst :: { InstDecl }
+>       : srcloc '{-# INLINE' activation qvar '#-}'     { InsInline $1 $2 $3 $4 }
 
 > atinst :: { InstDecl }
 >       : srcloc 'type' dtype '=' ctype
