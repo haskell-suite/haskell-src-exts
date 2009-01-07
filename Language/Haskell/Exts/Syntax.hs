@@ -397,6 +397,7 @@ data InstDecl
     | InsType   SrcLoc Type Type
     | InsData   SrcLoc DataOrNew Type [QualConDecl] [Deriving]
     | InsGData  SrcLoc DataOrNew Type (Maybe Kind) [GadtDecl] [Deriving]
+    | InsInline SrcLoc Bool Activation QName
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
