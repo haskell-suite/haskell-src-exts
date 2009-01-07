@@ -1205,6 +1205,8 @@ Record Field Update/Construction
 
 > fbind :: { PFieldUpdate }
 >       : qvar '=' exp                  { FieldUpdate $1 $3 }
+>       | var                           { FieldPun $1 }
+>       | '..'                          { FieldWildcard }
 
 -----------------------------------------------------------------------------
 Implicit parameter bindings

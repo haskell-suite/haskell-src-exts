@@ -905,6 +905,8 @@ instance Pretty PXAttr where
 instance Pretty PatField where
         pretty (PFieldPat name pat) =
                 myFsep [pretty name, equals, pretty pat]
+        pretty (PFieldPun name) = pretty name
+        pretty (PFieldWildcard) = text ".."
 
 --------------------- Regular Patterns -------------------------
 
@@ -965,6 +967,8 @@ ppLetStmt l = text "let" $$$ ppBody letIndent (map pretty l)
 instance Pretty FieldUpdate where
         pretty (FieldUpdate name e) =
                 myFsep [pretty name, equals, pretty e]
+        pretty (FieldPun name) = pretty name
+        pretty (FieldWildcard) = text ".."
 
 ------------------------- Names -------------------------
 instance Pretty QOp where
