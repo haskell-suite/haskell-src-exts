@@ -495,7 +495,8 @@ shift/reduce-conflict, so we don't handle this case here, but in bodyaux.
 > signdecl :: { Decl }
 >       : srcloc exp0b '::' ctype                                {% do { v <- checkSigVar $2;
 >                                                                        return $ TypeSig $1 [v] $4 } }
->       | srcloc var ',' vars '::' ctype                        { TypeSig $1 ($2 : reverse $4) $6 }
+>       | srcloc exp0b ',' vars '::' ctype                      {% do { v <- checkSigVar $2;
+>                                                                       return $ TypeSig $1 (v : reverse $4) $6 } }
 >       | srcloc '{-# INLINE' activation qvar '#-}'             { InlineSig $1 $2 $3 $4 }
 >       | srcloc '{-# SPECIALISE' qvar '::' sigtypes '#-}'      { SpecSig $1 $3 $5 }
 >       | srcloc '{-# SPECIALISE_INLINE' activation qvar '::' sigtypes '#-}'   

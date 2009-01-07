@@ -497,7 +497,7 @@ isFunLhs _ _ = Nothing
 
 checkSigVar :: PExp -> P Name
 checkSigVar (Var (UnQual n)) = return n
-checkSigVar _ = fail "Left-hand side of type signature is not a variable"
+checkSigVar e = fail $ "Left-hand side of type signature is not a variable: " ++ show e
 
 -----------------------------------------------------------------------------
 -- In a class or instance body, a pattern binding must be of a variable.
