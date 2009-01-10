@@ -607,7 +607,7 @@ Types
 >       : btype                         { $1 }
 >       | btype qtyconop dtype          { TyInfix $1 $2 $3 }
 >       | btype qtyvarop dtype          { TyInfix $1 $2 $3 }
->       | btype '->' dtype              { TyFun $1 $3 }
+>       | btype '->' ctype              { TyFun $1 $3 }
 >       | btype '~' btype       { TyPred $ EqualP $1 $3 }
 
 Implicit parameters can occur in normal types, as well as in contexts.
