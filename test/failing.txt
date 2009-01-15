@@ -1,4 +1,3 @@
 Hyphen.hs
 Unicode.hs
-Rank2Types.hs
 TypeFunctions.hs
