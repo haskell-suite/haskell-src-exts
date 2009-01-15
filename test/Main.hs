@@ -21,7 +21,8 @@ check :: Bool -> FilePath -> IO ()
 check expected file = do
     res <- parseFile file
     case res of
-        ParseOk x -> putChar '.'
+        ParseOk x | expected -> putStrLn $ "\n<unexpected pass for " ++ file ++ ">"
+                  | otherwise -> putChar '.'
         err | expected -> putChar '!'
             | otherwise -> putStrLn $ "\nFailure when parsing " ++ show file ++ "\n" ++ show err
 
