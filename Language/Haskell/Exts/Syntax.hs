@@ -101,7 +101,11 @@ module Language.Haskell.Exts.Syntax (
 
 
 #ifdef __GLASGOW_HASKELL__
+#ifdef BASE4
 import Data.Data
+#else
+import Data.Generics (Data(..),Typeable(..))
+#endif
 #endif
 
 -- | A position in the source.
