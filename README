@@ -48,10 +48,10 @@ Supported extensions:
 * Standalone deriving
 * Regular patterns
 * Haskell XML, HSX style
+* Pragmas
 
 As-of-yet unsupported extensions:
 
-* Pragmas. These can exist in the code but are treated as comments.
 * Unboxed functions ( ident# )
 
 Any other out there..?
