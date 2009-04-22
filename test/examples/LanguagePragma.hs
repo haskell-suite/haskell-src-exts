@@ -1,1 +1,0 @@
-{-# LANGUAGE PatternGuards, ViewPatterns #-}

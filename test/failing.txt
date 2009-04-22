@@ -1,3 +1,0 @@
-Hyphen.hs
-Unicode.hs
-TypeFunctions.hs

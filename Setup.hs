@@ -1,2 +1,3 @@
 import Distribution.Simple
-main = defaultMain
+import Test.Runner ( go )
+main = defaultMainWithHooks $ simpleUserHooks { runTests = \args _ _ _ -> go args }

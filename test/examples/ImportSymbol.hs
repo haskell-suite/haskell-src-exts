@@ -1,1 +1,0 @@
-import Data.Generics hiding ((:*:))
