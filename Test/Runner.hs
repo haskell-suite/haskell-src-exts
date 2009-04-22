@@ -1,20 +1,26 @@
-
-module Main where
+-- | Use "runhaskell Setup.hs test" or "cabal test" to run these tests.
+-- Particular files may be selected by supplying arguments.
+module Test.Runner ( go ) where
 
 import Language.Haskell.Exts
 import System.IO
 import Control.Monad
 import Data.List
 import System.Directory
+import System.FilePath
 
 
-main :: IO ()
-main = do
+go :: [FilePath] -> IO ()
+go testsToRun = do
     hSetBuffering stdout NoBuffering
-    files <- getDirectoryContents "examples"
-    src <- liftM lines $ readFile "failing.txt"
-    sequence_ [check (x `elem` src) ("examples/" ++ x) | x <- files, not $ "." `isPrefixOf` x]
+    files <- if null testsToRun then getDirectoryContents examplesDir else return testsToRun
+    src <- liftM lines . readFile $ "Test" </> "failing.txt"
+    sequence_ [check (x `elem` src) (examplesDir </> x) | x <- files, not $ "." `isPrefixOf` x]
     putStrLn "\nAll tests completed"
+
+
+examplesDir :: FilePath
+examplesDir = "Test" </> "examples"
 
 
 check :: Bool -> FilePath -> IO ()

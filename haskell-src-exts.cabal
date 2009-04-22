@@ -30,7 +30,7 @@ Description:            Haskell-Source with Extensions (HSE, haskell-src-exts)
 Homepage:               http://www.cs.chalmers.se/~d00nibro/haskell-src-exts/
 Stability:              Stable
 Tested-with:            GHC==6.10.1
-Build-Type:             Simple
+Build-Type:             Custom
 Cabal-Version:          >= 1.2
 
 Flag base4
@@ -53,3 +53,4 @@ Library
   Other-modules:        Language.Haskell.Exts.ParseMonad,
                         Language.Haskell.Exts.Lexer,
                         Language.Haskell.Exts.ParseUtils
+  Hs-source-dirs:       src
