@@ -3,6 +3,7 @@ module Language.Haskell.Exts (
     , module Language.Haskell.Exts.Build
     , module Language.Haskell.Exts.Parser
     , module Language.Haskell.Exts.Pretty
+    , module Language.Haskell.Exts.Extension
     , parseFileContents
     , parseFileContentsWithMode
     , parseFile
@@ -12,6 +13,8 @@ import Language.Haskell.Exts.Build
 import Language.Haskell.Exts.Syntax
 import Language.Haskell.Exts.Parser
 import Language.Haskell.Exts.Pretty
+import Language.Haskell.Exts.Extension
+
 import Data.List
 import Language.Preprocessor.Unlit
 
