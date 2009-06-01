@@ -24,6 +24,7 @@
 > import Language.Haskell.Exts.ParseMonad
 > import Language.Haskell.Exts.Lexer
 > import Language.Haskell.Exts.ParseUtils
+> import Language.Haskell.Exts.Extension
 > }
 
 -----------------------------------------------------------------------------
@@ -39,7 +40,7 @@ This module comprises a parser for Haskell 98 with the following extensions
 
 Most of the code is blatantly stolen from the GHC module Language.Haskell.Parser.
 Some of the code for extensions is greatly influenced by GHC's internal parser
-library, ghc/compiler/parser/Parser.y. 
+library, ghc/compiler/parser/Parser.y.
 -----------------------------------------------------------------------------
 Conflicts: 7 shift/reduce
 
@@ -51,7 +52,7 @@ Conflicts: 7 shift/reduce
          allows these, because it would require unbounded lookahead.)
         There are 2 conflicts rather than one because contexts are parsed
         as btypes (cf ctype).
-        
+
 1 for ambiguity in 'let ?x ...'                     [State 707]
         the parser can't tell whether the ?x is the lhs of a normal binding or
         an implicit binding. Fortunately resolving as shift gives it the only
@@ -65,13 +66,13 @@ Conflicts: 7 shift/reduce
 1 for ambiguity using toplevel xml modules          [State 8]
         For HSP xml pages starting with a <, the parser cannot tell whether to shift
         that < or reduce an implicit 'open'. Since no other body could possibly start
-        with <, shifting is the only sensible thing to do. 
+        with <, shifting is the only sensible thing to do.
 
 1 for ambiguity in '{-# RULES "name" [ ... #-}'     [State 212]
     we don't know whether the '[' starts the activation or not: it
     might be the start of the declaration with the activation being
     empty. Resolving with shift means the declaration cannot start with '['.
-    
+
 1 for ambiguity in 'x :: Int = ...'
     we don't know if we should reduce the lefthand side to a type signature
     declaration, or shift the '=' and treat the lefthand side as a pattern with
@@ -243,10 +244,14 @@ Pragmas
 -----------------------------------------------------------------------------
 HSP Pages
 
+Any HSP-specific parts requiring the XmlSyntax extension enabled will
+be governed by the lexing, since all productions require at least one
+special lexeme.
+
 > page :: { Module }
 >       : toppragmas topxml                            {% checkExpr $2 >>= mkPageModule $1 }
 >       | toppragmas '<%' module '%>' srcloc topxml    {% checkExpr $6 >>= \x -> mkPage ($3 $1) $5 x }
->       | toppragmas module                                     { $2 $1 }
+>       | toppragmas module                            { $2 $1 }
 
 > topxml :: { PExp }
 >       : srcloc '<' name attrs mattr '>' children '</' name '>'        {% do { n <- checkEqNames $3 $9;
@@ -430,29 +435,45 @@ shift/reduce-conflict, so we don't handle this case here, but in bodyaux.
 >       : srcloc 'type' dtype '=' ctype
 >                       {% do { (c,ts) <- checkSimpleType $3;
 >                               return (TypeDecl $1 c ts $5) } }
+
+Requires the TypeFamilies extension enabled, but the lexer will handle
+that through the 'family' keyword.
 >       | srcloc 'type' 'family' type optkind
 >                       {% do { (c,ts) <- checkSimpleType $4;
 >                               return (TypeFamDecl $1 c ts $5) } }
+
+Here there is no special keyword so we must do the check.
 >       | srcloc 'type' 'instance' dtype '=' ctype
 >                       {% do { -- no checkSimpleType $4 since dtype may contain type patterns
+>                               checkEnabled TypeFamilies ;
 >                               return (TypeInsDecl $1 $4 $6) } }
 >       | srcloc data_or_newtype ctype constrs0 deriving
 >                       {% do { (cs,c,t) <- checkDataHeader $3;
 >                               checkDataOrNew $2 $4;
 >                               return (DataDecl $1 $2 cs c t (reverse $4) $5) } }
+
+Requires the GADTs extension enabled, handled in gadtlist.
 >       | srcloc data_or_newtype ctype optkind 'where' gadtlist deriving
 >                       {% do { (cs,c,t) <- checkDataHeader $3;
 >                               checkDataOrNew $2 $6;
 >                               return (GDataDecl $1 $2 cs c t $4 (reverse $6) $7) } }
+
+Same as above, lexer will handle through the 'family' keyword.
 >       | srcloc 'data' 'family' ctype optkind
 >                       {% do { (cs,c,t) <- checkDataHeader $4;
 >                               return (DataFamDecl $1 cs c t $5) } }
+
+Here we must check for TypeFamilies.
 >       | srcloc data_or_newtype 'instance' ctype constrs0 deriving
 >                       {% do { -- (cs,c,t) <- checkDataHeader $4;
+>                               checkEnabled TypeFamilies ;
 >                               checkDataOrNew $2 $5;
 >                               return (DataInsDecl $1 $2 $4 (reverse $5) $6) } }
+
+This style requires both TypeFamilies and GADTs, the latter is handled in gadtlist.
 >       | srcloc data_or_newtype 'instance' ctype optkind 'where' gadtlist deriving
 >                       {% do { -- (cs,c,t) <- checkDataHeader $4;
+>                               checkEnabled TypeFamilies ;
 >                               checkDataOrNew $2 $7;
 >                               return (GDataInsDecl $1 $2 $4 $5 (reverse $7) $8) } }
 >       | srcloc 'class' ctype fds optcbody
@@ -461,18 +482,27 @@ shift/reduce-conflict, so we don't handle this case here, but in bodyaux.
 >       | srcloc 'instance' ctype optvaldefs
 >                       {% do { (cs,c,ts) <- checkInstHeader $3;
 >                               return (InstDecl $1 cs c ts $4) } }
+
+Requires the StandaloneDeriving extension enabled.
 >       | srcloc 'deriving' 'instance' ctype
->                       {% do { (cs, c, ts) <- checkInstHeader $4;
+>                       {% do { checkEnabled StandaloneDeriving ;
+>                               (cs, c, ts) <- checkInstHeader $4;
 >                               return (DerivDecl $1 cs c ts) } }
 >       | srcloc 'default' '(' typelist ')'
 >                       { DefaultDecl $1 $4 }
+
+Requires the TemplateHaskell extension, but the lexer will handle that
+throught he '$(' lexeme.
 >       | srcloc '$(' trueexp ')'
 >                        { SpliceDecl $1 $ ParenSplice $3 }
->
+
+These require the ForeignFunctionInterface extension, handled by the
+lexer through the 'foreign' (and 'export') keyword.
 >       | srcloc 'foreign' 'import' callconv safety fspec
 >                       { let (s,n,t) = $6 in ForImp $1 $4 $5 s n t }
 >       | srcloc 'foreign' 'export' callconv fspec
 >                       { let (s,n,t) = $5 in ForExp $1 $4 s n t }
+
 >       | srcloc '{-# RULES' rules '#-}'               { RulePragmaDecl $1 $ reverse $3 }
 >       | srcloc '{-# DEPRECATED' warndeprs '#-}'      { DeprPragmaDecl $1 $ reverse $3 }
 >       | srcloc '{-# WARNING' warndeprs '#-}'         { WarnPragmaDecl $1 $ reverse $3 }
@@ -512,7 +542,7 @@ shift/reduce-conflict, so we don't handle this case here, but in bodyaux.
 >                                                                       return $ TypeSig $1 (v : reverse $4) $6 } }
 >       | srcloc '{-# INLINE' activation qvar '#-}'             { InlineSig $1 $2 $3 $4 }
 >       | srcloc '{-# SPECIALISE' qvar '::' sigtypes '#-}'      { SpecSig $1 $3 $5 }
->       | srcloc '{-# SPECIALISE_INLINE' activation qvar '::' sigtypes '#-}'   
+>       | srcloc '{-# SPECIALISE_INLINE' activation qvar '::' sigtypes '#-}'
 >                                                       { SpecInlineSig $1 $2 $3 $4 $6 }
 >       | srcloc '{-# SPECIALISE' 'instance' ctype '#-}'        {% do { (cs,c,ts) <- checkInstHeader $4;
 >                                                                       return $ InstSig $1 cs c ts } }
@@ -551,6 +581,9 @@ would require more lookahead. So let's check for ourselves...
 
 -----------------------------------------------------------------------------
 FFI
+
+These will only be called on in the presence of a 'foreign' keyword,
+so no need to check for extensions.
 
 > callconv :: { CallConv }
 >          : 'stdcall'                  { StdCall }
@@ -616,12 +649,15 @@ Pragmas
 -----------------------------------------------------------------------------
 Types
 
+Type equality contraints need the TypeFamilies extension.
+
 > dtype :: { Type }
 >       : btype                         { $1 }
 >       | btype qtyconop dtype          { TyInfix $1 $2 $3 }
 >       | btype qtyvarop dtype          { TyInfix $1 $2 $3 }
 >       | btype '->' ctype              { TyFun $1 $3 }
->       | btype '~' btype       { TyPred $ EqualP $1 $3 }
+>       | btype '~' btype               {% do { checkEnabled TypeFamilies ;
+>                                               return $ TyPred $ EqualP $1 $3 } }
 
 Implicit parameters can occur in normal types, as well as in contexts.
 
@@ -632,6 +668,9 @@ Implicit parameters can occur in normal types, as well as in contexts.
 > btype :: { Type }
 >       : btype atype                   { TyApp $1 $2 }
 >       | atype                         { $1 }
+
+UnboxedTuples requires the extension, but that will be handled through
+the (# and #) lexeme. Kinds will be handled at the kind rule.
 
 > atype :: { Type }
 >       : gtycon                        { TyCon $1 }
@@ -668,14 +707,19 @@ with one token of lookahead.  The HACK is to parse the context as a btype
 (more specifically as a tuple type), then check that it has the right form
 C a, or (C1 a, C2 b, ... Cn z) and convert it into a context.  Blaach!
 
+Forall-quantified types require some extension to enable them, but
+that requires the 'forall' keyword, so the lexer will handle it.
+
 > ctype :: { Type }
 >       : 'forall' ktyvars '.' ctype    { mkTyForall (Just $2) [] $4 }
 >       | context '=>' type             { mkTyForall Nothing $1 $3 }
 >       | type                          { $1 }
 
+Equality constraints require the TypeFamilies extension.
+
 > context :: { Context }
 >       : btype                         {% checkContext $1 }
->   | btype '~' btype       {% checkContext (TyPred $ EqualP $1 $3) }
+>       | btype '~' btype               {% checkEnabled TypeFamilies >> checkContext (TyPred $ EqualP $1 $3) }
 
 > types :: { [Type] }
 >       : types1 ',' type               { $3 : $1 }
@@ -700,9 +744,11 @@ C a, or (C1 a, C2 b, ... Cn z) and convert it into a context.  Blaach!
 -----------------------------------------------------------------------------
 Functional Dependencies
 
+These require the FunctionalDependencies extension to be enabled.
+
 > fds :: { [FunDep] }
 >       : {- empty -}                   { [] }
->       | '|' fds1                      { reverse $2 }
+>       | '|' fds1                      {% checkEnabled FunctionalDependencies >> return (reverse $2) }
 
 > fds1 :: { [FunDep] }
 >       : fds1 ',' fd                   { $3 : $1 }
@@ -714,9 +760,12 @@ Functional Dependencies
 -----------------------------------------------------------------------------
 Datatype declarations
 
-GADTs
+GADTs - require the GADTs extension enabled, but we handle that at the calling site.
 
 > gadtlist :: { [GadtDecl] }
+>       : gadtlist1                 {% checkEnabled GADTs >> return $1 }
+
+> gadtlist1 :: { [GadtDecl] }
 >       : '{' gadtconstrs1 '}'                  { $2 }
 >       | open gadtconstrs1 close               { $2 }
 
@@ -785,7 +834,7 @@ GADTs
 >       : vars '::' stype               { (reverse $1, $3) }
 
 > stype :: { BangType }
->       : ctype                         { UnBangedTy $1 }     
+>       : ctype                         { UnBangedTy $1 }
 >       | '!' atype                     { BangedTy   $2 }
 >       | '{-# UNPACK' '#-}' '!' atype  { UnpackedTy $4 }
 
@@ -819,13 +868,16 @@ GADTs
 Kinds
 
 > kind :: { Kind }
+>       : kind1             {% checkEnabled KindSignatures >> return $1 }
+
+> kind1 :: { Kind }
 >       : akind                 { $1 }
->       | akind '->' kind       { KindFn $1 $3 }
+>       | akind '->' kind1      { KindFn $1 $3 }
 
 > akind :: { Kind }
 >       : '*'                   { KindStar  }
 >       | '!'                   { KindBang  }
->       | '(' kind ')'          { $2 }
+>       | '(' kind1 ')'         { $2 }
 
 > optkind :: { Maybe Kind }
 >       : {-empty-}             { Nothing }
@@ -850,12 +902,14 @@ No implicit parameters in the where clause of a class declaration.
 >       : cldecls1 semis cldecl         { $3 : $1 }
 >       | cldecl                        { [$1] }
 
+Associated types require the TypeFamilies extension.
+
 > cldecl :: { ClassDecl }
 >       : decl                          { ClsDecl $1 }
->       | atdecl                        { $1 }
+>       | atdecl                        {% checkEnabled TypeFamilies >> return $1 }
 
 > atdecl :: { ClassDecl }
->       : srcloc 'type' type optkind           
+>       : srcloc 'type' type optkind
 >               {% do { (c,ts) <- checkSimpleType $3;
 >                       return (ClsTyFam $1 c ts $4) } }
 >       | srcloc 'type' dtype '=' ctype
@@ -880,9 +934,11 @@ Instance declarations
 >       : valdefs1 semis insvaldef      { $3 : $1 }
 >       | insvaldef                     { [$1] }
 
+Associated types require the TypeFamilies extension enabled.
+
 > insvaldef :: { InstDecl }
 >       : valdef                        { InsDecl $1 }
->       | atinst                        { $1 }
+>       | atinst                        {% checkEnabled TypeFamilies >> return $1 }
 >       | inlinst                       { $1 }
 
 > inlinst :: { InstDecl }
@@ -912,8 +968,10 @@ May bind implicit parameters
 >       : 'where' binds                 { $2 }
 >       | {- empty -}                   { BDecls [] }
 
+Type signatures on value definitions require ScopedTypeVariables (or PatternSignatures, which is deprecated).
+
 > optsig :: { Maybe Type }
->       : '::' ctype                    { Just $2 }
+>       : '::' ctype                    {% checkEnabled ScopedTypeVariables >> return (Just $2) }
 >       | {- empty -}                   { Nothing }
 
 > rhs   :: { Rhs }
@@ -924,9 +982,9 @@ May bind implicit parameters
 >       : gdrhs gdrh                    { $2 : $1 }
 >       | gdrh                          { [$1] }
 
-Guards may contain patterns, hence quals instead of exp.
+Guards may contain patterns if PatternGuards is enabled, hence quals instead of exp.
 > gdrh :: { GuardedRhs }
->       : srcloc '|' quals '=' trueexp  { GuardedRhs $1 (reverse $3) $5 }
+>       : srcloc '|' quals '=' trueexp  {% checkPatternGuards $3 >> return (GuardedRhs $1 (reverse $3) $5) }
 
 -----------------------------------------------------------------------------
 Expressions
@@ -960,6 +1018,8 @@ mangle them into the correct form depending on context.
 >       : exp0b qop exp10a              { InfixApp $1 $2 $3 }
 >       | exp10a                        { $1 }
 
+Hyphenated identifiers require XmlSyntax to be enabled, handled in the lexer.
+
 > exp0b :: { PExp }
 >       : exp0b qop exp10b              { InfixApp $1 $2 $3 }
 >       | dvarexp                       { $1 }
@@ -970,6 +1030,8 @@ mangle them into the correct form depending on context.
 A let may bind implicit parameters
 >       | 'let' binds 'in' exp          { Let $2 $4 }
 >       | 'if' exp 'then' exp 'else' exp { If $2 $4 $6 }
+
+mdo blocks require the RecursiveDo extension enabled, but the lexer handles that.
 
 > exp10b :: { PExp }
 >       : 'case' exp 'of' altslist      { Case $2 $4 }
@@ -983,7 +1045,7 @@ A let may bind implicit parameters
 >       : '{-# CORE' STRING '#-}'       { CorePragma $2 }
 >       | '{-# SCC' STRING '#-}'        { SCCPragma $2 }
 >       | '{-# GENERATED' STRING INT ':' INT '-' INT ':' INT '#-}'
->                                       { GenPragma $2 (fromInteger $3, fromInteger $5) 
+>                                       { GenPragma $2 (fromInteger $3, fromInteger $5)
 >                                                      (fromInteger $7, fromInteger $9) }
 >       | '{-# unknown' '#-}'           { let (n, s) = $1 in UnknownExpPragma n s }
 
@@ -1006,6 +1068,8 @@ Even though the variable in an as-pattern cannot be qualified, we use
 qvar here to avoid a shift/reduce conflict, and then check it ourselves
 (as for vars above).
 
+Non-linear name binding, @:, requires RegularPatterns, but the lexer handles that.
+
 > aexp  :: { PExp }
 >       : qvar '@' aexp                 {% do { n <- checkUnQual $1;
 >                                               return (AsPat n $3) } }
@@ -1024,7 +1088,9 @@ updates: they could be labeled constructions.
 
 According to the Report, the left section (e op) is legal iff (e op x)
 parses equivalently to ((e) op x).  Thus e must be an exp0b.
-An implicit parameter can be used as an expression.
+An implicit parameter can be used as an expression, enabled by the lexer.
+Extensions using banana brackets are also enabled by the lexer. The only
+thing we need to look at here is the erpats that use no non-standard lexemes.
 
 > aexp2 :: { PExp }
 >       : ivar                          { IPVar $1 }
@@ -1035,15 +1101,15 @@ An implicit parameter can be used as an expression.
 >       | '(' texp ',' texps ')'        { Tuple ($2 : reverse $4) }
 >       | '[' list ']'                  { $2 }
 We parse left sections as PostOp instead, and post-mangle them, see above
-        | '(' exp0b rqop ')'            { LeftSection $2 $3  } 
+        | '(' exp0b rqop ')'            { LeftSection $2 $3  } -- this line is commented out
 >       | '(' qopm exp0 ')'             { RightSection $2 $3 }
 >       | '_'                           { WildCard }
->       | '(' erpats ')'                { $2 }
+>       | '(' erpats ')'                {% checkEnabled RegularPatterns >> return $2 }
 >       | '(|' sexps '|)'               { SeqRP $ reverse $2 }
 >       | '(|' exp '|' quals '|)'       { GuardRP $2 $ reverse $4 }
 >       | xml                           { $1 }
 
-Template Haskell
+Template Haskell - all this is enabled in the lexer.
 >       | IDSPLICE                      { SpliceExp $ IdSplice $1 }
 >       | '$(' trueexp ')'              { SpliceExp $ ParenSplice $2 }
 >       | '[|' trueexp '|]'             { BracketExp $ ExpBracket $2 }
@@ -1082,7 +1148,7 @@ Either patterns are left associative
 >       | exp '|' exp                 { EitherRP $1 $3 }
 
 -----------------------------------------------------------------------------
-Hsx Extensions
+Hsx Extensions - requires XmlSyntax, but the lexer handles all that.
 
 > xml :: { PExp }
 >       : srcloc '<' name attrs mattr '>' children '</' name '>'        {% do { n <- checkEqNames $3 $9;
@@ -1109,9 +1175,44 @@ Hsx Extensions
 >       : VARID                         { $1 }
 >       | CONID                         { $1 }
 >       | DVARID                        { mkDVar $1 }
->       | 'type'                        { "type" }
+>       | xmlkeyword                    { $1 }
+
+> xmlkeyword :: { String }
+>       : 'type'                        { "type" }
 >       | 'class'                       { "class" }
 >       | 'data'                        { "data" }
+>       | 'foreign'                     { "foreign" }
+>       | 'export'                      { "export" }
+>       | 'safe'                        { "safe" }
+>       | 'unsafe'                      { "unsafe" }
+>       | 'threadsafe'                  { "threadsafe" }
+>       | 'stdcall'                     { "stdcall" }
+>       | 'ccall'                       { "ccall" }
+>       | 'as'                          { "as" }
+>       | 'case'                        { "case" }
+>       | 'default'                     { "default" }
+>       | 'deriving'                    { "deriving" }
+>       | 'do'                          { "do" }
+>       | 'else'                        { "else" }
+>       | 'family'                      { "family" }
+>       | 'forall'                      { "forall" }
+>       | 'hiding'                      { "hiding" }
+>       | 'if'                          { "if" }
+>       | 'import'                      { "import" }
+>       | 'in'                          { "in" }
+>       | 'infix'                       { "infix" }
+>       | 'infixl'                      { "infixl" }
+>       | 'infixr'                      { "infixr" }
+>       | 'instance'                    { "instance" }
+>       | 'let'                         { "let" }
+>       | 'mdo'                         { "mdo" }
+>       | 'module'                      { "module" }
+>       | 'newtype'                     { "newtype" }
+>       | 'of'                          { "of" }
+>       | 'then'                        { "then" }
+>       | 'where'                       { "where" }
+>       | 'qualified'                   { "qualified" }
+
 
 > attrs :: { [ParseXAttr] }
 >       : attrs attr                    { $2 : $1 }
@@ -1151,7 +1252,7 @@ avoiding another shift/reduce-conflict.
 List comprehensions
 
  quals :: { [Stmt] }
-       : quals1                        {% mapM checkStmt $1 }
+       : quals1                         {% mapM checkStmt $1 }
 
 > quals :: { [Stmt] }
 >       : quals ',' qual                { $3 : $1 }
@@ -1187,9 +1288,9 @@ Case alternatives
 >       : gdpats gdpat                  { $2 : $1 }
 >       | gdpat                         { [$1] }
 
-A guard can be a pattern guard, hence quals instead of exp0.
+A guard can be a pattern guard if PatternGuards is enabled, hence quals instead of exp0.
 > gdpat :: { GuardedAlt }
->       : srcloc '|' quals '->' trueexp { GuardedAlt $1 (reverse $3) $5 }
+>       : srcloc '|' quals '->' trueexp {% checkPatternGuards $3 >> return (GuardedAlt $1 (reverse $3) $5) }
 
 > pat :: { Pat }
 >       : exp                           {% checkPattern $1 }
@@ -1221,13 +1322,15 @@ Record Field Update/Construction
 >       : fbinds ',' fbind              { $3 : $1 }
 >       | fbind                         { [$1] }
 
+Puns and wild cards need the respective extensions enabled.
+
 > fbind :: { PFieldUpdate }
 >       : qvar '=' exp                  { FieldUpdate $1 $3 }
->       | var                           { FieldPun $1 }
->       | '..'                          { FieldWildcard }
+>       | var                           {% checkEnabled NamedFieldPuns >> return (FieldPun $1) }
+>       | '..'                          {% checkEnabled RecordWildCards >> return FieldWildcard }
 
 -----------------------------------------------------------------------------
-Implicit parameter bindings
+Implicit parameter bindings - need the ImplicitParameter extension enabled, but the lexer handles that.
 
 > ipbinds :: { [IPBind] }
 >       : optsemis ipbinds1 optsemis    { reverse $2 }
@@ -1285,7 +1388,7 @@ Implicit parameter
 >       | '`' qvarid '`'        { $2 }
 
 > conop :: { Name }
->       : consym                { $1 }  
+>       : consym                { $1 }
 >       | '`' conid '`'         { $2 }
 
 > qconop :: { QName }
@@ -1388,7 +1491,7 @@ Implicit parameter
 
 
 > srcloc :: { SrcLoc }  :       {% getSrcLoc }
- 
+
 -----------------------------------------------------------------------------
 Layout
 
