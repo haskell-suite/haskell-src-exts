@@ -16,7 +16,7 @@ import Data.List
 import Language.Preprocessor.Unlit
 
 parseFile :: FilePath -> IO (ParseResult Module)
-parseFile fp = readFile fp >>= (return . parseFileContentsWithMode (ParseMode fp))
+parseFile fp = readFile fp >>= (return . parseFileContentsWithMode (ParseMode fp []))
 
 parseFileContents :: String -> ParseResult Module
 parseFileContents = parseFileContentsWithMode defaultParseMode
