@@ -174,75 +174,80 @@ data Token
         | EOF
         deriving (Eq,Show)
 
-reserved_ops :: [(String,Token)]
+reserved_ops :: [(String,(Token, Maybe ExtScheme))]
 reserved_ops = [
- ( ".",  Dot ),
- ( "..", DotDot ),
- ( ":",  Colon ),
- ( "::", DoubleColon ),
- ( "=",  Equals ),
- ( "\\", Backslash ),
- ( "|",  Bar ),
- ( "<-", LeftArrow ),
- ( "->", RightArrow ),
- ( "@",  At ),
- ( "~",  Tilde ),
- ( "=>", DoubleArrow ),
- ( "*",  Star )
+ ( ".",  (Dot,          Nothing) ),
+ ( "..", (DotDot,       Nothing) ),
+ ( ":",  (Colon,        Nothing) ),
+ ( "::", (DoubleColon,  Nothing) ),
+ ( "=",  (Equals,       Nothing) ),
+ ( "\\", (Backslash,    Nothing) ),
+ ( "|",  (Bar,          Nothing) ),
+ ( "<-", (LeftArrow,    Nothing) ),
+ ( "->", (RightArrow,   Nothing) ),
+ ( "@",  (At,           Nothing) ),
+ ( "@:", (RPCAt,        Just (Any [RegularPatterns])) ),
+ ( "~",  (Tilde,        Nothing) ),
+ ( "=>", (DoubleArrow,  Nothing) ),
+ ( "*",  (Star,         Just (Any [KindSignatures])) )
  ]
 
-special_varops :: [(String,Token)]
+special_varops :: [(String,(Token, Maybe ExtScheme))]
 special_varops = [
- ( "-",  Minus ),           --ToDo: shouldn't be here
- ( "!",  Exclamation )      --ditto
+ ( "-",  (Minus,        Nothing) ),
+ ( "!",  (Exclamation,  Just (Any [BangPatterns])) )
  ]
 
-reserved_ids :: [(String,Token)]
+reserved_ids :: [(String,(Token, Maybe ExtScheme))]
 reserved_ids = [
- ( "_",         Underscore ),
- ( "case",      KW_Case ),
- ( "class",     KW_Class ),
- ( "data",      KW_Data ),
- ( "default",   KW_Default ),
- ( "deriving",  KW_Deriving ),
- ( "do",        KW_Do ),
- ( "else",      KW_Else ),
- ( "family",    KW_Family ),        -- indexed type families
- ( "forall",    KW_Forall ),        -- universal/existential quantification
- ( "if",        KW_If ),
- ( "import",    KW_Import ),
- ( "in",        KW_In ),
- ( "infix",     KW_Infix ),
- ( "infixl",    KW_InfixL ),
- ( "infixr",    KW_InfixR ),
- ( "instance",  KW_Instance ),
- ( "let",       KW_Let ),
- ( "mdo",       KW_MDo ),
- ( "module",    KW_Module ),
- ( "newtype",   KW_NewType ),
- ( "of",        KW_Of ),
- ( "then",      KW_Then ),
- ( "type",      KW_Type ),
- ( "where",     KW_Where ),
+ ( "_",         (Underscore,    Nothing) ),
+ ( "case",      (KW_Case,       Nothing) ),
+ ( "class",     (KW_Class,      Nothing) ),
+ ( "data",      (KW_Data,       Nothing) ),
+ ( "default",   (KW_Default,    Nothing) ),
+ ( "deriving",  (KW_Deriving,   Nothing) ),
+ ( "do",        (KW_Do,         Nothing) ),
+ ( "else",      (KW_Else,       Nothing) ),
+ ( "family",    (KW_Family,     Just (Any [TypeFamilies])) ),        -- indexed type families
+ ( "forall",    (KW_Forall,     Just (Any [LiberalTypeSynonyms,
+                                            ExistentialQuantification,
+                                            PolymorphicComponents,
+                                            Rank2Types, RankNTypes,
+                                            ImpredicativeTypes])) ),        -- universal/existential quantification
+ ( "if",        (KW_If,         Nothing) ),
+ ( "import",    (KW_Import,     Nothing) ),
+ ( "in",        (KW_In,         Nothing) ),
+ ( "infix",     (KW_Infix,      Nothing) ),
+ ( "infixl",    (KW_InfixL,     Nothing) ),
+ ( "infixr",    (KW_InfixR,     Nothing) ),
+ ( "instance",  (KW_Instance,   Nothing) ),
+ ( "let",       (KW_Let,        Nothing) ),
+ ( "mdo",       (KW_MDo,        Just (Any [RecursiveDo])) ),
+ ( "module",    (KW_Module,     Nothing) ),
+ ( "newtype",   (KW_NewType,    Nothing) ),
+ ( "of",        (KW_Of,         Nothing) ),
+ ( "then",      (KW_Then,       Nothing) ),
+ ( "type",      (KW_Type,       Nothing) ),
+ ( "where",     (KW_Where,      Nothing) ),
 
 -- FFI
- ( "foreign",   KW_Foreign )
+ ( "foreign",   (KW_Foreign,    Just (Any [ForeignFunctionInterface])) )
  ]
 
 
-special_varids :: [(String,Token)]
+special_varids :: [(String,(Token, Maybe ExtScheme))]
 special_varids = [
- ( "as",        KW_As ),
- ( "qualified", KW_Qualified ),
- ( "hiding",    KW_Hiding ),
+ ( "as",        (KW_As,         Nothing) ),
+ ( "qualified", (KW_Qualified,  Nothing) ),
+ ( "hiding",    (KW_Hiding,     Nothing) ),
 
 -- FFI
- ( "export",     KW_Export),
- ( "safe",       KW_Safe),
- ( "unsafe",     KW_Unsafe),
- ( "threadsafe", KW_Threadsafe),
- ( "stdcall",    KW_StdCall),
- ( "ccall",      KW_CCall)
+ ( "export",     (KW_Export,        Just (Any [ForeignFunctionInterface])) ),
+ ( "safe",       (KW_Safe,          Just (Any [ForeignFunctionInterface])) ),
+ ( "unsafe",     (KW_Unsafe,        Just (Any [ForeignFunctionInterface])) ),
+ ( "threadsafe", (KW_Threadsafe,    Just (Any [ForeignFunctionInterface])) ),
+ ( "stdcall",    (KW_StdCall,       Just (Any [ForeignFunctionInterface])) ),
+ ( "ccall",      (KW_CCall,         Just (Any [ForeignFunctionInterface])) )
  ]
 
 pragmas :: [(String,Token)]
@@ -288,10 +293,12 @@ lexer = runL $ do
     ec <- getExtContext
     case ec of
      -- if there was no linebreak, and we are lexing PCDATA,
-     -- then we want to care about the whitespace
+     -- then we want to care about the whitespace.
+     -- We don't bother to test for XmlSyntax, since we
+     -- couldn't end up in ChildCtxt otherwise.
      Just ChildCtxt | not bol && ws -> return $ XPCDATA " "
      _ -> do startToken
-             if bol then lexBOL else lexToken 
+             if bol then lexBOL else lexToken
 
 lexWhiteSpace :: Bool -> Lex a (Bool, Bool)
 lexWhiteSpace bol = do
@@ -321,7 +328,7 @@ lexWhiteSpace bol = do
         '\t':_ -> do
             lexTab
             (bol, _) <- lexWhiteSpace bol
-            return (bol, True)      
+            return (bol, True)
         c:_ | isSpace c -> do
             discard 1
             (bol, _) <- lexWhiteSpace bol
@@ -366,6 +373,9 @@ lexBOL = do
 lexToken :: Lex a Token
 lexToken = do
     ec <- getExtContext
+    -- we don't bother to check XmlSyntax since we couldn't
+    -- have ended up in a non-Nothing context if it wasn't
+    -- enabled.
     case ec of
      Just HarpCtxt     -> lexHarpToken
      Just TagCtxt      -> lexTagCtxt
@@ -377,6 +387,7 @@ lexToken = do
 
 lexChildCtxt :: Lex a Token
 lexChildCtxt = do
+    -- if we ever end up here, then XmlSyntax must be on.
     s <- getInput
     case s of
         '<':'%':_ -> do discard 2
@@ -397,6 +408,7 @@ lexChildCtxt = do
 
 lexPCDATA :: Lex a Token
 lexPCDATA = do
+    -- if we ever end up here, then XmlSyntax must be on.
     s <- getInput
     case s of
         [] -> return EOF
@@ -418,6 +430,7 @@ lexPCDATA = do
 
 lexCodeTagCtxt :: Lex a Token
 lexCodeTagCtxt = do
+    -- if we ever end up here, then XmlSyntax must be on.
     s <- getInput
     case s of
         '%':'>':_ -> do discard 2
@@ -427,6 +440,7 @@ lexCodeTagCtxt = do
 
 lexCloseTagCtxt :: Lex a Token
 lexCloseTagCtxt = do
+    -- if we ever end up here, then XmlSyntax must be on.
     s <- getInput
     case s of
         '>':_     -> do discard 1
@@ -436,6 +450,7 @@ lexCloseTagCtxt = do
 
 lexTagCtxt :: Lex a Token
 lexTagCtxt = do
+    -- if we ever end up here, then XmlSyntax must be on.
     s <- getInput
     case s of
         '/':'>':_ -> do discard 2
@@ -449,6 +464,7 @@ lexTagCtxt = do
 
 lexHarpToken :: Lex a Token
 lexHarpToken = do
+    -- if we ever end up here, then RegularPatterns must be on.
     s <- getInput
     case s of
         ']':'>':_ -> do discard 2
@@ -459,6 +475,7 @@ lexHarpToken = do
 lexStdToken :: Lex a Token
 lexStdToken = do
     s <- getInput
+    exts <- getExtensionsL
     case s of
         [] -> return EOF
 
@@ -470,14 +487,14 @@ lexStdToken = do
                         discard 2
                         n <- lexHexadecimal
                         return (IntTok n)
-    
+
         -- implicit parameters
-        '?':c:_ | isLower c -> do
+        '?':c:_ | isLower c && ImplicitParams `elem` exts -> do
                         discard 1
                         id <- lexWhile isIdent
                         return $ IDupVarId id
 
-        '%':c:_ | isLower c -> do
+        '%':c:_ | isLower c && ImplicitParams `elem` exts -> do
                         discard 1
                         id <- lexWhile isIdent
                         return $ ILinVarId id
@@ -485,62 +502,69 @@ lexStdToken = do
 
         -- harp
         '(':'|':c:_  | isHSymbol c -> discard 1 >> return LeftParen
-        '(':'|':_ -> do discard 2
+        '(':'|':_ | RegularPatterns `elem` exts ->
+                     do discard 2
                         return RPGuardOpen
-        '|':')':_ -> do discard 2
+        '|':')':_ | RegularPatterns `elem` exts ->
+                     do discard 2
                         return RPGuardClose
-        '@':':':_ -> do discard 2
-                        return RPCAt
-    
+        {- This is handled by the reserved_ops above.
+        '@':':':_ | RegularPatterns `elem` exts ->
+                     do discard 2
+                        return RPCAt -}
+
         -- template haskell
-        '[':'|':_ -> do
+        '[':'|':_ | TemplateHaskell `elem` exts -> do
                 discard 2
                 return $ THExpQuote
-    
-        '[':c:'|':_ | c == 'e' -> do
+
+        '[':c:'|':_ | c == 'e' && TemplateHaskell `elem` exts -> do
                         discard 3
                         return $ THExpQuote
-                    | c == 'p' -> do
+                    | c == 'p' && TemplateHaskell `elem` exts -> do
                         discard 3
                         return THPatQuote
-                    | c == 'd' -> do
+                    | c == 'd' && TemplateHaskell `elem` exts -> do
                         discard 3
                         return THDecQuote
-                    | c == 't' -> do
+                    | c == 't' && TemplateHaskell `elem` exts -> do
                         discard 3
                         return THTypQuote
-                
-        '|':']':_ -> do discard 2
+
+        '|':']':_ | TemplateHaskell `elem` exts -> do
+                        discard 2
                         return THCloseQuote
-              
-        '$':c:_ | isLower c -> do
+
+        '$':c:_ | isLower c && TemplateHaskell `elem` exts -> do
                         discard 1
                         id <- lexWhile isIdent
                         return $ THIdEscape id
-                | c == '(' -> do
+                | c == '(' && TemplateHaskell `elem` exts -> do
                         discard 2
                         return THParenEscape
         -- end template haskell
-    
+
         -- hsx
-        '<':'%':_ -> do discard 2
+        '<':'%':_ | XmlSyntax `elem` exts -> do
+                        discard 2
                         pushExtContextL CodeTagCtxt
                         return XCodeTagOpen
-        '<':c:_ | isAlpha c -> do discard 1
-                                  pushExtContextL TagCtxt
-                                  return XStdTagOpen
+        '<':c:_ | isAlpha c && XmlSyntax `elem` exts -> do
+                        discard 1
+                        pushExtContextL TagCtxt
+                        return XStdTagOpen
         -- end hsx
-    
-        '(':'#':_ -> do discard 2 >> return LeftHashParen
-    
-        '#':')':_ -> do discard 2 >> return RightHashParen
-        
+
+        '(':'#':_ | UnboxedTuples `elem` exts -> do discard 2 >> return LeftHashParen
+
+        '#':')':_ | UnboxedTuples `elem` exts -> do discard 2 >> return RightHashParen
+
         -- pragmas
-        
+
         '{':'-':'#':_ -> do discard 3 >> lexPragmaStart
-        
+
         '#':'-':'}':_ -> do discard 3 >> return PragmaEnd
-    
+
         c:_ | isDigit c -> lexDecimalOrFloat
 
             | isUpper c -> lexConIdOrQual ""
@@ -549,14 +573,22 @@ lexStdToken = do
                     idents <- lexIdents
                     case idents of
                      [ident] -> return $ case lookup ident (reserved_ids ++ special_varids) of
-                                          Just keyword -> keyword
+                                          Just (keyword, scheme) ->
+                                            -- check if an extension keyword is enabled
+                                            if isEnabled scheme exts then keyword else VarId ident
                                           Nothing -> VarId ident
                      _ -> return $ DVarId idents
 
             | isHSymbol c -> do
                     sym <- lexWhile isHSymbol
                     return $ case lookup sym (reserved_ops ++ special_varops) of
-                              Just t  -> t
+                              Just (t , scheme) ->
+                                -- check if an extension op is enabled
+                                if isEnabled scheme exts
+                                 then t
+                                 else case c of
+                                        ':' -> ConSym sym
+                                        _   -> VarSym sym
                               Nothing -> case c of
                                           ':' -> ConSym sym
                                           _   -> VarSym sym
@@ -589,12 +621,15 @@ lexStdToken = do
             lexIdents = do
                 ident <- lexWhile isIdent
                 s <- getInput
+                exts <- getExtensionsL
                 case s of
-                 '-':c:_ | isAlpha c -> do 
+                 -- This is the only way we can get more than one ident in the list
+                 -- and it requires XmlSyntax to be on.
+                 '-':c:_ | XmlSyntax `elem` exts && isAlpha c -> do
                         discard 1
                         idents <- lexIdents
                         return $ ident : idents
-                 '#':_ -> do
+                 '#':_ | MagicHash `elem` exts -> do
                         discard 1
                         return [ident ++ "#"]
                  _ -> return [ident]
@@ -621,7 +656,7 @@ lexPragmaStart = do
                         discard 9
                         return $ SPECIALISE_INLINE False
              _ -> return SPECIALISE
-              
+
      Just (OPTIONS _) -> do     -- see, I promised we'd mask out the 'undefined'
             s <- getInput
             case s of
@@ -654,7 +689,7 @@ lexRawPragma = do
         s <- getInput
         case s of
          '#':'-':'}':_  -> return rpr
-         _ -> do 
+         _ -> do
             discard 1
             rpr' <- lexRawPragma
             return $ rpr ++ '#':rpr'
@@ -663,6 +698,7 @@ lexDecimalOrFloat :: Lex a Token
 lexDecimalOrFloat = do
     ds <- lexWhile isDigit
     rest <- getInput
+    exts <- getExtensionsL
     case rest of
         ('.':d:_) | isDigit d -> do
                 discard 1
@@ -681,8 +717,8 @@ lexDecimalOrFloat = do
                 exponent <- lexExponent
                 con <- lexHash FloatTok FloatTokHash (Right DoubleTokHash)
                 return $ con ((parseInteger 10 ds%1) * 10^^exponent)
-        '#':'#':_ -> discard 2 >> return (WordTokHash (parseInteger 10 ds))
-        '#':_     -> discard 1 >> return (IntTokHash  (parseInteger 10 ds))
+        '#':'#':_ | MagicHash `elem` exts -> discard 2 >> return (WordTokHash (parseInteger 10 ds))
+        '#':_     | MagicHash `elem` exts -> discard 1 >> return (IntTokHash  (parseInteger 10 ds))
         _         ->              return (IntTok      (parseInteger 10 ds))
 
     where
@@ -700,16 +736,20 @@ lexDecimalOrFloat = do
             return (negate n)
          d:_ | isDigit d -> lexDecimal
          _ -> fail "Float with missing exponent"
-    
+
 lexHash :: (b -> Token) -> (b -> Token) -> Either String (b -> Token) -> Lex a (b -> Token)
 lexHash a b c = do
-    r <- getInput
-    case r of
-     '#':'#':_ -> case c of
-                   Right c -> discard 2 >> return c
-                   Left s  -> fail s
-     '#':_     -> discard 1 >> return b
-     _         ->              return a
+    exts <- getExtensionsL
+    if MagicHash `elem` exts
+     then do
+        r <- getInput
+        case r of
+         '#':'#':_ -> case c of
+                       Right c -> discard 2 >> return c
+                       Left s  -> fail s
+         '#':_     -> discard 1 >> return b
+         _         ->              return a
+     else return a
 
 lexConIdOrQual :: String -> Lex a Token
 lexConIdOrQual qual = do
@@ -720,14 +760,16 @@ lexConIdOrQual qual = do
                   | otherwise = qual ++ '.':con
         just_a_conid <- alternative (return conid)
         rest <- getInput
+        exts <- getExtensionsL
         case rest of
           '.':c:_
              | isLower c || c == '_' -> do  -- qualified varid?
                     discard 1
                     ident <- lexWhile isIdent
                     s <- getInput
+                    exts <- getExtensionsL
                     ident' <- case s of
-                               '#':_ -> discard 1 >> return (ident ++ "#")
+                               '#':_ | MagicHash `elem` exts -> discard 1 >> return (ident ++ "#")
                                _ -> return ident
                     case lookup ident' reserved_ids of
                        -- cannot qualify a reserved word
@@ -748,8 +790,8 @@ lexConIdOrQual qual = do
                                               ':' -> QConSym (qual', sym)
                                               _   -> QVarSym (qual', sym)
 
-          '#':c:_ 
-            | isSpace c -> do
+          '#':c:_
+            | isSpace c && MagicHash `elem` exts -> do
                 discard 1
                 case conid of
                  ConId con -> return $ ConId $ con ++ "#"
@@ -760,20 +802,22 @@ lexCharacter :: Lex a Token
 lexCharacter = do   -- We need to keep track of not only character constants but also TH 'x and ''T
         -- We've seen ' so far
         s <- getInput
+        exts <- getExtensionsL
         case s of
-         '\'':_ -> discard 1 >> return THTyQuote
-         '\\':_ -> do 
-                    c <- lexEscape 
+         '\'':_ | TemplateHaskell `elem` exts -> discard 1 >> return THTyQuote
+         '\\':_ -> do
+                    c <- lexEscape
                     matchQuote
-                    con <- lexHash Character CharacterHash 
-                            (Left "Double hash not available for character literals") 
+                    con <- lexHash Character CharacterHash
+                            (Left "Double hash not available for character literals")
                     return (con c)
-         c:'\'':_ -> do 
-                    discard 2 
-                    con <- lexHash Character CharacterHash 
-                            (Left "Double hash not available for character literals") 
+         c:'\'':_ -> do
+                    discard 2
+                    con <- lexHash Character CharacterHash
+                            (Left "Double hash not available for character literals")
                     return (con c)
-         _ -> return THVarQuote                    
+         _ | TemplateHaskell `elem` exts -> return THVarQuote
+         _ -> fail "Improper character constant or misplaced \'"
 
     where matchQuote = matchChar '\'' "Improperly terminated character constant"
 
@@ -783,6 +827,7 @@ lexString = loop ""
     where
     loop s = do
         r <- getInput
+        exts <- getExtensionsL
         case r of
             '\\':'&':_ -> do
                     discard 2
@@ -795,7 +840,7 @@ lexString = loop ""
                      | otherwise -> do
                         ce <- lexEscape
                         loop (ce:s)
-            '"':'#':_ -> do
+            '"':'#':_ | MagicHash `elem` exts -> do
                         discard 2
                         return (StringHash (reverse s))
             '"':_ -> do
