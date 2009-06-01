@@ -7,6 +7,7 @@ module Language.Haskell.Exts (
     , parseFileContents
     , parseFileContentsWithMode
     , parseFile
+    , parseFileWithExts
     ) where
 
 import Language.Haskell.Exts.Build
@@ -19,7 +20,10 @@ import Data.List
 import Language.Preprocessor.Unlit
 
 parseFile :: FilePath -> IO (ParseResult Module)
-parseFile fp = readFile fp >>= (return . parseFileContentsWithMode (ParseMode fp []))
+parseFile = parseFileWithExts []
+
+parseFileWithExts :: [Extension] -> FilePath -> IO (ParseResult Module)
+parseFileWithExts exts fp = readFile fp >>= (return . parseFileContentsWithMode (ParseMode fp exts))
 
 parseFileContents :: String -> ParseResult Module
 parseFileContents = parseFileContentsWithMode defaultParseMode
