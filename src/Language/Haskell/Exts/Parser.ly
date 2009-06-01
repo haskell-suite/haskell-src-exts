@@ -341,8 +341,8 @@ Import Declarations
 >       | impdecl                               { [$1] }
 
 > impdecl :: { ImportDecl }
->       : srcloc 'import' optsrc optqualified modid maybeas maybeimpspec
->                               { ImportDecl $1 $5 $4 $3 $6 $7 }
+>       : srcloc 'import' optsrc optqualified maybepkg modid maybeas maybeimpspec
+>                               { ImportDecl $1 $6 $4 $3 $5 $7 $8 }
 
 > optsrc :: { Bool }
 >       : '{-# SOURCE' '#-}'                    { True }
@@ -351,6 +351,12 @@ Import Declarations
 > optqualified :: { Bool }
 >       : 'qualified'                           { True  }
 >       | {- empty -}                           { False }
+
+Requires the PackageImports extension enabled.
+> maybepkg :: { Maybe String }
+>       : STRING                                {% do { checkEnabled PackageImports ;
+>                                                       return $ Just $1 } }
+>       | {- empty -}                           { Nothing }
 
 > maybeas :: { Maybe ModuleName }
 >       : 'as' modid                            { Just $2 }
