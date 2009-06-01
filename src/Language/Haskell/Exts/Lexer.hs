@@ -195,7 +195,7 @@ reserved_ops = [
 special_varops :: [(String,(Token, Maybe ExtScheme))]
 special_varops = [
  ( "-",  (Minus,        Nothing) ),
- ( "!",  (Exclamation,  Just (Any [BangPatterns])) )
+ ( "!",  (Exclamation,  Nothing) )
  ]
 
 reserved_ids :: [(String,(Token, Maybe ExtScheme))]
