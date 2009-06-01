@@ -5,7 +5,7 @@
 -- Copyright   :  (c) Niklas Broberg 2004,
 --                (c) The GHC Team, 1997-2000
 -- License     :  BSD-style (see the file LICENSE.txt)
--- 
+--
 -- Maintainer  :  Niklas Broberg, d00nibro@dtek.chalmers.se
 -- Stability   :  experimental
 -- Portability :  portable
@@ -43,7 +43,7 @@ module Language.Haskell.Exts.Syntax (
     Module(..), ExportSpec(..),
     ImportDecl(..), ImportSpec(..), Assoc(..),
     -- * Declarations
-    Decl(..), Binds(..), IPBind(..), 
+    Decl(..), Binds(..), IPBind(..),
     ClassDecl(..), InstDecl(..), Deriving,
     GadtDecl(..), ConDecl(..), QualConDecl(..), BangType(..),
     Match(..), Rhs(..), GuardedRhs(..), DataOrNew(..),
@@ -53,7 +53,7 @@ module Language.Haskell.Exts.Syntax (
     Type(..), Boxed(..), Kind(..), TyVarBind(..),
     -- * Expressions
     Exp(..), Stmt(..), FieldUpdate(..),
-    Alt(..), GuardedAlts(..), GuardedAlt(..), 
+    Alt(..), GuardedAlts(..), GuardedAlt(..),
     -- * Patterns
     Pat(..), PatField(..),
     -- * Literals
@@ -61,14 +61,14 @@ module Language.Haskell.Exts.Syntax (
     -- * Variables, Constructors and Operators
     ModuleName(..), QName(..), Name(..), QOp(..), Op(..),
     SpecialCon(..), CName(..), IPName(..),
-    
+
     -- * Template Haskell
-    -- HsReify(..), 
+    -- HsReify(..),
     Bracket(..), Splice(..),
-    
+
     -- * HaRP
     RPat(..), RPatOp(..),
-    
+
     -- * Hsx
     XAttr(..), XName(..), PXAttr(..),
 
@@ -76,7 +76,7 @@ module Language.Haskell.Exts.Syntax (
     Safety(..), CallConv(..),
 
     -- * Pragmas
-    OptionPragma(..), Tool(..), WarningText(..), 
+    OptionPragma(..), Tool(..), WarningText(..),
     Rule(..), RuleVar(..), Activation(..),
 
     -- * Builtin names
@@ -119,7 +119,7 @@ data SrcLoc = SrcLoc {
 #else
   deriving (Eq,Ord,Show)
 #endif
-  
+
 -- | The name of a Haskell module.
 newtype ModuleName = ModuleName String
 #ifdef __GLASGOW_HASKELL__
@@ -209,7 +209,7 @@ data CName
 #endif
 
 -- | A Haskell source module.
-data Module = Module SrcLoc ModuleName [OptionPragma] (Maybe WarningText) 
+data Module = Module SrcLoc ModuleName [OptionPragma] (Maybe WarningText)
                         (Maybe [ExportSpec]) [ImportDecl] [Decl]
 #ifdef __GLASGOW_HASKELL__
   deriving (Show,Typeable,Data)
@@ -243,6 +243,7 @@ data ImportDecl = ImportDecl
     , importModule :: ModuleName    -- ^ name of the module imported.
     , importQualified :: Bool       -- ^ imported @qualified@?
     , importSrc :: Bool             -- ^ imported with {-# SOURCE #-}
+    , importPkg :: Maybe String     -- ^ imported with explicit package name
     , importAs :: Maybe ModuleName  -- ^ optional alias name in an
                     -- @as@ clause.
     , importSpecs :: Maybe (Bool,[ImportSpec])
@@ -354,7 +355,7 @@ data Match
 #endif
 
 data QualConDecl
-    = QualConDecl SrcLoc 
+    = QualConDecl SrcLoc
         {-forall-} [TyVarBind] {- . -} Context
         {- => -} ConDecl
 #ifdef __GLASGOW_HASKELL__
@@ -363,7 +364,7 @@ data QualConDecl
   deriving (Eq,Show)
 #endif
 
-data GadtDecl 
+data GadtDecl
     = GadtDecl SrcLoc Name Type
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
@@ -444,7 +445,7 @@ data GuardedRhs
 --   An unqualified type has an empty context.
 
 data Type
-     = TyForall 
+     = TyForall
         (Maybe [TyVarBind])
         Context
         Type
@@ -469,7 +470,7 @@ data Boxed = Boxed | Unboxed
   deriving (Eq,Show)
 #endif
 
-data TyVarBind 
+data TyVarBind
     = KindedVar Name Kind
     | UnkindedVar Name
 #ifdef __GLASGOW_HASKELL__
@@ -487,7 +488,7 @@ data Kind
 #else
   deriving (Eq,Show)
 #endif
-    
+
 
 -- | A functional dependency, given on the form
 --   l1 l2 ... ln -> r2 r3 .. rn
@@ -594,7 +595,7 @@ data Exp
     | TypQuote QName            -- ^ ''T
     | BracketExp Bracket
     | SpliceExp Splice
-    
+
 -- Hsx
     | XTag SrcLoc XName [XAttr] (Maybe Exp) [Exp]
     | XETag SrcLoc XName [XAttr] (Maybe Exp)
@@ -612,7 +613,7 @@ data Exp
   deriving (Eq,Show)
 #endif
 
-data XName 
+data XName
     = XName String              -- <name ...
     | XDomName String String    -- <dom:name ...
 #ifdef __GLASGOW_HASKELL__
@@ -764,7 +765,7 @@ data Pat
   deriving (Eq,Show)
 #endif
 
--- | An XML attribute in an XML tag pattern 
+-- | An XML attribute in an XML tag pattern
 data PXAttr = PXAttr XName Pat
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
@@ -785,7 +786,7 @@ data RPatOp
 #else
   deriving (Eq,Show)
 #endif
-        
+
 -- | An entity in a regular pattern (HaRP)
 data RPat
     = RPOp RPat RPatOp

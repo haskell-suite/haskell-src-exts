@@ -297,11 +297,12 @@ instance Pretty ExportSpec where
         pretty (EModuleContents m)        = text "module" <+> pretty m
 
 instance Pretty ImportDecl where
-        pretty (ImportDecl pos m qual src mbName mbSpecs) =
+        pretty (ImportDecl pos m qual src mbPkg mbName mbSpecs) =
                 markLine pos $
                 mySep [text "import",
                        if src  then text "{-# SOURCE #-}" else empty,
                        if qual then text "qualified" else empty,
+                       maybePP (\s -> text (show s)) mbPkg,
                        pretty m,
                        maybePP (\m' -> text "as" <+> pretty m') mbName,
                        maybePP exports mbSpecs]
@@ -349,7 +350,7 @@ instance Pretty Decl where
                 mySep ([text "type", text "family", pretty name]
                         ++ map pretty nameList
                         ++ ppOptKind optkind)
-        
+
         pretty (DataFamDecl loc context name nameList optkind) =
                 blankline $
                 markLine loc $
@@ -360,7 +361,7 @@ instance Pretty Decl where
                 blankline $
                 markLine loc $
                 mySep [text "type", text "instance", pretty ntype, equals, pretty htype]
-        
+
         pretty (DataInsDecl loc don ntype constrList derives) =
                 blankline $
                 markLine loc $
@@ -451,16 +452,16 @@ instance Pretty Decl where
                 mySep [text "foreign export", pretty cconv,
                        text (show str), pretty name, text "::", pretty typ]
 
-        pretty (RulePragmaDecl pos rules) = 
+        pretty (RulePragmaDecl pos rules) =
                 blankline $
                 markLine pos $
                 myVcat $ text "{-# RULES" : map pretty rules ++ [text " #-}"]
-                
+
         pretty (DeprPragmaDecl pos deprs) =
                 blankline $
                 markLine pos $
                 myVcat $ text "{-# DEPRECATED" : map ppWarnDepr deprs ++ [text " #-}"]
-                
+
         pretty (WarnPragmaDecl pos deprs) =
                 blankline $
                 markLine pos $
@@ -470,17 +471,17 @@ instance Pretty Decl where
                 blankline $
                 markLine pos $
                 mySep [text (if inl then "{-# INLINE" else "{-# NOINLINE"), pretty activ, pretty name, text "#-}"]
-                
+
         pretty (SpecSig pos name types) =
                 blankline $
                 markLine pos $
                 mySep $ [text "{-# SPECIALISE", pretty name, text "::"]
                     ++ punctuate comma (map pretty types) ++ [text "#-}"]
 
-        pretty (SpecInlineSig pos inl activ name types) = 
+        pretty (SpecInlineSig pos inl activ name types) =
                 blankline $
                 markLine pos $
-                mySep $ [text "{-# SPECIALISE", text (if inl then "INLINE" else "NOINLINE"), 
+                mySep $ [text "{-# SPECIALISE", text (if inl then "INLINE" else "NOINLINE"),
                         pretty activ, pretty name, text "::"]
                         ++ (punctuate comma $ map pretty types) ++ [text "#-}"]
 
@@ -538,10 +539,10 @@ instance Pretty ClassDecl where
                 markLine loc $
                 mySep ( [text "type", pretty name]
                         ++ map pretty nameList ++ ppOptKind optkind)
-    
+
     pretty (ClsTyDef loc ntype htype) =
                 markLine loc $
-                mySep [text "type", pretty ntype, equals, pretty htype] 
+                mySep [text "type", pretty ntype, equals, pretty htype]
 
 instance Pretty InstDecl where
         pretty (InsDecl decl) = pretty decl
@@ -584,8 +585,8 @@ ppWarnDepr (names, txt) = mySep $ (punctuate comma $ map pretty names) ++ [text 
 
 instance Pretty Rule where
         pretty (Rule tag activ rvs rhs lhs) =
-            mySep $ [text $ show tag, pretty activ, 
-                        maybePP ppRuleVars rvs, 
+            mySep $ [text $ show tag, pretty activ,
+                        maybePP ppRuleVars rvs,
                         pretty rhs, char '=', pretty lhs]
 
 ppRuleVars :: [RuleVar] -> Doc
@@ -818,10 +819,10 @@ instance Pretty Exp where
         pretty (CorePragma s) = myFsep $ map text ["{-# CORE", show s, "#-}"]
         pretty (SCCPragma  s) = myFsep $ map text ["{-# SCC",  show s, "#-}"]
         pretty (GenPragma  s (a,b) (c,d)) =
-                myFsep $ [text "{-# GENERATED", text $ show s, 
-                            int a, char ':', int b, char '-', 
+                myFsep $ [text "{-# GENERATED", text $ show s,
+                            int a, char ':', int b, char '-',
                             int c, char ':', int d, text "#-}"]
-        pretty (UnknownExpPragma n s) = 
+        pretty (UnknownExpPragma n s) =
                 myFsep $ [text "{-#", text n, text s, text "#-}"]
 
 instance Pretty XAttr where
@@ -885,7 +886,7 @@ instance Pretty Pat where
         prettyPrec _ (PNPlusK n k) =
                 myFsep [pretty n, text "+", text $ show k]
         -- HaRP
-        prettyPrec _ (PRPat rs) = 
+        prettyPrec _ (PRPat rs) =
                 bracketList . punctuate comma . map pretty $ rs
         -- Hsx
         prettyPrec _ (PXTag _ n attrs mattr cp) =
@@ -1154,7 +1155,7 @@ markLine loc doc = do
 
 -- Pretty print a source location, useful for printing out error messages
 instance Pretty SrcLoc where
-  pretty srcLoc = 
+  pretty srcLoc =
     return $ P.hsep [ colonFollow (P.text $ srcFilename srcLoc)
                     , colonFollow (P.int  $ srcLine     srcLoc)
                     , P.int $ srcColumn srcLoc
