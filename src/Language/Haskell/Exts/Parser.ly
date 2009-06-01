@@ -15,8 +15,10 @@
 >
 > module Language.Haskell.Exts.Parser (
 >               parseModule, parseModuleWithMode,
+>               parseExp, parsePat, parseDecl, parseType,
+>               getTopPragmas,
 >               ParseMode(..), defaultParseMode, ParseResult(..)) where
-> 
+>
 > import Language.Haskell.Exts.Syntax hiding ( Exp(..), XAttr(..), FieldUpdate(..) )
 > import Language.Haskell.Exts.Syntax ( Exp )
 > import Language.Haskell.Exts.ParseMonad
@@ -228,7 +230,12 @@ Pragmas
 
 > %monad { P }
 > %lexer { lexer } { EOF }
-> %name parse
+> %name parse page
+> %name mparseExp trueexp
+> %name mparsePat pat
+> %name mparseDecl topdecl
+> %name mparseType ctype
+> %partial mfindOptPragmas toppragmas
 > %tokentype { Token }
 > %expect 7
 > %%
@@ -1417,9 +1424,29 @@ Miscellaneous (mostly renamings)
 > happyError :: P a
 > happyError = fail "Parse error"
 
-> -- | Parse of a string, which should contain a complete Haskell 98 module.
+> -- | Parse of a string, which should contain a complete Haskell module.
 > parseModule :: String -> ParseResult Module
 > parseModule = runParser parse
+
+> -- | Parse of a string containing a Haskell expression.
+> parseExp :: String -> ParseResult Exp
+> parseExp = runParser mparseExp
+
+> -- | Parse of a string containing a Haskell pattern.
+> parsePat :: String -> ParseResult Pat
+> parsePat = runParser mparsePat
+
+> -- | Parse of a string containing a Haskell top-level declaration.
+> parseDecl :: String -> ParseResult Decl
+> parseDecl = runParser mparseDecl
+
+> -- | Parse of a string containing a Haskell type.
+> parseType :: String -> ParseResult Type
+> parseType = runParser mparseType
+
+> -- | Parse of a string starting with a series of top-level option pragmas.
+> getTopPragmas :: String -> ParseResult [OptionPragma]
+> getTopPragmas = runParser mfindOptPragmas
 
 > -- | Parse of a string, which should contain a complete Haskell 98 module.
 > parseModuleWithMode :: ParseMode -> String -> ParseResult Module
