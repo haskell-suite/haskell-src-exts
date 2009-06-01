@@ -5,7 +5,7 @@
 -- Copyright   :  (c) Niklas Broberg 2004,
 --        (c) The GHC Team, 1997-2000
 -- License     :  BSD-style (see the file LICENSE.txt)
--- 
+--
 -- Maintainer  :  Niklas Broberg, d00nibro@dtek.chalmers.se
 -- Stability   :  experimental
 -- Portability :  portable
@@ -16,6 +16,8 @@
 
 module Language.Haskell.Exts.ParseUtils (
       splitTyConApp         -- Type -> P (Name,[Type])
+    , checkEnabled          -- Extension -> P ()
+    , checkPatternGuards    -- [Stmt] -> P ()
     , mkRecConstrOrUpdate   -- Exp -> [FieldUpdate] -> P S.Exp
     , checkPrec             -- Integer -> P Int
     , checkContext          -- Type -> P Context
@@ -36,7 +38,7 @@ module Language.Haskell.Exts.ParseUtils (
     , checkSimpleType       -- Type -> P ()
     , checkSigVar           -- PExp -> P Name
     , getGConName           -- S.Exp -> P QName
-    , mkTyForall            -- Maybe [Name] -> Context -> Type -> Type 
+    , mkTyForall            -- Maybe [Name] -> Context -> Type -> Type
     -- HaRP
     , checkRPattern         -- PExp -> P RPat
     -- Hsx
@@ -48,7 +50,7 @@ module Language.Haskell.Exts.ParseUtils (
     -- Pragmas
     , checkRuleExpr         -- PExp -> P Exp
     , readTool              -- Maybe String -> Maybe Tool
-    
+
     -- Parsed expressions
     , PExp(..), PFieldUpdate(..), ParseXAttr(..)
     , p_unit_con            -- PExp
@@ -56,10 +58,11 @@ module Language.Haskell.Exts.ParseUtils (
     ) where
 
 import Language.Haskell.Exts.Syntax hiding ( Exp(..), FieldUpdate(..), XAttr(..) )
-import qualified Language.Haskell.Exts.Syntax as S ( Exp(..), FieldUpdate(..), XAttr(..) ) 
+import qualified Language.Haskell.Exts.Syntax as S ( Exp(..), FieldUpdate(..), XAttr(..) )
 import Language.Haskell.Exts.ParseMonad
 import Language.Haskell.Exts.Pretty
 import Language.Haskell.Exts.Build
+import Language.Haskell.Exts.Extension
 
 import Data.List (intersperse)
 
@@ -71,6 +74,20 @@ splitTyConApp t0 = split t0 []
     split (TyCon (UnQual t)) ts = return (t,ts)
     split (TyInfix a op b) ts = split (TyCon op) (a:b:ts)
     split _ _ = fail "Illegal data/newtype declaration"
+
+-----------------------------------------------------------------------------
+-- Checking for extensions
+
+checkEnabled :: (Show e, Enabled e) => e  -> P ()
+checkEnabled e = do
+    exts <- getExtensions
+    if isEnabled e exts
+     then return ()
+     else fail $ show e ++ " is not enabled"
+
+checkPatternGuards :: [Stmt] -> P ()
+checkPatternGuards [Qualifier _] = return ()
+checkPatternGuards _ = checkEnabled PatternGuards
 
 -----------------------------------------------------------------------------
 -- Various Syntactic Checks
@@ -124,7 +141,7 @@ checkInstHeader (TyForall Nothing cs t) = do
 checkInstHeader t = do
     (c,ts) <- checkInsts t []
     return ([],c,ts)
-    
+
 
 checkInsts :: Type -> [Type] -> P ((QName,[Type]))
 checkInsts (TyApp l t) ts = checkInsts l (t:ts)
@@ -148,7 +165,7 @@ checkPat (App f x) args = do
 checkPat e [] = case e of
     Var (UnQual x)   -> return (PVar x)
     Lit l            -> return (PLit l)
-    InfixApp l op r  -> 
+    InfixApp l op r  ->
         case op of
             QConOp c -> do
                     l <- checkPat l []
@@ -195,24 +212,26 @@ checkPat e [] = case e of
                   return (PRec c fs)
     NegApp (Lit l) -> return (PNeg (PLit l))
     ExpTypeSig s e t -> do
+                  -- patterns cannot have signatures unless ScopedTypeVariables is enabled.
+                  checkEnabled ScopedTypeVariables
                   p <- checkPat e []
                   return (PatTypeSig s p t)
-    
+
     -- Hsx
     XTag s n attrs mattr cs -> do
                   pattrs <- mapM checkPAttr attrs
                   pcs    <- mapM (\c -> checkPat c []) cs
-                  mpattr <- maybe (return Nothing) 
+                  mpattr <- maybe (return Nothing)
                               (\e -> do p <- checkPat e []
-                                        return $ Just p) 
+                                        return $ Just p)
                               mattr
                   let cps = mkChildrenPat pcs
                   return $ PXTag s n pattrs mpattr cps
     XETag s n attrs mattr -> do
                   pattrs <- mapM checkPAttr attrs
-                  mpattr <- maybe (return Nothing) 
+                  mpattr <- maybe (return Nothing)
                               (\e -> do p <- checkPat e []
-                                        return $ Just p) 
+                                        return $ Just p)
                               mattr
                   return $ PXETag s n pattrs mpattr
     XPcdata pcdata   -> return $ PXPcdata pcdata
@@ -242,7 +261,7 @@ patFail s = fail $ "Parse error in pattern: " ++ s
 
 checkRPattern :: PExp -> P RPat
 checkRPattern e = case e of
-    SeqRP es -> do 
+    SeqRP es -> do
         rps <- mapM checkRPattern es
         return $ RPSeq rps
     PostOp e op -> do
@@ -311,7 +330,7 @@ mkChildrenPat ps = mkCPAux ps []
         mkCPAux (p:ps) qs = case p of
             (PRPat rps) -> [mkCRP ps (reverse rps ++ map RPPat qs)]
             _             -> mkCPAux ps (p:qs)
-        
+
         mkCRP :: [Pat] -> [RPat] -> Pat
         mkCRP [] rps = PXRPats $ reverse rps
         mkCRP (p:ps) rps = case p of
@@ -362,25 +381,25 @@ checkExpr e = case e of
     ExpTypeSig loc e ty     -> do
                      e <- checkExpr e
                      return (S.ExpTypeSig loc e ty)
-    
+
     --Template Haskell
     BracketExp e        -> return $ S.BracketExp e
     SpliceExp e         -> return $ S.SpliceExp e
     TypQuote q          -> return $ S.TypQuote q
     VarQuote q          -> return $ S.VarQuote q
-    
+
     -- Hsx
     XTag s n attrs mattr cs -> do attrs <- mapM checkAttr attrs
                                   cs <- mapM checkExpr cs
-                                  mattr <- maybe (return Nothing) 
-                                              (\e -> checkExpr e >>= return . Just) 
-                                              mattr                 
+                                  mattr <- maybe (return Nothing)
+                                              (\e -> checkExpr e >>= return . Just)
+                                              mattr
                                   return $ S.XTag s n attrs mattr cs
     XETag s n attrs mattr   -> do attrs <- mapM checkAttr attrs
-                                  mattr <- maybe (return Nothing) 
-                                              (\e -> checkExpr e >>= return . Just) 
-                                              mattr                 
-                                  return $ S.XETag s n attrs mattr 
+                                  mattr <- maybe (return Nothing)
+                                              (\e -> checkExpr e >>= return . Just)
+                                              mattr
+                                  return $ S.XETag s n attrs mattr
     XPcdata p       -> return $ S.XPcdata p
     XExpTag e       -> do e <- checkExpr e
                           return $ S.XExpTag e
@@ -389,7 +408,7 @@ checkExpr e = case e of
     SCCPragma s     -> return $ S.SCCPragma s
     GenPragma s xx yy -> return $ S.GenPragma s xx yy
     UnknownExpPragma n s -> return $ S.UnknownExpPragma n s
-    
+
     _             -> fail $ "Parse error in expression: " ++ show e
 
 checkAttr :: ParseXAttr -> P S.XAttr
@@ -472,7 +491,9 @@ checkValDef srcloc lhs optsig rhs whereBinds =
     case isFunLhs lhs [] of
      Just (f,es) -> do
             ps <- mapM checkPattern es
-            return (FunBind [Match srcloc f ps optsig rhs whereBinds])
+            case optsig of -- only pattern bindings can have signatures
+                Nothing -> return (FunBind [Match srcloc f ps optsig rhs whereBinds])
+                Just _  -> fail "Cannot give an explicit type signature to a function binding"
      Nothing     -> do
             lhs <- checkPattern lhs
             return (PatBind srcloc lhs optsig rhs whereBinds)
@@ -527,11 +548,11 @@ checkUnQual (Special _) = fail "Illegal special name"
 
 -----------------------------------------------------------------------------
 -- Check that two xml tag names are equal
--- Could use Eq directly, but I am not sure whether <dom:name>...</name> 
+-- Could use Eq directly, but I am not sure whether <dom:name>...</name>
 -- would be valid, in that case Eq won't work. TODO
 
 checkEqNames :: XName -> XName -> P XName
-checkEqNames n@(XName n1) (XName n2) 
+checkEqNames n@(XName n1) (XName n2)
     | n1 == n2  = return n
     | otherwise = fail "names in matching xml tags are not equal"
 checkEqNames n@(XDomName d1 n1) (XDomName d2 n2)
@@ -631,10 +652,10 @@ mkPage :: Module -> SrcLoc -> S.Exp -> P Module
 mkPage (Module src md os warn exps imps decls) loc xml = do
     let page = pageFun loc xml
     return $ Module src md os warn exps imps (decls ++ [page])
-    
+
 mkPageModule :: [OptionPragma] -> S.Exp -> P Module
-mkPageModule os xml = do 
-    do loc <- case xml of 
+mkPageModule os xml = do
+    do loc <- case xml of
            S.XTag l _ _ _ _ -> return l
            S.XETag l _ _ _  -> return l
            _ -> fail "Will not happen since mkPageModule is only called on XML expressions"
@@ -658,7 +679,7 @@ mkDVarExpr :: [String] -> PExp
 mkDVarExpr = foldl1 (\x y -> InfixApp x (op $ sym "-") y) . map (Var . UnQual . name)
 
 ---------------------------------------
--- Combine adjacent for-alls. 
+-- Combine adjacent for-alls.
 --
 -- A valid type must have one for-all at the top of the type, or of the fn arg types
 
@@ -672,7 +693,7 @@ mk_forall_ty mtvs1     (TyForall mtvs2 ctxt ty) = mkTyForall (mtvs1 `plus` mtvs2
 mk_forall_ty mtvs1     ty             = TyForall mtvs1 [] ty
 
 mtvs1       `plus` Nothing     = mtvs1
-Nothing     `plus` mtvs2       = mtvs2 
+Nothing     `plus` mtvs2       = mtvs2
 (Just tvs1) `plus` (Just tvs2) = Just (tvs1 ++ tvs2)
 
 ---------------------------------------
@@ -729,13 +750,13 @@ data PExp
     | GuardRP PExp [Stmt]       -- ^ regular patterns only
     | EitherRP PExp PExp        -- ^ regular patterns only
     | CAsRP Name PExp           -- ^ regular patterns only
-    
+
 -- Template Haskell
     | VarQuote QName            -- ^ 'x
     | TypQuote QName            -- ^ ''T
     | BracketExp Bracket
     | SpliceExp Splice
-    
+
 -- Hsx
     | XTag SrcLoc XName [ParseXAttr] (Maybe PExp) [PExp]
     | XETag SrcLoc XName [ParseXAttr] (Maybe PExp)
@@ -750,7 +771,7 @@ data PExp
     | UnknownExpPragma  String String
   deriving (Eq,Show)
 
-data PFieldUpdate 
+data PFieldUpdate
     = FieldUpdate QName PExp
     | FieldPun Name
     | FieldWildcard
