@@ -5,7 +5,7 @@
 -- Copyright   :  (c) The GHC Team, 1997-2000
 --        (c) Niklas Broberg, 2004
 -- License     :  BSD-style (see the file LICENSE.txt)
--- 
+--
 -- Maintainer  :  Niklas Broberg, d00nibro@dtek.chalmers.se
 -- Stability   :  experimental
 -- Portability :  portable
@@ -21,6 +21,7 @@
 module Language.Haskell.Exts.Lexer (Token(..), lexer) where
 
 import Language.Haskell.Exts.ParseMonad
+import Language.Haskell.Exts.Extension
 
 import Data.Char
 import Data.Ratio
@@ -81,15 +82,15 @@ data Token
         | Minus
         | Exclamation
         | Star
-    
+
 -- Template Haskell
         | THExpQuote            -- [| or [e|
         | THPatQuote            -- [p|
         | THDecQuote            -- [d|
-        | THTypQuote            -- [t|         
+        | THTypQuote            -- [t|
         | THCloseQuote          -- |]
         | THIdEscape (String)   -- dollar x
-        | THParenEscape         -- dollar ( 
+        | THParenEscape         -- dollar (
         | THVarQuote            -- 'x (but without the x)
         | THTyQuote             -- ''T (but without the T)
 
@@ -108,7 +109,7 @@ data Token
         | XPCDATA String
         | XRPatOpen             -- <[
         | XRPatClose            -- ]>
-        
+
 -- Pragmas
 
         | PragmaEnd                     -- #-}
