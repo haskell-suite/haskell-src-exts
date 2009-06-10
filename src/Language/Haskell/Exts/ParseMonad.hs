@@ -34,14 +34,37 @@ import Language.Haskell.Exts.Syntax(SrcLoc(..))
 import Language.Haskell.Exts.Extension
 
 import Data.List ( intersperse )
+import Control.Applicative
+import Data.Monoid
 
 -- | The result of a parse.
 data ParseResult a
-    = ParseOk a     -- ^ The parse succeeded, yielding a value.
+    = ParseOk { unParseOk :: a }    -- ^ The parse succeeded, yielding a value.
     | ParseFailed SrcLoc String
                 -- ^ The parse failed at the specified
                 -- source location, with an error message.
     deriving Show
+
+instance Functor ParseResult where
+  fmap f (ParseOk x)           = ParseOk $ f x
+  fmap f (ParseFailed loc msg) = ParseFailed loc msg
+
+instance Applicative ParseResult where
+  pure = ParseOk
+  ParseOk f           <*> x = f <$> x
+  ParseFailed loc msg <*> _ = ParseFailed loc msg
+
+instance Monad ParseResult where
+  return = ParseOk
+  ParseOk x           >>= f = f x
+  ParseFailed loc msg >>= _ = ParseFailed loc msg
+
+instance Monoid m => Monoid (ParseResult m) where
+  mempty = ParseOk mempty
+  ParseOk x `mappend` ParseOk y = ParseOk $ x `mappend` y
+  ParseOk x `mappend` err       = err
+  err       `mappend` _         = err -- left-biased
+
 
 -- internal version
 data ParseStatus a = Ok ParseState a | Failed SrcLoc String
