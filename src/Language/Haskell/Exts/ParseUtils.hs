@@ -65,6 +65,7 @@ import Language.Haskell.Exts.Build
 import Language.Haskell.Exts.Extension
 
 import Data.List (intersperse)
+import Control.Monad (when)
 
 splitTyConApp :: Type -> P (Name,[Type])
 splitTyConApp t0 = split t0 []
@@ -101,9 +102,12 @@ checkContext t = do
 
 -- Changed for multi-parameter type classes.
 -- Further changed for implicit parameters.
+-- Totally redone for extension parametrisation.
 
 checkAssertion :: Type -> P Asst
+-- We cannot even get here unless ImplicitParameters is enabled.
 checkAssertion (TyPred p@(IParam _ _)) = return p
+-- We cannot even get here unless TypeFamilies is enabled.
 checkAssertion (TyPred p@(EqualP _ _)) = return p
 checkAssertion t = checkAssertion' [] t
     where   checkAssertion' ts (TyCon c) = return $ ClassA c ts
@@ -175,6 +179,12 @@ checkPat e [] = case e of
                     case (l,r) of
                         (Var (UnQual n@(Ident _)), Lit (Int k)) -> return (PNPlusK n k)
                         _ -> patFail ""
+            QVarOp (UnQual (Symbol "!")) -> do
+                    -- We must have BangPatterns on
+                    checkEnabled BangPatterns
+                    let (e,es) = splitBang r []
+                    ps <- mapM checkPattern (BangPat e:es)
+                    checkPat l ps
             _ -> patFail ""
     Tuple es         -> do
                   ps <- mapM (\e -> checkPat e []) es
@@ -241,9 +251,25 @@ checkPat e [] = case e of
     XRPats es -> do
             rps <- mapM checkRPattern es
             return (PXRPats $ map fixRPOpPrec rps)
+
+    -- Generics
+    ExplTypeArg qn t -> return $ PExplTypeArg qn t
+
+    -- QuasiQuotation
+    QuasiQuote n q -> return $ PQuasiQuote n q
+
+    -- BangPatterns
+    BangPat e -> do
+        p <- checkPat e []
+        return $ PBangPat p
+
     e -> patFail $ show e
 
 checkPat e _ = patFail $ show e
+
+splitBang :: PExp -> [PExp] -> (PExp, [PExp])
+splitBang (App f x) es = splitBang f (x:es)
+splitBang e es = (e, es)
 
 checkPatField :: PFieldUpdate -> P PatField
 checkPatField (FieldUpdate n e) = do
@@ -387,6 +413,7 @@ checkExpr e = case e of
     SpliceExp e         -> return $ S.SpliceExp e
     TypQuote q          -> return $ S.TypQuote q
     VarQuote q          -> return $ S.VarQuote q
+    QuasiQuote n q      -> return $ S.QuasiQuote n q
 
     -- Hsx
     XTag s n attrs mattr cs -> do attrs <- mapM checkAttr attrs
@@ -408,6 +435,14 @@ checkExpr e = case e of
     SCCPragma s     -> return $ S.SCCPragma s
     GenPragma s xx yy -> return $ S.GenPragma s xx yy
     UnknownExpPragma n s -> return $ S.UnknownExpPragma n s
+
+    -- Arrows
+    Proc p e        -> do e <- checkExpr e
+                          return $ S.Proc p e
+    LeftArrApp e1 e2      -> check2Exprs e1 e2 S.LeftArrApp
+    RightArrApp e1 e2     -> check2Exprs e1 e2 S.RightArrApp
+    LeftArrHighApp e1 e2  -> check2Exprs e1 e2 S.LeftArrHighApp
+    RightArrHighApp e1 e2 -> check2Exprs e1 e2 S.RightArrHighApp
 
     _             -> fail $ "Parse error in expression: " ++ show e
 
@@ -756,6 +791,7 @@ data PExp
     | TypQuote QName            -- ^ ''T
     | BracketExp Bracket
     | SpliceExp Splice
+    | QuasiQuote String String  -- ^ [$...|...]
 
 -- Hsx
     | XTag SrcLoc XName [ParseXAttr] (Maybe PExp) [PExp]
@@ -769,6 +805,19 @@ data PExp
     | SCCPragma         String
     | GenPragma         String (Int, Int) (Int, Int)
     | UnknownExpPragma  String String
+
+-- Generics
+    | ExplTypeArg QName Type    -- ^ f {| Int |} x = ...
+
+-- Bang Patterns
+    | BangPat PExp              -- ^ f !a = ...
+
+-- Arrows
+    | Proc Pat PExp
+    | LeftArrApp      PExp PExp
+    | RightArrApp     PExp PExp
+    | LeftArrHighApp  PExp PExp
+    | RightArrHighApp PExp PExp
   deriving (Eq,Show)
 
 data PFieldUpdate
