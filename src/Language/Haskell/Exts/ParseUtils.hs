@@ -218,9 +218,10 @@ checkPat e [] = case e of
                   return (PTuple ps)
     List es      -> do
                   ps <- mapM checkRPattern es
-                  return $ if all isStdPat ps
-                            then PList $ map stripRP ps
-                            else PRPat $ map fixRPOpPrec ps
+                  if all isStdPat ps
+                    then return . PList $ map stripRP ps
+                    -- we don't allow truly regular patterns unless the extension is enabled
+                    else checkEnabled RegularPatterns >> return (PRPat $ map fixRPOpPrec ps)
             where isStdPat :: RPat -> Bool
                   isStdPat (RPPat _) = True
                   isStdPat (RPAs _ p) = isStdPat p
