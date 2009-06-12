@@ -803,6 +803,7 @@ instance Pretty Exp where
         pretty (SpliceExp s) = pretty s
         pretty (TypQuote t)  = text "\'\'" <> pretty t
         pretty (VarQuote x)  = text "\'" <> pretty x
+        pretty (QuasiQuote n qt) = text ("[$" ++ n ++ "|" ++ qt ++ "|]")
         -- Hsx
         pretty (XTag _ n attrs mattr cs) =
                 let ax = maybe [] (return . pretty) mattr
@@ -824,6 +825,13 @@ instance Pretty Exp where
                             int c, char ':', int d, text "#-}"]
         pretty (UnknownExpPragma n s) =
                 myFsep $ [text "{-#", text n, text s, text "#-}"]
+        -- Arrows
+        pretty (Proc p e) = myFsep $ [text "proc", pretty p, text "->", pretty e]
+        pretty (LeftArrApp l r)      = myFsep $ [pretty l, text "-<",  pretty r]
+        pretty (RightArrApp l r)     = myFsep $ [pretty l, text ">-",  pretty r]
+        pretty (LeftArrHighApp l r)  = myFsep $ [pretty l, text "-<<", pretty r]
+        pretty (RightArrHighApp l r) = myFsep $ [pretty l, text ">>-", pretty r]
+
 
 instance Pretty XAttr where
         pretty (XAttr n v) =
@@ -902,6 +910,11 @@ instance Pretty Pat where
                 myFsep $ [text "<%", pretty p, text "%>"]
         prettyPrec _ (PXRPats ps) =
                 myFsep $ text "<[" : map pretty ps ++ [text "%>"]
+        -- Generics
+        prettyPrec _ (PExplTypeArg qn t) =
+                myFsep [pretty qn, text "{|", pretty t, text "|}"]
+        -- BangPatterns
+        prettyPrec _ (PBangPat p) = text "!" <> pretty p
 
 instance Pretty PXAttr where
         pretty (PXAttr n p) =
@@ -965,6 +978,8 @@ instance Pretty Stmt where
                 ppLetStmt declList
         pretty (LetStmt (IPBinds bindList)) =
                 ppLetStmt bindList
+        pretty (RecStmt stmtList) =
+                text "rec" $$$ ppBody letIndent (map pretty stmtList)
 
 ppLetStmt l = text "let" $$$ ppBody letIndent (map pretty l)
 

@@ -110,6 +110,8 @@ Symbols
 >       ')'     { RightParen }
 >       '(#'    { LeftHashParen }
 >       '#)'    { RightHashParen }
+>       '{|'    { LeftCurlyBar }
+>       '|}'    { RightCurlyBar }
 >       ';'     { SemiColon }
 >       '{'     { LeftCurly }
 >       '}'     { RightCurly }
@@ -138,6 +140,13 @@ Reserved operators
 >       '!'     { Exclamation }
 >       '*'     { Star }
 
+Arrows
+
+>       '-<'    { LeftArrowTail }
+>       '>-'    { RightArrowTail }
+>       '-<<'   { LeftDblArrowTail }
+>       '>>-'   { RightDblArrowTail }
+
 Harp
 
 >       '(|'    { RPGuardOpen }
@@ -155,6 +164,7 @@ Template Haskell
 >       '|]'            { THCloseQuote }
 >       VARQUOTE        { THVarQuote }      -- 'x
 >       TYPQUOTE        { THTyQuote }       -- ''T
+>       QUASIQUOTE      { THQuasiQuote $$ }
 
 Hsx
 
@@ -203,6 +213,8 @@ Reserved Ids
 >       'module'        { KW_Module }
 >       'newtype'       { KW_NewType }
 >       'of'            { KW_Of }
+>       'proc'          { KW_Proc }     -- arrows
+>       'rec'           { KW_Rec }      -- arrows
 >       'then'          { KW_Then }
 >       'type'          { KW_Type }
 >       'where'         { KW_Where }
@@ -962,6 +974,9 @@ Value definitions
 
 > valdef :: { Decl }
 >       : srcloc exp0b optsig rhs optwhere     {% checkValDef $1 $2 $3 $4 $5 }
+>       | srcloc '!' aexp rhs optwhere         {% do { checkEnabled BangPatterns ;
+>                                                      p <- checkPattern $3;
+>                                                      return $ PatBind $1 p Nothing $4 $5 } }
 
 May bind implicit parameters
 > optwhere :: { Binds }
@@ -1009,6 +1024,10 @@ mangle them into the correct form depending on context.
 >       : exp0b '::' srcloc ctype       { ExpTypeSig $3 $1 $4 }
 >       | exp0                          { $1 }
 >       | exp0b qop                     { PostOp $1 $2 }
+>       | exp0b '-<' exp                { LeftArrApp $1 $3 }
+>       | exp0b '>-' exp                { RightArrApp $1 $3 }
+>       | exp0b '-<<' exp               { LeftArrHighApp $1 $3 }
+>       | exp0b '>>-' exp               { RightArrHighApp $1 $3 }
 
 > exp0 :: { PExp }
 >       : exp0a                         { $1 }
@@ -1030,6 +1049,7 @@ Hyphenated identifiers require XmlSyntax to be enabled, handled in the lexer.
 A let may bind implicit parameters
 >       | 'let' binds 'in' exp          { Let $2 $4 }
 >       | 'if' exp 'then' exp 'else' exp { If $2 $4 $6 }
+>       | 'proc' apat '->' exp          { Proc $2 $4 }
 
 mdo blocks require the RecursiveDo extension enabled, but the lexer handles that.
 
@@ -1059,6 +1079,7 @@ mdo blocks require the RecursiveDo extension enabled, but the lexer handles that
 
 > apat :: { Pat }
 >       : aexp                          {% checkPattern $1 }
+>       | '!' aexp                      {% checkPattern (BangPat $2) }
 
 UGLY: Because patterns and expressions are mixed, aexp has to be split into
 two rules: One right-recursive and one left-recursive. Otherwise we get two
@@ -1080,10 +1101,13 @@ Non-linear name binding, @:, requires RegularPatterns, but the lexer handles tha
 
 Note: The first two alternatives of aexp1 are not necessarily record
 updates: they could be labeled constructions.
+Generics-style explicit type arguments need the Generics extension, but
+we check that in the lexer.
 
 > aexp1 :: { PExp }
 >       : aexp1 '{' '}'                 {% mkRecConstrOrUpdate $1 [] }
 >       | aexp1 '{' fbinds '}'          {% mkRecConstrOrUpdate $1 (reverse $3) }
+>       | qvar '{|' type '|}'           { ExplTypeArg $1 $3 }
 >       | aexp2                         { $1 }
 
 According to the Report, the left section (e op) is legal iff (e op x)
@@ -1121,6 +1145,7 @@ Template Haskell - all this is enabled in the lexer.
 >       | VARQUOTE qcon                 { VarQuote $2 }
 >       | TYPQUOTE tyvar                { TypQuote (UnQual $2) }
 >       | TYPQUOTE gtycon               { TypQuote $2 }
+>       | QUASIQUOTE                    { let (n,q) = $1 in QuasiQuote n q }
 End Template Haskell
 
 > commas :: { Int }
@@ -1294,7 +1319,7 @@ A guard can be a pattern guard if PatternGuards is enabled, hence quals instead 
 
 > pat :: { Pat }
 >       : exp                           {% checkPattern $1 }
-
+>       | '!' aexp                      {% checkPattern (BangPat $2) }
 -----------------------------------------------------------------------------
 Statement sequences
 
@@ -1314,6 +1339,7 @@ A let statement may bind implicit parameters.
 >       | ';' stmts                         { $2 }
 >       | trueexp ';'                       { [Qualifier $1] }
 >       | trueexp                           { [Qualifier $1] }
+>       | 'rec' stmtlist ';' stmts          { RecStmt $2 : $4 }
 
 -----------------------------------------------------------------------------
 Record Field Update/Construction
@@ -1464,13 +1490,13 @@ Implicit parameter
 > varsym :: { Name }
 >       : VARSYM                { Symbol $1 }
 >       | '-'                   { minus_name }
->       | '!'                   { pling_name }
+>       | '!'                   { bang_name }
 >       | '.'                   { dot_name }
 >       | '*'                   { star_name }
 
 > varsymm :: { Name } -- varsym not including '-'
 >       : VARSYM                { Symbol $1 }
->       | '!'                   { pling_name }
+>       | '!'                   { bang_name }
 >       | '.'                   { dot_name }
 >       | '*'                   { star_name }
 

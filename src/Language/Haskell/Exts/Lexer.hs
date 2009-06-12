@@ -55,6 +55,8 @@ data Token
         | RightParen
         | LeftHashParen
         | RightHashParen
+        | LeftCurlyBar
+        | RightCurlyBar
         | SemiColon
         | LeftCurly
         | RightCurly
@@ -82,6 +84,10 @@ data Token
         | Minus
         | Exclamation
         | Star
+        | LeftArrowTail         -- >-
+        | RightArrowTail        -- -<
+        | LeftDblArrowTail      -- >>-
+        | RightDblArrowTail     -- -<<
 
 -- Template Haskell
         | THExpQuote            -- [| or [e|
@@ -93,6 +99,7 @@ data Token
         | THParenEscape         -- dollar (
         | THVarQuote            -- 'x (but without the x)
         | THTyQuote             -- ''T (but without the T)
+        | THQuasiQuote (String,String)  -- [$...|...]
 
 -- HaRP
         | RPGuardOpen       -- (|
@@ -157,6 +164,8 @@ data Token
         | KW_Module
         | KW_NewType
         | KW_Of
+        | KW_Proc       -- arrows
+        | KW_Rec        -- arrows
         | KW_Then
         | KW_Type
         | KW_Where
@@ -189,7 +198,12 @@ reserved_ops = [
  ( "@:", (RPCAt,        Just (Any [RegularPatterns])) ),
  ( "~",  (Tilde,        Nothing) ),
  ( "=>", (DoubleArrow,  Nothing) ),
- ( "*",  (Star,         Just (Any [KindSignatures])) )
+ ( "*",  (Star,         Just (Any [KindSignatures])) ),
+ -- Arrows notation
+ ( "-<",  (LeftArrowTail,       Just (Any [Arrows])) ),
+ ( ">-",  (RightArrowTail,      Just (Any [Arrows])) ),
+ ( "-<<", (LeftDblArrowTail,    Just (Any [Arrows])) ),
+ ( ">>-", (RightDblArrowTail,   Just (Any [Arrows])) )
  ]
 
 special_varops :: [(String,(Token, Maybe ExtScheme))]
@@ -226,6 +240,8 @@ reserved_ids = [
  ( "module",    (KW_Module,     Nothing) ),
  ( "newtype",   (KW_NewType,    Nothing) ),
  ( "of",        (KW_Of,         Nothing) ),
+ ( "proc",      (KW_Proc,       Just (Any [Arrows])) ),
+ ( "rec",       (KW_Rec,        Just (Any [Arrows])) ),
  ( "then",      (KW_Then,       Nothing) ),
  ( "type",      (KW_Type,       Nothing) ),
  ( "where",     (KW_Where,      Nothing) ),
@@ -530,6 +546,8 @@ lexStdToken = do
                     | c == 't' && TemplateHaskell `elem` exts -> do
                         discard 3
                         return THTypQuote
+        '[':'$':c:_ | isLower c && QuasiQuotes `elem` exts ->
+                        discard 2 >> lexQuasiQuote
 
         '|':']':_ | TemplateHaskell `elem` exts -> do
                         discard 2
@@ -558,6 +576,10 @@ lexStdToken = do
         '(':'#':_ | UnboxedTuples `elem` exts -> do discard 2 >> return LeftHashParen
 
         '#':')':_ | UnboxedTuples `elem` exts -> do discard 2 >> return RightHashParen
+
+        '{':'|':_ | Generics `elem` exts -> do discard 2 >> return LeftCurlyBar
+
+        '|':'}':_ | Generics `elem` exts -> do discard 2 >> return RightCurlyBar
 
         -- pragmas
 
@@ -634,6 +656,26 @@ lexStdToken = do
                         return [ident ++ "#"]
                  _ -> return [ident]
 
+            lexQuasiQuote :: Lex a Token
+            lexQuasiQuote = do
+                -- We've seen and dropped [$ already
+                ident <- lexWhile isIdent
+                matchChar '|' "Malformed quasi-quote quoter"
+                body <- lexQQBody
+                return $ THQuasiQuote (ident, body)
+
+            lexQQBody :: Lex a String
+            lexQQBody = do
+                s <- getInput
+                case s of
+                  '\\':']':_ -> do str <- lexQQBody
+                                   return (']':str)
+                  '\\':'|':_ -> do str <- lexQQBody
+                                   return ('|':str)
+                  '|':']':_  -> discard 2 >> return ""
+                  _ -> do str <- lexWhile (not . (`elem` "\\|"))
+                          rest <- lexQQBody
+                          return (str++rest)
 
 lexPragmaStart :: Lex a Token
 lexPragmaStart = do

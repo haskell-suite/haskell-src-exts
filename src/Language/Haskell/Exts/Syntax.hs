@@ -89,7 +89,7 @@ module Language.Haskell.Exts.Syntax (
     unit_con_name, tuple_con_name, list_cons_name,
     unit_con, tuple_con,
     -- ** Special identifiers
-    as_name, qualified_name, hiding_name, minus_name, pling_name, dot_name, star_name,
+    as_name, qualified_name, hiding_name, minus_name, bang_name, dot_name, star_name,
     export_name, safe_name, unsafe_name, threadsafe_name, stdcall_name, ccall_name,
     -- ** Type constructors
     unit_tycon_name, fun_tycon_name, list_tycon_name, tuple_tycon_name,
@@ -595,6 +595,7 @@ data Exp
     | TypQuote QName            -- ^ ''T
     | BracketExp Bracket
     | SpliceExp Splice
+    | QuasiQuote String String  -- ^ [$name| string |]
 
 -- Hsx
     | XTag SrcLoc XName [XAttr] (Maybe Exp) [Exp]
@@ -607,6 +608,13 @@ data Exp
     | SCCPragma         String
     | GenPragma         String (Int, Int) (Int, Int)
     | UnknownExpPragma  String String
+
+-- Arrows
+    | Proc Pat Exp              -- ^ @proc@ /pat/ @->@ /exp/
+    | LeftArrApp Exp Exp        -- ^ /exp/ @-<@ /exp/
+    | RightArrApp Exp Exp       -- ^ /exp/ @>-@ /exp/
+    | LeftArrHighApp Exp Exp    -- ^ /exp/ @-<<@ /exp/
+    | RightArrHighApp Exp Exp   -- ^ /exp/ @>>-@ /exp/
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -753,12 +761,15 @@ data Pat
                                     -- ^ XML tag pattern
     | PXETag SrcLoc XName [PXAttr] (Maybe Pat)
                                     -- ^ XML singleton tag pattern
-    | PXPcdata String
-                                    -- ^ XML PCDATA pattern
-    | PXPatTag Pat
-                                    -- ^ XML embedded pattern
-    | PXRPats [RPat]
-                                    -- ^ XML regular list pattern
+    | PXPcdata String               -- ^ XML PCDATA pattern
+    | PXPatTag Pat                  -- ^ XML embedded pattern
+    | PXRPats [RPat]                -- ^ XML regular list pattern
+    | PExplTypeArg QName Type       -- ^ Explicit type argument e.g. f {| Int |} x = ...
+
+    | PQuasiQuote String String     -- ^ [$name| string |]
+
+    | PBangPat Pat                  -- ^ f !x = ...
+
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -824,6 +835,7 @@ data Stmt
                 -- an action whose result is discarded;
                 -- in a list comprehension, a guard expression
     | LetStmt Binds -- ^ local bindings
+    | RecStmt [Stmt]
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -893,12 +905,12 @@ unit_con          = Con unit_con_name
 tuple_con :: Int -> Exp
 tuple_con i       = Con (tuple_con_name i)
 
-as_name, qualified_name, hiding_name, minus_name, pling_name, dot_name, star_name :: Name
+as_name, qualified_name, hiding_name, minus_name, bang_name, dot_name, star_name :: Name
 as_name               = Ident "as"
 qualified_name        = Ident "qualified"
 hiding_name       = Ident "hiding"
 minus_name        = Symbol "-"
-pling_name        = Symbol "!"
+bang_name        = Symbol "!"
 dot_name          = Symbol "."
 star_name             = Symbol "*"
 
