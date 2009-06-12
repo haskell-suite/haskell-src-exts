@@ -809,11 +809,12 @@ GADTs - require the GADTs extension enabled, but we handle that at the calling s
 >       | constr                        { [$1] }
 
 > constr :: { QualConDecl }
->       : srcloc forall context '=>' constr1    { QualConDecl $1 $2 $3 $5 }
+>       : srcloc forall context '=>' constr1    {% do { checkEnabled ExistentialQuantification ;
+>                                                       return $ QualConDecl $1 $2 $3 $5 } }
 >       | srcloc forall constr1                 { QualConDecl $1 $2 [] $3 }
 
 > forall :: { [TyVarBind] }
->       : 'forall' ktyvars '.'          { $2 }
+>       : 'forall' ktyvars '.'          {% checkEnabled ExistentialQuantification >> return $2 }
 >       | {- empty -}                   { [] }
 
 To avoid conflicts when introducing type operators, we need to parse record constructors

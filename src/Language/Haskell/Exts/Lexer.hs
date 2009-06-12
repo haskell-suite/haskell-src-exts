@@ -185,7 +185,11 @@ data Token
 
 reserved_ops :: [(String,(Token, Maybe ExtScheme))]
 reserved_ops = [
- ( ".",  (Dot,          Nothing) ),
+ -- the dot is only a special symbol together with forall.
+ ( ".",  (Dot,          Just (Any [LiberalTypeSynonyms,
+                                    ExistentialQuantification,
+                                    PolymorphicComponents,
+                                    Rank2Types, RankNTypes])) ),
  ( "..", (DotDot,       Nothing) ),
  ( ":",  (Colon,        Nothing) ),
  ( "::", (DoubleColon,  Nothing) ),
@@ -225,9 +229,7 @@ reserved_ids = [
  ( "family",    (KW_Family,     Just (Any [TypeFamilies])) ),        -- indexed type families
  ( "forall",    (KW_Forall,     Just (Any [LiberalTypeSynonyms,
                                             ExistentialQuantification,
-                                            PolymorphicComponents,
-                                            Rank2Types, RankNTypes,
-                                            ImpredicativeTypes])) ),        -- universal/existential quantification
+                                            Rank2Types, RankNTypes])) ),    -- universal/existential quantification
  ( "if",        (KW_If,         Nothing) ),
  ( "import",    (KW_Import,     Nothing) ),
  ( "in",        (KW_In,         Nothing) ),
