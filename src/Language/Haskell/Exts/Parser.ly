@@ -800,8 +800,9 @@ GADTs - require the GADTs extension enabled, but we handle that at the calling s
 >       : srcloc qcon '::' ctype                {% do { c <- checkUnQual $2;
 >                                                       return $ GadtDecl $1 c $4 } }
 
+To allow the empty case we need the EmptyDataDecls extension.
 > constrs0 :: { [QualConDecl] }
->       : {- empty -}                   { [] }
+>       : {- empty -}                   {% checkEnabled EmptyDataDecls >> return [] }
 >       | '=' constrs                   { $2 }
 
 > constrs :: { [QualConDecl] }
@@ -1170,7 +1171,7 @@ End Template Haskell
 
 > texp :: { PExp }
 >       : exp                           { $1 }
->       | exp '->' exp                  { ViewPat $1 $3 }
+>       | exp '->' exp                  {% checkEnabled ViewPatterns >> return (ViewPat $1 $3) }
 
 -----------------------------------------------------------------------------
 Harp Extensions
@@ -1287,9 +1288,6 @@ avoiding another shift/reduce-conflict.
 
 -----------------------------------------------------------------------------
 List comprehensions
-
- quals :: { [Stmt] }
-       : quals1                         {% mapM checkStmt $1 }
 
 > quals :: { [Stmt] }
 >       : quals ',' qual                { $3 : $1 }
