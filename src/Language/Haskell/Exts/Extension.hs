@@ -83,7 +83,7 @@ data Extension
   | NewQualifiedOperators
   | PostfixOperators
   | QuasiQuotes
-  | GeneralizedListComp
+  | TransformListComp
   | ViewPatterns
 
   -- | Allow concrete XML syntax to be used in expressions and patterns,

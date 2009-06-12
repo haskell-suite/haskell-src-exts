@@ -52,7 +52,7 @@ module Language.Haskell.Exts.Syntax (
     -- * Types
     Type(..), Boxed(..), Kind(..), TyVarBind(..),
     -- * Expressions
-    Exp(..), Stmt(..), FieldUpdate(..),
+    Exp(..), Stmt(..), QualStmt(..), FieldUpdate(..),
     Alt(..), GuardedAlts(..), GuardedAlt(..),
     -- * Patterns
     Pat(..), PatField(..),
@@ -593,7 +593,8 @@ data Exp
     | EnumFromThenTo Exp Exp Exp
                                     -- ^ bounded arithmetic sequence,
                                     -- with first two elements given
-    | ListComp Exp [Stmt]     -- ^ list comprehension
+    | ListComp Exp  [QualStmt]     -- ^ list comprehension
+    | ParComp  Exp [[QualStmt]]    -- ^ parallel list comprehension
     | ExpTypeSig SrcLoc Exp Type
                                     -- ^ expression type signature
 -- Template Haskell
@@ -842,6 +843,22 @@ data Stmt
                 -- in a list comprehension, a guard expression
     | LetStmt Binds -- ^ local bindings
     | RecStmt [Stmt]
+#ifdef __GLASGOW_HASKELL__
+  deriving (Eq,Show,Typeable,Data)
+#else
+  deriving (Eq,Show)
+#endif
+
+-- | This type represents a /qual/ in a list comprehension,
+--   which could potentially be a transform of the kind
+--   enabled by TransformListComp.
+data QualStmt
+    = QualStmt     Stmt         -- ^ an ordinary statement qualifier
+    | ThenTrans    Exp          -- ^ @then@ /exp/
+    | ThenBy       Exp Exp      -- ^ @then@ /exp/ @by@ /exp/
+    | GroupBy      Exp          -- ^ @then@ @group@ @by@ /exp/
+    | GroupUsing   Exp          -- ^ @then@ @group@ @using@ /exp/
+    | GroupByUsing Exp Exp      -- ^ @then@ @group@ @by@ /exp/ @using@ /exp/
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else

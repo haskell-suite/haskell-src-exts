@@ -142,6 +142,7 @@ data Token
 -- Reserved Ids
 
         | KW_As
+        | KW_By         -- transform list comprehensions
         | KW_Case
         | KW_Class
         | KW_Data
@@ -152,6 +153,7 @@ data Token
         | KW_Else
         | KW_Family     -- indexed type families
         | KW_Forall     -- universal/existential types
+        | KW_Group      -- transform list comprehensions
         | KW_Hiding
         | KW_If
         | KW_Import
@@ -168,6 +170,7 @@ data Token
         | KW_Rec        -- arrows
         | KW_Then
         | KW_Type
+        | KW_Using      -- transform list comprehensions
         | KW_Where
         | KW_Qualified
 
@@ -219,6 +222,7 @@ special_varops = [
 reserved_ids :: [(String,(Token, Maybe ExtScheme))]
 reserved_ids = [
  ( "_",         (Underscore,    Nothing) ),
+ ( "by",        (KW_By,         Just (Any [TransformListComp])) ),
  ( "case",      (KW_Case,       Nothing) ),
  ( "class",     (KW_Class,      Nothing) ),
  ( "data",      (KW_Data,       Nothing) ),
@@ -230,6 +234,7 @@ reserved_ids = [
  ( "forall",    (KW_Forall,     Just (Any [LiberalTypeSynonyms,
                                             ExistentialQuantification,
                                             Rank2Types, RankNTypes])) ),    -- universal/existential quantification
+ ( "group",     (KW_Group,      Just (Any [TransformListComp])) ),
  ( "if",        (KW_If,         Nothing) ),
  ( "import",    (KW_Import,     Nothing) ),
  ( "in",        (KW_In,         Nothing) ),
@@ -246,6 +251,7 @@ reserved_ids = [
  ( "rec",       (KW_Rec,        Just (Any [Arrows])) ),
  ( "then",      (KW_Then,       Nothing) ),
  ( "type",      (KW_Type,       Nothing) ),
+ ( "using",     (KW_Using,      Just (Any [TransformListComp])) ),
  ( "where",     (KW_Where,      Nothing) ),
 
 -- FFI
