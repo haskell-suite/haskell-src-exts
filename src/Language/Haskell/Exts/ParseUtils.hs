@@ -55,6 +55,7 @@ module Language.Haskell.Exts.ParseUtils (
     , PExp(..), PFieldUpdate(..), ParseXAttr(..)
     , p_unit_con            -- PExp
     , p_tuple_con           -- Int -> PExp
+    , p_unboxed_singleton_con   -- PExp
     ) where
 
 import Language.Haskell.Exts.Syntax hiding ( Exp(..), FieldUpdate(..), XAttr(..) )
@@ -110,10 +111,26 @@ checkAssertion (TyPred p@(IParam _ _)) = return p
 -- We cannot even get here unless TypeFamilies is enabled.
 checkAssertion (TyPred p@(EqualP _ _)) = return p
 checkAssertion t = checkAssertion' [] t
-    where   checkAssertion' ts (TyCon c) = return $ ClassA c ts
-            checkAssertion' ts (TyApp a t) = checkAssertion' (t:ts) a
-            checkAssertion' ts (TyInfix a op b) = checkAssertion' (a:b:ts) (TyCon op)
+    where   -- class assertions must have at least one argument
+            checkAssertion' ts@(_:xs) (TyCon c) = do
+                when (not $ null xs) $ checkEnabled MultiParamTypeClasses
+                when (isSymbol c)    $ checkEnabled TypeOperators
+                return $ ClassA c ts
+            checkAssertion' ts (TyApp a t) = do
+                case t of
+                  TyVar _  -> return ()
+                  -- to allow anything other than just variables, we need FlexibleContexts
+                  _        -> checkEnabled FlexibleContexts
+                checkAssertion' (t:ts) a
+            checkAssertion' ts (TyInfix a op b) =
+                -- infix operators require TypeOperators
+                checkEnabled TypeOperators >> checkAssertion' (a:b:ts) (TyCon op)
             checkAssertion' _ _ = fail "Illegal class assertion"
+
+isSymbol :: QName -> Bool
+isSymbol (UnQual (Symbol _)) = True
+isSymbol (Qual _ (Symbol _)) = True
+isSymbol _                   = False
 
 
 checkDataHeader :: Type -> P (Context,Name,[Name])
@@ -134,8 +151,13 @@ checkClassHeader t = do
 
 checkSimple :: String -> Type -> [Name] -> P (Name,[Name])
 checkSimple kw (TyApp l (TyVar a)) xs = checkSimple kw l (a:xs)
-checkSimple _  (TyInfix (TyVar a) (UnQual t) (TyVar b)) xs = return (t,a:b:xs)
-checkSimple _kw (TyCon (UnQual t))   xs = return (t,xs)
+checkSimple _  (TyInfix (TyVar a) (UnQual t) (TyVar b)) xs =
+    checkEnabled TypeOperators >> return (t,a:b:xs)
+checkSimple _kw (TyCon (UnQual t))   xs = do
+    case t of
+      Symbol _ -> checkEnabled TypeOperators
+      _ -> return ()
+    return (t,xs)
 checkSimple kw _ _ = fail ("Illegal " ++ kw ++ " declaration")
 
 checkInstHeader :: Type -> P (Context,QName,[Type])
@@ -149,7 +171,12 @@ checkInstHeader t = do
 
 checkInsts :: Type -> [Type] -> P ((QName,[Type]))
 checkInsts (TyApp l t) ts = checkInsts l (t:ts)
-checkInsts (TyCon c)   ts = return (c,ts)
+checkInsts (TyCon c)   ts = do
+    when (isSymbol c) $ checkEnabled TypeOperators
+    return (c,ts)
+checkInsts (TyInfix a op b) [] = do
+    checkEnabled TypeOperators
+    return (op,[a,b])
 checkInsts _ _ = fail "Illegal instance declaration"
 
 -----------------------------------------------------------------------------
@@ -832,5 +859,8 @@ data ParseXAttr = XAttr XName PExp
 p_unit_con :: PExp
 p_unit_con          = Con unit_con_name
 
-p_tuple_con :: Int -> PExp
-p_tuple_con i       = Con (tuple_con_name i)
+p_tuple_con :: Boxed -> Int -> PExp
+p_tuple_con b i       = Con (tuple_con_name b i)
+
+p_unboxed_singleton_con :: PExp
+p_unboxed_singleton_con = Con unboxed_singleton_con_name

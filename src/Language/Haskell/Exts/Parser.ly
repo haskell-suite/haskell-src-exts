@@ -666,7 +666,7 @@ Type equality contraints need the TypeFamilies extension.
 > dtype :: { Type }
 >       : btype                         { $1 }
 >       | btype qtyconop dtype          { TyInfix $1 $2 $3 }
->       | btype qtyvarop dtype          { TyInfix $1 $2 $3 }
+>       | btype qtyvarop dtype          { TyInfix $1 $2 $3 } -- FIXME
 >       | btype '->' ctype              { TyFun $1 $3 }
 >       | btype '~' btype               {% do { checkEnabled TypeFamilies ;
 >                                               return $ TyPred $ EqualP $1 $3 } }
@@ -682,7 +682,7 @@ Implicit parameters can occur in normal types, as well as in contexts.
 >       | atype                         { $1 }
 
 UnboxedTuples requires the extension, but that will be handled through
-the (# and #) lexeme. Kinds will be handled at the kind rule.
+the (# and #) lexemes. Kinds will be handled at the kind rule.
 
 > atype :: { Type }
 >       : gtycon                        { TyCon $1 }
@@ -690,23 +690,26 @@ the (# and #) lexeme. Kinds will be handled at the kind rule.
 >       | '(' types ')'                 { TyTuple Boxed (reverse $2) }
 >       | '(#' types1 '#)'              { TyTuple Unboxed (reverse $2) }
 >       | '[' type ']'                  { TyApp list_tycon $2 }
->       | '(' ctype ')'                 { $2 }
+>       | '(' ctype ')'                 { TyParen $2 }
 >       | '(' ctype '::' kind ')'       { TyKind $2 $4 }
 
 > gtycon :: { QName }
->       : qconid                        { $1 }
+>       : otycon                        { $1 }
 >       | '(' ')'                       { unit_tycon_name }
 >       | '(' '->' ')'                  { fun_tycon_name }
 >       | '[' ']'                       { list_tycon_name }
->       | '(' commas ')'                { tuple_tycon_name $2 }
+>       | '(' commas ')'                { tuple_tycon_name Boxed $2 }
+>       | '(#' '#)'                     { unboxed_singleton_tycon_name }
+>       | '(#' commas '#)'              { tuple_tycon_name Unboxed $2 }
+
+> otycon :: { QName }
+>       : qconid                        { $1 }
+>       | '(' gconsym ')'               { $2 }
 
 These are for infix types
 
 > qtyconop :: { QName }
 >       : qconop                        { $1 }
-
-
-
 
 
 (Slightly edited) Comment from GHC's hsparser.y:
@@ -808,11 +811,14 @@ GADTs - require the GADTs extension enabled, but we handle that at the calling s
 >       : 'forall' ktyvars '.'          { $2 }
 >       | {- empty -}                   { [] }
 
+To avoid conflicts when introducing type operators, we need to parse record constructors
+as qcon and then check separately that they are truly unqualified.
+
 > constr1 :: { ConDecl }
 >       : scontype                      { ConDecl (fst $1) (snd $1) }
->       | sbtype conop sbtype           { ConDecl $2 [$1,$3] }
->       | con '{' '}'                   { RecDecl $1 [] }
->       | con '{' fielddecls '}'        { RecDecl $1 (reverse $3) }
+>       | sbtype conop sbtype           { InfixConDecl $1 $2 $3 }
+>       | qcon '{' '}'                  {% do { c <- checkUnQual $1; return $ RecDecl c [] } }
+>       | qcon '{' fielddecls '}'       {% do { c <- checkUnQual $1; return $ RecDecl c (reverse $3) } }
 
 > scontype :: { (Name, [BangType]) }
 >       : btype                         {% do { (c,ts) <- splitTyConApp $1;
@@ -1374,7 +1380,9 @@ Variables, Constructors and Operators.
 > gcon :: { PExp }
 >       : '(' ')'               { p_unit_con }
 >       | '[' ']'               { List [] }
->       | '(' commas ')'        { p_tuple_con $2 }
+>       | '(' commas ')'        { p_tuple_con Boxed $2 }
+>       | '(#' '#)'             { p_unboxed_singleton_con }
+>       | '(#' commas '#)'      { p_tuple_con Unboxed $2 }
 >       | qcon                  { Con $1 }
 
 > var   :: { Name }
