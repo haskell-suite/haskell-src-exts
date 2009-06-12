@@ -14,10 +14,15 @@
 > -----------------------------------------------------------------------------
 >
 > module Language.Haskell.Exts.Parser (
+>               Parseable(..),
 >               parseModule, parseModuleWithMode,
->               parseExp, parsePat, parseDecl, parseType,
+>               parseExp, parseExpWithMode,
+>               parsePat, parsePatWithMode,
+>               parseDecl, parseDeclWithMode,
+>               parseType, parseTypeWithMode,
 >               getTopPragmas,
->               ParseMode(..), defaultParseMode, ParseResult(..)) where
+>               ParseMode(..), defaultParseMode, ParseResult(..)
+>               ) where
 >
 > import Language.Haskell.Exts.Syntax hiding ( Exp(..), XAttr(..), FieldUpdate(..) )
 > import Language.Haskell.Exts.Syntax ( Exp )
@@ -243,7 +248,7 @@ Pragmas
 
 > %monad { P }
 > %lexer { lexer } { EOF }
-> %name parse page
+> %name mparseModule page
 > %name mparseExp trueexp
 > %name mparsePat pat
 > %name mparseDecl topdecl
@@ -1569,29 +1574,73 @@ Miscellaneous (mostly renamings)
 
 > -- | Parse of a string, which should contain a complete Haskell module.
 > parseModule :: String -> ParseResult Module
-> parseModule = runParser parse
+> parseModule = runParser mparseModule
+
+> -- | Parse of a string, which should contain a complete Haskell 98 module.
+> parseModuleWithMode :: ParseMode -> String -> ParseResult Module
+> parseModuleWithMode mode = runParserWithMode mode mparseModule
 
 > -- | Parse of a string containing a Haskell expression.
 > parseExp :: String -> ParseResult Exp
 > parseExp = runParser mparseExp
 
+> -- | Parse of a string, which should contain a complete Haskell 98 module.
+> parseExpWithMode :: ParseMode -> String -> ParseResult Exp
+> parseExpWithMode mode = runParserWithMode mode mparseExp
+
 > -- | Parse of a string containing a Haskell pattern.
 > parsePat :: String -> ParseResult Pat
 > parsePat = runParser mparsePat
+
+> -- | Parse of a string, which should contain a complete Haskell 98 module.
+> parsePatWithMode :: ParseMode -> String -> ParseResult Pat
+> parsePatWithMode mode = runParserWithMode mode mparsePat
 
 > -- | Parse of a string containing a Haskell top-level declaration.
 > parseDecl :: String -> ParseResult Decl
 > parseDecl = runParser mparseDecl
 
+> -- | Parse of a string, which should contain a complete Haskell 98 module.
+> parseDeclWithMode :: ParseMode -> String -> ParseResult Decl
+> parseDeclWithMode mode = runParserWithMode mode mparseDecl
+
 > -- | Parse of a string containing a Haskell type.
 > parseType :: String -> ParseResult Type
 > parseType = runParser mparseType
+
+> -- | Parse of a string, which should contain a complete Haskell 98 module.
+> parseTypeWithMode :: ParseMode -> String -> ParseResult Type
+> parseTypeWithMode mode = runParserWithMode mode mparseType
 
 > -- | Parse of a string starting with a series of top-level option pragmas.
 > getTopPragmas :: String -> ParseResult [OptionPragma]
 > getTopPragmas = runParser mfindOptPragmas
 
-> -- | Parse of a string, which should contain a complete Haskell 98 module.
-> parseModuleWithMode :: ParseMode -> String -> ParseResult Module
-> parseModuleWithMode mode = runParserWithMode mode parse
+> -- | Class to reuse the parse function at many different types
+> class Parseable ast where
+>   parse :: String -> ParseResult ast
+>   parseWithMode :: ParseMode -> String -> ParseResult ast
+>
+> instance Parseable Module where
+>   parse = parseModule
+>   parseWithMode = parseModuleWithMode
+>
+> instance Parseable Exp where
+>   parse = parseExp
+>   parseWithMode = parseExpWithMode
+>
+> instance Parseable Pat where
+>   parse = parsePat
+>   parseWithMode = parsePatWithMode
+>
+> instance Parseable Decl where
+>   parse = parseDecl
+>   parseWithMode = parseDeclWithMode
+>
+> instance Parseable Type where
+>   parse = parseType
+>   parseWithMode = parseTypeWithMode
+>
+
+
 > }
