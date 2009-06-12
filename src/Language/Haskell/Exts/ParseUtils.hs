@@ -429,9 +429,12 @@ checkExpr e = case e of
     EnumFromTo e1 e2    -> check2Exprs e1 e2 S.EnumFromTo
     EnumFromThen e1 e2      -> check2Exprs e1 e2 S.EnumFromThen
     EnumFromThenTo e1 e2 e3 -> check3Exprs e1 e2 e3 S.EnumFromThenTo
-    ListComp e stmts        -> do
+    -- a parallel list comprehension, which could be just a simple one
+    ParComp e qualss        -> do
                      e <- checkExpr e
-                     return (S.ListComp e stmts)
+                     case qualss of
+                      [quals] -> return (S.ListComp e quals)
+                      _       -> return (S.ParComp e qualss)
     ExpTypeSig loc e ty     -> do
                      e <- checkExpr e
                      return (S.ExpTypeSig loc e ty)
@@ -795,7 +798,7 @@ data PExp
     | EnumFromThenTo PExp PExp PExp
                                 -- ^ bounded arithmetic sequence,
                                     -- with first two elements given
-    | ListComp PExp [Stmt]      -- ^ list comprehension
+    | ParComp  PExp [[QualStmt]]    -- ^ parallel list comprehension
     | ExpTypeSig SrcLoc PExp Type
                                 -- ^ expression type signature
     | AsPat Name PExp           -- ^ patterns only

@@ -26,6 +26,7 @@ module Language.Haskell.Exts.Pretty (
 import Language.Haskell.Exts.Syntax
 
 import qualified Text.PrettyPrint as P
+import Data.List (intersperse)
 
 infixl 5 $$$
 
@@ -798,9 +799,12 @@ instance Pretty Exp where
         pretty (EnumFromThenTo from thenE to) =
                 bracketList [pretty from <> comma, pretty thenE,
                              text "..", pretty to]
-        pretty (ListComp e stmtList) =
+        pretty (ListComp e qualList) =
                 bracketList ([pretty e, char '|']
-                             ++ (punctuate comma . map pretty $ stmtList))
+                             ++ (punctuate comma . map pretty $ qualList))
+        pretty (ParComp e qualLists) =
+                bracketList (intersperse (char '|') $
+                                pretty e : (punctuate comma . concatMap (map pretty) $ qualLists))
         pretty (ExpTypeSig _pos e ty) =
                 myFsep [pretty e, text "::", pretty ty]
         -- Template Haskell
@@ -987,6 +991,17 @@ instance Pretty Stmt where
                 text "rec" $$$ ppBody letIndent (map pretty stmtList)
 
 ppLetStmt l = text "let" $$$ ppBody letIndent (map pretty l)
+
+instance Pretty QualStmt where
+        pretty (QualStmt s) = pretty s
+        pretty (ThenTrans    f)    = myFsep $ [text "then", pretty f]
+        pretty (ThenBy       f e)  = myFsep $ [text "then", pretty f, text "by", pretty e]
+        pretty (GroupBy      e)    = myFsep $ [text "then", text "group", text "by", pretty e]
+        pretty (GroupUsing   f)    = myFsep $ [text "then", text "group", text "using", pretty f]
+        pretty (GroupByUsing e f)  = myFsep $ [text "then", text "group", text "by",
+                                                pretty e, text "using", pretty f]
+
+
 
 ------------------------- Record updates
 instance Pretty FieldUpdate where

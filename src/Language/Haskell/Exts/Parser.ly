@@ -196,6 +196,7 @@ FFI
 Reserved Ids
 
 >       'as'            { KW_As }
+>       'by'            { KW_By }       -- transform list comprehensions
 >       'case'          { KW_Case }
 >       'class'         { KW_Class }
 >       'data'          { KW_Data }
@@ -205,6 +206,7 @@ Reserved Ids
 >       'else'          { KW_Else }
 >       'family'        { KW_Family }   -- indexed type families
 >       'forall'        { KW_Forall }   -- universal/existential qualification
+>       'group'         { KW_Group }    -- transform list comprehensions
 >       'hiding'        { KW_Hiding }
 >       'if'            { KW_If }
 >       'import'        { KW_Import }
@@ -222,6 +224,7 @@ Reserved Ids
 >       'rec'           { KW_Rec }      -- arrows
 >       'then'          { KW_Then }
 >       'type'          { KW_Type }
+>       'using'         { KW_Using }    -- transform list comprehensions
 >       'where'         { KW_Where }
 >       'qualified'     { KW_Qualified }
 
@@ -1227,6 +1230,7 @@ Hsx Extensions - requires XmlSyntax, but the lexer handles all that.
 >       | 'stdcall'                     { "stdcall" }
 >       | 'ccall'                       { "ccall" }
 >       | 'as'                          { "as" }
+>       | 'by'                          { "by" }
 >       | 'case'                        { "case" }
 >       | 'default'                     { "default" }
 >       | 'deriving'                    { "deriving" }
@@ -1234,6 +1238,7 @@ Hsx Extensions - requires XmlSyntax, but the lexer handles all that.
 >       | 'else'                        { "else" }
 >       | 'family'                      { "family" }
 >       | 'forall'                      { "forall" }
+>       | 'group'                       { "group" }
 >       | 'hiding'                      { "hiding" }
 >       | 'if'                          { "if" }
 >       | 'import'                      { "import" }
@@ -1247,7 +1252,10 @@ Hsx Extensions - requires XmlSyntax, but the lexer handles all that.
 >       | 'module'                      { "module" }
 >       | 'newtype'                     { "newtype" }
 >       | 'of'                          { "of" }
+>       | 'proc'                        { "proc" }
+>       | 'rec'                         { "rec" }
 >       | 'then'                        { "then" }
+>       | 'using'                       { "using" }
 >       | 'where'                       { "where" }
 >       | 'qualified'                   { "qualified" }
 
@@ -1280,7 +1288,7 @@ avoiding another shift/reduce-conflict.
 >       | texp ',' exp '..'             { EnumFromThen $1 $3 }
 >       | texp '..' exp                 { EnumFromTo $1 $3 }
 >       | texp ',' exp '..' exp         { EnumFromThenTo $1 $3 $5 }
->       | texp '|' quals                { ListComp $1 (reverse $3) }
+>       | texp '|' pqualstmts           { ParComp $1 (reverse $3) }
 
 > lexps :: { [PExp] }
 >       : lexps ',' texp                { $3 : $1 }
@@ -1288,6 +1296,25 @@ avoiding another shift/reduce-conflict.
 
 -----------------------------------------------------------------------------
 List comprehensions
+
+> pqualstmts :: { [[QualStmt]] }
+>       : pqualstmts '|' qualstmts      { reverse $3 : $1 }
+>       | qualstmts                     { [$1] }
+
+> qualstmts :: { [QualStmt] }
+>       : qualstmts ',' qualstmt        { $3 : $1 }
+>       | qualstmt                      { [$1] }
+
+> qualstmt :: { QualStmt }
+>       : transformqual                 { $1 }
+>       | qual                          { QualStmt $1 }
+
+> transformqual :: { QualStmt }
+>       : 'then' trueexp                                { ThenTrans $2 }
+>       | 'then' trueexp 'by' trueexp                   { ThenBy $2 $4 }
+>       | 'then' 'group' 'by' trueexp                   { GroupBy $4 }
+>       | 'then' 'group' 'using' trueexp                { GroupUsing $4 }
+>       | 'then' 'group' 'by' trueexp 'using' trueexp   { GroupByUsing $4 $6 }
 
 > quals :: { [Stmt] }
 >       : quals ',' qual                { $3 : $1 }
@@ -1297,6 +1324,7 @@ List comprehensions
 >       : pat srcloc '<-' trueexp       { Generator $2 $1 $4 }
 >       | trueexp                       { Qualifier $1 }
 >       | 'let' binds                   { LetStmt $2 }
+
 
 -----------------------------------------------------------------------------
 Case alternatives
