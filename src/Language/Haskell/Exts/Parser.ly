@@ -475,7 +475,7 @@ Requires the GADTs extension enabled, handled in gadtlist.
 >                               checkDataOrNew $2 $6;
 >                               return (GDataDecl $1 $2 cs c t $4 (reverse $6) $7) } }
 
-Same as above, lexer will handle through the 'family' keyword.
+Same as above, lexer will handle it through the 'family' keyword.
 >       | srcloc 'data' 'family' ctype optkind
 >                       {% do { (cs,c,t) <- checkDataHeader $4;
 >                               return (DataFamDecl $1 cs c t $5) } }
@@ -509,7 +509,7 @@ Requires the StandaloneDeriving extension enabled.
 >                       { DefaultDecl $1 $4 }
 
 Requires the TemplateHaskell extension, but the lexer will handle that
-throught he '$(' lexeme.
+through the '$(' lexeme.
 >       | srcloc '$(' trueexp ')'
 >                        { SpliceDecl $1 $ ParenSplice $3 }
 
