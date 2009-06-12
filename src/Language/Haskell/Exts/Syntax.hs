@@ -86,14 +86,14 @@ module Language.Haskell.Exts.Syntax (
     -- ** Main function of a program
     main_name,
     -- ** Constructors
-    unit_con_name, tuple_con_name, list_cons_name,
-    unit_con, tuple_con,
+    unit_con_name, tuple_con_name, list_cons_name, unboxed_singleton_con_name,
+    unit_con, tuple_con, unboxed_singleton_con,
     -- ** Special identifiers
     as_name, qualified_name, hiding_name, minus_name, bang_name, dot_name, star_name,
     export_name, safe_name, unsafe_name, threadsafe_name, stdcall_name, ccall_name,
     -- ** Type constructors
-    unit_tycon_name, fun_tycon_name, list_tycon_name, tuple_tycon_name,
-    unit_tycon, fun_tycon, list_tycon, tuple_tycon,
+    unit_tycon_name, fun_tycon_name, list_tycon_name, tuple_tycon_name, unboxed_singleton_tycon_name,
+    unit_tycon, fun_tycon, list_tycon, tuple_tycon, unboxed_singleton_tycon,
 
     -- * Source coordinates
     SrcLoc(..),
@@ -136,9 +136,10 @@ data SpecialCon
     = UnitCon     -- ^ unit type and data constructor @()@
     | ListCon     -- ^ list type constructor @[]@
     | FunCon      -- ^ function type constructor @->@
-    | TupleCon Int    -- ^ /n/-ary tuple type and data
+    | TupleCon Boxed Int    -- ^ /n/-ary tuple type and data
                 --   constructors @(,)@ etc
     | Cons        -- ^ list data constructor @(:)@
+    | UnboxedSingleCon -- ^ unboxed singleton tuple constructor
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
@@ -376,6 +377,8 @@ data GadtDecl
 data ConDecl
      = ConDecl Name [BangType]
                 -- ^ ordinary data constructor
+     | InfixConDecl BangType Name BangType
+                -- ^ infix data constructor
      | RecDecl Name [([Name],BangType)]
                 -- ^ record constructor
 #ifdef __GLASGOW_HASKELL__
@@ -449,14 +452,16 @@ data Type
         (Maybe [TyVarBind])
         Context
         Type
-     | TyFun   Type Type  -- ^ function type
-     | TyTuple Boxed [Type]   -- ^ tuple type, possibly boxed
-     | TyApp   Type Type  -- ^ application of a type constructor
-     | TyVar   Name     -- ^ type variable
-     | TyCon   QName        -- ^ named type or type constructor
-     | TyPred  Asst         -- ^ assertion of an implicit parameter
-     | TyInfix Type QName Type -- ^ infix type constructor
-     | TyKind  Type Kind  -- ^ type with explicit kind signature
+     | TyFun   Type Type        -- ^ function type
+     | TyTuple Boxed [Type]     -- ^ tuple type, possibly boxed
+     | TyList  Type             -- ^ list syntax, e.g. [a], as opposed to [] a
+     | TyApp   Type Type        -- ^ application of a type constructor
+     | TyVar   Name             -- ^ type variable
+     | TyCon   QName            -- ^ named type or type constructor
+     | TyParen Type             -- ^ type surrounded by parentheses
+     | TyPred  Asst             -- ^ assertion of an implicit parameter
+     | TyInfix Type QName Type  -- ^ infix type constructor
+     | TyKind  Type Kind        -- ^ type with explicit kind signature
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -465,9 +470,9 @@ data Type
 
 data Boxed = Boxed | Unboxed
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 data TyVarBind
@@ -507,9 +512,10 @@ type Context = [Asst]
 --   In Haskell 98, the argument would be a /tyvar/, but this definition
 --   allows multiple parameters, and allows them to be /type/s.
 --   Also extended with support for implicit parameters and equality constraints.
-data Asst     = ClassA QName [Type]
-        | IParam IPName Type
-        | EqualP Type   Type
+data Asst = ClassA QName [Type]
+          | InfixA Type QName Type
+          | IParam IPName Type
+          | EqualP Type   Type
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -893,17 +899,23 @@ main_name         = Ident "main"
 unit_con_name :: QName
 unit_con_name         = Special UnitCon
 
-tuple_con_name :: Int -> QName
-tuple_con_name i      = Special (TupleCon (i+1))
+tuple_con_name :: Boxed -> Int -> QName
+tuple_con_name b i      = Special (TupleCon b (i+1))
 
 list_cons_name :: QName
 list_cons_name        = Special Cons
 
+unboxed_singleton_con_name :: QName
+unboxed_singleton_con_name = Special UnboxedSingleCon
+
 unit_con :: Exp
 unit_con          = Con unit_con_name
 
-tuple_con :: Int -> Exp
-tuple_con i       = Con (tuple_con_name i)
+tuple_con :: Boxed -> Int -> Exp
+tuple_con b i       = Con (tuple_con_name b i)
+
+unboxed_singleton_con :: Exp
+unboxed_singleton_con = Con (unboxed_singleton_con_name)
 
 as_name, qualified_name, hiding_name, minus_name, bang_name, dot_name, star_name :: Name
 as_name               = Ident "as"
@@ -922,18 +934,20 @@ threadsafe_name     = Ident "threadsafe"
 stdcall_name        = Ident "stdcall"
 ccall_name      = Ident "ccall"
 
-unit_tycon_name, fun_tycon_name, list_tycon_name :: QName
+unit_tycon_name, fun_tycon_name, list_tycon_name, unboxed_singleton_tycon_name :: QName
 unit_tycon_name       = unit_con_name
 fun_tycon_name        = Special FunCon
 list_tycon_name       = Special ListCon
+unboxed_singleton_tycon_name = Special UnboxedSingleCon
 
-tuple_tycon_name :: Int -> QName
-tuple_tycon_name i    = tuple_con_name i
+tuple_tycon_name :: Boxed -> Int -> QName
+tuple_tycon_name b i    = tuple_con_name b i
 
-unit_tycon, fun_tycon, list_tycon :: Type
+unit_tycon, fun_tycon, list_tycon, unboxed_singleton_tycon :: Type
 unit_tycon        = TyCon unit_tycon_name
 fun_tycon         = TyCon fun_tycon_name
 list_tycon        = TyCon list_tycon_name
+unboxed_singleton_tycon = TyCon unboxed_singleton_tycon_name
 
-tuple_tycon :: Int -> Type
-tuple_tycon i         = TyCon (tuple_tycon_name i)
+tuple_tycon :: Boxed -> Int -> Type
+tuple_tycon b i         = TyCon (tuple_tycon_name b i)

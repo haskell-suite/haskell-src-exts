@@ -633,11 +633,14 @@ instance Pretty ConDecl where
         pretty (RecDecl name fieldList) =
                 pretty name <> (braceList . map ppField $ fieldList)
 
-        pretty (ConDecl name@(Symbol _) [l, r]) =
+{-        pretty (ConDecl name@(Symbol _) [l, r]) =
                 myFsep [prettyPrec prec_btype l, ppName name,
-                        prettyPrec prec_btype r]
+                        prettyPrec prec_btype r] -}
         pretty (ConDecl name typeList) =
                 mySep $ ppName name : map (prettyPrec prec_atype) typeList
+        pretty (InfixConDecl l name r) =
+                myFsep [prettyPrec prec_btype l, ppNameInfix name,
+                         prettyPrec prec_btype r]
 
 ppField :: ([Name],BangType) -> Doc
 ppField (names, ty) =
@@ -679,14 +682,16 @@ instance Pretty Type where
                  in case bxd of
                         Boxed   -> parenList ds
                         Unboxed -> hashParenList ds
-        prettyPrec p (TyApp a b)
-                | a == list_tycon = brackets $ pretty b         -- special case
-                | otherwise = parensIf (p > prec_btype) $
-                        myFsep [pretty a, ppAType b]
+        prettyPrec _ (TyList t)  = brackets $ pretty t
+        prettyPrec p (TyApp a b) =
+                {- | a == list_tycon = brackets $ pretty b         -- special case
+                | otherwise = -} parensIf (p > prec_btype) $
+                                    myFsep [pretty a, ppAType b]
         prettyPrec _ (TyVar name) = pretty name
         prettyPrec _ (TyCon name) = pretty name
+        prettyPrec _ (TyParen t) = parens (pretty t)
         prettyPrec _ (TyPred asst) = pretty asst
-        prettyPrec _ (TyInfix a op b) = parens (myFsep [pretty op, pretty a, pretty b])
+        prettyPrec _ (TyInfix a op b) = myFsep [pretty a, ppQNameInfix op, pretty b]
         prettyPrec _ (TyKind t k) = parens (myFsep [pretty t, text "::", pretty k])
 
 
@@ -1055,7 +1060,8 @@ specialName :: SpecialCon -> String
 specialName UnitCon = "()"
 specialName ListCon = "[]"
 specialName FunCon = "->"
-specialName (TupleCon n) = "(" ++ replicate (n-1) ',' ++ ")"
+specialName (TupleCon b n) = "(" ++ hash ++ replicate (n-1) ',' ++ hash ++ ")"
+    where hash = if b == Unboxed then "#" else ""
 specialName Cons = ":"
 
 ppContext :: Context -> Doc
@@ -1064,9 +1070,10 @@ ppContext context = mySep [parenList (map pretty context), text "=>"]
 
 -- hacked for multi-parameter type classes
 instance Pretty Asst where
-        pretty (ClassA a ts)  = myFsep $ ppQName a : map ppAType ts
-        pretty (IParam i t)   = myFsep $ [pretty i, text "::", pretty t]
-        pretty (EqualP t1 t2) = myFsep $ [pretty t1, text "~", pretty t2]
+        pretty (ClassA a ts)   = myFsep $ ppQName a : map ppAType ts
+        pretty (InfixA a op b) = myFsep $ [pretty a, ppQNameInfix op, pretty b]
+        pretty (IParam i t)    = myFsep $ [pretty i, text "::", pretty t]
+        pretty (EqualP t1 t2)  = myFsep $ [pretty t1, text "~", pretty t2]
 
 ------------------------- pp utils -------------------------
 maybePP :: (a -> Doc) -> Maybe a -> Doc
