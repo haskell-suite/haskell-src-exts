@@ -8,6 +8,7 @@ module Language.Haskell.Exts (
     , parseFileContentsWithMode
     , parseFile
     , parseFileWithExts
+    , readExtensions
     ) where
 
 import Language.Haskell.Exts.Build
@@ -20,7 +21,13 @@ import Data.List
 import Language.Preprocessor.Unlit
 
 parseFile :: FilePath -> IO (ParseResult Module)
-parseFile = parseFileWithExts []
+parseFile fp = do
+        fc <- readFile fp
+        let md = delit fp $ ppContents fc
+            exts = case readExtensions md of
+                    Just exts -> exts
+                    Nothing   -> []
+        return $ parseModuleWithMode (ParseMode fp exts) md
 
 parseFileWithExts :: [Extension] -> FilePath -> IO (ParseResult Module)
 parseFileWithExts exts fp = readFile fp >>= (return . parseFileContentsWithMode (ParseMode fp exts))
@@ -29,10 +36,23 @@ parseFileContents :: String -> ParseResult Module
 parseFileContents = parseFileContentsWithMode defaultParseMode
 
 parseFileContentsWithMode :: ParseMode -> String -> ParseResult Module
-parseFileContentsWithMode p rawStr = parseModuleWithMode p (delit $ unlines $ map f $ lines rawStr)
-    where
-        f ('#':_) = ""
+parseFileContentsWithMode p rawStr = parseModuleWithMode p (delit filename $ ppContents rawStr)
+  where filename = parseFilename p
+
+readExtensions :: String -> Maybe [Extension]
+readExtensions str = case getTopPragmas str of
+        ParseOk pgms -> Just (concatMap getExts pgms)
+        _            -> Nothing
+  where getExts :: OptionPragma -> [Extension]
+        getExts (LanguagePragma _ ns) = map readExt ns
+        getExts _ = []
+
+        readExt (Ident e) = read e
+
+ppContents :: String -> String
+ppContents = unlines . map f . lines
+  where f ('#':_) = ""
         f x = x
 
-        filename = parseFilename p
-        delit = if ".lhs" `isSuffixOf` filename then unlit filename else id
+delit :: String -> String -> String
+delit fn = if ".lhs" `isSuffixOf` fn then unlit fn else id
