@@ -97,7 +97,7 @@ data Extension
   -- paper "Regular Expression Patterns" by Niklas Broberg, Andreas Farre
   -- and Josef Svenningsson, from ICFP '04.
   | RegularPatterns
-  deriving (Eq, Show)
+  deriving (Eq, Show, Read)
 -- -}
 
 data ExtScheme = Any [Extension] | All [Extension]
