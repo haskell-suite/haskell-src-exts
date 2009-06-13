@@ -289,16 +289,16 @@ data Assoc
 type Deriving = (QName, [QName])
 
 data Decl
-     = TypeDecl     SrcLoc Name [Name] Type
-     | DataDecl     SrcLoc DataOrNew Context Name [Name] [QualConDecl] [Deriving]
-     | GDataDecl    SrcLoc DataOrNew Context Name [Name] (Maybe Kind) [GadtDecl] [Deriving]
-     | TypeFamDecl  SrcLoc Name [Name] (Maybe Kind)
-     | DataFamDecl  SrcLoc Context Name [Name] (Maybe Kind)
+     = TypeDecl     SrcLoc Name [TyVarBind] Type
+     | DataDecl     SrcLoc DataOrNew Context Name [TyVarBind] [QualConDecl] [Deriving]
+     | GDataDecl    SrcLoc DataOrNew Context Name [TyVarBind] (Maybe Kind) [GadtDecl] [Deriving]
+     | TypeFamDecl  SrcLoc Name [TyVarBind] (Maybe Kind)
+     | DataFamDecl  SrcLoc Context Name [TyVarBind] (Maybe Kind)
      | TypeInsDecl  SrcLoc Type Type
      | DataInsDecl  SrcLoc DataOrNew Type [QualConDecl] [Deriving]
      | GDataInsDecl SrcLoc DataOrNew Type (Maybe Kind) [GadtDecl] [Deriving]
      | InfixDecl    SrcLoc Assoc Int [Op]
-     | ClassDecl    SrcLoc Context Name [Name] [FunDep] [ClassDecl]
+     | ClassDecl    SrcLoc Context Name [TyVarBind] [FunDep] [ClassDecl]
      | InstDecl     SrcLoc Context QName [Type] [InstDecl]
      | DerivDecl    SrcLoc Context QName [Type]
      | DefaultDecl  SrcLoc [Type]
@@ -390,8 +390,8 @@ data ConDecl
 -- | Declarations inside a class declaration
 data ClassDecl
     = ClsDecl    Decl
-    | ClsDataFam SrcLoc Context Name [Name] (Maybe Kind)
-    | ClsTyFam   SrcLoc         Name [Name] (Maybe Kind)
+    | ClsDataFam SrcLoc Context Name [TyVarBind] (Maybe Kind)
+    | ClsTyFam   SrcLoc         Name [TyVarBind] (Maybe Kind)
     | ClsTyDef   SrcLoc Type    Type
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
