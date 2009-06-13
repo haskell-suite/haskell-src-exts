@@ -459,7 +459,7 @@ data Type
      | TyVar   Name             -- ^ type variable
      | TyCon   QName            -- ^ named type or type constructor
      | TyParen Type             -- ^ type surrounded by parentheses
-     | TyPred  Asst             -- ^ assertion of an implicit parameter
+--     | TyPred  Asst             -- ^ assertion of an implicit parameter
      | TyInfix Type QName Type  -- ^ infix type constructor
      | TyKind  Type Kind        -- ^ type with explicit kind signature
 #ifdef __GLASGOW_HASKELL__

@@ -20,13 +20,15 @@ module Language.Haskell.Exts.ParseUtils (
     , checkPatternGuards    -- [Stmt] -> P ()
     , mkRecConstrOrUpdate   -- Exp -> [FieldUpdate] -> P S.Exp
     , checkPrec             -- Integer -> P Int
-    , checkContext          -- Type -> P Context
+    , checkPContext         -- Type -> P Context
+    , checkContext          -- PContext -> P S.Context
     , checkAssertion        -- Type -> P Asst
     , checkDataHeader       -- Type -> P (Context,Name,[Name])
     , checkClassHeader      -- Type -> P (Context,Name,[Name])
     , checkInstHeader       -- Type -> P (Context,QName,[Type])
     , checkPattern          -- PExp -> P Pat
     , checkExpr             -- PExp -> P Exp
+    , checkType             -- PType -> P Type
     , checkValDef           -- SrcLoc -> S.Exp -> Rhs -> [Decl] -> P Decl
     , checkClassBody        -- [ClassDecl] -> P [ClassDecl]
     , checkInstBody         -- [InstDecl] -> P [InstDecl]
@@ -51,15 +53,15 @@ module Language.Haskell.Exts.ParseUtils (
     , checkRuleExpr         -- PExp -> P Exp
     , readTool              -- Maybe String -> Maybe Tool
 
-    -- Parsed expressions
-    , PExp(..), PFieldUpdate(..), ParseXAttr(..)
+    -- Parsed expressions and types
+    , PExp(..), PFieldUpdate(..), ParseXAttr(..), PType(..), PContext, PAsst(..)
     , p_unit_con            -- PExp
     , p_tuple_con           -- Int -> PExp
     , p_unboxed_singleton_con   -- PExp
     ) where
 
-import Language.Haskell.Exts.Syntax hiding ( Exp(..), FieldUpdate(..), XAttr(..) )
-import qualified Language.Haskell.Exts.Syntax as S ( Exp(..), FieldUpdate(..), XAttr(..) )
+import Language.Haskell.Exts.Syntax hiding ( Type(..), Asst(..), Exp(..), FieldUpdate(..), XAttr(..) )
+import qualified Language.Haskell.Exts.Syntax as S ( Type(..), Asst(..), Exp(..), FieldUpdate(..), XAttr(..) )
 import Language.Haskell.Exts.ParseMonad
 import Language.Haskell.Exts.Pretty
 import Language.Haskell.Exts.Build
@@ -68,10 +70,13 @@ import Language.Haskell.Exts.Extension
 import Data.List (intersperse)
 import Control.Monad (when)
 
-splitTyConApp :: Type -> P (Name,[Type])
-splitTyConApp t0 = split t0 []
+splitTyConApp :: PType -> P (Name,[S.Type])
+splitTyConApp t0 = do
+            (n, pts) <- split t0 []
+            ts <- mapM checkType pts
+            return (n,ts)
  where
-    split :: Type -> [Type] -> P (Name,[Type])
+    split :: PType -> [PType] -> P (Name,[PType])
     split (TyApp t u) ts = split t (u:ts)
     split (TyCon (UnQual t)) ts = return (t,ts)
     split (TyInfix a op b) ts = split (TyCon op) (a:b:ts)
@@ -92,20 +97,22 @@ checkPatternGuards [Qualifier _] = return ()
 checkPatternGuards _ = checkEnabled PatternGuards
 
 -----------------------------------------------------------------------------
--- Various Syntactic Checks
+-- Checking contexts
 
-checkContext :: Type -> P Context
-checkContext (TyTuple Boxed ts) =
+-- Check that a context is syntactically correct. Takes care of
+-- checking for MPTCs, TypeOperators, TypeFamilies (for eq constraints)
+-- and ImplicitParameters, but leaves checking of the class assertion
+-- parameters for later.
+checkPContext :: PType -> P PContext
+checkPContext (TyTuple Boxed ts) =
     mapM checkAssertion ts
-checkContext t = do
+checkPContext t = do
     c <- checkAssertion t
     return [c]
 
--- Changed for multi-parameter type classes.
--- Further changed for implicit parameters.
--- Totally redone for extension parametrisation.
-
-checkAssertion :: Type -> P Asst
+-- Check a single assertion according to the above, still leaving
+-- the class assertion parameters for later.
+checkAssertion :: PType -> P PAsst
 -- We cannot even get here unless ImplicitParameters is enabled.
 checkAssertion (TyPred p@(IParam _ _)) = return p
 -- We cannot even get here unless TypeFamilies is enabled.
@@ -117,10 +124,7 @@ checkAssertion t = checkAssertion' [] t
                 when (isSymbol c)    $ checkEnabled TypeOperators
                 return $ ClassA c ts
             checkAssertion' ts (TyApp a t) = do
-                case t of
-                  TyVar _  -> return ()
-                  -- to allow anything other than just variables, we need FlexibleContexts
-                  _        -> checkEnabled FlexibleContexts
+                -- no check on t at this stage
                 checkAssertion' (t:ts) a
             checkAssertion' ts (TyInfix a op b) =
                 -- infix operators require TypeOperators
@@ -133,23 +137,72 @@ isSymbol (Qual _ (Symbol _)) = True
 isSymbol _                   = False
 
 
-checkDataHeader :: Type -> P (Context,Name,[Name])
+-- Checks simple contexts for class and instance
+-- headers. If FlexibleContexts is enabled then
+-- anything goes, otherwise only tyvars are allowed.
+checkSContext :: PContext -> P Context
+checkSContext = mapM (checkAsst True)
+
+-- Checks ordinary contexts for sigtypes and data type
+-- declarations. If FlexibleContexts is enabled then
+-- anything goes, otherwise only tyvars OR tyvars
+-- applied to types are allowed.
+checkContext :: PContext -> P Context
+checkContext = mapM (checkAsst False)
+
+checkAsst :: Bool -> PAsst -> P S.Asst
+checkAsst isSimple asst =
+    case asst of
+      ClassA qn pts -> do
+                ts <- mapM (checkAsstParam isSimple) pts
+                return $ S.ClassA qn ts
+      InfixA a op b -> do
+                [a,b] <- mapM (checkAsstParam isSimple) [a,b]
+                return $ S.InfixA a op b
+      IParam ipn pt -> do
+                t <- checkType pt
+                return $ S.IParam ipn t
+      EqualP pa pb  -> do
+                a <- checkType pa
+                b <- checkType pb
+                return $ S.EqualP a b
+
+checkAsstParam :: Bool -> PType -> P S.Type
+checkAsstParam isSimple t = do
+        exts <- getExtensions
+        if FlexibleContexts `elem` exts
+         then checkType t
+         else case t of
+                TyVar n     -> return $ S.TyVar n
+                TyApp pf pt | not isSimple    -> do
+                        f <- checkAsstParam isSimple pf
+                        t <- checkType pt
+                        return $ S.TyApp f t
+                _       -> fail "Malformed context: FlexibleContexts not enabled"
+
+-----------------------------------------------------------------------------
+-- Checking Headers
+
+
+checkDataHeader :: PType -> P (Context,Name,[Name])
 checkDataHeader (TyForall Nothing cs t) = do
     (c,ts) <- checkSimple "data/newtype" t []
+    cs <- checkContext cs
     return (cs,c,ts)
 checkDataHeader t = do
     (c,ts) <- checkSimple "data/newtype" t []
     return ([],c,ts)
 
-checkClassHeader :: Type -> P (Context,Name,[Name])
+checkClassHeader :: PType -> P (Context,Name,[Name])
 checkClassHeader (TyForall Nothing cs t) = do
     (c,ts) <- checkSimple "class" t []
+    cs <- checkSContext cs
     return (cs,c,ts)
 checkClassHeader t = do
     (c,ts) <- checkSimple "class" t []
     return ([],c,ts)
 
-checkSimple :: String -> Type -> [Name] -> P (Name,[Name])
+checkSimple :: String -> PType -> [Name] -> P (Name,[Name])
 checkSimple kw (TyApp l (TyVar a)) xs = checkSimple kw l (a:xs)
 checkSimple _  (TyInfix (TyVar a) (UnQual t) (TyVar b)) xs =
     checkEnabled TypeOperators >> return (t,a:b:xs)
@@ -160,24 +213,28 @@ checkSimple _kw (TyCon (UnQual t))   xs = do
     return (t,xs)
 checkSimple kw _ _ = fail ("Illegal " ++ kw ++ " declaration")
 
-checkInstHeader :: Type -> P (Context,QName,[Type])
+checkInstHeader :: PType -> P (Context,QName,[S.Type])
 checkInstHeader (TyForall Nothing cs t) = do
     (c,ts) <- checkInsts t []
+    cs <- checkSContext cs
     return (cs,c,ts)
 checkInstHeader t = do
     (c,ts) <- checkInsts t []
     return ([],c,ts)
 
 
-checkInsts :: Type -> [Type] -> P ((QName,[Type]))
+checkInsts :: PType -> [PType] -> P ((QName,[S.Type]))
 checkInsts (TyApp l t) ts = checkInsts l (t:ts)
 checkInsts (TyCon c)   ts = do
     when (isSymbol c) $ checkEnabled TypeOperators
+    ts <- checkTypes ts
     return (c,ts)
 checkInsts (TyInfix a op b) [] = do
     checkEnabled TypeOperators
-    return (op,[a,b])
+    ts <- checkTypes [a,b]
+    return (op,ts)
 checkInsts _ _ = fail "Illegal instance declaration"
+
 
 -----------------------------------------------------------------------------
 -- Checking Patterns.
@@ -552,7 +609,7 @@ getGConName _ = fail "Expression in reification is not a name"
 -----------------------------------------------------------------------------
 -- Check Equation Syntax
 
-checkValDef :: SrcLoc -> PExp -> Maybe Type -> Rhs -> Binds -> P Decl
+checkValDef :: SrcLoc -> PExp -> Maybe S.Type -> Rhs -> Binds -> P Decl
 checkValDef srcloc lhs optsig rhs whereBinds =
     case isFunLhs lhs [] of
      Just (f,es) -> do
@@ -703,8 +760,40 @@ checkDataOrNew NewType [x] = return ()
 checkDataOrNew DataType _  = return ()
 checkDataOrNew _        _  = fail "newtype declaration must have exactly one constructor."
 
-checkSimpleType :: Type -> P (Name, [Name])
+checkSimpleType :: PType -> P (Name, [Name])
 checkSimpleType t = checkSimple "test" t []
+
+---------------------------------------
+-- Check actual types
+
+checkType :: PType -> P S.Type
+checkType t = case t of
+    TyForall tvs@Nothing cs pt    -> do
+            ctxt <- checkContext cs
+            check1Type pt (S.TyForall Nothing ctxt)
+    TyForall tvs cs pt -> do
+            checkEnabled (Any [PolymorphicComponents, LiberalTypeSynonyms, Rank2Types, RankNTypes])
+            ctxt <- checkContext cs
+            check1Type pt (S.TyForall tvs ctxt)
+    TyFun   at rt   -> check2Types at rt S.TyFun
+    TyTuple b pts   -> checkTypes pts >>= return . S.TyTuple b
+    TyList  pt      -> check1Type pt S.TyList
+    TyApp   ft at   -> check2Types ft at S.TyApp
+    TyVar   n       -> return $ S.TyVar n
+    TyCon   n       -> return $ S.TyCon n
+    TyParen pt      -> check1Type pt S.TyParen
+    -- TyPred  cannot be a valid type
+    TyInfix at op bt -> check2Types at bt (flip S.TyInfix op)
+    TyKind  pt k    -> check1Type pt (flip S.TyKind k)
+
+check1Type :: PType -> (S.Type -> S.Type) -> P S.Type
+check1Type pt f = checkType pt >>= return . f
+
+check2Types :: PType -> PType -> (S.Type -> S.Type -> S.Type) -> P S.Type
+check2Types at bt f = checkType at >>= \a -> checkType bt >>= \b -> return (f a b)
+
+checkTypes :: [PType] -> P [S.Type]
+checkTypes = mapM checkType
 
 ---------------------------------------
 -- Converting a complete page
@@ -749,7 +838,7 @@ mkDVarExpr = foldl1 (\x y -> InfixApp x (op $ sym "-") y) . map (Var . UnQual . 
 --
 -- A valid type must have one for-all at the top of the type, or of the fn arg types
 
-mkTyForall :: Maybe [TyVarBind] -> Context -> Type -> Type
+mkTyForall :: Maybe [TyVarBind] -> PContext -> PType -> PType
 mkTyForall mtvs []   ty = mk_forall_ty mtvs ty
 mkTyForall mtvs ctxt ty = TyForall mtvs ctxt ty
 
@@ -799,7 +888,7 @@ data PExp
                                 -- ^ bounded arithmetic sequence,
                                     -- with first two elements given
     | ParComp  PExp [[QualStmt]]    -- ^ parallel list comprehension
-    | ExpTypeSig SrcLoc PExp Type
+    | ExpTypeSig SrcLoc PExp S.Type
                                 -- ^ expression type signature
     | AsPat Name PExp           -- ^ patterns only
     | WildCard                  -- ^ patterns only
@@ -838,7 +927,7 @@ data PExp
     | UnknownExpPragma  String String
 
 -- Generics
-    | ExplTypeArg QName Type    -- ^ f {| Int |} x = ...
+    | ExplTypeArg QName S.Type    -- ^ f {| Int |} x = ...
 
 -- Bang Patterns
     | BangPat PExp              -- ^ f !a = ...
@@ -868,3 +957,37 @@ p_tuple_con b i       = Con (tuple_con_name b i)
 
 p_unboxed_singleton_con :: PExp
 p_unboxed_singleton_con = Con unboxed_singleton_con_name
+
+type PContext = [PAsst]
+
+data PType
+     = TyForall
+        (Maybe [TyVarBind])
+        PContext
+        PType
+     | TyFun   PType PType        -- ^ function type
+     | TyTuple Boxed [PType]      -- ^ tuple type, possibly boxed
+     | TyList  PType              -- ^ list syntax, e.g. [a], as opposed to [] a
+     | TyApp   PType PType        -- ^ application of a type constructor
+     | TyVar   Name               -- ^ type variable
+     | TyCon   QName              -- ^ named type or type constructor
+     | TyParen PType              -- ^ type surrounded by parentheses
+     | TyPred  PAsst              -- ^ assertion of an implicit parameter
+     | TyInfix PType QName PType  -- ^ infix type constructor
+     | TyKind  PType Kind         -- ^ type with explicit kind signature
+  deriving (Eq, Show)
+
+data PAsst = ClassA QName [PType]
+           | InfixA PType QName PType
+           | IParam IPName  PType
+           | EqualP PType   PType
+  deriving (Eq, Show)
+
+unit_tycon, fun_tycon, list_tycon, unboxed_singleton_tycon :: PType
+unit_tycon        = TyCon unit_tycon_name
+fun_tycon         = TyCon fun_tycon_name
+list_tycon        = TyCon list_tycon_name
+unboxed_singleton_tycon = TyCon unboxed_singleton_tycon_name
+
+tuple_tycon :: Boxed -> Int -> PType
+tuple_tycon b i         = TyCon (tuple_tycon_name b i)

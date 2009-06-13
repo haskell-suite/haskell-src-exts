@@ -691,7 +691,7 @@ instance Pretty Type where
         prettyPrec _ (TyVar name) = pretty name
         prettyPrec _ (TyCon name) = pretty name
         prettyPrec _ (TyParen t) = parens (pretty t)
-        prettyPrec _ (TyPred asst) = pretty asst
+--        prettyPrec _ (TyPred asst) = pretty asst
         prettyPrec _ (TyInfix a op b) = myFsep [pretty a, ppQNameInfix op, pretty b]
         prettyPrec _ (TyKind t k) = parens (myFsep [pretty t, text "::", pretty k])
 
