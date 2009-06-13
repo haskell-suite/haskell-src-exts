@@ -890,20 +890,7 @@ as qcon and then check separately that they are truly unqualified.
 >       | 'deriving' '(' dclasses ')'   { reverse $3 }
 
 > dclasses :: { [Deriving] }
->       : dclasses ',' qtycls           { $3 : $1 }
->       | qtycls                        { [$1] }
-
-> qtycls :: { Deriving } -- FIXME
->       : qtycls1               { ($1, []) }
->       | qconid tyconvars      { ($1, reverse $2) }
-
-> tyconvars :: { [QName] }
->       : tyconvars tyconvar    { $2 : $1 }
->       | tyconvar              { [$1] }
-
-> tyconvar :: { QName }
->       : qconid                { $1 }
->       | qvarid                { $1 }
+>       : types1                        {% checkDeriving $1 }
 
 > qtycls1 :: { QName }
 >       : qconid                { $1 }

@@ -286,7 +286,7 @@ data Assoc
   deriving (Eq,Show)
 #endif
 
-type Deriving = (QName, [QName])
+type Deriving = (QName, [Type])
 
 data Decl
      = TypeDecl     SrcLoc Name [TyVarBind] Type

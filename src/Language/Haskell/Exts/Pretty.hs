@@ -657,8 +657,8 @@ ppDeriving :: [Deriving] -> Doc
 ppDeriving []  = empty
 ppDeriving [(d, [])] = text "deriving" <+> ppQName d
 ppDeriving ds  = text "deriving" <+> parenList (map ppDer ds)
-    where ppDer :: (QName, [QName]) -> Doc
-          ppDer (x, xs) = mySep (map pretty (x:xs))
+    where ppDer :: (QName, [Type]) -> Doc
+          ppDer (n, ts) = mySep (pretty n : map pretty ts)
 
 ------------------------- Types -------------------------
 ppBType :: Type -> Doc
