@@ -532,7 +532,7 @@ checkExpr e = case e of
     CorePragma s    -> return $ S.CorePragma s
     SCCPragma s     -> return $ S.SCCPragma s
     GenPragma s xx yy -> return $ S.GenPragma s xx yy
-    UnknownExpPragma n s -> return $ S.UnknownExpPragma n s
+--    UnknownExpPragma n s -> return $ S.UnknownExpPragma n s
 
     -- Arrows
     Proc p e        -> do e <- checkExpr e
@@ -938,7 +938,7 @@ data PExp
     | CorePragma        String
     | SCCPragma         String
     | GenPragma         String (Int, Int) (Int, Int)
-    | UnknownExpPragma  String String
+--    | UnknownExpPragma  String String
 
 -- Generics
     | ExplTypeArg QName S.Type    -- ^ f {| Int |} x = ...

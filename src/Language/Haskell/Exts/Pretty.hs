@@ -492,10 +492,10 @@ instance Pretty Decl where
                 mySep $ [text "{-# SPECIALISE", text "instance", ppContext context, pretty name]
                             ++ map ppAType args ++ [text "#-}"]
 
-        pretty (UnknownDeclPragma pos n s) =
+{-        pretty (UnknownDeclPragma pos n s) =
                 blankline $
                 markLine pos $
-                mySep $ [text "{-#", text n, text s, text "#-}"]
+                mySep $ [text "{-#", text n, text s, text "#-}"] -}
 
 
 instance Pretty DataOrNew where
@@ -614,8 +614,8 @@ instance Pretty OptionPragma where
         myFsep $ [text "{-# OPTIONS_" <> pretty tool, text s, text "#-}"]
     pretty (OptionsPragma _ _ s) =
         myFsep $ [text "{-# OPTIONS", text s, text "#-}"]
-    pretty (UnknownTopPragma _ n s) =
-        myFsep $ map text ["{-#", n, s, "#-}"]
+{-    pretty (UnknownTopPragma _ n s) =
+        myFsep $ map text ["{-#", n, s, "#-}"] -}
 
 instance Pretty Tool where
     pretty (UnknownTool s) = text s
@@ -832,8 +832,8 @@ instance Pretty Exp where
                 myFsep $ [text "{-# GENERATED", text $ show s,
                             int a, char ':', int b, char '-',
                             int c, char ':', int d, text "#-}"]
-        pretty (UnknownExpPragma n s) =
-                myFsep $ [text "{-#", text n, text s, text "#-}"]
+{-        pretty (UnknownExpPragma n s) =
+                myFsep $ [text "{-#", text n, text s, text "#-}"] -}
         -- Arrows
         pretty (Proc p e) = myFsep $ [text "proc", pretty p, text "->", pretty e]
         pretty (LeftArrApp l r)      = myFsep $ [pretty l, text "-<",  pretty r]

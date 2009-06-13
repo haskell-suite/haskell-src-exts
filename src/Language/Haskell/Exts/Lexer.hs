@@ -120,7 +120,7 @@ data Token
 -- Pragmas
 
         | PragmaEnd                     -- #-}
-        | PragmaUnknown (String,String)   -- Any pragma not recognized
+--        | PragmaUnknown (String,String)   -- Any pragma not recognized
         | RULES
         | INLINE Bool
         | SPECIALISE
@@ -310,7 +310,10 @@ matchChar c msg = do
 -- whether to insert layout tokens.
 
 lexer :: (Token -> P a) -> P a
-lexer = runL $ do
+lexer = runL topLexer
+
+topLexer :: Lex a Token
+topLexer = do
     bol <- checkBOL
     (bol, ws) <- lexWhiteSpace bol
     -- take care of whitespace in PCDATA
@@ -728,7 +731,9 @@ lexPragmaStart = do
      Just p ->  return p
 
      _      -> do rawStr <- lexRawPragma
-                  return $ PragmaUnknown (pr, rawStr)
+                  -- return $ PragmaUnknown (pr, rawStr) -- no support for unrecognized pragmas, treat as comment
+                  discard 3 -- #-}
+                  topLexer -- we just discard it as a comment for now and restart
 
 lexRawPragma :: Lex a String
 lexRawPragma = do

@@ -316,7 +316,7 @@ data Decl
      | SpecSig          SrcLoc                 QName [Type]
      | SpecInlineSig    SrcLoc Bool Activation QName [Type]
      | InstSig          SrcLoc Context         QName [Type]
-     | UnknownDeclPragma SrcLoc String String
+--     | UnknownDeclPragma SrcLoc String String
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -614,7 +614,7 @@ data Exp
     | CorePragma        String
     | SCCPragma         String
     | GenPragma         String (Int, Int) (Int, Int)
-    | UnknownExpPragma  String String
+--    | UnknownExpPragma  String String
 
 -- Arrows
     | Proc Pat Exp              -- ^ @proc@ /pat/ @->@ /exp/
@@ -690,7 +690,7 @@ data OptionPragma
     | IncludePragma    SrcLoc String
     | CFilesPragma     SrcLoc String
     | OptionsPragma    SrcLoc (Maybe Tool) String
-    | UnknownTopPragma SrcLoc String String
+--    | UnknownTopPragma SrcLoc String String
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
