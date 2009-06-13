@@ -184,7 +184,7 @@ checkAsstParam isSimple t = do
 -- Checking Headers
 
 
-checkDataHeader :: PType -> P (Context,Name,[Name])
+checkDataHeader :: PType -> P (Context,Name,[TyVarBind])
 checkDataHeader (TyForall Nothing cs t) = do
     (c,ts) <- checkSimple "data/newtype" t []
     cs <- checkContext cs
@@ -193,7 +193,7 @@ checkDataHeader t = do
     (c,ts) <- checkSimple "data/newtype" t []
     return ([],c,ts)
 
-checkClassHeader :: PType -> P (Context,Name,[Name])
+checkClassHeader :: PType -> P (Context,Name,[TyVarBind])
 checkClassHeader (TyForall Nothing cs t) = do
     (c,ts) <- checkSimple "class" t []
     cs <- checkSContext cs
@@ -202,16 +202,26 @@ checkClassHeader t = do
     (c,ts) <- checkSimple "class" t []
     return ([],c,ts)
 
-checkSimple :: String -> PType -> [Name] -> P (Name,[Name])
-checkSimple kw (TyApp l (TyVar a)) xs = checkSimple kw l (a:xs)
-checkSimple _  (TyInfix (TyVar a) (UnQual t) (TyVar b)) xs =
-    checkEnabled TypeOperators >> return (t,a:b:xs)
+checkSimple :: String -> PType -> [TyVarBind] -> P (Name,[TyVarBind])
+checkSimple kw (TyApp l t) xs | isTyVarBind t = checkSimple kw l (toTyVarBind t : xs)
+checkSimple _  (TyInfix t1 (UnQual t) t2) xs
+    | isTyVarBind t1 && isTyVarBind t2 =
+       checkEnabled TypeOperators >> return (t, toTyVarBind t1 : toTyVarBind t2 : xs)
 checkSimple _kw (TyCon (UnQual t))   xs = do
     case t of
       Symbol _ -> checkEnabled TypeOperators
       _ -> return ()
     return (t,xs)
 checkSimple kw _ _ = fail ("Illegal " ++ kw ++ " declaration")
+
+isTyVarBind :: PType -> Bool
+isTyVarBind (TyVar _) = True
+isTyVarBind (TyKind (TyVar _) _) = True
+isTyVarBind _ = False
+
+toTyVarBind :: PType -> TyVarBind
+toTyVarBind (TyVar n) = UnkindedVar n
+toTyVarBind (TyKind (TyVar n) k) = KindedVar n k
 
 checkInstHeader :: PType -> P (Context,QName,[S.Type])
 checkInstHeader (TyForall Nothing cs t) = do
@@ -760,7 +770,7 @@ checkDataOrNew NewType [x] = return ()
 checkDataOrNew DataType _  = return ()
 checkDataOrNew _        _  = fail "newtype declaration must have exactly one constructor."
 
-checkSimpleType :: PType -> P (Name, [Name])
+checkSimpleType :: PType -> P (Name, [TyVarBind])
 checkSimpleType t = checkSimple "test" t []
 
 ---------------------------------------

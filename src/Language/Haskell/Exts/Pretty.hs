@@ -697,7 +697,7 @@ instance Pretty Type where
 
 
 instance Pretty TyVarBind where
-        pretty (KindedVar var kind) = myFsep [pretty var, text "::", pretty kind]
+        pretty (KindedVar var kind) = parens $ myFsep [pretty var, text "::", pretty kind]
         pretty (UnkindedVar var)    = pretty var
 
 ppForall :: Maybe [TyVarBind] -> Doc
