@@ -1,3 +1,4 @@
+{-# LANGUAGE TypeFamilies #-}
 
 data Id = Id
 
