@@ -24,8 +24,8 @@
 >               ParseMode(..), defaultParseMode, ParseResult(..)
 >               ) where
 >
-> import Language.Haskell.Exts.Syntax hiding ( Exp(..), XAttr(..), FieldUpdate(..) )
-> import Language.Haskell.Exts.Syntax ( Exp )
+> import Language.Haskell.Exts.Syntax hiding ( Type(..), Exp(..), Asst(..), XAttr(..), FieldUpdate(..) )
+> import Language.Haskell.Exts.Syntax ( Type, Exp, Asst )
 > import Language.Haskell.Exts.ParseMonad
 > import Language.Haskell.Exts.Lexer
 > import Language.Haskell.Exts.ParseUtils
@@ -255,7 +255,7 @@ Pragmas
 > %name mparseExp trueexp
 > %name mparsePat pat
 > %name mparseDecl topdecl
-> %name mparseType ctype
+> %name mparseType truectype
 > %partial mfindOptPragmas toppragmas
 > %tokentype { Token }
 > %expect 7
@@ -452,7 +452,7 @@ shift/reduce-conflict, so we don't handle this case here, but in bodyaux.
 >       | topdecl                       { [$1] }
 
 > topdecl :: { Decl }
->       : srcloc 'type' dtype '=' ctype
+>       : srcloc 'type' dtype '=' truectype
 >                       {% do { (c,ts) <- checkSimpleType $3;
 >                               return (TypeDecl $1 c ts $5) } }
 
@@ -463,7 +463,7 @@ that through the 'family' keyword.
 >                               return (TypeFamDecl $1 c ts $5) } }
 
 Here there is no special keyword so we must do the check.
->       | srcloc 'type' 'instance' dtype '=' ctype
+>       | srcloc 'type' 'instance' truedtype '=' truectype
 >                       {% do { -- no checkSimpleType $4 since dtype may contain type patterns
 >                               checkEnabled TypeFamilies ;
 >                               return (TypeInsDecl $1 $4 $6) } }
@@ -484,14 +484,14 @@ Same as above, lexer will handle it through the 'family' keyword.
 >                               return (DataFamDecl $1 cs c t $5) } }
 
 Here we must check for TypeFamilies.
->       | srcloc data_or_newtype 'instance' ctype constrs0 deriving
+>       | srcloc data_or_newtype 'instance' truectype constrs0 deriving
 >                       {% do { -- (cs,c,t) <- checkDataHeader $4;
 >                               checkEnabled TypeFamilies ;
 >                               checkDataOrNew $2 $5;
 >                               return (DataInsDecl $1 $2 $4 (reverse $5) $6) } }
 
 This style requires both TypeFamilies and GADTs, the latter is handled in gadtlist.
->       | srcloc data_or_newtype 'instance' ctype optkind 'where' gadtlist deriving
+>       | srcloc data_or_newtype 'instance' truectype optkind 'where' gadtlist deriving
 >                       {% do { -- (cs,c,t) <- checkDataHeader $4;
 >                               checkEnabled TypeFamilies ;
 >                               checkDataOrNew $2 $7;
@@ -534,8 +534,9 @@ lexer through the 'foreign' (and 'export') keyword.
 >       | 'newtype' { NewType  }
 
 > typelist :: { [Type] }
->       : types                         { reverse $1 }
->       | type                          { [$1] }
+>       : types                         {% do { ts <- mapM checkType $1;
+>                                               return $ reverse ts } }
+>       | truetype                      { [$1] }
 >       | {- empty -}                   { [] }
 
 > decls :: { [Decl] }
@@ -556,9 +557,9 @@ lexer through the 'foreign' (and 'export') keyword.
 >       | open decls close              { $2 }
 
 > signdecl :: { Decl }
->       : srcloc exp0b '::' ctype                                {% do { v <- checkSigVar $2;
->                                                                        return $ TypeSig $1 [v] $4 } }
->       | srcloc exp0b ',' vars '::' ctype                      {% do { v <- checkSigVar $2;
+>       : srcloc exp0b '::' truectype                           {% do { v <- checkSigVar $2;
+>                                                                       return $ TypeSig $1 [v] $4 } }
+>       | srcloc exp0b ',' vars '::' truectype                  {% do { v <- checkSigVar $2;
 >                                                                       return $ TypeSig $1 (v : reverse $4) $6 } }
 >       | srcloc '{-# INLINE' activation qvar '#-}'             { InlineSig $1 $2 $3 $4 }
 >       | srcloc '{-# SPECIALISE' qvar '::' sigtypes '#-}'      { SpecSig $1 $3 $5 }
@@ -572,7 +573,7 @@ lexer through the 'foreign' (and 'export') keyword.
 >       | sigtype ',' sigtypes              { $1 : $3 }
 
 > sigtype :: { Type }
->       : ctype                             { mkTyForall Nothing [] $1 }
+>       : ctype                             {% checkType $ mkTyForall Nothing [] $1 }
 
 Binding can be either of implicit parameters, or it can be a normal sequence
 of declarations. The two kinds cannot be mixed within the same block of
@@ -616,8 +617,8 @@ so no need to check for extensions.
 >        | {- empty -}                  { PlaySafe False }
 
 > fspec :: { (String, Name, Type) }
->       : STRING var_no_safety '::' dtype               { ($1, $2, $4) }
->       |        var_no_safety '::' dtype               { ("", $1, $3) }
+>       : STRING var_no_safety '::' truedtype               { ($1, $2, $4) }
+>       |        var_no_safety '::' truedtype               { ("", $1, $3) }
 
 -----------------------------------------------------------------------------
 Pragmas
@@ -646,8 +647,8 @@ Pragmas
 >       | rulevar rulevars              { $1 : $2 }
 
 > rulevar :: { RuleVar }
->       : varid                         { RuleVar $1 }
->       | '(' varid '::' ctype ')'      { TypedRuleVar $2 $4 }
+>       : varid                             { RuleVar $1 }
+>       | '(' varid '::' truectype ')'      { TypedRuleVar $2 $4 }
 
 > warndeprs :: { [([Name],String)] }
 >   : warndeprs ';' warndepr        { $3 : $1 }
@@ -671,7 +672,10 @@ Types
 
 Type equality contraints need the TypeFamilies extension.
 
-> dtype :: { Type }
+> truedtype :: { Type }
+>       : dtype                         {% checkType $1 }
+
+> dtype :: { PType }
 >       : btype                         { $1 }
 >       | btype qtyconop dtype          { TyInfix $1 $2 $3 }
 >       | btype qtyvarop dtype          { TyInfix $1 $2 $3 } -- FIXME
@@ -681,23 +685,32 @@ Type equality contraints need the TypeFamilies extension.
 
 Implicit parameters can occur in normal types, as well as in contexts.
 
-> type :: { Type }
+> truetype :: { Type }
+>       : type                          {% checkType $1 }
+
+> type :: { PType }
 >       : ivar '::' dtype               { TyPred $ IParam $1 $3 }
 >       | dtype                         { $1 }
 
-> btype :: { Type }
+> truebtype :: { Type }
+>       : btype                         {% checkType $1 }
+
+> btype :: { PType }
 >       : btype atype                   { TyApp $1 $2 }
 >       | atype                         { $1 }
 
 UnboxedTuples requires the extension, but that will be handled through
 the (# and #) lexemes. Kinds will be handled at the kind rule.
 
-> atype :: { Type }
+> trueatype :: { Type }
+>       : atype                         {% checkType $1 }
+
+> atype :: { PType }
 >       : gtycon                        { TyCon $1 }
 >       | tyvar                         { TyVar $1 }
 >       | '(' types ')'                 { TyTuple Boxed (reverse $2) }
 >       | '(#' types1 '#)'              { TyTuple Unboxed (reverse $2) }
->       | '[' type ']'                  { TyApp list_tycon $2 }
+>       | '[' type ']'                  { TyApp (TyCon list_tycon_name) $2 }
 >       | '(' ctype ')'                 { TyParen $2 }
 >       | '(' ctype '::' kind ')'       { TyKind $2 $4 }
 
@@ -730,24 +743,27 @@ with one token of lookahead.  The HACK is to parse the context as a btype
 (more specifically as a tuple type), then check that it has the right form
 C a, or (C1 a, C2 b, ... Cn z) and convert it into a context.  Blaach!
 
-Forall-quantified types require some extension to enable them, but
-that requires the 'forall' keyword, so the lexer will handle it.
+Forall-quantified types require some extension to enable them, which
+is any of the keyword-enabling ones, except ExistentialQuantification.
 
-> ctype :: { Type }
+> truectype :: { Type }
+>       : ctype                         {% checkType $1 }
+
+> ctype :: { PType }
 >       : 'forall' ktyvars '.' ctype    { mkTyForall (Just $2) [] $4 }
 >       | context '=>' type             { mkTyForall Nothing $1 $3 }
 >       | type                          { $1 }
 
 Equality constraints require the TypeFamilies extension.
 
-> context :: { Context }
->       : btype                         {% checkContext $1 }
->       | btype '~' btype               {% checkEnabled TypeFamilies >> checkContext (TyPred $ EqualP $1 $3) }
+> context :: { PContext }
+>       : btype                         {% checkPContext $1 }
+>       | btype '~' btype               {% checkEnabled TypeFamilies >> checkPContext (TyPred $ EqualP $1 $3) }
 
-> types :: { [Type] }
+> types :: { [PType] }
 >       : types1 ',' type               { $3 : $1 }
 
-> types1 :: { [Type] }
+> types1 :: { [PType] }
 >       : type                          { [$1] }
 >       | types1 ',' type               { $3 : $1 }
 
@@ -800,7 +816,7 @@ GADTs - require the GADTs extension enabled, but we handle that at the calling s
 >       | gadtconstr                            { [$1] }
 
 > gadtconstr :: { GadtDecl }
->       : srcloc qcon '::' ctype                {% do { c <- checkUnQual $2;
+>       : srcloc qcon '::' truectype            {% do { c <- checkUnQual $2;
 >                                                       return $ GadtDecl $1 c $4 } }
 
 To allow the empty case we need the EmptyDataDecls extension.
@@ -814,7 +830,8 @@ To allow the empty case we need the EmptyDataDecls extension.
 
 > constr :: { QualConDecl }
 >       : srcloc forall context '=>' constr1    {% do { checkEnabled ExistentialQuantification ;
->                                                       return $ QualConDecl $1 $2 $3 $5 } }
+>                                                       ctxt <- checkContext $3 ;
+>                                                       return $ QualConDecl $1 $2 ctxt $5 } }
 >       | srcloc forall constr1                 { QualConDecl $1 $2 [] $3 }
 
 > forall :: { [TyVarBind] }
@@ -836,23 +853,23 @@ as qcon and then check separately that they are truly unqualified.
 >       | scontype1                     { $1 }
 
 > scontype1 :: { (Name, [BangType]) }
->       : btype '!' atype                       {% do { (c,ts) <- splitTyConApp $1;
->                                                       return (c,map UnBangedTy ts++
->                                                               [BangedTy $3]) } }
->       | btype '{-# UNPACK' '#-}' '!' atype    {% do { (c,ts) <- splitTyConApp $1;
->                                                       return (c,map UnBangedTy ts++
->                                                               [UnpackedTy $5]) } }
+>       : btype '!' trueatype                       {% do { (c,ts) <- splitTyConApp $1;
+>                                                           return (c,map UnBangedTy ts++
+>                                                                   [BangedTy $3]) } }
+>       | btype '{-# UNPACK' '#-}' '!' trueatype    {% do { (c,ts) <- splitTyConApp $1;
+>                                                           return (c,map UnBangedTy ts++
+>                                                                   [UnpackedTy $5]) } }
 >       | scontype1 satype              { (fst $1, snd $1 ++ [$2] ) }
 
 > satype :: { BangType }
->       : atype                         { UnBangedTy $1 }
->       | '!' atype                     { BangedTy   $2 }
->       | '{-# UNPACK' '#-}' '!' atype  { UnpackedTy $4 }
+>       : trueatype                         { UnBangedTy $1 }
+>       | '!' trueatype                     { BangedTy $2 }
+>       | '{-# UNPACK' '#-}' '!' trueatype  { UnpackedTy $4 }
 
 > sbtype :: { BangType }
->       : btype                         { UnBangedTy $1 }
->       | '!' atype                     { BangedTy   $2 }
->       | '{-# UNPACK' '#-}' '!' atype  { UnpackedTy $4 }
+>       : truebtype                         { UnBangedTy $1 }
+>       | '!' trueatype                     { BangedTy $2 }
+>       | '{-# UNPACK' '#-}' '!' trueatype  { UnpackedTy $4 }
 
 > fielddecls :: { [([Name],BangType)] }
 >       : fielddecls ',' fielddecl      { $3 : $1 }
@@ -862,9 +879,9 @@ as qcon and then check separately that they are truly unqualified.
 >       : vars '::' stype               { (reverse $1, $3) }
 
 > stype :: { BangType }
->       : ctype                         { UnBangedTy $1 }
->       | '!' atype                     { BangedTy   $2 }
->       | '{-# UNPACK' '#-}' '!' atype  { UnpackedTy $4 }
+>       : truectype                         { UnBangedTy $1 }
+>       | '!' trueatype                     { BangedTy   $2 }
+>       | '{-# UNPACK' '#-}' '!' trueatype  { UnpackedTy $4 }
 
 > deriving :: { [Deriving] }
 >       : {- empty -}                   { [] }
@@ -876,7 +893,7 @@ as qcon and then check separately that they are truly unqualified.
 >       : dclasses ',' qtycls           { $3 : $1 }
 >       | qtycls                        { [$1] }
 
-> qtycls :: { Deriving }
+> qtycls :: { Deriving } -- FIXME
 >       : qtycls1               { ($1, []) }
 >       | qconid tyconvars      { ($1, reverse $2) }
 
@@ -940,7 +957,7 @@ Associated types require the TypeFamilies extension.
 >       : srcloc 'type' type optkind
 >               {% do { (c,ts) <- checkSimpleType $3;
 >                       return (ClsTyFam $1 c ts $4) } }
->       | srcloc 'type' dtype '=' ctype
+>       | srcloc 'type' truedtype '=' truectype
 >                       { ClsTyDef $1 $3 $5 }
 >       | srcloc 'data' ctype optkind
 >                {% do { (cs,c,t) <- checkDataHeader $3;
@@ -973,14 +990,14 @@ Associated types require the TypeFamilies extension enabled.
 >       : srcloc '{-# INLINE' activation qvar '#-}'     { InsInline $1 $2 $3 $4 }
 
 > atinst :: { InstDecl }
->       : srcloc 'type' dtype '=' ctype
+>       : srcloc 'type' truedtype '=' truectype
 >                       {% do { -- no checkSimpleType $4 since dtype may contain type patterns
 >                               return (InsType $1 $3 $5) } }
->       | srcloc data_or_newtype ctype constrs0 deriving
+>       | srcloc data_or_newtype truectype constrs0 deriving
 >                       {% do { -- (cs,c,t) <- checkDataHeader $4;
 >                               checkDataOrNew $2 $4;
 >                               return (InsData $1 $2 $3 (reverse $4) $5) } }
->       | srcloc data_or_newtype ctype optkind 'where' gadtlist deriving
+>       | srcloc data_or_newtype truectype optkind 'where' gadtlist deriving
 >                       {% do { -- (cs,c,t) <- checkDataHeader $4;
 >                               checkDataOrNew $2 $6;
 >                               return (InsGData $1 $2 $3 $4 (reverse $6) $7) } }
@@ -1002,7 +1019,7 @@ May bind implicit parameters
 Type signatures on value definitions require ScopedTypeVariables (or PatternSignatures, which is deprecated).
 
 > optsig :: { Maybe Type }
->       : '::' ctype                    {% checkEnabled ScopedTypeVariables >> return (Just $2) }
+>       : '::' truectype                {% checkEnabled ScopedTypeVariables >> return (Just $2) }
 >       | {- empty -}                   { Nothing }
 
 > rhs   :: { Rhs }
@@ -1037,13 +1054,13 @@ mangle them into the correct form depending on context.
 >         : exp                 {% checkExpr $1 }
 
 > exp   :: { PExp }
->       : exp0b '::' srcloc ctype       { ExpTypeSig $3 $1 $4 }
->       | exp0                          { $1 }
->       | exp0b qop                     { PostOp $1 $2 }
->       | exp0b '-<' exp                { LeftArrApp $1 $3 }
->       | exp0b '>-' exp                { RightArrApp $1 $3 }
->       | exp0b '-<<' exp               { LeftArrHighApp $1 $3 }
->       | exp0b '>>-' exp               { RightArrHighApp $1 $3 }
+>       : exp0b '::' srcloc truectype       { ExpTypeSig $3 $1 $4 }
+>       | exp0                              { $1 }
+>       | exp0b qop                         { PostOp $1 $2 }
+>       | exp0b '-<' exp                    { LeftArrApp $1 $3 }
+>       | exp0b '>-' exp                    { RightArrApp $1 $3 }
+>       | exp0b '-<<' exp                   { LeftArrHighApp $1 $3 }
+>       | exp0b '>>-' exp                   { RightArrHighApp $1 $3 }
 
 > exp0 :: { PExp }
 >       : exp0a                         { $1 }
@@ -1123,7 +1140,7 @@ we check that in the lexer.
 > aexp1 :: { PExp }
 >       : aexp1 '{' '}'                 {% mkRecConstrOrUpdate $1 [] }
 >       | aexp1 '{' fbinds '}'          {% mkRecConstrOrUpdate $1 (reverse $3) }
->       | qvar '{|' type '|}'           { ExplTypeArg $1 $3 }
+>       | qvar '{|' truetype '|}'       { ExplTypeArg $1 $3 }
 >       | aexp2                         { $1 }
 
 According to the Report, the left section (e op) is legal iff (e op x)
@@ -1155,7 +1172,7 @@ Template Haskell - all this is enabled in the lexer.
 >       | '[|' trueexp '|]'             { BracketExp $ ExpBracket $2 }
 >       | '[p|' exp0 '|]'               {% do { p <- checkPattern $2;
 >                                               return $ BracketExp $ PatBracket p } }
->       | '[t|' ctype '|]'              { BracketExp $ TypeBracket $2 }
+>       | '[t|' truectype '|]'          { BracketExp $ TypeBracket $2 }
 >       | '[d|' open topdecls close '|]'        { BracketExp $ DeclBracket $3 }
 >       | VARQUOTE qvar                 { VarQuote $2 }
 >       | VARQUOTE qcon                 { VarQuote $2 }
@@ -1353,7 +1370,8 @@ Case alternatives
 
 A guard can be a pattern guard if PatternGuards is enabled, hence quals instead of exp0.
 > gdpat :: { GuardedAlt }
->       : srcloc '|' quals '->' trueexp {% checkPatternGuards $3 >> return (GuardedAlt $1 (reverse $3) $5) }
+>       : srcloc '|' quals '->' trueexp {% do { checkPatternGuards $3;
+>                                               return (GuardedAlt $1 (reverse $3) $5) } }
 
 > pat :: { Pat }
 >       : exp                           {% checkPattern $1 }
