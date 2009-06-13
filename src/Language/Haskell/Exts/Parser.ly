@@ -245,7 +245,7 @@ Pragmas
 >       '{-# CFILES'            { CFILES  $$ }
 >       '{-# INCLUDE'           { INCLUDE $$ }
 >       '{-# LANGUAGE'          { LANGUAGE }
->      '{-# unknown'            { PragmaUnknown $$ }
+      '{-# unknown'            { PragmaUnknown $$ }
 >       '#-}'                   { PragmaEnd }
 
 
@@ -293,7 +293,7 @@ special lexeme.
 >           | srcloc '{-# INCLUDE' '#-}'               { IncludePragma  $1 $2 }
 >           | srcloc '{-# OPTIONS' '#-}'               { let (mc, s) = $2 in OptionsPragma $1 (readTool mc) s }
 >           | srcloc '{-# CFILES'  '#-}'               { CFilesPragma   $1 $2 }
->           | srcloc '{-# unknown' '#-}'               { let (n, s) = $2 in UnknownTopPragma $1 n s }
+           | srcloc '{-# unknown' '#-}'               { let (n, s) = $2 in UnknownTopPragma $1 n s }
 
 > conids    :: { [Name] }
 >          : conid ',' conids                  { $1 : $3 }
@@ -526,7 +526,7 @@ lexer through the 'foreign' (and 'export') keyword.
 >       | srcloc '{-# RULES' rules '#-}'               { RulePragmaDecl $1 $ reverse $3 }
 >       | srcloc '{-# DEPRECATED' warndeprs '#-}'      { DeprPragmaDecl $1 $ reverse $3 }
 >       | srcloc '{-# WARNING' warndeprs '#-}'         { WarnPragmaDecl $1 $ reverse $3 }
->       | srcloc '{-# unknown' '#-}'                   { let (n, s) = $2 in UnknownDeclPragma $1 n s }
+       | srcloc '{-# unknown' '#-}'                   { let (n, s) = $2 in UnknownDeclPragma $1 n s }
 >       | decl          { $1 }
 
 > data_or_newtype :: { DataOrNew }
@@ -1100,7 +1100,7 @@ mdo blocks require the RecursiveDo extension enabled, but the lexer handles that
 >       | '{-# GENERATED' STRING INT ':' INT '-' INT ':' INT '#-}'
 >                                       { GenPragma $2 (fromInteger $3, fromInteger $5)
 >                                                      (fromInteger $7, fromInteger $9) }
->       | '{-# unknown' '#-}'           { let (n, s) = $1 in UnknownExpPragma n s }
+       | '{-# unknown' '#-}'           { let (n, s) = $1 in UnknownExpPragma n s }
 
 > fexp :: { PExp }
 >       : fexp aexp                     { App $1 $2 }
