@@ -780,10 +780,14 @@ checkType t = case t of
     TyList  pt      -> check1Type pt S.TyList
     TyApp   ft at   -> check2Types ft at S.TyApp
     TyVar   n       -> return $ S.TyVar n
-    TyCon   n       -> return $ S.TyCon n
+    TyCon   n       -> do
+            when (isSymbol n) $ checkEnabled TypeOperators
+            return $ S.TyCon n
     TyParen pt      -> check1Type pt S.TyParen
     -- TyPred  cannot be a valid type
-    TyInfix at op bt -> check2Types at bt (flip S.TyInfix op)
+    -- Here we know that t will be used as an actual type (and not a data constructor)
+    -- so we can check that TypeOperators are enabled.
+    TyInfix at op bt -> checkEnabled TypeOperators >> check2Types at bt (flip S.TyInfix op)
     TyKind  pt k    -> check1Type pt (flip S.TyKind k)
 
 check1Type :: PType -> (S.Type -> S.Type) -> P S.Type
