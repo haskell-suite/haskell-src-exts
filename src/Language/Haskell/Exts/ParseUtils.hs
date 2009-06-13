@@ -26,6 +26,7 @@ module Language.Haskell.Exts.ParseUtils (
     , checkDataHeader       -- Type -> P (Context,Name,[Name])
     , checkClassHeader      -- Type -> P (Context,Name,[Name])
     , checkInstHeader       -- Type -> P (Context,QName,[Type])
+    , checkDeriving         -- [PType] -> P [Deriving]
     , checkPattern          -- PExp -> P Pat
     , checkExpr             -- PExp -> P Exp
     , checkType             -- PType -> P Type
@@ -233,7 +234,7 @@ checkInstHeader t = do
     return ([],c,ts)
 
 
-checkInsts :: PType -> [PType] -> P ((QName,[S.Type]))
+checkInsts :: PType -> [PType] -> P (QName,[S.Type])
 checkInsts (TyApp l t) ts = checkInsts l (t:ts)
 checkInsts (TyCon c)   ts = do
     when (isSymbol c) $ checkEnabled TypeOperators
@@ -245,6 +246,8 @@ checkInsts (TyInfix a op b) [] = do
     return (op,ts)
 checkInsts _ _ = fail "Illegal instance declaration"
 
+checkDeriving :: [PType] -> P [Deriving]
+checkDeriving = mapM (flip checkInsts [])
 
 -----------------------------------------------------------------------------
 -- Checking Patterns.
