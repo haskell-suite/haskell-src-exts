@@ -1,5 +1,4 @@
-Hyphen.hs
 Unicode.hs
 TypeFunctions.hs
-PackageImport.hs
 EmptyInstance.hs
+GhcDeriving.hs
