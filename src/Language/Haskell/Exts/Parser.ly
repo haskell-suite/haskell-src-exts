@@ -30,6 +30,8 @@
 > import Language.Haskell.Exts.Lexer
 > import Language.Haskell.Exts.ParseUtils
 > import Language.Haskell.Exts.Extension
+
+import Debug.Trace (trace)
 > }
 
 -----------------------------------------------------------------------------
@@ -1566,11 +1568,11 @@ Implicit parameter
 -----------------------------------------------------------------------------
 Layout
 
-> open  :: { () }       :       {% pushCurrentContext }
+> open  :: { () }       :       {% pushCurrentContext {- >>= \x -> trace (show x) (return x) -} }
 
 > close :: { () }
->       : vccurly               { () } -- context popped in lexer.
->       | error                 {% popContext }
+>       : vccurly               {% return () {- >>= \x -> trace (show x ++ show x ++ show x) (return x) -} } -- context popped in lexer.
+>       | error                 {% popContext {- >>= \x -> trace (show x ++ show x) (return x) -} }
 
 -----------------------------------------------------------------------------
 Miscellaneous (mostly renamings)
