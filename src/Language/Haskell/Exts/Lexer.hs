@@ -26,6 +26,8 @@ import Language.Haskell.Exts.Extension
 import Data.Char
 import Data.Ratio
 
+-- import Debug.Trace (trace)
+
 data Token
         = VarId String
         | QVarId (String,String)
@@ -314,18 +316,23 @@ lexer = runL topLexer
 
 topLexer :: Lex a Token
 topLexer = do
-    bol <- checkBOL
-    (bol, ws) <- lexWhiteSpace bol
-    -- take care of whitespace in PCDATA
-    ec <- getExtContext
-    case ec of
-     -- if there was no linebreak, and we are lexing PCDATA,
-     -- then we want to care about the whitespace.
-     -- We don't bother to test for XmlSyntax, since we
-     -- couldn't end up in ChildCtxt otherwise.
-     Just ChildCtxt | not bol && ws -> return $ XPCDATA " "
-     _ -> do startToken
-             if bol then lexBOL else lexToken
+    p <- pullLexState
+    if p then --trace (show p ++ ": " ++ show VRightCurly) $
+              setBOL >> return VRightCurly -- the lex state flags that we must do an empty {} - UGLY
+     else do
+        bol <- checkBOL
+        (bol, ws) <- lexWhiteSpace bol
+        -- take care of whitespace in PCDATA
+        ec <- getExtContext
+        case ec of
+         -- if there was no linebreak, and we are lexing PCDATA,
+         -- then we want to care about the whitespace.
+         -- We don't bother to test for XmlSyntax, since we
+         -- couldn't end up in ChildCtxt otherwise.
+         Just ChildCtxt | not bol && ws -> return $ XPCDATA " "
+         _ -> do startToken
+                 if bol then lexBOL  -- >>= \t -> trace ("BOL: " ++ show t) (return t)
+                        else lexToken  -- >>= \t -> trace (show t) (return t)
 
 lexWhiteSpace :: Bool -> Lex a (Bool, Bool)
 lexWhiteSpace bol = do
@@ -382,6 +389,7 @@ lexNestedComment bol = do
 lexBOL :: Lex a Token
 lexBOL = do
     pos <- getOffside
+    --trace (show pos) $
     case pos of
         LT -> do
                 -- trace "layout: inserting '}'\n" $
