@@ -4,6 +4,7 @@ module Language.Haskell.Exts (
     , module Language.Haskell.Exts.Parser
     , module Language.Haskell.Exts.Pretty
     , module Language.Haskell.Exts.Extension
+    , module Language.Haskell.Exts.Fixity
     , parseFileContents
     , parseFileContentsWithMode
     , parseFile
@@ -16,6 +17,7 @@ import Language.Haskell.Exts.Syntax
 import Language.Haskell.Exts.Parser
 import Language.Haskell.Exts.Pretty
 import Language.Haskell.Exts.Extension
+import Language.Haskell.Exts.Fixity
 
 import Data.List
 import Language.Preprocessor.Unlit
@@ -27,10 +29,13 @@ parseFile fp = do
             exts = case readExtensions md of
                     Just exts -> exts
                     Nothing   -> []
-        return $ parseModuleWithMode (ParseMode fp exts) md
+        return $ parseModuleWithMode (ParseMode fp exts preludeFixities) md
 
 parseFileWithExts :: [Extension] -> FilePath -> IO (ParseResult Module)
-parseFileWithExts exts fp = readFile fp >>= (return . parseFileContentsWithMode (ParseMode fp exts))
+parseFileWithExts exts fp = parseFileWithMode (ParseMode fp exts preludeFixities) fp
+
+parseFileWithMode :: ParseMode -> FilePath -> IO (ParseResult Module)
+parseFileWithMode p fp = readFile fp >>= (return . parseFileContentsWithMode p)
 
 parseFileContents :: String -> ParseResult Module
 parseFileContents = parseFileContentsWithMode defaultParseMode

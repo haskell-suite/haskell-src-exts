@@ -30,6 +30,7 @@
 > import Language.Haskell.Exts.Lexer
 > import Language.Haskell.Exts.ParseUtils
 > import Language.Haskell.Exts.Extension
+> import Language.Haskell.Exts.Fixity
 
 import Debug.Trace (trace)
 > }
@@ -1608,35 +1609,35 @@ Miscellaneous (mostly renamings)
 
 > -- | Parse of a string, which should contain a complete Haskell module.
 > parseModule :: String -> ParseResult Module
-> parseModule = runParser mparseModule
+> parseModule = fmap (applyFixities preludeFixities) . runParser mparseModule
 
 > -- | Parse of a string, which should contain a complete Haskell 98 module.
 > parseModuleWithMode :: ParseMode -> String -> ParseResult Module
-> parseModuleWithMode mode = runParserWithMode mode mparseModule
+> parseModuleWithMode mode = fmap (applyFixities (fixities mode)) . runParserWithMode mode mparseModule
 
 > -- | Parse of a string containing a Haskell expression.
 > parseExp :: String -> ParseResult Exp
-> parseExp = runParser mparseExp
+> parseExp = fmap (applyFixities preludeFixities) . runParser mparseExp
 
 > -- | Parse of a string, which should contain a complete Haskell 98 module.
 > parseExpWithMode :: ParseMode -> String -> ParseResult Exp
-> parseExpWithMode mode = runParserWithMode mode mparseExp
+> parseExpWithMode mode = fmap (applyFixities (fixities mode)) . runParserWithMode mode mparseExp
 
 > -- | Parse of a string containing a Haskell pattern.
 > parsePat :: String -> ParseResult Pat
-> parsePat = runParser mparsePat
+> parsePat = fmap (applyFixities preludeFixities) . runParser mparsePat
 
 > -- | Parse of a string, which should contain a complete Haskell 98 module.
 > parsePatWithMode :: ParseMode -> String -> ParseResult Pat
-> parsePatWithMode mode = runParserWithMode mode mparsePat
+> parsePatWithMode mode = fmap (applyFixities (fixities mode)) . runParserWithMode mode mparsePat
 
 > -- | Parse of a string containing a Haskell top-level declaration.
 > parseDecl :: String -> ParseResult Decl
-> parseDecl = runParser mparseDecl
+> parseDecl = fmap (applyFixities preludeFixities) . runParser mparseDecl
 
 > -- | Parse of a string, which should contain a complete Haskell 98 module.
 > parseDeclWithMode :: ParseMode -> String -> ParseResult Decl
-> parseDeclWithMode mode = runParserWithMode mode mparseDecl
+> parseDeclWithMode mode = fmap (applyFixities (fixities mode)) . runParserWithMode mode mparseDecl
 
 > -- | Parse of a string containing a Haskell type.
 > parseType :: String -> ParseResult Type

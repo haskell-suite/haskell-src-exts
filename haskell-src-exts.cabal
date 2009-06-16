@@ -50,7 +50,8 @@ Library
                         Language.Haskell.Exts.Pretty,
                         Language.Haskell.Exts.Syntax,
                         Language.Haskell.Exts.Extension,
-                        Language.Haskell.Exts.Build
+                        Language.Haskell.Exts.Build,
+                        Language.Haskell.Exts.Fixity
   Other-modules:        Language.Haskell.Exts.ParseMonad,
                         Language.Haskell.Exts.Lexer,
                         Language.Haskell.Exts.ParseUtils
