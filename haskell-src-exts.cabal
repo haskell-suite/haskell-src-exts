@@ -1,5 +1,5 @@
 Name:                   haskell-src-exts
-Version:                0.5.1
+Version:                0.5.2
 License:                BSD3
 License-File:           LICENSE
 Author:                 Niklas Broberg
@@ -8,7 +8,7 @@ Category:               Language
 Synopsis:               Manipulating Haskell source: abstract syntax, lexer, parser, and pretty-printer
 Description:            Haskell-Source with Extensions (HSE, haskell-src-exts)
                         is an extension of the standard haskell-src package,
-                        and handles most common syntactic extensions to Haskell, including:
+                        and handles most registered syntactic extensions to Haskell, including:
                         .
                         * Multi-parameter type classes with functional dependencies
                         .
@@ -22,7 +22,8 @@ Description:            Haskell-Source with Extensions (HSE, haskell-src-exts)
                         .
                         * Template Haskell
                         .
-                        and a few more. Apart from these standard extensions,
+                        and a few more. All extensions implemented in GHC are supported.
+                        Apart from these standard extensions,
                         it also handles regular patterns as per the HaRP extension
                         as well as HSX-style embedded XML syntax.
                         .
