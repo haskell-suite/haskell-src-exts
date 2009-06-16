@@ -32,7 +32,8 @@ module Language.Haskell.Exts.ParseMonad(
     ) where
 
 import Language.Haskell.Exts.Syntax(SrcLoc(..))
-import Language.Haskell.Exts.Extension
+import Language.Haskell.Exts.Extension (Extension)
+import Language.Haskell.Exts.Fixity (Fixity, preludeFixities)
 
 import Data.List ( intersperse )
 import Control.Applicative
@@ -94,7 +95,9 @@ data ParseMode = ParseMode {
         -- | original name of the file being parsed
         parseFilename :: String,
         -- | list of extensions enabled
-        extensions :: [Extension]
+        extensions :: [Extension],
+        -- | list of fixities to be aware of
+        fixities :: [Fixity]
         }
 
 -- | Default parameters for a parse,
@@ -103,7 +106,8 @@ data ParseMode = ParseMode {
 defaultParseMode :: ParseMode
 defaultParseMode = ParseMode {
         parseFilename = "<unknown>.hs",
-        extensions = []
+        extensions = [],
+        fixities = preludeFixities
         }
 
 -- | Monad for parsing
