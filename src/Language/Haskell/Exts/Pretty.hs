@@ -685,7 +685,8 @@ instance Pretty Type where
                         Unboxed -> hashParenList ds
         prettyPrec _ (TyList t)  = brackets $ pretty t
         prettyPrec p (TyApp a b) =
-                {- | a == list_tycon = brackets $ pretty b         -- special case
+                {-
+                | a == list_tycon = brackets $ pretty b         -- special case
                 | otherwise = -} parensIf (p > prec_btype) $
                                     myFsep [pretty a, ppAType b]
         prettyPrec _ (TyVar name) = pretty name
