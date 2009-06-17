@@ -263,6 +263,13 @@ checkPat (Con c) args = return (PApp c args)
 checkPat (App f x) args = do
     x <- checkPat x []
     checkPat f (x:args)
+checkPat (InfixApp l op r) args
+    | op == (QVarOp (UnQual (Symbol "!"))) = do
+        -- We must have BangPatterns on
+        checkEnabled BangPatterns
+        let (e,es) = splitBang r []
+        ps <- mapM checkPattern (BangPat e:es)
+        checkPat l (ps++args)
 checkPat e [] = case e of
     Var (UnQual x)   -> return (PVar x)
     Lit l            -> return (PLit l)
@@ -276,12 +283,12 @@ checkPat e [] = case e of
                     case (l,r) of
                         (Var (UnQual n@(Ident _)), Lit (Int k)) -> return (PNPlusK n k)
                         _ -> patFail ""
-            QVarOp (UnQual (Symbol "!")) -> do
+{-            QVarOp (UnQual (Symbol "!")) -> do
                     -- We must have BangPatterns on
                     checkEnabled BangPatterns
                     let (e,es) = splitBang r []
                     ps <- mapM checkPattern (BangPat e:es)
-                    checkPat l ps
+                    checkPat l ps -}
             _ -> patFail ""
     Tuple es         -> do
                   ps <- mapM (\e -> checkPat e []) es
@@ -623,8 +630,9 @@ getGConName _ = fail "Expression in reification is not a name"
 -- Check Equation Syntax
 
 checkValDef :: SrcLoc -> PExp -> Maybe S.Type -> Rhs -> Binds -> P Decl
-checkValDef srcloc lhs optsig rhs whereBinds =
-    case isFunLhs lhs [] of
+checkValDef srcloc lhs optsig rhs whereBinds = do
+    mlhs <- isFunLhs lhs []
+    case mlhs of
      Just (f,es) -> do
             ps <- mapM checkPattern es
             case optsig of -- only pattern bindings can have signatures
@@ -636,12 +644,21 @@ checkValDef srcloc lhs optsig rhs whereBinds =
 
 -- A variable binding is parsed as an PatBind.
 
-isFunLhs :: PExp -> [PExp] -> Maybe (Name, [PExp])
-isFunLhs (InfixApp l (QVarOp (UnQual op)) r) es = Just (op, l:r:es)
-isFunLhs (App (Var (UnQual f)) e) es = Just (f, e:es)
-isFunLhs (App (Paren f) e) es = isFunLhs f (e:es)
+isFunLhs :: PExp -> [PExp] -> P (Maybe (Name, [PExp]))
+isFunLhs (InfixApp l (QVarOp (UnQual op)) r) es
+    | op == (Symbol "!") = do
+        exts <- getExtensions
+        if BangPatterns `elem` exts
+         then let (b,bs) = splitBang r []
+               in isFunLhs l (BangPat b : bs ++ es)
+         else return $ Just (op, l:r:es) -- It's actually a definition of the operator !
+    | otherwise = return $ Just (op, l:r:es)
+isFunLhs (App (Var (UnQual f)) e) es = return $ Just (f, e:es)
+--isFunLhs (App (Paren f) e) es = isFunLhs f (e:es)
 isFunLhs (App f e) es = isFunLhs f (e:es)
-isFunLhs _ _ = Nothing
+isFunLhs (Var (UnQual f)) es@(_:_) = return $ Just (f, es)
+isFunLhs (Paren f) es@(_:_) = isFunLhs f es
+isFunLhs _ _ = return Nothing
 
 -- Separating between signature declarations and value definitions in
 -- a post-processing step
