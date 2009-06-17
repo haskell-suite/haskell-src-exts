@@ -107,6 +107,11 @@ checkPatternGuards _ = checkEnabled PatternGuards
 checkPContext :: PType -> P PContext
 checkPContext (TyTuple Boxed ts) =
     mapM checkAssertion ts
+checkPContext (TyCon (Special UnitCon)) =
+    return []
+checkPContext (TyParen t) = do
+    c <- checkAssertion t
+    return [c]
 checkPContext t = do
     c <- checkAssertion t
     return [c]
