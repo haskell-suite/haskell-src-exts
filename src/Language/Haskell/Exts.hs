@@ -5,10 +5,11 @@ module Language.Haskell.Exts (
     , module Language.Haskell.Exts.Pretty
     , module Language.Haskell.Exts.Extension
     , module Language.Haskell.Exts.Fixity
+    , parseFile
+    , parseFileWithMode
+    , parseFileWithExts
     , parseFileContents
     , parseFileContentsWithMode
-    , parseFile
-    , parseFileWithExts
     , readExtensions
     ) where
 
@@ -23,16 +24,10 @@ import Data.List
 import Language.Preprocessor.Unlit
 
 parseFile :: FilePath -> IO (ParseResult Module)
-parseFile fp = do
-        fc <- readFile fp
-        let md = delit fp $ ppContents fc
-            exts = case readExtensions md of
-                    Just exts -> exts
-                    Nothing   -> []
-        return $ parseModuleWithMode (ParseMode fp exts preludeFixities) md
+parseFile fp = parseFileWithMode (defaultParseMode { parseFilename = fp }) fp
 
 parseFileWithExts :: [Extension] -> FilePath -> IO (ParseResult Module)
-parseFileWithExts exts fp = parseFileWithMode (ParseMode fp exts preludeFixities) fp
+parseFileWithExts exts fp = parseFileWithMode (defaultParseMode { extensions = exts, parseFilename = fp }) fp
 
 parseFileWithMode :: ParseMode -> FilePath -> IO (ParseResult Module)
 parseFileWithMode p fp = readFile fp >>= (return . parseFileContentsWithMode p)
@@ -41,8 +36,13 @@ parseFileContents :: String -> ParseResult Module
 parseFileContents = parseFileContentsWithMode defaultParseMode
 
 parseFileContentsWithMode :: ParseMode -> String -> ParseResult Module
-parseFileContentsWithMode p rawStr = parseModuleWithMode p (delit filename $ ppContents rawStr)
-  where filename = parseFilename p
+parseFileContentsWithMode p@(ParseMode fn exts ign _) rawStr =
+        let md = delit fn $ ppContents rawStr
+            plusExts = case (ign, readExtensions md) of
+                        (False,Just exts) -> exts
+                        _                 -> []
+         in parseModuleWithMode (p { extensions = exts ++ plusExts }) md
+
 
 readExtensions :: String -> Maybe [Extension]
 readExtensions str = case getTopPragmas str of

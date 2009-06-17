@@ -96,6 +96,9 @@ data ParseMode = ParseMode {
         parseFilename :: String,
         -- | list of extensions enabled
         extensions :: [Extension],
+        -- | if @True@, the parser won't look for further extensions
+        -- in LANGUAGE pragmas in source files
+        ignoreLanguagePragmas :: Bool,
         -- | list of fixities to be aware of
         fixities :: [Fixity]
         }
@@ -107,6 +110,7 @@ defaultParseMode :: ParseMode
 defaultParseMode = ParseMode {
         parseFilename = "<unknown>.hs",
         extensions = [],
+        ignoreLanguagePragmas = False,
         fixities = preludeFixities
         }
 
