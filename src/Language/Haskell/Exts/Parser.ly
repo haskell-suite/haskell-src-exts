@@ -1149,7 +1149,8 @@ thing we need to look at here is the erpats that use no non-standard lexemes.
 >       | '[' list ']'                  { $2 }
 We parse left sections as PostOp instead, and post-mangle them, see above
         | '(' exp0b rqop ')'            { LeftSection $2 $3  } -- this line is commented out
->       | '(' qopm exp0 ')'             { RightSection $2 $3 }
+We parse right sections as PreOp, since we need to check for bang patterns.
+        | '(' qopm exp0 ')'             { RightSection $2 $3 }
 >       | '_'                           { WildCard }
 >       | '(' erpats ')'                {% checkEnabled RegularPatterns >> return $2 }
 >       | '(|' sexps '|)'               { SeqRP $ reverse $2 }
@@ -1181,6 +1182,7 @@ End Template Haskell
 
 > texp :: { PExp }
 >       : exp                           { $1 }
+>       | qopm exp0                     { PreOp $1 $2 }
 >       | exp '->' exp                  {% checkEnabled ViewPatterns >> return (ViewPat $1 $3) }
 
 -----------------------------------------------------------------------------

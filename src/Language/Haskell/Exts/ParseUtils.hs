@@ -375,6 +375,11 @@ checkPat e [] = case e of
         p <- checkPat e []
         return $ PBangPat p
 
+    PreOp (QVarOp (UnQual (Symbol "!"))) e -> do
+        checkEnabled BangPatterns
+        p <- checkPat e []
+        return $ PBangPat p
+
     e -> patFail $ show e
 
 checkPat e _ = patFail $ show e
@@ -500,8 +505,9 @@ checkExpr e = case e of
     -- Since we don't parse things as left sections, we need to mangle them into that.
     Paren e         -> case e of
                           PostOp e1 op -> check1Expr e1 (flip S.LeftSection op)
+                          PreOp  op e2 -> check1Expr e2 (S.RightSection op)
                           _            -> check1Expr e S.Paren
-    RightSection op e   -> check1Expr e (S.RightSection op)
+--    RightSection op e   -> check1Expr e (S.RightSection op)
     RecConstr c fields      -> do
                      fields <- mapM checkField fields
                      return (S.RecConstr c fields)
@@ -914,7 +920,7 @@ data PExp
     | Tuple [PExp]              -- ^ tuple expression
     | List [PExp]               -- ^ list expression
     | Paren PExp                -- ^ parenthesized expression
-    | RightSection QOp PExp     -- ^ right section @(@/qop/ /exp/@)@
+--     RightSection QOp PExp     -- ^ right section @(@/qop/ /exp/@)@
     | RecConstr QName [PFieldUpdate]
                                 -- ^ record construction expression
     | RecUpdate PExp [PFieldUpdate]
@@ -937,6 +943,7 @@ data PExp
 
 -- Post-ops for parsing left sections and regular patterns. Not to be left in the final tree.
     | PostOp PExp QOp           -- ^ post-ops
+    | PreOp QOp PExp            -- ^ pre-ops
 
 -- View patterns
     | ViewPat PExp PExp         -- ^ patterns only
