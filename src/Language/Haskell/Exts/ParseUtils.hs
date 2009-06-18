@@ -815,7 +815,7 @@ checkType t = case t of
             ctxt <- checkContext cs
             check1Type pt (S.TyForall Nothing ctxt)
     TyForall tvs cs pt -> do
-            checkEnabled (Any [PolymorphicComponents, LiberalTypeSynonyms, Rank2Types, RankNTypes])
+            checkEnabled ExplicitForallTypes
             ctxt <- checkContext cs
             check1Type pt (S.TyForall tvs ctxt)
     TyFun   at rt   -> check2Types at rt S.TyFun

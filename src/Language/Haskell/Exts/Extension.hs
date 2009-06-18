@@ -7,7 +7,9 @@ module Language.Haskell.Exts.Extension (
 
     Extension(..),
 
-    ExtScheme(..), Enabled(..)
+    ExtScheme(..), Enabled(..),
+
+    impliesExts
 
     ) where
 
@@ -35,6 +37,8 @@ data Extension
   | FlexibleInstances
   | EmptyDataDecls
   | CPP
+
+  | ExplicitForallTypes
 
   | KindSignatures
   | BangPatterns
@@ -99,6 +103,11 @@ data Extension
   | RegularPatterns
   deriving (Eq, Show, Read)
 -- -}
+
+impliesExts :: Extension -> [Extension]
+impliesExts e@TypeFamilies = [e, KindSignatures]
+impliesExts e | e `elem` [Rank2Types, RankNTypes, PolymorphicComponents, LiberalTypeSynonyms] = [e, ExplicitForallTypes]
+impliesExts e = [e]
 
 data ExtScheme = Any [Extension] | All [Extension]
   deriving (Eq,Show)
