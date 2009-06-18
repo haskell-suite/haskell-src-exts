@@ -307,10 +307,12 @@ checkPat e [] = case e of
             where isStdPat :: RPat -> Bool
                   isStdPat (RPPat _) = True
                   isStdPat (RPAs _ p) = isStdPat p
+                  isStdPat (RPParen p) = isStdPat p
                   isStdPat _           = False
                   stripRP :: RPat -> Pat
                   stripRP (RPPat  p) = p
                   stripRP (RPAs n p) = PAsPat n (stripRP p)
+                  stripRP (RPParen p) = PParen (stripRP p)
                   stripRP _           = error "cannot strip RP wrapper if not all patterns are base"
 
     Paren e      -> do
