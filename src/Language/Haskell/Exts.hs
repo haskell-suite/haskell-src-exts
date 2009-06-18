@@ -39,7 +39,7 @@ parseFileContentsWithMode :: ParseMode -> String -> ParseResult Module
 parseFileContentsWithMode p@(ParseMode fn exts ign _) rawStr =
         let md = delit fn $ ppContents rawStr
             plusExts = case (ign, readExtensions md) of
-                        (False,Just exts) -> exts
+                        (False,Just exts) -> concatMap impliesExts exts
                         _                 -> []
          in parseModuleWithMode (p { extensions = exts ++ plusExts }) md
 
