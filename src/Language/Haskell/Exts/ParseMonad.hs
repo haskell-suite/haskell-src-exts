@@ -27,7 +27,7 @@ module Language.Haskell.Exts.ParseMonad(
         -- * Harp/Hsx
         ExtContext(..),
         pushExtContextL, popExtContextL, getExtContext,
-        pushLexState, pullLexState,
+        pullCtxtFlag, flagDo,
         getModuleName
     ) where
 
@@ -80,9 +80,11 @@ data ExtContext = CodeCtxt | HarpCtxt | TagCtxt | ChildCtxt
         | CloseTagCtxt | CodeTagCtxt
     deriving (Eq,Ord,Show)
 
-type LexState = Bool
+type CtxtFlag = (Bool,Bool)
+-- (True,_) = We're in a do context.
+-- (_, True)= Next token must be a virtual closing brace.
 
-type ParseState = ([LexContext],[ExtContext],LexState)
+type ParseState = ([LexContext],[ExtContext],CtxtFlag)
 
 indentOfParseState :: ParseState -> Int
 indentOfParseState (Layout n:_,_,_) = n
@@ -127,7 +129,7 @@ newtype P a = P { runP ::
         }
 
 runParserWithMode :: ParseMode -> P a -> String -> ParseResult a
-runParserWithMode mode (P m) s = case m s 0 1 start ([],[],False) mode of
+runParserWithMode mode (P m) s = case m s 0 1 start ([],[],(False,False)) mode of
     Ok _ a -> ParseOk a
     Failed loc msg -> ParseFailed loc msg
     where start = SrcLoc {
@@ -176,10 +178,13 @@ getModuleName = P $ \_i _x _y _l s m ->
 
 pushCurrentContext :: P ()
 pushCurrentContext = do
-    loc <- getSrcLoc
+    lc <- getSrcLoc
     indent <- currentIndent
-    when (srcColumn loc <= indent) $ pushLexState -- this means we must give a vccurly next.
-    pushContext (Layout (srcColumn loc))
+    dob <- pullDoStatus
+    let loc = srcColumn lc
+    when (dob && loc < indent
+           || not dob && loc <= indent) $ pushCtxtFlag
+    pushContext (Layout loc)
 
 currentIndent :: P Int
 currentIndent = P $ \_r _x _y loc stk _mode -> Ok stk (indentOfParseState stk)
@@ -214,13 +219,15 @@ getExtensions :: P [Extension]
 getExtensions = P $ \_i _x _y _l s m ->
     Ok s $ extensions m
 
-pushLexState :: P ()
-pushLexState = -- Lex $ \cont -> P $ \r x y loc (ct, e, pst) -> case pst of
-        --False -> runP (cont ()) r x y loc (ct, e, True)
-        --_ -> error "Internal error: Lex state already pushed"
-    P $ \_i _x _y _l (s, e, p) _m -> case p of
-        False -> Ok (s, e, True) ()
-        _ -> error "Internal error: Lex state already pushed"
+pushCtxtFlag :: P ()
+pushCtxtFlag =
+    P $ \_i _x _y _l (s, e, (d,c)) _m -> case c of
+        False -> Ok (s, e, (d,True)) ()
+        _     -> error "Internal error: context flag already pushed"
+
+pullDoStatus :: P Bool
+pullDoStatus = P $ \_i _x _y _l (s, e, (d,c)) _m -> Ok (s,e,(False,c)) d
+
 
 ----------------------------------------------------------------------------
 -- Monad for lexical analysis:
@@ -327,10 +334,14 @@ popContextL fn = Lex $ \cont -> P $ \r x y loc stk -> case stk of
         (_:ctxt, e, pst) -> runP (cont ()) r x y loc (ctxt, e, pst)
         ([], _, _)       -> error ("Internal error: empty context in " ++ fn)
 
-pullLexState :: Lex a LexState
-pullLexState = Lex $ \cont -> P $ \r x y loc (ct, e, pst) ->
-        runP (cont pst) r x y loc (ct, e, False)
+pullCtxtFlag :: Lex a Bool
+pullCtxtFlag = Lex $ \cont -> P $ \r x y loc (ct, e, (d,c)) ->
+        runP (cont c) r x y loc (ct, e, (d,False))
 
+
+flagDo :: Lex a ()
+flagDo = Lex $ \cont -> P $ \r x y loc (ct, e, (d,c)) ->
+        runP (cont ()) r x y loc (ct, e, (True,c))
 
 
 -- Harp/Hsx

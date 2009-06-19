@@ -25,6 +25,7 @@ import Language.Haskell.Exts.Extension
 
 import Data.Char
 import Data.Ratio
+import Control.Monad (when)
 
 -- import Debug.Trace (trace)
 
@@ -311,9 +312,9 @@ lexer = runL topLexer
 
 topLexer :: Lex a Token
 topLexer = do
-    p <- pullLexState
-    if p then --trace (show p ++ ": " ++ show VRightCurly) $
-              setBOL >> return VRightCurly -- the lex state flags that we must do an empty {} - UGLY
+    b <- pullCtxtFlag
+    if b then -- trace (show cf ++ ": " ++ show VRightCurly) $
+              setBOL >> return VRightCurly -- the lex context state flags that we must do an empty {} - UGLY
      else do
         bol <- checkBOL
         (bol, ws) <- lexWhiteSpace bol
@@ -326,8 +327,8 @@ topLexer = do
          -- couldn't end up in ChildCtxt otherwise.
          Just ChildCtxt | not bol && ws -> return $ XPCDATA " "
          _ -> do startToken
-                 if bol then lexBOL  -- >>= \t -> trace ("BOL: " ++ show t) (return t)
-                        else lexToken  -- >>= \t -> trace (show t) (return t)
+                 if bol then lexBOL   -- >>= \t -> trace ("BOL: " ++ show t) (return t)
+                        else lexToken -- >>= \t -> trace (show t) (return t)
 
 lexWhiteSpace :: Bool -> Lex a (Bool, Bool)
 lexWhiteSpace bol = do
@@ -384,7 +385,7 @@ lexNestedComment bol = do
 lexBOL :: Lex a Token
 lexBOL = do
     pos <- getOffside
-    --trace (show pos) $
+    -- trace ("Off: " ++ (show pos)) $ do
     case pos of
         LT -> do
                 -- trace "layout: inserting '}'\n" $
@@ -608,11 +609,13 @@ lexStdToken = do
             | isLower c || c == '_' -> do
                     idents <- lexIdents
                     case idents of
-                     [ident] -> return $ case lookup ident (reserved_ids ++ special_varids) of
-                                          Just (keyword, scheme) ->
-                                            -- check if an extension keyword is enabled
-                                            if isEnabled scheme exts then keyword else VarId ident
-                                          Nothing -> VarId ident
+                     [ident] -> case lookup ident (reserved_ids ++ special_varids) of
+                                 Just (keyword, scheme) -> do
+                                    -- check if an extension keyword is enabled
+                                    if isEnabled scheme exts
+                                     then flagKW keyword >> return keyword
+                                     else return $ VarId ident
+                                 Nothing -> return $ VarId ident
                      _ -> return $ DVarId idents
 
             | isHSymbol c -> do
@@ -841,10 +844,11 @@ lexConIdOrQual qual = do
              | isHSymbol c -> do    -- qualified symbol?
                     discard 1
                     sym <- lexWhile isHSymbol
+                    exts <- getExtensionsL
                     case lookup sym reserved_ops of
                         -- cannot qualify a reserved operator
-                        Just _  -> just_a_conid
-                        Nothing -> return $ case c of
+                        Just (_,scheme) | isEnabled scheme exts -> just_a_conid
+                        _        -> return $ case c of
                                               ':' -> QConSym (qual', sym)
                                               _   -> QVarSym (qual', sym)
 
@@ -1029,3 +1033,6 @@ lexDecimal = do
 parseInteger :: Integer -> String -> Integer
 parseInteger radix ds =
     foldl1 (\n d -> n * radix + d) (map (toInteger . digitToInt) ds)
+
+flagKW :: Token -> Lex a ()
+flagKW t = when (t `elem` [KW_Do, KW_MDo]) flagDo
