@@ -810,8 +810,12 @@ checkSimpleType t = checkSimple "test" t []
 -- Check actual types
 
 checkType :: PType -> P S.Type
-checkType t = case t of
+checkType t = checkT t False
+
+checkT :: PType -> Bool -> P S.Type
+checkT t simple = case t of
     TyForall tvs@Nothing cs pt    -> do
+            when (simple) $ checkEnabled ExplicitForallTypes
             ctxt <- checkContext cs
             check1Type pt (S.TyForall Nothing ctxt)
     TyForall tvs cs pt -> do
@@ -834,13 +838,13 @@ checkType t = case t of
     TyKind  pt k    -> check1Type pt (flip S.TyKind k)
 
 check1Type :: PType -> (S.Type -> S.Type) -> P S.Type
-check1Type pt f = checkType pt >>= return . f
+check1Type pt f = checkT pt True >>= return . f
 
 check2Types :: PType -> PType -> (S.Type -> S.Type -> S.Type) -> P S.Type
-check2Types at bt f = checkType at >>= \a -> checkType bt >>= \b -> return (f a b)
+check2Types at bt f = checkT at True >>= \a -> checkT bt True >>= \b -> return (f a b)
 
 checkTypes :: [PType] -> P [S.Type]
-checkTypes = mapM checkType
+checkTypes = mapM (flip checkT True)
 
 ---------------------------------------
 -- Converting a complete page

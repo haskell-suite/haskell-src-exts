@@ -754,7 +754,7 @@ is any of the keyword-enabling ones, except ExistentialQuantification.
 
 > ctype :: { PType }
 >       : 'forall' ktyvars '.' ctype    { mkTyForall (Just $2) [] $4 }
->       | context '=>' type             { mkTyForall Nothing $1 $3 }
+>       | context '=>' ctype            { mkTyForall Nothing $1 $3 }
 >       | type                          { $1 }
 
 Equality constraints require the TypeFamilies extension.
@@ -764,11 +764,11 @@ Equality constraints require the TypeFamilies extension.
 >       | btype '~' btype               {% checkEnabled TypeFamilies >> checkPContext (TyPred $ EqualP $1 $3) }
 
 > types :: { [PType] }
->       : types1 ',' type               { $3 : $1 }
+>       : types1 ',' ctype              { $3 : $1 }
 
 > types1 :: { [PType] }
->       : type                          { [$1] }
->       | types1 ',' type               { $3 : $1 }
+>       : ctype                         { [$1] }
+>       | types1 ',' ctype              { $3 : $1 }
 
 > ktyvars :: { [TyVarBind] }
 >       : ktyvars ktyvar                { $2 : $1 }
