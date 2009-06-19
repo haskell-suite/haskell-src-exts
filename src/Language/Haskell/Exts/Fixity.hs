@@ -259,7 +259,7 @@ appFixExp fixs e = case e of
     Do stmts                -> Do $ map fix stmts
     MDo stmts               -> MDo $ map fix stmts
     Tuple exps              -> Tuple $ map fix exps
-    List exps               -> Tuple $ map fix  exps
+    List exps               -> List $ map fix  exps
     Paren e                 -> Paren $ fix e
     LeftSection e op        -> LeftSection (fix e) op
     RightSection op e       -> RightSection op $ fix e
