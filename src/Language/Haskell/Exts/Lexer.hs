@@ -190,8 +190,6 @@ data Token
 
 reserved_ops :: [(String,(Token, Maybe ExtScheme))]
 reserved_ops = [
- -- the dot is only a special symbol together with forall.
- ( ".",  (Dot,          Just (Any [ExplicitForallTypes, ExistentialQuantification])) ),
  ( "..", (DotDot,       Nothing) ),
  ( ":",  (Colon,        Nothing) ),
  ( "::", (DoubleColon,  Nothing) ),
@@ -214,6 +212,8 @@ reserved_ops = [
 
 special_varops :: [(String,(Token, Maybe ExtScheme))]
 special_varops = [
+ -- the dot is only a special symbol together with forall, but can still be used as function composition
+ ( ".",  (Dot,          Just (Any [ExplicitForallTypes, ExistentialQuantification])) ),
  ( "-",  (Minus,        Nothing) ),
  ( "!",  (Exclamation,  Nothing) )
  ]
