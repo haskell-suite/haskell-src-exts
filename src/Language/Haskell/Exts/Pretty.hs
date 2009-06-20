@@ -827,12 +827,12 @@ instance Pretty Exp where
         pretty (XExpTag e) =
                 myFsep $ [text "<%", pretty e, text "%>"]
         -- Pragmas
-        pretty (CorePragma s) = myFsep $ map text ["{-# CORE", show s, "#-}"]
-        pretty (SCCPragma  s) = myFsep $ map text ["{-# SCC",  show s, "#-}"]
-        pretty (GenPragma  s (a,b) (c,d)) =
+        pretty (CorePragma s e) = myFsep $ map text ["{-# CORE", show s, "#-}"] ++ [pretty e]
+        pretty (SCCPragma  s e) = myFsep $ map text ["{-# SCC",  show s, "#-}"] ++ [pretty e]
+        pretty (GenPragma  s (a,b) (c,d) e) =
                 myFsep $ [text "{-# GENERATED", text $ show s,
                             int a, char ':', int b, char '-',
-                            int c, char ':', int d, text "#-}"]
+                            int c, char ':', int d, text "#-}", pretty e]
 {-        pretty (UnknownExpPragma n s) =
                 myFsep $ [text "{-#", text n, text s, text "#-}"] -}
         -- Arrows

@@ -1073,6 +1073,7 @@ A let may bind implicit parameters
 >       | 'let' binds 'in' exp          { Let $2 $4 }
 >       | 'if' exp 'then' exp 'else' exp { If $2 $4 $6 }
 >       | 'proc' apat '->' exp          { Proc $2 $4 }
+>       | exppragma                     { $1 }
 
 mdo blocks require the RecursiveDo extension enabled, but the lexer handles that.
 
@@ -1081,15 +1082,14 @@ mdo blocks require the RecursiveDo extension enabled, but the lexer handles that
 >       | '-' fexp                      { NegApp $2 }
 >       | 'do' stmtlist                 { Do $2 }
 >       | 'mdo' stmtlist                { MDo $2 }
->       | exppragma                     { $1 }
 >       | fexp                          { $1 }
 
 > exppragma :: { PExp }
->       : '{-# CORE' STRING '#-}'       { CorePragma $2 }
->       | '{-# SCC' STRING '#-}'        { SCCPragma $2 }
->       | '{-# GENERATED' STRING INT ':' INT '-' INT ':' INT '#-}'
->                                       { GenPragma $2 (fromInteger $3, fromInteger $5)
->                                                      (fromInteger $7, fromInteger $9) }
+>       : '{-# CORE' STRING '#-}' exp       { CorePragma $2 $4 }
+>       | '{-# SCC' STRING '#-}' exp        { SCCPragma $2 $4 }
+>       | '{-# GENERATED' STRING INT ':' INT '-' INT ':' INT '#-}' exp
+>                                           { GenPragma $2 (fromInteger $3, fromInteger $5)
+>                                                          (fromInteger $7, fromInteger $9) $11 }
        | '{-# unknown' '#-}'           { let (n, s) = $1 in UnknownExpPragma n s }
 
 > fexp :: { PExp }
