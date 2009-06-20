@@ -50,9 +50,9 @@ Most of the code is blatantly stolen from the GHC module Language.Haskell.Parser
 Some of the code for extensions is greatly influenced by GHC's internal parser
 library, ghc/compiler/parser/Parser.y.
 -----------------------------------------------------------------------------
-Conflicts: 7 shift/reduce
+Conflicts: 6 shift/reduce
 
-2 for ambiguity in 'case x of y | let z = y in z :: Bool -> b'  [State 220, 236]
+2 for ambiguity in 'case x of y | let z = y in z :: Bool -> b'  [State 12, 244]
         (don't know whether to reduce 'Bool' as a btype or shift the '->'.
          Similarly lambda and if. The default resolution in favour of the
          shift means that a guard can never end with a type signature.
@@ -61,31 +61,26 @@ Conflicts: 7 shift/reduce
         There are 2 conflicts rather than one because contexts are parsed
         as btypes (cf ctype).
 
-1 for ambiguity in 'let ?x ...'                     [State 707]
+1 for ambiguity in 'let ?x ...'                     [State 712]
         the parser can't tell whether the ?x is the lhs of a normal binding or
         an implicit binding. Fortunately resolving as shift gives it the only
         sensible meaning, namely the lhs of an implicit binding.
 
-1 for ambiguity using hybrid modules                [State 5]
+1 for ambiguity using hybrid modules                [State 116]
         For HSP pages that start with a <% %> block, the parser cannot tell whether
         to reduce a srcloc or shift the starting <%. Since any other body could not
         start with <%, shifting is the only sensible thing to do.
 
-1 for ambiguity using toplevel xml modules          [State 8]
+1 for ambiguity using toplevel xml modules          [State 119]
         For HSP xml pages starting with a <, the parser cannot tell whether to shift
         that < or reduce an implicit 'open'. Since no other body could possibly start
         with <, shifting is the only sensible thing to do.
 
-1 for ambiguity in '{-# RULES "name" [ ... #-}'     [State 212]
+1 for ambiguity in '{-# RULES "name" [ ... #-}'     [State 318]
     we don't know whether the '[' starts the activation or not: it
     might be the start of the declaration with the activation being
     empty. Resolving with shift means the declaration cannot start with '['.
 
-1 for ambiguity in 'x :: Int = ...'
-    we don't know if we should reduce the lefthand side to a type signature
-    declaration, or shift the '=' and treat the lefthand side as a pattern with
-    a scoped type variable. Since a type signature declaration couldn't be followed
-    by a '=', shifting is the only sensible thing to do.
 -----------------------------------------------------------------------------
 
 > %token
