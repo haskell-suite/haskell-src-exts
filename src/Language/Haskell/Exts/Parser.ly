@@ -261,7 +261,7 @@ Pragmas
 > %name mparseType truectype
 > %partial mfindOptPragmas toppragmas
 > %tokentype { Token }
-> %expect 7
+> %expect 6
 > %%
 
 -----------------------------------------------------------------------------
@@ -1400,7 +1400,7 @@ Puns and wild cards need the respective extensions enabled.
 
 > fbind :: { PFieldUpdate }
 >       : qvar '=' exp                  { FieldUpdate $1 $3 }
->       | var                           {% checkEnabled NamedFieldPuns >> return (FieldPun $1) }
+>       | qvar                          {% checkEnabled NamedFieldPuns >> checkUnQual $1 >>= return . FieldPun }
 >       | '..'                          {% checkEnabled RecordWildCards >> return FieldWildcard }
 
 -----------------------------------------------------------------------------
