@@ -611,9 +611,9 @@ data Exp
     | XExpTag Exp
 
 -- Pragmas
-    | CorePragma        String
-    | SCCPragma         String
-    | GenPragma         String (Int, Int) (Int, Int)
+    | CorePragma        String Exp
+    | SCCPragma         String Exp
+    | GenPragma         String (Int, Int) (Int, Int) Exp
 --    | UnknownExpPragma  String String
 
 -- Arrows

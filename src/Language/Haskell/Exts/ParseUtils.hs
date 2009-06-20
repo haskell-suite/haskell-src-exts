@@ -552,9 +552,9 @@ checkExpr e = case e of
     XExpTag e       -> do e <- checkExpr e
                           return $ S.XExpTag e
     -- Pragmas
-    CorePragma s    -> return $ S.CorePragma s
-    SCCPragma s     -> return $ S.SCCPragma s
-    GenPragma s xx yy -> return $ S.GenPragma s xx yy
+    CorePragma s e  -> check1Expr e (S.CorePragma s)
+    SCCPragma  s e  -> check1Expr e (S.SCCPragma s)
+    GenPragma s xx yy e -> check1Expr e (S.GenPragma s xx yy)
 --    UnknownExpPragma n s -> return $ S.UnknownExpPragma n s
 
     -- Arrows
@@ -973,9 +973,9 @@ data PExp
     | XRPats [PExp]
 
 -- Pragmas
-    | CorePragma        String
-    | SCCPragma         String
-    | GenPragma         String (Int, Int) (Int, Int)
+    | CorePragma        String  PExp
+    | SCCPragma         String  PExp
+    | GenPragma         String (Int, Int) (Int, Int) PExp
 --    | UnknownExpPragma  String String
 
 -- Generics
