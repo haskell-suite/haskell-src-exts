@@ -334,8 +334,8 @@ lexWhiteSpace :: Bool -> Lex a (Bool, Bool)
 lexWhiteSpace bol = do
     s <- getInput
     case s of
-        '{':'-':'#':_ -> do
-            return (bol, False)
+        -- If we find a recognised pragma, we don't want to treat it as a comment.
+        '{':'-':'#':rest | isRecognisedPragma rest -> return (bol, False)
         '{':'-':_ -> do
             discard 2
             bol <- lexNestedComment bol
@@ -364,6 +364,12 @@ lexWhiteSpace bol = do
             (bol, _) <- lexWhiteSpace bol
             return (bol, True)
         _ -> return (bol, False)
+
+isRecognisedPragma :: String -> Bool
+isRecognisedPragma str = let pragma = map toLower . takeWhile isAlphaNum . dropWhile isSpace $ str
+                          in case lookup pragma pragmas of
+                              Nothing -> False
+                              _       -> True
 
 lexNestedComment :: Bool -> Lex a Bool
 lexNestedComment bol = do
@@ -736,10 +742,11 @@ lexPragmaStart = do
             return $ INCLUDE rest
      Just p ->  return p
 
-     _      -> do rawStr <- lexRawPragma
+     _      -> fail "Internal error: Unrecognised recognised pragma"
+                  -- do rawStr <- lexRawPragma
                   -- return $ PragmaUnknown (pr, rawStr) -- no support for unrecognized pragmas, treat as comment
-                  discard 3 -- #-}
-                  topLexer -- we just discard it as a comment for now and restart
+                  -- discard 3 -- #-}
+                  -- topLexer -- we just discard it as a comment for now and restart -}
 
 lexRawPragma :: Lex a String
 lexRawPragma = do

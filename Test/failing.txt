@@ -1,3 +1,2 @@
 Unicode.hs
 UnindentedPragmaClose.hs
-LineOptionsPragma.hs
