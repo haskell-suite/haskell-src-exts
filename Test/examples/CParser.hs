@@ -89,16 +89,16 @@ import Language.C.Data.Name
 import Language.C.Data.Node
 import Language.C.Data.Position
 import Language.C.Syntax
-#if __GLASGOW_HASKELL__ >= 503
+-- #if __GLASGOW_HASKELL__ >= 503
 import Data.Array
-#else
+-- #else
 import Array
-#endif
-#if __GLASGOW_HASKELL__ >= 503
+-- #endif
+-- #if __GLASGOW_HASKELL__ >= 503
 import GHC.Exts
-#else
+-- #else
 import GlaExts
-#endif
+-- #endif
 
 -- parser produced by Happy Version 1.16
 
@@ -6133,19 +6133,19 @@ happyDoAction i tk st
 
 
 indexShortOffAddr (HappyA# arr) off =
-#if __GLASGOW_HASKELL__ > 500
+-- #if __GLASGOW_HASKELL__ > 500
     narrow16Int# i
-#elif __GLASGOW_HASKELL__ == 500
+-- #elif __GLASGOW_HASKELL__ == 500
     intToInt16# i
-#else
+-- #else
     (i `iShiftL#` 16#) `iShiftRA#` 16#
-#endif
+-- #endif
   where
-#if __GLASGOW_HASKELL__ >= 503
+-- #if __GLASGOW_HASKELL__ >= 503
     i = word2Int# ((high `uncheckedShiftL#` 8#) `or#` low)
-#else
+-- #else
     i = word2Int# ((high `shiftL#` 8#) `or#` low)
-#endif
+-- #endif
     high = int2Word# (ord# (indexCharOffAddr# arr (off' +# 1#)))
     low  = int2Word# (ord# (indexCharOffAddr# arr off'))
     off' = off *# 2#
