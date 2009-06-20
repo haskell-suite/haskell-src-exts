@@ -53,9 +53,9 @@ import qualified Data.ByteString.Internal   as BI
 import Data.ByteString (intercalate, uncons)
 import Data.ByteString.Internal (fromForeignPtr)
 
-#if defined (HAVE_MMAP) || ! defined (HAVE_HASKELL_ZLIB)
+-- #if defined (HAVE_MMAP) || ! defined (HAVE_HASKELL_ZLIB)
 import Control.Exception        ( catch )
-#endif
+-- #endif
 import System.IO
 import System.IO.Unsafe         ( unsafePerformIO )
 
@@ -70,37 +70,37 @@ import Data.Word                ( Word8 )
 import Data.Int                 ( Int32 )
 import Control.Monad            ( when )
 
-#ifndef HAVE_HASKELL_ZLIB
+-- #ifndef HAVE_HASKELL_ZLIB
 import Foreign.Ptr              ( nullPtr )
 import Foreign.ForeignPtr       ( ForeignPtr )
-#endif
+-- #endif
 import Foreign.Ptr              ( plusPtr, Ptr )
 import Foreign.ForeignPtr       ( withForeignPtr )
 
-#ifdef DEBUG_PS
+-- #ifdef DEBUG_PS
 import Foreign.ForeignPtr       ( addForeignPtrFinalizer )
 import Foreign.Ptr              ( FunPtr )
-#endif
+-- #endif
 
-#if HAVE_HASKELL_ZLIB
+-- #if HAVE_HASKELL_ZLIB
 import qualified Data.ByteString.Lazy as BL
 import qualified Codec.Compression.GZip as GZ
-#else
+-- #else
 import Foreign.C.String ( CString, withCString )
-#endif
+-- #endif
 
-#ifdef HAVE_MMAP
+-- #ifdef HAVE_MMAP
 import System.IO.MMap( mmapFileByteString )
 import System.Mem( performGC )
 import System.Posix.Files( fileSize, getSymbolicLinkStatus )
-#endif
+-- #endif
 
 -- -----------------------------------------------------------------------------
 -- obsolete debugging code
 
-# ifndef HAVE_HASKELL_ZLIB
+-- # ifndef HAVE_HASKELL_ZLIB
 debugForeignPtr :: ForeignPtr a -> String -> IO ()
-#ifdef DEBUG_PS
+-- #ifdef DEBUG_PS
 foreign import ccall unsafe "static fpstring.h debug_alloc" debug_alloc
     :: Ptr a -> CString -> IO ()
 foreign import ccall unsafe "static fpstring.h & debug_free" debug_free
@@ -109,10 +109,10 @@ debugForeignPtr fp n =
     withCString n $ \cname-> withForeignPtr fp $ \p->
     do debug_alloc p cname
        addForeignPtrFinalizer debug_free fp
-#else
+-- #else
 debugForeignPtr _ _ = return ()
-#endif
-#endif
+-- #endif
+-- #endif
 
 -- -----------------------------------------------------------------------------
 -- unsafeWithInternals
@@ -194,7 +194,7 @@ firstspace !ptr !n !m
 -- | 'dropSpace' efficiently returns the 'ByteString' argument with
 -- white space Chars removed from the front. It is more efficient than
 -- calling dropWhile for removing whitespace. I.e.
--- 
+--
 -- > dropWhile isSpace == dropSpace
 --
 dropSpace :: B.ByteString -> B.ByteString
@@ -205,7 +205,7 @@ dropSpace (BI.PS x s l) = BI.inlinePerformIO $ withForeignPtr x $ \p -> do
 
 -- | 'breakSpace' returns the pair of ByteStrings when the argument is
 -- broken at the first whitespace byte. I.e.
--- 
+--
 -- > break isSpace == breakSpace
 --
 breakSpace :: B.ByteString -> (B.ByteString,B.ByteString)
@@ -338,7 +338,7 @@ unlinesPSOld ss = BC.concat $ intersperse_newlines ss
 -- | Read an entire file, which may or may not be gzip compressed, directly
 -- into a 'B.ByteString'.
 
-#ifndef HAVE_HASKELL_ZLIB
+-- #ifndef HAVE_HASKELL_ZLIB
 foreign import ccall unsafe "static zlib.h gzopen" c_gzopen
     :: CString -> CString -> IO (Ptr ())
 foreign import ccall unsafe "static zlib.h gzclose" c_gzclose
@@ -347,7 +347,7 @@ foreign import ccall unsafe "static zlib.h gzread" c_gzread
     :: Ptr () -> Ptr Word8 -> CInt -> IO CInt
 foreign import ccall unsafe "static zlib.h gzwrite" c_gzwrite
     :: Ptr () -> Ptr Word8 -> CInt -> IO CInt
-#endif
+-- #endif
 
 gzReadFilePS :: FilePath -> IO B.ByteString
 gzReadFilePS f = do
@@ -359,7 +359,7 @@ gzReadFilePS f = do
        else do hSeek h SeekFromEnd (-4)
                len <- hGetLittleEndInt h
                hClose h
-#ifdef HAVE_HASKELL_ZLIB
+-- #ifdef HAVE_HASKELL_ZLIB
                -- Passing the length to GZ.decompressWith means
                -- that BL.toChunks only produces one chunk, which in turn
                -- means that B.concat won't need to copy data.
@@ -368,16 +368,16 @@ gzReadFilePS f = do
                                   GZ.decompressBufferSize = len
                                 }
                fmap (B.concat . BL.toChunks . decompress) $
-#ifdef HAVE_OLD_BYTESTRING
+-- #ifdef HAVE_OLD_BYTESTRING
                         -- bytestring < 0.9.1 had a bug where it did not know to close handles upon EOF
                         -- performance would be better with a newer bytestring and lazy
                         -- readFile below -- ratify readFile: comment
                         fmap (BL.fromChunks . (:[])) $
                         B.readFile f  -- ratify readFile: immediately consumed
-#else
+-- #else
                         BL.readFile f -- ratify readFile: immediately consumed by the conversion to a strict bytestring
-#endif
-#else
+-- #endif
+-- #else
                withCString f $ \fstr-> withCString "rb" $ \rb-> do
                  gzf <- c_gzopen fstr rb
                  when (gzf == nullPtr) $ fail $ "problem opening file "++f
@@ -389,7 +389,7 @@ gzReadFilePS f = do
                  when (fromIntegral lread /= len) $
                       fail $ "problem gzreading file "++f
                  return $ fromForeignPtr fp 0 len
-#endif
+-- #endif
 
 hGetLittleEndInt :: Handle -> IO Int
 hGetLittleEndInt h = do
@@ -404,9 +404,9 @@ gzWriteFilePS f ps = gzWriteFilePSs f [ps]
 
 gzWriteFilePSs :: FilePath -> [B.ByteString] -> IO ()
 gzWriteFilePSs f pss  =
-#ifdef HAVE_HASKELL_ZLIB
+-- #ifdef HAVE_HASKELL_ZLIB
     BL.writeFile f $ GZ.compress $ BL.fromChunks pss
-#else
+-- #else
     withCString f $ \fstr -> withCString "wb" $ \wb -> do
     gzf <- c_gzopen fstr wb
     when (gzf == nullPtr) $ fail $ "problem gzopening file for write: "++f
@@ -423,7 +423,7 @@ gzWriteToGzf gzf ps = case BI.toForeignPtr ps of
     lw <- withForeignPtr x $ \p -> c_gzwrite gzf (p `plusPtr` s)
                                                  (fromIntegral l)
     when (fromIntegral lw /= l) $ fail $ "problem in gzWriteToGzf"
-#endif
+-- #endif
 
 -- -----------------------------------------------------------------------------
 -- mmapFilePS
@@ -440,7 +440,7 @@ gzWriteToGzf gzf ps = case BI.toForeignPtr ps of
 -- the file is assumed to be ISO-8859-1.
 
 mmapFilePS :: FilePath -> IO B.ByteString
-#ifdef HAVE_MMAP
+-- #ifdef HAVE_MMAP
 mmapFilePS f = do
   x <- mmapFileByteString f Nothing
    `catch` (\_ -> do
@@ -449,9 +449,9 @@ mmapFilePS f = do
                         then return B.empty
                         else performGC >> mmapFileByteString f Nothing)
   return x
-#else
+-- #else
 mmapFilePS = B.readFile
-#endif
+-- #endif
 
 -- -------------------------------------------------------------------------
 -- fromPS2Hex
