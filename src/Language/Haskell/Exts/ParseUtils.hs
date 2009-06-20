@@ -15,41 +15,41 @@
 -----------------------------------------------------------------------------
 
 module Language.Haskell.Exts.ParseUtils (
-      splitTyConApp         -- Type -> P (Name,[Type])
-    , checkEnabled          -- Extension -> P ()
+      splitTyConApp         -- PType -> P (Name,[Type])
+    , checkEnabled          -- (Show e, Enabled e) => e -> P ()
     , checkPatternGuards    -- [Stmt] -> P ()
-    , mkRecConstrOrUpdate   -- Exp -> [FieldUpdate] -> P S.Exp
+    , mkRecConstrOrUpdate   -- PExp -> [PFieldUpdate] -> P Exp
     , checkPrec             -- Integer -> P Int
-    , checkPContext         -- Type -> P Context
-    , checkContext          -- PContext -> P S.Context
-    , checkAssertion        -- Type -> P Asst
-    , checkDataHeader       -- Type -> P (Context,Name,[Name])
-    , checkClassHeader      -- Type -> P (Context,Name,[Name])
-    , checkInstHeader       -- Type -> P (Context,QName,[Type])
+    , checkPContext         -- PType -> P PContext
+    , checkContext          -- PContext -> P Context
+    , checkAssertion        -- PType -> P PAsst
+    , checkDataHeader       -- PType -> P (Context,Name,[TyVarBind])
+    , checkClassHeader      -- PType -> P (Context,Name,[TyVarBind])
+    , checkInstHeader       -- PType -> P (Context,QName,[Type])
     , checkDeriving         -- [PType] -> P [Deriving]
     , checkPattern          -- PExp -> P Pat
     , checkExpr             -- PExp -> P Exp
     , checkType             -- PType -> P Type
-    , checkValDef           -- SrcLoc -> S.Exp -> Rhs -> [Decl] -> P Decl
+    , checkValDef           -- SrcLoc -> PExp -> Maybe Type -> Rhs -> Binds -> P Decl
     , checkClassBody        -- [ClassDecl] -> P [ClassDecl]
     , checkInstBody         -- [InstDecl] -> P [InstDecl]
     , checkUnQual           -- QName -> P Name
     , checkRevDecls         -- [Decl] -> P [Decl]
     , checkRevClsDecls      -- [ClassDecl] -> P [ClassDecl]
     , checkRevInstDecls     -- [InstDecl] -> P [InstDecl]
-    , checkDataOrNew        -- DataOrNew -> [Decl] -> P ()
-    , checkSimpleType       -- Type -> P ()
+    , checkDataOrNew        -- DataOrNew -> [a] -> P ()
+    , checkSimpleType       -- PType -> P (Name, [TyVarBind])
     , checkSigVar           -- PExp -> P Name
     , getGConName           -- S.Exp -> P QName
-    , mkTyForall            -- Maybe [Name] -> Context -> Type -> Type
+    , mkTyForall            -- Maybe [TyVarBind] -> PContext -> PType -> PType
     -- HaRP
     , checkRPattern         -- PExp -> P RPat
     -- Hsx
     , checkEqNames          -- XName -> XName -> P XName
-    , mkPageModule          -- [OptionPragma] -> S.Exp -> P Module
-    , mkPage                -- [OptionPragma] -> Module -> SrcLoc -> S.Exp -> P Module
+    , mkPageModule          -- [OptionPragma] -> Exp -> P Module
+    , mkPage                -- Module -> SrcLoc -> Exp -> P Module
     , mkDVar                -- [String] -> String
-    , mkDVarExpr            -- [String] -> ParseExp
+    , mkDVarExpr            -- [String] -> PExp
     -- Pragmas
     , checkRuleExpr         -- PExp -> P Exp
     , readTool              -- Maybe String -> Maybe Tool
@@ -57,7 +57,7 @@ module Language.Haskell.Exts.ParseUtils (
     -- Parsed expressions and types
     , PExp(..), PFieldUpdate(..), ParseXAttr(..), PType(..), PContext, PAsst(..)
     , p_unit_con            -- PExp
-    , p_tuple_con           -- Int -> PExp
+    , p_tuple_con           -- Boxed -> Int -> PExp
     , p_unboxed_singleton_con   -- PExp
     ) where
 
