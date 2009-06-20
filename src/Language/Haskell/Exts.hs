@@ -55,8 +55,8 @@ readExtensions str = case getTopPragmas str of
         readExt (Ident e) = read e
 
 ppContents :: String -> String
-ppContents = unlines . map f . lines
-  where f ('#':_) = ""
+ppContents = unlines . f . lines
+  where f (('#':_):rest) = rest
         f x = x
 
 delit :: String -> String -> String

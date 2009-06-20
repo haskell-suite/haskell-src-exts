@@ -287,11 +287,11 @@ special lexeme.
 >               | {- nothing -}                         { [] }
 
 > toppragma :: { OptionPragma }
->           : srcloc '{-# LANGUAGE' conids '#-}'       { LanguagePragma $1 $3 }
->           | srcloc '{-# INCLUDE' '#-}'               { IncludePragma  $1 $2 }
->           | srcloc '{-# OPTIONS' '#-}'               { let (mc, s) = $2 in OptionsPragma $1 (readTool mc) s }
->           | srcloc '{-# CFILES'  '#-}'               { CFilesPragma   $1 $2 }
-           | srcloc '{-# unknown' '#-}'               { let (n, s) = $2 in UnknownTopPragma $1 n s }
+>           : srcloc '{-# LANGUAGE' conids optsemis '#-}'   { LanguagePragma $1 $3 }
+>           | srcloc '{-# INCLUDE' optsemis '#-}'           { IncludePragma  $1 $2 }
+>           | srcloc '{-# OPTIONS' optsemis '#-}'           { let (mc, s) = $2 in OptionsPragma $1 (readTool mc) s }
+>           | srcloc '{-# CFILES'  optsemis '#-}'           { CFilesPragma   $1 $2 }
+           | srcloc '{-# unknown' '#-}'                     { let (n, s) = $2 in UnknownTopPragma $1 n s }
 
 > conids    :: { [Name] }
 >          : conid ',' conids                  { $1 : $3 }
