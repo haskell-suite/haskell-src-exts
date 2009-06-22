@@ -42,11 +42,17 @@ import Data.Monoid
 
 -- | The result of a parse.
 data ParseResult a
-    = ParseOk { unParseOk :: a }    -- ^ The parse succeeded, yielding a value.
+    = ParseOk a  -- ^ The parse succeeded, yielding a value.
     | ParseFailed SrcLoc String
                 -- ^ The parse failed at the specified
                 -- source location, with an error message.
     deriving Show
+
+-- | Retrieve the result of a successful parse, throwing an
+--   error if the parse is actually not successful.
+fromParseResult :: ParseResult a -> a
+fromParseResult (ParseOk a) = a
+fromParseResult (ParseFailed loc str) = error $ "fromParseResult: Parse failed: " ++ str
 
 instance Functor ParseResult where
   fmap f (ParseOk x)           = ParseOk $ f x
