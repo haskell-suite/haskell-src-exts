@@ -55,5 +55,6 @@ Library
                         Language.Haskell.Exts.Fixity
   Other-modules:        Language.Haskell.Exts.ParseMonad,
                         Language.Haskell.Exts.Lexer,
-                        Language.Haskell.Exts.ParseUtils
+                        Language.Haskell.Exts.ParseUtils,
+                        Language.Haskell.Exts.ExtScheme
   Hs-source-dirs:       src

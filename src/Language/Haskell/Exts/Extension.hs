@@ -4,12 +4,11 @@
 -}
 
 module Language.Haskell.Exts.Extension (
+    -- * Extensions
+    Extension(..), classifyExtension, impliesExts,
 
-    Extension(..),
-
-    ExtScheme(..), Enabled(..),
-
-    impliesExts
+    -- * Extension groups
+    glasgowExts
 
     ) where
 
@@ -114,16 +113,48 @@ data ExtScheme = Any [Extension] | All [Extension]
 
 type MExtScheme = Maybe ExtScheme
 
-class Enabled a where
-  isEnabled :: a -> [Extension] -> Bool
+-- | The list of extensions enabled by
+--   GHC's portmanteau -fglasgow-exts flag.
+glasgowExts :: [Extension]
+glasgowExts = [
+      ForeignFunctionInterface
+    , UnliftedFFITypes
+    , GADTs
+    , ImplicitParams
+    , ScopedTypeVariables
+    , UnboxedTuples
+    , TypeSynonymInstances
+    , StandaloneDeriving
+    , DeriveDataTypeable
+    , FlexibleContexts
+    , FlexibleInstances
+    , ConstrainedClassMethods
+    , MultiParamTypeClasses
+    , FunctionalDependencies
+    , MagicHash
+    , PolymorphicComponents
+    , ExistentialQuantification
+    , UnicodeSyntax
+    , PostfixOperators
+    , PatternGuards
+    , LiberalTypeSynonyms
+    , RankNTypes
+    , ImpredicativeTypes
+    , TypeOperators
+    , RecursiveDo
+    , ParallelListComp
+    , EmptyDataDecls
+    , KindSignatures
+    , GeneralizedNewtypeDeriving
+    , TypeFamilies
+    ]
 
-instance Enabled Extension where
-  isEnabled = elem
 
-instance Enabled ExtScheme where
-  isEnabled (Any exts) enabled = any (`elem` enabled) exts
-  isEnabled (All exts) enabled = all (`elem` enabled) exts
 
-instance Enabled a => Enabled (Maybe a) where
-  isEnabled Nothing  = const True
-  isEnabled (Just a) = isEnabled a
+-- | A clever version of read that returns an 'UnknownExtension'
+--   if the string is not recognised.
+classifyExtension :: String -> Extension
+classifyExtension str
+  = case readsPrec 0 str of
+      [(e,"")]     -> e
+      _            -> UnknownExtension str
