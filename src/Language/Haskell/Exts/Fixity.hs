@@ -14,21 +14,24 @@ class AppFixity ast where
 
 
 instance AppFixity Exp where
-  -- This is the real meat case. We can assume a left-associative list to begin with.
-  applyFixities fixs (InfixApp a op2 z) =
-        let e = applyFixities fixs a
-         in case e of
-             InfixApp x op1 y ->
-                let (a1,p1) = askFixity fixs op1
-                    (a2,p2) = askFixity fixs op2
-                 in if (p1 == p2 && (a1 /= a2 || a1 == AssocNone)) -- Ambiguous infix expression!
-                        || (p1 > p2 || p1 == p2 && (a1 == AssocLeft || a2 == AssocNone)) -- Already right order
-                     then InfixApp e op2 z
-                     else InfixApp x op1 (applyFixities fixs $ InfixApp y op2 z)
-             _  -> InfixApp e op2 z
-  -- the boilerplate
-  applyFixities fixs e = appFixExp fixs e
+  applyFixities fixs = infFix fixs . leafFix fixs
+    where -- This is the real meat case. We can assume a left-associative list to begin with.
+          infFix fixs (InfixApp a op2 z) =
+              let e = infFix fixs a
+               in case e of
+                   InfixApp x op1 y ->
+                      let (a1,p1) = askFixity fixs op1
+                          (a2,p2) = askFixity fixs op2
+                       in if (p1 == p2 && (a1 /= a2 || a1 == AssocNone)) -- Ambiguous infix expression!
+                              || (p1 > p2 || p1 == p2 && (a1 == AssocLeft || a2 == AssocNone)) -- Already right order
+                           then InfixApp e op2 z
+                           else InfixApp x op1 (infFix fixs $ InfixApp y op2 z)
+                   _  -> InfixApp e op2 z
 
+          infFix _ e = e
+
+
+-- Internal: lookup associativity and precedence of an operator
 askFixity :: [Fixity] -> QOp -> (Assoc, Int)
 askFixity xs = \k -> lookupWithDefault (AssocLeft, 9) (f k) mp
     where
@@ -249,7 +252,11 @@ instance AppFixity XAttr where
 
 
 -- the boring boilerplate stuff for expressions too
-appFixExp fixs e = case e of
+-- Recursively fixes the "leaves" of the infix chains,
+-- without yet touching the chain itself. We assume all chains are
+-- left-associate to begin with.
+leafFix fixs e = case e of
+    InfixApp e1 op e2       -> InfixApp (leafFix fixs e1) op (fix e2)
     App e1 e2               -> App (fix e1) (fix e2)
     NegApp e                -> NegApp $ fix e
     Lambda loc pats e       -> Lambda loc (map fix pats) $ fix e
@@ -282,6 +289,10 @@ appFixExp fixs e = case e of
     RightArrApp e1 e2       -> RightArrApp (fix e1) (fix e2)
     LeftArrHighApp e1 e2    -> LeftArrHighApp (fix e1) (fix e2)
     RightArrHighApp e1 e2   -> RightArrHighApp (fix e1) (fix e2)
+    CorePragma s e          -> CorePragma s (fix e)
+    SCCPragma s e           -> SCCPragma s (fix e)
+    GenPragma s ab cd e     -> GenPragma s ab cd (fix e)
+
     _                       -> e
   where
     fix x = applyFixities fixs x
