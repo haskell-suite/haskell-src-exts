@@ -1,4 +1,4 @@
-{-# LANGUAGE ExplicitForallTypes #-}
+{-# LANGUAGE RankNTypes #-}
 module GenericTree where
 
 import Data.Typeable
