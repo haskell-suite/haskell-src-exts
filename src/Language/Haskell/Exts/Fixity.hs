@@ -1,16 +1,55 @@
-module Language.Haskell.Exts.Fixity where
+-----------------------------------------------------------------------------
+-- |
+-- Module      :  Language.Haskell.Exts.Fixity
+-- Copyright   :  (c) Niklas Broberg 2009
+-- License     :  BSD-style (see the file LICENSE.txt)
+--
+-- Maintainer  :  Niklas Broberg, d00nibro@chalmers.se
+-- Stability   :  stable
+-- Portability :  portable
+--
+-- Fixity information to give the parser so that infix operators can
+-- be parsed properly.
+--
+-----------------------------------------------------------------------------
+module Language.Haskell.Exts.Fixity
+    (
+    -- * Fixity representation
+      Fixity(..)
+    -- | The following three functions all create lists of
+    --   fixities from textual representations of operators.
+    --   The intended usage is e.g.
+    --
+    -- > fixs = infixr_ 0  ["$","$!","`seq`"]
+    --
+    --   Note that the operators are expected as you would
+    --   write them infix, i.e. with ` characters surrounding
+    --   /varid/ operators, and /varsym/ operators written as is.
+    , infix_, infixl_, infixr_
+    -- ** Collections of fixities
+    , preludeFixities, baseFixities
+
+    -- * Applying fixities to an AST
+    , AppFixity(..)
+    ) where
 
 import Language.Haskell.Exts.Syntax
 
 import Data.Char (isUpper)
 
-------------------------------------------------------------
---
-
+-- | Operator fixities are represented by their associativity
+--   (left, right or none) and their precedence (0-9).
 data Fixity = Fixity Assoc Int Op
 
+-- | All AST elements that may include expressions which in turn may
+--   need fixity tweaking will be instances of this class.
 class AppFixity ast where
-  applyFixities :: [Fixity] -> ast -> ast
+  -- | Tweak any expressions in the element to account for the
+  --   fixities given. Assumes that all operator expressions are
+  --   fully left associative chains to begin with.
+  applyFixities :: [Fixity] -- ^ The fixities to account for.
+                    -> ast  -- ^ The element to tweak.
+                    -> ast  -- ^ The same element, but with operator expressions updated.
 
 
 instance AppFixity Exp where
@@ -49,6 +88,7 @@ askFixity xs = \k -> lookupWithDefault (AssocLeft, 9) (f k) mp
         g (Special Cons) = Symbol ":"
 
 
+-- | All fixities defined in the Prelude.
 preludeFixities :: [Fixity]
 preludeFixities = concat
     [infixr_ 9  ["."]
@@ -65,6 +105,11 @@ preludeFixities = concat
     ,infixr_ 0  ["$","$!","`seq`"]
     ]
 
+-- | All fixities defined in the base package.
+--
+--   Note that the @+++@ operator appears in both Control.Arrows and
+--   Text.ParserCombinators.ReadP. The listed precedence for @+++@ in
+--   this list is that of Control.Arrows.
 baseFixities :: [Fixity]
 baseFixities = preludeFixities ++ concat
     [infixl_ 9 ["!","//","!:"]
@@ -85,11 +130,12 @@ baseFixities = preludeFixities ++ concat
     ,infixr_ 0 ["`par`","`pseq`"]
     ]
 
-
+infixr_, infixl_, infix_ :: Int -> [String] -> [Fixity]
 infixr_ = fixity AssocRight
 infixl_ = fixity AssocLeft
 infix_  = fixity AssocNone
 
+-- Internal: help function for the above definitions.
 fixity :: Assoc -> Int -> [String] -> [Fixity]
 fixity a p = map (Fixity a p . op)
     where
@@ -102,7 +148,7 @@ fixity a p = map (Fixity a p . op)
 
 
 -------------------------------------------------------------------
--- Boilerplate - yuck!!
+-- Boilerplate - yuck!! Everything below here is internal stuff
 
 instance AppFixity Module where
     applyFixities fixs (Module loc n prs mwt ext imp decls) =

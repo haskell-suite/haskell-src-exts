@@ -1,82 +1,77 @@
-{-# OPTIONS_GHC -fglasgow-exts -cpp #-}
+{-# LANGUAGE CPP, DeriveDataTypeable #-}
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Language.Haskell.Exts.Syntax
--- Copyright   :  (c) Niklas Broberg 2004,
+-- Copyright   :  (c) Niklas Broberg 2004-2009,
 --                (c) The GHC Team, 1997-2000
 -- License     :  BSD-style (see the file LICENSE.txt)
 --
--- Maintainer  :  Niklas Broberg, d00nibro@dtek.chalmers.se
--- Stability   :  experimental
+-- Maintainer  :  Niklas Broberg, d00nibro@chalmers.se
+-- Stability   :  stable
 -- Portability :  portable
 --
 -- A suite of datatypes describing the abstract syntax of Haskell 98
--- <http://www.haskell.org/onlinereport/> plus some extensions:
+-- <http://www.haskell.org/onlinereport/> plus registered extensions, including:
 --
---   * multi-parameter type classes with functional dependencies
+--   * multi-parameter type classes with functional dependencies (MultiParamTypeClasses, FunctionalDependencies)
 --
---   * parameters of type class assertions are unrestricted
+--   * parameters of type class assertions are unrestricted (FlexibleContexts)
 --
---   * 'forall' types as universal and existential quantification
+--   * 'forall' types as universal and existential quantification (RankNTypes, ExistentialQuantification, etc)
 --
---   * pattern guards
+--   * pattern guards (PatternGuards)
 --
---   * implicit parameters
+--   * implicit parameters (ImplicitParameters)
 --
---   * generalised algebraic data types
+--   * generalised algebraic data types (GADTs)
 --
---   * template haskell
+--   * template haskell (TemplateHaskell)
 --
---   * empty data type declarations
+--   * empty data type declarations (EmptyDataDecls)
 --
---   * unboxed tuples
+--   * unboxed tuples (UnboxedTuples)
 --
---   * regular patterns (HaRP)
+--   * regular patterns (RegularPatterns)
 --
---   * HSP-style XML expressions and patterns (HSP)
+--   * HSP-style XML expressions and patterns (XmlSyntax)
 --
--- Also worth noting is that (n+k) patterns from Haskell 98 are not supported
 -----------------------------------------------------------------------------
 
 module Language.Haskell.Exts.Syntax (
     -- * Modules
-    Module(..), ExportSpec(..),
+    Module(..), WarningText(..), ExportSpec(..),
     ImportDecl(..), ImportSpec(..), Assoc(..),
     -- * Declarations
     Decl(..), Binds(..), IPBind(..),
+    -- ** Type classes and instances
     ClassDecl(..), InstDecl(..), Deriving,
-    GadtDecl(..), ConDecl(..), QualConDecl(..), BangType(..),
-    Match(..), Rhs(..), GuardedRhs(..), DataOrNew(..),
+    -- ** Data type declarations
+    DataOrNew(..), ConDecl(..), QualConDecl(..), GadtDecl(..), BangType(..),
+    -- ** Function bindings
+    Match(..), Rhs(..), GuardedRhs(..),
     -- * Class Assertions and Contexts
     Context, FunDep(..), Asst(..),
     -- * Types
     Type(..), Boxed(..), Kind(..), TyVarBind(..),
     -- * Expressions
     Exp(..), Stmt(..), QualStmt(..), FieldUpdate(..),
-    Alt(..), GuardedAlts(..), GuardedAlt(..),
+    Alt(..), GuardedAlts(..), GuardedAlt(..), XAttr(..),
     -- * Patterns
-    Pat(..), PatField(..),
+    Pat(..), PatField(..), PXAttr(..), RPat(..), RPatOp(..),
     -- * Literals
     Literal(..),
     -- * Variables, Constructors and Operators
     ModuleName(..), QName(..), Name(..), QOp(..), Op(..),
-    SpecialCon(..), CName(..), IPName(..),
+    SpecialCon(..), CName(..), IPName(..), XName(..),
 
     -- * Template Haskell
-    -- HsReify(..),
     Bracket(..), Splice(..),
-
-    -- * HaRP
-    RPat(..), RPatOp(..),
-
-    -- * Hsx
-    XAttr(..), XName(..), PXAttr(..),
 
     -- * FFI
     Safety(..), CallConv(..),
 
     -- * Pragmas
-    OptionPragma(..), Tool(..), WarningText(..),
+    OptionPragma(..), Tool(..),
     Rule(..), RuleVar(..), Activation(..),
 
     -- * Builtin names
@@ -137,9 +132,9 @@ data SpecialCon
     | ListCon     -- ^ list type constructor @[]@
     | FunCon      -- ^ function type constructor @->@
     | TupleCon Boxed Int    -- ^ /n/-ary tuple type and data
-                --   constructors @(,)@ etc
-    | Cons        -- ^ list data constructor @(:)@
-    | UnboxedSingleCon -- ^ unboxed singleton tuple constructor
+                            --   constructors @(,)@ etc, possibly boxed @(\#,\#)@
+    | Cons              -- ^ list data constructor @(:)@
+    | UnboxedSingleCon  -- ^ unboxed singleton tuple constructor @(\# \#)@
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
@@ -150,8 +145,8 @@ data SpecialCon
 -- qualified constructors.
 data QName
     = Qual ModuleName Name    -- ^ name qualified with a module name
-    | UnQual Name     -- ^ unqualified name
-    | Special SpecialCon  -- ^ built-in constructor with special syntax
+    | UnQual Name             -- ^ unqualified local name
+    | Special SpecialCon      -- ^ built-in constructor with special syntax
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
@@ -168,10 +163,10 @@ data Name
   deriving (Eq,Ord,Show)
 #endif
 
--- | This type is used to represent implicit parameter names.
+-- | An implicit parameter name.
 data IPName
-    = IPDup String -- ?x
-    | IPLin String -- %x
+    = IPDup String -- ^ ?/ident/, non-linear implicit parameter
+    | IPLin String -- ^ %/ident/, linear implicit parameter
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
@@ -188,7 +183,7 @@ data QOp
   deriving (Eq,Ord,Show)
 #endif
 
--- | Operators, appearing in @infix@ declarations.
+-- | Operators appearing in @infix@ declarations are never qualified.
 data Op
     = VarOp Name    -- ^ variable operator (/varop/)
     | ConOp Name    -- ^ constructor operator (/conop/)
@@ -209,7 +204,7 @@ data CName
   deriving (Eq,Ord,Show)
 #endif
 
--- | A Haskell source module.
+-- | A complete Haskell source module.
 data Module = Module SrcLoc ModuleName [OptionPragma] (Maybe WarningText)
                         (Maybe [ExportSpec]) [ImportDecl] [Decl]
 #ifdef __GLASGOW_HASKELL__
@@ -218,35 +213,34 @@ data Module = Module SrcLoc ModuleName [OptionPragma] (Maybe WarningText)
   deriving (Show)
 #endif
 
--- | Export specification.
+-- | An item in a module's export specification.
 data ExportSpec
      = EVar QName           -- ^ variable
      | EAbs QName           -- ^ @T@:
-            -- a class or datatype exported abstractly,
-            -- or a type synonym.
-     | EThingAll QName          -- ^ @T(..)@:
-            -- a class exported with all of its methods, or
-            -- a datatype exported with all of its constructors.
+                            -- a class or datatype exported abstractly,
+                            -- or a type synonym.
+     | EThingAll QName      -- ^ @T(..)@:
+                            -- a class exported with all of its methods, or
+                            -- a datatype exported with all of its constructors.
      | EThingWith QName [CName]   -- ^ @T(C_1,...,C_n)@:
-            -- a class exported with some of its methods, or
-            -- a datatype exported with some of its constructors.
+                                  -- a class exported with some of its methods, or
+                                  -- a datatype exported with some of its constructors.
      | EModuleContents ModuleName     -- ^ @module M@:
-            -- re-export a module.
+                                      -- re-export a module.
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
   deriving (Eq,Show)
 #endif
 
--- | Import declaration.
+-- | An import declaration.
 data ImportDecl = ImportDecl
     { importLoc :: SrcLoc           -- ^ position of the @import@ keyword.
     , importModule :: ModuleName    -- ^ name of the module imported.
     , importQualified :: Bool       -- ^ imported @qualified@?
-    , importSrc :: Bool             -- ^ imported with {-# SOURCE #-}
+    , importSrc :: Bool             -- ^ imported with @{-\# SOURCE \#-}@?
     , importPkg :: Maybe String     -- ^ imported with explicit package name
-    , importAs :: Maybe ModuleName  -- ^ optional alias name in an
-                    -- @as@ clause.
+    , importAs :: Maybe ModuleName  -- ^ optional alias name in an @as@ clause.
     , importSpecs :: Maybe (Bool,[ImportSpec])
             -- ^ optional list of import specifications.
             -- The 'Bool' is 'True' if the names are excluded
@@ -258,17 +252,18 @@ data ImportDecl = ImportDecl
   deriving (Eq,Show)
 #endif
 
--- | Import specification.
+-- | An import specification, representing a single explicit item imported
+--   (or hidden) from a module.
 data ImportSpec
      = IVar Name            -- ^ variable
      | IAbs Name            -- ^ @T@:
-            -- the name of a class, datatype or type synonym.
+                            -- the name of a class, datatype or type synonym.
      | IThingAll Name           -- ^ @T(..)@:
-            -- a class imported with all of its methods, or
-            -- a datatype imported with all of its constructors.
-     | IThingWith Name [CName]    -- ^ @T(C_1,...,C_n)@:
-            -- a class imported with some of its methods, or
-            -- a datatype imported with some of its constructors.
+                                -- a class imported with all of its methods, or
+                                -- a datatype imported with all of its constructors.
+     | IThingWith Name [CName]  -- ^ @T(C_1,...,C_n)@:
+                                -- a class imported with some of its methods, or
+                                -- a datatype imported with some of its constructors.
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -286,43 +281,71 @@ data Assoc
   deriving (Eq,Show)
 #endif
 
+-- | A single derived instance, which may have arguments since it may be a MPTC.
 type Deriving = (QName, [Type])
 
+-- | A top-level declaration.
 data Decl
      = TypeDecl     SrcLoc Name [TyVarBind] Type
-     | DataDecl     SrcLoc DataOrNew Context Name [TyVarBind] [QualConDecl] [Deriving]
-     | GDataDecl    SrcLoc DataOrNew Context Name [TyVarBind] (Maybe Kind) [GadtDecl] [Deriving]
+     -- ^ A type declaration
      | TypeFamDecl  SrcLoc Name [TyVarBind] (Maybe Kind)
-     | DataFamDecl  SrcLoc Context Name [TyVarBind] (Maybe Kind)
+     -- ^ A type family declaration
+     | DataDecl     SrcLoc DataOrNew Context Name [TyVarBind]              [QualConDecl] [Deriving]
+     -- ^ A data OR newtype declaration
+     | GDataDecl    SrcLoc DataOrNew Context Name [TyVarBind] (Maybe Kind) [GadtDecl]    [Deriving]
+     -- ^ A data OR newtype declaration, GADT style
+     | DataFamDecl  SrcLoc {-data-}  Context Name [TyVarBind] (Maybe Kind)
+     -- ^ A data family declaration
      | TypeInsDecl  SrcLoc Type Type
-     | DataInsDecl  SrcLoc DataOrNew Type [QualConDecl] [Deriving]
-     | GDataInsDecl SrcLoc DataOrNew Type (Maybe Kind) [GadtDecl] [Deriving]
-     | InfixDecl    SrcLoc Assoc Int [Op]
+     -- ^ A type family instance declaration
+     | DataInsDecl  SrcLoc DataOrNew Type              [QualConDecl] [Deriving]
+     -- ^ A data family instance declaration
+     | GDataInsDecl SrcLoc DataOrNew Type (Maybe Kind) [GadtDecl]    [Deriving]
+     -- ^ A data family instance declaration, GADT style
      | ClassDecl    SrcLoc Context Name [TyVarBind] [FunDep] [ClassDecl]
+     -- ^ A declaration of a type class
      | InstDecl     SrcLoc Context QName [Type] [InstDecl]
+     -- ^ An declaration of a type class instance
      | DerivDecl    SrcLoc Context QName [Type]
+     -- ^ A standalone deriving declaration
+     | InfixDecl    SrcLoc Assoc Int [Op]
+     -- ^ A declaration of operator fixity
      | DefaultDecl  SrcLoc [Type]
+     -- ^ A declaration of default types
      | SpliceDecl   SrcLoc Splice
+     -- ^ A Template Haskell splicing declaration
      | TypeSig      SrcLoc [Name] Type
+     -- ^ A type signature declaration
      | FunBind      [Match]
+     -- ^ A set of function binding clauses
      | PatBind      SrcLoc Pat (Maybe Type) Rhs {-where-} Binds
+     -- ^ A pattern binding
      | ForImp   SrcLoc CallConv Safety String Name Type
+     -- ^ A foreign import declaration
      | ForExp   SrcLoc CallConv          String Name Type
--- Pragmas
+     -- ^ A foreign export declaration
+
      | RulePragmaDecl   SrcLoc [Rule]
+     -- ^ A RULES pragma
      | DeprPragmaDecl   SrcLoc [([Name], String)]
+     -- ^ A DEPRECATED pragma
      | WarnPragmaDecl   SrcLoc [([Name], String)]
+     -- ^ A WARNING pragma
      | InlineSig        SrcLoc Bool Activation QName
+     -- ^ An INLINE pragma
      | SpecSig          SrcLoc                 QName [Type]
+     -- ^ A SPECIALISE pragma
      | SpecInlineSig    SrcLoc Bool Activation QName [Type]
+     -- ^ A SPECIALISE INLINE pragma
      | InstSig          SrcLoc Context         QName [Type]
---     | UnknownDeclPragma SrcLoc String String
+     -- ^ A SPECIALISE instance pragma
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
   deriving (Eq,Show)
 #endif
 
+-- | A flag stating whether a declaration is a data or newtype declaration.
 data DataOrNew = DataType | NewType
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
@@ -330,15 +353,17 @@ data DataOrNew = DataType | NewType
   deriving (Eq,Show)
 #endif
 
+-- | A binding group inside a @let@ or @where@ clause.
 data Binds
-    = BDecls [Decl]
-    | IPBinds [IPBind]
+    = BDecls [Decl]     -- ^ An ordinary binding group
+    | IPBinds [IPBind]  -- ^ A binding group for implicit parameters
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
   deriving (Eq,Show)
 #endif
 
+-- | A binding of an implicit parameter.
 data IPBind = IPBind SrcLoc IPName Exp
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
@@ -355,6 +380,8 @@ data Match
   deriving (Eq,Show)
 #endif
 
+-- | A single constructor declaration within a data type declaration,
+--   which may have an existential quantification binding.
 data QualConDecl
     = QualConDecl SrcLoc
         {-forall-} [TyVarBind] {- . -} Context
@@ -365,15 +392,7 @@ data QualConDecl
   deriving (Eq,Show)
 #endif
 
-data GadtDecl
-    = GadtDecl SrcLoc Name Type
-#ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
-#else
-  deriving (Eq,Show)
-#endif
-
--- | Declaration of a data constructor.
+-- | Declaration of an ordinary data constructor.
 data ConDecl
      = ConDecl Name [BangType]
                 -- ^ ordinary data constructor
@@ -387,25 +406,43 @@ data ConDecl
   deriving (Eq,Show)
 #endif
 
--- | Declarations inside a class declaration
-data ClassDecl
-    = ClsDecl    Decl
-    | ClsDataFam SrcLoc Context Name [TyVarBind] (Maybe Kind)
-    | ClsTyFam   SrcLoc         Name [TyVarBind] (Maybe Kind)
-    | ClsTyDef   SrcLoc Type    Type
+-- | A single constructor declaration in a GADT data type declaration.
+data GadtDecl
+    = GadtDecl SrcLoc Name Type
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
   deriving (Eq,Show)
 #endif
 
--- | Declarations inside an instance declaration
+-- | Declarations inside a class declaration.
+data ClassDecl
+    = ClsDecl    Decl
+            -- ^ ordinary declaration
+    | ClsDataFam SrcLoc Context Name [TyVarBind] (Maybe Kind)
+            -- ^ declaration of an associated data type
+    | ClsTyFam   SrcLoc         Name [TyVarBind] (Maybe Kind)
+            -- ^ declaration of an associated type synonym
+    | ClsTyDef   SrcLoc Type    Type
+            -- ^ default choice for an associated type synonym
+#ifdef __GLASGOW_HASKELL__
+  deriving (Eq,Show,Typeable,Data)
+#else
+  deriving (Eq,Show)
+#endif
+
+-- | Declarations inside an instance declaration.
 data InstDecl
     = InsDecl   Decl
+            -- ^ ordinary declaration
     | InsType   SrcLoc Type Type
+            -- ^ an associated type definition
     | InsData   SrcLoc DataOrNew Type [QualConDecl] [Deriving]
+            -- ^ an associated data type implementation
     | InsGData  SrcLoc DataOrNew Type (Maybe Kind) [GadtDecl] [Deriving]
+            -- ^ an associated data type implemented using GADT style
     | InsInline SrcLoc Bool Activation QName
+            -- ^ an INLINE pragma
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -413,11 +450,11 @@ data InstDecl
 #endif
 
 -- | The type of a constructor argument or field, optionally including
--- a strictness annotation.
+--   a strictness annotation.
 data BangType
      = BangedTy   Type  -- ^ strict component, marked with \"@!@\"
      | UnBangedTy Type  -- ^ non-strict component
-     | UnpackedTy Type  -- ^ unboxed component
+     | UnpackedTy Type  -- ^ unboxed component, marked with an UNPACK pragma
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -434,8 +471,10 @@ data Rhs
 #else
   deriving (Eq,Show)
 #endif
--- | A guarded right hand side @|@ /exp/ @=@ /exp/.
--- The first expression will be Boolean-valued.
+
+-- | A guarded right hand side @|@ /stmts/ @=@ /exp/.
+--   The guard is a series of statements when using pattern guards,
+--   otherwise it will be a single qualifier expression.
 data GuardedRhs
      = GuardedRhs SrcLoc [Stmt] Exp
 #ifdef __GLASGOW_HASKELL__
@@ -446,12 +485,11 @@ data GuardedRhs
 
 -- | A type qualified with a context.
 --   An unqualified type has an empty context.
-
 data Type
      = TyForall
         (Maybe [TyVarBind])
         Context
-        Type
+        Type                    -- ^ qualified type
      | TyFun   Type Type        -- ^ function type
      | TyTuple Boxed [Type]     -- ^ tuple type, possibly boxed
      | TyList  Type             -- ^ list syntax, e.g. [a], as opposed to [] a
@@ -459,7 +497,6 @@ data Type
      | TyVar   Name             -- ^ type variable
      | TyCon   QName            -- ^ named type or type constructor
      | TyParen Type             -- ^ type surrounded by parentheses
---     | TyPred  Asst             -- ^ assertion of an implicit parameter
      | TyInfix Type QName Type  -- ^ infix type constructor
      | TyKind  Type Kind        -- ^ type with explicit kind signature
 #ifdef __GLASGOW_HASKELL__
@@ -468,6 +505,7 @@ data Type
   deriving (Eq,Show)
 #endif
 
+-- | Flag denoting whether a tuple is boxed or unboxed.
 data Boxed = Boxed | Unboxed
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
@@ -475,19 +513,21 @@ data Boxed = Boxed | Unboxed
   deriving (Eq,Ord,Show)
 #endif
 
+-- | A type variable declaration, optionally with an explicit kind annotation.
 data TyVarBind
-    = KindedVar Name Kind
-    | UnkindedVar Name
+    = KindedVar Name Kind   -- ^ variable binding with kind annotation
+    | UnkindedVar Name      -- ^ ordinary variable binding
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
   deriving (Eq,Show)
 #endif
 
+-- | An explicit kind annotation.
 data Kind
-    = KindStar
-    | KindBang
-    | KindFn Kind Kind
+    = KindStar          -- ^ @*@, the kind of types
+    | KindBang          -- ^ @!@, the kind of unboxed types
+    | KindFn Kind Kind  -- ^ @->@, the kind of a type constructor
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -505,17 +545,17 @@ data FunDep
   deriving (Eq,Show)
 #endif
 
-
+-- | A context is a set of assertions
 type Context = [Asst]
 
 -- | Class assertions.
 --   In Haskell 98, the argument would be a /tyvar/, but this definition
 --   allows multiple parameters, and allows them to be /type/s.
 --   Also extended with support for implicit parameters and equality constraints.
-data Asst = ClassA QName [Type]
-          | InfixA Type QName Type
-          | IParam IPName Type
-          | EqualP Type   Type
+data Asst = ClassA QName [Type]     -- ^ ordinary class assertion
+          | InfixA Type QName Type  -- ^ class assertion where the class name is given infix
+          | IParam IPName Type      -- ^ implicit parameter assertion
+          | EqualP Type   Type      -- ^ type equality constraint
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -531,12 +571,12 @@ data Literal
     | String  String        -- ^ string literal
     | Int     Integer       -- ^ integer literal
     | Frac    Rational      -- ^ floating point literal
-    | PrimInt    Integer    -- ^ GHC unboxed integer literal
-    | PrimWord   Integer    -- ^ GHC unboxed word literal
-    | PrimFloat  Rational   -- ^ GHC unboxed float literal
-    | PrimDouble Rational   -- ^ GHC unboxed double literal
-    | PrimChar   Char       -- ^ GHC unboxed character literal
-    | PrimString String     -- ^ GHC unboxed string literal
+    | PrimInt    Integer    -- ^ unboxed integer literal
+    | PrimWord   Integer    -- ^ unboxed word literal
+    | PrimFloat  Rational   -- ^ unboxed float literal
+    | PrimDouble Rational   -- ^ unboxed double literal
+    | PrimChar   Char       -- ^ unboxed character literal
+    | PrimString String     -- ^ unboxed string literal
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -544,90 +584,79 @@ data Literal
 #endif
 
 -- | Haskell expressions.
---
--- /Notes:/
---
--- * Because it is difficult for parsers to distinguish patterns from
---   expressions, they typically parse them in the same way and then check
---   that they have the appropriate form.  Hence the expression type
---   includes some forms that are found only in patterns.  After these
---   checks, these constructors should not be used.
---
--- * The parser does not take precedence and associativity into account,
---   so it will leave 'InfixApp's associated to the left.
---
--- * The 'Language.Haskell.Exts.Pretty.Pretty' instance for 'Exp' does not
---   add parentheses in printing.
-
 data Exp
     = Var QName                 -- ^ variable
     | IPVar IPName              -- ^ implicit parameter variable
     | Con QName                 -- ^ data constructor
     | Lit Literal               -- ^ literal constant
-    | InfixApp Exp QOp Exp  -- ^ infix application
-    | App Exp Exp             -- ^ ordinary application
-    | NegApp Exp                -- ^ negation expression @-@ /exp/
-    | Lambda SrcLoc [Pat] Exp -- ^ lambda expression
-    | Let Binds Exp           -- ^ local declarations with @let@
-    | If Exp Exp Exp        -- ^ @if@ /exp/ @then@ /exp/ @else@ /exp/
-    | Case Exp [Alt]          -- ^ @case@ /exp/ @of@ /alts/
+    | InfixApp Exp QOp Exp      -- ^ infix application
+    | App Exp Exp               -- ^ ordinary application
+    | NegApp Exp                -- ^ negation expression @-/exp/@ (unary minus)
+    | Lambda SrcLoc [Pat] Exp   -- ^ lambda expression
+    | Let Binds Exp             -- ^ local declarations with @let@ ... @in@ ...
+    | If Exp Exp Exp            -- ^ @if@ /exp/ @then@ /exp/ @else@ /exp/
+    | Case Exp [Alt]            -- ^ @case@ /exp/ @of@ /alts/
     | Do [Stmt]                 -- ^ @do@-expression:
                                     -- the last statement in the list
                                     -- should be an expression.
     | MDo [Stmt]                -- ^ @mdo@-expression
     | Tuple [Exp]               -- ^ tuple expression
     | List [Exp]                -- ^ list expression
-    | Paren Exp                 -- ^ parenthesized expression
-    | LeftSection Exp QOp     -- ^ left section @(@/exp/ /qop/@)@
-    | RightSection QOp Exp    -- ^ right section @(@/qop/ /exp/@)@
+    | Paren Exp                 -- ^ parenthesised expression
+    | LeftSection Exp QOp       -- ^ left section @(@/exp/ /qop/@)@
+    | RightSection QOp Exp      -- ^ right section @(@/qop/ /exp/@)@
     | RecConstr QName [FieldUpdate]
                                     -- ^ record construction expression
     | RecUpdate Exp [FieldUpdate]
                                     -- ^ record update expression
     | EnumFrom Exp              -- ^ unbounded arithmetic sequence,
-                                    -- incrementing by 1
-    | EnumFromTo Exp Exp      -- ^ bounded arithmetic sequence,
-                                    -- incrementing by 1
-    | EnumFromThen Exp Exp    -- ^ unbounded arithmetic sequence,
-                                    -- with first two elements given
+                                    -- incrementing by 1: @[from ..]@
+    | EnumFromTo Exp Exp        -- ^ bounded arithmetic sequence,
+                                    -- incrementing by 1 @[from .. to]@
+    | EnumFromThen Exp Exp      -- ^ unbounded arithmetic sequence,
+                                    -- with first two elements given @[from, then ..]@
     | EnumFromThenTo Exp Exp Exp
-                                    -- ^ bounded arithmetic sequence,
-                                    -- with first two elements given
-    | ListComp Exp  [QualStmt]     -- ^ list comprehension
+                                -- ^ bounded arithmetic sequence,
+                                    -- with first two elements given @[from, then .. to]@
+    | ListComp Exp  [QualStmt]     -- ^ ordinary list comprehension
     | ParComp  Exp [[QualStmt]]    -- ^ parallel list comprehension
     | ExpTypeSig SrcLoc Exp Type
-                                    -- ^ expression type signature
--- Template Haskell
-    | VarQuote QName            -- ^ 'x
-    | TypQuote QName            -- ^ ''T
-    | BracketExp Bracket
-    | SpliceExp Splice
-    | QuasiQuote String String  -- ^ [$name| string |]
+                                    -- ^ expression with explicit type signature
+
+    | VarQuote QName            -- ^ @'x@ for template haskell reifying of expressions
+    | TypQuote QName            -- ^ @''T@ for template haskell reifying of types
+    | BracketExp Bracket        -- ^ template haskell bracket expression
+    | SpliceExp Splice          -- ^ template haskell splice expression
+    | QuasiQuote String String  -- ^ quasi-quotaion: @[$/name/| /string/ |]@
 
 -- Hsx
     | XTag SrcLoc XName [XAttr] (Maybe Exp) [Exp]
+                                -- ^ xml element, with attributes and children
     | XETag SrcLoc XName [XAttr] (Maybe Exp)
-    | XPcdata String
-    | XExpTag Exp
+                                -- ^ empty xml element, with attributes
+    | XPcdata String            -- ^ PCDATA child element
+    | XExpTag Exp               -- ^ escaped haskell expression inside xml
 
 -- Pragmas
-    | CorePragma        String Exp
-    | SCCPragma         String Exp
+    | CorePragma        String Exp      -- ^ CORE pragma
+    | SCCPragma         String Exp      -- ^ SCC pragma
     | GenPragma         String (Int, Int) (Int, Int) Exp
---    | UnknownExpPragma  String String
+                                        -- ^ GENERATED pragma
 
 -- Arrows
-    | Proc Pat Exp              -- ^ @proc@ /pat/ @->@ /exp/
-    | LeftArrApp Exp Exp        -- ^ /exp/ @-<@ /exp/
-    | RightArrApp Exp Exp       -- ^ /exp/ @>-@ /exp/
-    | LeftArrHighApp Exp Exp    -- ^ /exp/ @-<<@ /exp/
-    | RightArrHighApp Exp Exp   -- ^ /exp/ @>>-@ /exp/
+    | Proc            Pat Exp   -- ^ arrows proc: @proc@ /pat/ @->@ /exp/
+    | LeftArrApp      Exp Exp   -- ^ arrow application (from left): /exp/ @-<@ /exp/
+    | RightArrApp     Exp Exp   -- ^ arrow application (from right): /exp/ @>-@ /exp/
+    | LeftArrHighApp  Exp Exp   -- ^ higher-order arrow application (from left): /exp/ @-<<@ /exp/
+    | RightArrHighApp Exp Exp   -- ^ higher-order arrow application (from right): /exp/ @>>-@ /exp/
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
   deriving (Eq,Show)
 #endif
 
+-- | The name of an xml element or attribute,
+--   possibly qualified with a namespace.
 data XName
     = XName String              -- <name ...
     | XDomName String String    -- <dom:name ...
@@ -637,6 +666,7 @@ data XName
   deriving (Eq,Show)
 #endif
 
+-- | An xml attribute, which is a name-expression pair.
 data XAttr = XAttr XName Exp
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
@@ -644,37 +674,39 @@ data XAttr = XAttr XName Exp
   deriving (Eq,Show)
 #endif
 
+-- | A template haskell bracket expression.
 data Bracket
-    = ExpBracket Exp
-    | PatBracket Pat
-    | TypeBracket Type
-    | DeclBracket [Decl]
+    = ExpBracket Exp        -- ^ expression bracket: @[| ... |]@
+    | PatBracket Pat        -- ^ pattern bracket: @[p| ... |]@
+    | TypeBracket Type      -- ^ type bracket: @[t| ... |]@
+    | DeclBracket [Decl]    -- ^ declaration bracket: @[d| ... |]@
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
   deriving (Eq,Show)
 #endif
 
+-- | A template haskell splice expression
 data Splice
-    = IdSplice String
-    | ParenSplice Exp
+    = IdSplice String       -- ^ variable splice: @$var@
+    | ParenSplice Exp       -- ^ parenthesised expression splice: @$(/exp/)@
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
   deriving (Eq,Show)
 #endif
 
-
--- FFI stuff
+-- | The safety of a foreign function call.
 data Safety
-    = PlayRisky
-    | PlaySafe Bool
+    = PlayRisky         -- ^ unsafe
+    | PlaySafe Bool     -- ^ safe ('False') or threadsafe ('True')
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
   deriving (Eq,Show)
 #endif
 
+-- | The calling convention of a foreign function call.
 data CallConv
     = StdCall
     | CCall
@@ -684,19 +716,20 @@ data CallConv
   deriving (Eq,Show)
 #endif
 
--- Pragma stuff
+-- | A top level options pragma, preceding the module header.
 data OptionPragma
-    = LanguagePragma   SrcLoc [Name]
-    | IncludePragma    SrcLoc String
-    | CFilesPragma     SrcLoc String
+    = LanguagePragma   SrcLoc [Name]    -- ^ LANGUAGE pragma
+    | IncludePragma    SrcLoc String    -- ^ INCLUDE pragma
+    | CFilesPragma     SrcLoc String    -- ^ CFILES pragma
     | OptionsPragma    SrcLoc (Maybe Tool) String
---    | UnknownTopPragma SrcLoc String String
+                        -- ^ OPTIONS pragma, possibly qualified with a tool, e.g. OPTIONS_GHC
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
   deriving (Eq,Show)
 #endif
 
+-- | Recognised tools for OPTIONS pragmas.
 data Tool = GHC | HUGS | NHC98 | YHC | HADDOCK | UnknownTool String
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
@@ -704,6 +737,7 @@ data Tool = GHC | HUGS | NHC98 | YHC | HADDOCK | UnknownTool String
   deriving (Eq,Show)
 #endif
 
+-- | Activation clause of a RULES pragma.
 data Activation
     = AlwaysActive
     | ActiveFrom  Int
@@ -714,6 +748,7 @@ data Activation
   deriving (Eq,Show)
 #endif
 
+-- | The body of a RULES pragma.
 data Rule
     = Rule String Activation (Maybe [RuleVar]) Exp Exp
 #ifdef __GLASGOW_HASKELL__
@@ -722,6 +757,7 @@ data Rule
   deriving (Eq,Show)
 #endif
 
+-- | Variables used in a RULES pragma, optionally annotated with types
 data RuleVar
     = RuleVar Name
     | TypedRuleVar Name Type
@@ -731,6 +767,8 @@ data RuleVar
   deriving (Eq,Show)
 #endif
 
+-- | Warning text to optionally use in the module header of e.g.
+--   a deprecated module.
 data WarningText
     = DeprText String
     | WarnText String
@@ -748,34 +786,32 @@ data Pat
     | PNeg Pat                  -- ^ negated pattern
     | PNPlusK Name Integer      -- ^ n+k pattern
     | PInfixApp Pat QName Pat
-                                    -- ^ pattern with infix data constructor
-    | PApp QName [Pat]        -- ^ data constructor and argument
-                                    -- patterns
+                                -- ^ pattern with an infix data constructor
+    | PApp QName [Pat]          -- ^ data constructor and argument patterns
     | PTuple [Pat]              -- ^ tuple pattern
     | PList [Pat]               -- ^ list pattern
     | PParen Pat                -- ^ parenthesized pattern
-    | PRec QName [PatField]   -- ^ labelled pattern
-    | PAsPat Name Pat         -- ^ @\@@-pattern
-    | PWildCard                   -- ^ wildcard pattern (@_@)
-    | PIrrPat Pat               -- ^ irrefutable pattern (@~@)
-    | PatTypeSig SrcLoc Pat Type
-                                    -- ^ pattern type signature
-    | PViewPat Exp Pat          -- ^ view patterns of the form (e -> p)
--- HaRP
-    | PRPat [RPat]              -- ^ regular pattern (HaRP)
--- Hsx
+    | PRec QName [PatField]     -- ^ labelled pattern, record style
+    | PAsPat Name Pat           -- ^ @\@@-pattern
+    | PWildCard                 -- ^ wildcard pattern: @_@
+    | PIrrPat Pat               -- ^ irrefutable pattern: @~/pat/@
+    | PatTypeSig SrcLoc Pat Type    -- ^ pattern with type signature
+    | PViewPat Exp Pat          -- ^ view patterns of the form @(/exp/ -> /pat/)@
+
+    | PRPat [RPat]              -- ^ regular list pattern
+
     | PXTag SrcLoc XName [PXAttr] (Maybe Pat) [Pat]
-                                    -- ^ XML tag pattern
+                                    -- ^ XML element pattern
     | PXETag SrcLoc XName [PXAttr] (Maybe Pat)
-                                    -- ^ XML singleton tag pattern
+                                    -- ^ XML singleton element pattern
     | PXPcdata String               -- ^ XML PCDATA pattern
     | PXPatTag Pat                  -- ^ XML embedded pattern
     | PXRPats [RPat]                -- ^ XML regular list pattern
-    | PExplTypeArg QName Type       -- ^ Explicit type argument e.g. f {| Int |} x = ...
+    | PExplTypeArg QName Type       -- ^ Explicit generics style type argument e.g. @f {| Int |} x = ...@
 
-    | PQuasiQuote String String     -- ^ [$name| string |]
+    | PQuasiQuote String String     -- ^ quasi quote patter: @[$/name/| /string/ |]@
 
-    | PBangPat Pat                  -- ^ f !x = ...
+    | PBangPat Pat                  -- ^ strict (bang) pattern: @f !x = ...@
 
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
@@ -783,7 +819,7 @@ data Pat
   deriving (Eq,Show)
 #endif
 
--- | An XML attribute in an XML tag pattern
+-- | An XML attribute in a pattern.
 data PXAttr = PXAttr XName Pat
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
@@ -791,21 +827,21 @@ data PXAttr = PXAttr XName Pat
   deriving (Eq,Show)
 #endif
 
--- | A regular pattern operator (HaRP)
+-- | A regular pattern operator.
 data RPatOp
-        = RPStar
-    | RPStarG
-    | RPPlus
-    | RPPlusG
-    | RPOpt
-    | RPOptG
+    = RPStar    -- ^ @*@ = 0 or more
+    | RPStarG   -- ^ @*!@ = 0 or more, greedy
+    | RPPlus    -- ^ @+@ = 1 or more
+    | RPPlusG   -- ^ @+!@ = 1 or more, greedy
+    | RPOpt     -- ^ @?@ = 0 or 1
+    | RPOptG    -- ^ @?!@ = 0 or 1, greedy
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
   deriving (Eq,Show)
 #endif
 
--- | An entity in a regular pattern (HaRP)
+-- | An entity in a regular pattern.
 data RPat
     = RPOp RPat RPatOp
     | RPEither RPat RPat
@@ -823,37 +859,38 @@ data RPat
 
 -- | An /fpat/ in a labeled record pattern.
 data PatField
-    = PFieldPat QName Pat
-    | PFieldPun Name
-    | PFieldWildcard
+    = PFieldPat QName Pat       -- ^ ordinary label-pattern pair
+    | PFieldPun Name            -- ^ record field pun
+    | PFieldWildcard            -- ^ record field wildcard
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
   deriving (Eq,Show)
 #endif
 
--- | This type represents both /stmt/ in a @do@-expression,
---   and /qual/ in a list comprehension, as well as /stmt/
+-- | A statement, representing both a /stmt/ in a @do@-expression,
+--   an ordinary /qual/ in a list comprehension, as well as a /stmt/
 --   in a pattern guard.
 data Stmt
     = Generator SrcLoc Pat Exp
-                -- ^ a generator /pat/ @<-@ /exp/
+                    -- ^ a generator: /pat/ @<-@ /exp/
     | Qualifier Exp -- ^ an /exp/ by itself: in a @do@-expression,
-                -- an action whose result is discarded;
-                -- in a list comprehension, a guard expression
+                        -- an action whose result is discarded;
+                        -- in a list comprehension and pattern guard,
+                        -- a guard expression
     | LetStmt Binds -- ^ local bindings
-    | RecStmt [Stmt]
+    | RecStmt [Stmt]    -- ^ a recursive binding group for arrows
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
   deriving (Eq,Show)
 #endif
 
--- | This type represents a /qual/ in a list comprehension,
+-- | A general /transqual/ in a list comprehension,
 --   which could potentially be a transform of the kind
 --   enabled by TransformListComp.
 data QualStmt
-    = QualStmt     Stmt         -- ^ an ordinary statement qualifier
+    = QualStmt     Stmt         -- ^ an ordinary statement
     | ThenTrans    Exp          -- ^ @then@ /exp/
     | ThenBy       Exp Exp      -- ^ @then@ /exp/ @by@ /exp/
     | GroupBy      Exp          -- ^ @then@ @group@ @by@ /exp/
@@ -865,18 +902,18 @@ data QualStmt
   deriving (Eq,Show)
 #endif
 
--- | An /fbind/ in a labeled construction or update.
+-- | An /fbind/ in a labeled construction or update expression.
 data FieldUpdate
-    = FieldUpdate QName Exp
-    | FieldPun Name
-    | FieldWildcard
+    = FieldUpdate QName Exp     -- ^ ordinary label-expresion pair
+    | FieldPun Name             -- ^ record field pun
+    | FieldWildcard             -- ^ record field wildcard
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
   deriving (Eq,Show)
 #endif
 
--- | An /alt/ in a @case@ expression.
+-- | An /alt/ alternative in a @case@ expression.
 data Alt
     = Alt SrcLoc Pat GuardedAlts Binds
 #ifdef __GLASGOW_HASKELL__
@@ -885,8 +922,11 @@ data Alt
   deriving (Eq,Show)
 #endif
 
+-- | The right-hand sides of a @case@ alternative,
+--   which may be a single right-hand side or a
+--   set of guarded ones.
 data GuardedAlts
-    = UnGuardedAlt Exp      -- ^ @->@ /exp/
+    = UnGuardedAlt Exp          -- ^ @->@ /exp/
     | GuardedAlts  [GuardedAlt] -- ^ /gdpat/
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
@@ -894,7 +934,7 @@ data GuardedAlts
   deriving (Eq,Show)
 #endif
 
--- | A guarded alternative @|@ /stmt/, ... , /stmt/ @->@ /exp/.
+-- | A guarded case alternative @|@ /stmts/ @->@ /exp/.
 data GuardedAlt
     = GuardedAlt SrcLoc [Stmt] Exp
 #ifdef __GLASGOW_HASKELL__

@@ -1,13 +1,12 @@
-{-# OPTIONS_GHC -w #-}
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Language.Haskell.Exts.Pretty
--- Copyright   :  (c) Niklas Broberg 2004,
+-- Copyright   :  (c) Niklas Broberg 2004-2009,
 --                (c) The GHC Team, Noel Winstanley 1997-2000
 -- License     :  BSD-style (see the file LICENSE.txt)
 --
--- Maintainer  :  Niklas Broberg, d00nibro@dtek.chalmers.se
--- Stability   :  experimental
+-- Maintainer  :  Niklas Broberg, d00nibro@chalmers.se
+-- Stability   :  stable
 -- Portability :  portable
 --
 -- Pretty printer for Haskell with extensions.
@@ -66,9 +65,7 @@ data PPHsMode = PPHsMode {
                                 -- | Pretty-printing style to use
                 layout :: PPLayout,
                                 -- | add GHC-style @LINE@ pragmas to output?
-                linePragmas :: Bool,
-                                -- | not implemented yet
-                comments :: Bool
+                linePragmas :: Bool
                 }
 
 -- | The default mode: pretty-print using the offside rule and sensible
@@ -83,8 +80,7 @@ defaultMode = PPHsMode{
                       onsideIndent = 2,
                       spacing = True,
                       layout = PPOffsideRule,
-                      linePragmas = False,
-                      comments = True
+                      linePragmas = False
                       }
 
 -- | Pretty printing monad
@@ -128,7 +124,7 @@ getPPEnv = DocM id
 type Doc = DocM PPHsMode P.Doc
 
 -- | Things that can be pretty-printed, including all the syntactic objects
--- in "Language.Haskell.Syntax".
+-- in "Language.Haskell.Exts.Syntax".
 class Pretty a where
         -- | Pretty-print something in isolation.
         pretty :: a -> Doc

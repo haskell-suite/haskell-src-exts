@@ -1,12 +1,13 @@
--- #hide
+{-# OPTIONS_HADDOCK hide #-}
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Language.Haskell.Exts.ParseMonad
--- Copyright   :  (c) The GHC Team, 1997-2000
+-- Copyright   :  Niklas Broberg (c) 2004-2009,
+--                Original (c) The GHC Team, 1997-2000
 -- License     :  BSD-style (see the file libraries/base/LICENSE)
 --
--- Maintainer  :  libraries@haskell.org
--- Stability   :  experimental
+-- Maintainer  :  Niklas Broberg, d00nibro@chalmers.se
+-- Stability   :  stable
 -- Portability :  portable
 --
 -- Monads for the Haskell parser and lexer.
@@ -97,23 +98,29 @@ indentOfParseState (Layout n:_,_,_) = n
 indentOfParseState _                = 0
 
 -- | Static parameters governing a parse.
--- More to come later, e.g. literate mode, language extensions.
+--   Note that the various parse functions in "Language.Haskell.Exts.Parser"
+--   never look at LANGUAGE pragmas, regardless of
+--   what the @ignoreLanguagePragmas@ flag is set to.
+--   Only the various @parseFile@ functions in "Language.Haskell.Exts" will
+--   act on it, when set to 'False'.
 
 data ParseMode = ParseMode {
         -- | original name of the file being parsed
         parseFilename :: String,
-        -- | list of extensions enabled
+        -- | list of extensions enabled for parsing
         extensions :: [Extension],
-        -- | if @True@, the parser won't look for further extensions
-        -- in LANGUAGE pragmas in source files
+        -- | if 'True', the parser won't care about further extensions
+        --   in LANGUAGE pragmas in source files
         ignoreLanguagePragmas :: Bool,
         -- | list of fixities to be aware of
         fixities :: [Fixity]
         }
 
--- | Default parameters for a parse,
--- currently just a marker for an unknown filename.
-
+-- | Default parameters for a parse.
+--   The default is an unknown filename,
+--   no extensions (i.e. Haskell 98),
+--   don't ignore LANGUAGE pragmas,
+--   and be aware of fixities from the 'Prelude'.
 defaultParseMode :: ParseMode
 defaultParseMode = ParseMode {
         parseFilename = "<unknown>.hs",
