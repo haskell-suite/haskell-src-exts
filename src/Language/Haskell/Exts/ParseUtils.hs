@@ -1,13 +1,13 @@
--- #hide
+{-# OPTIONS_HADDOCK hide #-}
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Language.Haskell.Exts.ParseUtils
 -- Copyright   :  (c) Niklas Broberg 2004,
---        (c) The GHC Team, 1997-2000
+--                (c) The GHC Team, 1997-2000
 -- License     :  BSD-style (see the file LICENSE.txt)
 --
--- Maintainer  :  Niklas Broberg, d00nibro@dtek.chalmers.se
--- Stability   :  experimental
+-- Maintainer  :  Niklas Broberg, d00nibro@chalmers.se
+-- Stability   :  stable
 -- Portability :  portable
 --
 -- Utilities for the Haskell-exts parser.
@@ -67,6 +67,7 @@ import Language.Haskell.Exts.ParseMonad
 import Language.Haskell.Exts.Pretty
 import Language.Haskell.Exts.Build
 import Language.Haskell.Exts.Extension
+import Language.Haskell.Exts.ExtScheme
 
 import Data.List (intersperse)
 import Control.Monad (when)
@@ -815,11 +816,11 @@ checkType t = checkT t False
 checkT :: PType -> Bool -> P S.Type
 checkT t simple = case t of
     TyForall tvs@Nothing cs pt    -> do
-            when (simple) $ checkEnabled ExplicitForallTypes
+            when (simple) $ checkEnabled (Any [Rank2Types, RankNTypes, PolymorphicComponents, LiberalTypeSynonyms])
             ctxt <- checkContext cs
             check1Type pt (S.TyForall Nothing ctxt)
     TyForall tvs cs pt -> do
-            checkEnabled ExplicitForallTypes
+            checkEnabled (Any [Rank2Types, RankNTypes, PolymorphicComponents, LiberalTypeSynonyms])
             ctxt <- checkContext cs
             check1Type pt (S.TyForall tvs ctxt)
     TyFun   at rt   -> check2Types at rt S.TyFun

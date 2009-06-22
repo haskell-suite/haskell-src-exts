@@ -1,13 +1,13 @@
--- #hide
+{-# OPTIONS_HADDOCK hide #-}
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Language.Haskell.Exts.Lexer
 -- Copyright   :  (c) The GHC Team, 1997-2000
---        (c) Niklas Broberg, 2004
+--                (c) Niklas Broberg, 2004-2009
 -- License     :  BSD-style (see the file LICENSE.txt)
 --
--- Maintainer  :  Niklas Broberg, d00nibro@dtek.chalmers.se
--- Stability   :  experimental
+-- Maintainer  :  Niklas Broberg, d00nibro@chalmers.se
+-- Stability   :  stable
 -- Portability :  portable
 --
 -- Lexer for Haskell, with some extensions.
@@ -22,6 +22,7 @@ module Language.Haskell.Exts.Lexer (Token(..), lexer) where
 
 import Language.Haskell.Exts.ParseMonad
 import Language.Haskell.Exts.Extension
+import Language.Haskell.Exts.ExtScheme
 
 import Data.Char
 import Data.Ratio
@@ -214,7 +215,9 @@ reserved_ops = [
 special_varops :: [(String,(Token, Maybe ExtScheme))]
 special_varops = [
  -- the dot is only a special symbol together with forall, but can still be used as function composition
- ( ".",  (Dot,          Just (Any [ExplicitForallTypes, ExistentialQuantification])) ),
+ ( ".",  (Dot,          Just (Any [Rank2Types, RankNTypes,
+                                    PolymorphicComponents, LiberalTypeSynonyms,
+                                    ExistentialQuantification])) ),
  ( "-",  (Minus,        Nothing) ),
  ( "!",  (Exclamation,  Nothing) )
  ]
@@ -231,7 +234,9 @@ reserved_ids = [
  ( "do",        (KW_Do,         Nothing) ),
  ( "else",      (KW_Else,       Nothing) ),
  ( "family",    (KW_Family,     Just (Any [TypeFamilies])) ),        -- indexed type families
- ( "forall",    (KW_Forall,     Just (Any [ExistentialQuantification, ExplicitForallTypes])) ),    -- universal/existential quantification
+ ( "forall",    (KW_Forall,     Just (Any [Rank2Types, RankNTypes,
+                                               PolymorphicComponents, LiberalTypeSynonyms,
+                                               ExistentialQuantification])) ),    -- universal/existential quantification
  ( "group",     (KW_Group,      Just (Any [TransformListComp])) ),
  ( "if",        (KW_If,         Nothing) ),
  ( "import",    (KW_Import,     Nothing) ),
