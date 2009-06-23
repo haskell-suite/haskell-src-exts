@@ -114,10 +114,12 @@ impliesExts = go
 
         implE e = case e of
                     TypeFamilies        -> [KindSignatures]
-                    RecordPuns          -> [NamedFieldPuns]
-                    PatternSignatures   -> [ScopedTypeVariables]
+                    ScopedTypeVariables -> [TypeOperators]
                     XmlSyntax           -> [RegularPatterns]
                     RegularPatterns     -> [PatternGuards]
+                    -- Deprecations
+                    RecordPuns          -> [NamedFieldPuns]
+                    PatternSignatures   -> [ScopedTypeVariables]
                     e                   -> []
 
 -- | List of all known extensions. Poor man's 'Enum' instance
