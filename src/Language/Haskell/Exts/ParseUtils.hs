@@ -817,11 +817,11 @@ checkType t = checkT t False
 checkT :: PType -> Bool -> P S.Type
 checkT t simple = case t of
     TyForall tvs@Nothing cs pt    -> do
-            when (simple) $ checkEnabled (Any [Rank2Types, RankNTypes, PolymorphicComponents, LiberalTypeSynonyms])
+            when (simple) $ checkEnabled (Any [Rank2Types, RankNTypes, PolymorphicComponents, LiberalTypeSynonyms, ScopedTypeVariables])
             ctxt <- checkContext cs
             check1Type pt (S.TyForall Nothing ctxt)
     TyForall tvs cs pt -> do
-            checkEnabled (Any [Rank2Types, RankNTypes, PolymorphicComponents, LiberalTypeSynonyms])
+            checkEnabled (Any [Rank2Types, RankNTypes, PolymorphicComponents, LiberalTypeSynonyms, ScopedTypeVariables])
             ctxt <- checkContext cs
             check1Type pt (S.TyForall tvs ctxt)
     TyFun   at rt   -> check2Types at rt S.TyFun
