@@ -67,9 +67,9 @@ parseFileContentsWithExts exts = parseFileContentsWithMode (defaultParseMode { e
 parseFileContentsWithMode :: ParseMode -> String -> ParseResult Module
 parseFileContentsWithMode p@(ParseMode fn exts ign _) rawStr =
         let md = delit fn $ ppContents rawStr
-            allExts = case (ign, readExtensions md) of
-                        (False,Just exts) -> impliesExts exts
-                        _                 -> exts
+            allExts = impliesExts $ case (ign, readExtensions md) of
+                                     (False,Just es) -> exts ++ es
+                                     _               -> exts
          in parseModuleWithMode (p { extensions = allExts }) md
 
 
