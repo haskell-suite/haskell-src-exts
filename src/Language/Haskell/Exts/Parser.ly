@@ -16,7 +16,7 @@
 > module Language.Haskell.Exts.Parser (
 >               -- * General parsing
 >               Parseable(..),
->               ParseMode(..), defaultParseMode, ParseResult(..),
+>               ParseMode(..), defaultParseMode, ParseResult(..), fromParseResult,
 >               -- * Parsing of specific AST elements
 >               -- ** Modules
 >               parseModule, parseModuleWithMode,
