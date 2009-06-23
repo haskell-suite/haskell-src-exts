@@ -1,9 +1,9 @@
 Name:                   haskell-src-exts
-Version:                0.5.7
+Version:                1.0.0
 License:                BSD3
 License-File:           LICENSE
 Author:                 Niklas Broberg
-Maintainer:             Niklas Broberg <nibro@cs.chalmers.se>
+Maintainer:             Niklas Broberg <d00nibro@chalmers.se>
 Category:               Language
 Synopsis:               Manipulating Haskell source: abstract syntax, lexer, parser, and pretty-printer
 Description:            Haskell-Source with Extensions (HSE, haskell-src-exts)
