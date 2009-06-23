@@ -7,3 +7,6 @@ test = do
 
 
 value :: String = "Hello"
+
+forallTest :: forall x . Eq x => x -> x
+forallTest x = if x == x then (undefined :: x) else x

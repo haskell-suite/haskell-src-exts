@@ -215,7 +215,7 @@ reserved_ops = [
 special_varops :: [(String,(Token, Maybe ExtScheme))]
 special_varops = [
  -- the dot is only a special symbol together with forall, but can still be used as function composition
- ( ".",  (Dot,          Just (Any [Rank2Types, RankNTypes,
+ ( ".",  (Dot,          Just (Any [Rank2Types, RankNTypes, ScopedTypeVariables,
                                     PolymorphicComponents, LiberalTypeSynonyms,
                                     ExistentialQuantification])) ),
  ( "-",  (Minus,        Nothing) ),
@@ -234,7 +234,7 @@ reserved_ids = [
  ( "do",        (KW_Do,         Nothing) ),
  ( "else",      (KW_Else,       Nothing) ),
  ( "family",    (KW_Family,     Just (Any [TypeFamilies])) ),        -- indexed type families
- ( "forall",    (KW_Forall,     Just (Any [Rank2Types, RankNTypes,
+ ( "forall",    (KW_Forall,     Just (Any [Rank2Types, RankNTypes, ScopedTypeVariables,
                                                PolymorphicComponents, LiberalTypeSynonyms,
                                                ExistentialQuantification])) ),    -- universal/existential quantification
  ( "group",     (KW_Group,      Just (Any [TransformListComp])) ),
