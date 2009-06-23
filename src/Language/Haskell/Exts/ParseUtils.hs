@@ -250,6 +250,7 @@ checkInsts (TyInfix a op b) [] = do
     checkEnabled TypeOperators
     ts <- checkTypes [a,b]
     return (op,ts)
+checkInsts (TyParen t) [] = checkInsts t []
 checkInsts _ _ = fail "Illegal instance declaration"
 
 checkDeriving :: [PType] -> P [Deriving]
