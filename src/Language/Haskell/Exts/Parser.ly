@@ -257,6 +257,7 @@ Pragmas
 
 > %monad { P }
 > %lexer { lexer } { EOF }
+> %error { parseError }
 > %name mparseModule page
 > %name mparseExp trueexp
 > %name mparsePat pat
@@ -1609,8 +1610,11 @@ Miscellaneous (mostly renamings)
 -----------------------------------------------------------------------------
 
 > {
-> happyError :: P a
-> happyError = fail "Parse error"
+ happyError :: P a
+ happyError = fail "Parse error"
+
+> parseError :: Token -> P a
+> parseError t = fail $ "Parse error: " ++ show t
 
 > -- | Class to reuse the parse function at many different types.
 > class Parseable ast where
