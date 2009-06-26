@@ -601,7 +601,7 @@ instance Pretty RuleVar where
 
 instance Pretty OptionPragma where
     pretty (LanguagePragma _ ns) =
-        myFsep $ text "{-# LANGUAGE" : map pretty ns ++ [text "#-}"]
+        myFsep $ text "{-# LANGUAGE" : punctuate (char ',') (map pretty ns) ++ [text "#-}"]
     pretty (IncludePragma _ s) =
         myFsep $ [text "{-# INCLUDE", text s, text "#-}"]
     pretty (CFilesPragma _ s) =
