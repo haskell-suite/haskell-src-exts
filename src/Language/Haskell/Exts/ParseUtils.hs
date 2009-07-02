@@ -136,6 +136,8 @@ checkAssertion t = checkAssertion' [] t
             checkAssertion' ts (TyInfix a op b) =
                 -- infix operators require TypeOperators
                 checkEnabled TypeOperators >> checkAssertion' (a:b:ts) (TyCon op)
+            checkAssertion' ts (TyParen t) =
+                checkAssertion' ts t
             checkAssertion' _ _ = fail "Illegal class assertion"
 
 isSymbol :: QName -> Bool
