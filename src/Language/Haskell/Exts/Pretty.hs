@@ -424,8 +424,10 @@ instance Pretty Decl where
                 mySep ((punctuate comma . map pretty $ nameList)
                       ++ [text "::", pretty qualType])
 
-        pretty (FunBind matches) =
-                foldr ($$$) empty (map pretty matches)
+        pretty (FunBind matches) = do
+                e <- fmap layout getPPEnv
+                case e of PPOffsideRule -> foldr ($$$) empty (map pretty matches)
+                          _ -> foldr (\x y -> x <> semi <> y) empty (map pretty matches)
 
         pretty (PatBind pos pat optsig rhs whereBinds) =
                 markLine pos $
