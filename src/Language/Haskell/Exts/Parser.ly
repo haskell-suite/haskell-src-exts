@@ -1182,9 +1182,9 @@ End Template Haskell
 >       : commas ','                    { $1 + 1 }
 >       | ','                           { 1 }
 
-> texps :: { [PExp] }
->       : texps ',' texp                { $3 : $1 }
->       | texp                          { [$1] }
+ texps :: { [PExp] }
+       : texps ',' texp                { $3 : $1 }
+       | texp                          { [$1] }
 
 > texp :: { PExp }
 >       : exp                           { $1 }
