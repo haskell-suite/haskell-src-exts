@@ -601,6 +601,7 @@ data Exp
                                     -- should be an expression.
     | MDo [Stmt]                -- ^ @mdo@-expression
     | Tuple [Exp]               -- ^ tuple expression
+    | TupleSection [Maybe Exp]  -- ^ tuple section expression, e.g. @(,,3)@
     | List [Exp]                -- ^ list expression
     | Paren Exp                 -- ^ parenthesised expression
     | LeftSection Exp QOp       -- ^ left section @(@/exp/ /qop/@)@

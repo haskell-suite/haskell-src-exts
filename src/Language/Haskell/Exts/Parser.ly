@@ -1149,7 +1149,9 @@ thing we need to look at here is the erpats that use no non-standard lexemes.
 >       | gcon                          { $1 }
 >       | literal                       { Lit $1 }
 >       | '(' texp ')'                  { Paren $2 }
->       | '(' texp ',' texps ')'        { Tuple ($2 : reverse $4) }
+>       | '(' texp tsectend             { TupleSection (Just $2 : $3) }
+>       | '(' commas texp ')'           { TupleSection $ replicate ($2 - 1) Nothing ++ [Just $3] }
+>       | '(' commas texp tsectend      { TupleSection $ replicate ($2 - 1) Nothing ++ Just $3 : $4 }
 >       | '[' list ']'                  { $2 }
 We parse left sections as PostOp instead, and post-mangle them, see above
         | '(' exp0b rqop ')'            { LeftSection $2 $3  } -- this line is commented out
@@ -1188,6 +1190,11 @@ End Template Haskell
 >       : exp                           { $1 }
 >       | qopm exp0                     { PreOp $1 $2 }
 >       | exp '->' exp                  {% checkEnabled ViewPatterns >> return (ViewPat $1 $3) }
+
+> tsectend :: { [Maybe PExp] }
+>       : commas texp tsectend          { replicate ($1 - 1) Nothing ++ Just $2 : $3 }
+>       | commas texp ')'               { replicate ($1 - 1) Nothing ++ [Just $2] }
+>       | commas ')'                    { replicate $1 Nothing }
 
 -----------------------------------------------------------------------------
 Harp Extensions

@@ -96,6 +96,9 @@ data Extension
   | XmlSyntax
 
   | RegularPatterns
+
+  | TupleSections
+
   | UnknownExtension String
   deriving (Eq, Ord, Show, Read)
 
@@ -191,6 +194,7 @@ knownExtensions =
   , ViewPatterns
   , XmlSyntax
   , RegularPatterns
+  , TupleSections
   ]
 
 -- | The list of extensions enabled by

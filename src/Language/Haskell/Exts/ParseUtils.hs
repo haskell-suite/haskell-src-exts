@@ -70,6 +70,7 @@ import Language.Haskell.Exts.Extension
 import Language.Haskell.Exts.ExtScheme
 
 import Data.List (intersperse)
+import Data.Maybe (fromJust)
 import Control.Monad (when)
 
 splitTyConApp :: PType -> P (Name,[S.Type])
@@ -299,9 +300,15 @@ checkPat e [] = case e of
                     ps <- mapM checkPattern (BangPat e:es)
                     checkPat l ps -}
             _ -> patFail ""
-    Tuple es         -> do
+{-    Tuple es         -> do
                   ps <- mapM (\e -> checkPat e []) es
-                  return (PTuple ps)
+                  return (PTuple ps)-}
+    TupleSection mes    ->
+            if all ((/=) Nothing) mes
+             then do ps <- mapM (\e -> checkPat e []) (map fromJust mes)
+                     return (PTuple ps)
+             else fail "Illegal tuple section in pattern"
+
     List es      -> do
                   ps <- mapM checkRPattern es
                   if all isStdPat ps
@@ -504,7 +511,13 @@ checkExpr e = case e of
                      return (S.Case e alts)
     Do stmts        -> return (S.Do stmts)
     MDo stmts       -> return (S.MDo stmts)
-    Tuple es        -> checkManyExprs es S.Tuple
+--    Tuple es        -> checkManyExprs es S.Tuple
+    TupleSection mes -> if all ((/=) Nothing) mes
+                         then checkManyExprs (map fromJust mes) S.Tuple
+                         else do checkEnabled TupleSections
+                                 mes' <- mapM mCheckExpr mes
+                                 return $ S.TupleSection mes'
+
     List es         -> checkManyExprs es S.List
     -- Since we don't parse things as left sections, we need to mangle them into that.
     Paren e         -> case e of
@@ -599,6 +612,9 @@ checkManyExprs es f = do
     es <- mapM checkExpr es
     return (f es)
 
+mCheckExpr :: Maybe PExp -> P (Maybe S.Exp)
+mCheckExpr Nothing = return Nothing
+mCheckExpr (Just e) = checkExpr e >>= return . Just
 
 checkRuleExpr :: PExp -> P S.Exp
 checkRuleExpr = checkExpr
@@ -925,7 +941,8 @@ data PExp
                                     -- the last statement in the list
                                     -- should be an expression.
     | MDo [Stmt]                -- ^ @mdo@-expression
-    | Tuple [PExp]              -- ^ tuple expression
+--    | Tuple [PExp]              -- ^ tuple expression
+    | TupleSection [Maybe PExp] -- ^ tuple section expression, e.g. @(,,3)@
     | List [PExp]               -- ^ list expression
     | Paren PExp                -- ^ parenthesized expression
 --     RightSection QOp PExp     -- ^ right section @(@/qop/ /exp/@)@

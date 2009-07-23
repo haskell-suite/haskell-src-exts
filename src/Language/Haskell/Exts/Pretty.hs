@@ -776,6 +776,7 @@ instance Pretty Exp where
         pretty (IPVar ipname) = pretty ipname
         pretty (Con name) = pretty name
         pretty (Tuple expList) = parenList . map pretty $ expList
+        pretty (TupleSection mExpList) = parenList . map (maybePP pretty) $ mExpList
         -- weird stuff
         pretty (Paren e) = parens . pretty $ e
         pretty (LeftSection e op) = parens (pretty e <+> pretty op)
