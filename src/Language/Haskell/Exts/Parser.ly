@@ -1319,7 +1319,7 @@ List comprehensions
 
 > pqualstmts :: { [[QualStmt]] }
 >       : pqualstmts '|' qualstmts      { reverse $3 : $1 }
->       | qualstmts                     { [$1] }
+>       | qualstmts                     { [reverse $1] }
 
 > qualstmts :: { [QualStmt] }
 >       : qualstmts ',' qualstmt        { $3 : $1 }
