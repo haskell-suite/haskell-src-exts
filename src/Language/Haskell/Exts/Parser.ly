@@ -19,15 +19,15 @@
 >               ParseMode(..), defaultParseMode, ParseResult(..), fromParseResult,
 >               -- * Parsing of specific AST elements
 >               -- ** Modules
->               parseModule, parseModuleWithMode,
+>               parseModule, parseModuleWithMode, parseModuleWithComments,
 >               -- ** Expressions
->               parseExp, parseExpWithMode,
+>               parseExp, parseExpWithMode, parseExpWithComments,
 >               -- ** Patterns
->               parsePat, parsePatWithMode,
+>               parsePat, parsePatWithMode, parsePatWithComments,
 >               -- ** Declarations
->               parseDecl, parseDeclWithMode,
+>               parseDecl, parseDeclWithMode, parseDeclWithComments,
 >               -- ** Types
->               parseType, parseTypeWithMode,
+>               parseType, parseTypeWithMode, parseTypeWithComments,
 >               -- ** Option pragmas
 >               getTopPragmas
 >               ) where
@@ -39,6 +39,7 @@
 > import Language.Haskell.Exts.ParseUtils
 > import Language.Haskell.Exts.Extension
 > import Language.Haskell.Exts.Fixity
+> import Language.Haskell.Exts.Comments ( Comment )
 
 import Debug.Trace (trace)
 > }
@@ -1629,59 +1630,82 @@ Miscellaneous (mostly renamings)
 >   parse :: String -> ParseResult ast
 >   -- | Parse a string with an explicit mode.
 >   parseWithMode :: ParseMode -> String -> ParseResult ast
+>   -- | Parse a string with an explicit mode, returning all comments along the AST
+>   parseWithComments :: ParseMode -> String -> ParseResult (ast, [Comment])
 >
 > instance Parseable Module where
 >   parse = parseModule
 >   parseWithMode = parseModuleWithMode
+>   parseWithComments = parseModuleWithComments
 >
 > instance Parseable Exp where
 >   parse = parseExp
 >   parseWithMode = parseExpWithMode
+>   parseWithComments = parseExpWithComments
 >
 > instance Parseable Pat where
 >   parse = parsePat
 >   parseWithMode = parsePatWithMode
+>   parseWithComments = parsePatWithComments
 >
 > instance Parseable Decl where
 >   parse = parseDecl
 >   parseWithMode = parseDeclWithMode
+>   parseWithComments = parseDeclWithComments
 >
 > instance Parseable Type where
 >   parse = parseType
 >   parseWithMode = parseTypeWithMode
+>   parseWithComments = parseTypeWithComments
 >
 
 > -- | Parse of a string, which should contain a complete Haskell module.
 > parseModule :: String -> ParseResult Module
-> parseModule = fmap (applyFixities preludeFixities) . runParser mparseModule
+> parseModule = simpleParse mparseModule
 
 > -- | Parse of a string containing a complete Haskell module, using an explicit mode.
 > parseModuleWithMode :: ParseMode -> String -> ParseResult Module
-> parseModuleWithMode mode = fmap (applyFixities (fixities mode)) . runParserWithMode mode mparseModule
+> parseModuleWithMode = modeParse mparseModule
+
+> -- | Parse of a string containing a complete Haskell module, using an explicit mode, retaining comments.
+> parseModuleWithComments :: ParseMode -> String -> ParseResult (Module, [Comment])
+> parseModuleWithComments = commentParse mparseModule
 
 > -- | Parse of a string containing a Haskell expression.
 > parseExp :: String -> ParseResult Exp
-> parseExp = fmap (applyFixities preludeFixities) . runParser mparseExp
+> parseExp = simpleParse mparseExp
 
 > -- | Parse of a string containing a Haskell expression, using an explicit mode.
 > parseExpWithMode :: ParseMode -> String -> ParseResult Exp
-> parseExpWithMode mode = fmap (applyFixities (fixities mode)) . runParserWithMode mode mparseExp
+> parseExpWithMode = modeParse mparseExp
+
+> -- | Parse of a string containing a complete Haskell module, using an explicit mode, retaining comments.
+> parseExpWithComments :: ParseMode -> String -> ParseResult (Exp, [Comment])
+> parseExpWithComments = commentParse mparseExp
 
 > -- | Parse of a string containing a Haskell pattern.
 > parsePat :: String -> ParseResult Pat
-> parsePat = fmap (applyFixities preludeFixities) . runParser mparsePat
+> parsePat = simpleParse mparsePat
 
 > -- | Parse of a string containing a Haskell pattern, using an explicit mode.
 > parsePatWithMode :: ParseMode -> String -> ParseResult Pat
-> parsePatWithMode mode = fmap (applyFixities (fixities mode)) . runParserWithMode mode mparsePat
+> parsePatWithMode = modeParse mparsePat
+
+> -- | Parse of a string containing a complete Haskell module, using an explicit mode, retaining comments.
+> parsePatWithComments :: ParseMode -> String -> ParseResult (Pat, [Comment])
+> parsePatWithComments = commentParse mparsePat
 
 > -- | Parse of a string containing a Haskell top-level declaration.
 > parseDecl :: String -> ParseResult Decl
-> parseDecl = fmap (applyFixities preludeFixities) . runParser mparseDecl
+> parseDecl = simpleParse mparseDecl
 
 > -- | Parse of a string containing a Haskell top-level declaration, using an explicit mode.
 > parseDeclWithMode :: ParseMode -> String -> ParseResult Decl
-> parseDeclWithMode mode = fmap (applyFixities (fixities mode)) . runParserWithMode mode mparseDecl
+> parseDeclWithMode = modeParse mparseDecl
+
+> -- | Parse of a string containing a complete Haskell module, using an explicit mode, retaining comments.
+> parseDeclWithComments :: ParseMode -> String -> ParseResult (Decl, [Comment])
+> parseDeclWithComments = commentParse mparseDecl
 
 > -- | Parse of a string containing a Haskell type.
 > parseType :: String -> ParseResult Type
@@ -1690,6 +1714,21 @@ Miscellaneous (mostly renamings)
 > -- | Parse of a string containing a Haskell type, using an explicit mode.
 > parseTypeWithMode :: ParseMode -> String -> ParseResult Type
 > parseTypeWithMode mode = runParserWithMode mode mparseType
+
+> -- | Parse of a string containing a complete Haskell module, using an explicit mode, retaining comments.
+> parseTypeWithComments :: ParseMode -> String -> ParseResult (Type, [Comment])
+> parseTypeWithComments mode str = runParserWithModeComments mode mparseType str
+
+
+> simpleParse :: AppFixity a => P a -> String -> ParseResult a
+> simpleParse p = fmap (applyFixities preludeFixities) . runParser p
+
+> modeParse :: AppFixity a => P a -> ParseMode -> String -> ParseResult a
+> modeParse p mode = fmap (applyFixities (fixities mode)) . runParserWithMode mode p
+
+> commentParse :: AppFixity a => P a -> ParseMode -> String -> ParseResult (a, [Comment])
+> commentParse p mode str = runParserWithModeComments mode p str
+>                              >>= \(ast, cs) -> return (applyFixities (fixities mode) ast, cs)
 
 > -- | Partial parse of a string starting with a series of top-level option pragmas.
 > getTopPragmas :: String -> ParseResult [OptionPragma]

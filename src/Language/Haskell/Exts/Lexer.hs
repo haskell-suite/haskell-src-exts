@@ -23,6 +23,7 @@ module Language.Haskell.Exts.Lexer (Token(..), lexer) where
 import Language.Haskell.Exts.ParseMonad
 import Language.Haskell.Exts.Extension
 import Language.Haskell.Exts.ExtScheme
+import Language.Haskell.Exts.Comments
 
 import Data.Char
 import Data.Ratio
@@ -342,18 +343,22 @@ lexWhiteSpace bol = do
         -- If we find a recognised pragma, we don't want to treat it as a comment.
         '{':'-':'#':rest | isRecognisedPragma rest -> return (bol, False)
         '{':'-':_ -> do
+            loc <- getSrcLocL
             discard 2
-            bol <- lexNestedComment bol
+            (bol, c) <- lexNestedComment bol ""
+            pushComment $ MultiLine loc (reverse c)
             (bol, _) <- lexWhiteSpace bol
             return (bol, True)
         '-':'-':s | all (== '-') (takeWhile isHSymbol s) -> do
-            lexWhile (== '-')
-            lexWhile (/= '\n')
+            loc    <- getSrcLocL
+            discard 2
+            dashes <- lexWhile (== '-')
+            rest   <- lexWhile (/= '\n')
             s' <- getInput
             case s' of
                 [] -> fail "Unterminated end-of-line comment"
                 _ -> do
-                    lexNewline
+                    lexNewline >> pushComment (SingleLine loc $ dashes ++ rest)
                     lexWhiteSpace True
                     return (True, True)
         '\n':_ -> do
@@ -376,18 +381,18 @@ isRecognisedPragma str = let pragma = map toLower . takeWhile isAlphaNum . dropW
                               Nothing -> False
                               _       -> True
 
-lexNestedComment :: Bool -> Lex a Bool
-lexNestedComment bol = do
+lexNestedComment :: Bool -> String -> Lex a (Bool, String)
+lexNestedComment bol str = do
     s <- getInput
     case s of
-        '-':'}':_ -> discard 2 >> return bol
+        '-':'}':_ -> discard 2 >> return (bol, str)
         '{':'-':_ -> do
             discard 2
-            bol <- lexNestedComment bol -- rest of the subcomment
-            lexNestedComment bol        -- rest of this comment
-        '\t':_    -> lexTab >> lexNestedComment bol
-        '\n':_    -> lexNewline >> lexNestedComment True
-        _:_       -> discard 1 >> lexNestedComment bol
+            (bol, c) <- lexNestedComment bol ("-{" ++ str) -- rest of the subcomment
+            lexNestedComment bol ("}-" ++ c  ) -- rest of this comment
+        '\t':_    -> lexTab >> lexNestedComment bol ('\t':str)
+        '\n':_    -> lexNewline >> lexNestedComment True ('\n':str)
+        c:_       -> discard 1 >> lexNestedComment bol (c:str)
         []        -> fail "Unterminated nested comment"
 
 -- When we are lexing the first token of a line, check whether we need to

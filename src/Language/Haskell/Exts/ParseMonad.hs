@@ -18,13 +18,13 @@ module Language.Haskell.Exts.ParseMonad(
         -- * Parsing
         P, ParseResult(..), atSrcLoc, LexContext(..),
         ParseMode(..), defaultParseMode, fromParseResult,
-        runParserWithMode, runParser,
+        runParserWithMode, runParserWithModeComments, runParser,
         getSrcLoc, pushCurrentContext, popContext,
         getExtensions,
         -- * Lexing
         Lex(runL), getInput, discard, lexNewline, lexTab, lexWhile,
         alternative, checkBOL, setBOL, startToken, getOffside,
-        pushContextL, popContextL, getExtensionsL,
+        pushContextL, popContextL, getExtensionsL, pushComment, getSrcLocL,
         -- * Harp/Hsx
         ExtContext(..),
         pushExtContextL, popExtContextL, getExtContext,
@@ -35,6 +35,7 @@ module Language.Haskell.Exts.ParseMonad(
 import Language.Haskell.Exts.Syntax(SrcLoc(..))
 import Language.Haskell.Exts.Extension (Extension)
 import Language.Haskell.Exts.Fixity (Fixity, preludeFixities)
+import Language.Haskell.Exts.Comments
 
 import Data.List ( intersperse )
 import Control.Applicative
@@ -91,11 +92,11 @@ type CtxtFlag = (Bool,Bool)
 -- (True,_) = We're in a do context.
 -- (_, True)= Next token must be a virtual closing brace.
 
-type ParseState = ([LexContext],[ExtContext],CtxtFlag)
+type ParseState = ([LexContext],[ExtContext],CtxtFlag,[Comment])
 
 indentOfParseState :: ParseState -> Int
-indentOfParseState (Layout n:_,_,_) = n
-indentOfParseState _                = 0
+indentOfParseState (Layout n:_,_,_,_) = n
+indentOfParseState _                  = 0
 
 -- | Static parameters governing a parse.
 --   Note that the various parse functions in "Language.Haskell.Exts.Parser"
@@ -142,7 +143,7 @@ newtype P a = P { runP ::
         }
 
 runParserWithMode :: ParseMode -> P a -> String -> ParseResult a
-runParserWithMode mode (P m) s = case m s 0 1 start ([],[],(False,False)) mode of
+runParserWithMode mode (P m) s = case m s 0 1 start ([],[],(False,False),[]) mode of
     Ok _ a -> ParseOk a
     Failed loc msg -> ParseFailed loc msg
     where start = SrcLoc {
@@ -153,6 +154,16 @@ runParserWithMode mode (P m) s = case m s 0 1 start ([],[],(False,False)) mode o
 
 runParser :: P a -> String -> ParseResult a
 runParser = runParserWithMode defaultParseMode
+
+runParserWithModeComments :: ParseMode -> P a -> String -> ParseResult (a, [Comment])
+runParserWithModeComments mode (P m) s = case m s 0 1 start ([],[],(False,False),[]) mode of
+    Ok (_,_,_,cs) a -> ParseOk (a, reverse cs)
+    Failed loc msg -> ParseFailed loc msg
+    where start = SrcLoc {
+        srcFilename = parseFilename mode,
+        srcLine = 1,
+        srcColumn = 1
+    }
 
 instance Monad P where
     return a = P $ \_i _x _y _l s _m -> Ok s a
@@ -205,25 +216,25 @@ currentIndent = P $ \_r _x _y loc stk _mode -> Ok stk (indentOfParseState stk)
 pushContext :: LexContext -> P ()
 pushContext ctxt =
 --trace ("pushing lexical scope: " ++ show ctxt ++"\n") $
-    P $ \_i _x _y _l (s, e, p) _m -> Ok (ctxt:s, e, p) ()
+    P $ \_i _x _y _l (s, e, p, c) _m -> Ok (ctxt:s, e, p, c) ()
 
 popContext :: P ()
 popContext = P $ \_i _x _y _l stk _m ->
       case stk of
-        (_:s, e, p) -> --trace ("popping lexical scope, context now "++show s ++ "\n") $
-                       Ok (s, e, p) ()
-        ([],_,_)    -> error "Internal error: empty context in popContext"
+        (_:s, e, p, c) -> --trace ("popping lexical scope, context now "++show s ++ "\n") $
+                          Ok (s, e, p, c) ()
+        ([],_,_,_)     -> error "Internal error: empty context in popContext"
 
 
 -- HaRP/Hsx
 pushExtContext :: ExtContext -> P ()
-pushExtContext ctxt = P $ \_i _x _y _l (s, e, p) _m -> Ok (s, ctxt:e, p) ()
+pushExtContext ctxt = P $ \_i _x _y _l (s, e, p, c) _m -> Ok (s, ctxt:e, p, c) ()
 
 popExtContext :: P ()
-popExtContext = P $ \_i _x _y _l (s, e, p) _m ->
+popExtContext = P $ \_i _x _y _l (s, e, p, c) _m ->
     case e of
      (_:e') ->
-       Ok (s, e', p) ()
+       Ok (s, e', p, c) ()
      [] -> error "Internal error: empty context in popExtContext"
 
 
@@ -234,12 +245,12 @@ getExtensions = P $ \_i _x _y _l s m ->
 
 pushCtxtFlag :: P ()
 pushCtxtFlag =
-    P $ \_i _x _y _l (s, e, (d,c)) _m -> case c of
-        False -> Ok (s, e, (d,True)) ()
+    P $ \_i _x _y _l (s, e, (d,c), cs) _m -> case c of
+        False -> Ok (s, e, (d,True), cs) ()
         _     -> error "Internal error: context flag already pushed"
 
 pullDoStatus :: P Bool
-pullDoStatus = P $ \_i _x _y _l (s, e, (d,c)) _m -> Ok (s,e,(False,c)) d
+pullDoStatus = P $ \_i _x _y _l (s, e, (d,c), cs) _m -> Ok (s,e,(False,c),cs) d
 
 
 ----------------------------------------------------------------------------
@@ -338,41 +349,45 @@ getOffside :: Lex a Ordering
 getOffside = Lex $ \cont -> P $ \r x y loc stk ->
         runP (cont (compare x (indentOfParseState stk))) r x y loc stk
 
+getSrcLocL :: Lex a SrcLoc
+getSrcLocL = Lex $ \cont -> P $ \i x y l ->
+        runP (cont l) i x y l
+
 pushContextL :: LexContext -> Lex a ()
-pushContextL ctxt = Lex $ \cont -> P $ \r x y loc (stk, e, pst) ->
-        runP (cont ()) r x y loc (ctxt:stk, e, pst)
+pushContextL ctxt = Lex $ \cont -> P $ \r x y loc (stk, e, pst, cs) ->
+        runP (cont ()) r x y loc (ctxt:stk, e, pst, cs)
 
 popContextL :: String -> Lex a ()
 popContextL fn = Lex $ \cont -> P $ \r x y loc stk -> case stk of
-        (_:ctxt, e, pst) -> runP (cont ()) r x y loc (ctxt, e, pst)
-        ([], _, _)       -> error ("Internal error: empty context in " ++ fn)
+        (_:ctxt, e, pst, cs) -> runP (cont ()) r x y loc (ctxt, e, pst, cs)
+        ([], _, _, _)        -> error ("Internal error: empty context in " ++ fn)
 
 pullCtxtFlag :: Lex a Bool
-pullCtxtFlag = Lex $ \cont -> P $ \r x y loc (ct, e, (d,c)) ->
-        runP (cont c) r x y loc (ct, e, (d,False))
+pullCtxtFlag = Lex $ \cont -> P $ \r x y loc (ct, e, (d,c), cs) ->
+        runP (cont c) r x y loc (ct, e, (d,False), cs)
 
 
 flagDo :: Lex a ()
-flagDo = Lex $ \cont -> P $ \r x y loc (ct, e, (d,c)) ->
-        runP (cont ()) r x y loc (ct, e, (True,c))
+flagDo = Lex $ \cont -> P $ \r x y loc (ct, e, (d,c), cs) ->
+        runP (cont ()) r x y loc (ct, e, (True,c), cs)
 
 
 -- Harp/Hsx
 
 getExtContext :: Lex a (Maybe ExtContext)
-getExtContext = Lex $ \cont -> P $ \r x y loc stk@(_, e, _) ->
+getExtContext = Lex $ \cont -> P $ \r x y loc stk@(_, e, _, _) ->
         let me = case e of
               [] -> Nothing
               (c:_) -> Just c
         in runP (cont me) r x y loc stk
 
 pushExtContextL :: ExtContext -> Lex a ()
-pushExtContextL ec = Lex $ \cont -> P $ \r x y loc (s, e, p) ->
-        runP (cont ()) r x y loc (s, ec:e, p)
+pushExtContextL ec = Lex $ \cont -> P $ \r x y loc (s, e, p, c) ->
+        runP (cont ()) r x y loc (s, ec:e, p, c)
 
 popExtContextL :: String -> Lex a ()
-popExtContextL fn = Lex $ \cont -> P $ \r x y loc stk@(s,e,p) -> case e of
-            (_:ec) -> runP (cont ()) r x y loc (s,ec,p)
+popExtContextL fn = Lex $ \cont -> P $ \r x y loc stk@(s,e,p,c) -> case e of
+            (_:ec) -> runP (cont ()) r x y loc (s,ec,p,c)
             []       -> error ("Internal error: empty tag context in " ++ fn)
 
 
@@ -381,3 +396,9 @@ popExtContextL fn = Lex $ \cont -> P $ \r x y loc stk@(s,e,p) -> case e of
 getExtensionsL :: Lex a [Extension]
 getExtensionsL = Lex $ \cont -> P $ \r x y loc s m ->
         runP (cont $ extensions m) r x y loc s m
+
+-- Comments
+
+pushComment :: Comment -> Lex a ()
+pushComment c = Lex $ \cont -> P $ \r x y loc (s, e, p, cs) ->
+        runP (cont ()) r x y loc (s, e, p, c:cs)

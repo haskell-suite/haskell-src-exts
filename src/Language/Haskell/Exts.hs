@@ -21,6 +21,7 @@ module Language.Haskell.Exts (
     , module Language.Haskell.Exts.Pretty
     , module Language.Haskell.Exts.Extension
     , module Language.Haskell.Exts.Fixity
+    , module Language.Haskell.Exts.Comments
     -- * Parsing of Haskell source files
     , parseFile
     , parseFileWithMode
@@ -37,6 +38,7 @@ import Language.Haskell.Exts.Parser
 import Language.Haskell.Exts.Pretty
 import Language.Haskell.Exts.Extension
 import Language.Haskell.Exts.Fixity
+import Language.Haskell.Exts.Comments
 
 import Data.List
 import Language.Preprocessor.Unlit
