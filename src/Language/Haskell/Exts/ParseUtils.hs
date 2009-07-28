@@ -509,8 +509,8 @@ checkExpr e = case e of
     Case e alts         -> do
                      e <- checkExpr e
                      return (S.Case e alts)
-    Do stmts        -> return (S.Do stmts)
-    MDo stmts       -> return (S.MDo stmts)
+    Do stmts        -> checkDo stmts >> return (S.Do stmts)
+    MDo stmts       -> checkDo stmts >> return (S.MDo stmts)
 --    Tuple es        -> checkManyExprs es S.Tuple
     TupleSection mes -> if all ((/=) Nothing) mes
                          then checkManyExprs (map fromJust mes) S.Tuple
@@ -587,6 +587,10 @@ checkExpr e = case e of
 checkAttr :: ParseXAttr -> P S.XAttr
 checkAttr (XAttr n v) = do v <- checkExpr v
                            return $ S.XAttr n v
+
+checkDo [] = error "Parse error: Last statement in a do-block must be an expression"
+checkDo [Qualifier _] = return ()
+checkDo (_:xs) = checkDo xs
 
 -- type signature for polymorphic recursion!!
 check1Expr :: PExp -> (S.Exp -> a) -> P a

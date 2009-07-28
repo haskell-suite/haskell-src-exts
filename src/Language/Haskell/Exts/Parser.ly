@@ -1393,13 +1393,19 @@ an expression.
 
 A let statement may bind implicit parameters.
 > stmts :: { [Stmt] }
->       : 'let' binds ';' stmts             { LetStmt $2 : $4 }
->       | pat srcloc '<-' trueexp ';' stmts { Generator $2 $1 $4 : $6 }
->       | trueexp ';' stmts                 { Qualifier $1 : $3 }
+>       : stmt stmts1                       { $1 : $2 }
 >       | ';' stmts                         { $2 }
->       | trueexp ';'                       { [Qualifier $1] }
->       | trueexp                           { [Qualifier $1] }
->       | 'rec' stmtlist ';' stmts          { RecStmt $2 : $4 }
+>       | {- empty -}                       { [] }
+
+> stmts1 :: { [Stmt] }
+>       : ';' stmts                         { $2 }
+>       | {- empty -}                       { [] }
+
+> stmt :: { Stmt }
+>       : 'let' binds                       { LetStmt $2 }
+>       | pat srcloc '<-' trueexp           { Generator $2 $1 $4 }
+>       | trueexp                           { Qualifier $1 }
+>       | 'rec' stmtlist                    { RecStmt $2 }
 
 -----------------------------------------------------------------------------
 Record Field Update/Construction
