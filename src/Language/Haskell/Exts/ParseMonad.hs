@@ -54,7 +54,8 @@ data ParseResult a
 --   error if the parse is actually not successful.
 fromParseResult :: ParseResult a -> a
 fromParseResult (ParseOk a) = a
-fromParseResult (ParseFailed loc str) = error $ "fromParseResult: Parse failed: " ++ str
+fromParseResult (ParseFailed loc str) = error $ "fromParseResult: Parse failed at ("
+                ++ show (srcLine loc) ++ ":" ++ show (srcColumn loc) ++ "): " ++ str
 
 instance Functor ParseResult where
   fmap f (ParseOk x)           = ParseOk $ f x
