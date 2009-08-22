@@ -53,9 +53,22 @@ Library
                         Language.Haskell.Exts.Extension,
                         Language.Haskell.Exts.Build,
                         Language.Haskell.Exts.Fixity,
-                        Language.Haskell.Exts.Comments
+                        Language.Haskell.Exts.Comments,
+                        
+                        Language.Haskell.Exts.Annotated,
+                        Language.Haskell.Exts.Annotated.Parser,
+                        Language.Haskell.Exts.Annotated.Pretty,
+                        Language.Haskell.Exts.Annotated.Syntax,
+                        Language.Haskell.Exts.Annotated.Fixity,
+                        Language.Haskell.Exts.Annotated.Build,
+                        Language.Haskell.Exts.Annotated.Comments
+
   Other-modules:        Language.Haskell.Exts.ParseMonad,
                         Language.Haskell.Exts.Lexer,
                         Language.Haskell.Exts.ParseUtils,
-                        Language.Haskell.Exts.ExtScheme
+                        Language.Haskell.Exts.ExtScheme,
+                        
+                        Language.Haskell.Exts.Annotated.ParseMonad,
+                        Language.Haskell.Exts.Annotated.Lexer,
+                        Language.Haskell.Exts.Annotated.ParseUtils
   Hs-source-dirs:       src
