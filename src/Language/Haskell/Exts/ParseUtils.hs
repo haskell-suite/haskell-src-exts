@@ -222,6 +222,7 @@ checkSimple _kw (TyCon (UnQual t))   xs = do
       Symbol _ -> checkEnabled TypeOperators
       _ -> return ()
     return (t,xs)
+checkSimple kw (TyParen t) xs = checkSimple kw t xs
 checkSimple kw _ _ = fail ("Illegal " ++ kw ++ " declaration")
 
 isTyVarBind :: PType -> Bool
