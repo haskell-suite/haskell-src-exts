@@ -477,16 +477,16 @@ shift/reduce-conflict, so we don't handle this case here, but in bodyaux.
 
 > topdecl :: { Decl L }
 >       : 'type' dtype '=' truectype
->                {% do { (c,ts) <- checkSimpleType $2;
+>                {% do { dh <- checkSimpleType $2;
 >                        let {l = nIS $1 <++> ann $4 <** [$1,$3]};
->                        return (TypeDecl l c ts $4) } }
+>                        return (TypeDecl l dh $4) } }
 
 Requires the TypeFamilies extension enabled, but the lexer will handle
 that through the 'family' keyword.
 >       | 'type' 'family' type optkind
->                {% do { (c,ts) <- checkSimpleType $3;
+>                {% do { dh <- checkSimpleType $3;
 >                        let {l = nIS $1 <++> ann $3 <+?> (fmap ann) (fst $4) <** ($1:$2:snd $4)};
->                        return (TypeFamDecl l c ts (fst $4)) } }
+>                        return (TypeFamDecl l dh (fst $4)) } }
 
 Here there is no special keyword so we must do the check.
 >       | 'type' 'instance' truedtype '=' truectype
@@ -495,34 +495,34 @@ Here there is no special keyword so we must do the check.
 >                        let {l = nIS $1 <++> ann $5 <** [$1,$2,$4]};
 >                        return (TypeInsDecl l $3 $5) } }
 >       | data_or_newtype ctype constrs0 deriving
->                {% do { (cs,c,t) <- checkDataHeader $2;
->                        let { (qds,ss1,minf1) = $3; (mders,ss2,minf2) = $4 ;
->                              l = $1 <> $2 <+?> minf1 <+?> minf2 <** (ss1 ++ ss2)};
+>                {% do { (cs,dh) <- checkDataHeader $2;
+>                        let { (qds,ss,minf) = $3;
+>                              l = $1 <> $2 <+?> minf <+?> fmap ann $4 <** ss};
 >                        checkDataOrNew $1 qds;
->                        return (DataDecl l $1 cs c t (reverse qds) mders) } }
+>                        return (DataDecl l $1 cs dh (reverse qds) $4) } }
 
 Requires the GADTs extension enabled, handled in gadtlist.
 >       | data_or_newtype ctype optkind 'where' gadtlist deriving
->                {% do { (cs,c,t) <- checkDataHeader $2;
->                        let { (gs,ss1,inf,b) = $5; (ds,ss2,minf) = $6 ;
->                              l = ann $1 <++> inf <+?> minf <** (snd $3 ++ ($4:ss1 ++ ss2)) <?? b};
+>                {% do { (cs,dh) <- checkDataHeader $2;
+>                        let { (gs,ss,inf) = $5;
+>                              l = ann $1 <++> inf <+?> fmap ann $6 <** (snd $3 ++ $4:ss)};
 >                        checkDataOrNew $1 gs;
->                        return (GDataDecl l $1 cs c t (fst $3) (reverse gs) ds) } }
+>                        return (GDataDecl l $1 cs dh (fst $3) (reverse gs) $6) } }
 
 Same as above, lexer will handle it through the 'family' keyword.
 >       | 'data' 'family' ctype optkind
->                {% do { (cs,c,t) <- checkDataHeader $3;
+>                {% do { (cs,dh) <- checkDataHeader $3;
 >                        let {l = nIS $1 <++> ann $3 <+?> (fmap ann) (fst $4) <** ($1:$2:snd $4)};
->                        return (DataFamDecl l cs c t (fst $4)) } }
+>                        return (DataFamDecl l cs dh (fst $4)) } }
 
 Here we must check for TypeFamilies.
 >       | data_or_newtype 'instance' truectype constrs0 deriving
 >                {% do { -- (cs,c,t) <- checkDataHeader $4;
 >                        checkEnabled TypeFamilies ;
->                        let { (qds,ss1,minf1) = $4 ; (mders,ss2,minf2) = $5 ;
->                              l = $1 <> $3 <+?> minf1 <+?> minf2 <** ($2:ss1 ++ ss2) };
+>                        let { (qds,ss,minf) = $4 ;
+>                              l = $1 <> $3 <+?> minf <+?> fmap ann $5 <** $2:ss };
 >                        checkDataOrNew $1 qds;
->                        return (DataInsDecl l $1 $3 (reverse qds) mders) } }
+>                        return (DataInsDecl l $1 $3 (reverse qds) $5) } }
 
 This style requires both TypeFamilies and GADTs, the latter is handled in gadtlist.
 >       | data_or_newtype 'instance' truectype optkind 'where' gadtlist deriving
@@ -531,23 +531,23 @@ This style requires both TypeFamilies and GADTs, the latter is handled in gadtli
 >                        let {(gs,ss,inf) = $6;
 >                             l = ann $1 <++> inf <+?> fmap ann $7 <** ($2:snd $4 ++ $5:ss)};
 >                        checkDataOrNew $1 gs;
->                        return (GDataInsDecl l $1 $3 (fst $4) (reverse gs) ds) } }
+>                        return (GDataInsDecl l $1 $3 (fst $4) (reverse gs) $7) } }
 >       | 'class' ctype fds optcbody
->                {% do { (cs,c,vs) <- checkClassHeader $2;
->                        let {(fds,ss1,minf1) = $3;(mcs,ss2,minf2,b) = $4} ;
->                        let { l = nIS $1 <++> ann $2 <+?> minf1 <+?> minf2 <** ($1:ss1 ++ ss2) <?? b} ;
->                        return (ClassDecl l cs c vs fds mcs) } }
+>                {% do { (cs,dh) <- checkClassHeader $2;
+>                        let {(fds,ss1,minf1) = $3;(mcs,ss2,minf2) = $4} ;
+>                        let { l = nIS $1 <++> ann $2 <+?> minf1 <+?> minf2 <** ($1:ss1 ++ ss2)} ;
+>                        return (ClassDecl l cs dh fds mcs) } }
 >       | 'instance' ctype optvaldefs
->                {% do { (cs,c,ts) <- checkInstHeader $2;
->                        let {(mis,ss,minf,b) = $3};
->                        return (InstDecl (nIS $1 <++> ann $2 <+?> minf <** ($1:ss) <?? b) cs c ts mis) } }
+>                {% do { (cs,ih) <- checkInstHeader $2;
+>                        let {(mis,ss,minf) = $3};
+>                        return (InstDecl (nIS $1 <++> ann $2 <+?> minf <** ($1:ss)) cs ih mis) } }
 
 Requires the StandaloneDeriving extension enabled.
 >       | 'deriving' 'instance' ctype
 >                {% do { checkEnabled StandaloneDeriving ;
->                        (cs, c, ts) <- checkInstHeader $3;
+>                        (cs, ih) <- checkInstHeader $3;
 >                        let {l = nIS $1 <++> ann $3 <** [$1,$2]};
->                        return (DerivDecl l cs c ts) } }
+>                        return (DerivDecl l cs ih) } }
 >       | 'default' '(' typelist ')'
 >                { DefaultDecl ($1 <^^> $4 <** ($1:$2 : snd $3 ++ [$4])) (fst $3) }
 
@@ -605,9 +605,9 @@ lexer through the 'foreign' (and 'export') keyword.
 >       | '{-# SPECIALISE_INLINE' activation qvar '::' sigtypes '#-}'
 >                                                        { let Loc l (SPECIALISE_INLINE s) = $1
 >                                                           in SpecInlineSig (l <^^> $6 <** (l:$4:snd $5++[$6])) s $2 $3 (fst $5) }
->       | '{-# SPECIALISE' 'instance' ctype '#-}'        {% do { (cs,c,ts) <- checkInstHeader $3;
+>       | '{-# SPECIALISE' 'instance' ctype '#-}'        {% do { (cs,ih) <- checkInstHeader $3;
 >                                                                let {l = $1 <^^> $4 <** [$1,$2,$4]};
->                                                                return $ InstSig l cs c ts } }
+>                                                                return $ InstSig l cs ih } }
 
 > sigtypes :: { ([Type L],[S]) }
 >       : sigtype                           { ([$1],[]) }
@@ -794,15 +794,15 @@ is any of the keyword-enabling ones, except ExistentialQuantification.
 
 > ctype :: { PType L }
 >       : 'forall' ktyvars '.' ctype    { TyForall (nIS $1 <++> ann $4 <** [$1,$3]) (Just (reverse (fst $2))) Nothing $4 }
->       | context '=>' ctype            { TyForall ($1 <> $3) Nothing (Just $1) $3 }
+>       | context ctype                 { TyForall ($1 <> $2) Nothing (Just $1) $2 }
 >       | type                          { $1 }
 
 Equality constraints require the TypeFamilies extension.
 
 > context :: { PContext L }
->       : btype                         {% checkPContext $1 }
->       | btype '~' btype               {% do { checkEnabled TypeFamilies;
->                                               let {l = $1 <> $3 <** [$2]};
+>       : btype '=>'                    {% checkPContext $ (amap (\l -> l <++> nIS $2 <** (srcInfoPoints l ++ [$2]))) $1 }
+>       | btype '~' btype '=>'          {% do { checkEnabled TypeFamilies;
+>                                               let {l = $1 <> $3 <** [$2,$4]};
 >                                               checkPContext (TyPred l $ EqualP l $1 $3) } }
 
 > types :: { ([PType L],[S]) }
@@ -879,10 +879,10 @@ To allow the empty case we need the EmptyDataDecls extension.
 >       | constr                        { ([$1],[],ann $1) }
 
 > constr :: { QualConDecl L }
->       : forall context '=>' constr1    {% do { checkEnabled ExistentialQuantification ;
+>       : forall context constr1        {% do { checkEnabled ExistentialQuantification ;
 >                                                ctxt <- checkContext (Just $2) ;
 >                                                let {(mtvs,ss,ml) = $1} ;
->                                                return $ QualConDecl (ml <?+> ann $4 <** (ss ++ [$3])) mtvs ctxt $4 } }
+>                                                return $ QualConDecl (ml <?+> ann $3 <** ss) mtvs ctxt $3 } }
 >       | forall constr1                 { let (mtvs, ss, ml) = $1 in QualConDecl (ml <?+> ann $2 <** ss) mtvs Nothing $2 }
 
 > forall :: { (Maybe [TyVarBind L], [S], Maybe L) }
@@ -935,13 +935,13 @@ as qcon and then check separately that they are truly unqualified.
 >       | '!' trueatype                     { BangedTy   (nIS $1 <++> ann $2 <** [$1]) $2 }
 >       | '{-# UNPACK' '#-}' '!' trueatype  { UnpackedTy (nIS $1 <++> ann $4 <** [$1,$2,$3]) $4 }
 
-> deriving :: { (Maybe [Deriving L],[S],Maybe L) }
->       : {- empty -}                   { (Nothing,[],Nothing) }
->       | 'deriving' qtycls1            { let l = nIS $1 <++> ann $2 in (Just [Deriving l $2 []], [$1], Just l) }
->       | 'deriving' '('          ')'   { (Just [], [$1,$2,$3], Just $ $1 <^^> $3) }
->       | 'deriving' '(' dclasses ')'   { (Just $ reverse (fst $3), $1:$2:snd $3 ++ [$4], Just $ $1 <^^> $4) }
+> deriving :: { Maybe (Deriving L) }
+>       : {- empty -}                   { Nothing }
+>       | 'deriving' qtycls1            { let l = nIS $1 <++> ann $2 <** [$1] in Just $ Deriving l [IHead (ann $2) $2 []] }
+>       | 'deriving' '('          ')'   { Just $ Deriving ($1 <^^> $3 <** [$1,$2,$3]) [] }
+>       | 'deriving' '(' dclasses ')'   { Just $ Deriving ($1 <^^> $4 <** $1:$2: reverse (snd $3) ++ [$4]) (reverse (fst $3)) }
 
-> dclasses :: { ([Deriving L],[S]) }
+> dclasses :: { ([InstHead L],[S]) }
 >       : types1                        {% checkDeriving (fst $1) >>= \ds -> return (ds, snd $1) }
 
 > qtycls1 :: { QName L }
@@ -993,13 +993,13 @@ Associated types require the TypeFamilies extension.
 
 > atdecl :: { ClassDecl L }
 >       : 'type' type optkind
->             {% do { (c,ts) <- checkSimpleType $2;
->                     return (ClsTyFam  (nIS $1 <++> ann $2 <+?> (fmap ann) (fst $3) <** $1:snd $3) c ts (fst $3)) } }
+>             {% do { dh <- checkSimpleType $2;
+>                     return (ClsTyFam  (nIS $1 <++> ann $2 <+?> (fmap ann) (fst $3) <** $1:snd $3) dh (fst $3)) } }
 >       | 'type' truedtype '=' truectype
 >                     { ClsTyDef (nIS $1 <++> ann $4 <** [$1,$3]) $2 $4 }
 >       | 'data' ctype optkind
->             {% do { (cs,c,t) <- checkDataHeader $2;
->                     return (ClsDataFam (nIS $1 <++> ann $2 <+?> (fmap ann) (fst $3) <** $1:snd $3) cs c t (fst $3)) } }
+>             {% do { (cs,dh) <- checkDataHeader $2;
+>                     return (ClsDataFam (nIS $1 <++> ann $2 <+?> (fmap ann) (fst $3) <** $1:snd $3) cs dh (fst $3)) } }
 
 -----------------------------------------------------------------------------
 Instance declarations
@@ -1033,9 +1033,9 @@ Associated types require the TypeFamilies extension enabled.
 >                        return (InsType (nIS $1 <++> ann $4 <** [$1,$3]) $2 $4) } }
 >       | data_or_newtype truectype constrs0 deriving
 >                {% do { -- (cs,c,t) <- checkDataHeader $4;
->                        let {(ds,ss1,minf1) = $3 ; (mds,ss2,minf2) = $4};
+>                        let {(ds,ss,minf) = $3};
 >                        checkDataOrNew $1 ds;
->                        return (InsData ($1 <> $2 <+?> minf1 <+?> minf2 <** (ss1 ++ ss2)) $1 $2 (reverse ds) mds) } }
+>                        return (InsData ($1 <> $2 <+?> minf <+?> fmap ann $4 <** ss ) $1 $2 (reverse ds) $4) } }
 >       | data_or_newtype truectype optkind 'where' gadtlist deriving
 >                {% do { -- (cs,c,t) <- checkDataHeader $4;
 >                        let { (gs,ss,inf) = $5 } ;

@@ -63,8 +63,8 @@ module Language.Haskell.Exts.Annotated.ParseUtils (
     , p_unboxed_singleton_con   -- PExp
     ) where
 
-import Language.Haskell.Exts.Annotated.Syntax hiding ( Type(..), Asst(..), Exp(..), FieldUpdate(..), XAttr(..) )
-import qualified Language.Haskell.Exts.Annotated.Syntax as S ( Type(..), Asst(..), Exp(..), FieldUpdate(..), XAttr(..) )
+import Language.Haskell.Exts.Annotated.Syntax hiding ( Type(..), Asst(..), Exp(..), FieldUpdate(..), XAttr(..), Context(..) )
+import qualified Language.Haskell.Exts.Annotated.Syntax as S ( Type(..), Asst(..), Exp(..), FieldUpdate(..), XAttr(..), Context(..) )
 import Language.Haskell.Exts.Annotated.SrcLoc
 import Language.Haskell.Exts.Annotated.ParseMonad
 import Language.Haskell.Exts.Annotated.Pretty
@@ -116,15 +116,15 @@ checkPatternGuards _ = checkEnabled PatternGuards
 -- parameters for later.
 checkPContext :: PType L -> P (PContext L)
 checkPContext (TyTuple l Boxed ts) =
-    mapM checkAssertion ts >>= return . PContext l
-checkPContext (TyCon _ (Special _ (UnitCon l))) =
-    return $ PContext l []
-checkPContext (TyParen _ t) = do
-    c <- checkAssertion t
-    return $ PContext (ann c) [c]
+    mapM checkAssertion ts >>= return . CxTuple l
+checkPContext (TyCon l (Special _ (UnitCon _))) =
+    return $ CxEmpty l
+checkPContext (TyParen l t) = do
+    c <- checkPContext t
+    return $ CxParen l c
 checkPContext t = do
     c <- checkAssertion t
-    return $ PContext (ann c) [c]
+    return $ CxSingle (ann c) c
 
 ------------------------------------------------------------------------------------------------------------------- WORKING HERE
 
@@ -135,21 +135,22 @@ checkAssertion :: PType L -> P (PAsst L)
 checkAssertion (TyPred _ p@(IParam _ _ _)) = return p
 -- We cannot even get here unless TypeFamilies is enabled.
 checkAssertion (TyPred _ p@(EqualP _ _ _)) = return p
-checkAssertion t = checkAssertion' [] t
+checkAssertion t = checkAssertion' id [] t
     where   -- class assertions must have at least one argument
-            checkAssertion' ts@(_:xs) (TyCon l c) = do
+            checkAssertion' fl ts@(_:xs) (TyCon l c) = do
                 when (not $ null xs) $ checkEnabled MultiParamTypeClasses
                 when (isSymbol c)    $ checkEnabled TypeOperators
-                return $ ClassA l c ts
-            checkAssertion' ts (TyApp _ a t) = do
+                return $ ClassA (fl l) c ts
+            checkAssertion' fl ts (TyApp l a t) = do
                 -- no check on t at this stage
-                checkAssertion' (t:ts) a
-            checkAssertion' ts (TyInfix _ a op b) =
+                checkAssertion' (const (fl l)) (t:ts) a
+            checkAssertion' fl ts (TyInfix l a op b) = do
                 -- infix operators require TypeOperators
-                checkEnabled TypeOperators >> checkAssertion' (a:b:ts) (TyCon (ann op) op)
-            checkAssertion' ts (TyParen _ t) =
-                checkAssertion' ts t
-            checkAssertion' _ _ = fail "Illegal class assertion"
+                checkEnabled TypeOperators
+                return $ InfixA (fl l) a op b
+            checkAssertion' fl ts (TyParen l t) =
+                checkAssertion' (const (fl l)) ts t
+            checkAssertion' _ _ _ = fail "Illegal class assertion"
 
 isSymbol :: QName L -> Bool
 isSymbol (UnQual _ (Symbol _ _)) = True
@@ -160,16 +161,24 @@ isSymbol _                       = False
 -- Checks simple contexts for class and instance
 -- headers. If FlexibleContexts is enabled then
 -- anything goes, otherwise only tyvars are allowed.
-checkSContext :: Maybe (PContext L) -> P (Maybe (Context L))
-checkSContext (Just (PContext l cs)) = liftM Just $ mapM (checkAsst True) cs >>= return . Context l
+checkSContext :: Maybe (PContext L) -> P (Maybe (S.Context L))
+checkSContext (Just ctxt) = case ctxt of
+    CxEmpty l -> return $ Just $ S.CxEmpty l
+    CxSingle l a -> checkAsst True a >>= return . Just . S.CxSingle l
+    CxTuple l as -> mapM (checkAsst True) as >>= return . Just . S.CxTuple l
+    CxParen l cx -> checkSContext (Just cx) >>= return . fmap (S.CxParen l)
 checkSContext _ = return Nothing
 
 -- Checks ordinary contexts for sigtypes and data type
 -- declarations. If FlexibleContexts is enabled then
 -- anything goes, otherwise only tyvars OR tyvars
 -- applied to types are allowed.
-checkContext :: Maybe (PContext L) -> P (Maybe (Context L))
-checkContext (Just (PContext l cs)) = liftM Just $ mapM (checkAsst False) cs >>= return . Context l
+checkContext :: Maybe (PContext L) -> P (Maybe (S.Context L))
+checkContext (Just ctxt) = case ctxt of
+    CxEmpty l -> return $ Just $ S.CxEmpty l
+    CxSingle l a -> checkAsst False a >>= return . Just . S.CxSingle l
+    CxTuple l as -> mapM (checkAsst False) as >>= return . Just . S.CxTuple l
+    CxParen l cx -> checkSContext (Just cx) >>= return . fmap (S.CxParen l)
 checkContext _ = return Nothing
 
 checkAsst :: Bool -> PAsst L -> P (S.Asst L)
@@ -206,34 +215,37 @@ checkAsstParam isSimple t = do
 -- Checking Headers
 
 
-checkDataHeader :: PType L -> P (Maybe (Context L), Name L, [TyVarBind L])
+checkDataHeader :: PType L -> P (Maybe (S.Context L), DeclHead L)
 checkDataHeader (TyForall _ Nothing cs t) = do
-    (c,ts) <- checkSimple "data/newtype" t []
+    dh <- checkSimple "data/newtype" t []
     cs <- checkContext cs
-    return (cs,c,ts)
+    return (cs,dh)
 checkDataHeader t = do
-    (c,ts) <- checkSimple "data/newtype" t []
-    return (Nothing,c,ts)
+    dh <- checkSimple "data/newtype" t []
+    return (Nothing,dh)
 
-checkClassHeader :: PType L -> P (Maybe (Context L), Name L, [TyVarBind L])
+checkClassHeader :: PType L -> P (Maybe (S.Context L), DeclHead L)
 checkClassHeader (TyForall _ Nothing cs t) = do
-    (c,ts) <- checkSimple "class" t []
+    dh <- checkSimple "class" t []
     cs <- checkSContext cs
-    return (cs,c,ts)
+    return (cs,dh)
 checkClassHeader t = do
-    (c,ts) <- checkSimple "class" t []
-    return (Nothing,c,ts)
+    dh <- checkSimple "class" t []
+    return (Nothing,dh)
 
-checkSimple :: String -> PType L -> [TyVarBind L] -> P (Name L, [TyVarBind L])
+checkSimple :: String -> PType L -> [TyVarBind L] -> P (DeclHead L)
 checkSimple kw (TyApp _ l t) xs | isTyVarBind t = checkSimple kw l (toTyVarBind t : xs)
-checkSimple _  (TyInfix _ t1 (UnQual _ t) t2) xs
+checkSimple _  (TyInfix l t1 (UnQual _ t) t2) []
     | isTyVarBind t1 && isTyVarBind t2 =
-       checkEnabled TypeOperators >> return (t, toTyVarBind t1 : toTyVarBind t2 : xs)
-checkSimple _kw (TyCon _ (UnQual _ t))   xs = do
+       checkEnabled TypeOperators >> return (DHInfix l (toTyVarBind t1) t (toTyVarBind t2))
+checkSimple _kw (TyCon l (UnQual _ t))   xs = do
     case t of
       Symbol _ _ -> checkEnabled TypeOperators
       _ -> return ()
-    return (t,xs)
+    return (DHead l t xs)
+checkSimple kw (TyParen l t) xs = do
+    dh <- checkSimple kw t xs
+    return (DHParen l dh)
 checkSimple kw _ _ = fail ("Illegal " ++ kw ++ " declaration")
 
 isTyVarBind :: PType L -> Bool
@@ -245,30 +257,30 @@ toTyVarBind :: PType L -> TyVarBind L
 toTyVarBind (TyVar l n) = UnkindedVar l n
 toTyVarBind (TyKind l (TyVar _ n) k) = KindedVar l n k
 
-checkInstHeader :: PType L -> P (Maybe (Context L), QName L, [S.Type L])
+checkInstHeader :: PType L -> P (Maybe (S.Context L), InstHead L)
 checkInstHeader (TyForall _ Nothing cs t) = do
-    (Deriving l c ts) <- checkInsts t []
+    ih <- checkInsts t []
     cs <- checkSContext cs
-    return (cs, c, ts)
+    return (cs, ih)
 checkInstHeader t = do
-    (Deriving _ c ts) <- checkInsts t []
-    return (Nothing, c, ts)
+    ih <- checkInsts t []
+    return (Nothing, ih)
 
 
-checkInsts :: PType L -> [PType L] -> P (Deriving L)
+checkInsts :: PType L -> [PType L] -> P (InstHead L)
 checkInsts (TyApp _ l t) ts = checkInsts l (t:ts)
 checkInsts (TyCon l c)   ts = do
     when (isSymbol c) $ checkEnabled TypeOperators
     ts <- checkTypes ts
-    return $ Deriving l c ts
+    return $ IHead l c ts
 checkInsts (TyInfix l a op b) [] = do
     checkEnabled TypeOperators
-    ts <- checkTypes [a,b]
-    return $ Deriving l op ts
-checkInsts (TyParen _ t) [] = checkInsts t []
+    [ta,tb] <- checkTypes [a,b]
+    return $ IHInfix l ta op tb
+checkInsts (TyParen l t) [] = checkInsts t [] >>= return . IHParen l
 checkInsts _ _ = fail "Illegal instance declaration"
 
-checkDeriving :: [PType L] -> P [Deriving L]
+checkDeriving :: [PType L] -> P [InstHead L]
 checkDeriving = mapM (flip checkInsts [])
 
 -----------------------------------------------------------------------------
@@ -301,7 +313,7 @@ checkPat e [] = case e of
                     l <- checkPat l []
                     r <- checkPat r []
                     return (PInfixApp loc l c r)
-            QVarOp _ (UnQual _ (Symbol _ "+")) -> do
+            QVarOp ppos (UnQual _ (Symbol _ "+")) -> do
                     case (l,r) of
                         (Var _ (UnQual _ n@(Ident _ _)), Lit _ (Int _ k)) -> return (PNPlusK loc n k)
                         _ -> patFail ""
@@ -652,29 +664,31 @@ checkValDef :: L -> PExp L -> Maybe (S.Type L) -> Rhs L -> Maybe (Binds L) -> P 
 checkValDef l lhs optsig rhs whereBinds = do
     mlhs <- isFunLhs lhs []
     case mlhs of
-     Just (f,es) -> do
+     Just (f,es,b) -> do
             ps <- mapM checkPattern es
             case optsig of -- only pattern bindings can have signatures
-                Nothing -> return (FunBind l [Match l f ps optsig rhs whereBinds])
+                Nothing -> return (FunBind l $
+                            if b then [Match l f ps rhs whereBinds]
+                                 else let [a,b] = ps in [InfixMatch l a f b rhs whereBinds])
                 Just _  -> fail "Cannot give an explicit type signature to a function binding"
      Nothing     -> do
             lhs <- checkPattern lhs
             return (PatBind l lhs optsig rhs whereBinds)
 
--- A variable binding is parsed as an PatBind.
+-- A variable binding is parsed as a PatBind.
 
-isFunLhs :: PExp L -> [PExp L] -> P (Maybe (Name L, [PExp L]))
+isFunLhs :: PExp L -> [PExp L] -> P (Maybe (Name L, [PExp L], Bool))
 isFunLhs (InfixApp _ l (QVarOp loc (UnQual _ op)) r) es
     | op =~= (Symbol () "!") = do
         exts <- getExtensions
         if BangPatterns `elem` exts
          then let (b,bs) = splitBang r []
                in isFunLhs l (BangPat loc b : bs ++ es)
-         else return $ Just (op, l:r:es) -- It's actually a definition of the operator !
-    | otherwise = return $ Just (op, l:r:es)
-isFunLhs (App _ (Var _ (UnQual _ f)) e) es = return $ Just (f, e:es)
+         else return $ Just (op, l:r:es, False) -- It's actually a definition of the operator !
+    | otherwise = return $ Just (op, l:r:es, False)
+isFunLhs (App _ (Var _ (UnQual _ f)) e) es = return $ Just (f, e:es, True)
 isFunLhs (App _ f e) es = isFunLhs f (e:es)
-isFunLhs (Var _ (UnQual _ f)) es@(_:_) = return $ Just (f, es)
+isFunLhs (Var _ (UnQual _ f)) es@(_:_) = return $ Just (f, es, True)
 isFunLhs (Paren _ f) es@(_:_) = isFunLhs f es
 isFunLhs _ _ = return Nothing
 
@@ -752,34 +766,34 @@ checkRevDecls :: [Decl L] -> P [Decl L]
 checkRevDecls = mergeFunBinds []
     where
     mergeFunBinds revDs [] = return revDs
-    mergeFunBinds revDs (FunBind l ms1@(Match _ name ps _ _ _:_):ds1) =
-        mergeMatches ms1 ds1
+    mergeFunBinds revDs (FunBind l ms1@(Match _ name ps _ _:_):ds1) =
+        mergeMatches ms1 ds1 l
         where
         arity = length ps
-        mergeMatches ms' (FunBind _ ms@(Match loc name' ps' _ _ _:_):ds)
+        mergeMatches ms' (FunBind _ ms@(Match loc name' ps' _ _:_):ds) l
             | name' =~= name =
             if length ps' /= arity
             then fail ("arity mismatch for '" ++ prettyPrint name ++ "'")
-                 -- `atSrcLoc` loc
-            else mergeMatches (ms++ms') ds
-        mergeMatches ms' ds = mergeFunBinds (FunBind l ms':revDs) ds
+                    -- `atSrcLoc` loc
+            else mergeMatches (ms++ms') ds (loc <++> l)
+        mergeMatches ms' ds l = mergeFunBinds (FunBind l ms':revDs) ds
     mergeFunBinds revDs (d:ds) = mergeFunBinds (d:revDs) ds
 
 checkRevClsDecls :: [ClassDecl L] -> P [ClassDecl L]
 checkRevClsDecls = mergeClsFunBinds []
     where
     mergeClsFunBinds revDs [] = return revDs
-    mergeClsFunBinds revDs (ClsDecl l (FunBind _ ms1@(Match _ name ps _ _ _:_)):ds1) =
-        mergeMatches ms1 ds1
+    mergeClsFunBinds revDs (ClsDecl l (FunBind _ ms1@(Match _ name ps _ _:_)):ds1) =
+        mergeMatches ms1 ds1 l
         where
         arity = length ps
-        mergeMatches ms' (ClsDecl _ (FunBind _ ms@(Match loc name' ps' _ _ _:_)):ds)
+        mergeMatches ms' (ClsDecl _ (FunBind _ ms@(Match loc name' ps' _ _:_)):ds) l
             | name' =~= name =
             if length ps' /= arity
             then fail ("arity mismatch for '" ++ prettyPrint name ++ "'")
-                 -- `atSrcLoc` loc
-            else mergeMatches (ms++ms') ds
-        mergeMatches ms' ds = mergeClsFunBinds (ClsDecl l (FunBind l ms'):revDs) ds
+                    -- `atSrcLoc` loc
+            else mergeMatches (ms++ms') ds (loc <++> l)
+        mergeMatches ms' ds l = mergeClsFunBinds (ClsDecl l (FunBind l ms'):revDs) ds
     mergeClsFunBinds revDs (d:ds) = mergeClsFunBinds (d:revDs) ds
 
 checkRevInstDecls :: [InstDecl L] -> P [InstDecl L]
@@ -787,17 +801,17 @@ checkRevInstDecls = mergeInstFunBinds []
     where
     mergeInstFunBinds :: [InstDecl L] -> [InstDecl L] -> P [InstDecl L]
     mergeInstFunBinds revDs [] = return revDs
-    mergeInstFunBinds revDs (InsDecl l (FunBind _ ms1@(Match _ name ps _ _ _:_)):ds1) =
-        mergeMatches ms1 ds1
+    mergeInstFunBinds revDs (InsDecl l (FunBind _ ms1@(Match _ name ps _ _:_)):ds1) =
+        mergeMatches ms1 ds1 l
         where
         arity = length ps
-        mergeMatches ms' (InsDecl _ (FunBind _ ms@(Match loc name' ps' _ _ _:_)):ds)
+        mergeMatches ms' (InsDecl _ (FunBind _ ms@(Match loc name' ps' _ _:_)):ds) l
             | name' =~= name =
             if length ps' /= arity
             then fail ("arity mismatch for '" ++ prettyPrint name ++ "'")
-                 -- `atSrcLoc` loc
-            else mergeMatches (ms++ms') ds
-        mergeMatches ms' ds = mergeInstFunBinds (InsDecl l (FunBind l ms'):revDs) ds
+                    -- `atSrcLoc` loc
+            else mergeMatches (ms++ms') ds (loc <++> l)
+        mergeMatches ms' ds l = mergeInstFunBinds (InsDecl l (FunBind l ms'):revDs) ds
     mergeInstFunBinds revDs (d:ds) = mergeInstFunBinds (d:revDs) ds
 
 ----------------------------------------------------------------
@@ -809,7 +823,7 @@ checkDataOrNew (NewType _) [x] = return ()
 checkDataOrNew (DataType _) _  = return ()
 checkDataOrNew _        _  = fail "newtype declaration must have exactly one constructor."
 
-checkSimpleType :: PType L -> P (Name L, [TyVarBind L])
+checkSimpleType :: PType L -> P (DeclHead L)
 checkSimpleType t = checkSimple "test" t []
 
 ---------------------------------------
@@ -1051,20 +1065,35 @@ instance Annotated PExp where
         EnumFromThenTo l ef eth eto -> l
         ParComp  l e qsss       -> l
         ExpTypeSig l e t        -> l
+        AsPat l n e             -> l
+        WildCard l              -> l
+        IrrPat l e              -> l
+        PostOp l e op           -> l
+        PreOp l op e            -> l
+        ViewPat l e1 e2         -> l
+        SeqRP l es              -> l
+        GuardRP l e ss          -> l
+        EitherRP l e1 e2        -> l
+        CAsRP l n e             -> l
+
         VarQuote l qn           -> l
         TypQuote l qn           -> l
         BracketExp l br         -> l
         SpliceExp l sp          -> l
         QuasiQuote l sn se      -> l
 
-        XTag  l xn xas me es     -> l
-        XETag l xn xas me        -> l
-        XPcdata l s              -> l
-        XExpTag l e              -> l
+        XTag  l xn xas me es    -> l
+        XETag l xn xas me       -> l
+        XPcdata l s             -> l
+        XExpTag l e             -> l
+        XRPats l es             -> l
 
         CorePragma l s e   -> l
         SCCPragma  l s e   -> l
         GenPragma  l s n12 n34 e -> l
+
+        ExplTypeArg l qn t      -> l
+        BangPat l e             -> l
 
         Proc            l p e   -> l
         LeftArrApp      l e1 e2 -> l
@@ -1097,6 +1126,20 @@ instance Annotated PExp where
         EnumFromThenTo l ef eth eto -> EnumFromThenTo (f l) ef eth eto
         ParComp  l e qsss       -> ParComp  (f l) e qsss
         ExpTypeSig l e t        -> ExpTypeSig (f l) e t
+
+        AsPat l n e             -> AsPat (f l) n e
+        WildCard l              -> WildCard (f l)
+        IrrPat l e              -> IrrPat (f l) e
+        PostOp l e op           -> PostOp (f l) e op
+        PreOp l op e            -> PreOp (f l) op e
+        ViewPat l e1 e2         -> ViewPat (f l) e1 e2
+        SeqRP l es              -> SeqRP (f l) es
+        GuardRP l e ss          -> GuardRP (f l) e ss
+        EitherRP l e1 e2        -> EitherRP (f l) e1 e2
+        CAsRP l n e             -> CAsRP (f l) n e
+        ExplTypeArg l n t       -> ExplTypeArg (f l) n t
+        BangPat l e             -> BangPat (f l) e
+
         VarQuote l qn           -> VarQuote (f l) qn
         TypQuote l qn           -> TypQuote (f l) qn
         BracketExp l br         -> BracketExp (f l) br
@@ -1140,15 +1183,28 @@ p_tuple_con l b i       = Con l (tuple_con_name l b i)
 p_unboxed_singleton_con :: l -> PExp l
 p_unboxed_singleton_con l = Con l (unboxed_singleton_con_name l)
 
-data PContext l = PContext l [PAsst l]
+data PContext l
+    = CxSingle l (PAsst l)
+    | CxTuple  l [PAsst l]
+    | CxParen  l (PContext l)
+    | CxEmpty  l
  deriving (Eq, Show)
 
 instance Functor PContext where
-  fmap f (PContext l assts) = PContext (f l) (map (fmap f) assts)
+  fmap f (CxSingle l asst) = CxSingle (f l) (fmap f asst)
+  fmap f (CxTuple l assts) = CxTuple (f l) (map (fmap f) assts)
+  fmap f (CxParen l ctxt)  = CxParen (f l) (fmap f ctxt)
+  fmap f (CxEmpty l)       = CxEmpty (f l)
 
 instance Annotated PContext where
-  ann (PContext l _) = l
-  amap f (PContext l assts) = PContext (f l) assts
+  ann (CxSingle l asst ) = l
+  ann (CxTuple  l assts) = l
+  ann (CxParen  l ctxt ) = l
+  ann (CxEmpty  l)       = l
+  amap f (CxSingle l asst ) = CxSingle (f l) asst
+  amap f (CxTuple  l assts) = CxTuple  (f l) assts
+  amap f (CxParen  l ctxt ) = CxParen  (f l) ctxt
+  amap f (CxEmpty l) = CxEmpty (f l)
 
 data PType l
      = TyForall l
