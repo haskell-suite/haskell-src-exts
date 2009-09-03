@@ -1,0 +1,1 @@
+happyThen :: () => P a
