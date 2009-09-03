@@ -46,6 +46,9 @@ mkSrcSpan (SrcLoc fn sl sc) (SrcLoc _ el ec) = SrcSpan fn sl sc el ec
 mergeSrcSpan :: SrcSpan -> SrcSpan -> SrcSpan
 mergeSrcSpan (SrcSpan fn sl sc _ _) (SrcSpan _ _ _ el ec) = SrcSpan fn sl sc el ec
 
+isNullSpan ss = srcSpanStartLine ss == srcSpanEndLine ss &&
+                    srcSpanStartColumn ss >= srcSpanEndColumn ss
+
 -- | An entity located in the source.
 data Loc a = Loc
     { loc :: SrcSpan
