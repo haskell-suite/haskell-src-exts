@@ -319,8 +319,8 @@ Module Header
 
 > module :: { [OptionPragma L] -> [S] -> L -> Module L }
 >       : optmodulehead body
->               { let (is,ds,ss1,b,inf) = $2
->                  in \os ss l -> Module (l <++> inf <** (ss ++ ss1) <?? b) $1 os is ds }
+>               { let (is,ds,ss1,inf) = $2
+>                  in \os ss l -> Module (l <++> inf <** (ss ++ ss1)) $1 os is ds }
 
 > optmodulehead :: { Maybe (ModuleHead L) }
 >       : 'module' modid maybemodwarning maybeexports 'where'   { Just $ ModuleHead ($1 <^^> $5 <** [$1,$5]) $2 $3 $4 }
@@ -331,9 +331,9 @@ Module Header
 >       | '{-# WARNING'    STRING '#-}'         { let Loc l (StringTok s) = $2 in Just $ WarnText ($1 <^^> $3 <** [l,$3]) s }
 >       | {- empty -}                           { Nothing }
 
-> body :: { ([ImportDecl L],[Decl L],[S],Bool,L) }
->       : '{'  bodyaux '}'                      { let (is,ds,ss) = $2 in (is,ds,$1:ss ++ [$3], True,  $1 <^^> $3) }
->       | open bodyaux close                    { let (is,ds,ss) = $2 in (is,ds,$1:ss ++ [$3], False, $1 <^^> $3) }
+> body :: { ([ImportDecl L],[Decl L],[S],L) }
+>       : '{'  bodyaux '}'                      { let (is,ds,ss) = $2 in (is,ds,$1:ss ++ [$3], $1 <^^> $3) }
+>       | open bodyaux close                    { let (is,ds,ss) = $2 in (is,ds,$1:ss ++ [$3], $1 <^^> $3) }
 
 > bodyaux :: { ([ImportDecl L],[Decl L],[S]) }
 >       : optsemis impdecls semis topdecls      { (reverse (fst $2), fst $4, reverse $1 ++ snd $2 ++ reverse $3 ++ snd $4) }
@@ -528,8 +528,8 @@ This style requires both TypeFamilies and GADTs, the latter is handled in gadtli
 >       | data_or_newtype 'instance' truectype optkind 'where' gadtlist deriving
 >                {% do { -- (cs,c,t) <- checkDataHeader $4;
 >                        checkEnabled TypeFamilies ;
->                        let {(gs,ss1,inf,b) = $6; (ds,ss2,minf) = $7 ;
->                             l = ann $1 <++> inf <+?> minf <** ($2:snd $4 ++ ($5:ss1 ++ ss2)) <?? b};
+>                        let {(gs,ss,inf) = $6;
+>                             l = ann $1 <++> inf <+?> fmap ann $7 <** ($2:snd $4 ++ $5:ss)};
 >                        checkDataOrNew $1 gs;
 >                        return (GDataInsDecl l $1 $3 (fst $4) (reverse gs) ds) } }
 >       | 'class' ctype fds optcbody
@@ -591,8 +591,8 @@ lexer through the 'foreign' (and 'export') keyword.
 >       | valdef                        { $1 }
 
 > decllist :: { Binds L }
->       : '{'  decls '}'                { BDecls ($1 <^^> $3 <** ($1:snd $2++[$3]) <?? True ) (fst $2) }
->       | open decls close              { BDecls ($1 <^^> $3 <** ($1:snd $2++[$3]) <?? False) (fst $2) }
+>       : '{'  decls '}'                { BDecls ($1 <^^> $3 <** ($1:snd $2++[$3])) (fst $2) }
+>       | open decls close              { BDecls ($1 <^^> $3 <** ($1:snd $2++[$3])) (fst $2) }
 
 > signdecl :: { Decl L }
 >       : exp0b '::' truectype                           {% do { v <- checkSigVar $1;
@@ -622,8 +622,8 @@ binding.
 
 > binds :: { Binds L }
 >       : decllist                      { $1 }
->       | '{' ipbinds '}'               { IPBinds ($1 <^^> $3 <** snd $2 <?? True ) (fst $2) }
->       | open ipbinds close            { IPBinds ($1 <^^> $3 <** snd $2 <?? False) (fst $2) }
+>       | '{' ipbinds '}'               { IPBinds ($1 <^^> $3 <** snd $2) (fst $2) }
+>       | open ipbinds close            { IPBinds ($1 <^^> $3 <** snd $2) (fst $2) }
 
 ATTENTION: Dirty Hackery Ahead! If the second alternative of vars is var
 instead of qvar, we get another shift/reduce-conflict. Consider the
@@ -851,12 +851,12 @@ Datatype declarations
 
 GADTs - require the GADTs extension enabled, but we handle that at the calling site.
 
-> gadtlist :: { ([GadtDecl L],[S],L,Bool) }
+> gadtlist :: { ([GadtDecl L],[S],L) }
 >       : gadtlist1                 {% checkEnabled GADTs >> return $1 }
 
-> gadtlist1 :: { ([GadtDecl L],[S],L,Bool) }
->       : '{' gadtconstrs1 '}'                  { (fst $2, $1 : snd $2 ++ [$3], $1 <^^> $3,True)  }
->       | open gadtconstrs1 close               { (fst $2, $1 : snd $2 ++ [$3], $1 <^^> $3,False) }
+> gadtlist1 :: { ([GadtDecl L],[S],L) }
+>       : '{' gadtconstrs1 '}'                  { (fst $2, $1 : snd $2 ++ [$3], $1 <^^> $3)  }
+>       | open gadtconstrs1 close               { (fst $2, $1 : snd $2 ++ [$3], $1 <^^> $3) }
 
 > gadtconstrs1 :: { ([GadtDecl L],[S]) }
 >       : optsemis gadtconstrs optsemis         { (fst $2, reverse $1 ++ snd $2 ++ reverse $3)  }
@@ -972,10 +972,10 @@ Class declarations
 TODO: Lots of stuff to pass around here.
 
 No implicit parameters in the where clause of a class declaration.
-> optcbody :: { (Maybe [ClassDecl L],[S],Maybe L,Bool) }
->       : 'where' '{'  cldecls '}'      {% checkClassBody (fst $3) >>= \vs -> return (Just vs, $1:$2: snd $3 ++ [$4], Just ($1 <^^> $4),True) }
->       | 'where' open cldecls close    {% checkClassBody (fst $3) >>= \vs -> return (Just vs, $1:$2: snd $3 ++ [$4], Just ($1 <^^> $4),False) }
->       | {- empty -}                   { (Nothing,[],Nothing,False) }
+> optcbody :: { (Maybe [ClassDecl L],[S],Maybe L) }
+>       : 'where' '{'  cldecls '}'      {% checkClassBody (fst $3) >>= \vs -> return (Just vs, $1:$2: snd $3 ++ [$4], Just ($1 <^^> $4)) }
+>       | 'where' open cldecls close    {% checkClassBody (fst $3) >>= \vs -> return (Just vs, $1:$2: snd $3 ++ [$4], Just ($1 <^^> $4)) }
+>       | {- empty -}                   { (Nothing,[],Nothing) }
 
 > cldecls :: { ([ClassDecl L],[S]) }
 >       : optsemis cldecls1 optsemis    {% checkRevClsDecls (fst $2) >>= \cs -> return (cs, reverse $1 ++ snd $2 ++ reverse $3) }
@@ -1004,10 +1004,10 @@ Associated types require the TypeFamilies extension.
 -----------------------------------------------------------------------------
 Instance declarations
 
-> optvaldefs :: { (Maybe [InstDecl L],[S],Maybe L,Bool) }
->       : 'where' '{'  valdefs '}'      {% checkInstBody (fst $3) >>= \vs -> return (Just vs, $1:$2: snd $3 ++ [$4], Just ($1 <^^> $4),True)  }
->       | 'where' open valdefs close    {% checkInstBody (fst $3) >>= \vs -> return (Just vs, $1:$2: snd $3 ++ [$4], Just ($1 <^^> $4),False) }
->       | {- empty -}                   { (Nothing, [], Nothing, False) }
+> optvaldefs :: { (Maybe [InstDecl L],[S],Maybe L) }
+>       : 'where' '{'  valdefs '}'      {% checkInstBody (fst $3) >>= \vs -> return (Just vs, $1:$2: snd $3 ++ [$4], Just ($1 <^^> $4))  }
+>       | 'where' open valdefs close    {% checkInstBody (fst $3) >>= \vs -> return (Just vs, $1:$2: snd $3 ++ [$4], Just ($1 <^^> $4)) }
+>       | {- empty -}                   { (Nothing, [], Nothing) }
 
 > valdefs :: { ([InstDecl L],[S]) }
 >       : optsemis valdefs1 optsemis    {% checkRevInstDecls (fst $2) >>= \is -> return (is, reverse $1 ++ snd $2 ++ reverse $3) }
@@ -1038,9 +1038,9 @@ Associated types require the TypeFamilies extension enabled.
 >                        return (InsData ($1 <> $2 <+?> minf1 <+?> minf2 <** (ss1 ++ ss2)) $1 $2 (reverse ds) mds) } }
 >       | data_or_newtype truectype optkind 'where' gadtlist deriving
 >                {% do { -- (cs,c,t) <- checkDataHeader $4;
->                        let { (gs,ss1,inf,b) = $5 ; (mds,ss2,minf) = $6 } ;
+>                        let { (gs,ss,inf) = $5 } ;
 >                        checkDataOrNew $1 gs;
->                        return $ InsGData (ann $1 <++> inf <+?> minf <** (snd $3 ++ $4:ss1 ++ ss2) <?? b) $1 $2 (fst $3) (reverse gs) mds } }
+>                        return $ InsGData (ann $1 <++> inf <+?> fmap ann $6 <** (snd $3 ++ $4:ss)) $1 $2 (fst $3) (reverse gs) $6 } }
 
 -----------------------------------------------------------------------------
 Value definitions
@@ -1127,10 +1127,10 @@ A let may bind implicit parameters
 mdo blocks require the RecursiveDo extension enabled, but the lexer handles that.
 
 > exp10b :: { PExp L }
->       : 'case' exp 'of' altslist      { let (als, inf, ss, b) = $4 in Case (nIS $1 <++> inf <** ($1:$3:ss) <?? b) $2 als }
+>       : 'case' exp 'of' altslist      { let (als, inf, ss) = $4 in Case (nIS $1 <++> inf <** ($1:$3:ss)) $2 als }
 >       | '-' fexp                      { NegApp (nIS $1 <++> ann $2 <** [$1]) $2 }
->       | 'do'  stmtlist                { let (sts, inf, ss, b) = $2 in Do   (nIS $1 <++> inf <** $1:ss <?? b) sts }
->       | 'mdo' stmtlist                { let (sts, inf, ss, b) = $2 in MDo  (nIS $1 <++> inf <** $1:ss <?? b) sts }
+>       | 'do'  stmtlist                { let (sts, inf, ss) = $2 in Do   (nIS $1 <++> inf <** $1:ss) sts }
+>       | 'mdo' stmtlist                { let (sts, inf, ss) = $2 in MDo  (nIS $1 <++> inf <** $1:ss) sts }
 >       | fexp                          { $1 }
 
 > exppragma :: { PExp L }
@@ -1396,9 +1396,9 @@ List comprehensions
 -----------------------------------------------------------------------------
 Case alternatives
 
-> altslist :: { ([Alt L],L,[S],Bool) }
->       : '{'  alts '}'                 { (fst $2, $1 <^^> $3, $1:snd $2 ++ [$3], True)  }
->       | open alts close               { (fst $2, $1 <^^> $3, $1:snd $2 ++ [$3], False) }
+> altslist :: { ([Alt L],L,[S]) }
+>       : '{'  alts '}'                 { (fst $2, $1 <^^> $3, $1:snd $2 ++ [$3])  }
+>       | open alts close               { (fst $2, $1 <^^> $3, $1:snd $2 ++ [$3]) }
 
 > alts :: { ([Alt L],[S]) }
 >       : optsemis alts1 optsemis       { (reverse $ fst $2, $1 ++ snd $2 ++ $3) }
@@ -1436,9 +1436,9 @@ an expression.
 
 TODO: The points can't be added here, must be propagated!
 
-> stmtlist :: { ([Stmt L],L,[S],Bool) }
->       : '{'  stmts '}'                { (fst $2, $1 <^^> $3, snd $2 ++ [$1,$3], True)  }
->       | open stmts close              { (fst $2, $1 <^^> $3, snd $2 ++ [$1,$3], False) }
+> stmtlist :: { ([Stmt L],L,[S]) }
+>       : '{'  stmts '}'                { (fst $2, $1 <^^> $3, $1:snd $2 ++ [$3])  }
+>       | open stmts close              { (fst $2, $1 <^^> $3, $1:snd $2 ++ [$3]) }
 
 > stmts :: { ([Stmt L],[S]) }
 >       : stmt stmts1                       { ($1 : fst $2, snd $2) }
@@ -1454,7 +1454,7 @@ A let statement may bind implicit parameters.
 >       : 'let' binds                       { LetStmt (nIS $1 <++> ann $2 <** [$1]) $2 }
 >       | pat '<-' trueexp                  { Generator ($1 <> $3 <** [$2]) $1 $3 }
 >       | trueexp                           { Qualifier (ann $1) $1 }
->       | 'rec' stmtlist                    { let (stms,inf,ss,b) = $2 in RecStmt (nIS $1 <++> inf <** $1:ss <?? b) stms }
+>       | 'rec' stmtlist                    { let (stms,inf,ss) = $2 in RecStmt (nIS $1 <++> inf <** $1:ss) stms }
 
 -----------------------------------------------------------------------------
 Record Field Update/Construction
