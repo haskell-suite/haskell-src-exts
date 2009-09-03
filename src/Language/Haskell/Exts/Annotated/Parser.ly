@@ -327,8 +327,8 @@ Module Header
 >       | {- empty -}                                           { Nothing }
 
 > maybemodwarning ::  { Maybe (WarningText L) }
->       : '{-# DEPRECATED' STRING '#-}'         { let Loc l (StringTok s) = $2 in Just $ DeprText ($1 <^^> $3 <** [l,$3]) s }
->       | '{-# WARNING'    STRING '#-}'         { let Loc l (StringTok s) = $2 in Just $ WarnText ($1 <^^> $3 <** [l,$3]) s }
+>       : '{-# DEPRECATED' STRING '#-}'         { let Loc l (StringTok (s,_)) = $2 in Just $ DeprText ($1 <^^> $3 <** [$1,l,$3]) s }
+>       | '{-# WARNING'    STRING '#-}'         { let Loc l (StringTok (s,_)) = $2 in Just $ WarnText ($1 <^^> $3 <** [$1,l,$3]) s }
 >       | {- empty -}                           { Nothing }
 
 > body :: { ([ImportDecl L],[Decl L],[S],L) }
@@ -399,7 +399,7 @@ Import Declarations
 Requires the PackageImports extension enabled.
 > maybepkg :: { (Maybe String,[S]) }
 >       : STRING                                {% do { checkEnabled PackageImports ;
->                                                       let { Loc l (StringTok s) = $1 } ;
+>                                                       let { Loc l (StringTok (s,_)) = $1 } ;
 >                                                       return $ (Just s,[l]) } }
 >       | {- empty -}                           { (Nothing,[]) }
 
@@ -451,7 +451,7 @@ Fixity Declarations
 
 > prec :: { (Maybe Int, [S]) }
 >       : {- empty -}                           { (Nothing, []) }
->       | INT                                   {% let Loc l (IntTok i) = $1 in checkPrec i >>= \i -> return (Just i, [l]) }
+>       | INT                                   {% let Loc l (IntTok (i,_)) = $1 in checkPrec i >>= \i -> return (Just i, [l]) }
 
 > infix :: { Assoc L }
 >       : 'infix'                               { AssocNone  $ nIS $1 }
@@ -657,9 +657,9 @@ so no need to check for extensions.
 >        | 'threadsafe'                 { Just $ PlaySafe  (nIS $1) True }
 >        | {- empty -}                  { Nothing }
 
-> fspec :: { (String, Name L, Type L, [S]) }
->       : STRING var_no_safety '::' truedtype               { let Loc l (StringTok s) = $1 in (s, $2, $4, [l,$3]) }
->       |        var_no_safety '::' truedtype               { ("", $1, $3, [$2]) }
+> fspec :: { (Maybe String, Name L, Type L, [S]) }
+>       : STRING var_no_safety '::' truedtype               { let Loc l (StringTok (s,_)) = $1 in (Just s, $2, $4, [l,$3]) }
+>       |        var_no_safety '::' truedtype               { (Nothing, $1, $3, [$2]) }
 
 -----------------------------------------------------------------------------
 Pragmas
@@ -671,14 +671,14 @@ Pragmas
 >       | {- empty -}           { [] }
 
 > rule :: { Rule L }
->      : STRING activation ruleforall exp0 '=' trueexp      {% do { let {Loc l (StringTok s) = $1};
+>      : STRING activation ruleforall exp0 '=' trueexp      {% do { let {Loc l (StringTok (s,_)) = $1};
 >                                                                   e <- checkRuleExpr $4;
 >                                                                   return $ Rule (nIS l <++> ann $6 <** snd $3 ++ [$5]) s $2 (fst $3) e $6 } }
 
 > activation :: { Maybe (Activation L) }
 >        : {- empty -}          { Nothing }
->        | '[' INT ']'          { let Loc l (IntTok i) = $2 in Just $ ActiveFrom  ($1 <^^> $3 <** [$1,l,$3])    (fromInteger i) }
->        | '[' '~' INT ']'      { let Loc l (IntTok i) = $3 in Just $ ActiveUntil ($1 <^^> $4 <** [$1,$2,l,$4]) (fromInteger i) }
+>        | '[' INT ']'          { let Loc l (IntTok (i,_)) = $2 in Just $ ActiveFrom  ($1 <^^> $3 <** [$1,l,$3])    (fromInteger i) }
+>        | '[' '~' INT ']'      { let Loc l (IntTok (i,_)) = $3 in Just $ ActiveUntil ($1 <^^> $4 <** [$1,$2,l,$4]) (fromInteger i) }
 
 > ruleforall :: { (Maybe [RuleVar L],[S]) }
 >       : {- empty -}                           { (Nothing,[]) }
@@ -699,7 +699,7 @@ Pragmas
 >   | {- empty -}                       { ([],[]) }
 
 > warndepr :: { (([Name L], String),[S]) }
->       : namevars STRING               { let Loc l (StringTok s) = $2 in ((fst $1,s),snd $1 ++ [l]) }
+>       : namevars STRING               { let Loc l (StringTok (s,_)) = $2 in ((fst $1,s),snd $1 ++ [l]) }
 
 > namevars :: { ([Name L],[S]) }
 >           : namevar                   { ([$1],[]) }
@@ -1134,14 +1134,14 @@ mdo blocks require the RecursiveDo extension enabled, but the lexer handles that
 >       | fexp                          { $1 }
 
 > exppragma :: { PExp L }
->       : '{-# CORE' STRING '#-}' exp   { let Loc l (StringTok s) = $2 in CorePragma (nIS $1 <++> ann $4 <** [l,$3]) s $4 }
->       | '{-# SCC'  STRING '#-}' exp   { let Loc l (StringTok s) = $2 in SCCPragma  (nIS $1 <++> ann $4 <** [l,$3]) s $4 }
+>       : '{-# CORE' STRING '#-}' exp   { let Loc l (StringTok (s,_)) = $2 in CorePragma (nIS $1 <++> ann $4 <** [l,$3]) s $4 }
+>       | '{-# SCC'  STRING '#-}' exp   { let Loc l (StringTok (s,_)) = $2 in SCCPragma  (nIS $1 <++> ann $4 <** [l,$3]) s $4 }
 >       | '{-# GENERATED' STRING INT ':' INT '-' INT ':' INT '#-}' exp
->                                           { let { Loc l0 (StringTok s) = $2;
->                                                   Loc l1 (IntTok i1)   = $3;
->                                                   Loc l2 (IntTok i2)   = $5;
->                                                   Loc l3 (IntTok i3)   = $7;
->                                                   Loc l4 (IntTok i4)   = $9}
+>                                           { let { Loc l0 (StringTok (s,_)) = $2;
+>                                                   Loc l1 (IntTok (i1,_))   = $3;
+>                                                   Loc l2 (IntTok (i2,_))   = $5;
+>                                                   Loc l3 (IntTok (i3,_))   = $7;
+>                                                   Loc l4 (IntTok (i4,_))   = $9}
 >                                              in GenPragma (nIS $1 <++> ann $11 <** [$1,l0,l1,$4,l2,$6,l3,$8,l4,$10])
 >                                                       s (fromInteger i1, fromInteger i2)
 >                                                         (fromInteger i3, fromInteger i4) $11 }
@@ -1622,16 +1622,16 @@ Implicit parameter
 >       : QVARSYM               { let {Loc l (QVarSym q) = $1; nis = nIS l} in Qual nis (ModuleName nis (fst q)) (Symbol nis (snd q)) }
 
 > literal :: { Literal L }
->       : INT                   { let Loc l (IntTok        i) = $1 in Int        (nIS l) i }
->       | CHAR                  { let Loc l (Character     c) = $1 in Char       (nIS l) c }
->       | RATIONAL              { let Loc l (FloatTok      r) = $1 in Frac       (nIS l) r }
->       | STRING                { let Loc l (StringTok     s) = $1 in String     (nIS l) s }
->       | PRIMINT               { let Loc l (IntTokHash    i) = $1 in PrimInt    (nIS l) i }
->       | PRIMWORD              { let Loc l (WordTokHash   w) = $1 in PrimWord   (nIS l) w }
->       | PRIMFLOAT             { let Loc l (FloatTokHash  f) = $1 in PrimFloat  (nIS l) f }
->       | PRIMDOUBLE            { let Loc l (DoubleTokHash d) = $1 in PrimDouble (nIS l) d }
->       | PRIMCHAR              { let Loc l (CharacterHash c) = $1 in PrimChar   (nIS l) c }
->       | PRIMSTRING            { let Loc l (StringHash    s) = $1 in PrimString (nIS l) s }
+>       : INT                   { let Loc l (IntTok        (i,raw)) = $1 in Int        (nIS l) i raw }
+>       | CHAR                  { let Loc l (Character     (c,raw)) = $1 in Char       (nIS l) c raw }
+>       | RATIONAL              { let Loc l (FloatTok      (r,raw)) = $1 in Frac       (nIS l) r raw }
+>       | STRING                { let Loc l (StringTok     (s,raw)) = $1 in String     (nIS l) s raw }
+>       | PRIMINT               { let Loc l (IntTokHash    (i,raw)) = $1 in PrimInt    (nIS l) i raw }
+>       | PRIMWORD              { let Loc l (WordTokHash   (w,raw)) = $1 in PrimWord   (nIS l) w raw }
+>       | PRIMFLOAT             { let Loc l (FloatTokHash  (f,raw)) = $1 in PrimFloat  (nIS l) f raw }
+>       | PRIMDOUBLE            { let Loc l (DoubleTokHash (d,raw)) = $1 in PrimDouble (nIS l) d raw }
+>       | PRIMCHAR              { let Loc l (CharacterHash (c,raw)) = $1 in PrimChar   (nIS l) c raw }
+>       | PRIMSTRING            { let Loc l (StringHash    (s,raw)) = $1 in PrimString (nIS l) s raw }
 
 -----------------------------------------------------------------------------
 Layout

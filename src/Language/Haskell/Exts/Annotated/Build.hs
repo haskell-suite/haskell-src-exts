@@ -140,27 +140,27 @@ function l = var l . Ident l
 
 -- | A literal string expression.
 strE :: l -> String -> Exp l
-strE l = Lit l . String l
+strE l s = Lit l $ String l s s
 
 -- | A literal character expression.
 charE :: l -> Char -> Exp l
-charE l = Lit l . Char l
+charE l c = Lit l $ Char l c [c]
 
 -- | A literal integer expression.
 intE :: l -> Integer -> Exp l
-intE l = Lit l . Int l
+intE l i = Lit l $ Int l i (show i)
 
 -- | A literal string pattern.
 strP :: l -> String -> Pat l
-strP l = PLit l . String l
+strP l s = PLit l $ String l s s
 
 -- | A literal character pattern.
 charP :: l -> Char -> Pat l
-charP l = PLit l . Char l
+charP l c = PLit l $ Char l c [c]
 
 -- | A literal integer pattern.
 intP :: l -> Integer -> Pat l
-intP l = PLit l . Int l
+intP l i = PLit l $ Int l i (show i)
 
 -- | A do block formed by the given statements.
 --   The last statement in the list should be
@@ -254,7 +254,7 @@ genNames l s k = [ Ident l $ s ++ show i | i <- [1..k] ]
 
 -- | A function with a single clause
 sfun :: l -> Name l -> [Name l] -> Rhs l -> Maybe (Binds l) -> Decl l
-sfun l f pvs rhs mbs = FunBind l [Match l f (map (pvar l) pvs) Nothing rhs mbs]
+sfun l f pvs rhs mbs = FunBind l [Match l f (map (pvar l) pvs) rhs mbs]
 
 -- | A function with a single clause, a single argument, no guards
 -- and no where declarations

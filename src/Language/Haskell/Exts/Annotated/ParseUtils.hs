@@ -315,7 +315,10 @@ checkPat e [] = case e of
                     return (PInfixApp loc l c r)
             QVarOp ppos (UnQual _ (Symbol _ "+")) -> do
                     case (l,r) of
-                        (Var _ (UnQual _ n@(Ident _ _)), Lit _ (Int _ k)) -> return (PNPlusK loc n k)
+                        (Var _ (UnQual _ n@(Ident _ _)), Lit _ (Int kpos k _)) -> do
+                            let pp = srcInfoSpan ppos
+                                kp = srcInfoSpan kpos
+                            return (PNPlusK (loc <** [pp,kp]) n k)
                         _ -> patFail ""
             _ -> patFail ""
     TupleSection l mes    ->
