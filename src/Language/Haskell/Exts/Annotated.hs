@@ -40,8 +40,9 @@ import Language.Haskell.Exts.Annotated.Parser
 import Language.Haskell.Exts.Annotated.Pretty
 import Language.Haskell.Exts.Annotated.SrcLoc
 import Language.Haskell.Exts.Annotated.Fixity
+import Language.Haskell.Exts.Annotated.Comments
+import Language.Haskell.Exts.Annotated.ExactPrint
 import Language.Haskell.Exts.Extension
-import Language.Haskell.Exts.Comments
 
 import Data.List
 import Language.Preprocessor.Unlit

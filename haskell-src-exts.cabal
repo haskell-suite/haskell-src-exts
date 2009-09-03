@@ -62,7 +62,8 @@ Library
                         Language.Haskell.Exts.Annotated.Fixity,
                         Language.Haskell.Exts.Annotated.Build,
                         Language.Haskell.Exts.Annotated.Comments,
-                        Language.Haskell.Exts.Annotated.SrcLoc
+                        Language.Haskell.Exts.Annotated.SrcLoc,
+                        Language.Haskell.Exts.Annotated.ExactPrint
 
   Other-modules:        Language.Haskell.Exts.ParseMonad,
                         Language.Haskell.Exts.Lexer,
