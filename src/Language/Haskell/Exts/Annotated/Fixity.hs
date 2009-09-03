@@ -34,8 +34,11 @@ module Language.Haskell.Exts.Annotated.Fixity
     ) where
 
 import Language.Haskell.Exts.Annotated.Syntax
+import Language.Haskell.Exts.Annotated.SrcLoc
 
 import Data.Char (isUpper)
+
+type L = SrcSpanInfo
 
 -- | Operator fixities are represented by their associativity
 --   (left, right or none) and their precedence (0-9).
@@ -47,12 +50,12 @@ class AppFixity ast where
   -- | Tweak any expressions in the element to account for the
   --   fixities given. Assumes that all operator expressions are
   --   fully left associative chains to begin with.
-  applyFixities :: [Fixity] -- ^ The fixities to account for.
-                    -> ast  -- ^ The element to tweak.
-                    -> ast  -- ^ The same element, but with operator expressions updated.
+  applyFixities :: [Fixity]   -- ^ The fixities to account for.
+                    -> ast L  -- ^ The element to tweak.
+                    -> ast L  -- ^ The same element, but with operator expressions updated.
 
 
-instance AppFixity (Exp l) where
+instance AppFixity Exp where
   applyFixities fixs = infFix fixs . leafFix fixs
     where -- This is the real meat case. We can assume a left-associative list to begin with.
           infFix fixs (InfixApp l2 a op2 z) =
@@ -64,7 +67,7 @@ instance AppFixity (Exp l) where
                        in if (p1 == p2 && (a1 /= a2 || a1 == AssocNone ())) -- Ambiguous infix expression!
                               || (p1 > p2 || p1 == p2 && (a1 == AssocLeft () || a2 == AssocNone ())) -- Already right order
                            then InfixApp l2 e op2 z
-                           else InfixApp l1 x op1 (infFix fixs $ InfixApp l1 y op2 z)
+                           else InfixApp l2 x op1 (infFix fixs $ InfixApp (ann y <++> ann z) y op2 z)
                    _  -> InfixApp l2 e op2 z
 
           infFix _ e = e
@@ -153,7 +156,7 @@ fixity a p = map (Fixity a p . op)
 -------------------------------------------------------------------
 -- Boilerplate - yuck!! Everything below here is internal stuff
 
-instance AppFixity (Module l) where
+instance AppFixity Module where
     applyFixities fixs (Module l mmh prs imp decls) =
         Module l mmh prs imp $ appFixDecls fixs decls
     applyFixities fixs (XmlPage l os xn xas mexp cs) =
@@ -165,17 +168,17 @@ instance AppFixity (Module l) where
       where fixe x = let extraFixs = getFixities decls
                       in applyFixities (fixs++extraFixs) x
 
-instance AppFixity (Decl l) where
+instance AppFixity Decl where
     applyFixities fixs decl = case decl of
-        ClassDecl l ctxt n vars deps cdecls   -> ClassDecl l ctxt n vars deps $ fmap (map fix) cdecls
-        InstDecl  l ctxt n ts idecls          -> InstDecl l ctxt n ts $ fmap (map fix) idecls
+        ClassDecl l ctxt dh deps cdecls   -> ClassDecl l ctxt dh deps $ fmap (map fix) cdecls
+        InstDecl  l ctxt ih idecls        -> InstDecl  l ctxt ih      $ fmap (map fix) idecls
         SpliceDecl l spl        -> SpliceDecl l $ fix spl
         FunBind l matches       -> FunBind l $ map fix matches
         PatBind l p mt rhs bs -> PatBind l (fix p) mt (fix rhs) (fmap fix bs)
         _                       -> decl
       where fix x = applyFixities fixs x
 
-appFixDecls :: [Fixity] -> [Decl l] -> [Decl l]
+appFixDecls :: [Fixity] -> [Decl L] -> [Decl L]
 appFixDecls fixs decls =
     let extraFixs = getFixities decls
      in map (applyFixities (fixs++extraFixs)) decls
@@ -184,29 +187,31 @@ getFixities = concatMap getFixity
 getFixity (InfixDecl _ a mp ops) = let p = maybe 9 id mp in map (Fixity (nullAnn a) p) (map nullAnn ops)
 getFixity _ = []
 
-instance AppFixity (ClassDecl l) where
+instance AppFixity ClassDecl where
     applyFixities fixs (ClsDecl l decl) = ClsDecl l $ applyFixities fixs decl
     applyFixities _ cdecl = cdecl
 
-instance AppFixity (InstDecl l) where
+instance AppFixity InstDecl where
     applyFixities fixs (InsDecl l decl) = InsDecl l $ applyFixities fixs decl
     applyFixities _ idecl = idecl
 
-instance AppFixity (Match l) where
-    applyFixities fixs (Match l n ps mt rhs bs) = Match l n (map fix ps) mt (fix rhs) (fmap fix bs)
+instance AppFixity Match where
+    applyFixities fixs match = case match of
+        Match l n ps rhs bs -> Match l n (map fix ps) (fix rhs) (fmap fix bs)
+        InfixMatch l a n b rhs bs -> InfixMatch l (fix a) n (fix b) (fix rhs) (fmap fix bs)
       where fix x = applyFixities fixs x
 
-instance AppFixity (Rhs l) where
+instance AppFixity Rhs where
     applyFixities fixs rhs = case rhs of
         UnGuardedRhs l e      -> UnGuardedRhs l $ fix e
         GuardedRhss l grhss   -> GuardedRhss l $ map fix grhss
       where fix x = applyFixities fixs x
 
-instance AppFixity (GuardedRhs l) where
+instance AppFixity GuardedRhs where
     applyFixities fixs (GuardedRhs l stmts e) = GuardedRhs l (map fix stmts) $ fix e
       where fix x = applyFixities fixs x
 
-instance AppFixity (Pat l) where
+instance AppFixity Pat where
     applyFixities fixs p = case p of
         PNeg l p                -> PNeg l $ fix p
         PInfixApp l a op b      -> PInfixApp l (fix a) op (fix b)
@@ -228,11 +233,11 @@ instance AppFixity (Pat l) where
         _                       -> p
       where fix x = applyFixities fixs x
 
-instance AppFixity (PatField l) where
+instance AppFixity PatField where
     applyFixities fixs (PFieldPat l n p) = PFieldPat l n $ applyFixities fixs p
     applyFixities _ pf = pf
 
-instance AppFixity (RPat l) where
+instance AppFixity RPat where
     applyFixities fixs rp = case rp of
         RPOp l rp op          -> RPOp l (fix rp) op
         RPEither l a b        -> RPEither l (fix a) (fix b)
@@ -244,10 +249,10 @@ instance AppFixity (RPat l) where
         RPPat l p             -> RPPat l $ fix p
       where fix x = applyFixities fixs x
 
-instance AppFixity (PXAttr l) where
+instance AppFixity PXAttr where
     applyFixities fixs (PXAttr l n p) = PXAttr l n $ applyFixities fixs p
 
-instance AppFixity (Stmt l) where
+instance AppFixity Stmt where
     applyFixities fixs stmt = case stmt of
         Generator l p e       -> Generator l (fix p) (fix e)
         Qualifier l e         -> Qualifier l $ fix e
@@ -255,35 +260,35 @@ instance AppFixity (Stmt l) where
         RecStmt l stmts       -> RecStmt l $ map fix stmts
       where fix x = applyFixities fixs x
 
-instance AppFixity (Binds l) where
+instance AppFixity Binds where
     applyFixities fixs bs = case bs of
         BDecls l decls        -> BDecls l $ appFixDecls fixs decls  -- special behavior
         IPBinds l ips         -> IPBinds l $ map fix ips
       where fix x = applyFixities fixs x
 
 
-instance AppFixity (IPBind l) where
+instance AppFixity IPBind where
     applyFixities fixs (IPBind l n e) = IPBind l n $ applyFixities fixs e
 
-instance AppFixity (FieldUpdate l) where
+instance AppFixity FieldUpdate where
     applyFixities fixs (FieldUpdate l n e) = FieldUpdate l n $ applyFixities fixs e
     applyFixities _ fup = fup
 
-instance AppFixity (Alt l) where
+instance AppFixity Alt where
     applyFixities fixs (Alt l p galts bs) = Alt l (fix p) (fix galts) (fmap fix bs)
       where fix x = applyFixities fixs x
 
-instance AppFixity (GuardedAlts l) where
+instance AppFixity GuardedAlts where
     applyFixities fixs galts = case galts of
         UnGuardedAlt l e      -> UnGuardedAlt l $ fix e
         GuardedAlts  l galts  -> GuardedAlts l $ map fix galts
       where fix x = applyFixities fixs x
 
-instance AppFixity (GuardedAlt l) where
+instance AppFixity GuardedAlt where
     applyFixities fixs (GuardedAlt l stmts e) = GuardedAlt l (map fix stmts) (fix e)
       where fix x = applyFixities fixs x
 
-instance AppFixity (QualStmt l) where
+instance AppFixity QualStmt where
     applyFixities fixs qstmt = case qstmt of
         QualStmt     l s      -> QualStmt l $ fix s
         ThenTrans    l e      -> ThenTrans l $ fix e
@@ -293,7 +298,7 @@ instance AppFixity (QualStmt l) where
         GroupByUsing l e1 e2  -> GroupByUsing l (fix e1) (fix e2)
       where fix x = applyFixities fixs x
 
-instance AppFixity (Bracket l) where
+instance AppFixity Bracket where
     applyFixities fixs br = case br of
         ExpBracket l e    -> ExpBracket l $ fix e
         PatBracket l p    -> PatBracket l $ fix p
@@ -301,11 +306,11 @@ instance AppFixity (Bracket l) where
         _                 -> br
       where fix x = applyFixities fixs x
 
-instance AppFixity (Splice l) where
+instance AppFixity Splice where
     applyFixities fixs (ParenSplice l e) = ParenSplice l $ applyFixities fixs e
     applyFixities _ s = s
 
-instance AppFixity (XAttr l) where
+instance AppFixity XAttr where
     applyFixities fixs (XAttr l n e) = XAttr l n $ applyFixities fixs e
 
 
