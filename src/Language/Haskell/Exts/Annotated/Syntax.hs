@@ -42,7 +42,7 @@ module Language.Haskell.Exts.Annotated.Syntax (
     Module(..), ModuleHead(..), WarningText(..), ExportSpecList(..), ExportSpec(..),
     ImportDecl(..), ImportSpecList(..), ImportSpec(..), Assoc(..),
     -- * Declarations
-    Decl(..), Binds(..), IPBind(..),
+    Decl(..), DeclHead(..), InstHead(..), Binds(..), IPBind(..),
     -- ** Type classes and instances
     ClassDecl(..), InstDecl(..), Deriving(..),
     -- ** Data type declarations
@@ -321,37 +321,29 @@ data Assoc l
   deriving (Eq,Show)
 #endif
 
--- | A single derived instance, which may have arguments since it may be a MPTC.
-data Deriving l = Deriving l (QName l) [Type l]
-#ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
-#else
-  deriving (Eq,Show)
-#endif
-
 -- | A top-level declaration.
 data Decl l
-     = TypeDecl     l (Name l) [TyVarBind l] (Type l)
+     = TypeDecl     l (DeclHead l) (Type l)
      -- ^ A type declaration
-     | TypeFamDecl  l (Name l) [TyVarBind l] (Maybe (Kind l))
+     | TypeFamDecl  l (DeclHead l) (Maybe (Kind l))
      -- ^ A type family declaration
-     | DataDecl     l (DataOrNew l) (Maybe (Context l)) (Name l) [TyVarBind l]                  [QualConDecl l] (Maybe [Deriving l])
+     | DataDecl     l (DataOrNew l) (Maybe (Context l)) (DeclHead l)                  [QualConDecl l] (Maybe (Deriving l))
      -- ^ A data OR newtype declaration
-     | GDataDecl    l (DataOrNew l) (Maybe (Context l)) (Name l) [TyVarBind l] (Maybe (Kind l)) [GadtDecl l]    (Maybe [Deriving l])
+     | GDataDecl    l (DataOrNew l) (Maybe (Context l)) (DeclHead l) (Maybe (Kind l)) [GadtDecl l]    (Maybe (Deriving l))
      -- ^ A data OR newtype declaration, GADT style
-     | DataFamDecl  l {-data-}      (Maybe (Context l)) (Name l) [TyVarBind l] (Maybe (Kind l))
+     | DataFamDecl  l {-data-}      (Maybe (Context l)) (DeclHead l) (Maybe (Kind l))
      -- ^ A data family declaration
      | TypeInsDecl  l (Type l) (Type l)
      -- ^ A type family instance declaration
-     | DataInsDecl  l (DataOrNew l) (Type l)                  [QualConDecl l] (Maybe [Deriving l])
+     | DataInsDecl  l (DataOrNew l) (Type l)                  [QualConDecl l] (Maybe (Deriving l))
      -- ^ A data family instance declaration
-     | GDataInsDecl l (DataOrNew l) (Type l) (Maybe (Kind l)) [GadtDecl l]    (Maybe [Deriving l])
+     | GDataInsDecl l (DataOrNew l) (Type l) (Maybe (Kind l)) [GadtDecl l]    (Maybe (Deriving l))
      -- ^ A data family instance declaration, GADT style
-     | ClassDecl    l (Maybe (Context l)) (Name l) [TyVarBind l] [FunDep l] (Maybe [ClassDecl l])
+     | ClassDecl    l (Maybe (Context l)) (DeclHead l) [FunDep l] (Maybe [ClassDecl l])
      -- ^ A declaration of a type class
-     | InstDecl     l (Maybe (Context l)) (QName l) [Type l] (Maybe [InstDecl l])
+     | InstDecl     l (Maybe (Context l)) (InstHead l) (Maybe [InstDecl l])
      -- ^ An declaration of a type class instance
-     | DerivDecl    l (Maybe (Context l)) (QName l) [Type l]
+     | DerivDecl    l (Maybe (Context l)) (InstHead l)
      -- ^ A standalone deriving declaration
      | InfixDecl    l (Assoc l) (Maybe Int) [Op l]
      -- ^ A declaration of operator fixity
@@ -365,9 +357,9 @@ data Decl l
      -- ^ A set of function binding clauses
      | PatBind      l (Pat l) (Maybe (Type l)) (Rhs l) {-where-} (Maybe (Binds l))
      -- ^ A pattern binding
-     | ForImp       l (CallConv l) (Maybe (Safety l)) String (Name l) (Type l)
+     | ForImp       l (CallConv l) (Maybe (Safety l)) (Maybe String) (Name l) (Type l)
      -- ^ A foreign import declaration
-     | ForExp       l (CallConv l)            String (Name l) (Type l)
+     | ForExp       l (CallConv l)                    (Maybe String) (Name l) (Type l)
      -- ^ A foreign export declaration
 
      | RulePragmaDecl   l [Rule l]
@@ -378,11 +370,11 @@ data Decl l
      -- ^ A WARNING pragma
      | InlineSig        l Bool (Maybe (Activation l)) (QName l)
      -- ^ An INLINE pragma
-     | SpecSig          l                     (QName l) [Type l]
+     | SpecSig          l                             (QName l) [Type l]
      -- ^ A SPECIALISE pragma
      | SpecInlineSig    l Bool (Maybe (Activation l)) (QName l) [Type l]
      -- ^ A SPECIALISE INLINE pragma
-     | InstSig          l (Maybe (Context l)) (QName l) [Type l]
+     | InstSig          l      (Maybe (Context l))    (InstHead l)
      -- ^ A SPECIALISE instance pragma
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
@@ -392,6 +384,36 @@ data Decl l
 
 -- | A flag stating whether a declaration is a data or newtype declaration.
 data DataOrNew l = DataType l | NewType l
+#ifdef __GLASGOW_HASKELL__
+  deriving (Eq,Show,Typeable,Data)
+#else
+  deriving (Eq,Show)
+#endif
+
+-- | The head of a type or class declaration.
+data DeclHead l
+    = DHead l (Name l) [TyVarBind l]
+    | DHInfix l (TyVarBind l) (Name l) (TyVarBind l)
+    | DHParen l (DeclHead l)
+#ifdef __GLASGOW_HASKELL__
+  deriving (Eq,Show,Typeable,Data)
+#else
+  deriving (Eq,Show)
+#endif
+
+-- | The head of an instance declaration.
+data InstHead l
+    = IHead l (QName l) [Type l]
+    | IHInfix l (Type l) (QName l) (Type l)
+    | IHParen l (InstHead l)
+#ifdef __GLASGOW_HASKELL__
+  deriving (Eq,Show,Typeable,Data)
+#else
+  deriving (Eq,Show)
+#endif
+
+-- | A deriving clause following a data type declaration.
+data Deriving l = Deriving l [InstHead l]
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -418,7 +440,8 @@ data IPBind l = IPBind l (IPName l) (Exp l)
 
 -- | Clauses of a function binding.
 data Match l
-     = Match l (Name l) [Pat l] (Maybe (Type l)) (Rhs l) {-where-} (Maybe (Binds l))
+     = Match l      (Name l) [Pat l]         (Rhs l) {-where-} (Maybe (Binds l))
+     | InfixMatch l (Pat l) (Name l) (Pat l) (Rhs l) {-where-} (Maybe (Binds l))
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -473,11 +496,11 @@ data GadtDecl l
 data ClassDecl l
     = ClsDecl    l (Decl l)
             -- ^ ordinary declaration
-    | ClsDataFam l (Maybe (Context l)) (Name l) [TyVarBind l] (Maybe (Kind l))
+    | ClsDataFam l (Maybe (Context l)) (DeclHead l) (Maybe (Kind l))
             -- ^ declaration of an associated data type
-    | ClsTyFam   l             (Name l) [TyVarBind l] (Maybe (Kind l))
+    | ClsTyFam   l                     (DeclHead l) (Maybe (Kind l))
             -- ^ declaration of an associated type synonym
-    | ClsTyDef   l (Type l)    (Type l)
+    | ClsTyDef   l (Type l) (Type l)
             -- ^ default choice for an associated type synonym
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
@@ -491,9 +514,9 @@ data InstDecl l
             -- ^ ordinary declaration
     | InsType   l (Type l) (Type l)
             -- ^ an associated type definition
-    | InsData   l (DataOrNew l) (Type l) [QualConDecl l] (Maybe [Deriving l])
+    | InsData   l (DataOrNew l) (Type l) [QualConDecl l] (Maybe (Deriving l))
             -- ^ an associated data type implementation
-    | InsGData  l (DataOrNew l) (Type l) (Maybe (Kind l)) [GadtDecl l] (Maybe [Deriving l])
+    | InsGData  l (DataOrNew l) (Type l) (Maybe (Kind l)) [GadtDecl l] (Maybe (Deriving l))
             -- ^ an associated data type implemented using GADT style
     | InsInline l Bool (Maybe (Activation l)) (QName l)
             -- ^ an INLINE pragma
@@ -601,7 +624,11 @@ data FunDep l
 #endif
 
 -- | A context is a set of assertions
-data Context l = Context l [Asst l]
+data Context l
+    = CxSingle l (Asst l)
+    | CxTuple  l [Asst l]
+    | CxParen  l (Context l)
+    | CxEmpty  l
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -628,16 +655,16 @@ data Asst l
 -- precise string representation used.  For example, @10@, @0o12@ and @0xa@
 -- have the same representation.
 data Literal l
-    = Char    l Char          -- ^ character literal
-    | String  l String        -- ^ string literal
-    | Int     l Integer       -- ^ integer literal
-    | Frac    l Rational      -- ^ floating point literal
-    | PrimInt    l Integer    -- ^ unboxed integer literal
-    | PrimWord   l Integer    -- ^ unboxed word literal
-    | PrimFloat  l Rational   -- ^ unboxed float literal
-    | PrimDouble l Rational   -- ^ unboxed double literal
-    | PrimChar   l Char       -- ^ unboxed character literal
-    | PrimString l String     -- ^ unboxed string literal
+    = Char       l Char     String     -- ^ character literal
+    | String     l String   String     -- ^ string literal
+    | Int        l Integer  String     -- ^ integer literal
+    | Frac       l Rational String     -- ^ floating point literal
+    | PrimInt    l Integer  String     -- ^ unboxed integer literal
+    | PrimWord   l Integer  String     -- ^ unboxed word literal
+    | PrimFloat  l Rational String     -- ^ unboxed float literal
+    | PrimDouble l Rational String     -- ^ unboxed double literal
+    | PrimChar   l Char     String     -- ^ unboxed character literal
+    | PrimString l String   String     -- ^ unboxed string literal
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
@@ -1157,24 +1184,21 @@ instance Functor Assoc where
     fmap f (AssocLeft  l) = AssocLeft  (f l)
     fmap f (AssocRight l) = AssocRight (f l)
 
-instance Functor Deriving where
-    fmap f (Deriving l qn ts) = Deriving (f l) (fmap f qn) (map (fmap f) ts)
-
 instance Functor Decl where
     fmap f decl = case decl of
-        TypeDecl     l n tvs t      -> TypeDecl    (f l) (fmap f n) (map (fmap f) tvs) (fmap f t)
-        TypeFamDecl  l n tvs mk     -> TypeFamDecl (f l) (fmap f n) (map (fmap f) tvs) (fmap (fmap f) mk)
-        DataDecl     l dn mcx n tvs cds ders ->
-            DataDecl (f l) (fmap f dn) (fmap (fmap f) mcx) (fmap f n) (map (fmap f) tvs) (map (fmap f) cds) (fmap (map (fmap f)) ders)
-        GDataDecl    l dn mcx n tvs mk gds ders ->
-            GDataDecl (f l) (fmap f dn) (fmap (fmap f) mcx) (fmap f n) (map (fmap f) tvs) (fmap (fmap f) mk) (map (fmap f) gds) (fmap (map (fmap f)) ders)
-        DataFamDecl  l mcx n tvs mk       -> DataFamDecl (f l) (fmap (fmap f) mcx) (fmap f n) (map (fmap f) tvs) (fmap (fmap f) mk)
+        TypeDecl     l dh t      -> TypeDecl    (f l) (fmap f dh) (fmap f t)
+        TypeFamDecl  l dh mk     -> TypeFamDecl (f l) (fmap f dh) (fmap (fmap f) mk)
+        DataDecl     l dn mcx dh cds ders ->
+            DataDecl (f l) (fmap f dn) (fmap (fmap f) mcx) (fmap f dh) (map (fmap f) cds) (fmap (fmap f) ders)
+        GDataDecl    l dn mcx dh mk gds ders ->
+            GDataDecl (f l) (fmap f dn) (fmap (fmap f) mcx) (fmap f dh) (fmap (fmap f) mk) (map (fmap f) gds) (fmap (fmap f) ders)
+        DataFamDecl  l mcx dh mk          -> DataFamDecl (f l) (fmap (fmap f) mcx) (fmap f dh) (fmap (fmap f) mk)
         TypeInsDecl  l t1 t2              -> TypeInsDecl (f l) (fmap f t1) (fmap f t2)
-        DataInsDecl  l dn t cds ders      -> DataInsDecl (f l) (fmap f dn) (fmap f t) (map (fmap f) cds) (fmap (map (fmap f)) ders)
-        GDataInsDecl l dn t mk gds ders   -> GDataInsDecl (f l) (fmap f dn) (fmap f t) (fmap (fmap f) mk) (map (fmap f) gds) (fmap (map (fmap f)) ders)
-        ClassDecl    l mcx n tvs fds mcds -> ClassDecl (f l) (fmap (fmap f) mcx) (fmap f n) (map (fmap f) tvs) (map (fmap f) fds) (fmap (map (fmap f)) mcds)
-        InstDecl     l mcx qn ts mids     -> InstDecl (f l) (fmap (fmap f) mcx) (fmap f qn) (map (fmap f) ts) (fmap (map (fmap f)) mids)
-        DerivDecl    l mcx qn ts          -> DerivDecl (f l) (fmap (fmap f) mcx) (fmap f qn) (map (fmap f) ts)
+        DataInsDecl  l dn t cds ders      -> DataInsDecl (f l) (fmap f dn) (fmap f t) (map (fmap f) cds) (fmap (fmap f) ders)
+        GDataInsDecl l dn t mk gds ders   -> GDataInsDecl (f l) (fmap f dn) (fmap f t) (fmap (fmap f) mk) (map (fmap f) gds) (fmap (fmap f) ders)
+        ClassDecl    l mcx dh fds mcds    -> ClassDecl (f l) (fmap (fmap f) mcx) (fmap f dh) (map (fmap f) fds) (fmap (map (fmap f)) mcds)
+        InstDecl     l mcx ih mids        -> InstDecl  (f l) (fmap (fmap f) mcx) (fmap f ih) (fmap (map (fmap f)) mids)
+        DerivDecl    l mcx ih             -> DerivDecl (f l) (fmap (fmap f) mcx) (fmap f ih)
         InfixDecl    l a k ops            -> InfixDecl (f l) (fmap f a) k (map (fmap f) ops)
         DefaultDecl  l ts                 -> DefaultDecl (f l) (map (fmap f) ts)
         SpliceDecl   l sp                 -> SpliceDecl (f l) (fmap f sp)
@@ -1188,13 +1212,26 @@ instance Functor Decl where
         WarnPragmaDecl   l nss            -> WarnPragmaDecl (f l) (map (wp f) nss)
         InlineSig        l b mact qn      -> InlineSig (f l) b (fmap (fmap f) mact) (fmap f qn)
         SpecInlineSig    l b mact qn ts   -> SpecInlineSig (f l) b (fmap (fmap f) mact) (fmap f qn) (map (fmap f) ts)
-        SpecSig          l qn ts          -> SpecSig (f l) (fmap f qn) (map (fmap f) ts)
-        InstSig          l mcx qn ts      -> InstSig (f l) (fmap (fmap f) mcx) (fmap f qn) (map (fmap f) ts)
+        SpecSig          l        qn ts   -> SpecSig (f l) (fmap f qn) (map (fmap f) ts)
+        InstSig          l mcx ih         -> InstSig (f l) (fmap (fmap f) mcx) (fmap f ih)
       where wp f (ns, s) = (map (fmap f) ns, s)
 
 instance Functor DataOrNew where
     fmap f (DataType l) = DataType (f l)
     fmap f (NewType  l) = NewType  (f l)
+
+instance Functor DeclHead where
+    fmap f (DHead l n tvs)       = DHead (f l) (fmap f n) (map (fmap f) tvs)
+    fmap f (DHInfix l tva n tvb) = DHInfix (f l) (fmap f tva) (fmap f n) (fmap f tvb)
+    fmap f (DHParen l dh)        = DHParen (f l) (fmap f dh)
+
+instance Functor InstHead where
+    fmap f (IHead l qn ts)       = IHead (f l) (fmap f qn) (map (fmap f) ts)
+    fmap f (IHInfix l ta qn tb)  = IHInfix (f l) (fmap f ta) (fmap f qn) (fmap f tb)
+    fmap f (IHParen l ih)        = IHParen (f l) (fmap f ih)
+
+instance Functor Deriving where
+    fmap f (Deriving l ihs) = Deriving (f l) (map (fmap f) ihs)
 
 instance Functor Binds where
     fmap f (BDecls  l decls) = BDecls (f l) (map (fmap f) decls)
@@ -1204,8 +1241,10 @@ instance Functor IPBind where
     fmap f (IPBind l ipn e) = IPBind (f l) (fmap f ipn) (fmap f e)
 
 instance Functor Match where
-    fmap f (Match l n ps mt rhs bs) =
-        Match (f l) (fmap f n) (map (fmap f) ps) (fmap (fmap f) mt) (fmap f rhs) (fmap (fmap f) bs)
+    fmap f (Match l n ps rhs bs) =
+        Match (f l) (fmap f n) (map (fmap f) ps) (fmap f rhs) (fmap (fmap f) bs)
+    fmap f (InfixMatch l a n b rhs bs) =
+        InfixMatch (f l) (fmap f a) (fmap f n) (fmap f b) (fmap f rhs) (fmap (fmap f) bs)
 
 instance Functor QualConDecl where
     fmap f (QualConDecl l mtvs mcx cd) = QualConDecl (f l) (fmap (map (fmap f)) mtvs) (fmap (fmap f) mcx) (fmap f cd)
@@ -1223,8 +1262,8 @@ instance Functor GadtDecl where
 
 instance Functor ClassDecl where
     fmap f (ClsDecl    l d) = ClsDecl (f l) (fmap f d)
-    fmap f (ClsDataFam l mcx n tvs mk) = ClsDataFam (f l) (fmap (fmap f) mcx) (fmap f n) (map (fmap f) tvs) (fmap (fmap f) mk)
-    fmap f (ClsTyFam   l     n tvs mk) = ClsTyFam   (f l)                     (fmap f n) (map (fmap f) tvs) (fmap (fmap f) mk)
+    fmap f (ClsDataFam l mcx dh mk) = ClsDataFam (f l) (fmap (fmap f) mcx) (fmap f dh) (fmap (fmap f) mk)
+    fmap f (ClsTyFam   l     dh mk) = ClsTyFam   (f l)                     (fmap f dh) (fmap (fmap f) mk)
     fmap f (ClsTyDef   l t1 t2) = ClsTyDef (f l) (fmap f t1) (fmap f t2)
 
 instance Functor InstDecl where
@@ -1232,9 +1271,9 @@ instance Functor InstDecl where
         InsDecl   l d           -> InsDecl (f l) (fmap f d)
         InsType   l t1 t2       -> InsType (f l) (fmap f t1) (fmap f t2)
         InsData   l dn t    cds ders
-            -> InsData  (f l) (fmap f dn) (fmap f t)                    (map (fmap f) cds) (fmap (map (fmap f)) ders)
+            -> InsData  (f l) (fmap f dn) (fmap f t)                    (map (fmap f) cds) (fmap (fmap f) ders)
         InsGData  l dn t mk gds ders
-            -> InsGData (f l) (fmap f dn) (fmap f t) (fmap (fmap f) mk) (map (fmap f) gds) (fmap (map (fmap f)) ders)
+            -> InsGData (f l) (fmap f dn) (fmap f t) (fmap (fmap f) mk) (map (fmap f) gds) (fmap (fmap f) ders)
         InsInline l b mact qn   -> InsInline (f l) b (fmap (fmap f) mact) (fmap f qn)
 
 instance Functor BangType where
@@ -1275,7 +1314,10 @@ instance Functor FunDep where
     fmap f (FunDep l ns1 ns2) = FunDep (f l) (map (fmap f) ns1) (map (fmap f) ns2)
 
 instance Functor Context where
-    fmap f (Context l assts) = Context (f l) (map (fmap f) assts)
+    fmap f (CxSingle l asst) = CxSingle (f l) (fmap f asst)
+    fmap f (CxTuple l assts) = CxTuple (f l) (map (fmap f) assts)
+    fmap f (CxParen l ctxt)  = CxParen (f l) (fmap f ctxt)
+    fmap f (CxEmpty l)       = CxEmpty (f l)
 
 instance Functor Asst where
     fmap f asst = case asst of
@@ -1286,16 +1328,16 @@ instance Functor Asst where
 
 instance Functor Literal where
     fmap f lit = case lit of
-        Char    l c     -> Char   (f l) c
-        String  l s     -> String (f l) s
-        Int     l i     -> Int    (f l) i
-        Frac    l r     -> Frac   (f l) r
-        PrimInt    l i  -> PrimInt    (f l) i
-        PrimWord   l i  -> PrimWord   (f l) i
-        PrimFloat  l r  -> PrimFloat  (f l) r
-        PrimDouble l r  -> PrimDouble (f l) r
-        PrimChar   l c  -> PrimChar   (f l) c
-        PrimString l s  -> PrimString (f l) s
+        Char    l c rw    -> Char   (f l) c rw
+        String  l s rw    -> String (f l) s rw
+        Int     l i rw    -> Int    (f l) i rw
+        Frac    l r rw    -> Frac   (f l) r rw
+        PrimInt    l i rw -> PrimInt    (f l) i rw
+        PrimWord   l i rw -> PrimWord   (f l) i rw
+        PrimFloat  l r rw -> PrimFloat  (f l) r rw
+        PrimDouble l r rw -> PrimDouble (f l) r rw
+        PrimChar   l c rw -> PrimChar   (f l) c rw
+        PrimString l s rw -> PrimString (f l) s rw
 
 instance Functor Exp where
     fmap f e = case e of
@@ -1599,22 +1641,22 @@ instance Annotated Assoc where
     amap = fmap
 
 instance Annotated Deriving where
-    ann (Deriving l qn ts) = l
-    amap f (Deriving l qn ts) = Deriving (f l) qn ts
+    ann (Deriving l ihs)    = l
+    amap f (Deriving l ihs) = Deriving (f l) ihs
 
 instance Annotated Decl where
     ann decl = case decl of
-        TypeDecl     l n tvs t      -> l
-        TypeFamDecl  l n tvs mk     -> l
-        DataDecl     l dn cx n tvs cds ders -> l
-        GDataDecl    l dn cx n tvs mk gds ders -> l
-        DataFamDecl  l cx n tvs mk  -> l
+        TypeDecl     l dh t         -> l
+        TypeFamDecl  l dh mk        -> l
+        DataDecl     l dn cx dh cds ders -> l
+        GDataDecl    l dn cx dh mk gds ders -> l
+        DataFamDecl  l    cx dh mk  -> l
         TypeInsDecl  l t1 t2        -> l
         DataInsDecl  l dn t cds ders    -> l
         GDataInsDecl l dn t mk gds ders -> l
-        ClassDecl    l cx n tvs fds cds -> l
-        InstDecl     l cx qn ts ids     -> l
-        DerivDecl    l cx qn ts         -> l
+        ClassDecl    l cx dh fds cds    -> l
+        InstDecl     l cx ih ids        -> l
+        DerivDecl    l cx ih            -> l
         InfixDecl    l a k ops          -> l
         DefaultDecl  l ts               -> l
         SpliceDecl   l sp               -> l
@@ -1627,23 +1669,23 @@ instance Annotated Decl where
         DeprPragmaDecl   l nss          -> l
         WarnPragmaDecl   l nss          -> l
         InlineSig        l b act qn     -> l
-        SpecSig          l                     qn ts    -> l
+        SpecSig          l qn ts        -> l
         SpecInlineSig    l b act qn ts  -> l
-        InstSig          l cx qn ts     -> l
+        InstSig          l cx ih        -> l
     amap f decl = case decl of
-        TypeDecl     l n tvs t      -> TypeDecl    (f l) n tvs t
-        TypeFamDecl  l n tvs mk     -> TypeFamDecl (f l) n tvs mk
-        DataDecl     l dn mcx n tvs cds ders ->
-            DataDecl (f l) dn mcx n tvs cds ders
-        GDataDecl    l dn mcx n tvs mk gds ders ->
-            GDataDecl (f l) dn mcx n tvs mk gds ders
-        DataFamDecl  l mcx n tvs mk      -> DataFamDecl (f l) mcx n tvs mk
+        TypeDecl     l dh t      -> TypeDecl    (f l) dh t
+        TypeFamDecl  l dh mk     -> TypeFamDecl (f l) dh mk
+        DataDecl     l dn mcx dh cds ders ->
+            DataDecl (f l) dn mcx dh cds ders
+        GDataDecl    l dn mcx dh mk gds ders ->
+            GDataDecl (f l) dn mcx dh mk gds ders
+        DataFamDecl  l mcx dh mk         -> DataFamDecl (f l) mcx dh mk
         TypeInsDecl  l t1 t2             -> TypeInsDecl (f l) t1 t2
         DataInsDecl  l dn t cds ders     -> DataInsDecl (f l) dn t cds ders
         GDataInsDecl l dn t mk gds ders  -> GDataInsDecl (f l) dn t mk gds ders
-        ClassDecl    l mcx n tvs fds cds -> ClassDecl (f l) mcx n tvs fds cds
-        InstDecl     l mcx qn ts ids     -> InstDecl (f l) mcx qn ts ids
-        DerivDecl    l mcx qn ts         -> DerivDecl (f l) mcx qn ts
+        ClassDecl    l mcx dh fds cds    -> ClassDecl (f l) mcx dh fds cds
+        InstDecl     l mcx ih ids        -> InstDecl (f l) mcx ih ids
+        DerivDecl    l mcx ih            -> DerivDecl (f l) mcx ih
         InfixDecl    l a k ops           -> InfixDecl (f l) a k ops
         DefaultDecl  l ts                -> DefaultDecl (f l) ts
         SpliceDecl   l sp                -> SpliceDecl (f l) sp
@@ -1658,12 +1700,28 @@ instance Annotated Decl where
         InlineSig        l b act qn      -> InlineSig (f l) b act qn
         SpecSig          l qn ts         -> SpecSig (f l) qn ts
         SpecInlineSig    l b act qn ts   -> SpecInlineSig (f l) b act qn ts
-        InstSig          l mcx qn ts     -> InstSig (f l) mcx qn ts
+        InstSig          l mcx ih        -> InstSig (f l) mcx ih
 
 instance Annotated DataOrNew where
     ann (DataType l) = l
     ann (NewType  l) = l
     amap = fmap
+
+instance Annotated DeclHead where
+    ann (DHead l n tvs)       = l
+    ann (DHInfix l tva n tvb) = l
+    ann (DHParen l dh)        = l
+    amap f (DHead l n tvs)       = DHead (f l) n tvs
+    amap f (DHInfix l tva n tvb) = DHInfix (f l) tva n tvb
+    amap f (DHParen l dh)        = DHParen (f l) dh
+
+instance Annotated InstHead where
+    ann (IHead l qn ts) = l
+    ann (IHInfix l ta qn tb) = l
+    ann (IHParen l ih) = l
+    amap f (IHead l qn ts)       = IHead (f l) qn ts
+    amap f (IHInfix l ta qn tb)  = IHInfix (f l) ta qn tb
+    amap f (IHParen l ih)        = IHParen (f l) ih
 
 instance Annotated Binds where
     ann (BDecls  l decls) = l
@@ -1676,8 +1734,10 @@ instance Annotated IPBind where
     amap f (IPBind l ipn e) = IPBind (f l) ipn e
 
 instance Annotated Match where
-    ann (Match l n ps mt rhs bs) = l
-    amap f (Match l n ps mt rhs bs) = Match (f l) n ps mt rhs bs
+    ann (Match l n ps rhs bs) = l
+    ann (InfixMatch l a n b rhs bs) = l
+    amap f (Match l n ps rhs bs) = Match (f l) n ps rhs bs
+    amap f (InfixMatch l a n b rhs bs) = InfixMatch (f l) a n b rhs bs
 
 instance Annotated QualConDecl where
     ann (QualConDecl l tvs cx cd) = l
@@ -1701,12 +1761,12 @@ instance Annotated GadtDecl where
 
 instance Annotated ClassDecl where
     ann (ClsDecl    l d) = l
-    ann (ClsDataFam l cx n tvs mk) = l
-    ann (ClsTyFam   l    n tvs mk) = l
+    ann (ClsDataFam l cx dh mk) = l
+    ann (ClsTyFam   l    dh mk) = l
     ann (ClsTyDef   l t1 t2) = l
     amap f (ClsDecl    l d) = ClsDecl (f l) d
-    amap f (ClsDataFam l mcx n tvs mk) = ClsDataFam (f l) mcx n tvs mk
-    amap f (ClsTyFam   l     n tvs mk) = ClsTyFam   (f l)     n tvs mk
+    amap f (ClsDataFam l mcx dh mk) = ClsDataFam (f l) mcx dh mk
+    amap f (ClsTyFam   l     dh mk) = ClsTyFam   (f l)     dh mk
     amap f (ClsTyDef   l t1 t2) = ClsTyDef (f l) t1 t2
 
 instance Annotated InstDecl where
@@ -1784,8 +1844,14 @@ instance Annotated FunDep where
     amap f (FunDep l ns1 ns2) = FunDep (f l) ns1 ns2
 
 instance Annotated Context where
-    ann (Context l assts) = l
-    amap f (Context l assts) = Context (f l) assts
+    ann (CxSingle l asst ) = l
+    ann (CxTuple  l assts) = l
+    ann (CxParen  l ctxt )  = l
+    ann (CxEmpty  l)       = l
+    amap f (CxSingle l asst ) = CxSingle (f l) asst
+    amap f (CxTuple  l assts) = CxTuple  (f l) assts
+    amap f (CxParen  l ctxt ) = CxParen  (f l) ctxt
+    amap f (CxEmpty l) = CxEmpty (f l)
 
 instance Annotated Asst where
     ann asst = case asst of
@@ -1801,16 +1867,16 @@ instance Annotated Asst where
 
 instance Annotated Literal where
     ann lit = case lit of
-        Char    l c     -> l
-        String  l s     -> l
-        Int     l i     -> l
-        Frac    l r     -> l
-        PrimInt    l i  -> l
-        PrimWord   l i  -> l
-        PrimFloat  l r  -> l
-        PrimDouble l r  -> l
-        PrimChar   l c  -> l
-        PrimString l s  -> l
+        Char    l c    rw  -> l
+        String  l s    rw  -> l
+        Int     l i    rw  -> l
+        Frac    l r    rw  -> l
+        PrimInt    l i rw  -> l
+        PrimWord   l i rw  -> l
+        PrimFloat  l r rw  -> l
+        PrimDouble l r rw  -> l
+        PrimChar   l c rw  -> l
+        PrimString l s rw  -> l
     amap = fmap
 
 instance Annotated Exp where

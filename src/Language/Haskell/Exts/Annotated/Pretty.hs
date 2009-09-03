@@ -345,42 +345,37 @@ instance Pretty (ImportSpec l) where
 
 -------------------------  Declarations ------------------------------
 instance SrcInfo pos => Pretty (Decl pos) where
-        pretty (TypeDecl loc name nameList htype) =
+        pretty (TypeDecl loc dhead htype) =
                 blankline $
                 markLine loc $
-                mySep ( [text "type", pretty name]
-                        ++ map pretty nameList
-                        ++ [equals, pretty htype])
+                mySep [text "type", pretty dhead, equals, pretty htype]
 
-        pretty (DataDecl loc don context name nameList constrList derives) =
+        pretty (DataDecl loc don context dhead constrList derives) =
                 blankline $
                 markLine loc $
-                mySep ( [pretty don, ppContext context, pretty name]
-                        ++ map pretty nameList)
+                mySep [pretty don, ppContext context, pretty dhead]
                         <+> (myVcat (zipWith (<+>) (equals : repeat (char '|'))
                                                    (map pretty constrList))
                         $$$ ppDeriving derives)
 
-        pretty (GDataDecl loc don context name nameList optkind gadtList derives) =
+        pretty (GDataDecl loc don context dhead optkind gadtList derives) =
                 blankline $
                 markLine loc $
-                mySep ( [pretty don, ppContext context, pretty name]
-                        ++ map pretty nameList ++ ppOptKind optkind ++ [text "where"])
+                mySep ( [pretty don, ppContext context, pretty dhead]
+                        ++ ppOptKind optkind ++ [text "where"])
                         $$$ ppBody classIndent (map pretty gadtList)
                         $$$ ppDeriving derives
 
-        pretty (TypeFamDecl loc name nameList optkind) =
+        pretty (TypeFamDecl loc dhead optkind) =
                 blankline $
                 markLine loc $
-                mySep ([text "type", text "family", pretty name]
-                        ++ map pretty nameList
+                mySep ([text "type", text "family", pretty dhead]
                         ++ ppOptKind optkind)
 
-        pretty (DataFamDecl loc context name nameList optkind) =
+        pretty (DataFamDecl loc context dhead optkind) =
                 blankline $
                 markLine loc $
-                mySep ( [text "data", text "family", ppContext context, pretty name]
-                        ++ map pretty nameList ++ ppOptKind optkind)
+                mySep ( [text "data", text "family", ppContext context, pretty dhead] ++ ppOptKind optkind)
 
         pretty (TypeInsDecl loc ntype htype) =
                 blankline $
@@ -405,37 +400,32 @@ instance SrcInfo pos => Pretty (Decl pos) where
 
         --m{spacing=False}
         -- special case for empty class declaration
-        pretty (ClassDecl pos context name nameList fundeps Nothing) =
+        pretty (ClassDecl pos context dhead fundeps Nothing) =
                 blankline $
                 markLine pos $
-                mySep ( [text "class", ppContext context, pretty name]
-                        ++ map pretty nameList ++ [ppFunDeps fundeps])
-        pretty (ClassDecl pos context name nameList fundeps (Just declList)) =
+                mySep [text "class", ppContext context, pretty dhead, ppFunDeps fundeps]
+        pretty (ClassDecl pos context dhead fundeps (Just declList)) =
                 blankline $
                 markLine pos $
-                mySep ( [text "class", ppContext context, pretty name]
-                        ++ map pretty nameList ++ [ppFunDeps fundeps, text "where"])
+                mySep [text "class", ppContext context, pretty dhead, ppFunDeps fundeps, text "where"]
                 $$$ ppBody classIndent (map pretty declList)
 
         -- m{spacing=False}
         -- special case for empty instance declaration
-        pretty (InstDecl pos context name args Nothing) =
+        pretty (InstDecl pos context ihead Nothing) =
                 blankline $
                 markLine pos $
-                mySep ( [text "instance", ppContext context, pretty name]
-                        ++ map ppAType args)
-        pretty (InstDecl pos context name args (Just declList)) =
+                mySep [text "instance", ppContext context, pretty ihead]
+        pretty (InstDecl pos context ihead (Just declList)) =
                 blankline $
                 markLine pos $
-                mySep ( [text "instance", ppContext context, pretty name]
-                        ++ map ppAType args ++ [text "where"])
+                mySep ( [text "instance", ppContext context, pretty ihead, text "where"])
                 $$$ ppBody classIndent (map pretty declList)
 
-        pretty (DerivDecl pos context name args) =
+        pretty (DerivDecl pos context ihead) =
                 blankline $
                 markLine pos $
-                mySep ( [text "deriving", text "instance", ppContext context, pretty name]
-                        ++ map ppAType args)
+                mySep [text "deriving", text "instance", ppContext context, pretty ihead]
         pretty (DefaultDecl pos htypes) =
                 blankline $
                 markLine pos $
@@ -467,17 +457,17 @@ instance SrcInfo pos => Pretty (Decl pos) where
                 mySep ([pretty assoc, maybePP int prec]
                        ++ (punctuate comma . map pretty $ opList))
 
-        pretty (ForImp pos cconv msaf str name typ) =
+        pretty (ForImp pos cconv msaf mstr name typ) =
                 blankline $
                 markLine pos $
                 mySep [text "foreign import", pretty cconv, maybePP pretty msaf,
-                       text (show str), pretty name, text "::", pretty typ]
+                       maybePP (text . show) mstr, pretty name, text "::", pretty typ]
 
-        pretty (ForExp pos cconv str name typ) =
+        pretty (ForExp pos cconv mstr name typ) =
                 blankline $
                 markLine pos $
                 mySep [text "foreign export", pretty cconv,
-                       text (show str), pretty name, text "::", pretty typ]
+                       maybePP (text . show) mstr, pretty name, text "::", pretty typ]
 
         pretty (RulePragmaDecl pos rules) =
                 blankline $
@@ -512,17 +502,21 @@ instance SrcInfo pos => Pretty (Decl pos) where
                         maybePP pretty mactiv, pretty name, text "::"]
                         ++ (punctuate comma $ map pretty types) ++ [text "#-}"]
 
-        pretty (InstSig pos context name args) =
+        pretty (InstSig pos context ihead) =
                 blankline $
                 markLine pos $
-                mySep $ [text "{-# SPECIALISE", text "instance", ppContext context, pretty name]
-                            ++ map ppAType args ++ [text "#-}"]
+                mySep $ [text "{-# SPECIALISE", text "instance", ppContext context, pretty ihead, text "#-}"]
 
-{-        pretty (UnknownDeclPragma pos n s) =
-                blankline $
-                markLine pos $
-                mySep $ [text "{-#", text n, text s, text "#-}"] -}
 
+instance Pretty (DeclHead l) where
+    pretty (DHead l n tvs)       = mySep (pretty n : map pretty tvs)
+    pretty (DHInfix l tva n tvb) = mySep [pretty tva, pretty n, pretty tvb]
+    pretty (DHParen l dh)        = parens (pretty dh)
+
+instance Pretty (InstHead l) where
+    pretty (IHead l qn ts)       = mySep (pretty qn : map pretty ts)
+    pretty (IHInfix l ta qn tb)  = mySep [pretty ta, pretty qn, pretty tb]
+    pretty (IHParen l ih)        = parens (pretty ih)
 
 instance Pretty (DataOrNew l) where
         pretty (DataType _) = text "data"
@@ -534,17 +528,21 @@ instance Pretty (Assoc l) where
         pretty (AssocRight _) = text "infixr"
 
 instance SrcInfo pos => Pretty (Match pos) where
-        pretty (Match pos f ps optsig rhs whereBinds) =
+        pretty (Match pos f ps rhs whereBinds) =
                 markLine pos $
-                myFsep (lhs ++ [maybePP ppSig optsig, pretty rhs])
+                myFsep (pretty f : map (prettyPrec 2) ps ++ [pretty rhs])
                 $$$ ppWhere whereBinds
-            where
+{-            where
                 lhs = case ps of
                         l:r:ps' | isSymbolName f ->
                                 let hd = [pretty l, ppName f, pretty r] in
                                 if null ps' then hd
                                 else parens (myFsep hd) : map (prettyPrec 2) ps'
-                        _ -> pretty f : map (prettyPrec 2) ps
+                        _ -> pretty f : map (prettyPrec 2) ps -}
+        pretty (InfixMatch pos a f b rhs whereBinds) =
+                markLine pos $
+                myFsep [pretty a, pretty f, pretty b, pretty rhs]
+                $$$ ppWhere whereBinds
 
 ppWhere :: SrcInfo loc => Maybe (Binds loc) -> Doc
 ppWhere Nothing              = empty
@@ -558,15 +556,13 @@ ppSig t = text "::" <+> pretty t
 instance SrcInfo loc => Pretty (ClassDecl loc) where
     pretty (ClsDecl _ decl) = pretty decl
 
-    pretty (ClsDataFam loc context name nameList optkind) =
+    pretty (ClsDataFam loc context dhead optkind) =
                 markLine loc $
-                mySep ( [text "data", ppContext context, pretty name]
-                        ++ map pretty nameList ++ ppOptKind optkind)
+                mySep ( [text "data", ppContext context, pretty dhead] ++ ppOptKind optkind)
 
-    pretty (ClsTyFam loc name nameList optkind) =
+    pretty (ClsTyFam loc dhead optkind) =
                 markLine loc $
-                mySep ( [text "type", pretty name]
-                        ++ map pretty nameList ++ ppOptKind optkind)
+                mySep ( [text "type", pretty dhead] ++ ppOptKind optkind)
 
     pretty (ClsTyDef loc ntype htype) =
                 markLine loc $
@@ -686,13 +682,13 @@ instance Pretty (BangType l) where
         prettyPrec p (UnBangedTy _ ty) = prettyPrec p ty
         prettyPrec p (UnpackedTy _ ty) = text "{-# UNPACK #-}" <+> char '!' <> prettyPrec p ty
 
-ppDeriving :: Maybe [Deriving l] -> Doc
-ppDeriving Nothing    = empty
-ppDeriving (Just [])  = text "deriving" <+> parenList []
-ppDeriving (Just [Deriving _ d []]) = text "deriving" <+> ppQName d
-ppDeriving (Just ds)  = text "deriving" <+> parenList (map ppDer ds)
-    where ppDer :: Deriving l -> Doc
-          ppDer (Deriving _ n ts) = mySep (pretty n : map pretty ts)
+ppDeriving :: Maybe (Deriving l) -> Doc
+ppDeriving = maybePP pretty
+
+instance Pretty (Deriving l) where
+        pretty (Deriving _ []) = text "deriving" <+> parenList []
+        pretty (Deriving _ [IHead _ d []]) = text "deriving" <+> ppQName d
+        pretty (Deriving _ ihs) = text "deriving" <+> parenList (map pretty ihs)
 
 ------------------------- Types -------------------------
 ppBType :: Type l -> Doc
@@ -772,17 +768,17 @@ instance SrcInfo loc => Pretty (GuardedRhs loc) where
                 myFsep $ [char '|'] ++ (punctuate comma . map pretty $ guards) ++ [equals, pretty ppBody]
 
 instance Pretty (Literal l) where
-        pretty (Int _ i)        = integer i
-        pretty (Char _ c)       = text (show c)
-        pretty (String _ s)     = text (show s)
-        pretty (Frac _ r)       = double (fromRational r)
+        pretty (Int _ i _)        = integer i
+        pretty (Char _ c _)       = text (show c)
+        pretty (String _ s _)     = text (show s)
+        pretty (Frac _ r _)       = double (fromRational r)
         -- GHC unboxed literals:
-        pretty (PrimChar _ c)   = text (show c)           <> char '#'
-        pretty (PrimString _ s) = text (show s)           <> char '#'
-        pretty (PrimInt _ i)    = integer i               <> char '#'
-        pretty (PrimWord _ w)   = integer w               <> text "##"
-        pretty (PrimFloat _ r)  = float  (fromRational r) <> char '#'
-        pretty (PrimDouble _ r) = double (fromRational r) <> text "##"
+        pretty (PrimChar _ c _)   = text (show c)           <> char '#'
+        pretty (PrimString _ s _) = text (show s)           <> char '#'
+        pretty (PrimInt _ i _)    = integer i               <> char '#'
+        pretty (PrimWord _ w _)   = integer w               <> text "##"
+        pretty (PrimFloat _ r _)  = float  (fromRational r) <> char '#'
+        pretty (PrimDouble _ r _) = double (fromRational r) <> text "##"
 
 instance SrcInfo loc => Pretty (Exp loc) where
         pretty (Lit _ l) = pretty l
@@ -1117,8 +1113,13 @@ specialName (TupleCon _ b n) = "(" ++ hash ++ replicate (n-1) ',' ++ hash ++ ")"
 specialName (Cons _) = ":"
 
 ppContext :: Maybe (Context l) -> Doc
-ppContext Nothing = empty
-ppContext (Just (Context _ context)) = mySep [parenList (map pretty context), text "=>"]
+ppContext = maybePP pretty
+
+instance Pretty (Context l) where
+        pretty (CxEmpty _) = mySep [text "()", text "=>"]
+        pretty (CxSingle _ asst) = mySep [pretty asst, text "=>"]
+        pretty (CxTuple _ assts) = myFsep $ [parenList (map pretty assts), text "=>"]
+        pretty (CxParen _ asst)  = parens (pretty asst)
 
 -- hacked for multi-parameter type classes
 instance Pretty (Asst l) where
