@@ -6,6 +6,7 @@ import Language.Haskell.Exts.Annotated
 import System.IO
 import Control.Monad
 import Data.List
+import Data.Char
 import System.Directory
 import System.Environment (getArgs)
 import System.Exit (exitFailure)
@@ -54,7 +55,9 @@ roundTrip expected file = do
     fc <- readFile file
     (ast,cs) <- liftM fromParseResult $ parseFileWithComments (defaultParseMode { parseFilename = file }) file
     let res      = exactPrint ast cs
-        xs       = dropWhile (uncurry (==)) $ zip (lines fc) (lines res)
+        xs       = dropWhile (uncurry (==))
+                        $ zip (map (reverse . dropWhile isSpace . reverse) $ lines fc)
+                              (map (reverse . dropWhile isSpace . reverse) $ lines res)
     case xs of
      [] | expected  -> putStrLn ("\n<unexpected pass for " ++ file ++ ">") >> return False
         | otherwise -> putChar '.' >> return True
