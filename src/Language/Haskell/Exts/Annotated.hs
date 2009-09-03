@@ -21,8 +21,9 @@ module Language.Haskell.Exts.Annotated (
     , module Language.Haskell.Exts.Annotated.Pretty
     , module Language.Haskell.Exts.Annotated.Fixity
     , module Language.Haskell.Exts.Annotated.SrcLoc
+    , module Language.Haskell.Exts.Annotated.ExactPrint
+    , module Language.Haskell.Exts.Annotated.Comments
     , module Language.Haskell.Exts.Extension
-    , module Language.Haskell.Exts.Comments
     -- * Parsing of Haskell source files
     , parseFile
     , parseFileWithMode

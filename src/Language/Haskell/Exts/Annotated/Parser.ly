@@ -303,7 +303,7 @@ TODO: Yuck, this is messy, needs fixing in the AST!
 TODO: the various pragma starts with content don't record where that content is located.
 
 > toppragma :: { OptionPragma L }
->           : '{-# LANGUAGE' conids optsemis '#-}'   { LanguagePragma ($1 <^^> $4 <** ($1:reverse (snd $2) ++ reverse $3 ++ [$4])) (fst $2) }
+>           : '{-# LANGUAGE' conids optsemis '#-}'   { LanguagePragma ($1 <^^> $4 <** ($1:snd $2 ++ reverse $3 ++ [$4])) (fst $2) }
 >           | '{-# INCLUDE' optsemis '#-}'           { let Loc l (INCLUDE s) = $1 in IncludePragma (l <^^> $3 <** (l:reverse $2 ++ [$3])) s }
 >           | '{-# OPTIONS' optsemis '#-}'           { let Loc l (OPTIONS (mc, s)) = $1
 >                                                       in OptionsPragma (l <^^> $3 <** (l:reverse $2 ++ [$3])) (readTool mc) s }
@@ -414,7 +414,7 @@ Requires the PackageImports extension enabled.
 
 > impspec :: { ImportSpecList L }
 >       : opthiding '(' importlist optcomma ')' { let {(b,ml,s) = $1 ;
->                                                       l = (ml <?+> ($2 <^^> $5)) <** (s ++ $2:snd $3 ++ $4 ++ [$5])}
+>                                                       l = (ml <?+> ($2 <^^> $5)) <** (s ++ $2:reverse (snd $3) ++ $4 ++ [$5])}
 >                                                  in ImportSpecList l b (reverse (fst $3)) }
 >       | opthiding '(' optcomma ')'            { let {(b,ml,s) = $1 ; l = (ml <?+> ($2 <^^> $4)) <** (s ++ $2:$3 ++ [$4])}
 >                                                  in ImportSpecList l b [] }
@@ -673,7 +673,7 @@ Pragmas
 > rule :: { Rule L }
 >      : STRING activation ruleforall exp0 '=' trueexp      {% do { let {Loc l (StringTok (s,_)) = $1};
 >                                                                   e <- checkRuleExpr $4;
->                                                                   return $ Rule (nIS l <++> ann $6 <** snd $3 ++ [$5]) s $2 (fst $3) e $6 } }
+>                                                                   return $ Rule (nIS l <++> ann $6 <** l:snd $3 ++ [$5]) s $2 (fst $3) e $6 } }
 
 > activation :: { Maybe (Activation L) }
 >        : {- empty -}          { Nothing }
@@ -768,7 +768,7 @@ the (# and #) lexemes. Kinds will be handled at the kind rule.
 
 > otycon :: { QName L }
 >       : qconid                        { $1 }
->       | '(' gconsym ')'               { amap (const ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3])) $2 }
+>       | '(' gconsym ')'               { fmap (const ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3])) $2 }
 
 These are for infix types
 
@@ -907,10 +907,10 @@ as qcon and then check separately that they are truly unqualified.
 > scontype1 :: { (Name L, [BangType L],L) }
 >       : btype '!' trueatype                       {% do { (c,ts) <- splitTyConApp $1;
 >                                                           return (c,map (\t -> UnBangedTy (ann t) t) ts++
->                                                                   [BangedTy (nIS $2 <++> ann $3) $3], $1 <> $3) } }
+>                                                                   [BangedTy (nIS $2 <++> ann $3 <** [$2]) $3], $1 <> $3) } }
 >       | btype '{-# UNPACK' '#-}' '!' trueatype    {% do { (c,ts) <- splitTyConApp $1;
 >                                                           return (c,map (\t -> UnBangedTy (ann t) t) ts++
->                                                                   [UnpackedTy (nIS $2 <++> ann $5 <** [$3,$4]) $5], $1 <> $5) } }
+>                                                                   [UnpackedTy (nIS $2 <++> ann $5 <** [$2,$3,$4]) $5], $1 <> $5) } }
 >       | scontype1 satype              { let (n,ts,l) = $1 in (n, ts ++ [$2],l <++> ann $2) }
 
 > satype :: { BangType L }
@@ -1048,8 +1048,9 @@ Value definitions
 > valdef :: { Decl L }
 >       : exp0b optsig rhs optwhere     {% checkValDef (($1 <> $3 <+?> (fmap ann) (fst $4)) <** (snd $2 ++ snd $4)) $1 (fst $2) $3 (fst $4) }
 >       | '!' aexp rhs optwhere         {% do { checkEnabled BangPatterns ;
->                                               p <- checkPattern $2;
->                                               return $ PatBind ((nIS $1 <++> ann $3 <+?> (fmap ann) (fst $4)) <** $1:snd $4)
+>                                               let { l = nIS $1 <++> ann $2 <** [$1] };
+>                                               p <- checkPattern (BangPat l $2);
+>                                               return $ PatBind (p <> $3 <+?> (fmap ann) (fst $4) <** snd $4)
 >                                                           p Nothing $3 (fst $4) } }
 
 May bind implicit parameters
@@ -1205,7 +1206,7 @@ thing we need to look at here is the erpats that use no non-standard lexemes.
 >                                                       (replicate (length $2 - 1) Nothing ++ [Just $3]) }
 >       | '(' commas texp tsectend      { TupleSection ($1 <^^> head (snd $4) <** $1:reverse (snd $4 ++ $2))
 >                                                       (replicate (length $2 - 1) Nothing ++ Just $3 : fst $4) }
->       | '[' list ']'                  { amap (<** [$1,$3]) $ $2 ($1 <^^> $3) }
+>       | '[' list ']'                  { amap (\l -> l <** [$3]) $ $2 ($1 <^^> $3 <** [$1]) }
 >       | '_'                           { WildCard (nIS $1) }
 >       | '(' erpats ')'                {% checkEnabled RegularPatterns >> return (Paren ($1 <^^> $3 <** [$1,$3]) $2) }
 >       | '(|' sexps '|)'               { SeqRP ($1 <^^> $3 <** ($1:reverse (snd $2) ++ [$3])) $ reverse (fst $2) }
@@ -1261,7 +1262,7 @@ Hsx Extensions - requires XmlSyntax, but the lexer handles all that.
 >       : '<' name attrs mattr '>' children '</' name '>'        {% do { n <- checkEqNames $2 $8;
 >                                                                        let { cn = reverse $6;
 >                                                                              as = reverse $3;
->                                                                              l  = $1 <^^> $9 <** [$1,$5,$7,$9] };
+>                                                                              l  = $1 <^^> $9 <** [$1,$5,$7,srcInfoSpan (ann $8),$9] };
 >                                                                        return $ XTag l n as $4 cn } }
 >       | '<' name attrs mattr '/>'                              { XETag   ($1 <^^> $5 <** [$1,$5]) $2 (reverse $3) $4 }
 >       | '<%' exp '%>'                                          { XExpTag ($1 <^^> $3 <** [$1,$3]) $2 }
@@ -1277,7 +1278,7 @@ Hsx Extensions - requires XmlSyntax, but the lexer handles all that.
 
 > name :: { XName L }
 >       : xmlname ':' xmlname           { let {Loc l1 s1 = $1; Loc l2 s2 = $3}
->                                          in XDomName (nIS l1 <++> nIS l2 <** [$2]) s1 s2 }
+>                                          in XDomName (nIS l1 <++> nIS l2 <** [l1,$2,l2]) s1 s2 }
 >       | xmlname                       { let Loc l str = $1 in XName (nIS l) str }
 
 > xmlname :: { Loc String }
@@ -1348,7 +1349,7 @@ avoiding another shift/reduce-conflict.
 
 > list :: { L -> PExp L }
 >       : texp                          { \l -> List l [$1] }
->       | lexps                         { \l -> let (ps,ss) = $1 in List (l <** ss) ps }
+>       | lexps                         { \l -> let (ps,ss) = $1 in List (l <** reverse ss) (reverse ps) }
 >       | texp '..'                     { \l -> EnumFrom       (l <** [$2]) $1 }
 >       | texp ',' exp '..'             { \l -> EnumFromThen   (l <** [$2,$4]) $1 $3 }
 >       | texp '..' exp                 { \l -> EnumFromTo     (l <** [$2]) $1 $3 }
@@ -1496,15 +1497,15 @@ Variables, Constructors and Operators.
 
 > var   :: { Name L }
 >       : varid                 { $1 }
->       | '(' varsym ')'        { amap (const ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3])) $2 }
+>       | '(' varsym ')'        { fmap (const ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3])) $2 }
 
 > var_no_safety :: { Name L }
 >       : varid_no_safety       { $1 }
->       | '(' varsym ')'        { amap (const ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3])) $2 }
+>       | '(' varsym ')'        { fmap (const ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3])) $2 }
 
 > qvar  :: { QName L }
 >       : qvarid                { $1 }
->       | '(' qvarsym ')'       { amap (const ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3])) $2 }
+>       | '(' qvarsym ')'       { fmap (const ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3])) $2 }
 
 Implicit parameter
 > ivar  :: { IPName L }
@@ -1512,31 +1513,31 @@ Implicit parameter
 
 > con   :: { Name L }
 >       : conid                 { $1 }
->       | '(' consym ')'        { amap (const ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3])) $2 }
+>       | '(' consym ')'        { fmap (const ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3])) $2 }
 
 > qcon  :: { QName L }
 >       : qconid                { $1 }
->       | '(' gconsym ')'       { amap (const ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3])) $2 }
+>       | '(' gconsym ')'       { fmap (const ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3])) $2 }
 
 > varop :: { Name L }
 >       : varsym                { $1 }
->       | '`' varid '`'         { amap (const ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3])) $2 }
+>       | '`' varid '`'         { fmap (const ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3])) $2 }
 
 > qvarop :: { QName L }
 >       : qvarsym               { $1 }
->       | '`' qvarid '`'        { amap (const ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3])) $2 }
+>       | '`' qvarid '`'        { fmap (const ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3])) $2 }
 
 > qvaropm :: { QName L }
 >       : qvarsymm              { $1 }
->       | '`' qvarid '`'        { amap (const ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3])) $2 }
+>       | '`' qvarid '`'        { fmap (const ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3])) $2 }
 
 > conop :: { Name L }
 >       : consym                { $1 }
->       | '`' conid '`'         { amap (const ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3])) $2 }
+>       | '`' conid '`'         { fmap (const ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3])) $2 }
 
 > qconop :: { QName L }
 >       : gconsym               { $1 }
->       | '`' qconid '`'        { amap (const ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3])) $2 }
+>       | '`' qconid '`'        { fmap (const ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3])) $2 }
 
 > op    :: { Op L }
 >       : varop                 { VarOp (ann $1) $1 }
@@ -1777,13 +1778,13 @@ Miscellaneous (mostly renamings)
 > parseTypeWithComments mode str = runParserWithModeComments mode mparseType str
 
 
-> simpleParse :: AppFixity a => P a -> String -> ParseResult a
+> simpleParse :: AppFixity a => P (a L) -> String -> ParseResult (a L)
 > simpleParse p = fmap (applyFixities preludeFixities) . runParser p
 
-> modeParse :: AppFixity a => P a -> ParseMode -> String -> ParseResult a
+> modeParse :: AppFixity a => P (a L) -> ParseMode -> String -> ParseResult (a L)
 > modeParse p mode = fmap (applyFixities (fixities mode)) . runParserWithMode mode p
 
-> commentParse :: AppFixity a => P a -> ParseMode -> String -> ParseResult (a, [Comment])
+> commentParse :: AppFixity a => P (a L) -> ParseMode -> String -> ParseResult (a L, [Comment])
 > commentParse p mode str = runParserWithModeComments mode p str
 >                              >>= \(ast, cs) -> return (applyFixities (fixities mode) ast, cs)
 
