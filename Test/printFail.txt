@@ -1,0 +1,3 @@
+HexPrec.hs
+ParenFunBind.hs
+RealGHC.lhs
