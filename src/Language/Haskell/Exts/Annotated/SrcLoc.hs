@@ -57,7 +57,7 @@ data Loc a = Loc
 -- | A portion of the source, extended with information on the position of entities within the span.
 data SrcSpanInfo = SrcSpanInfo
     { srcInfoSpan    :: SrcSpan
-    , explLayout     :: Bool
+--    , explLayout     :: Bool
     , srcInfoPoints  :: [SrcSpan]    -- Marks the location of specific entities inside the span
     }
 #ifdef __GLASGOW_HASKELL__
@@ -67,24 +67,23 @@ data SrcSpanInfo = SrcSpanInfo
 #endif
 
 nIS, noInfoSpan :: SrcSpan -> SrcSpanInfo
-noInfoSpan ss = SrcSpanInfo ss False []
+noInfoSpan ss = SrcSpanInfo ss []
 
 nIS = noInfoSpan
 
 pIS, pointInfoSpan :: SrcSpan -> SrcSpanInfo
-pointInfoSpan ss = SrcSpanInfo ss False [ss]
+pointInfoSpan ss = SrcSpanInfo ss [ss]
 
 pIS = pointInfoSpan
 
 iS, infoSpan :: SrcSpan -> [SrcSpan] -> SrcSpanInfo
-infoSpan x y = SrcSpanInfo x False y
+infoSpan x y = SrcSpanInfo x y
 
 iS = infoSpan
 
 (<++>), combSpanInfo :: SrcSpanInfo -> SrcSpanInfo -> SrcSpanInfo
 combSpanInfo s1 s2 = SrcSpanInfo
     (mergeSrcSpan (srcInfoSpan s1) (srcInfoSpan s2))
-    (explLayout s1)
     []
 
 (<++>) = combSpanInfo
@@ -98,18 +97,18 @@ a <?+> b = case a of {Nothing -> b; Just a -> a <++> b}
 (<**) :: SrcSpanInfo -> [SrcSpan] -> SrcSpanInfo
 ss@(SrcSpanInfo {srcInfoPoints = ps}) <** xs = ss {srcInfoPoints = ps ++ xs}
 
-(<??) :: SrcSpanInfo -> Bool -> SrcSpanInfo
-ss <?? b = ss { explLayout = b }
+--(<??) :: SrcSpanInfo -> Bool -> SrcSpanInfo
+--ss <?? b = ss { explLayout = b }
 
 (<^^>) :: SrcSpan -> SrcSpan -> SrcSpanInfo
 a <^^> b = nIS (mergeSrcSpan a b)
 
 infixl 6 <^^>
 infixl 5 <++>
-infixl 4 <**, <??, <+?>, <?+>
+infixl 4 <**, <+?>, <?+>
 
 class SrcInfo si where
-  toSrcInfo   :: SrcLoc -> Bool -> [SrcSpan] -> SrcLoc -> si
+  toSrcInfo   :: SrcLoc -> [SrcSpan] -> SrcLoc -> si
   fromSrcInfo :: SrcSpanInfo -> si
   getPointLoc :: si -> SrcLoc
   fileName    :: si -> String
@@ -119,21 +118,21 @@ class SrcInfo si where
   getPointLoc si = SrcLoc (fileName si) (startLine si) (startColumn si)
 
 instance SrcInfo SrcLoc where
-  toSrcInfo s _ _ _ = s
+  toSrcInfo s _ _ = s
   fromSrcInfo si = SrcLoc (fileName si) (startLine si) (startColumn si)
   fileName = srcFilename
   startLine = srcLine
   startColumn = srcColumn
 
 instance SrcInfo SrcSpan where
-  toSrcInfo st _ _ end = mkSrcSpan st end
+  toSrcInfo st _ end = mkSrcSpan st end
   fromSrcInfo = srcInfoSpan
   fileName = srcSpanFilename
   startLine = srcSpanStartLine
   startColumn = srcSpanStartColumn
 
 instance SrcInfo SrcSpanInfo where
-  toSrcInfo st lay pts end = SrcSpanInfo (mkSrcSpan st end) lay pts
+  toSrcInfo st pts end = SrcSpanInfo (mkSrcSpan st end) pts
   fromSrcInfo = id
   fileName = fileName . srcInfoSpan
   startLine = startLine . srcInfoSpan
