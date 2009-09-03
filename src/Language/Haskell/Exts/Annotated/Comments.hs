@@ -11,8 +11,7 @@ import Data.Generics (Data(..),Typeable(..))
 #endif
 #endif
 
-data Comment = SingleLine SrcLoc String
-             | MultiLine  SrcLoc String
+data Comment = Comment Bool SrcSpan String
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
