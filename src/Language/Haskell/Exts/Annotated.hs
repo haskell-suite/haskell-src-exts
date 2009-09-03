@@ -28,8 +28,11 @@ module Language.Haskell.Exts.Annotated (
     , parseFile
     , parseFileWithMode
     , parseFileWithExts
+    , parseFileWithComments
     , parseFileContents
     , parseFileContentsWithMode
+    , parseFileContentsWithExts
+    , parseFileContentsWithComments
     -- * Read extensions declared in LANGUAGE pragmas
     , readExtensions
     ) where
@@ -60,6 +63,9 @@ parseFileWithExts exts fp = parseFileWithMode (defaultParseMode { extensions = e
 parseFileWithMode :: ParseMode -> FilePath -> IO (ParseResult (Module SrcSpanInfo))
 parseFileWithMode p fp = readFile fp >>= (return . parseFileContentsWithMode p)
 
+parseFileWithComments :: ParseMode -> FilePath -> IO (ParseResult (Module SrcSpanInfo, [Comment]))
+parseFileWithComments p fp = readFile fp >>= (return . parseFileContentsWithComments p)
+
 -- | Parse a source file from a string using the default parse mode.
 parseFileContents :: String -> ParseResult (Module SrcSpanInfo)
 parseFileContents = parseFileContentsWithMode defaultParseMode
@@ -78,6 +84,13 @@ parseFileContentsWithMode p@(ParseMode fn exts ign _) rawStr =
                                      _               -> exts
          in parseModuleWithMode (p { extensions = allExts }) md
 
+parseFileContentsWithComments :: ParseMode -> String -> ParseResult (Module SrcSpanInfo, [Comment])
+parseFileContentsWithComments p@(ParseMode fn exts ign _) rawStr =
+        let md = delit fn $ ppContents rawStr
+            allExts = impliesExts $ case (ign, readExtensions md) of
+                                     (False,Just es) -> exts ++ es
+                                     _               -> exts
+         in parseModuleWithComments (p { extensions = allExts }) md
 
 -- | Gather the extensions declared in LANGUAGE pragmas
 --   at the top of the file. Returns 'Nothing' if the
