@@ -364,12 +364,37 @@ instance ExactP Module where
         maybeEP exactPC mmh
         printStreams (map (\(p,s) -> (pos p, printString s)) $ lList pts)
                      (map (\i -> (pos $ ann i, exactPC i)) ids ++ map (\d -> (pos $ ann d, exactPC d)) (sepFunBinds decls))
-{-
-    XmlPage l [OptionPragma l] (XName l) [XAttr l] (Maybe (Exp l)) [Exp l]
+    XmlPage l _mn oss xn attrs mat es  -> do
+        let (oPts, [a,b,c,d,e]) = splitAt (max (length oss + 1) 2) $ srcInfoPoints l
+        layoutList oPts oss
+        printStringAt (pos a) "<"
+        exactPC xn
+        mapM_ exactPC attrs
+        maybeEP exactPC mat
+        printStringAt (pos b) ">"
+        mapM_ exactPC es
+        printStringAt (pos c) "</"
+        printWhitespace (pos d)
+        exactP xn
+        printStringAt (pos e) ">"
+    XmlHybrid l mmh oss ids decls xn attrs mat es -> do
+        let (oPts, pts) = splitAt (max (length oss + 1) 2) (srcInfoPoints l)
+        layoutList oPts oss
+        maybeEP exactPC mmh
+        let (dPts, [a,b,c,d,e]) = splitAt (length pts - 5) pts
+        printStreams (map (\(p,s) -> (pos p, printString s)) $ lList dPts)
+                     (map (\i -> (pos $ ann i, exactPC i)) ids ++ map (\d -> (pos $ ann d, exactPC d)) (sepFunBinds decls))
 
-    XmlHybrid l (Maybe (ModuleHead l)) [OptionPragma l] [ImportDecl l] [Decl l]
-                (XName l) [XAttr l] (Maybe (Exp l)) [Exp l]
--}
+        printStringAt (pos a) "<"
+        exactPC xn
+        mapM_ exactPC attrs
+        maybeEP exactPC mat
+        printStringAt (pos b) ">"
+        mapM_ exactPC es
+        printStringAt (pos c) "</"
+        printWhitespace (pos d)
+        exactP xn
+        printStringAt (pos e) ">"
 
 instance ExactP ModuleHead where
   exactP (ModuleHead l mn mwt mess) = do
