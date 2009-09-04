@@ -103,7 +103,9 @@ import Data.Generics (Data(..),Typeable(..))
 #endif
 #endif
 
--- | A position in the source.
+import Language.Haskell.Exts.Annotated.SrcLoc (SrcLoc(..))
+
+{-- | A position in the source.
 data SrcLoc = SrcLoc {
         srcFilename :: String,
         srcLine :: Int,
@@ -114,6 +116,7 @@ data SrcLoc = SrcLoc {
 #else
   deriving (Eq,Ord,Show)
 #endif
+-}
 
 -- | The name of a Haskell module.
 newtype ModuleName = ModuleName String
