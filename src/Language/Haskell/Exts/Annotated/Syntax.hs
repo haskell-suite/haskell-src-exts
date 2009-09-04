@@ -215,8 +215,9 @@ data CName l
 data Module l
     = Module l (Maybe (ModuleHead l)) [OptionPragma l] [ImportDecl l] [Decl l]
     -- ^ an ordinary Haskell module
-    | XmlPage l [OptionPragma l] (XName l) [XAttr l] (Maybe (Exp l)) [Exp l]
-    -- ^ a module consisting of a single XML document
+    | XmlPage l (ModuleName l) [OptionPragma l] (XName l) [XAttr l] (Maybe (Exp l)) [Exp l]
+    -- ^ a module consisting of a single XML document. The ModuleName never appears in the source
+    --   but is needed for semantic purposes, it will be the same as the file name.
     | XmlHybrid l (Maybe (ModuleHead l)) [OptionPragma l] [ImportDecl l] [Decl l]
                 (XName l) [XAttr l] (Maybe (Exp l)) [Exp l]
     -- ^ a hybrid module combining an XML document with an ordinary module
@@ -1144,8 +1145,8 @@ instance Functor CName where
 instance Functor Module where
     fmap f (Module l mmh ops iss dcls) =
         Module (f l) (fmap (fmap f) mmh) (map (fmap f) ops) (map (fmap f) iss) (map (fmap f) dcls)
-    fmap f (XmlPage l os xn xas me es) =
-        XmlPage (f l) (map (fmap f) os) (fmap f xn) (map (fmap f) xas) (fmap (fmap f) me) (map (fmap f) es)
+    fmap f (XmlPage l mn os xn xas me es) =
+        XmlPage (f l) (fmap f mn) (map (fmap f) os) (fmap f xn) (map (fmap f) xas) (fmap (fmap f) me) (map (fmap f) es)
     fmap f (XmlHybrid l mmh ops iss dcls xn xas me es) =
         XmlHybrid (f l) (fmap (fmap f) mmh) (map (fmap f) ops) (map (fmap f) iss) (map (fmap f) dcls)
                 (fmap f xn) (map (fmap f) xas) (fmap (fmap f) me) (map (fmap f) es)
@@ -1581,13 +1582,13 @@ instance Annotated CName where
 
 instance Annotated Module where
     ann (Module l mmh ops iss dcls) = l
-    ann (XmlPage l os xn xas me es) = l
+    ann (XmlPage l mn os xn xas me es) = l
     ann (XmlHybrid l mmh ops iss dcls xn xas me es) = l
 
     amap f (Module l mmh ops iss dcls) =
         Module (f l) mmh ops iss dcls
-    amap f (XmlPage l os xn xas me es) =
-        XmlPage (f l) os xn xas me es
+    amap f (XmlPage l mn os xn xas me es) =
+        XmlPage (f l) mn os xn xas me es
     amap f (XmlHybrid l mmh ops iss dcls xn xas me es) =
         XmlHybrid (f l) mmh ops iss dcls xn xas me es
 

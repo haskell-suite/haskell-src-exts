@@ -270,7 +270,7 @@ instance SrcInfo pos => Pretty (Module pos) where
                         Nothing -> id
                         Just h  -> \x -> [topLevel (pretty h) x])
                     (map pretty imp ++ map pretty decls)
-        pretty (XmlPage pos os n attrs mattr cs) =
+        pretty (XmlPage pos _mn os n attrs mattr cs) =
                 markLine pos $
                 myVcat $ map pretty os ++
                     [let ax = maybe [] (return . pretty) mattr

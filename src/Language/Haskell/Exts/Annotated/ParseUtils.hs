@@ -874,10 +874,11 @@ checkTypes = mapM (flip checkT True)
 
 checkPageModule :: PExp L -> ([OptionPragma L],[S],L) -> P (Module L)
 checkPageModule xml (os,ss,inf) = do
+    mod <- getModuleName
     xml <- checkExpr xml
     case xml of
-        S.XTag  l xn ats mattr cs -> return $ XmlPage (inf<++>l<**(srcInfoPoints l ++ ss)) os xn ats mattr cs
-        S.XETag l xn ats mattr    -> return $ XmlPage (inf<++>l<**(srcInfoPoints l ++ ss)) os xn ats mattr []
+        S.XTag  l xn ats mattr cs -> return $ XmlPage (inf<++>l<**(srcInfoPoints l ++ ss)) (ModuleName l mod) os xn ats mattr cs
+        S.XETag l xn ats mattr    -> return $ XmlPage (inf<++>l<**(srcInfoPoints l ++ ss)) (ModuleName l mod) os xn ats mattr []
 
 checkHybridModule :: PExp L -> Module L -> S -> S -> P (Module L)
 checkHybridModule xml (Module inf mh os is ds) s1 s2 = do

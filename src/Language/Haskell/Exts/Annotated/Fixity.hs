@@ -159,8 +159,8 @@ fixity a p = map (Fixity a p . op)
 instance AppFixity Module where
     applyFixities fixs (Module l mmh prs imp decls) =
         Module l mmh prs imp $ appFixDecls fixs decls
-    applyFixities fixs (XmlPage l os xn xas mexp cs) =
-        XmlPage l os xn (map fix xas) (fmap fix mexp) (map fix cs)
+    applyFixities fixs (XmlPage l mn os xn xas mexp cs) =
+        XmlPage l mn os xn (map fix xas) (fmap fix mexp) (map fix cs)
       where fix x = applyFixities fixs x
     applyFixities fixs (XmlHybrid l mmh prs imp decls xn xas mexp cs) =
         XmlHybrid l mmh prs imp (appFixDecls fixs decls)
