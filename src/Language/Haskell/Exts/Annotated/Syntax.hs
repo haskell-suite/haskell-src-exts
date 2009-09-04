@@ -1524,7 +1524,7 @@ instance Functor GuardedAlt where
 -----------------------------------------------------------------------------
 -- Reading annotations
 
-class Annotated ast where
+class Functor ast => Annotated ast where
     ann :: ast l -> l
     amap :: (l -> l) -> ast l -> ast l
 
