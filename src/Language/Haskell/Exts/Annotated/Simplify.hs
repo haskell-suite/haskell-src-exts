@@ -20,10 +20,10 @@ import qualified Language.Haskell.Exts.Syntax as S
 
 import Language.Haskell.Exts.SrcLoc
 
-sModuleName :: ModuleName a -> S.ModuleName
+sModuleName :: ModuleName l -> S.ModuleName
 sModuleName (ModuleName _ str)  = S.ModuleName str
 
-sSpecialCon :: SpecialCon a -> S.SpecialCon
+sSpecialCon :: SpecialCon l -> S.SpecialCon
 sSpecialCon sc = case sc of
     UnitCon _           -> S.UnitCon
     ListCon _           -> S.ListCon
@@ -32,33 +32,33 @@ sSpecialCon sc = case sc of
     Cons _              -> S.Cons
     UnboxedSingleCon _  -> S.UnboxedSingleCon
 
-sQName :: QName a -> S.QName
+sQName :: QName l -> S.QName
 sQName qn = case qn of
     Qual    _ mn n  -> S.Qual (sModuleName mn) (sName n)
     UnQual  _    n  -> S.UnQual (sName n)
     Special _ sc    -> S.Special (sSpecialCon sc)
 
-sName :: Name a -> S.Name
+sName :: Name l -> S.Name
 sName (Ident _ str) = S.Ident str
 sName (Symbol _ str) = S.Symbol str
 
-sIPName :: IPName a -> S.IPName
+sIPName :: IPName l -> S.IPName
 sIPName (IPDup _ str) = S.IPDup str
 sIPName (IPLin _ str) = S.IPLin str
 
-sQOp :: QOp a -> S.QOp
+sQOp :: QOp l -> S.QOp
 sQOp (QVarOp _ qn) = S.QVarOp (sQName qn)
 sQOp (QConOp _ qn) = S.QConOp (sQName qn)
 
-sOp :: Op a -> S.Op
+sOp :: Op l -> S.Op
 sOp (VarOp _ n) = S.VarOp (sName n)
 sOp (ConOp _ n) = S.ConOp (sName n)
 
-sCName :: CName a -> S.CName
+sCName :: CName l -> S.CName
 sCName (VarName _ n) = S.VarName (sName n)
 sCName (ConName _ n) = S.ConName (sName n)
 
-sModuleHead :: Maybe (ModuleHead a) -> (S.ModuleName, Maybe (S.WarningText), Maybe [S.ExportSpec])
+sModuleHead :: Maybe (ModuleHead l) -> (S.ModuleName, Maybe (S.WarningText), Maybe [S.ExportSpec])
 sModuleHead mmh = case mmh of
     Nothing -> (S.main_mod, Nothing, Just [S.EVar (S.UnQual S.main_name)])
     Just (ModuleHead _ mn mwt mel) -> (sModuleName mn, fmap sWarningText mwt, fmap sExportSpecList mel)
@@ -67,7 +67,7 @@ sModuleHead mmh = case mmh of
 --   a simpler version that retains (almost) only abstract information.
 --   In particular, XML and hybrid XML pages enabled by the XmlSyntax extension
 --   are translated into standard Haskell modules with a @page@ function.
-sModule :: SrcInfo si => Module si -> S.Module
+sModule :: SrcInfo loc => Module loc -> S.Module
 sModule md = case md of
     Module l mmh oss ids ds ->
         let (mn, mwt, mes) = sModuleHead mmh
@@ -91,10 +91,10 @@ pageFun loc e = S.PatBind loc namePat Nothing rhs (S.BDecls [])
     where namePat = S.PVar $ S.Ident "page"
           rhs = S.UnGuardedRhs e
 
-sExportSpecList :: ExportSpecList a -> [S.ExportSpec]
+sExportSpecList :: ExportSpecList l -> [S.ExportSpec]
 sExportSpecList (ExportSpecList _ ess) = map sExportSpec ess
 
-sExportSpec :: ExportSpec a -> S.ExportSpec
+sExportSpec :: ExportSpec l -> S.ExportSpec
 sExportSpec es = case es of
     EVar _ qn           -> S.EVar (sQName qn)
     EAbs _ qn           -> S.EAbs (sQName qn)
@@ -102,21 +102,21 @@ sExportSpec es = case es of
     EThingWith _ qn cns -> S.EThingWith (sQName qn) (map sCName cns)
     EModuleContents _ mn    -> S.EModuleContents (sModuleName mn)
 
-sImportDecl :: SrcInfo si => ImportDecl si -> S.ImportDecl
+sImportDecl :: SrcInfo loc => ImportDecl loc -> S.ImportDecl
 sImportDecl (ImportDecl l mn qu src mpkg as misl) =
     S.ImportDecl (getPointLoc l) (sModuleName mn) qu src mpkg (fmap sModuleName as) (fmap sImportSpecList misl)
 
-sImportSpecList :: ImportSpecList a -> (Bool, [S.ImportSpec])
+sImportSpecList :: ImportSpecList l -> (Bool, [S.ImportSpec])
 sImportSpecList (ImportSpecList _ b iss) = (b, map sImportSpec iss)
 
-sImportSpec :: ImportSpec a -> S.ImportSpec
+sImportSpec :: ImportSpec l -> S.ImportSpec
 sImportSpec is = case is of
     IVar _ n            -> S.IVar (sName n)
     IAbs _ n            -> S.IAbs (sName n)
     IThingAll _ n       -> S.IThingAll (sName n)
     IThingWith _ n cns  -> S.IThingWith (sName n) (map sCName cns)
 
-sAssoc :: Assoc a -> S.Assoc
+sAssoc :: Assoc l -> S.Assoc
 sAssoc a = case a of
     AssocNone  _ -> S.AssocNone
     AssocLeft  _ -> S.AssocLeft
@@ -137,7 +137,7 @@ sInstHead ih = case ih of
 -- | Translate an annotated AST node representing a Haskell declaration
 --   into a simpler version. Note that in the simpler version, all declaration
 --   nodes are still annotated by 'SrcLoc's.
-sDecl :: SrcInfo si => Decl si -> S.Decl
+sDecl :: SrcInfo loc => Decl loc -> S.Decl
 sDecl decl = case decl of
      TypeDecl     l dh t        ->
         let (n, tvs) = sDeclHead dh
@@ -190,44 +190,44 @@ sDecl decl = case decl of
         let (qn, ts) = sInstHead ih
          in S.InstSig (getPointLoc l) (maybe [] sContext mctxt) qn ts
 
-sDataOrNew :: DataOrNew a -> S.DataOrNew
+sDataOrNew :: DataOrNew l -> S.DataOrNew
 sDataOrNew (DataType _) = S.DataType
 sDataOrNew (NewType _) = S.NewType
 
 sDeriving :: (Deriving l) -> [(S.QName, [S.Type])]
 sDeriving (Deriving _ ihs) = map sInstHead ihs
 
-sBinds :: SrcInfo si => Binds si -> S.Binds
+sBinds :: SrcInfo loc => Binds loc -> S.Binds
 sBinds bs = case bs of
     BDecls  _ decls     -> S.BDecls (map sDecl decls)
     IPBinds _ ipbds     -> S.IPBinds (map sIPBind ipbds)
 
-sIPBind :: SrcInfo si => IPBind si -> S.IPBind
+sIPBind :: SrcInfo loc => IPBind loc -> S.IPBind
 sIPBind (IPBind l ipn e) = S.IPBind (getPointLoc l) (sIPName ipn) (sExp e)
 
-sMatch :: SrcInfo si => Match si -> S.Match
+sMatch :: SrcInfo loc => Match loc -> S.Match
 sMatch (Match l n ps rhs mwhere) =
     S.Match (getPointLoc l) (sName n) (map sPat ps) Nothing (sRhs rhs) (maybe (S.BDecls []) sBinds mwhere)
 sMatch (InfixMatch l pa n pb rhs mwhere) =
     S.Match (getPointLoc l) (sName n) (map sPat [pa,pb]) Nothing (sRhs rhs) (maybe (S.BDecls []) sBinds mwhere)
 
-sQualConDecl :: SrcInfo si => QualConDecl si -> S.QualConDecl
+sQualConDecl :: SrcInfo loc => QualConDecl loc -> S.QualConDecl
 sQualConDecl (QualConDecl l mtvs mctxt cd) =
     S.QualConDecl (getPointLoc l) (maybe [] (map sTyVarBind) mtvs) (maybe [] sContext mctxt) (sConDecl cd)
 
-sConDecl :: ConDecl a -> S.ConDecl
+sConDecl :: ConDecl l -> S.ConDecl
 sConDecl cd = case cd of
     ConDecl _ n bts     -> S.ConDecl (sName n) (map sBangType bts)
     InfixConDecl _ bta n btb -> S.InfixConDecl (sBangType bta) (sName n) (sBangType btb)
     RecDecl _ n fds -> S.RecDecl (sName n) (map sFieldDecl fds)
 
-sFieldDecl :: FieldDecl a -> ([S.Name], S.BangType)
+sFieldDecl :: FieldDecl l -> ([S.Name], S.BangType)
 sFieldDecl (FieldDecl _ ns bt) = (map sName ns, sBangType bt)
 
-sGadtDecl :: SrcInfo si => GadtDecl si -> S.GadtDecl
+sGadtDecl :: SrcInfo loc => GadtDecl loc -> S.GadtDecl
 sGadtDecl (GadtDecl l n t) = S.GadtDecl (getPointLoc l) (sName n) (sType t)
 
-sClassDecl :: SrcInfo si => ClassDecl si -> S.ClassDecl
+sClassDecl :: SrcInfo loc => ClassDecl loc -> S.ClassDecl
 sClassDecl cd = case cd of
     ClsDecl _ d  -> S.ClsDecl (sDecl d)
     ClsDataFam l mctxt dh mk    ->
@@ -239,7 +239,7 @@ sClassDecl cd = case cd of
     ClsTyDef l t1 t2    ->
         S.ClsTyDef (getPointLoc l) (sType t1) (sType t2)
 
-sInstDecl :: SrcInfo si => InstDecl si -> S.InstDecl
+sInstDecl :: SrcInfo loc => InstDecl loc -> S.InstDecl
 sInstDecl id = case id of
     InsDecl   _ d   -> S.InsDecl (sDecl d)
     InsType   l t1 t2   -> S.InsType (getPointLoc l) (sType t1) (sType t2)
@@ -249,22 +249,22 @@ sInstDecl id = case id of
         S.InsGData (getPointLoc l) (sDataOrNew dn) (sType t) (fmap sKind mk) (map sGadtDecl gds) (maybe [] sDeriving mder)
     InsInline l b mact qn   -> S.InsInline (getPointLoc l) b (maybe S.AlwaysActive sActivation mact) (sQName qn)
 
-sBangType :: BangType a -> S.BangType
+sBangType :: BangType l -> S.BangType
 sBangType bt = case bt of
     BangedTy   _ t  -> S.BangedTy (sType t)
     UnBangedTy _ t  -> S.UnBangedTy (sType t)
     UnpackedTy _ t  -> S.UnpackedTy (sType t)
 
-sRhs :: SrcInfo si => Rhs si -> S.Rhs
+sRhs :: SrcInfo loc => Rhs loc -> S.Rhs
 sRhs (UnGuardedRhs _ e) = S.UnGuardedRhs (sExp e)
 sRhs (GuardedRhss _ grhss) = S.GuardedRhss (map sGuardedRhs grhss)
 
-sGuardedRhs :: SrcInfo si => GuardedRhs si -> S.GuardedRhs
+sGuardedRhs :: SrcInfo loc => GuardedRhs loc -> S.GuardedRhs
 sGuardedRhs (GuardedRhs l ss e) = S.GuardedRhs (getPointLoc l) (map sStmt ss) (sExp e)
 
 -- | Translate an annotated AST node representing a Haskell type into a simpler
 --   unannotated form.
-sType :: Type a -> S.Type
+sType :: Type l -> S.Type
 sType t = case t of
     TyForall _ mtvs mctxt t     -> S.TyForall (fmap (map sTyVarBind) mtvs) (maybe [] sContext mctxt) (sType t)
     TyFun _ t1 t2               -> S.TyFun (sType t1) (sType t2)
@@ -277,35 +277,35 @@ sType t = case t of
     TyInfix _ ta qn tb          -> S.TyInfix (sType ta) (sQName qn) (sType tb)
     TyKind _ t k                -> S.TyKind (sType t) (sKind k)
 
-sTyVarBind :: TyVarBind a -> S.TyVarBind
+sTyVarBind :: TyVarBind l -> S.TyVarBind
 sTyVarBind (KindedVar _ n k) = S.KindedVar (sName n) (sKind k)
 sTyVarBind (UnkindedVar _ n) = S.UnkindedVar (sName n)
 
-sKind :: Kind a -> S.Kind
+sKind :: Kind l -> S.Kind
 sKind k = case k of
     KindStar  _     -> S.KindStar
     KindBang  _     -> S.KindBang
     KindFn _ k1 k2  -> S.KindFn (sKind k1) (sKind k2)
     KindParen _ k   -> sKind k
 
-sFunDep :: FunDep a -> S.FunDep
+sFunDep :: FunDep l -> S.FunDep
 sFunDep (FunDep _ as bs) = S.FunDep (map sName as) (map sName bs)
 
-sContext :: Context a -> S.Context
+sContext :: Context l -> S.Context
 sContext ctxt = case ctxt of
     CxSingle _ asst     -> [sAsst asst]
     CxTuple  _ assts    -> map sAsst assts
     CxParen  _ ct       -> sContext ct
     CxEmpty  _          -> []
 
-sAsst :: Asst a -> S.Asst
+sAsst :: Asst l -> S.Asst
 sAsst asst = case asst of
     ClassA _ qn ts      -> S.ClassA (sQName qn) (map sType ts)
     InfixA _ ta qn tb   -> S.InfixA (sType ta) (sQName qn) (sType tb)
     IParam _ ipn t      -> S.IParam (sIPName ipn) (sType t)
     EqualP _ t1 t2      -> S.EqualP (sType t1) (sType t2)
 
-sLiteral :: Literal a -> S.Literal
+sLiteral :: Literal l -> S.Literal
 sLiteral lit = case lit of
     Char       _ c _ -> S.Char c
     String     _ s _ -> S.String s
@@ -320,7 +320,7 @@ sLiteral lit = case lit of
 
 -- | Translate an annotated AST node representing a Haskell expression
 --   into a simpler unannotated form.
-sExp :: SrcInfo si => Exp si -> S.Exp
+sExp :: SrcInfo loc => Exp loc -> S.Exp
 sExp e = case e of
     Var _ qn            -> S.Var (sQName qn)
     IPVar _ ipn         -> S.IPVar (sIPName ipn)
@@ -369,61 +369,61 @@ sExp e = case e of
     RightArrHighApp _ e1 e2 -> S.RightArrHighApp (sExp e1) (sExp e2)
 
 
-sXName :: XName a -> S.XName
+sXName :: XName l -> S.XName
 sXName (XName _ str) = S.XName str
 sXName (XDomName _ dom str) = S.XDomName dom str
 
-sXAttr :: SrcInfo si => XAttr si -> S.XAttr
+sXAttr :: SrcInfo loc => XAttr loc -> S.XAttr
 sXAttr (XAttr _ xn e) = S.XAttr (sXName xn) (sExp e)
 
-sBracket:: SrcInfo si => Bracket si -> S.Bracket
+sBracket:: SrcInfo loc => Bracket loc -> S.Bracket
 sBracket br = case br of
     ExpBracket _ e  -> S.ExpBracket (sExp e)
     PatBracket _ p  -> S.PatBracket (sPat p)
     TypeBracket _ t -> S.TypeBracket (sType t)
     DeclBracket _ ds -> S.DeclBracket (map sDecl ds)
 
-sSplice :: SrcInfo si => Splice si -> S.Splice
+sSplice :: SrcInfo loc => Splice loc -> S.Splice
 sSplice (IdSplice _ str) = S.IdSplice str
 sSplice (ParenSplice _ e) = S.ParenSplice (sExp e)
 
-sSafety :: Safety a -> S.Safety
+sSafety :: Safety l -> S.Safety
 sSafety (PlayRisky _) = S.PlayRisky
 sSafety (PlaySafe _ b) = S.PlaySafe b
 
-sCallConv :: CallConv a -> S.CallConv
+sCallConv :: CallConv l -> S.CallConv
 sCallConv (StdCall _) = S.StdCall
 sCallConv (CCall _)   = S.CCall
 
 -- | Translate an annotated AST node representing a top-level Options pragma
 --   into a simpler unannotated form.
-sOptionPragma :: SrcInfo si => OptionPragma si -> S.OptionPragma
+sOptionPragma :: SrcInfo loc => OptionPragma loc -> S.OptionPragma
 sOptionPragma pr = case pr of
     LanguagePragma   l ns   -> S.LanguagePragma (getPointLoc l) (map sName ns)
     IncludePragma    l str  -> S.IncludePragma (getPointLoc l) str
     CFilesPragma     l str  -> S.CFilesPragma (getPointLoc l) str
     OptionsPragma    l mt str -> S.OptionsPragma (getPointLoc l) mt str
 
-sActivation :: Activation a -> S.Activation
+sActivation :: Activation l -> S.Activation
 sActivation act = case act of
     ActiveFrom   _ k    -> S.ActiveFrom k
     ActiveUntil  _ k    -> S.ActiveUntil k
 
-sRule :: SrcInfo si => Rule si -> S.Rule
+sRule :: SrcInfo loc => Rule loc -> S.Rule
 sRule (Rule _ str mact mrvs e1 e2) =
     S.Rule str (maybe S.AlwaysActive sActivation mact) (fmap (map sRuleVar) mrvs) (sExp e1) (sExp e2)
 
-sRuleVar :: RuleVar a -> S.RuleVar
+sRuleVar :: RuleVar l -> S.RuleVar
 sRuleVar (RuleVar _ n) = S.RuleVar (sName n)
 sRuleVar (TypedRuleVar _ n t) = S.TypedRuleVar (sName n) (sType t)
 
-sWarningText :: WarningText a -> S.WarningText
+sWarningText :: WarningText l -> S.WarningText
 sWarningText (DeprText _ str) = S.DeprText str
 sWarningText (WarnText _ str) = S.WarnText str
 
 -- | Translate an annotated AST node representing a Haskell pattern
 --   into a simpler unannotated form.
-sPat :: SrcInfo si => Pat si -> S.Pat
+sPat :: SrcInfo loc => Pat loc -> S.Pat
 sPat pat = case pat of
     PVar _ n            -> S.PVar (sName n)
     PLit _ lit          -> S.PLit (sLiteral lit)
@@ -450,10 +450,10 @@ sPat pat = case pat of
     PQuasiQuote _ nm qt -> S.PQuasiQuote nm qt
     PBangPat _ p        -> S.PBangPat (sPat p)
 
-sPXAttr :: SrcInfo si => PXAttr si -> S.PXAttr
+sPXAttr :: SrcInfo loc => PXAttr loc -> S.PXAttr
 sPXAttr (PXAttr _ xn p) = S.PXAttr (sXName xn) (sPat p)
 
-sRPatOp :: RPatOp a -> S.RPatOp
+sRPatOp :: RPatOp l -> S.RPatOp
 sRPatOp rpop = case rpop of
     RPStar  _ -> S.RPStar
     RPStarG _ -> S.RPStarG
@@ -462,7 +462,7 @@ sRPatOp rpop = case rpop of
     RPOpt   _ -> S.RPOpt
     RPOptG  _ -> S.RPOptG
 
-sRPat :: SrcInfo si => RPat si -> S.RPat
+sRPat :: SrcInfo loc => RPat loc -> S.RPat
 sRPat rp = case rp of
     RPOp _ rp rop       -> S.RPOp (sRPat rp) (sRPatOp rop)
     RPEither _ rp1 rp2  -> S.RPEither (sRPat rp1) (sRPat rp2)
@@ -473,20 +473,20 @@ sRPat rp = case rp of
     RPParen _ rp        -> S.RPParen (sRPat rp)
     RPPat _ p           -> S.RPPat (sPat p)
 
-sPatField :: SrcInfo si => PatField si -> S.PatField
+sPatField :: SrcInfo loc => PatField loc -> S.PatField
 sPatField pf = case pf of
     PFieldPat _ qn p    -> S.PFieldPat (sQName qn) (sPat p)
     PFieldPun _ n       -> S.PFieldPun (sName n)
     PFieldWildcard _    -> S.PFieldWildcard
 
-sStmt :: SrcInfo si => Stmt si -> S.Stmt
+sStmt :: SrcInfo loc => Stmt loc -> S.Stmt
 sStmt stmt = case stmt of
     Generator l p e     -> S.Generator (getPointLoc l) (sPat p) (sExp e)
     Qualifier _ e       -> S.Qualifier (sExp e)
     LetStmt _ bs        -> S.LetStmt (sBinds bs)
     RecStmt _ ss        -> S.RecStmt (map sStmt ss)
 
-sQualStmt :: SrcInfo si => QualStmt si -> S.QualStmt
+sQualStmt :: SrcInfo loc => QualStmt loc -> S.QualStmt
 sQualStmt qs = case qs of
     QualStmt     _ stmt     -> S.QualStmt (sStmt stmt)
     ThenTrans    _ e        -> S.ThenTrans (sExp e)
@@ -495,19 +495,19 @@ sQualStmt qs = case qs of
     GroupUsing   _ e        -> S.GroupUsing (sExp e)
     GroupByUsing _ e1 e2    -> S.GroupByUsing (sExp e1) (sExp e2)
 
-sFieldUpdate :: SrcInfo si => FieldUpdate si -> S.FieldUpdate
+sFieldUpdate :: SrcInfo loc => FieldUpdate loc -> S.FieldUpdate
 sFieldUpdate fu = case fu of
     FieldUpdate _ qn e      -> S.FieldUpdate (sQName qn) (sExp e)
     FieldPun _ n            -> S.FieldPun (sName n)
     FieldWildcard _         -> S.FieldWildcard
 
-sAlt :: SrcInfo si => Alt si -> S.Alt
+sAlt :: SrcInfo loc => Alt loc -> S.Alt
 sAlt (Alt l p galts mbs) = S.Alt (getPointLoc l) (sPat p) (sGuardedAlts galts) (maybe (S.BDecls []) sBinds mbs)
 
-sGuardedAlts :: SrcInfo si => GuardedAlts si -> S.GuardedAlts
+sGuardedAlts :: SrcInfo loc => GuardedAlts loc -> S.GuardedAlts
 sGuardedAlts galts = case galts of
     UnGuardedAlt _ e    -> S.UnGuardedAlt (sExp e)
     GuardedAlts  _ gs   -> S.GuardedAlts (map sGuardedAlt gs)
 
-sGuardedAlt :: SrcInfo si => GuardedAlt si -> S.GuardedAlt
+sGuardedAlt :: SrcInfo loc => GuardedAlt loc -> S.GuardedAlt
 sGuardedAlt (GuardedAlt l ss e) = S.GuardedAlt (getPointLoc l) (map sStmt ss) (sExp e)

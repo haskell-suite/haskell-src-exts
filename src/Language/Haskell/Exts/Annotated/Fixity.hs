@@ -38,8 +38,6 @@ import Language.Haskell.Exts.SrcLoc
 
 import Data.Char (isUpper)
 
-type L = SrcSpanInfo
-
 -- | Operator fixities are represented by their associativity
 --   (left, right or none) and their precedence (0-9).
 data Fixity = Fixity (Assoc ()) Int (Op ())
@@ -51,8 +49,8 @@ class AppFixity ast where
   --   fixities given. Assumes that all operator expressions are
   --   fully left associative chains to begin with.
   applyFixities :: [Fixity]   -- ^ The fixities to account for.
-                    -> ast L  -- ^ The element to tweak.
-                    -> ast L  -- ^ The same element, but with operator expressions updated.
+                    -> ast SrcSpanInfo  -- ^ The element to tweak.
+                    -> ast SrcSpanInfo  -- ^ The same element, but with operator expressions updated.
 
 
 instance AppFixity Exp where
@@ -178,7 +176,7 @@ instance AppFixity Decl where
         _                       -> decl
       where fix x = applyFixities fixs x
 
-appFixDecls :: [Fixity] -> [Decl L] -> [Decl L]
+appFixDecls :: [Fixity] -> [Decl SrcSpanInfo] -> [Decl SrcSpanInfo]
 appFixDecls fixs decls =
     let extraFixs = getFixities decls
      in map (applyFixities (fixs++extraFixs)) decls

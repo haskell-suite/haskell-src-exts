@@ -262,23 +262,23 @@ fullRender :: P.Mode -> Int -> Float -> (P.TextDetails -> a -> a)
 fullRender = fullRenderWithMode defaultMode
 
 -------------------------  Pretty-Print a Module --------------------
-instance SrcInfo pos => Pretty (Module pos) where
-        pretty (Module pos mbHead os imp decls) =
-                markLine pos $
+instance SrcInfo loc => Pretty (Module loc) where
+        pretty (Module loc mbHead os imp decls) =
+                markLine loc $
                 myVcat $ map pretty os ++
                     (case mbHead of
                         Nothing -> id
                         Just h  -> \x -> [topLevel (pretty h) x])
                     (map pretty imp ++ map pretty decls)
-        pretty (XmlPage pos _mn os n attrs mattr cs) =
-                markLine pos $
+        pretty (XmlPage loc _mn os n attrs mattr cs) =
+                markLine loc $
                 myVcat $ map pretty os ++
                     [let ax = maybe [] (return . pretty) mattr
                       in hcat $
                          (myFsep $ (char '<' <> pretty n): map pretty attrs ++ ax ++ [char '>']):
                             map pretty cs ++ [myFsep $ [text "</" <> pretty n, char '>']]]
-        pretty (XmlHybrid pos mbHead os imp decls n attrs mattr cs) =
-                markLine pos $
+        pretty (XmlHybrid loc mbHead os imp decls n attrs mattr cs) =
+                markLine loc $
                 myVcat $ map pretty os ++ [text "<%"] ++
                     (case mbHead of
                         Nothing -> id
@@ -321,9 +321,9 @@ instance Pretty (ExportSpec l) where
                 pretty name <> (parenList . map pretty $ nameList)
         pretty (EModuleContents _ m)        = text "module" <+> pretty m
 
-instance SrcInfo pos => Pretty (ImportDecl pos) where
-        pretty (ImportDecl pos m qual src mbPkg mbName mbSpecs) =
-                markLine pos $
+instance SrcInfo loc => Pretty (ImportDecl loc) where
+        pretty (ImportDecl loc m qual src mbPkg mbName mbSpecs) =
+                markLine loc $
                 mySep [text "import",
                        if src  then text "{-# SOURCE #-}" else empty,
                        if qual then text "qualified" else empty,
@@ -344,7 +344,7 @@ instance Pretty (ImportSpec l) where
                 pretty name <> (parenList . map pretty $ nameList)
 
 -------------------------  Declarations ------------------------------
-instance SrcInfo pos => Pretty (Decl pos) where
+instance SrcInfo loc => Pretty (Decl loc) where
         pretty (TypeDecl loc dhead htype) =
                 blankline $
                 markLine loc $
@@ -400,45 +400,45 @@ instance SrcInfo pos => Pretty (Decl pos) where
 
         --m{spacing=False}
         -- special case for empty class declaration
-        pretty (ClassDecl pos context dhead fundeps Nothing) =
+        pretty (ClassDecl loc context dhead fundeps Nothing) =
                 blankline $
-                markLine pos $
+                markLine loc $
                 mySep [text "class", ppContext context, pretty dhead, ppFunDeps fundeps]
-        pretty (ClassDecl pos context dhead fundeps (Just declList)) =
+        pretty (ClassDecl loc context dhead fundeps (Just declList)) =
                 blankline $
-                markLine pos $
+                markLine loc $
                 mySep [text "class", ppContext context, pretty dhead, ppFunDeps fundeps, text "where"]
                 $$$ ppBody classIndent (map pretty declList)
 
         -- m{spacing=False}
         -- special case for empty instance declaration
-        pretty (InstDecl pos context ihead Nothing) =
+        pretty (InstDecl loc context ihead Nothing) =
                 blankline $
-                markLine pos $
+                markLine loc $
                 mySep [text "instance", ppContext context, pretty ihead]
-        pretty (InstDecl pos context ihead (Just declList)) =
+        pretty (InstDecl loc context ihead (Just declList)) =
                 blankline $
-                markLine pos $
+                markLine loc $
                 mySep ( [text "instance", ppContext context, pretty ihead, text "where"])
                 $$$ ppBody classIndent (map pretty declList)
 
-        pretty (DerivDecl pos context ihead) =
+        pretty (DerivDecl loc context ihead) =
                 blankline $
-                markLine pos $
+                markLine loc $
                 mySep [text "deriving", text "instance", ppContext context, pretty ihead]
-        pretty (DefaultDecl pos htypes) =
+        pretty (DefaultDecl loc htypes) =
                 blankline $
-                markLine pos $
+                markLine loc $
                 text "default" <+> parenList (map pretty htypes)
 
-        pretty (SpliceDecl pos splice) =
+        pretty (SpliceDecl loc splice) =
                 blankline $
-                markLine pos $
+                markLine loc $
                 pretty splice
 
-        pretty (TypeSig pos nameList qualType) =
+        pretty (TypeSig loc nameList qualType) =
                 blankline $
-                markLine pos $
+                markLine loc $
                 mySep ((punctuate comma . map pretty $ nameList)
                       ++ [text "::", pretty qualType])
 
@@ -447,64 +447,64 @@ instance SrcInfo pos => Pretty (Decl pos) where
                 case e of PPOffsideRule -> foldr ($$$) empty (map pretty matches)
                           _ -> foldr (\x y -> x <> semi <> y) empty (map pretty matches)
 
-        pretty (PatBind pos pat optsig rhs whereBinds) =
-                markLine pos $
+        pretty (PatBind loc pat optsig rhs whereBinds) =
+                markLine loc $
                 myFsep [pretty pat, maybePP ppSig optsig, pretty rhs] $$$ ppWhere whereBinds
 
-        pretty (InfixDecl pos assoc prec opList) =
+        pretty (InfixDecl loc assoc prec opList) =
                 blankline $
-                markLine pos $
+                markLine loc $
                 mySep ([pretty assoc, maybePP int prec]
                        ++ (punctuate comma . map pretty $ opList))
 
-        pretty (ForImp pos cconv msaf mstr name typ) =
+        pretty (ForImp loc cconv msaf mstr name typ) =
                 blankline $
-                markLine pos $
+                markLine loc $
                 mySep [text "foreign import", pretty cconv, maybePP pretty msaf,
                        maybePP (text . show) mstr, pretty name, text "::", pretty typ]
 
-        pretty (ForExp pos cconv mstr name typ) =
+        pretty (ForExp loc cconv mstr name typ) =
                 blankline $
-                markLine pos $
+                markLine loc $
                 mySep [text "foreign export", pretty cconv,
                        maybePP (text . show) mstr, pretty name, text "::", pretty typ]
 
-        pretty (RulePragmaDecl pos rules) =
+        pretty (RulePragmaDecl loc rules) =
                 blankline $
-                markLine pos $
+                markLine loc $
                 myVcat $ text "{-# RULES" : map pretty rules ++ [text " #-}"]
 
-        pretty (DeprPragmaDecl pos deprs) =
+        pretty (DeprPragmaDecl loc deprs) =
                 blankline $
-                markLine pos $
+                markLine loc $
                 myVcat $ text "{-# DEPRECATED" : map ppWarnDepr deprs ++ [text " #-}"]
 
-        pretty (WarnPragmaDecl pos deprs) =
+        pretty (WarnPragmaDecl loc deprs) =
                 blankline $
-                markLine pos $
+                markLine loc $
                 myVcat $ text "{-# WARNING" : map ppWarnDepr deprs ++ [text " #-}"]
 
-        pretty (InlineSig pos inl mactiv name) =
+        pretty (InlineSig loc inl mactiv name) =
                 blankline $
-                markLine pos $
+                markLine loc $
                 mySep [text (if inl then "{-# INLINE" else "{-# NOINLINE"), maybePP pretty mactiv, pretty name, text "#-}"]
 
-        pretty (SpecSig pos name types) =
+        pretty (SpecSig loc name types) =
                 blankline $
-                markLine pos $
+                markLine loc $
                 mySep $ [text "{-# SPECIALISE", pretty name, text "::"]
                     ++ punctuate comma (map pretty types) ++ [text "#-}"]
 
-        pretty (SpecInlineSig pos inl mactiv name types) =
+        pretty (SpecInlineSig loc inl mactiv name types) =
                 blankline $
-                markLine pos $
+                markLine loc $
                 mySep $ [text "{-# SPECIALISE", text (if inl then "INLINE" else "NOINLINE"),
                         maybePP pretty mactiv, pretty name, text "::"]
                         ++ (punctuate comma $ map pretty types) ++ [text "#-}"]
 
-        pretty (InstSig pos context ihead) =
+        pretty (InstSig loc context ihead) =
                 blankline $
-                markLine pos $
+                markLine loc $
                 mySep $ [text "{-# SPECIALISE", text "instance", ppContext context, pretty ihead, text "#-}"]
 
 
@@ -527,9 +527,9 @@ instance Pretty (Assoc l) where
         pretty (AssocLeft _)  = text "infixl"
         pretty (AssocRight _) = text "infixr"
 
-instance SrcInfo pos => Pretty (Match pos) where
-        pretty (Match pos f ps rhs whereBinds) =
-                markLine pos $
+instance SrcInfo loc => Pretty (Match loc) where
+        pretty (Match loc f ps rhs whereBinds) =
+                markLine loc $
                 myFsep (pretty f : map (prettyPrec 2) ps ++ [pretty rhs])
                 $$$ ppWhere whereBinds
 {-            where
@@ -539,8 +539,8 @@ instance SrcInfo pos => Pretty (Match pos) where
                                 if null ps' then hd
                                 else parens (myFsep hd) : map (prettyPrec 2) ps'
                         _ -> pretty f : map (prettyPrec 2) ps -}
-        pretty (InfixMatch pos a f b rhs whereBinds) =
-                markLine pos $
+        pretty (InfixMatch loc a f b rhs whereBinds) =
+                markLine loc $
                 myFsep [pretty a, pretty f, pretty b, pretty rhs]
                 $$$ ppWhere whereBinds
 

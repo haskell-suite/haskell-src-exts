@@ -31,7 +31,7 @@ import Control.Monad (when)
 
 type Pos = (Int,Int)
 
-pos :: (SrcInfo si) => si -> Pos
+pos :: (SrcInfo loc) => loc -> Pos
 pos ss = (startLine ss, startColumn ss)
 
 newtype EP x = EP (Pos -> [Comment] -> (x, Pos, [Comment], ShowS))
@@ -113,25 +113,25 @@ printStringAt p str = printWhitespace p >> printString str
 ------------------------------------------------------------------------------
 -- Printing of source elements
 
-exactPrint :: (ExactP ast) => ast L -> [Comment] -> String
+exactPrint :: (ExactP ast) => ast SrcSpanInfo -> [Comment] -> String
 exactPrint ast cs = runEP (exactP ast) cs
 
-exactPC :: (Annotated ast, ExactP ast) => ast L -> EP ()
+exactPC :: (Annotated ast, ExactP ast) => ast SrcSpanInfo -> EP ()
 exactPC ast = let p = pos (ann ast) in mPrintComments p >> padUntil p >> exactP ast
 
 printSeq :: [(Pos, EP ())] -> EP ()
 printSeq [] = return ()
 printSeq ((p,pr):xs) = printWhitespace p >> pr >> printSeq xs
 
-printStrs :: SrcInfo si => [(si, String)] -> EP ()
-printStrs = printSeq . map (\(si, str) -> (pos si, printString str))
+printStrs :: SrcInfo loc => [(loc, String)] -> EP ()
+printStrs = printSeq . map (\(loc, str) -> (pos loc, printString str))
 
-printPoints :: L -> [String] -> EP ()
+printPoints :: SrcSpanInfo -> [String] -> EP ()
 printPoints l = printStrs . zip (srcInfoPoints l)
 
-printInterleaved, printInterleaved' :: (Annotated ast, ExactP ast, SrcInfo si) => [(si, String)] -> [ast L] -> EP ()
+printInterleaved, printInterleaved' :: (Annotated ast, ExactP ast, SrcInfo loc) => [(loc, String)] -> [ast SrcSpanInfo] -> EP ()
 printInterleaved sistrs asts = printSeq $
-    interleave (map (\(si, str) -> (pos si, printString str)) sistrs)
+    interleave (map (\(loc, str) -> (pos loc, printString str)) sistrs)
                (map (\a -> (pos $ ann a, exactP a)) asts)
 
 printInterleaved' sistrs (a:asts) = exactPC a >> printInterleaved sistrs asts
@@ -152,7 +152,7 @@ interleave (x:xs) (y:ys) = x:y: interleave xs ys
 maybeEP :: (a -> EP ()) -> Maybe a -> EP ()
 maybeEP = maybe (return ())
 
-bracketList :: (Annotated ast, ExactP ast) => (String, String, String) -> [SrcSpan] -> [ast L] -> EP ()
+bracketList :: (Annotated ast, ExactP ast) => (String, String, String) -> [SrcSpan] -> [ast SrcSpanInfo] -> EP ()
 bracketList (a,b,c) poss asts = printInterleaved (pList poss (a,b,c)) asts
 
 pList (p:ps) (a,b,c) = (p,a) : pList' ps (b,c)
@@ -160,12 +160,12 @@ pList' [] _ = []
 pList' [p] (_,c) = [(p,c)]
 pList' (p:ps) (b,c) = (p, b) : pList' ps (b,c)
 
-parenList, squareList, curlyList :: (Annotated ast, ExactP ast) => [SrcSpan] -> [ast L] -> EP ()
+parenList, squareList, curlyList :: (Annotated ast, ExactP ast) => [SrcSpan] -> [ast SrcSpanInfo] -> EP ()
 parenList = bracketList ("(",",",")")
 squareList = bracketList ("[",",","]")
 curlyList = bracketList ("{",",","}")
 
-layoutList :: (Functor ast, Show (ast ()), Annotated ast, ExactP ast) => [SrcSpan] -> [ast L] -> EP ()
+layoutList :: (Functor ast, Show (ast ()), Annotated ast, ExactP ast) => [SrcSpan] -> [ast SrcSpanInfo] -> EP ()
 layoutList poss asts = printInterleaved (lList poss) asts
 
 lList (p:ps) = (if isNullSpan p then (p,"") else (p,"{")) : lList' ps
@@ -174,13 +174,11 @@ lList' [p] = [if isNullSpan p then (p,"") else (p,"}")]
 lList' (p:ps) = (if isNullSpan p then (p,"") else (p,";")) : lList' ps
 
 
-type L = SrcSpanInfo
-
 --------------------------------------------------
 -- Exact printing
 
 class ExactP ast where
-  exactP :: ast L -> EP ()
+  exactP :: ast SrcSpanInfo -> EP ()
 
 instance ExactP Literal where
   exactP lit = case lit of
@@ -241,13 +239,13 @@ instance ExactP QName where
         printStringAt (pos c) ")"
     | otherwise = epQName qn
 
-epQName :: QName L -> EP ()
+epQName :: QName SrcSpanInfo -> EP ()
 epQName qn = case qn of
     Qual    l mn n  -> exactP mn >> printString "." >> epName n
     UnQual  l    n  -> epName n
     Special l sc    -> exactP sc
 
-epInfixQName :: QName L -> EP ()
+epInfixQName :: QName SrcSpanInfo -> EP ()
 epInfixQName qn
     | isSymbol (getName qn) = printWhitespace (pos (ann qn)) >> epQName qn
     | otherwise = do
@@ -267,11 +265,11 @@ instance ExactP Name where
         printString str
         printStringAt (pos c) ")"
 
-epName :: Name L -> EP ()
+epName :: Name SrcSpanInfo -> EP ()
 epName (Ident  _ str) = printString str
 epName (Symbol _ str) = printString str
 
-epInfixName :: Name L -> EP ()
+epInfixName :: Name SrcSpanInfo -> EP ()
 epInfixName n
     | isSymbol n = printWhitespace (pos (ann n)) >> epName n
     | otherwise = do
@@ -651,16 +649,16 @@ instance ExactP Decl where
         exactPC ih
         printStringAt (pos c) "#-}"
 
-printWarndeprs :: [Pos] -> [([Name L], String)] -> EP ()
+printWarndeprs :: [Pos] -> [([Name SrcSpanInfo], String)] -> EP ()
 printWarndeprs _ [] = return ()
 printWarndeprs ps ((ns,str):nsts) = printWd ps ns str nsts
-  where printWd :: [Pos] -> [Name L] -> String -> [([Name L], String)] -> EP ()
+  where printWd :: [Pos] -> [Name SrcSpanInfo] -> String -> [([Name SrcSpanInfo], String)] -> EP ()
         printWd (p:ps) []  str nsts = printStringAt p (show str) >> printWarndeprs ps nsts
         printWd ps     [n] str nsts = exactPC n >> printWd ps [] str nsts
         printWd (p:ps) (n:ns) str nsts = exactPC n >> printStringAt p "," >> printWd ps ns str nsts
 
 
-sepFunBinds :: [Decl L] -> [Decl L]
+sepFunBinds :: [Decl SrcSpanInfo] -> [Decl SrcSpanInfo]
 sepFunBinds [] = []
 sepFunBinds (FunBind _ ms:ds) = map (\m -> FunBind (ann m) [m]) ms ++ sepFunBinds ds
 sepFunBinds (d:ds) = d : sepFunBinds ds
