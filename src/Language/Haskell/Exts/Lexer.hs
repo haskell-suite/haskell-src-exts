@@ -18,9 +18,9 @@
 -- ToDo: FloatTok should have three parts (integer part, fraction, exponent) (?)
 -- ToDo: Use a lexical analyser generator (lx?)
 
-module Language.Haskell.Exts.Annotated.Lexer (Token(..), lexer) where
+module Language.Haskell.Exts.Lexer (Token(..), lexer) where
 
-import Language.Haskell.Exts.Annotated.ParseMonad
+import Language.Haskell.Exts.ParseMonad
 import Language.Haskell.Exts.SrcLoc
 import Language.Haskell.Exts.Comments
 import Language.Haskell.Exts.Extension

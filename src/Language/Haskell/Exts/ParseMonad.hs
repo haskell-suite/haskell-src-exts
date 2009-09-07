@@ -14,7 +14,7 @@
 --
 -----------------------------------------------------------------------------
 
-module Language.Haskell.Exts.Annotated.ParseMonad(
+module Language.Haskell.Exts.ParseMonad(
         -- * Parsing
         P, ParseResult(..), atSrcLoc, LexContext(..),
         ParseMode(..), defaultParseMode, fromParseResult,

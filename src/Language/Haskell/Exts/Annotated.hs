@@ -17,8 +17,8 @@ module Language.Haskell.Exts.Annotated (
     -- * Re-exported modules
       module Language.Haskell.Exts.Annotated.Syntax
     , module Language.Haskell.Exts.Annotated.Build
-    , module Language.Haskell.Exts.Annotated.Parser
-    , module Language.Haskell.Exts.Annotated.Pretty
+    , module Language.Haskell.Exts.Parser
+    , module Language.Haskell.Exts.Pretty
     , module Language.Haskell.Exts.Annotated.Fixity
     , module Language.Haskell.Exts.Annotated.ExactPrint
     , module Language.Haskell.Exts.SrcLoc
@@ -39,13 +39,15 @@ module Language.Haskell.Exts.Annotated (
 
 import Language.Haskell.Exts.Annotated.Build
 import Language.Haskell.Exts.Annotated.Syntax
-import Language.Haskell.Exts.Annotated.Parser
-import Language.Haskell.Exts.Annotated.Pretty
+import Language.Haskell.Exts.Parser ( Parseable(..), ParseResult(..), fromParseResult, ParseMode(..), defaultParseMode )
+import Language.Haskell.Exts.Pretty
 import Language.Haskell.Exts.Annotated.Fixity
 import Language.Haskell.Exts.Annotated.ExactPrint
 import Language.Haskell.Exts.SrcLoc
 import Language.Haskell.Exts.Extension
 import Language.Haskell.Exts.Comments
+
+import Language.Haskell.Exts.InternalParser
 
 import Data.List
 import Language.Preprocessor.Unlit

@@ -1,4 +1,5 @@
 > {
+> {-# OPTIONS_HADDOCK hide #-}
 > -----------------------------------------------------------------------------
 > -- |
 > -- Module      :  Language.Haskell.Exts.Annotated.Parser
@@ -13,7 +14,7 @@
 > --
 > -----------------------------------------------------------------------------
 >
-> module Language.Haskell.Exts.Annotated.Parser (
+> module Language.Haskell.Exts.InternalParser (
 >               -- * General parsing
 >               ParseMode(..), defaultParseMode, ParseResult(..), fromParseResult,
 >               -- * Parsing of specific AST elements
@@ -33,9 +34,9 @@
 >
 > import Language.Haskell.Exts.Annotated.Syntax hiding ( Type(..), Exp(..), Asst(..), XAttr(..), FieldUpdate(..) )
 > import Language.Haskell.Exts.Annotated.Syntax ( Type, Exp, Asst )
-> import Language.Haskell.Exts.Annotated.ParseMonad
-> import Language.Haskell.Exts.Annotated.Lexer
-> import Language.Haskell.Exts.Annotated.ParseUtils
+> import Language.Haskell.Exts.ParseMonad
+> import Language.Haskell.Exts.Lexer
+> import Language.Haskell.Exts.ParseUtils
 > import Language.Haskell.Exts.Annotated.Fixity
 > import Language.Haskell.Exts.SrcLoc
 > import Language.Haskell.Exts.Comments ( Comment )

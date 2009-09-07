@@ -1,7 +1,7 @@
 {-# OPTIONS_HADDOCK hide #-}
 -----------------------------------------------------------------------------
 -- |
--- Module      :  Language.Haskell.Exts.Annotated.ParseUtils
+-- Module      :  Language.Haskell.Exts.ParseUtils
 -- Copyright   :  (c) Niklas Broberg 2004-2009,
 --                (c) The GHC Team, 1997-2000
 -- License     :  BSD-style (see the file LICENSE.txt)
@@ -14,7 +14,7 @@
 --
 -----------------------------------------------------------------------------
 
-module Language.Haskell.Exts.Annotated.ParseUtils (
+module Language.Haskell.Exts.ParseUtils (
       splitTyConApp         -- PType -> P (Name,[Type])
     , checkEnabled          -- (Show e, Enabled e) => e -> P ()
     , checkPatternGuards    -- [Stmt] -> P ()
@@ -62,10 +62,10 @@ module Language.Haskell.Exts.Annotated.ParseUtils (
 
 import Language.Haskell.Exts.Annotated.Syntax hiding ( Type(..), Asst(..), Exp(..), FieldUpdate(..), XAttr(..), Context(..) )
 import qualified Language.Haskell.Exts.Annotated.Syntax as S ( Type(..), Asst(..), Exp(..), FieldUpdate(..), XAttr(..), Context(..) )
-import Language.Haskell.Exts.Annotated.ParseMonad
-import Language.Haskell.Exts.Annotated.Pretty
 import Language.Haskell.Exts.Annotated.Build
 
+import Language.Haskell.Exts.ParseMonad
+import Language.Haskell.Exts.Pretty
 import Language.Haskell.Exts.SrcLoc
 import Language.Haskell.Exts.Extension
 import Language.Haskell.Exts.ExtScheme

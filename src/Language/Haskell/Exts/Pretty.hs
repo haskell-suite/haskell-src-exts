@@ -23,6 +23,10 @@ module Language.Haskell.Exts.Pretty (
                 PPHsMode(..), Indent, PPLayout(..), defaultMode) where
 
 import Language.Haskell.Exts.Syntax
+import qualified Language.Haskell.Exts.Annotated.Syntax as A
+import Language.Haskell.Exts.Annotated.Simplify
+
+import Language.Haskell.Exts.SrcLoc
 
 import qualified Text.PrettyPrint as P
 import Data.List (intersperse)
