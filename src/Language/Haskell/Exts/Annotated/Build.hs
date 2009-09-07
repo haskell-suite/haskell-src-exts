@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------------
 -- |
--- Module      :  Language.Haskell.Exts.Build
+-- Module      :  Language.Haskell.Exts.Annotated.Build
 -- Copyright   :  (c) The GHC Team, 1997-2000,
 --                (c) Niklas Broberg 2004
 -- License     :  BSD-style (see the file LICENSE.txt)

@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------------
 -- |
--- Module      :  Language.Haskell.Exts.Fixity
+-- Module      :  Language.Haskell.Exts.Annotated.Fixity
 -- Copyright   :  (c) Niklas Broberg 2009
 -- License     :  BSD-style (see the file LICENSE.txt)
 --
@@ -34,7 +34,7 @@ module Language.Haskell.Exts.Annotated.Fixity
     ) where
 
 import Language.Haskell.Exts.Annotated.Syntax
-import Language.Haskell.Exts.Annotated.SrcLoc
+import Language.Haskell.Exts.SrcLoc
 
 import Data.Char (isUpper)
 

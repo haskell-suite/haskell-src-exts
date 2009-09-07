@@ -1,7 +1,7 @@
 {-# LANGUAGE CPP, DeriveDataTypeable #-}
 -----------------------------------------------------------------------------
 -- |
--- Module      :  Language.Haskell.Exts.Syntax
+-- Module      :  Language.Haskell.Exts.Annotated.Syntax
 -- Copyright   :  (c) Niklas Broberg 2004-2009,
 --                (c) The GHC Team, 1997-2000
 -- License     :  BSD-style (see the file LICENSE.txt)
@@ -10,7 +10,7 @@
 -- Stability   :  stable
 -- Portability :  portable
 --
--- A suite of datatypes describing the abstract syntax of Haskell 98
+-- A suite of datatypes describing the (semi-concrete) abstract syntax of Haskell 98
 -- <http://www.haskell.org/onlinereport/> plus registered extensions, including:
 --
 --   * multi-parameter type classes with functional dependencies (MultiParamTypeClasses, FunctionalDependencies)
@@ -34,6 +34,10 @@
 --   * regular patterns (RegularPatterns)
 --
 --   * HSP-style XML expressions and patterns (XmlSyntax)
+--
+-- All nodes in the syntax tree are annotated with something of a user-definable data type.
+-- When parsing, this annotation will contain information about the source location that the
+-- particular node comes from.
 --
 -----------------------------------------------------------------------------
 
@@ -107,7 +111,7 @@ import Data.Generics (Data(..),Typeable(..))
 #endif
 
 -- import Language.Haskell.Exts.SrcLoc
-import Control.Monad.Instances  -- just for Functor (,) a
+-- import Control.Monad.Instances  -- just for Functor (,) a
 
 {-- | A position in the source.
 data SrcLoc = SrcLoc {

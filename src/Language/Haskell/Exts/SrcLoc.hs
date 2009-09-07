@@ -1,5 +1,19 @@
 {-# LANGUAGE CPP, DeriveDataTypeable #-}
-module Language.Haskell.Exts.Annotated.SrcLoc where
+-----------------------------------------------------------------------------
+-- |
+-- Module      :  Language.Haskell.Exts.SrcLoc
+-- Copyright   :  (c) Niklas Broberg 2009
+-- License     :  BSD-style (see the file LICENSE.txt)
+--
+-- Maintainer  :  Niklas Broberg, d00nibro@chalmers.se
+-- Stability   :  stable
+-- Portability :  portable
+--
+-- This module defines various data types representing source location
+-- information, of varying degree of preciseness.
+--
+-----------------------------------------------------------------------------
+module Language.Haskell.Exts.SrcLoc where
 
 #ifdef __GLASGOW_HASKELL__
 #ifdef BASE4
@@ -46,6 +60,7 @@ mkSrcSpan (SrcLoc fn sl sc) (SrcLoc _ el ec) = SrcSpan fn sl sc el ec
 mergeSrcSpan :: SrcSpan -> SrcSpan -> SrcSpan
 mergeSrcSpan (SrcSpan fn sl sc _ _) (SrcSpan _ _ _ el ec) = SrcSpan fn sl sc el ec
 
+-- | Test if a given span starts and ends at the same location.
 isNullSpan ss = srcSpanStartLine ss == srcSpanEndLine ss &&
                     srcSpanStartColumn ss >= srcSpanEndColumn ss
 
@@ -69,20 +84,12 @@ data SrcSpanInfo = SrcSpanInfo
   deriving (Eq,Ord,Show)
 #endif
 
-nIS, noInfoSpan :: SrcSpan -> SrcSpanInfo
+
+noInfoSpan :: SrcSpan -> SrcSpanInfo
 noInfoSpan ss = SrcSpanInfo ss []
 
-nIS = noInfoSpan
-
-pIS, pointInfoSpan :: SrcSpan -> SrcSpanInfo
-pointInfoSpan ss = SrcSpanInfo ss [ss]
-
-pIS = pointInfoSpan
-
-iS, infoSpan :: SrcSpan -> [SrcSpan] -> SrcSpanInfo
+infoSpan :: SrcSpan -> [SrcSpan] -> SrcSpanInfo
 infoSpan x y = SrcSpanInfo x y
-
-iS = infoSpan
 
 (<++>), combSpanInfo :: SrcSpanInfo -> SrcSpanInfo -> SrcSpanInfo
 combSpanInfo s1 s2 = SrcSpanInfo
@@ -100,11 +107,8 @@ a <?+> b = case a of {Nothing -> b; Just a -> a <++> b}
 (<**) :: SrcSpanInfo -> [SrcSpan] -> SrcSpanInfo
 ss@(SrcSpanInfo {srcInfoPoints = ps}) <** xs = ss {srcInfoPoints = ps ++ xs}
 
---(<??) :: SrcSpanInfo -> Bool -> SrcSpanInfo
---ss <?? b = ss { explLayout = b }
-
 (<^^>) :: SrcSpan -> SrcSpan -> SrcSpanInfo
-a <^^> b = nIS (mergeSrcSpan a b)
+a <^^> b = noInfoSpan (mergeSrcSpan a b)
 
 infixl 6 <^^>
 infixl 5 <++>

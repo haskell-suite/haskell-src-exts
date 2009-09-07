@@ -1,7 +1,7 @@
 {-# OPTIONS_HADDOCK hide #-}
 -----------------------------------------------------------------------------
 -- |
--- Module      :  Language.Haskell.Exts.ParseMonad
+-- Module      :  Language.Haskell.Exts.Annotated.ParseMonad
 -- Copyright   :  Niklas Broberg (c) 2004-2009,
 --                Original (c) The GHC Team, 1997-2000
 -- License     :  BSD-style (see the file libraries/base/LICENSE)
@@ -32,9 +32,9 @@ module Language.Haskell.Exts.Annotated.ParseMonad(
         getModuleName
     ) where
 
-import Language.Haskell.Exts.Annotated.SrcLoc(SrcLoc(..))
+import Language.Haskell.Exts.SrcLoc(SrcLoc(..))
 import Language.Haskell.Exts.Annotated.Fixity (Fixity, preludeFixities)
-import Language.Haskell.Exts.Annotated.Comments
+import Language.Haskell.Exts.Comments
 import Language.Haskell.Exts.Extension (Extension)
 
 import Data.List ( intersperse )

@@ -72,7 +72,7 @@ parseFileContentsWithMode p@(ParseMode fn exts ign _) rawStr =
             allExts = impliesExts $ case (ign, readExtensions md) of
                                      (False,Just es) -> exts ++ es
                                      _               -> exts
-         in parseModuleWithMode (p { extensions = allExts }) md
+         in parseWithMode (p { extensions = allExts }) md
 
 
 -- | Gather the extensions declared in LANGUAGE pragmas

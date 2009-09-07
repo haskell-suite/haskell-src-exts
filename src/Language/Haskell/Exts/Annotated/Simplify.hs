@@ -1,9 +1,25 @@
-module Language.Haskell.Exts.Annotated.Simplify where
+-----------------------------------------------------------------------------
+-- |
+-- Module      :  Language.Haskell.Exts.Annotated.Simplify
+-- Copyright   :  (c) Niklas Broberg 2009
+-- License     :  BSD-style (see the file LICENSE.txt)
+--
+-- Maintainer  :  Niklas Broberg, d00nibro@chalmers.se
+-- Stability   :  experimental
+-- Portability :  portable
+--
+-- This module contains code for translating from the annotated
+-- complex AST in Language.Haskell.Exts.Annotated.Syntax
+-- to the simpler, sparsely annotated AST in Language.Haskell.Exts.Syntax.
+--
+-----------------------------------------------------------------------------
+module Language.Haskell.Exts.Annotated.Simplify
+        ( sModule, sExp, sType, sDecl, sPat, sOptionPragma ) where
 
 import Language.Haskell.Exts.Annotated.Syntax
 import qualified Language.Haskell.Exts.Syntax as S
 
-import Language.Haskell.Exts.Annotated.SrcLoc
+import Language.Haskell.Exts.SrcLoc
 
 sModuleName :: ModuleName a -> S.ModuleName
 sModuleName (ModuleName _ str)  = S.ModuleName str
@@ -13,13 +29,9 @@ sSpecialCon sc = case sc of
     UnitCon _           -> S.UnitCon
     ListCon _           -> S.ListCon
     FunCon  _           -> S.FunCon
-    TupleCon _ b k      -> S.TupleCon (sBoxed b) k
+    TupleCon _ b k      -> S.TupleCon b k
     Cons _              -> S.Cons
     UnboxedSingleCon _  -> S.UnboxedSingleCon
-
-sBoxed :: Boxed -> S.Boxed
-sBoxed Boxed = S.Boxed
-sBoxed Unboxed = S.Unboxed
 
 sQName :: QName a -> S.QName
 sQName qn = case qn of
@@ -52,6 +64,10 @@ sModuleHead mmh = case mmh of
     Nothing -> (S.main_mod, Nothing, Just [S.EVar (S.UnQual S.main_name)])
     Just (ModuleHead _ mn mwt mel) -> (sModuleName mn, fmap sWarningText mwt, fmap sExportSpecList mel)
 
+-- | Translate an annotated AST node representing a Haskell module, into
+--   a simpler version that retains (almost) only abstract information.
+--   In particular, XML and hybrid XML pages enabled by the XmlSyntax extension
+--   are translated into standard Haskell modules with a @page@ function.
 sModule :: SrcInfo si => Module si -> S.Module
 sModule md = case md of
     Module l mmh oss ids ds ->
@@ -119,6 +135,9 @@ sInstHead ih = case ih of
     IHInfix _ ta qn tb -> (sQName qn, map sType [ta,tb])
     IHParen _ ih       -> sInstHead ih
 
+-- | Translate an annotated AST node representing a Haskell declaration
+--   into a simpler version. Note that in the simpler version, all declaration
+--   nodes are still annotated by 'SrcLoc's.
 sDecl :: SrcInfo si => Decl si -> S.Decl
 sDecl decl = case decl of
      TypeDecl     l dh t        ->
@@ -244,11 +263,13 @@ sRhs (GuardedRhss _ grhss) = S.GuardedRhss (map sGuardedRhs grhss)
 sGuardedRhs :: SrcInfo si => GuardedRhs si -> S.GuardedRhs
 sGuardedRhs (GuardedRhs l ss e) = S.GuardedRhs (getPointLoc l) (map sStmt ss) (sExp e)
 
+-- | Translate an annotated AST node representing a Haskell type into a simpler
+--   unannotated form.
 sType :: Type a -> S.Type
 sType t = case t of
     TyForall _ mtvs mctxt t     -> S.TyForall (fmap (map sTyVarBind) mtvs) (maybe [] sContext mctxt) (sType t)
     TyFun _ t1 t2               -> S.TyFun (sType t1) (sType t2)
-    TyTuple _ bx ts             -> S.TyTuple (sBoxed bx) (map sType ts)
+    TyTuple _ bx ts             -> S.TyTuple bx (map sType ts)
     TyList _ t                  -> S.TyList (sType t)
     TyApp _ t1 t2               -> S.TyApp (sType t1) (sType t2)
     TyVar _ n                   -> S.TyVar (sName n)
@@ -298,7 +319,8 @@ sLiteral lit = case lit of
     PrimChar   _ c _ -> S.PrimChar c
     PrimString _ s _ -> S.PrimString s
 
-
+-- | Translate an annotated AST node representing a Haskell expression
+--   into a simpler unannotated form.
 sExp :: SrcInfo si => Exp si -> S.Exp
 sExp e = case e of
     Var _ qn            -> S.Var (sQName qn)
@@ -374,21 +396,14 @@ sCallConv :: CallConv a -> S.CallConv
 sCallConv (StdCall _) = S.StdCall
 sCallConv (CCall _)   = S.CCall
 
+-- | Translate an annotated AST node representing a top-level Options pragma
+--   into a simpler unannotated form.
 sOptionPragma :: SrcInfo si => OptionPragma si -> S.OptionPragma
 sOptionPragma pr = case pr of
     LanguagePragma   l ns   -> S.LanguagePragma (getPointLoc l) (map sName ns)
     IncludePragma    l str  -> S.IncludePragma (getPointLoc l) str
     CFilesPragma     l str  -> S.CFilesPragma (getPointLoc l) str
-    OptionsPragma    l mt str -> S.OptionsPragma (getPointLoc l) (fmap sTool mt) str
-
-sTool :: Tool -> S.Tool
-sTool t = case t of
-    GHC     -> S.GHC
-    HUGS    -> S.HUGS
-    NHC98   -> S.NHC98
-    YHC     -> S.YHC
-    HADDOCK -> S.HADDOCK
-    UnknownTool str -> S.UnknownTool str
+    OptionsPragma    l mt str -> S.OptionsPragma (getPointLoc l) mt str
 
 sActivation :: Activation a -> S.Activation
 sActivation act = case act of
@@ -407,6 +422,8 @@ sWarningText :: WarningText a -> S.WarningText
 sWarningText (DeprText _ str) = S.DeprText str
 sWarningText (WarnText _ str) = S.WarnText str
 
+-- | Translate an annotated AST node representing a Haskell pattern
+--   into a simpler unannotated form.
 sPat :: SrcInfo si => Pat si -> S.Pat
 sPat pat = case pat of
     PVar _ n            -> S.PVar (sName n)

@@ -1,7 +1,7 @@
 {-# OPTIONS_HADDOCK hide #-}
 -----------------------------------------------------------------------------
 -- |
--- Module      :  Language.Haskell.Exts.Lexer
+-- Module      :  Language.Haskell.Exts.Annotated.Lexer
 -- Copyright   :  (c) The GHC Team, 1997-2000
 --                (c) Niklas Broberg, 2004-2009
 -- License     :  BSD-style (see the file LICENSE.txt)
@@ -20,9 +20,9 @@
 
 module Language.Haskell.Exts.Annotated.Lexer (Token(..), lexer) where
 
-import Language.Haskell.Exts.Annotated.SrcLoc
 import Language.Haskell.Exts.Annotated.ParseMonad
-import Language.Haskell.Exts.Annotated.Comments
+import Language.Haskell.Exts.SrcLoc
+import Language.Haskell.Exts.Comments
 import Language.Haskell.Exts.Extension
 import Language.Haskell.Exts.ExtScheme
 

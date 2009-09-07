@@ -103,7 +103,9 @@ import Data.Generics (Data(..),Typeable(..))
 #endif
 #endif
 
-import Language.Haskell.Exts.Annotated.SrcLoc (SrcLoc(..))
+import Language.Haskell.Exts.SrcLoc (SrcLoc(..))
+
+import Language.Haskell.Exts.Annotated.Syntax (Boxed(..), Tool(..))
 
 {-- | A position in the source.
 data SrcLoc = SrcLoc {
@@ -508,13 +510,14 @@ data Type
   deriving (Eq,Show)
 #endif
 
--- | Flag denoting whether a tuple is boxed or unboxed.
+{-- | Flag denoting whether a tuple is boxed or unboxed.
 data Boxed = Boxed | Unboxed
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
   deriving (Eq,Ord,Show)
 #endif
+--}
 
 -- | A type variable declaration, optionally with an explicit kind annotation.
 data TyVarBind
@@ -733,13 +736,14 @@ data OptionPragma
   deriving (Eq,Show)
 #endif
 
--- | Recognised tools for OPTIONS pragmas.
+{-- | Recognised tools for OPTIONS pragmas.
 data Tool = GHC | HUGS | NHC98 | YHC | HADDOCK | UnknownTool String
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else
   deriving (Eq,Show)
 #endif
+-}
 
 -- | Activation clause of a RULES pragma.
 data Activation

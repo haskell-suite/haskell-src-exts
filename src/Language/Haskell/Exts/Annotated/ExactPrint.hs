@@ -1,11 +1,26 @@
+-----------------------------------------------------------------------------
+-- |
+-- Module      :  Language.Haskell.Exts.Annotated.ExactPrint
+-- Copyright   :  (c) Niklas Broberg 2009
+-- License     :  BSD-style (see the file LICENSE.txt)
+--
+-- Maintainer  :  Niklas Broberg, d00nibro@chalmers.se
+-- Stability   :  stable
+-- Portability :  portable
+--
+-- Exact-printer for Haskell abstract syntax. The input is a (semi-concrete)
+-- abstract syntax tree, annotated with exact source information to enable
+-- printing the tree exactly as it was parsed.
+--
+-----------------------------------------------------------------------------
 module Language.Haskell.Exts.Annotated.ExactPrint
         ( exactPrint
         , ExactP
         ) where
 
-import Language.Haskell.Exts.Annotated.Comments
-import Language.Haskell.Exts.Annotated.SrcLoc
 import Language.Haskell.Exts.Annotated.Syntax
+import Language.Haskell.Exts.SrcLoc
+import Language.Haskell.Exts.Comments
 
 import Control.Monad (when)
 

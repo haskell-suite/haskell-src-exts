@@ -1,7 +1,7 @@
 > {
 > -----------------------------------------------------------------------------
 > -- |
-> -- Module      :  Language.Haskell.Exts.Parser
+> -- Module      :  Language.Haskell.Exts.Annotated.Parser
 > -- Copyright   :  (c) Niklas Broberg 2004-2009,
 > --                Original (c) Simon Marlow, Sven Panne 1997-2000
 > -- License     :  BSD-style (see the file LICENSE.txt)
@@ -15,7 +15,6 @@
 >
 > module Language.Haskell.Exts.Annotated.Parser (
 >               -- * General parsing
->               Parseable(..),
 >               ParseMode(..), defaultParseMode, ParseResult(..), fromParseResult,
 >               -- * Parsing of specific AST elements
 >               -- ** Modules
@@ -32,14 +31,14 @@
 >               getTopPragmas
 >               ) where
 >
-> import Language.Haskell.Exts.Annotated.SrcLoc
 > import Language.Haskell.Exts.Annotated.Syntax hiding ( Type(..), Exp(..), Asst(..), XAttr(..), FieldUpdate(..) )
 > import Language.Haskell.Exts.Annotated.Syntax ( Type, Exp, Asst )
 > import Language.Haskell.Exts.Annotated.ParseMonad
 > import Language.Haskell.Exts.Annotated.Lexer
 > import Language.Haskell.Exts.Annotated.ParseUtils
-> import Language.Haskell.Exts.Annotated.Comments ( Comment )
 > import Language.Haskell.Exts.Annotated.Fixity
+> import Language.Haskell.Exts.SrcLoc
+> import Language.Haskell.Exts.Comments ( Comment )
 > import Language.Haskell.Exts.Extension
 
 > import Control.Monad ( liftM )
@@ -1681,41 +1680,9 @@ Miscellaneous (mostly renamings)
 >
 > infixl 6 <>
 
-> -- | Class to reuse the parse function at many different types.
-> class Parseable ast where
->   -- | Parse a string with default mode.
->   parse :: String -> ParseResult ast
->   -- | Parse a string with an explicit mode.
->   parseWithMode :: ParseMode -> String -> ParseResult ast
->   -- | Parse a string with an explicit mode, returning all comments along the AST
->   parseWithComments :: ParseMode -> String -> ParseResult (ast, [Comment])
+> nIS = noInfoSpan
+> iS = infoSpan
 
->
-> instance SrcInfo loc => Parseable (Module loc) where
->   parse = fmap (fmap fromSrcInfo) . parseModule
->   parseWithMode md = fmap (fmap fromSrcInfo) . parseModuleWithMode md
->   parseWithComments md s = parseModuleWithComments md s >>= \(r, cs) -> return (fmap fromSrcInfo r, cs)
->
-> instance SrcInfo loc => Parseable (Exp loc) where
->   parse = fmap (fmap fromSrcInfo) . parseExp
->   parseWithMode md = fmap (fmap fromSrcInfo) . parseExpWithMode md
->   parseWithComments md s = parseExpWithComments md s >>= \(r, cs) -> return (fmap fromSrcInfo r, cs)
->
-> instance SrcInfo loc => Parseable (Pat loc) where
->   parse = fmap (fmap fromSrcInfo) . parsePat
->   parseWithMode md = fmap (fmap fromSrcInfo) . parsePatWithMode md
->   parseWithComments md s = parsePatWithComments md s >>= \(r, cs) -> return (fmap fromSrcInfo r, cs)
->
-> instance SrcInfo loc => Parseable (Decl loc) where
->   parse = fmap (fmap fromSrcInfo) . parseDecl
->   parseWithMode md = fmap (fmap fromSrcInfo) . parseDeclWithMode md
->   parseWithComments md s = parseDeclWithComments md s >>= \(r, cs) -> return (fmap fromSrcInfo r, cs)
->
-> instance SrcInfo loc => Parseable (Type loc) where
->   parse = fmap (fmap fromSrcInfo) . parseType
->   parseWithMode md = fmap (fmap fromSrcInfo) . parseTypeWithMode md
->   parseWithComments md s = parseTypeWithComments md s >>= \(r, cs) -> return (fmap fromSrcInfo r, cs)
->
 
 > -- | Parse of a string, which should contain a complete Haskell module.
 > parseModule :: String -> ParseResult (Module L)

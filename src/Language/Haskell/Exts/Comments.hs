@@ -1,7 +1,7 @@
 {-# LANGUAGE CPP, DeriveDataTypeable #-}
 module Language.Haskell.Exts.Comments where
 
-import Language.Haskell.Exts.Syntax
+import Language.Haskell.Exts.SrcLoc
 
 #ifdef __GLASGOW_HASKELL__
 #ifdef BASE4
@@ -11,8 +11,7 @@ import Data.Generics (Data(..),Typeable(..))
 #endif
 #endif
 
-data Comment = SingleLine SrcLoc String
-             | MultiLine  SrcLoc String
+data Comment = Comment Bool SrcSpan String
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Show,Typeable,Data)
 #else

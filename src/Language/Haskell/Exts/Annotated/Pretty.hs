@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------------
 -- |
--- Module      :  Language.Haskell.Exts.Pretty
+-- Module      :  Language.Haskell.Exts.Annotated.Pretty
 -- Copyright   :  (c) Niklas Broberg 2004-2009,
 --                (c) The GHC Team, Noel Winstanley 1997-2000
 -- License     :  BSD-style (see the file LICENSE.txt)
@@ -23,7 +23,7 @@ module Language.Haskell.Exts.Annotated.Pretty (
                 PPHsMode(..), Indent, PPLayout(..), defaultMode) where
 
 import Language.Haskell.Exts.Annotated.Syntax
-import Language.Haskell.Exts.Annotated.SrcLoc
+import Language.Haskell.Exts.SrcLoc
 
 import qualified Text.PrettyPrint as P
 import Data.List (intersperse)

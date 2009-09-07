@@ -20,9 +20,9 @@ module Language.Haskell.Exts.Annotated (
     , module Language.Haskell.Exts.Annotated.Parser
     , module Language.Haskell.Exts.Annotated.Pretty
     , module Language.Haskell.Exts.Annotated.Fixity
-    , module Language.Haskell.Exts.Annotated.SrcLoc
     , module Language.Haskell.Exts.Annotated.ExactPrint
-    , module Language.Haskell.Exts.Annotated.Comments
+    , module Language.Haskell.Exts.SrcLoc
+    , module Language.Haskell.Exts.Comments
     , module Language.Haskell.Exts.Extension
     -- * Parsing of Haskell source files
     , parseFile
@@ -41,11 +41,11 @@ import Language.Haskell.Exts.Annotated.Build
 import Language.Haskell.Exts.Annotated.Syntax
 import Language.Haskell.Exts.Annotated.Parser
 import Language.Haskell.Exts.Annotated.Pretty
-import Language.Haskell.Exts.Annotated.SrcLoc
 import Language.Haskell.Exts.Annotated.Fixity
-import Language.Haskell.Exts.Annotated.Comments
 import Language.Haskell.Exts.Annotated.ExactPrint
+import Language.Haskell.Exts.SrcLoc
 import Language.Haskell.Exts.Extension
+import Language.Haskell.Exts.Comments
 
 import Data.List
 import Language.Preprocessor.Unlit
