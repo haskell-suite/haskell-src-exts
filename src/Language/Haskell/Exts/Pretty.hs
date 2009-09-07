@@ -1094,6 +1094,281 @@ instance Pretty Asst where
         pretty (IParam i t)    = myFsep $ [pretty i, text "::", pretty t]
         pretty (EqualP t1 t2)  = myFsep $ [pretty t1, text "~", pretty t2]
 
+-- Pretty print a source location, useful for printing out error messages
+instance Pretty SrcLoc where
+  pretty srcLoc =
+    return $ P.hsep [ colonFollow (P.text $ srcFilename srcLoc)
+                    , colonFollow (P.int  $ srcLine     srcLoc)
+                    , P.int $ srcColumn srcLoc
+                    ]
+    where
+    colonFollow p = P.hcat [ p, P.colon ]
+
+
+---------------------------------------------------------------------
+-- Annotated version
+
+-------------------------  Pretty-Print a Module --------------------
+instance SrcInfo pos => Pretty (A.Module pos) where
+        pretty (A.Module pos mbHead os imp decls) =
+                markLine pos $
+                myVcat $ map pretty os ++
+                    (case mbHead of
+                        Nothing -> id
+                        Just h  -> \x -> [topLevel (pretty h) x])
+                    (map pretty imp ++ map pretty decls)
+        pretty (A.XmlPage pos _mn os n attrs mattr cs) =
+                markLine pos $
+                myVcat $ map pretty os ++
+                    [let ax = maybe [] (return . pretty) mattr
+                      in hcat $
+                         (myFsep $ (char '<' <> pretty n): map pretty attrs ++ ax ++ [char '>']):
+                            map pretty cs ++ [myFsep $ [text "</" <> pretty n, char '>']]]
+        pretty (A.XmlHybrid pos mbHead os imp decls n attrs mattr cs) =
+                markLine pos $
+                myVcat $ map pretty os ++ [text "<%"] ++
+                    (case mbHead of
+                        Nothing -> id
+                        Just h  -> \x -> [topLevel (pretty h) x])
+                    (map pretty imp ++ map pretty decls ++
+                        [let ax = maybe [] (return . pretty) mattr
+                          in hcat $
+                             (myFsep $ (char '<' <> pretty n): map pretty attrs ++ ax ++ [char '>']):
+                                map pretty cs ++ [myFsep $ [text "</" <> pretty n, char '>']]])
+
+
+
+--------------------------  Module Header ------------------------------
+instance Pretty (A.ModuleHead l) where
+    pretty (A.ModuleHead _ m mbWarn mbExportList) = mySep [
+        text "module",
+        pretty m,
+        maybePP pretty mbWarn,
+        maybePP pretty mbExportList,
+        text "where"]
+
+instance Pretty (A.WarningText l) where
+    pretty = ppWarnTxt. sWarningText
+
+instance Pretty (A.ModuleName l) where
+        pretty = pretty . sModuleName
+
+instance Pretty (A.ExportSpecList l) where
+        pretty (A.ExportSpecList _ especs)  = parenList $ map pretty especs
+
+instance Pretty (A.ExportSpec l) where
+        pretty = pretty . sExportSpec
+
+instance SrcInfo pos => Pretty (A.ImportDecl pos) where
+        pretty = pretty . sImportDecl
+
+instance Pretty (A.ImportSpecList l) where
+        pretty (A.ImportSpecList _ b ispecs)  =
+            (if b then text "hiding" else empty)
+                <+> parenList (map pretty ispecs)
+
+instance Pretty (A.ImportSpec l) where
+        pretty = pretty . sImportSpec
+
+-------------------------  Declarations ------------------------------
+instance SrcInfo pos => Pretty (A.Decl pos) where
+        pretty = pretty . sDecl
+
+instance Pretty (A.DeclHead l) where
+    pretty (A.DHead l n tvs)       = mySep (pretty n : map pretty tvs)
+    pretty (A.DHInfix l tva n tvb) = mySep [pretty tva, pretty n, pretty tvb]
+    pretty (A.DHParen l dh)        = parens (pretty dh)
+
+instance Pretty (A.InstHead l) where
+    pretty (A.IHead l qn ts)       = mySep (pretty qn : map pretty ts)
+    pretty (A.IHInfix l ta qn tb)  = mySep [pretty ta, pretty qn, pretty tb]
+    pretty (A.IHParen l ih)        = parens (pretty ih)
+
+instance Pretty (A.DataOrNew l) where
+        pretty = pretty . sDataOrNew
+
+instance Pretty (A.Assoc l) where
+        pretty = pretty . sAssoc
+
+instance SrcInfo pos => Pretty (A.Match pos) where
+        pretty = pretty . sMatch
+
+instance SrcInfo loc => Pretty (A.ClassDecl loc) where
+        pretty = pretty . sClassDecl
+
+instance SrcInfo loc => Pretty (A.InstDecl loc) where
+        pretty = pretty . sInstDecl
+
+------------------------- FFI stuff -------------------------------------
+instance Pretty (A.Safety l) where
+        pretty = pretty . sSafety
+
+instance Pretty (A.CallConv l) where
+        pretty = pretty . sCallConv
+
+------------------------- Pragmas ---------------------------------------
+instance SrcInfo loc => Pretty (A.Rule loc) where
+        pretty = pretty . sRule
+
+instance Pretty (A.Activation l) where
+    pretty = pretty . sActivation
+
+instance Pretty (A.RuleVar l) where
+    pretty = pretty . sRuleVar
+
+instance Pretty (A.OptionPragma l) where
+    pretty (A.LanguagePragma _ ns) =
+        myFsep $ text "{-# LANGUAGE" : punctuate (char ',') (map pretty ns) ++ [text "#-}"]
+    pretty (A.IncludePragma _ s) =
+        myFsep $ [text "{-# INCLUDE", text s, text "#-}"]
+    pretty (A.CFilesPragma _ s) =
+        myFsep $ [text "{-# CFILES", text s, text "#-}"]
+    pretty (A.OptionsPragma _ (Just tool) s) =
+        myFsep $ [text "{-# OPTIONS_" <> pretty tool, text s, text "#-}"]
+    pretty (A.OptionsPragma _ _ s) =
+        myFsep $ [text "{-# OPTIONS", text s, text "#-}"]
+
+------------------------- Data & Newtype Bodies -------------------------
+instance Pretty (A.QualConDecl l) where
+        pretty (A.QualConDecl _pos mtvs ctxt con) =
+                myFsep [ppForall (fmap (map sTyVarBind) mtvs), ppContext $ maybe [] sContext ctxt, pretty con]
+
+instance Pretty (A.GadtDecl l) where
+        pretty (A.GadtDecl _pos name ty) =
+                myFsep [pretty name, text "::", pretty ty]
+
+instance Pretty (A.ConDecl l) where
+        pretty = pretty . sConDecl
+
+instance Pretty (A.FieldDecl l) where
+        pretty (A.FieldDecl _ names ty) =
+                myFsepSimple $ (punctuate comma . map pretty $ names) ++
+                       [text "::", pretty ty]
+
+
+instance Pretty (A.BangType l) where
+        pretty = pretty . sBangType
+
+instance Pretty (A.Deriving l) where
+        pretty (A.Deriving _ []) = text "deriving" <+> parenList []
+        pretty (A.Deriving _ [A.IHead _ d []]) = text "deriving" <+> pretty d
+        pretty (A.Deriving _ ihs) = text "deriving" <+> parenList (map pretty ihs)
+
+------------------------- Types -------------------------
+instance Pretty (A.Type l) where
+        pretty = pretty . sType
+
+instance Pretty (A.TyVarBind l) where
+        pretty = pretty . sTyVarBind
+
+---------------------------- Kinds ----------------------------
+
+instance Pretty (A.Kind l) where
+        pretty = pretty . sKind
+
+------------------- Functional Dependencies -------------------
+instance Pretty (A.FunDep l) where
+        pretty = pretty . sFunDep
+
+------------------------- Expressions -------------------------
+instance SrcInfo loc => Pretty (A.Rhs loc) where
+        pretty = pretty . sRhs
+
+instance SrcInfo loc => Pretty (A.GuardedRhs loc) where
+        pretty = pretty . sGuardedRhs
+
+instance Pretty (A.Literal l) where
+        pretty = pretty . sLiteral
+
+instance SrcInfo loc => Pretty (A.Exp loc) where
+        pretty = pretty . sExp
+
+instance SrcInfo loc => Pretty (A.XAttr loc) where
+        pretty = pretty . sXAttr
+
+instance Pretty (A.XName l) where
+        pretty = pretty . sXName
+
+--------------------- Template Haskell -------------------------
+
+instance SrcInfo loc => Pretty (A.Bracket loc) where
+        pretty = pretty . sBracket
+
+instance SrcInfo loc => Pretty (A.Splice loc) where
+        pretty = pretty . sSplice
+
+------------------------- Patterns -----------------------------
+
+instance SrcInfo loc => Pretty (A.Pat loc) where
+        pretty = pretty . sPat
+
+instance SrcInfo loc => Pretty (A.PXAttr loc) where
+        pretty = pretty . sPXAttr
+
+instance SrcInfo loc => Pretty (A.PatField loc) where
+        pretty = pretty . sPatField
+
+--------------------- Regular Patterns -------------------------
+
+instance SrcInfo loc => Pretty (A.RPat loc) where
+        pretty = pretty . sRPat
+
+instance Pretty (A.RPatOp l) where
+        pretty = pretty . sRPatOp
+
+------------------------- Case bodies  -------------------------
+instance SrcInfo loc => Pretty (A.Alt loc) where
+        pretty = pretty . sAlt
+
+instance SrcInfo loc => Pretty (A.GuardedAlts loc) where
+        pretty = pretty . sGuardedAlts
+
+instance SrcInfo loc => Pretty (A.GuardedAlt loc) where
+        pretty = pretty . sGuardedAlt
+
+------------------------- Statements in monads, guards & list comprehensions -----
+instance SrcInfo loc => Pretty (A.Stmt loc) where
+        pretty = pretty . sStmt
+
+instance SrcInfo loc => Pretty (A.QualStmt loc) where
+        pretty = pretty . sQualStmt
+
+------------------------- Record updates
+instance SrcInfo loc => Pretty (A.FieldUpdate loc) where
+        pretty = pretty . sFieldUpdate
+
+------------------------- Names -------------------------
+instance Pretty (A.QOp l) where
+        pretty = pretty . sQOp
+
+instance Pretty (A.QName l) where
+        pretty = pretty . sQName
+
+instance Pretty (A.Op l) where
+        pretty = pretty . sOp
+
+instance Pretty (A.Name l) where
+        pretty = pretty . sName
+
+instance Pretty (A.IPName l) where
+        pretty = pretty . sIPName
+
+instance SrcInfo loc => Pretty (A.IPBind loc) where
+        pretty = pretty . sIPBind
+
+instance Pretty (A.CName l) where
+        pretty = pretty . sCName
+
+instance Pretty (A.Context l) where
+        pretty (A.CxEmpty _) = mySep [text "()", text "=>"]
+        pretty (A.CxSingle _ asst) = mySep [pretty asst, text "=>"]
+        pretty (A.CxTuple _ assts) = myFsep $ [parenList (map pretty assts), text "=>"]
+        pretty (A.CxParen _ asst)  = parens (pretty asst)
+
+-- hacked for multi-parameter type classes
+instance Pretty (A.Asst l) where
+        pretty = pretty . sAsst
+
 ------------------------- pp utils -------------------------
 maybePP :: (a -> Doc) -> Maybe a -> Doc
 maybePP pp Nothing = empty
@@ -1185,21 +1460,11 @@ layoutChoice a b dl = do e <- getPPEnv
 -- that the following line is line n.  But if there's no newline before
 -- the line we're talking about, we need to compensate by adding 1.
 
-markLine :: SrcLoc -> Doc -> Doc
+markLine :: SrcInfo s => s -> Doc -> Doc
 markLine loc doc = do
         e <- getPPEnv
-        let y = srcLine loc
+        let y = startLine loc
         let line l =
-              text ("{-# LINE " ++ show l ++ " \"" ++ srcFilename loc ++ "\" #-}")
+              text ("{-# LINE " ++ show l ++ " \"" ++ fileName loc ++ "\" #-}")
         if linePragmas e then layoutChoice (line y $$) (line (y+1) <+>) doc
               else doc
-
--- Pretty print a source location, useful for printing out error messages
-instance Pretty SrcLoc where
-  pretty srcLoc =
-    return $ P.hsep [ colonFollow (P.text $ srcFilename srcLoc)
-                    , colonFollow (P.int  $ srcLine     srcLoc)
-                    , P.int $ srcColumn srcLoc
-                    ]
-    where
-    colonFollow p = P.hcat [ p, P.colon ]

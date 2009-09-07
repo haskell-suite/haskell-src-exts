@@ -13,8 +13,7 @@
 -- to the simpler, sparsely annotated AST in Language.Haskell.Exts.Syntax.
 --
 -----------------------------------------------------------------------------
-module Language.Haskell.Exts.Annotated.Simplify
-        ( sModule, sExp, sType, sDecl, sPat, sOptionPragma ) where
+module Language.Haskell.Exts.Annotated.Simplify where
 
 import Language.Haskell.Exts.Annotated.Syntax
 import qualified Language.Haskell.Exts.Syntax as S
