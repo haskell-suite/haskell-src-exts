@@ -354,7 +354,7 @@ data Decl l
      -- ^ A declaration of operator fixity
      | DefaultDecl  l [Type l]
      -- ^ A declaration of default types
-     | SpliceDecl   l (Splice l)
+     | SpliceDecl   l (Exp l)
      -- ^ A Template Haskell splicing declaration
      | TypeSig      l [Name l] (Type l)
      -- ^ A type signature declaration

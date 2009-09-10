@@ -317,7 +317,7 @@ data Decl
      -- ^ A declaration of operator fixity
      | DefaultDecl  SrcLoc [Type]
      -- ^ A declaration of default types
-     | SpliceDecl   SrcLoc Splice
+     | SpliceDecl   SrcLoc Exp
      -- ^ A Template Haskell splicing declaration
      | TypeSig      SrcLoc [Name] Type
      -- ^ A type signature declaration

@@ -553,7 +553,9 @@ Requires the StandaloneDeriving extension enabled.
 
 Requires the TemplateHaskell extension, but the lexer will handle that
 through the '$(' lexeme.
->       | '$(' trueexp ')'  { let l = $1 <^^> $3 <** [$1,$3] in SpliceDecl l $ ParenSplice l $2 }
+CHANGE: Arbitrary top-level expressions are considered implicit splices
+>       | exp0             {% checkEnabled TemplateHaskell >> checkExpr $1 >>= \e -> return (SpliceDecl (ann e) e) }
+       | '$(' trueexp ')'  { let l = $1 <^^> $3 <** [$1,$3] in SpliceDecl l $ ParenSplice l $2 }
 
 These require the ForeignFunctionInterface extension, handled by the
 lexer through the 'foreign' (and 'export') keyword.
