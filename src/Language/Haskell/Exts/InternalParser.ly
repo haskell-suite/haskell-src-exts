@@ -502,12 +502,12 @@ Here there is no special keyword so we must do the check.
 >                        return (DataDecl l $1 cs dh (reverse qds) $4) } }
 
 Requires the GADTs extension enabled, handled in gadtlist.
->       | data_or_newtype ctype optkind 'where' gadtlist deriving
+>       | data_or_newtype ctype optkind gadtlist deriving
 >                {% do { (cs,dh) <- checkDataHeader $2;
->                        let { (gs,ss,inf) = $5;
->                              l = ann $1 <++> inf <+?> fmap ann $6 <** (snd $3 ++ $4:ss)};
+>                        let { (gs,ss,minf) = $4;
+>                              l = ann $1 <+?> minf <+?> fmap ann $5 <** (snd $3 ++ ss)};
 >                        checkDataOrNew $1 gs;
->                        return (GDataDecl l $1 cs dh (fst $3) (reverse gs) $6) } }
+>                        return (GDataDecl l $1 cs dh (fst $3) (reverse gs) $5) } }
 
 Same as above, lexer will handle it through the 'family' keyword.
 >       | 'data' 'family' ctype optkind
@@ -525,13 +525,13 @@ Here we must check for TypeFamilies.
 >                        return (DataInsDecl l $1 $3 (reverse qds) $5) } }
 
 This style requires both TypeFamilies and GADTs, the latter is handled in gadtlist.
->       | data_or_newtype 'instance' truectype optkind 'where' gadtlist deriving
+>       | data_or_newtype 'instance' truectype optkind gadtlist deriving
 >                {% do { -- (cs,c,t) <- checkDataHeader $4;
 >                        checkEnabled TypeFamilies ;
->                        let {(gs,ss,inf) = $6;
->                             l = ann $1 <++> inf <+?> fmap ann $7 <** ($2:snd $4 ++ $5:ss)};
+>                        let {(gs,ss,minf) = $5;
+>                             l = ann $1 <+?> minf <+?> fmap ann $6 <** ($2:snd $4 ++ ss)};
 >                        checkDataOrNew $1 gs;
->                        return (GDataInsDecl l $1 $3 (fst $4) (reverse gs) $7) } }
+>                        return (GDataInsDecl l $1 $3 (fst $4) (reverse gs) $6) } }
 >       | 'class' ctype fds optcbody
 >                {% do { (cs,dh) <- checkClassHeader $2;
 >                        let {(fds,ss1,minf1) = $3;(mcs,ss2,minf2) = $4} ;
@@ -853,12 +853,13 @@ Datatype declarations
 
 GADTs - require the GADTs extension enabled, but we handle that at the calling site.
 
-> gadtlist :: { ([GadtDecl L],[S],L) }
->       : gadtlist1                 {% checkEnabled GADTs >> return $1 }
+ gadtlist :: { ([GadtDecl L],[S],L) }
+       : gadtlist1                 {% >> return $1 }
 
-> gadtlist1 :: { ([GadtDecl L],[S],L) }
->       : '{' gadtconstrs1 '}'                  { (fst $2, $1 : snd $2 ++ [$3], $1 <^^> $3)  }
->       | open gadtconstrs1 close               { (fst $2, $1 : snd $2 ++ [$3], $1 <^^> $3) }
+> gadtlist :: { ([GadtDecl L],[S],Maybe L) }
+>       : 'where' '{' gadtconstrs1 '}'                  {% checkEnabled GADTs >> return (fst $3, $1 : $2 : snd $3 ++ [$4], Just $ $1 <^^> $4) }
+>       | 'where' open gadtconstrs1 close               {% checkEnabled GADTs >> return (fst $3, $1 : $2 : snd $3 ++ [$4], Just $ $1 <^^> $4) }
+>       | {- empty -}                                   {% checkEnabled EmptyDataDecls >> return ([],[],Nothing) }
 
 > gadtconstrs1 :: { ([GadtDecl L],[S]) }
 >       : optsemis gadtconstrs optsemis         { (fst $2, reverse $1 ++ snd $2 ++ reverse $3)  }
@@ -873,8 +874,8 @@ GADTs - require the GADTs extension enabled, but we handle that at the calling s
 
 To allow the empty case we need the EmptyDataDecls extension.
 > constrs0 :: { ([QualConDecl L],[S],Maybe L) }
->       : {- empty -}                   {% checkEnabled EmptyDataDecls >> return ([],[],Nothing) }
->       | '=' constrs                   { let (ds,ss,l) = $2 in (ds, $1 : reverse ss, Just $ nIS $1 <++> l) }
+       : {- empty -}                   {% checkEnabled EmptyDataDecls >> return ([],[],Nothing) }
+>       : '=' constrs                   { let (ds,ss,l) = $2 in (ds, $1 : reverse ss, Just $ nIS $1 <++> l) }
 
 > constrs :: { ([QualConDecl L],[S],L) }
 >       : constrs '|' constr            { let (ds,ss,l) = $1 in ($3 : ds, $2 : ss, l <++> ann $3) }
@@ -1038,11 +1039,11 @@ Associated types require the TypeFamilies extension enabled.
 >                        let {(ds,ss,minf) = $3};
 >                        checkDataOrNew $1 ds;
 >                        return (InsData ($1 <> $2 <+?> minf <+?> fmap ann $4 <** ss ) $1 $2 (reverse ds) $4) } }
->       | data_or_newtype truectype optkind 'where' gadtlist deriving
+>       | data_or_newtype truectype optkind gadtlist deriving
 >                {% do { -- (cs,c,t) <- checkDataHeader $4;
->                        let { (gs,ss,inf) = $5 } ;
+>                        let { (gs,ss,minf) = $4 } ;
 >                        checkDataOrNew $1 gs;
->                        return $ InsGData (ann $1 <++> inf <+?> fmap ann $6 <** (snd $3 ++ $4:ss)) $1 $2 (fst $3) (reverse gs) $6 } }
+>                        return $ InsGData (ann $1 <+?> minf <+?> fmap ann $5 <** (snd $3 ++ ss)) $1 $2 (fst $3) (reverse gs) $5 } }
 
 -----------------------------------------------------------------------------
 Value definitions
