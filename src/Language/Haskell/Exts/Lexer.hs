@@ -356,11 +356,13 @@ lexWhiteSpace bol = do
             dashes <- lexWhile (== '-')
             rest   <- lexWhile (/= '\n')
             s' <- getInput
+            loc2 <- getSrcLocL
+            let com = Comment False (mkSrcSpan loc loc2) $ dashes ++ rest
             case s' of
-                [] -> fail "Unterminated end-of-line comment"
+                [] -> pushComment com >> return (False, True)
                 _ -> do
-                    loc2 <- getSrcLocL
-                    lexNewline >> pushComment (Comment False (mkSrcSpan loc loc2) $ dashes ++ rest)
+                    pushComment com
+                    lexNewline
                     lexWhiteSpace True
                     return (True, True)
         '\n':_ -> do
