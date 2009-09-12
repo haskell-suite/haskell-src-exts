@@ -603,7 +603,7 @@ checkAttr :: ParseXAttr L -> P (S.XAttr L)
 checkAttr (XAttr l n v) = do v <- checkExpr v
                              return $ S.XAttr l n v
 
-checkDo [] = error "Parse error: Last statement in a do-block must be an expression"
+checkDo [] = fail "Parse error: Last statement in a do-block must be an expression"
 checkDo [Qualifier _ _] = return ()
 checkDo (_:xs) = checkDo xs
 
