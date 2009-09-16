@@ -170,7 +170,7 @@ sDecl decl = case decl of
          in S.DerivDecl (getPointLoc l) (maybe [] sContext mctxt) qn ts
      InfixDecl    l ass prec ops    -> S.InfixDecl (getPointLoc l) (sAssoc ass) (maybe 9 id prec) (map sOp ops)
      DefaultDecl  l ts          -> S.DefaultDecl (getPointLoc l) (map sType ts)
-     SpliceDecl   l sp          -> S.SpliceDecl (getPointLoc l) (sSplice sp)
+     SpliceDecl   l sp          -> S.SpliceDecl (getPointLoc l) (sExp sp)
      TypeSig      l ns t        -> S.TypeSig (getPointLoc l) (map sName ns) (sType t)
      FunBind      _ ms          -> S.FunBind (map sMatch ms)
      PatBind      l p mt rhs mbs    ->
