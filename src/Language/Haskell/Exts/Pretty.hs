@@ -1101,9 +1101,27 @@ instance Pretty SrcLoc where
                     , colonFollow (P.int  $ srcLine     srcLoc)
                     , P.int $ srcColumn srcLoc
                     ]
-    where
-    colonFollow p = P.hcat [ p, P.colon ]
 
+colonFollow p = P.hcat [ p, P.colon ]
+
+
+instance Pretty SrcSpan where
+    pretty srcSpan =
+        return $ P.hsep [ colonFollow (P.text $ srcSpanFilename srcSpan)
+                        , P.hcat [ P.text "("
+                                 , P.int $ srcSpanStartLine srcSpan
+                                 , P.colon
+                                 , P.int $ srcSpanStartColumn srcSpan
+                                 , P.text ")"
+                                 ]
+                        , P.text "-"
+                        , P.hcat [ P.text "("
+                                 , P.int $ srcSpanEndLine srcSpan
+                                 , P.colon
+                                 , P.int $ srcSpanEndColumn srcSpan
+                                 , P.text ")"
+                                 ]
+                        ]
 
 ---------------------------------------------------------------------
 -- Annotated version
