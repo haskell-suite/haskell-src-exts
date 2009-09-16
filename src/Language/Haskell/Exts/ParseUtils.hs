@@ -852,11 +852,13 @@ checkT t simple = case t of
             when (isSymbol n) $ checkEnabled TypeOperators
             return $ S.TyCon l n
     TyParen l pt      -> check1Type pt (S.TyParen l)
-    -- TyPred  cannot be a valid type
     -- Here we know that t will be used as an actual type (and not a data constructor)
     -- so we can check that TypeOperators are enabled.
     TyInfix l at op bt -> checkEnabled TypeOperators >> check2Types at bt (flip (S.TyInfix l) op)
     TyKind  l pt k    -> check1Type pt (flip (S.TyKind l) k)
+
+    -- TyPred  cannot be a valid type
+    _   -> fail $ "Parse error in type: " ++ show t
 
 check1Type :: PType L -> (S.Type L -> S.Type L) -> P (S.Type L)
 check1Type pt f = checkT pt True >>= return . f
