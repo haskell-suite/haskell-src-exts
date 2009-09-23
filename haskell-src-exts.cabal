@@ -66,6 +66,7 @@ Library
   Other-modules:        Language.Haskell.Exts.ExtScheme,
                         
                         Language.Haskell.Exts.ParseMonad,
+                        Language.Haskell.Exts.ParseSyntax,
                         Language.Haskell.Exts.Lexer,
                         Language.Haskell.Exts.ParseUtils,
                         Language.Haskell.Exts.InternalParser

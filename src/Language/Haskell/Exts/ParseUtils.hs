@@ -64,6 +64,7 @@ import Language.Haskell.Exts.Annotated.Syntax hiding ( Type(..), Asst(..), Exp(.
 import qualified Language.Haskell.Exts.Annotated.Syntax as S ( Type(..), Asst(..), Exp(..), FieldUpdate(..), XAttr(..), Context(..) )
 import Language.Haskell.Exts.Annotated.Build
 
+import Language.Haskell.Exts.ParseSyntax
 import Language.Haskell.Exts.ParseMonad
 import Language.Haskell.Exts.Pretty
 import Language.Haskell.Exts.SrcLoc
@@ -407,9 +408,9 @@ checkPat e [] = case e of
         p <- checkPat e []
         return $ PBangPat l p
 
-    e -> patFail $ show e
+    e -> patFail $ prettyPrint e
 
-checkPat e _ = patFail $ show e
+checkPat e _ = patFail $ prettyPrint e
 
 splitBang :: PExp L -> [PExp L] -> (PExp L, [PExp L])
 splitBang (App _ f x) es = splitBang f (x:es)
@@ -470,7 +471,7 @@ checkRPatOp o@(QVarOp l (UnQual _ (Symbol _ sym))) =
      _    -> rpOpFail o
 checkRPatOp o = rpOpFail o
 
-rpOpFail sym = fail $ "Unrecognized regular pattern operator: " ++ show sym
+rpOpFail sym = fail $ "Unrecognized regular pattern operator: " ++ prettyPrint sym
 
 fixRPOpPrec :: RPat L -> RPat L
 fixRPOpPrec rp = case rp of
@@ -597,7 +598,7 @@ checkExpr e = case e of
     LeftArrHighApp l e1 e2  -> check2Exprs e1 e2 (S.LeftArrHighApp l)
     RightArrHighApp l e1 e2 -> check2Exprs e1 e2 (S.RightArrHighApp l)
 
-    _             -> fail $ "Parse error in expression: " ++ show e
+    _             -> fail $ "Parse error in expression: " ++ prettyPrint e
 
 checkAttr :: ParseXAttr L -> P (S.XAttr L)
 checkAttr (XAttr l n v) = do v <- checkExpr v
@@ -698,7 +699,7 @@ isFunLhs _ _ = return Nothing
 
 checkSigVar :: PExp L -> P (Name L)
 checkSigVar (Var _ (UnQual _ n)) = return n
-checkSigVar e = fail $ "Left-hand side of type signature is not a variable: " ++ show e
+checkSigVar e = fail $ "Left-hand side of type signature is not a variable: " ++ prettyPrint e
 
 -----------------------------------------------------------------------------
 -- In a class or instance body, a pattern binding must be of a variable.
@@ -858,7 +859,7 @@ checkT t simple = case t of
     TyKind  l pt k    -> check1Type pt (flip (S.TyKind l) k)
 
     -- TyPred  cannot be a valid type
-    _   -> fail $ "Parse error in type: " ++ show t
+    _   -> fail $ "Parse error in type: " ++ prettyPrint t
 
 check1Type :: PType L -> (S.Type L -> S.Type L) -> P (S.Type L)
 check1Type pt f = checkT pt True >>= return . f
@@ -944,7 +945,7 @@ Nothing     `plus` mtvs2       = mtvs2
 (Just tvs1) `plus` (Just tvs2) = Just (tvs1 ++ tvs2)
 -}
 ---------------------------------------
--- Expressions as we parse them (and patters, and regular patterns)
+{-- Expressions as we parse them (and patters, and regular patterns)
 
 data PExp l
     = Var l (QName l)                 -- ^ variable
@@ -1370,3 +1371,4 @@ unboxed_singleton_tycon l = TyCon l (unboxed_singleton_tycon_name l)
 
 tuple_tycon :: l -> Boxed -> Int -> PType l
 tuple_tycon l b i         = TyCon l (tuple_tycon_name l b i)
+-}
