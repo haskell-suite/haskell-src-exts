@@ -611,6 +611,7 @@ data Kind l
     | KindBang  l                    -- ^ @!@, the kind of unboxed types
     | KindFn    l (Kind l) (Kind l)  -- ^ @->@, the kind of a type constructor
     | KindParen l (Kind l)           -- ^ a parenthesised kind
+    | KindVar   l (Name l)           -- ^ a kind variable (as-of-yet unsupported by compilers)
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
@@ -1311,9 +1312,11 @@ instance Functor TyVarBind where
     fmap f (UnkindedVar l n)   = UnkindedVar (f l) (fmap f n)
 
 instance Functor Kind where
-    fmap f (KindStar l) = KindStar (f l)
-    fmap f (KindBang l) = KindBang (f l)
-    fmap f (KindFn   l k1 k2) = KindFn (f l) (fmap f k1) (fmap f k2)
+    fmap f (KindStar  l)   = KindStar (f l)
+    fmap f (KindBang  l)   = KindBang (f l)
+    fmap f (KindFn    l k1 k2) = KindFn (f l) (fmap f k1) (fmap f k2)
+    fmap f (KindParen l k) = KindParen (f l) (fmap f k)
+    fmap f (KindVar   l n) = KindVar (f l) (fmap f n)
 
 instance Functor FunDep where
     fmap f (FunDep l ns1 ns2) = FunDep (f l) (map (fmap f) ns1) (map (fmap f) ns2)
@@ -1840,9 +1843,13 @@ instance Annotated Kind where
     ann (KindStar l) = l
     ann (KindBang l) = l
     ann (KindFn   l k1 k2) = l
+    ann (KindParen l k) = l
+    ann (KindVar l v) = l
     amap f (KindStar l) = KindStar (f l)
     amap f (KindBang l) = KindBang (f l)
     amap f (KindFn   l k1 k2) = KindFn (f l) k1 k2
+    amap f (KindParen l k) = KindParen (f l) k
+    amap f (KindVar l n) = KindVar (f l) n
 
 instance Annotated FunDep where
     ann (FunDep l ns1 ns2) = l

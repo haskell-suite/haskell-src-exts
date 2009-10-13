@@ -534,6 +534,8 @@ data Kind
     = KindStar          -- ^ @*@, the kind of types
     | KindBang          -- ^ @!@, the kind of unboxed types
     | KindFn Kind Kind  -- ^ @->@, the kind of a type constructor
+    | KindParen Kind    -- ^ a kind surrounded by parentheses
+    | KindVar Name      -- ^ a kind variable (as of yet unsupported by compilers)
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else

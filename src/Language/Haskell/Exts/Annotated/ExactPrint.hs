@@ -704,6 +704,7 @@ instance ExactP Kind where
         printString "("
         exactPC kd
         printStringAt (pos b) ")"
+    KindVar l n     -> exactP n       
 
 instance ExactP Type where
   exactP t = case t of

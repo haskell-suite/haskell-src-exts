@@ -286,7 +286,8 @@ sKind k = case k of
     KindStar  _     -> S.KindStar
     KindBang  _     -> S.KindBang
     KindFn _ k1 k2  -> S.KindFn (sKind k1) (sKind k2)
-    KindParen _ k   -> sKind k
+    KindParen _ k   -> S.KindParen (sKind k)
+    KindVar _ n     -> S.KindVar (sName n)
 
 sFunDep :: FunDep l -> S.FunDep
 sFunDep (FunDep _ as bs) = S.FunDep (map sName as) (map sName bs)
