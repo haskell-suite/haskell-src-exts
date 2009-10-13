@@ -1610,7 +1610,7 @@ instance SrcInfo loc => Pretty (P.PAsst loc) where
 
 instance SrcInfo loc => Pretty (P.PType loc) where
         prettyPrec p (P.TyForall _ mtvs ctxt htype) = parensIf (p > 0) $
-                myFsep [ppForall (fmap (map sTyVarBind) mtvs), maybePP ctxt, pretty htype]
+                myFsep [ppForall (fmap (map sTyVarBind) mtvs), maybePP pretty ctxt, pretty htype]
         prettyPrec p (P.TyFun _ a b) = parensIf (p > 0) $
                 myFsep [prettyPrec prec_btype a, text "->", pretty b]
         prettyPrec _ (P.TyTuple _ bxd l) =
