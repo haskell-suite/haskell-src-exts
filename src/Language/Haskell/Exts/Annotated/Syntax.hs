@@ -226,26 +226,26 @@ data Module l
                 (XName l) [XAttr l] (Maybe (Exp l)) [Exp l]
     -- ^ a hybrid module combining an XML document with an ordinary module
 #ifdef __GLASGOW_HASKELL__
-  deriving (Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | The head of a module, including the name and export specification.
 data ModuleHead l = ModuleHead l (ModuleName l) (Maybe (WarningText l)) (Maybe (ExportSpecList l))
 #ifdef __GLASGOW_HASKELL__
-  deriving (Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | An explicit export specification.
 data ExportSpecList l
     = ExportSpecList l [ExportSpec l]
 #ifdef __GLASGOW_HASKELL__
-  deriving (Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | An item in a module's export specification.
@@ -263,9 +263,9 @@ data ExportSpec l
      | EModuleContents l (ModuleName l)   -- ^ @module M@:
                                           -- re-export a module.
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | An import declaration.
@@ -280,9 +280,9 @@ data ImportDecl l = ImportDecl
             -- ^ optional list of import specifications.
     }
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | An explicit import specification list.
@@ -292,9 +292,9 @@ data ImportSpecList l
             -- The 'Bool' is 'True' if the names are excluded
             -- by @hiding@.
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | An import specification, representing a single explicit item imported
@@ -310,9 +310,9 @@ data ImportSpec l
                                         -- a class imported with some of its methods, or
                                         -- a datatype imported with some of its constructors.
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | Associativity of an operator.
@@ -321,9 +321,9 @@ data Assoc l
      | AssocLeft  l -- ^ left-associative operator (declared with @infixl@).
      | AssocRight l -- ^ right-associative operator (declared with @infixr@)
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | A top-level declaration.
@@ -382,17 +382,17 @@ data Decl l
      | InstSig          l      (Maybe (Context l))    (InstHead l)
      -- ^ A SPECIALISE instance pragma
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | A flag stating whether a declaration is a data or newtype declaration.
 data DataOrNew l = DataType l | NewType l
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | The head of a type or class declaration.
@@ -401,9 +401,9 @@ data DeclHead l
     | DHInfix l (TyVarBind l) (Name l) (TyVarBind l)
     | DHParen l (DeclHead l)
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | The head of an instance declaration.
@@ -412,17 +412,17 @@ data InstHead l
     | IHInfix l (Type l) (QName l) (Type l)
     | IHParen l (InstHead l)
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | A deriving clause following a data type declaration.
 data Deriving l = Deriving l [InstHead l]
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | A binding group inside a @let@ or @where@ clause.
@@ -430,17 +430,17 @@ data Binds l
     = BDecls  l [Decl l]     -- ^ An ordinary binding group
     | IPBinds l [IPBind l]   -- ^ A binding group for implicit parameters
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | A binding of an implicit parameter.
 data IPBind l = IPBind l (IPName l) (Exp l)
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | Clauses of a function binding.
@@ -448,9 +448,9 @@ data Match l
      = Match l      (Name l) [Pat l]         (Rhs l) {-where-} (Maybe (Binds l))
      | InfixMatch l (Pat l) (Name l) (Pat l) (Rhs l) {-where-} (Maybe (Binds l))
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | A single constructor declaration within a data type declaration,
@@ -460,9 +460,9 @@ data QualConDecl l
         {-forall-} (Maybe [TyVarBind l]) {- . -} (Maybe (Context l))
         {- => -} (ConDecl l)
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | Declaration of an ordinary data constructor.
@@ -474,17 +474,17 @@ data ConDecl l
      | RecDecl l (Name l) [FieldDecl l]
                 -- ^ record constructor
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | Declaration of a (list of) named field(s).
 data FieldDecl l = FieldDecl l [Name l] (BangType l)
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 
@@ -492,9 +492,9 @@ data FieldDecl l = FieldDecl l [Name l] (BangType l)
 data GadtDecl l
     = GadtDecl l (Name l) (Type l)
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | Declarations inside a class declaration.
@@ -508,9 +508,9 @@ data ClassDecl l
     | ClsTyDef   l (Type l) (Type l)
             -- ^ default choice for an associated type synonym
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | Declarations inside an instance declaration.
@@ -526,9 +526,9 @@ data InstDecl l
     | InsInline l Bool (Maybe (Activation l)) (QName l)
             -- ^ an INLINE pragma
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | The type of a constructor argument or field, optionally including
@@ -538,9 +538,9 @@ data BangType l
      | UnBangedTy l (Type l) -- ^ non-strict component
      | UnpackedTy l (Type l) -- ^ unboxed component, marked with an UNPACK pragma
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | The right hand side of a function or pattern binding.
@@ -549,9 +549,9 @@ data Rhs l
      | GuardedRhss  l [GuardedRhs l]
                 -- ^ guarded right hand side (/gdrhs/)
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | A guarded right hand side @|@ /stmts/ @=@ /exp/.
@@ -560,9 +560,9 @@ data Rhs l
 data GuardedRhs l
      = GuardedRhs l [Stmt l] (Exp l)
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | A type qualified with a context.
@@ -582,9 +582,9 @@ data Type l
      | TyInfix l (Type l) (QName l) (Type l)    -- ^ infix type constructor
      | TyKind  l (Type l) (Kind l)              -- ^ type with explicit kind signature
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | Flag denoting whether a tuple is boxed or unboxed.
@@ -600,9 +600,9 @@ data TyVarBind l
     = KindedVar   l (Name l) (Kind l)  -- ^ variable binding with kind annotation
     | UnkindedVar l (Name l)           -- ^ ordinary variable binding
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | An explicit kind annotation.
@@ -612,9 +612,9 @@ data Kind l
     | KindFn    l (Kind l) (Kind l)  -- ^ @->@, the kind of a type constructor
     | KindParen l (Kind l)           -- ^ a parenthesised kind
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 
@@ -623,9 +623,9 @@ data Kind l
 data FunDep l
     = FunDep l [Name l] [Name l]
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | A context is a set of assertions
@@ -635,9 +635,9 @@ data Context l
     | CxParen  l (Context l)
     | CxEmpty  l
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | Class assertions.
@@ -650,9 +650,9 @@ data Asst l
         | IParam l (IPName l) (Type l)          -- ^ implicit parameter assertion
         | EqualP l (Type l) (Type l)            -- ^ type equality constraint
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | /literal/
@@ -671,9 +671,9 @@ data Literal l
     | PrimChar   l Char     String     -- ^ unboxed character literal
     | PrimString l String   String     -- ^ unboxed string literal
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | Haskell expressions.
@@ -744,9 +744,9 @@ data Exp l
     | LeftArrHighApp  l (Exp l) (Exp l)  -- ^ higher-order arrow application (from left): /exp/ @-<<@ /exp/
     | RightArrHighApp l (Exp l) (Exp l)  -- ^ higher-order arrow application (from right): /exp/ @>>-@ /exp/
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | The name of an xml element or attribute,
@@ -755,17 +755,17 @@ data XName l
     = XName l String              -- <name ...
     | XDomName l String String    -- <dom:name ...
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | An xml attribute, which is a name-expression pair.
 data XAttr l = XAttr l (XName l) (Exp l)
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | A template haskell bracket expression.
@@ -775,9 +775,9 @@ data Bracket l
     | TypeBracket l (Type l)      -- ^ type bracket: @[t| ... |]@
     | DeclBracket l [Decl l]      -- ^ declaration bracket: @[d| ... |]@
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | A template haskell splice expression
@@ -785,9 +785,9 @@ data Splice l
     = IdSplice l String           -- ^ variable splice: @$var@
     | ParenSplice l (Exp l)       -- ^ parenthesised expression splice: @$(/exp/)@
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | The safety of a foreign function call.
@@ -795,9 +795,9 @@ data Safety l
     = PlayRisky l         -- ^ unsafe
     | PlaySafe l Bool     -- ^ safe ('False') or threadsafe ('True')
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | The calling convention of a foreign function call.
@@ -805,9 +805,9 @@ data CallConv l
     = StdCall l
     | CCall l
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | A top level options pragma, preceding the module header.
@@ -818,17 +818,17 @@ data OptionPragma l
     | OptionsPragma    l (Maybe Tool) String
                         -- ^ OPTIONS pragma, possibly qualified with a tool, e.g. OPTIONS_GHC
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | Recognised tools for OPTIONS pragmas.
 data Tool = GHC | HUGS | NHC98 | YHC | HADDOCK | UnknownTool String
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | Activation clause of a RULES pragma.
@@ -836,18 +836,18 @@ data Activation l
     = ActiveFrom   l Int
     | ActiveUntil  l Int
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | The body of a RULES pragma.
 data Rule l
     = Rule l String (Maybe (Activation l)) (Maybe [RuleVar l]) (Exp l) (Exp l)
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | Variables used in a RULES pragma, optionally annotated with types
@@ -855,9 +855,9 @@ data RuleVar l
     = RuleVar l (Name l)
     | TypedRuleVar l (Name l) (Type l)
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | Warning text to optionally use in the module header of e.g.
@@ -866,9 +866,9 @@ data WarningText l
     = DeprText l String
     | WarnText l String
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 
@@ -907,17 +907,17 @@ data Pat l
     | PBangPat l (Pat l)                    -- ^ strict (bang) pattern: @f !x = ...@
 
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | An XML attribute in a pattern.
 data PXAttr l = PXAttr l (XName l) (Pat l)
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | A regular pattern operator.
@@ -929,9 +929,9 @@ data RPatOp l
     | RPOpt   l  -- ^ @?@ = 0 or 1
     | RPOptG  l  -- ^ @?!@ = 0 or 1, greedy
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | An entity in a regular pattern.
@@ -945,9 +945,9 @@ data RPat l
     | RPParen l (RPat l)
     | RPPat l (Pat l)
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | An /fpat/ in a labeled record pattern.
@@ -956,9 +956,9 @@ data PatField l
     | PFieldPun l (Name l)              -- ^ record field pun
     | PFieldWildcard l                  -- ^ record field wildcard
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | A statement, representing both a /stmt/ in a @do@-expression,
@@ -974,9 +974,9 @@ data Stmt l
     | LetStmt l (Binds l)   -- ^ local bindings
     | RecStmt l [Stmt l]    -- ^ a recursive binding group for arrows
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | A general /transqual/ in a list comprehension,
@@ -990,9 +990,9 @@ data QualStmt l
     | GroupUsing   l (Exp l)          -- ^ @then@ @group@ @using@ /exp/
     | GroupByUsing l (Exp l) (Exp l)  -- ^ @then@ @group@ @by@ /exp/ @using@ /exp/
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | An /fbind/ in a labeled construction or update expression.
@@ -1001,18 +1001,18 @@ data FieldUpdate l
     | FieldPun l (Name l)                -- ^ record field pun
     | FieldWildcard l                    -- ^ record field wildcard
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | An /alt/ alternative in a @case@ expression.
 data Alt l
     = Alt l (Pat l) (GuardedAlts l) (Maybe (Binds l))
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | The right-hand sides of a @case@ alternative,
@@ -1022,18 +1022,18 @@ data GuardedAlts l
     = UnGuardedAlt l (Exp l)         -- ^ @->@ /exp/
     | GuardedAlts  l [GuardedAlt l]  -- ^ /gdpat/
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -- | A guarded case alternative @|@ /stmts/ @->@ /exp/.
 data GuardedAlt l
     = GuardedAlt l [Stmt l] (Exp l)
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data)
 #else
-  deriving (Eq,Show)
+  deriving (Eq,Ord,Show)
 #endif
 
 -----------------------------------------------------------------------------
