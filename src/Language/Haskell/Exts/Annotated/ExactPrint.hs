@@ -519,7 +519,7 @@ instance ExactP Decl where
         layoutList pts gds
         maybeEP exactPC mder
     ClassDecl    l mctxt dh fds mcds    -> do
-        let pts = srcInfoPoints l
+        let (a:pts) = srcInfoPoints l
         printString "class"
         maybeEP exactPC mctxt
         exactPC dh
