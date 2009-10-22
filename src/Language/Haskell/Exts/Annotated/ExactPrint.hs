@@ -81,9 +81,9 @@ padUntil :: Pos -> EP ()
 padUntil (l,c) = do
     (l1,c1) <- getPos
     case  {- trace (show ((l,c), (l1,c1))) -} () of
-     _ | l1 >= l && c1 <= c -> printString $ replicate (c - c1) ' '
-       | l1 < l             -> newLine >> padUntil (l,c)
-       | otherwise          -> return ()
+     _ {-()-} | l1 >= l && c1 <= c -> printString $ replicate (c - c1) ' '
+              | l1 < l             -> newLine >> padUntil (l,c)
+              | otherwise          -> return ()
 
 
 mPrintComments :: Pos -> EP ()
@@ -532,7 +532,7 @@ instance ExactP Decl where
         maybeEP (\cds -> do
             let (p:pts') = pts
             printStringAt (pos p) "where"
-            layoutList pts' cds
+            layoutList pts' $ sepClassFunBinds cds
             ) mcds
     InstDecl     l mctxt ih mids        -> do
         let (a:pts) = srcInfoPoints l
@@ -542,7 +542,7 @@ instance ExactP Decl where
         maybeEP (\ids -> do
             let (p:pts') = pts
             printStringAt (pos p) "where"
-            layoutList pts' ids
+            layoutList pts' $ sepInstFunBinds ids
             ) mids
     DerivDecl    l mctxt ih             -> do
         let [a,b] = srcInfoPoints l
@@ -663,6 +663,15 @@ sepFunBinds [] = []
 sepFunBinds (FunBind _ ms:ds) = map (\m -> FunBind (ann m) [m]) ms ++ sepFunBinds ds
 sepFunBinds (d:ds) = d : sepFunBinds ds
 
+sepClassFunBinds :: [ClassDecl SrcSpanInfo] -> [ClassDecl SrcSpanInfo]
+sepClassFunBinds [] = []
+sepClassFunBinds (ClsDecl _ (FunBind _ ms):ds) = map (\m -> ClsDecl (ann m) $ FunBind (ann m) [m]) ms ++ sepClassFunBinds ds
+sepClassFunBinds (d:ds) = d : sepClassFunBinds ds
+
+sepInstFunBinds :: [InstDecl SrcSpanInfo] -> [InstDecl SrcSpanInfo]
+sepInstFunBinds [] = []
+sepInstFunBinds (InsDecl _ (FunBind _ ms):ds) = map (\m -> InsDecl (ann m) $ FunBind (ann m) [m]) ms ++ sepInstFunBinds ds
+sepInstFunBinds (d:ds) = d : sepInstFunBinds ds
 
 instance ExactP DeclHead where
   exactP dh = case dh of
