@@ -53,19 +53,22 @@ check expected file = do
 roundTrip :: Bool -> FilePath -> IO Bool
 roundTrip expected file = do
     fc <- readFile file
-    (ast,cs) <- liftM fromParseResult $ parseFileWithComments (defaultParseMode { parseFilename = file }) file
-    let res      = exactPrint ast cs
-        xs       = dropWhile (uncurry (==))
+    pr <- parseFileWithComments (defaultParseMode { parseFilename = file }) file
+    case pr of
+     ParseOk (ast,cs) -> do
+      let res      = exactPrint ast cs
+          xs       = dropWhile (uncurry (==))
                         $ zip (map (reverse . dropWhile isSpace . reverse) $ lines fc)
                               (map (reverse . dropWhile isSpace . reverse) $ lines res)
-    case xs of
-     [] | expected  -> putStrLn ("\n<unexpected pass for " ++ file ++ ">") >> return False
-        | otherwise -> putChar '.' >> return True
-     (lfc, lres):_
-        | expected  -> putChar '!' >> return True
-        | otherwise -> do
-            putStrLn $ "Result of print does not match input when printing " ++ show file
-            putStrLn $ "First unmatching lines are (line length):"
-            putStrLn $ "  Input  (" ++ show (length lfc)  ++ "): " ++ lfc
-            putStrLn $ "  Result (" ++ show (length lres) ++ "): " ++ lres
-            return False
+      case xs of
+       [] | expected  -> putStrLn ("\n<unexpected pass for " ++ file ++ ">") >> return False
+          | otherwise -> putChar '.' >> return True
+       (lfc, lres):_
+          | expected  -> putChar '!' >> return True
+          | otherwise -> do
+              putStrLn $ "Result of print does not match input when printing " ++ show file
+              putStrLn $ "First unmatching lines are (line length):"
+              putStrLn $ "  Input  (" ++ show (length lfc)  ++ "): " ++ lfc
+              putStrLn $ "  Result (" ++ show (length lres) ++ "): " ++ lres
+              return False
+     err -> putStrLn ("\nFailure when parsing " ++ show file ++ "\n" ++ show err) >> return False
