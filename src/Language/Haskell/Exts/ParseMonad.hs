@@ -33,7 +33,7 @@ module Language.Haskell.Exts.ParseMonad(
     ) where
 
 import Language.Haskell.Exts.SrcLoc(SrcLoc(..))
-import Language.Haskell.Exts.Annotated.Fixity (Fixity, preludeFixities)
+import Language.Haskell.Exts.Fixity (Fixity, preludeFixities)
 import Language.Haskell.Exts.Comments
 import Language.Haskell.Exts.Extension (Extension)
 
