@@ -28,6 +28,8 @@
 >               parseDecl, parseDeclWithMode, parseDeclWithComments,
 >               -- ** Types
 >               parseType, parseTypeWithMode, parseTypeWithComments,
+>               -- ** Multiple modules in one file
+>               parseModules, parseModulesWithMode, parseModulesWithComments,
 >               -- ** Option pragmas
 >               getTopPragmas
 >               ) where
@@ -266,10 +268,21 @@ Pragmas
 > %name mparsePat pat
 > %name mparseDecl topdecl
 > %name mparseType truectype
+> %name mparseModules modules
 > %partial mfindOptPragmas toppragmas
 > %tokentype { Loc Token }
 > %expect 6
 > %%
+
+-----------------------------------------------------------------------------
+Testing multiple modules in one file
+
+> modules :: { [Module L] }
+>         : toppragmas modules1         { let (os,ss,l) = $1 in map (\x -> x os ss l) $2 }
+
+> modules1 :: { [[OptionPragma L] -> [S] -> L -> Module L] }
+>         : module modules1             { $1 : $2 }
+>         | module                      { [$1] }
 
 -----------------------------------------------------------------------------
 HSP Pages
@@ -1763,6 +1776,18 @@ Miscellaneous (mostly renamings)
 > getTopPragmas :: String -> ParseResult [OptionPragma L]
 > getTopPragmas = runParser (mfindOptPragmas >>= \(ps,_,_) -> return ps)
 
+> -- | Parse of a string, which should contain a complete Haskell module.
+> parseModules :: String -> ParseResult [Module L]
+> parseModules = fmap (map (applyFixities preludeFixities)) . runParser mparseModules
+
+> -- | Parse of a string containing a complete Haskell module, using an explicit mode.
+> parseModulesWithMode :: ParseMode -> String -> ParseResult [Module L]
+> parseModulesWithMode mode = fmap (map (applyFixities (fixities mode))) . runParserWithMode mode mparseModules
+
+> -- | Parse of a string containing a complete Haskell module, using an explicit mode, retaining comments.
+> parseModulesWithComments :: ParseMode -> String -> ParseResult ([Module L], [Comment])
+> parseModulesWithComments mode str = runParserWithModeComments mode mparseModules str
+>                              >>= \(ast, cs) -> return (map (applyFixities (fixities mode)) ast, cs)
 >
 
 > }
