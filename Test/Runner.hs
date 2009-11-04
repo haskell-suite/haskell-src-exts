@@ -29,7 +29,7 @@ go testsToRun = do
     putStrLn "Testing exact printer:"
     pSrc <- liftM lines . readFile $ "Test" </> "printFail.txt"
     pResults <- sequence [roundTrip (x `elem` pSrc) (examplesDir </> x)
-                            | x <- files, x `notElem` src), not $ "." `isPrefixOf` x]
+                            | x <- files, x `notElem` src, not $ "." `isPrefixOf` x]
     putStrLn "\nAll printing tests completed!\n"
     unless (all id $ results ++ pResults) exitFailure
 
