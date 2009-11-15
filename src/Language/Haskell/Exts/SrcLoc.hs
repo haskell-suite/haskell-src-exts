@@ -71,6 +71,7 @@ mergeSrcSpan :: SrcSpan -> SrcSpan -> SrcSpan
 mergeSrcSpan (SrcSpan fn sl sc _ _) (SrcSpan _ _ _ el ec) = SrcSpan fn sl sc el ec
 
 -- | Test if a given span starts and ends at the same location.
+isNullSpan :: SrcSpan -> Bool
 isNullSpan ss = srcSpanStartLine ss == srcSpanEndLine ss &&
                     srcSpanStartColumn ss >= srcSpanEndColumn ss
 
