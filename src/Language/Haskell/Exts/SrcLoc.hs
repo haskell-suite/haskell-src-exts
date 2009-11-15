@@ -50,6 +50,16 @@ data SrcSpan = SrcSpan
   deriving (Eq,Ord,Show)
 #endif
 
+
+-- | Returns 'srcSpanStartLine' and 'srcSpanStartColumn' in a pair.
+srcSpanStart :: SrcSpan -> (Int,Int)
+srcSpanStart x = (srcSpanStartLine x, srcSpanStartColumn x)
+
+-- | Returns 'srcSpanEndLine' and 'srcSpanEndColumn' in a pair.
+srcSpanEnd :: SrcSpan -> (Int,Int)
+srcSpanEnd x = (srcSpanEndLine x, srcSpanEndColumn x)
+
+
 -- | Combine two locations in the source to denote a span.
 mkSrcSpan :: SrcLoc -> SrcLoc -> SrcSpan
 mkSrcSpan (SrcLoc fn sl sc) (SrcLoc _ el ec) = SrcSpan fn sl sc el ec
