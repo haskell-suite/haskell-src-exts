@@ -803,7 +803,9 @@ instance ExactP Deriving where
   exactP (Deriving l ihs) = do
     let (x:pts) = srcInfoPoints l
     printString "deriving"
-    parenList pts ihs
+    case pts of
+     [] -> exactPC $ head ihs
+     _  -> parenList pts ihs
 
 instance ExactP ClassDecl where
   exactP cdecl = case cdecl of
