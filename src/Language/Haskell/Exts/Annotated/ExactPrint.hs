@@ -113,6 +113,7 @@ printStringAt p str = printWhitespace p >> printString str
 ------------------------------------------------------------------------------
 -- Printing of source elements
 
+-- | Print an AST exactly as specified by the annotations on the nodes in the tree.
 exactPrint :: (ExactP ast) => ast SrcSpanInfo -> [Comment] -> String
 exactPrint ast cs = runEP (exactP ast) cs
 
