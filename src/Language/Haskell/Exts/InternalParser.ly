@@ -1692,7 +1692,7 @@ Miscellaneous (mostly renamings)
 > type S = SrcSpan
 
 > parseError :: Loc Token -> P a
-> parseError t = fail $ "Parse error: " ++ show (unLoc t)
+> parseError t = fail $ "Parse error: " ++ showToken (unLoc t)
 
 > (<>) :: (Annotated a, Annotated b) => a SrcSpanInfo -> b SrcSpanInfo -> SrcSpanInfo
 > a <> b = ann a <++> ann b

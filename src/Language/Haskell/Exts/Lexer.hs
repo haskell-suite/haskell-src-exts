@@ -18,7 +18,7 @@
 -- ToDo: FloatTok should have three parts (integer part, fraction, exponent) (?)
 -- ToDo: Use a lexical analyser generator (lx?)
 
-module Language.Haskell.Exts.Lexer (Token(..), lexer) where
+module Language.Haskell.Exts.Lexer (Token(..), showToken, lexer) where
 
 import Language.Haskell.Exts.ParseMonad
 import Language.Haskell.Exts.SrcLoc
@@ -28,6 +28,7 @@ import Language.Haskell.Exts.ExtScheme
 
 import Data.Char
 import Data.Ratio
+import Data.List (intersperse)
 import Control.Monad (when)
 
 -- import Debug.Trace (trace)
@@ -1064,3 +1065,143 @@ parseInteger radix ds =
 
 flagKW :: Token -> Lex a ()
 flagKW t = when (t `elem` [KW_Do, KW_MDo]) flagDo
+
+------------------------------------------------------------------
+-- "Pretty" printing for tokens
+
+showToken :: Token -> String
+showToken t = case t of
+  VarId s           -> s
+  QVarId (q,s)      -> q ++ '.':s
+  IDupVarId s       -> '?':s
+  ILinVarId s       -> '%':s
+  ConId s           -> s
+  QConId (q,s)      -> q ++ '.':s
+  DVarId ss         -> concat $ intersperse "-" ss
+  VarSym s          -> s
+  ConSym s          -> s
+  QVarSym (q,s)     -> q ++ '.':s
+  QConSym (q,s)     -> q ++ '.':s
+  IntTok (_, s)         -> s
+  FloatTok (_, s)       -> s
+  Character (_, s)      -> '\'':s ++ "'"
+  StringTok (_, s)      -> '"':s ++ "\""
+  IntTokHash (_, s)     -> s ++ "#"
+  WordTokHash (_, s)    -> s ++ "##"
+  FloatTokHash (_, s)   -> s ++ "#"
+  DoubleTokHash (_, s)  -> s ++ "##"
+  CharacterHash (_, s)  -> '\'':s ++ "'#"
+  StringHash (_, s)     -> '"':s ++ "\"#"
+  LeftParen         -> "("
+  RightParen        -> ")"
+  LeftHashParen     -> "(#"
+  RightHashParen    -> "#)"
+  LeftCurlyBar      -> "{|"
+  RightCurlyBar     -> "|}"
+  SemiColon         -> ";"
+  LeftCurly         -> "{"
+  RightCurly        -> "}"
+  VRightCurly       -> "virtual }"
+  LeftSquare        -> "["
+  RightSquare       -> "]"
+  Comma             -> ","
+  Underscore        -> "_"
+  BackQuote         -> "`"
+  Dot               -> "."
+  DotDot            -> ".."
+  Colon             -> ":"
+  DoubleColon       -> "::"
+  Equals            -> "="
+  Backslash         -> "\\"
+  Bar               -> "|"
+  LeftArrow         -> "->"
+  RightArrow        -> "<-"
+  At                -> "@"
+  Tilde             -> "~"
+  DoubleArrow       -> "=>"
+  Minus             -> "-"
+  Exclamation       -> "!"
+  Star              -> "*"
+  LeftArrowTail     -> ">-"
+  RightArrowTail    -> "-<"
+  LeftDblArrowTail  -> ">>-"
+  RightDblArrowTail -> "-<<"
+  THExpQuote        -> "[|"
+  THPatQuote        -> "[p|"
+  THDecQuote        -> "[d|"
+  THTypQuote        -> "[t|"
+  THCloseQuote      -> "|]"
+  THIdEscape s      -> '$':s
+  THParenEscape     -> "$("
+  THVarQuote        -> "'"
+  THTyQuote         -> "''"
+  THQuasiQuote (n,q) -> "[$" ++ n ++ "|" ++ q ++ "]"
+  RPGuardOpen       -> "(|"
+  RPGuardClose      -> "|)"
+  RPCAt             -> "@:"
+  XCodeTagOpen      -> "<%"
+  XCodeTagClose     -> "%>"
+  XStdTagOpen       -> "<"
+  XStdTagClose      -> ">"
+  XCloseTagOpen     -> "</"
+  XEmptyTagClose    -> "/>"
+  XPCDATA s         -> "PCDATA " ++ s
+  XRPatOpen         -> "<["
+  XRPatClose        -> "]>"
+  PragmaEnd         -> "#-}"
+  RULES             -> "{-# RULES"
+  INLINE b          -> "{-# " ++ if b then "INLINE" else "NOINLINE"
+  SPECIALISE        -> "{-# SPECIALISE"
+  SPECIALISE_INLINE b -> "{-# SPECIALISE " ++ if b then "INLINE" else "NOINLINE"
+  SOURCE            -> "{-# SOURCE"
+  DEPRECATED        -> "{-# DEPRECATED"
+  WARNING           -> "{-# WARNING"
+  SCC               -> "{-# SCC"
+  GENERATED         -> "{-# GENERATED"
+  CORE              -> "{-# CORE"
+  UNPACK            -> "{-# UNPACK"
+  OPTIONS (mt,s)    -> "{-# OPTIONS" ++ maybe "" (':':) mt ++ " ..."
+  CFILES  s         -> "{-# CFILES ..."
+  LANGUAGE          -> "{-# LANGUAGE"
+  INCLUDE s         -> "{-# INCLUDE ..."
+  KW_As         -> "as"
+  KW_By         -> "by"
+  KW_Case       -> "case"
+  KW_Class      -> "class"
+  KW_Data       -> "data"
+  KW_Default    -> "default"
+  KW_Deriving   -> "deriving"
+  KW_Do         -> "do"
+  KW_MDo        -> "mdo"
+  KW_Else       -> "else"
+  KW_Family     -> "family"
+  KW_Forall     -> "forall"
+  KW_Group      -> "group"
+  KW_Hiding     -> "hiding"
+  KW_If         -> "if"
+  KW_Import     -> "import"
+  KW_In         -> "in"
+  KW_Infix      -> "infix"
+  KW_InfixL     -> "infixl"
+  KW_InfixR     -> "infixr"
+  KW_Instance   -> "instance"
+  KW_Let        -> "let"
+  KW_Module     -> "module"
+  KW_NewType    -> "newtype"
+  KW_Of         -> "of"
+  KW_Proc       -> "proc"
+  KW_Rec        -> "rec"
+  KW_Then       -> "then"
+  KW_Type       -> "type"
+  KW_Using      -> "using"
+  KW_Where      -> "where"
+  KW_Qualified  -> "qualified"
+  KW_Foreign    -> "foreign"
+  KW_Export     -> "export"
+  KW_Safe       -> "safe"
+  KW_Unsafe     -> "unsafe"
+  KW_Threadsafe -> "threadsafe"
+  KW_StdCall    -> "stdcall"
+  KW_CCall      -> "ccall"
+
+  EOF           -> "EOF"
