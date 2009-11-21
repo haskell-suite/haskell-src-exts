@@ -520,7 +520,9 @@ Requires the GADTs extension enabled, handled in gadtlist.
 >                        let { (gs,ss,minf) = $4;
 >                              l = ann $1 <+?> minf <+?> fmap ann $5 <** (snd $3 ++ ss)};
 >                        checkDataOrNew $1 gs;
->                        return (GDataDecl l $1 cs dh (fst $3) (reverse gs) $5) } }
+>                        case (gs, fst $3) of
+>                         ([], Nothing) -> return (DataDecl l $1 cs dh [] $5)
+>                         _ -> checkEnabled GADTs >> return (GDataDecl l $1 cs dh (fst $3) (reverse gs) $5) } }
 
 Same as above, lexer will handle it through the 'family' keyword.
 >       | 'data' 'family' ctype optkind
@@ -870,8 +872,8 @@ GADTs - require the GADTs extension enabled, but we handle that at the calling s
        : gadtlist1                 {% >> return $1 }
 
 > gadtlist :: { ([GadtDecl L],[S],Maybe L) }
->       : 'where' '{' gadtconstrs1 '}'                  {% checkEnabled GADTs >> return (fst $3, $1 : $2 : snd $3 ++ [$4], Just $ $1 <^^> $4) }
->       | 'where' open gadtconstrs1 close               {% checkEnabled GADTs >> return (fst $3, $1 : $2 : snd $3 ++ [$4], Just $ $1 <^^> $4) }
+>       : 'where' '{' gadtconstrs1 '}'                  {% return (fst $3, $1 : $2 : snd $3 ++ [$4], Just $ $1 <^^> $4) }
+>       | 'where' open gadtconstrs1 close               {% return (fst $3, $1 : $2 : snd $3 ++ [$4], Just $ $1 <^^> $4) }
 >       | {- empty -}                                   {% checkEnabled EmptyDataDecls >> return ([],[],Nothing) }
 
 > gadtconstrs1 :: { ([GadtDecl L],[S]) }
