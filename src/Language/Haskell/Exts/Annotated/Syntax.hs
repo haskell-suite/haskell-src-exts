@@ -1106,6 +1106,7 @@ tuple_tycon l b i         = TyCon l (tuple_tycon_name l b i)
 -----------------------------------------------------------------------------
 -- AST traversal, boiler-plate style
 
+-- | Test if two AST elements are equal modulo annotations.
 (=~=) :: (Functor a, Eq (a ())) => a l1 -> a l2 -> Bool
 a =~= b = fmap (const ()) a == fmap (const ()) b
 
@@ -1531,8 +1532,13 @@ instance Functor GuardedAlt where
 -----------------------------------------------------------------------------
 -- Reading annotations
 
+-- | AST nodes are annotated, and this class allows manipulation of the annotations.
 class Functor ast => Annotated ast where
+    -- | Retrieve the annotation of an AST node.
     ann :: ast l -> l
+    -- | Change the annotation of an AST node. Note that only the annotation of
+    --   the node itself is affected, and not the annotations of any child nodes.
+    --   if all nodes in the AST tree are to be affected, use 'fmap'.
     amap :: (l -> l) -> ast l -> ast l
 
 instance Annotated ModuleName where
