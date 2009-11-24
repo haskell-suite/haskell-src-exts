@@ -706,11 +706,22 @@ lexStdToken = do
             lexQQBody = do
                 s <- getInput
                 case s of
-                  '\\':']':_ -> do str <- lexQQBody
+                  '\\':']':_ -> do discard 2
+                                   str <- lexQQBody
                                    return (']':str)
-                  '\\':'|':_ -> do str <- lexQQBody
+                  '\\':'|':_ -> do discard 2
+                                   str <- lexQQBody
                                    return ('|':str)
                   '|':']':_  -> discard 2 >> return ""
+                  '|':_ -> do discard 1
+                              str <- lexQQBody
+                              return ('|':str)
+                  ']':_ -> do discard 1
+                              str <- lexQQBody
+                              return (']':str)
+                  '\\':_ -> do discard 1
+                               str <- lexQQBody
+                               return ('\\':str)
                   _ -> do str <- lexWhile (not . (`elem` "\\|"))
                           rest <- lexQQBody
                           return (str++rest)
