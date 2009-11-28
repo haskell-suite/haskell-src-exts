@@ -779,6 +779,13 @@ checkRevDecls = mergeFunBinds []
                     -- `atSrcLoc` loc
             else mergeMatches (ms++ms') ds (loc <++> l)
         mergeMatches ms' ds l = mergeFunBinds (FunBind l ms':revDs) ds
+    mergeFunBinds revDs (FunBind l ims1@(InfixMatch _ _ name _ _ _:_):ds1) =
+    	mergeInfix ims1 ds1 l
+    	where
+    	mergeInfix ims' (FunBind _ ims@(InfixMatch loc _ name' _ _ _:_):ds) l
+    		| name' =~= name =
+    		mergeInfix (ims++ims') ds (loc <++> l)
+    	mergeInfix ms' ds l = mergeFunBinds (FunBind l ms':revDs) ds
     mergeFunBinds revDs (d:ds) = mergeFunBinds (d:revDs) ds
 
 checkRevClsDecls :: [ClassDecl L] -> P [ClassDecl L]
@@ -795,6 +802,13 @@ checkRevClsDecls = mergeClsFunBinds []
             then fail ("arity mismatch for '" ++ prettyPrint name ++ "'")
                     -- `atSrcLoc` loc
             else mergeMatches (ms++ms') ds (loc <++> l)
+        mergeMatches ms' ds l = mergeClsFunBinds (ClsDecl l (FunBind l ms'):revDs) ds
+    mergeClsFunBinds revDs (ClsDecl l (FunBind _ ims1@(InfixMatch _ _ name _ _ _:_)):ds1) =
+        mergeInfix ims1 ds1 l
+        where
+        mergeInfix ims' (ClsDecl _ (FunBind _ ims@(InfixMatch loc _ name' _ _ _:_)):ds) l
+            | name' =~= name =
+            mergeInfix (ims++ims') ds (loc <++> l)
         mergeMatches ms' ds l = mergeClsFunBinds (ClsDecl l (FunBind l ms'):revDs) ds
     mergeClsFunBinds revDs (d:ds) = mergeClsFunBinds (d:revDs) ds
 
@@ -813,6 +827,13 @@ checkRevInstDecls = mergeInstFunBinds []
             then fail ("arity mismatch for '" ++ prettyPrint name ++ "'")
                     -- `atSrcLoc` loc
             else mergeMatches (ms++ms') ds (loc <++> l)
+        mergeMatches ms' ds l = mergeInstFunBinds (InsDecl l (FunBind l ms'):revDs) ds
+    mergeInstFunBinds revDs (InsDecl l (FunBind _ ims1@(InfixMatch _ _ name _ _ _:_)):ds1) =
+        mergeInfix ims1 ds1 l
+        where
+        mergeInfix ims' (InsDecl _ (FunBind _ ims@(InfixMatch loc _ name' _ _ _:_)):ds) l
+            | name' =~= name =
+            mergeMatches (ims++ims') ds (loc <++> l)
         mergeMatches ms' ds l = mergeInstFunBinds (InsDecl l (FunBind l ms'):revDs) ds
     mergeInstFunBinds revDs (d:ds) = mergeInstFunBinds (d:revDs) ds
 
