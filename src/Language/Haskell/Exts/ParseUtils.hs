@@ -809,7 +809,7 @@ checkRevClsDecls = mergeClsFunBinds []
         mergeInfix ims' (ClsDecl _ (FunBind _ ims@(InfixMatch loc _ name' _ _ _:_)):ds) l
             | name' =~= name =
             mergeInfix (ims++ims') ds (loc <++> l)
-        mergeMatches ms' ds l = mergeClsFunBinds (ClsDecl l (FunBind l ms'):revDs) ds
+        mergeInfix ms' ds l = mergeClsFunBinds (ClsDecl l (FunBind l ms'):revDs) ds
     mergeClsFunBinds revDs (d:ds) = mergeClsFunBinds (d:revDs) ds
 
 checkRevInstDecls :: [InstDecl L] -> P [InstDecl L]
@@ -833,8 +833,8 @@ checkRevInstDecls = mergeInstFunBinds []
         where
         mergeInfix ims' (InsDecl _ (FunBind _ ims@(InfixMatch loc _ name' _ _ _:_)):ds) l
             | name' =~= name =
-            mergeMatches (ims++ims') ds (loc <++> l)
-        mergeMatches ms' ds l = mergeInstFunBinds (InsDecl l (FunBind l ms'):revDs) ds
+            mergeInfix (ims++ims') ds (loc <++> l)
+        mergeInfix ms' ds l = mergeInstFunBinds (InsDecl l (FunBind l ms'):revDs) ds
     mergeInstFunBinds revDs (d:ds) = mergeInstFunBinds (d:revDs) ds
 
 ----------------------------------------------------------------
