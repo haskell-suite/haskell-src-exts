@@ -868,8 +868,8 @@ lexConIdOrQual qual = do
                                _ -> return ident
                     case lookup ident' reserved_ids of
                        -- cannot qualify a reserved word
-                       Just _  -> just_a_conid
-                       Nothing -> return (QVarId (qual', ident'))
+                       Just (_,scheme) | isEnabled scheme exts  -> just_a_conid
+                       _ -> return (QVarId (qual', ident'))
 
              | isUpper c -> do      -- qualified conid?
                     discard 1
