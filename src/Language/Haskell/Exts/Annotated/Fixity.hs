@@ -38,7 +38,7 @@ import Language.Haskell.Exts.SrcLoc
 
 import Language.Haskell.Exts.Fixity ( Fixity(..), infix_, infixl_, infixr_, preludeFixities, baseFixities )
 import qualified Language.Haskell.Exts.Syntax as S ( Assoc(..), QOp(..), Op(..), QName(..), Name(..), SpecialCon(..) )
-import Language.Haskell.Exts.Annotated.Simplify ( sQOp, sOp, sAssoc )
+import Language.Haskell.Exts.Annotated.Simplify ( sQOp, sOp, sAssoc, sQName )
 
 import Data.Char (isUpper)
 
@@ -70,8 +70,52 @@ instance AppFixity Exp where
 
           infFix _ e = e
 
+instance AppFixity Pat where
+  applyFixities fixs = infFix fixs . leafFixP fixs
+    where -- This is the real meat case. We can assume a left-associative list to begin with.
+          infFix fixs (PInfixApp l2 a op2 z) =
+              let p = infFix fixs a
+               in case p of
+                   PInfixApp l1 x op1 y ->
+                      let (a1,p1) = askFixityP fixs op1
+                          (a2,p2) = askFixityP fixs op2
+                       in if (p1 == p2 && (a1 /= a2 || a1 == S.AssocNone )) -- Ambiguous infix expression!
+                              || (p1 > p2 || p1 == p2 && (a1 == S.AssocLeft || a2 == S.AssocNone)) -- Already right order
+                           then PInfixApp l2 p op2 z
+                           else PInfixApp l2 x op1 (infFix fixs $ PInfixApp (ann y <++> ann z) y op2 z)
+                   _  -> PInfixApp l2 p op2 z
+
+          infFix _ p = p
 
 -- Internal: lookup associativity and precedence of an operator
+askFixity :: [Fixity] -> QOp l -> (S.Assoc, Int)
+askFixity xs k = askFix xs (f $ sQOp k) -- undefined -- \k -> askFixityP xs (f k) -- lookupWithDefault (AssocLeft, 9) (f k) mp
+    where
+        f (S.QVarOp x) = S.VarOp (g x)
+        f (S.QConOp x) = S.ConOp (g x)
+
+        g (S.Qual _ x) = x
+        g (S.UnQual x) = x
+        g (S.Special S.Cons) = S.Symbol ":"
+
+-- Same using patterns
+askFixityP :: [Fixity] -> QName l -> (S.Assoc, Int)
+askFixityP xs qn = askFix xs (S.ConOp $ g $ sQName qn)
+    where
+        g (S.Qual _ x) = x
+        g (S.UnQual x) = x
+        g (S.Special S.Cons) = S.Symbol ":"
+        
+askFix :: [Fixity] -> S.Op -> (S.Assoc, Int)
+askFix xs = \k -> lookupWithDefault (S.AssocLeft, 9) k mp
+    where
+        lookupWithDefault def k mp = case lookup k mp of
+            Nothing -> def
+            Just x  -> x
+
+        mp = [(x,(a,p)) | Fixity a p x <- xs]
+
+{-- Internal: lookup associativity and precedence of an operator
 askFixity :: [Fixity] -> QOp l -> (S.Assoc, Int)
 askFixity xs k = lookupWithDefault (S.AssocLeft, 9) (f $ sQOp k) mp
     where
@@ -87,7 +131,7 @@ askFixity xs k = lookupWithDefault (S.AssocLeft, 9) (f $ sQOp k) mp
         g (S.Qual _ x) = x
         g (S.UnQual x) = x
         g (S.Special S.Cons) = S.Symbol ":"
-
+-}
 
 -------------------------------------------------------------------
 -- Boilerplate - yuck!! Everything below here is internal stuff
@@ -145,28 +189,6 @@ instance AppFixity Rhs where
 
 instance AppFixity GuardedRhs where
     applyFixities fixs (GuardedRhs l stmts e) = GuardedRhs l (map fix stmts) $ fix e
-      where fix x = applyFixities fixs x
-
-instance AppFixity Pat where
-    applyFixities fixs p = case p of
-        PNeg l p                -> PNeg l $ fix p
-        PInfixApp l a op b      -> PInfixApp l (fix a) op (fix b)
-        PApp l n ps             -> PApp l n $ map fix ps
-        PTuple l ps             -> PTuple l $ map fix ps
-        PList l ps              -> PList l $ map fix ps
-        PParen l p              -> PParen l $ fix p
-        PRec l n pfs            -> PRec l n $ map fix pfs
-        PAsPat l n p            -> PAsPat l n $ fix p
-        PIrrPat l p             -> PIrrPat l $ fix p
-        PatTypeSig l p t        -> PatTypeSig l (fix p) t
-        PViewPat l e p          -> PViewPat l (fix e) (fix p)
-        PRPat l rps             -> PRPat l $ map fix rps
-        PXTag l n ats mp ps     -> PXTag l n (map fix ats) (fmap fix mp) (map fix ps)
-        PXETag l n ats mp       -> PXETag l n (map fix ats) (fmap fix mp)
-        PXPatTag l p            -> PXPatTag l $ fix p
-        PXRPats l rps           -> PXRPats l $ map fix rps
-        PBangPat l p            -> PBangPat l $ fix p
-        _                       -> p
       where fix x = applyFixities fixs x
 
 instance AppFixity PatField where
@@ -295,3 +317,23 @@ leafFix fixs e = case e of
     _                         -> e
   where
     fix x = applyFixities fixs x
+
+leafFixP fixs p = case p of
+        PNeg l p                -> PNeg l $ fix p
+        PApp l n ps             -> PApp l n $ map fix ps
+        PTuple l ps             -> PTuple l $ map fix ps
+        PList l ps              -> PList l $ map fix ps
+        PParen l p              -> PParen l $ fix p
+        PRec l n pfs            -> PRec l n $ map fix pfs
+        PAsPat l n p            -> PAsPat l n $ fix p
+        PIrrPat l p             -> PIrrPat l $ fix p
+        PatTypeSig l p t        -> PatTypeSig l (fix p) t
+        PViewPat l e p          -> PViewPat l (fix e) (fix p)
+        PRPat l rps             -> PRPat l $ map fix rps
+        PXTag l n ats mp ps     -> PXTag l n (map fix ats) (fmap fix mp) (map fix ps)
+        PXETag l n ats mp       -> PXETag l n (map fix ats) (fmap fix mp)
+        PXPatTag l p            -> PXPatTag l $ fix p
+        PXRPats l rps           -> PXRPats l $ map fix rps
+        PBangPat l p            -> PBangPat l $ fix p
+        _                       -> p
+      where fix x = applyFixities fixs x
