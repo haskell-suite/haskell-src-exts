@@ -33,6 +33,13 @@ module Language.Haskell.Exts.Annotated (
     , parseFileContentsWithMode
     , parseFileContentsWithExts
     , parseFileContentsWithComments
+    -- * Parsing of Haskell source elements,
+    , parseModule, parseModuleWithMode, parseModuleWithComments
+    , parseExp, parseExpWithMode, parseExpWithComments
+    , parseStmt, parseStmtWithMode, parseStmtWithComments
+    , parsePat, parsePatWithMode, parsePatWithComments
+    , parseDecl, parseDeclWithMode, parseDeclWithComments
+    , parseType, parseTypeWithMode, parseTypeWithComments
     -- * Read extensions declared in LANGUAGE pragmas
     , readExtensions
     ) where
