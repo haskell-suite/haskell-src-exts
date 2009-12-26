@@ -8,6 +8,8 @@ module Language.Haskell.Exts.Parser
                 parseModule, parseModuleWithMode, parseModuleWithComments,
                 -- ** Expressions
                 parseExp, parseExpWithMode, parseExpWithComments,
+                -- ** Statements
+                parseStmt, parseStmtWithMode, parseStmtWithComments,
                 -- ** Patterns
                 parsePat, parsePatWithMode, parsePatWithComments,
                 -- ** Declarations
@@ -66,6 +68,11 @@ instance SrcInfo loc => Parseable (Type loc) where
   parse = fmap (fmap fromSrcInfo) . P.parseType
   parseWithMode = (fmap (fmap fromSrcInfo) .) . P.parseTypeWithMode
   parseWithComments md s = P.parseTypeWithComments md s >>= \(r, cs) -> return (fmap fromSrcInfo r, cs)
+
+instance SrcInfo loc => Parseable (Stmt loc) where
+  parse = fmap (fmap fromSrcInfo) . P.parseStmt
+  parseWithMode = (fmap (fmap fromSrcInfo) .) . P.parseStmtWithMode
+  parseWithComments md s = P.parseStmtWithComments md s >>= \(r, cs) -> return (fmap fromSrcInfo r, cs)
 
 
 -- | Parse of a string, which should contain a complete Haskell module.
@@ -127,6 +134,19 @@ parseTypeWithMode = (fmap sType .) . P.parseTypeWithMode
 -- | Parse of a string containing a complete Haskell module, using an explicit mode, retaining comments.
 parseTypeWithComments :: ParseMode -> String -> ParseResult (S.Type, [Comment])
 parseTypeWithComments = (fmap (\(t, cs) -> (sType t, cs)) .) . P.parseTypeWithComments
+
+-- | Parse of a string containing a Haskell type.
+parseStmt :: String -> ParseResult S.Stmt
+parseStmt = fmap sStmt . P.parseStmt
+
+-- | Parse of a string containing a Haskell type, using an explicit mode.
+parseStmtWithMode :: ParseMode -> String -> ParseResult S.Stmt
+parseStmtWithMode = (fmap sStmt .) . P.parseStmtWithMode
+
+-- | Parse of a string containing a complete Haskell module, using an explicit mode, retaining comments.
+parseStmtWithComments :: ParseMode -> String -> ParseResult (S.Stmt, [Comment])
+parseStmtWithComments = (fmap (\(s, cs) -> (sStmt s, cs)) .) . P.parseStmtWithComments
+
 
 instance Parseable S.Module where
   parse = parseModule

@@ -22,6 +22,8 @@
 >               parseModule, parseModuleWithMode, parseModuleWithComments,
 >               -- ** Expressions
 >               parseExp, parseExpWithMode, parseExpWithComments,
+>               -- ** Statements
+>               parseStmt, parseStmtWithMode, parseStmtWithComments,
 >               -- ** Patterns
 >               parsePat, parsePatWithMode, parsePatWithComments,
 >               -- ** Declarations
@@ -268,6 +270,7 @@ Pragmas
 > %name mparsePat pat
 > %name mparseDecl topdecl
 > %name mparseType truectype
+> %name mparseStmt stmt
 > %name mparseModules modules
 > %partial mfindOptPragmas toppragmas
 > %tokentype { Loc Token }
