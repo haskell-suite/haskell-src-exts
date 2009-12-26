@@ -1066,7 +1066,7 @@ instance Pretty CName where
         pretty (ConName n) = pretty n
 
 instance Pretty SpecialCon where
-	pretty sc = text $ specialName sc
+        pretty sc = text $ specialName sc
 
 isSymbolName :: Name -> Bool
 isSymbolName (Symbol _) = True

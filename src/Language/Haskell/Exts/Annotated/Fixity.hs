@@ -115,23 +115,6 @@ askFix xs = \k -> lookupWithDefault (S.AssocLeft, 9) k mp
 
         mp = [(x,(a,p)) | Fixity a p x <- xs]
 
-{-- Internal: lookup associativity and precedence of an operator
-askFixity :: [Fixity] -> QOp l -> (S.Assoc, Int)
-askFixity xs k = lookupWithDefault (S.AssocLeft, 9) (f $ sQOp k) mp
-    where
-        lookupWithDefault def k mp = case lookup k mp of
-            Nothing -> def
-            Just x  -> x
-
-        mp = [(x,(a,p)) | Fixity a p x <- xs]
-
-        f (S.QVarOp x) = S.VarOp (g x)
-        f (S.QConOp x) = S.ConOp (g x)
-
-        g (S.Qual _ x) = x
-        g (S.UnQual x) = x
-        g (S.Special S.Cons) = S.Symbol ":"
--}
 
 -------------------------------------------------------------------
 -- Boilerplate - yuck!! Everything below here is internal stuff
