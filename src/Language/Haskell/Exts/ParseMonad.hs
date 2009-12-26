@@ -24,7 +24,8 @@ module Language.Haskell.Exts.ParseMonad(
         -- * Lexing
         Lex(runL), getInput, discard, lexNewline, lexTab, lexWhile,
         alternative, checkBOL, setBOL, startToken, getOffside,
-        pushContextL, popContextL, getExtensionsL, pushComment, getSrcLocL,
+        pushContextL, popContextL, getExtensionsL, pushComment, 
+        getSrcLocL, setSrcLineL, ignoreLinePragmasL,
         -- * Harp/Hsx
         ExtContext(..),
         pushExtContextL, popExtContextL, getExtContext,
@@ -114,6 +115,9 @@ data ParseMode = ParseMode {
         -- | if 'True', the parser won't care about further extensions
         --   in LANGUAGE pragmas in source files
         ignoreLanguagePragmas :: Bool,
+        -- | if 'True', the parser won't read line position information
+        --   from LINE pragmas in source files
+        ignoreLinePragmas :: Bool,
         -- | list of fixities to be aware of
         fixities :: [Fixity]
         }
@@ -121,13 +125,14 @@ data ParseMode = ParseMode {
 -- | Default parameters for a parse.
 --   The default is an unknown filename,
 --   no extensions (i.e. Haskell 98),
---   don't ignore LANGUAGE pragmas,
+--   don't ignore LANGUAGE pragmas, do ignore LINE pragmas,
 --   and be aware of fixities from the 'Prelude'.
 defaultParseMode :: ParseMode
 defaultParseMode = ParseMode {
         parseFilename = "<unknown>.hs",
         extensions = [],
         ignoreLanguagePragmas = False,
+        ignoreLinePragmas = True,
         fixities = preludeFixities
         }
 
@@ -354,6 +359,10 @@ getSrcLocL :: Lex a SrcLoc
 getSrcLocL = Lex $ \cont -> P $ \i x y l ->
         runP (cont (l { srcLine = y, srcColumn = x })) i x y l
 
+setSrcLineL :: Int -> Lex a ()
+setSrcLineL y = Lex $ \cont -> P $ \i x _ ->
+        runP (cont ()) i x y
+
 pushContextL :: LexContext -> Lex a ()
 pushContextL ctxt = Lex $ \cont -> P $ \r x y loc (stk, e, pst, cs) ->
         runP (cont ()) r x y loc (ctxt:stk, e, pst, cs)
@@ -397,6 +406,12 @@ popExtContextL fn = Lex $ \cont -> P $ \r x y loc stk@(s,e,p,c) -> case e of
 getExtensionsL :: Lex a [Extension]
 getExtensionsL = Lex $ \cont -> P $ \r x y loc s m ->
         runP (cont $ extensions m) r x y loc s m
+
+-- LINE-aware lexing
+
+ignoreLinePragmasL :: Lex a Bool
+ignoreLinePragmasL = Lex $ \cont -> P $ \r x y loc s m ->
+        runP (cont $ ignoreLinePragmas m) r x y loc s m
 
 -- Comments
 

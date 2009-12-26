@@ -67,7 +67,7 @@ parseFileContentsWithExts exts = parseFileContentsWithMode (defaultParseMode { e
 
 -- | Parse a source file from a string using a custom parse mode.
 parseFileContentsWithMode :: ParseMode -> String -> ParseResult Module
-parseFileContentsWithMode p@(ParseMode fn exts ign _) rawStr =
+parseFileContentsWithMode p@(ParseMode fn exts ign _ _) rawStr =
         let md = delit fn $ ppContents rawStr
             allExts = impliesExts $ case (ign, readExtensions md) of
                                      (False,Just es) -> exts ++ es

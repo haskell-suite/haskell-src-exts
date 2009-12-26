@@ -340,9 +340,14 @@ topLexer = do
 lexWhiteSpace :: Bool -> Lex a (Bool, Bool)
 lexWhiteSpace bol = do
     s <- getInput
+    ignL <- ignoreLinePragmasL
     case s of
         -- If we find a recognised pragma, we don't want to treat it as a comment.
         '{':'-':'#':rest | isRecognisedPragma rest -> return (bol, False)
+                         | isLinePragma rest && not ignL -> do 
+                            l <- lexLinePragma
+                            setSrcLineL l
+                            lexWhiteSpace True
         '{':'-':_ -> do
             loc <- getSrcLocL
             discard 2
@@ -380,11 +385,30 @@ lexWhiteSpace bol = do
             return (bol, True)
         _ -> return (bol, False)
 
-isRecognisedPragma :: String -> Bool
+isRecognisedPragma, isLinePragma :: String -> Bool
 isRecognisedPragma str = let pragma = map toLower . takeWhile isAlphaNum . dropWhile isSpace $ str
                           in case lookup pragma pragmas of
                               Nothing -> False
                               _       -> True
+
+isLinePragma str = let pragma = map toLower . takeWhile isAlphaNum . dropWhile isSpace $ str
+                    in case pragma of
+                        "line"  -> True
+                        _       -> False
+
+lexLinePragma :: Lex a Int
+lexLinePragma = do
+    discard 3   -- {-#
+    lexWhile isSpace
+    discard 4   -- LINE
+    lexWhile isSpace
+    i <- lexWhile isDigit
+    lexWhile isSpace
+    _ <- lexString
+    lexWhile isSpace
+    mapM (flip matchChar "Improperly formatted LINE pragma") "#-}"
+    lexNewline
+    return (read i)
 
 lexNestedComment :: Bool -> String -> Lex a (Bool, String)
 lexNestedComment bol str = do
