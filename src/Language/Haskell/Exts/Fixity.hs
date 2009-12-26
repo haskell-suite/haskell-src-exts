@@ -336,7 +336,7 @@ leafFix fixs e = case e of
     XTag loc n ats mexp cs  -> XTag loc n (map fix ats) (fmap fix mexp) (map fix cs)
     XETag loc n ats mexp    -> XETag loc n (map fix ats) (fmap fix mexp)
     XExpTag e               -> XExpTag $ fix e
-    Proc p e                -> Proc (fix p) (fix e)
+    Proc loc p e            -> Proc loc (fix p) (fix e)
     LeftArrApp e1 e2        -> LeftArrApp (fix e1) (fix e2)
     RightArrApp e1 e2       -> RightArrApp (fix e1) (fix e2)
     LeftArrHighApp e1 e2    -> LeftArrHighApp (fix e1) (fix e2)

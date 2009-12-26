@@ -840,7 +840,7 @@ instance Pretty Exp where
                             int a, char ':', int b, char '-',
                             int c, char ':', int d, text "#-}", pretty e]
         -- Arrows
-        pretty (Proc p e) = myFsep $ [text "proc", pretty p, text "->", pretty e]
+        pretty (Proc _ p e) = myFsep $ [text "proc", pretty p, text "->", pretty e]
         pretty (LeftArrApp l r)      = myFsep $ [pretty l, text "-<",  pretty r]
         pretty (RightArrApp l r)     = myFsep $ [pretty l, text ">-",  pretty r]
         pretty (LeftArrHighApp l r)  = myFsep $ [pretty l, text "-<<", pretty r]

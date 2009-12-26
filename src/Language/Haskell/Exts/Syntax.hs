@@ -653,7 +653,7 @@ data Exp
                                         -- ^ GENERATED pragma
 
 -- Arrows
-    | Proc            Pat Exp   -- ^ arrows proc: @proc@ /pat/ @->@ /exp/
+    | Proc SrcLoc     Pat Exp   -- ^ arrows proc: @proc@ /pat/ @->@ /exp/
     | LeftArrApp      Exp Exp   -- ^ arrow application (from left): /exp/ @-<@ /exp/
     | RightArrApp     Exp Exp   -- ^ arrow application (from right): /exp/ @>-@ /exp/
     | LeftArrHighApp  Exp Exp   -- ^ higher-order arrow application (from left): /exp/ @-<<@ /exp/

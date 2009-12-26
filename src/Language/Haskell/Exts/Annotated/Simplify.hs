@@ -363,7 +363,7 @@ sExp e = case e of
     CorePragma _ str e  -> S.CorePragma str (sExp e)
     SCCPragma  _ str e  -> S.SCCPragma  str (sExp e)
     GenPragma  _ str i12 i34 e  -> S.GenPragma str i12 i34 (sExp e)
-    Proc            _ p  e  -> S.Proc (sPat p) (sExp e)
+    Proc            l p  e  -> S.Proc (getPointLoc l) (sPat p) (sExp e)
     LeftArrApp      _ e1 e2 -> S.LeftArrApp (sExp e1) (sExp e2)
     RightArrApp     _ e1 e2 -> S.RightArrApp (sExp e1) (sExp e2)
     LeftArrHighApp  _ e1 e2 -> S.LeftArrHighApp (sExp e1) (sExp e2)
