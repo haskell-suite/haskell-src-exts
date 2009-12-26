@@ -1707,64 +1707,76 @@ Miscellaneous (mostly renamings)
 
 
 > -- | Parse of a string, which should contain a complete Haskell module.
-> parseModule :: String -> ParseResult (Module L)
+> parseModule :: String -> ParseResult (Module SrcSpanInfo)
 > parseModule = simpleParse mparseModule
 
 > -- | Parse of a string containing a complete Haskell module, using an explicit mode.
-> parseModuleWithMode :: ParseMode -> String -> ParseResult (Module L)
+> parseModuleWithMode :: ParseMode -> String -> ParseResult (Module SrcSpanInfo)
 > parseModuleWithMode = modeParse mparseModule
 
 > -- | Parse of a string containing a complete Haskell module, using an explicit mode, retaining comments.
-> parseModuleWithComments :: ParseMode -> String -> ParseResult (Module L, [Comment])
+> parseModuleWithComments :: ParseMode -> String -> ParseResult (Module SrcSpanInfo, [Comment])
 > parseModuleWithComments = commentParse mparseModule
 
 > -- | Parse of a string containing a Haskell expression.
-> parseExp :: String -> ParseResult (Exp L)
+> parseExp :: String -> ParseResult (Exp SrcSpanInfo)
 > parseExp = simpleParse mparseExp
 
 > -- | Parse of a string containing a Haskell expression, using an explicit mode.
-> parseExpWithMode :: ParseMode -> String -> ParseResult (Exp L)
+> parseExpWithMode :: ParseMode -> String -> ParseResult (Exp SrcSpanInfo)
 > parseExpWithMode = modeParse mparseExp
 
 > -- | Parse of a string containing a complete Haskell module, using an explicit mode, retaining comments.
-> parseExpWithComments :: ParseMode -> String -> ParseResult (Exp L, [Comment])
+> parseExpWithComments :: ParseMode -> String -> ParseResult (Exp SrcSpanInfo, [Comment])
 > parseExpWithComments = commentParse mparseExp
 
 > -- | Parse of a string containing a Haskell pattern.
-> parsePat :: String -> ParseResult (Pat L)
+> parsePat :: String -> ParseResult (Pat SrcSpanInfo)
 > parsePat = simpleParse mparsePat
 
 > -- | Parse of a string containing a Haskell pattern, using an explicit mode.
-> parsePatWithMode :: ParseMode -> String -> ParseResult (Pat L)
+> parsePatWithMode :: ParseMode -> String -> ParseResult (Pat SrcSpanInfo)
 > parsePatWithMode = modeParse mparsePat
 
 > -- | Parse of a string containing a complete Haskell module, using an explicit mode, retaining comments.
-> parsePatWithComments :: ParseMode -> String -> ParseResult (Pat L, [Comment])
+> parsePatWithComments :: ParseMode -> String -> ParseResult (Pat SrcSpanInfo, [Comment])
 > parsePatWithComments = commentParse mparsePat
 
 > -- | Parse of a string containing a Haskell top-level declaration.
-> parseDecl :: String -> ParseResult (Decl L)
+> parseDecl :: String -> ParseResult (Decl SrcSpanInfo)
 > parseDecl = simpleParse mparseDecl
 
 > -- | Parse of a string containing a Haskell top-level declaration, using an explicit mode.
-> parseDeclWithMode :: ParseMode -> String -> ParseResult (Decl L)
+> parseDeclWithMode :: ParseMode -> String -> ParseResult (Decl SrcSpanInfo)
 > parseDeclWithMode = modeParse mparseDecl
 
 > -- | Parse of a string containing a complete Haskell module, using an explicit mode, retaining comments.
-> parseDeclWithComments :: ParseMode -> String -> ParseResult (Decl L, [Comment])
+> parseDeclWithComments :: ParseMode -> String -> ParseResult (Decl SrcSpanInfo, [Comment])
 > parseDeclWithComments = commentParse mparseDecl
 
 > -- | Parse of a string containing a Haskell type.
-> parseType :: String -> ParseResult (Type L)
+> parseType :: String -> ParseResult (Type SrcSpanInfo)
 > parseType = runParser mparseType
 
 > -- | Parse of a string containing a Haskell type, using an explicit mode.
-> parseTypeWithMode :: ParseMode -> String -> ParseResult (Type L)
+> parseTypeWithMode :: ParseMode -> String -> ParseResult (Type SrcSpanInfo)
 > parseTypeWithMode mode = runParserWithMode mode mparseType
 
 > -- | Parse of a string containing a complete Haskell module, using an explicit mode, retaining comments.
-> parseTypeWithComments :: ParseMode -> String -> ParseResult (Type L, [Comment])
+> parseTypeWithComments :: ParseMode -> String -> ParseResult (Type SrcSpanInfo, [Comment])
 > parseTypeWithComments mode str = runParserWithModeComments mode mparseType str
+
+> -- | Parse of a string containing a Haskell statement.
+> parseStmt :: String -> ParseResult (Stmt SrcSpanInfo)
+> parseStmt = runParser mparseStmt
+
+> -- | Parse of a string containing a Haskell type, using an explicit mode.
+> parseStmtWithMode :: ParseMode -> String -> ParseResult (Stmt SrcSpanInfo)
+> parseStmtWithMode mode = runParserWithMode mode mparseStmt
+
+> -- | Parse of a string containing a complete Haskell module, using an explicit mode, retaining comments.
+> parseStmtWithComments :: ParseMode -> String -> ParseResult (Stmt SrcSpanInfo, [Comment])
+> parseStmtWithComments mode str = runParserWithModeComments mode mparseStmt str
 
 
 > simpleParse :: AppFixity a => P (a L) -> String -> ParseResult (a L)
@@ -1778,19 +1790,19 @@ Miscellaneous (mostly renamings)
 >                              >>= \(ast, cs) -> return (applyFixities (fixities mode) ast, cs)
 
 > -- | Partial parse of a string starting with a series of top-level option pragmas.
-> getTopPragmas :: String -> ParseResult [OptionPragma L]
+> getTopPragmas :: String -> ParseResult [OptionPragma SrcSpanInfo]
 > getTopPragmas = runParser (mfindOptPragmas >>= \(ps,_,_) -> return ps)
 
 > -- | Parse of a string, which should contain a complete Haskell module.
-> parseModules :: String -> ParseResult [Module L]
+> parseModules :: String -> ParseResult [Module SrcSpanInfo]
 > parseModules = fmap (map (applyFixities preludeFixities)) . runParser mparseModules
 
 > -- | Parse of a string containing a complete Haskell module, using an explicit mode.
-> parseModulesWithMode :: ParseMode -> String -> ParseResult [Module L]
+> parseModulesWithMode :: ParseMode -> String -> ParseResult [Module SrcSpanInfo]
 > parseModulesWithMode mode = fmap (map (applyFixities (fixities mode))) . runParserWithMode mode mparseModules
 
 > -- | Parse of a string containing a complete Haskell module, using an explicit mode, retaining comments.
-> parseModulesWithComments :: ParseMode -> String -> ParseResult ([Module L], [Comment])
+> parseModulesWithComments :: ParseMode -> String -> ParseResult ([Module SrcSpanInfo], [Comment])
 > parseModulesWithComments mode str = runParserWithModeComments mode mparseModules str
 >                              >>= \(ast, cs) -> return (map (applyFixities (fixities mode)) ast, cs)
 >
