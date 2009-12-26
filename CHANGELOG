@@ -3,8 +3,9 @@
 1.3.5 --> 1.4.0
 ===============
 
-* The AST node for Proc in the simple AST is changed to include a SrcLoc argument, 
-  which is specifically needed for transformation of patterns in HSX.
+* The AST node for Proc in the simple AST is changed to include a SrcLoc argument,
+  to make it consistent with similar nodes e.g. Lambda. This is specifically needed
+  for transformation of patterns in HSX.
 
 
 ** 1.3.x
