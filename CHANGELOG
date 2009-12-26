@@ -1,0 +1,38 @@
+** 1.4.x
+
+1.3.5 --> 1.4.0
+===============
+
+* The AST node for Proc in the simple AST is changed to include a SrcLoc argument, 
+  which is specifically needed for transformation of patterns in HSX.
+
+
+** 1.3.x
+
+1.3.4 --> 1.3.5
+===============
+
+* Added an entry point in the parser for statements, and an instance Parseable Stmt
+  to go with it.
+
+* Ensured that .Annotated exports all relevant parseXXX(WithYYY) functions.
+
+1.3.3 --> 1.3.4
+===============
+
+* Operator fixities are now resolved in patterns.
+
+1.3.2 --> 1.3.3
+===============
+
+* Fixes a bug where qualified keywords are rejected even if the extension that
+  enables the keyword in question is not turned on.
+
+
+1.3.0 --> 1.3.2
+===============
+
+(Let's forget 1.3.1 ever existed.)
+
+* Fix a bug where declarations of infix operators were not properly merged as FunBinds.
+
