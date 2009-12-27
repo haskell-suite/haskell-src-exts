@@ -903,9 +903,9 @@ instance Pretty Pat where
         prettyPrec _ (PIrrPat pat) = char '~' <> pretty pat
         prettyPrec _ (PatTypeSig _pos pat ty) =
                 myFsep [pretty pat, text "::", pretty ty]
-        prettyPrec _ (PViewPat e p) =
-                myFsep [pretty e, text "->", pretty p]
-        prettyPrec _ (PNPlusK n k) =
+        prettyPrec p (PViewPat e pat) = parensIf (p > 0) $
+                myFsep [pretty e, text "->", pretty pat]
+        prettyPrec p (PNPlusK n k) = parensIf (p > 0) $
                 myFsep [pretty n, text "+", text $ show k]
         -- HaRP
         prettyPrec _ (PRPat rs) =
