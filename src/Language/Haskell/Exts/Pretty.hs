@@ -755,96 +755,96 @@ instance Pretty Literal where
         pretty (PrimDouble r) = double (fromRational r) <> text "##"
 
 instance Pretty Exp where
-        pretty (Lit l) = pretty l
+        prettyPrec _ (Lit l) = pretty l
         -- lambda stuff
-        pretty (InfixApp a op b) = myFsep [pretty a, pretty op, pretty b]
-        pretty (NegApp e) = myFsep [char '-', pretty e]
-        pretty (App a b) = myFsep [pretty a, pretty b]
-        pretty (Lambda _loc expList ppBody) = myFsep $
+        prettyPrec p (InfixApp a op b) = parensIf (p > 0) $ myFsep [pretty a, pretty op, pretty b]
+        prettyPrec _ (NegApp e) = parens $ myFsep [char '-', pretty e]
+        prettyPrec p (App a b) = parensIf (p > 0) $ myFsep [pretty a, prettyPrec 1 b]
+        prettyPrec p (Lambda _loc expList ppBody) = parensIf (p > 0) $ myFsep $
                 char '\\' : map pretty expList ++ [text "->", pretty ppBody]
         -- keywords
         -- two cases for lets
-        pretty (Let (BDecls declList) letBody) =
-                ppLetExp declList letBody
-        pretty (Let (IPBinds bindList) letBody) =
-                ppLetExp bindList letBody
+        prettyPrec p (Let (BDecls declList) letBody) =
+                parensIf (p > 0) $ ppLetExp declList letBody
+        prettyPrec p (Let (IPBinds bindList) letBody) =
+                parensIf (p > 0) $ ppLetExp bindList letBody
 
-        pretty (If cond thenexp elsexp) =
+        prettyPrec p (If cond thenexp elsexp) = parensIf (p > 0) $
                 myFsep [text "if", pretty cond,
                         text "then", pretty thenexp,
                         text "else", pretty elsexp]
-        pretty (Case cond altList) =
+        prettyPrec p (Case cond altList) = parensIf (p > 0) $
                 myFsep [text "case", pretty cond, text "of"]
                 $$$ ppBody caseIndent (map pretty altList)
-        pretty (Do stmtList) =
+        prettyPrec p (Do stmtList) = parensIf (p > 0) $ 
                 text "do" $$$ ppBody doIndent (map pretty stmtList)
-        pretty (MDo stmtList) =
+        prettyPrec p (MDo stmtList) = parensIf (p > 0) $ 
                 text "mdo" $$$ ppBody doIndent (map pretty stmtList)
         -- Constructors & Vars
-        pretty (Var name) = pretty name
-        pretty (IPVar ipname) = pretty ipname
-        pretty (Con name) = pretty name
-        pretty (Tuple expList) = parenList . map pretty $ expList
-        pretty (TupleSection mExpList) = parenList . map (maybePP pretty) $ mExpList
+        prettyPrec _ (Var name) = pretty name
+        prettyPrec _ (IPVar ipname) = pretty ipname
+        prettyPrec _ (Con name) = pretty name
+        prettyPrec _ (Tuple expList) = parenList . map pretty $ expList
+        prettyPrec _ (TupleSection mExpList) = parenList . map (maybePP pretty) $ mExpList
         -- weird stuff
-        pretty (Paren e) = parens . pretty $ e
-        pretty (LeftSection e op) = parens (pretty e <+> pretty op)
-        pretty (RightSection op e) = parens (pretty op <+> pretty e)
-        pretty (RecConstr c fieldList) =
+        prettyPrec _ (Paren e) = parens . pretty $ e
+        prettyPrec _ (LeftSection e op) = parens (pretty e <+> pretty op)
+        prettyPrec _ (RightSection op e) = parens (pretty op <+> pretty e)
+        prettyPrec p (RecConstr c fieldList) = parensIf (p > 0) $ 
                 pretty c <> (braceList . map pretty $ fieldList)
-        pretty (RecUpdate e fieldList) =
+        prettyPrec p (RecUpdate e fieldList) = parensIf (p > 0) $ 
                 pretty e <> (braceList . map pretty $ fieldList)
         -- Lists
-        pretty (List list) =
+        prettyPrec _ (List list) =
                 bracketList . punctuate comma . map pretty $ list
-        pretty (EnumFrom e) =
+        prettyPrec _ (EnumFrom e) =
                 bracketList [pretty e, text ".."]
-        pretty (EnumFromTo from to) =
+        prettyPrec _ (EnumFromTo from to) =
                 bracketList [pretty from, text "..", pretty to]
-        pretty (EnumFromThen from thenE) =
+        prettyPrec _ (EnumFromThen from thenE) =
                 bracketList [pretty from <> comma, pretty thenE, text ".."]
-        pretty (EnumFromThenTo from thenE to) =
+        prettyPrec _ (EnumFromThenTo from thenE to) =
                 bracketList [pretty from <> comma, pretty thenE,
                              text "..", pretty to]
-        pretty (ListComp e qualList) =
+        prettyPrec _ (ListComp e qualList) =
                 bracketList ([pretty e, char '|']
                              ++ (punctuate comma . map pretty $ qualList))
-        pretty (ParComp e qualLists) =
+        prettyPrec _ (ParComp e qualLists) =
                 bracketList (intersperse (char '|') $
                                 pretty e : (punctuate comma . concatMap (map pretty) $ qualLists))
-        pretty (ExpTypeSig _pos e ty) =
+        prettyPrec p (ExpTypeSig _pos e ty) = parensIf (p > 0) $ 
                 myFsep [pretty e, text "::", pretty ty]
         -- Template Haskell
-        pretty (BracketExp b) = pretty b
-        pretty (SpliceExp s) = pretty s
-        pretty (TypQuote t)  = text "\'\'" <> pretty t
-        pretty (VarQuote x)  = text "\'" <> pretty x
-        pretty (QuasiQuote n qt) = text ("[$" ++ n ++ "|" ++ qt ++ "|]")
+        prettyPrec _ (BracketExp b) = pretty b
+        prettyPrec _ (SpliceExp s) = pretty s
+        prettyPrec _ (TypQuote t)  = text "\'\'" <> pretty t
+        prettyPrec _ (VarQuote x)  = text "\'" <> pretty x
+        prettyPrec _ (QuasiQuote n qt) = text ("[$" ++ n ++ "|" ++ qt ++ "|]")
         -- Hsx
-        pretty (XTag _ n attrs mattr cs) =
+        prettyPrec _ (XTag _ n attrs mattr cs) =
                 let ax = maybe [] (return . pretty) mattr
                  in hcat $
                      (myFsep $ (char '<' <> pretty n): map pretty attrs ++ ax ++ [char '>']):
                         map pretty cs ++ [myFsep $ [text "</" <> pretty n, char '>']]
-        pretty (XETag _ n attrs mattr) =
+        prettyPrec _ (XETag _ n attrs mattr) =
                 let ax = maybe [] (return . pretty) mattr
                  in myFsep $ (char '<' <> pretty n): map pretty attrs ++ ax ++ [text "/>"]
-        pretty (XPcdata s) = text s
-        pretty (XExpTag e) =
+        prettyPrec _ (XPcdata s) = text s
+        prettyPrec _ (XExpTag e) =
                 myFsep $ [text "<%", pretty e, text "%>"]
         -- Pragmas
-        pretty (CorePragma s e) = myFsep $ map text ["{-# CORE", show s, "#-}"] ++ [pretty e]
-        pretty (SCCPragma  s e) = myFsep $ map text ["{-# SCC",  show s, "#-}"] ++ [pretty e]
-        pretty (GenPragma  s (a,b) (c,d) e) =
+        prettyPrec p (CorePragma s e) = myFsep $ map text ["{-# CORE", show s, "#-}"] ++ [pretty e]
+        prettyPrec _ (SCCPragma  s e) = myFsep $ map text ["{-# SCC",  show s, "#-}"] ++ [pretty e]
+        prettyPrec _ (GenPragma  s (a,b) (c,d) e) =
                 myFsep $ [text "{-# GENERATED", text $ show s,
                             int a, char ':', int b, char '-',
                             int c, char ':', int d, text "#-}", pretty e]
         -- Arrows
-        pretty (Proc _ p e) = myFsep $ [text "proc", pretty p, text "->", pretty e]
-        pretty (LeftArrApp l r)      = myFsep $ [pretty l, text "-<",  pretty r]
-        pretty (RightArrApp l r)     = myFsep $ [pretty l, text ">-",  pretty r]
-        pretty (LeftArrHighApp l r)  = myFsep $ [pretty l, text "-<<", pretty r]
-        pretty (RightArrHighApp l r) = myFsep $ [pretty l, text ">>-", pretty r]
+        prettyPrec p (Proc _ pat e) = parensIf (p > 0) $ myFsep $ [text "proc", pretty pat, text "->", pretty e]
+        prettyPrec p (LeftArrApp l r)      = parensIf (p > 0) $ myFsep $ [pretty l, text "-<",  pretty r]
+        prettyPrec p (RightArrApp l r)     = parensIf (p > 0) $ myFsep $ [pretty l, text ">-",  pretty r]
+        prettyPrec p (LeftArrHighApp l r)  = parensIf (p > 0) $ myFsep $ [pretty l, text "-<<", pretty r]
+        prettyPrec p (RightArrHighApp l r) = parensIf (p > 0) $ myFsep $ [pretty l, text ">>-", pretty r]
 
 
 instance Pretty XAttr where
