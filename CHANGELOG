@@ -1,5 +1,16 @@
 ** 1.5.x
 
+1.5.0 --> 1.5.1
+===============
+
+* The pretty printer now introduces parentheses for non-atomic arguments to
+  function application. Note that infix applications are left untouched, no
+  parentheses will be inserted there, as it is assumed that fixities are
+  already properly resolved.
+
+* Fix a bug in the pretty printer where view patterns and n+k patterns were
+  not properly parenthesised.
+
 1.4.0 --> 1.5.0
 ===============
 
