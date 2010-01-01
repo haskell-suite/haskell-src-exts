@@ -1,5 +1,15 @@
 ** 1.5.x
 
+1.5.1 --> 1.5.2
+===============
+
+* Fix a bug in the exact printer that made it always print the first token
+  at position (0,0).
+
+* In fixing the above, Annotated is now a superclass of ExactP. It was already
+  a superclass in spirit, and nothing can break from this since ExactP is only
+  exported abstractly.
+
 1.5.0 --> 1.5.1
 ===============
 

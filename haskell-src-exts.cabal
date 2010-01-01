@@ -1,5 +1,5 @@
 Name:                   haskell-src-exts
-Version:                1.5.1
+Version:                1.5.2
 License:                BSD3
 License-File:           LICENSE
 Author:                 Niklas Broberg
@@ -26,11 +26,9 @@ Description:            Haskell-Source with Extensions (HSE, haskell-src-exts)
                         Apart from these standard extensions,
                         it also handles regular patterns as per the HaRP extension
                         as well as HSX-style embedded XML syntax.
-                        .
-                        For details on usage, please see the website.
-Homepage:               http://www.cs.chalmers.se/~d00nibro/haskell-src-exts/
+Homepage:               http://code.haskell.org/haskell-src-exts
 Stability:              Stable
-Tested-with:            GHC==6.10.2
+Tested-with:            GHC==6.10.2, GHC==6.10.4
 Build-Type:             Custom
 Cabal-Version:          >= 1.2
 
