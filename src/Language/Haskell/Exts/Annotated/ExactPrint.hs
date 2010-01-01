@@ -115,9 +115,9 @@ printStringAt p str = printWhitespace p >> printString str
 
 -- | Print an AST exactly as specified by the annotations on the nodes in the tree.
 exactPrint :: (ExactP ast) => ast SrcSpanInfo -> [Comment] -> String
-exactPrint ast cs = runEP (exactP ast) cs
+exactPrint ast cs = runEP (exactPC ast) cs
 
-exactPC :: (Annotated ast, ExactP ast) => ast SrcSpanInfo -> EP ()
+exactPC :: (ExactP ast) => ast SrcSpanInfo -> EP ()
 exactPC ast = let p = pos (ann ast) in mPrintComments p >> padUntil p >> exactP ast
 
 printSeq :: [(Pos, EP ())] -> EP ()
@@ -178,7 +178,7 @@ lList' (p:ps) = (if isNullSpan p then (p,"") else (p,";")) : lList' ps
 --------------------------------------------------
 -- Exact printing
 
-class ExactP ast where
+class Annotated ast => ExactP ast where
   exactP :: ast SrcSpanInfo -> EP ()
 
 instance ExactP Literal where
