@@ -1,5 +1,11 @@
 ** 1.5.x
 
+1.5.2 --> 1.5.3
+===============
+
+* Several small bug fixes in the exact printer, and fail more gracefully
+  if the number of srcInfoPoints doesn't match the needs of the node.
+
 1.5.1 --> 1.5.2
 ===============
 
