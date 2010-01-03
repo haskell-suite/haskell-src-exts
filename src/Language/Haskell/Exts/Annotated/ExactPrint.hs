@@ -204,8 +204,8 @@ instance ExactP SpecialCon where
     FunCon  l   -> printPoints l ["(","->",")"]
     TupleCon l b n -> printPoints l $
         case b of
-         Unboxed -> "(#": replicate n "," ++ ["#)"]
-         _       -> "(" : replicate n "," ++ [")"]
+         Unboxed -> "(#": replicate (n-1) "," ++ ["#)"]
+         _       -> "(" : replicate (n-1) "," ++ [")"]
     Cons l      -> printString ":"
     UnboxedSingleCon l -> printPoints l ["(#","#)"]
 
