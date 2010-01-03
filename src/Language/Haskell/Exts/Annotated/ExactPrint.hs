@@ -23,6 +23,7 @@ import Language.Haskell.Exts.SrcLoc
 import Language.Haskell.Exts.Comments
 
 import Control.Monad (when)
+import Control.Arrow ((***), (&&&))
 
 -- import Debug.Trace (trace)
 
@@ -125,15 +126,15 @@ printSeq [] = return ()
 printSeq ((p,pr):xs) = printWhitespace p >> pr >> printSeq xs
 
 printStrs :: SrcInfo loc => [(loc, String)] -> EP ()
-printStrs = printSeq . map (\(loc, str) -> (pos loc, printString str))
+printStrs = printSeq . map (pos *** printString)
 
 printPoints :: SrcSpanInfo -> [String] -> EP ()
 printPoints l = printStrs . zip (srcInfoPoints l)
 
 printInterleaved, printInterleaved' :: (Annotated ast, ExactP ast, SrcInfo loc) => [(loc, String)] -> [ast SrcSpanInfo] -> EP ()
 printInterleaved sistrs asts = printSeq $
-    interleave (map (\(loc, str) -> (pos loc, printString str)) sistrs)
-               (map (\a -> (pos $ ann a, exactP a)) asts)
+    interleave (map (pos *** printString ) sistrs)
+               (map (pos . ann &&& exactP) asts)
 
 printInterleaved' sistrs (a:asts) = exactPC a >> printInterleaved sistrs asts
 
