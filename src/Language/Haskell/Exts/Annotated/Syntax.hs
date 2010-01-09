@@ -1107,7 +1107,7 @@ tuple_tycon l b i         = TyCon l (tuple_tycon_name l b i)
 -- AST traversal, boiler-plate style
 
 -- | Test if two AST elements are equal modulo annotations.
-(=~=) :: (Functor a, Eq (a ())) => a l1 -> a l2 -> Bool
+(=~=) :: (Annotated a, Eq (a ())) => a l1 -> a l2 -> Bool
 a =~= b = fmap (const ()) a == fmap (const ()) b
 
 instance Functor ModuleName where

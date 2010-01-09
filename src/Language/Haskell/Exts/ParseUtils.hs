@@ -321,7 +321,7 @@ checkPat e [] = case e of
                         _ -> patFail ""
             _ -> patFail ""
     TupleSection l mes    ->
-            if not (any ((=~=) Nothing) mes)
+            if not (any ((==) Nothing) mes)
              then do ps <- mapM (\e -> checkPat e []) (map fromJust mes)
                      return (PTuple l ps)
              else fail "Illegal tuple section in pattern"
@@ -528,7 +528,7 @@ checkExpr e = case e of
                      return (S.Case l e alts)
     Do l stmts            -> checkDo stmts >> return (S.Do l stmts)
     MDo l stmts           -> checkDo stmts >> return (S.MDo l stmts)
-    TupleSection l mes -> if not (any ((=~=) Nothing) mes)
+    TupleSection l mes -> if not (any ((==) Nothing) mes)
                            then checkManyExprs (map fromJust mes) (S.Tuple l)
                            else do checkEnabled TupleSections
                                    mes' <- mapM mCheckExpr mes
