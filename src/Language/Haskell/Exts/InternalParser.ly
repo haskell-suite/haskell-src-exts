@@ -46,7 +46,7 @@
 > import Language.Haskell.Exts.Comments ( Comment )
 > import Language.Haskell.Exts.Extension
 
-> import Control.Monad ( liftM )
+> import Control.Monad ( liftM, (<=<) )
 import Debug.Trace (trace)
 
 > }
@@ -1780,14 +1780,15 @@ Miscellaneous (mostly renamings)
 
 
 > simpleParse :: AppFixity a => P (a L) -> String -> ParseResult (a L)
-> simpleParse p = fmap (applyFixities preludeFixities) . runParser p
+> simpleParse p = applyFixities preludeFixities <=< runParser p
 
 > modeParse :: AppFixity a => P (a L) -> ParseMode -> String -> ParseResult (a L)
-> modeParse p mode = fmap (applyFixities (fixities mode)) . runParserWithMode mode p
+> modeParse p mode = applyFixities (fixities mode) <=< runParserWithMode mode p
 
 > commentParse :: AppFixity a => P (a L) -> ParseMode -> String -> ParseResult (a L, [Comment])
-> commentParse p mode str = runParserWithModeComments mode p str
->                              >>= \(ast, cs) -> return (applyFixities (fixities mode) ast, cs)
+> commentParse p mode str = do (ast, cs) <- runParserWithModeComments mode p str
+>                              ast' <- applyFixities (fixities mode) ast
+>                              return (ast', cs)
 
 > -- | Partial parse of a string starting with a series of top-level option pragmas.
 > getTopPragmas :: String -> ParseResult [OptionPragma SrcSpanInfo]
@@ -1795,16 +1796,17 @@ Miscellaneous (mostly renamings)
 
 > -- | Parse of a string, which should contain a complete Haskell module.
 > parseModules :: String -> ParseResult [Module SrcSpanInfo]
-> parseModules = fmap (map (applyFixities preludeFixities)) . runParser mparseModules
+> parseModules = mapM (applyFixities preludeFixities) <=< runParser mparseModules
 
 > -- | Parse of a string containing a complete Haskell module, using an explicit mode.
 > parseModulesWithMode :: ParseMode -> String -> ParseResult [Module SrcSpanInfo]
-> parseModulesWithMode mode = fmap (map (applyFixities (fixities mode))) . runParserWithMode mode mparseModules
+> parseModulesWithMode mode = mapM (applyFixities (fixities mode)) <=< runParserWithMode mode mparseModules
 
 > -- | Parse of a string containing a complete Haskell module, using an explicit mode, retaining comments.
 > parseModulesWithComments :: ParseMode -> String -> ParseResult ([Module SrcSpanInfo], [Comment])
-> parseModulesWithComments mode str = runParserWithModeComments mode mparseModules str
->                              >>= \(ast, cs) -> return (map (applyFixities (fixities mode)) ast, cs)
+> parseModulesWithComments mode str = do (ast,cs) <- runParserWithModeComments mode mparseModules str
+>                                        ast' <- mapM (applyFixities (fixities mode)) ast
+>                                        return (ast', cs)
 >
 
 > }

@@ -41,6 +41,9 @@ import qualified Language.Haskell.Exts.Syntax as S ( Assoc(..), QOp(..), Op(..),
 import Language.Haskell.Exts.Annotated.Simplify ( sQOp, sOp, sAssoc, sQName )
 
 import Data.Char (isUpper)
+import Control.Monad (when, (<=<), liftM, liftM2, liftM3, liftM4)
+import Data.Traversable (mapM)
+import Prelude hiding (mapM)
 
 -- | All AST elements that may include expressions which in turn may
 --   need fixity tweaking will be instances of this class.
@@ -48,44 +51,46 @@ class AppFixity ast where
   -- | Tweak any expressions in the element to account for the
   --   fixities given. Assumes that all operator expressions are
   --   fully left associative chains to begin with.
-  applyFixities :: [Fixity]   -- ^ The fixities to account for.
-                    -> ast SrcSpanInfo  -- ^ The element to tweak.
-                    -> ast SrcSpanInfo  -- ^ The same element, but with operator expressions updated.
+  applyFixities :: Monad m => [Fixity]      -- ^ The fixities to account for.
+                    -> ast SrcSpanInfo      -- ^ The element to tweak.
+                    -> m (ast SrcSpanInfo)  -- ^ The same element, but with operator expressions updated, or a failure.
 
 
 instance AppFixity Exp where
-  applyFixities fixs = infFix fixs . leafFix fixs
+  applyFixities fixs = infFix fixs <=< leafFix fixs
     where -- This is the real meat case. We can assume a left-associative list to begin with.
-          infFix fixs (InfixApp l2 a op2 z) =
-              let e = infFix fixs a
-               in case e of
-                   InfixApp l1 x op1 y ->
-                      let (a1,p1) = askFixity fixs op1
-                          (a2,p2) = askFixity fixs op2
-                       in if (p1 == p2 && (a1 /= a2 || a1 == S.AssocNone )) -- Ambiguous infix expression!
-                              || (p1 > p2 || p1 == p2 && (a1 == S.AssocLeft || a2 == S.AssocNone)) -- Already right order
-                           then InfixApp l2 e op2 z
-                           else InfixApp l2 x op1 (infFix fixs $ InfixApp (ann y <++> ann z) y op2 z)
-                   _  -> InfixApp l2 e op2 z
+          infFix fixs (InfixApp l2 a op2 z) = do
+              e <- infFix fixs a
+              case e of
+               InfixApp l1 x op1 y -> do
+                  let (a1,p1) = askFixity fixs op1
+                      (a2,p2) = askFixity fixs op2
+                  when (p1 == p2 && (a1 /= a2 || a1 == S.AssocNone )) -- Ambiguous infix expression!
+                       $ fail "Ambiguous infix expression"
+                  if (p1 > p2 || p1 == p2 && (a1 == S.AssocLeft || a2 == S.AssocNone)) -- Already right order
+                   then return $ InfixApp l2 e op2 z
+                   else liftM (InfixApp l2 x op1) (infFix fixs $ InfixApp (ann y <++> ann z) y op2 z)
+               _  -> return $ InfixApp l2 e op2 z
 
-          infFix _ e = e
+          infFix _ e = return e
 
 instance AppFixity Pat where
-  applyFixities fixs = infFix fixs . leafFixP fixs
+  applyFixities fixs = infFix fixs <=< leafFixP fixs
     where -- This is the real meat case. We can assume a left-associative list to begin with.
-          infFix fixs (PInfixApp l2 a op2 z) =
-              let p = infFix fixs a
-               in case p of
-                   PInfixApp l1 x op1 y ->
-                      let (a1,p1) = askFixityP fixs op1
-                          (a2,p2) = askFixityP fixs op2
-                       in if (p1 == p2 && (a1 /= a2 || a1 == S.AssocNone )) -- Ambiguous infix expression!
-                              || (p1 > p2 || p1 == p2 && (a1 == S.AssocLeft || a2 == S.AssocNone)) -- Already right order
-                           then PInfixApp l2 p op2 z
-                           else PInfixApp l2 x op1 (infFix fixs $ PInfixApp (ann y <++> ann z) y op2 z)
-                   _  -> PInfixApp l2 p op2 z
+          infFix fixs (PInfixApp l2 a op2 z) = do
+              p <- infFix fixs a
+              case p of
+               PInfixApp l1 x op1 y -> do
+                  let (a1,p1) = askFixityP fixs op1
+                      (a2,p2) = askFixityP fixs op2
+                  when (p1 == p2 && (a1 /= a2 || a1 == S.AssocNone )) -- Ambiguous infix expression!
+                       $ fail "Ambiguous infix expression"
+                  if (p1 > p2 || p1 == p2 && (a1 == S.AssocLeft || a2 == S.AssocNone)) -- Already right order
+                   then return $ PInfixApp l2 p op2 z
+                   else liftM (PInfixApp l2 x op1) (infFix fixs $ PInfixApp (ann y <++> ann z) y op2 z)
+               _  -> return $ PInfixApp l2 p op2 z
 
-          infFix _ p = p
+          infFix _ p = return p
 
 -- Internal: lookup associativity and precedence of an operator
 askFixity :: [Fixity] -> QOp l -> (S.Assoc, Int)
@@ -121,138 +126,138 @@ askFix xs = \k -> lookupWithDefault (S.AssocLeft, 9) k mp
 
 instance AppFixity Module where
     applyFixities fixs (Module l mmh prs imp decls) =
-        Module l mmh prs imp $ appFixDecls fixs decls
+        liftM (Module l mmh prs imp) $ appFixDecls fixs decls
     applyFixities fixs (XmlPage l mn os xn xas mexp cs) =
-        XmlPage l mn os xn (map fix xas) (fmap fix mexp) (map fix cs)
-      where fix x = applyFixities fixs x
+        liftM3 (XmlPage l mn os xn) (fix xas) (fix mexp) (fix cs)
+      where fix xs = mapM (applyFixities fixs) xs
     applyFixities fixs (XmlHybrid l mmh prs imp decls xn xas mexp cs) =
-        XmlHybrid l mmh prs imp (appFixDecls fixs decls)
-                xn (map fixe xas) (fmap fixe mexp) (map fixe cs)
-      where fixe x = let extraFixs = getFixities decls
-                      in applyFixities (fixs++extraFixs) x
+        liftM4 (flip (XmlHybrid l mmh prs imp) xn) (appFixDecls fixs decls)
+                (fixe xas) (fixe mexp) (fixe cs)
+      where fixe xs = let extraFixs = getFixities decls
+                       in mapM (applyFixities (fixs++extraFixs)) xs
 
 instance AppFixity Decl where
     applyFixities fixs decl = case decl of
-        ClassDecl l ctxt dh deps cdecls   -> ClassDecl l ctxt dh deps $ fmap (map fix) cdecls
-        InstDecl  l ctxt ih idecls        -> InstDecl  l ctxt ih      $ fmap (map fix) idecls
-        SpliceDecl l spl        -> SpliceDecl l $ fix spl
-        FunBind l matches       -> FunBind l $ map fix matches
-        PatBind l p mt rhs bs -> PatBind l (fix p) mt (fix rhs) (fmap fix bs)
-        _                       -> decl
+        ClassDecl l ctxt dh deps cdecls   -> liftM (ClassDecl l ctxt dh deps) $ mapM (mapM fix) cdecls
+        InstDecl  l ctxt ih idecls        -> liftM (InstDecl  l ctxt ih)      $ mapM (mapM fix) idecls
+        SpliceDecl l spl        -> liftM (SpliceDecl l) $ fix spl
+        FunBind l matches       -> liftM (FunBind l) $ mapM fix matches
+        PatBind l p mt rhs bs -> liftM3 (flip (PatBind l) mt) (fix p) (fix rhs) (mapM fix bs)
+        _                       -> return decl
       where fix x = applyFixities fixs x
 
-appFixDecls :: [Fixity] -> [Decl SrcSpanInfo] -> [Decl SrcSpanInfo]
+appFixDecls :: Monad m => [Fixity] -> [Decl SrcSpanInfo] -> m [Decl SrcSpanInfo]
 appFixDecls fixs decls =
     let extraFixs = getFixities decls
-     in map (applyFixities (fixs++extraFixs)) decls
+     in mapM (applyFixities (fixs++extraFixs)) decls
 
 getFixities = concatMap getFixity
 getFixity (InfixDecl _ a mp ops) = let p = maybe 9 id mp in map (Fixity (sAssoc a) p) (map sOp ops)
 getFixity _ = []
 
 instance AppFixity ClassDecl where
-    applyFixities fixs (ClsDecl l decl) = ClsDecl l $ applyFixities fixs decl
-    applyFixities _ cdecl = cdecl
+    applyFixities fixs (ClsDecl l decl) = liftM (ClsDecl l) $ applyFixities fixs decl
+    applyFixities _ cdecl = return cdecl
 
 instance AppFixity InstDecl where
-    applyFixities fixs (InsDecl l decl) = InsDecl l $ applyFixities fixs decl
-    applyFixities _ idecl = idecl
+    applyFixities fixs (InsDecl l decl) = liftM (InsDecl l) $ applyFixities fixs decl
+    applyFixities _ idecl = return idecl
 
 instance AppFixity Match where
     applyFixities fixs match = case match of
-        Match l n ps rhs bs -> Match l n (map fix ps) (fix rhs) (fmap fix bs)
-        InfixMatch l a n b rhs bs -> InfixMatch l (fix a) n (fix b) (fix rhs) (fmap fix bs)
+        Match l n ps rhs bs -> liftM3 (Match l n) (mapM fix ps) (fix rhs) (mapM fix bs)
+        InfixMatch l a n b rhs bs -> liftM4 (flip (InfixMatch l) n) (fix a) (fix b) (fix rhs) (mapM fix bs)
       where fix x = applyFixities fixs x
 
 instance AppFixity Rhs where
     applyFixities fixs rhs = case rhs of
-        UnGuardedRhs l e      -> UnGuardedRhs l $ fix e
-        GuardedRhss l grhss   -> GuardedRhss l $ map fix grhss
+        UnGuardedRhs l e      -> liftM (UnGuardedRhs l) $ fix e
+        GuardedRhss l grhss   -> liftM (GuardedRhss l) $ mapM fix grhss
       where fix x = applyFixities fixs x
 
 instance AppFixity GuardedRhs where
-    applyFixities fixs (GuardedRhs l stmts e) = GuardedRhs l (map fix stmts) $ fix e
+    applyFixities fixs (GuardedRhs l stmts e) = liftM2 (GuardedRhs l) (mapM fix stmts) $ fix e
       where fix x = applyFixities fixs x
 
 instance AppFixity PatField where
-    applyFixities fixs (PFieldPat l n p) = PFieldPat l n $ applyFixities fixs p
-    applyFixities _ pf = pf
+    applyFixities fixs (PFieldPat l n p) = liftM (PFieldPat l n) $ applyFixities fixs p
+    applyFixities _ pf = return pf
 
 instance AppFixity RPat where
     applyFixities fixs rp = case rp of
-        RPOp l rp op          -> RPOp l (fix rp) op
-        RPEither l a b        -> RPEither l (fix a) (fix b)
-        RPSeq l rps           -> RPSeq l $ map fix rps
-        RPGuard l p stmts     -> RPGuard l (fix p) $ map fix stmts
-        RPCAs l n rp          -> RPCAs l n $ fix rp
-        RPAs l n rp           -> RPAs l n $ fix rp
-        RPParen l rp          -> RPParen l $ fix rp
-        RPPat l p             -> RPPat l $ fix p
+        RPOp l rp op          -> liftM (flip (RPOp l) op) $ fix rp
+        RPEither l a b        -> liftM2 (RPEither l) (fix a) (fix b)
+        RPSeq l rps           -> liftM (RPSeq l) $ mapM fix rps
+        RPGuard l p stmts     -> liftM2 (RPGuard l) (fix p) $ mapM fix stmts
+        RPCAs l n rp          -> liftM (RPCAs l n) $ fix rp
+        RPAs l n rp           -> liftM (RPAs l n) $ fix rp
+        RPParen l rp          -> liftM (RPParen l) $ fix rp
+        RPPat l p             -> liftM (RPPat l) $ fix p
       where fix x = applyFixities fixs x
 
 instance AppFixity PXAttr where
-    applyFixities fixs (PXAttr l n p) = PXAttr l n $ applyFixities fixs p
+    applyFixities fixs (PXAttr l n p) = liftM (PXAttr l n) $ applyFixities fixs p
 
 instance AppFixity Stmt where
     applyFixities fixs stmt = case stmt of
-        Generator l p e       -> Generator l (fix p) (fix e)
-        Qualifier l e         -> Qualifier l $ fix e
-        LetStmt l bs          -> LetStmt l $ fix bs    -- special behavior
-        RecStmt l stmts       -> RecStmt l $ map fix stmts
+        Generator l p e       -> liftM2 (Generator l) (fix p) (fix e)
+        Qualifier l e         -> liftM (Qualifier l) $ fix e
+        LetStmt l bs          -> liftM (LetStmt l) $ fix bs    -- special behavior
+        RecStmt l stmts       -> liftM (RecStmt l) $ mapM fix stmts
       where fix x = applyFixities fixs x
 
 instance AppFixity Binds where
     applyFixities fixs bs = case bs of
-        BDecls l decls        -> BDecls l $ appFixDecls fixs decls  -- special behavior
-        IPBinds l ips         -> IPBinds l $ map fix ips
+        BDecls l decls        -> liftM (BDecls l) $ appFixDecls fixs decls  -- special behavior
+        IPBinds l ips         -> liftM (IPBinds l) $ mapM fix ips
       where fix x = applyFixities fixs x
 
 
 instance AppFixity IPBind where
-    applyFixities fixs (IPBind l n e) = IPBind l n $ applyFixities fixs e
+    applyFixities fixs (IPBind l n e) = liftM (IPBind l n) $ applyFixities fixs e
 
 instance AppFixity FieldUpdate where
-    applyFixities fixs (FieldUpdate l n e) = FieldUpdate l n $ applyFixities fixs e
-    applyFixities _ fup = fup
+    applyFixities fixs (FieldUpdate l n e) = liftM (FieldUpdate l n) $ applyFixities fixs e
+    applyFixities _ fup = return fup
 
 instance AppFixity Alt where
-    applyFixities fixs (Alt l p galts bs) = Alt l (fix p) (fix galts) (fmap fix bs)
+    applyFixities fixs (Alt l p galts bs) = liftM3 (Alt l) (fix p) (fix galts) (mapM fix bs)
       where fix x = applyFixities fixs x
 
 instance AppFixity GuardedAlts where
     applyFixities fixs galts = case galts of
-        UnGuardedAlt l e      -> UnGuardedAlt l $ fix e
-        GuardedAlts  l galts  -> GuardedAlts l $ map fix galts
+        UnGuardedAlt l e      -> liftM (UnGuardedAlt l) $ fix e
+        GuardedAlts  l galts  -> liftM (GuardedAlts l) $ mapM fix galts
       where fix x = applyFixities fixs x
 
 instance AppFixity GuardedAlt where
-    applyFixities fixs (GuardedAlt l stmts e) = GuardedAlt l (map fix stmts) (fix e)
+    applyFixities fixs (GuardedAlt l stmts e) = liftM2 (GuardedAlt l) (mapM fix stmts) (fix e)
       where fix x = applyFixities fixs x
 
 instance AppFixity QualStmt where
     applyFixities fixs qstmt = case qstmt of
-        QualStmt     l s      -> QualStmt l $ fix s
-        ThenTrans    l e      -> ThenTrans l $ fix e
-        ThenBy       l e1 e2  -> ThenBy l (fix e1) (fix e2)
-        GroupBy      l e      -> GroupBy l (fix e)
-        GroupUsing   l e      -> GroupUsing l (fix e)
-        GroupByUsing l e1 e2  -> GroupByUsing l (fix e1) (fix e2)
+        QualStmt     l s      -> liftM (QualStmt l) $ fix s
+        ThenTrans    l e      -> liftM (ThenTrans l) $ fix e
+        ThenBy       l e1 e2  -> liftM2 (ThenBy l) (fix e1) (fix e2)
+        GroupBy      l e      -> liftM (GroupBy l) (fix e)
+        GroupUsing   l e      -> liftM (GroupUsing l) (fix e)
+        GroupByUsing l e1 e2  -> liftM2 (GroupByUsing l) (fix e1) (fix e2)
       where fix x = applyFixities fixs x
 
 instance AppFixity Bracket where
     applyFixities fixs br = case br of
-        ExpBracket l e    -> ExpBracket l $ fix e
-        PatBracket l p    -> PatBracket l $ fix p
-        DeclBracket l ds  -> DeclBracket l $ map fix ds
-        _                 -> br
+        ExpBracket l e    -> liftM (ExpBracket l) $ fix e
+        PatBracket l p    -> liftM (PatBracket l) $ fix p
+        DeclBracket l ds  -> liftM (DeclBracket l) $ mapM fix ds
+        _                 -> return br
       where fix x = applyFixities fixs x
 
 instance AppFixity Splice where
-    applyFixities fixs (ParenSplice l e) = ParenSplice l $ applyFixities fixs e
-    applyFixities _ s = s
+    applyFixities fixs (ParenSplice l e) = liftM (ParenSplice l) $ applyFixities fixs e
+    applyFixities _ s = return s
 
 instance AppFixity XAttr where
-    applyFixities fixs (XAttr l n e) = XAttr l n $ applyFixities fixs e
+    applyFixities fixs (XAttr l n e) = liftM (XAttr l n) $ applyFixities fixs e
 
 
 -- the boring boilerplate stuff for expressions too
@@ -260,63 +265,63 @@ instance AppFixity XAttr where
 -- without yet touching the chain itself. We assume all chains are
 -- left-associate to begin with.
 leafFix fixs e = case e of
-    InfixApp l e1 op e2       -> InfixApp l (leafFix fixs e1) op (fix e2)
-    App l e1 e2               -> App l (fix e1) (fix e2)
-    NegApp l e                -> NegApp l $ fix e
-    Lambda l pats e           -> Lambda l (map fix pats) $ fix e
-    Let l bs e                -> Let l (fix bs) $ fix e
-    If l e a b                -> If l (fix e) (fix a) (fix b)
-    Case l e alts             -> Case l (fix e) $ map fix alts
-    Do l stmts                -> Do l $ map fix stmts
-    MDo l stmts               -> MDo l $ map fix stmts
-    Tuple l exps              -> Tuple l $ map fix exps
-    List l exps               -> List l $ map fix  exps
-    Paren l e                 -> Paren l $ fix e
-    LeftSection l e op        -> LeftSection l (fix e) op
-    RightSection l op e       -> RightSection l op $ fix e
-    RecConstr l n fups        -> RecConstr l n $ map fix fups
-    RecUpdate l e fups        -> RecUpdate l (fix e) $ map fix fups
-    EnumFrom l e              -> EnumFrom l $ fix e
-    EnumFromTo l e1 e2        -> EnumFromTo l (fix e1) (fix e2)
-    EnumFromThen l e1 e2      -> EnumFromThen l (fix e1) (fix e2)
-    EnumFromThenTo l e1 e2 e3 -> EnumFromThenTo l (fix e1) (fix e2) (fix e3)
-    ListComp l e quals        -> ListComp l (fix e) $ map fix quals
-    ParComp  l e qualss       -> ParComp l (fix e) $ map (map fix) qualss
-    ExpTypeSig l e t          -> ExpTypeSig l (fix e) t
-    BracketExp l b            -> BracketExp l $ fix b
-    SpliceExp l s             -> SpliceExp l $ fix s
-    XTag l n ats mexp cs      -> XTag l n (map fix ats) (fmap fix mexp) (map fix cs)
-    XETag l n ats mexp        -> XETag l n (map fix ats) (fmap fix mexp)
-    XExpTag l e               -> XExpTag l $ fix e
-    Proc l p e                -> Proc l (fix p) (fix e)
-    LeftArrApp l e1 e2        -> LeftArrApp l (fix e1) (fix e2)
-    RightArrApp l e1 e2       -> RightArrApp l (fix e1) (fix e2)
-    LeftArrHighApp l e1 e2    -> LeftArrHighApp l (fix e1) (fix e2)
-    RightArrHighApp l e1 e2   -> RightArrHighApp l (fix e1) (fix e2)
-    CorePragma l s e          -> CorePragma l s (fix e)
-    SCCPragma l s e           -> SCCPragma l s (fix e)
-    GenPragma l s ab cd e     -> GenPragma l s ab cd (fix e)
+    InfixApp l e1 op e2       -> liftM2 (flip (InfixApp l) op) (leafFix fixs e1) (fix e2)
+    App l e1 e2               -> liftM2 (App l) (fix e1) (fix e2)
+    NegApp l e                -> liftM (NegApp l) $ fix e
+    Lambda l pats e           -> liftM2 (Lambda l) (mapM fix pats) $ fix e
+    Let l bs e                -> liftM2 (Let l) (fix bs) $ fix e
+    If l e a b                -> liftM3 (If l) (fix e) (fix a) (fix b)
+    Case l e alts             -> liftM2 (Case l) (fix e) $ mapM fix alts
+    Do l stmts                -> liftM (Do l) $ mapM fix stmts
+    MDo l stmts               -> liftM (MDo l) $ mapM fix stmts
+    Tuple l exps              -> liftM (Tuple l) $ mapM fix exps
+    List l exps               -> liftM (List l) $ mapM fix  exps
+    Paren l e                 -> liftM (Paren l) $ fix e
+    LeftSection l e op        -> liftM (flip (LeftSection l) op) (fix e)
+    RightSection l op e       -> liftM (RightSection l op) $ fix e
+    RecConstr l n fups        -> liftM (RecConstr l n) $ mapM fix fups
+    RecUpdate l e fups        -> liftM2 (RecUpdate l) (fix e) $ mapM fix fups
+    EnumFrom l e              -> liftM (EnumFrom l) $ fix e
+    EnumFromTo l e1 e2        -> liftM2 (EnumFromTo l) (fix e1) (fix e2)
+    EnumFromThen l e1 e2      -> liftM2 (EnumFromThen l) (fix e1) (fix e2)
+    EnumFromThenTo l e1 e2 e3 -> liftM3 (EnumFromThenTo l) (fix e1) (fix e2) (fix e3)
+    ListComp l e quals        -> liftM2 (ListComp l) (fix e) $ mapM fix quals
+    ParComp  l e qualss       -> liftM2 (ParComp l) (fix e) $ mapM (mapM fix) qualss
+    ExpTypeSig l e t          -> liftM (flip (ExpTypeSig l) t) (fix e)
+    BracketExp l b            -> liftM (BracketExp l) $ fix b
+    SpliceExp l s             -> liftM (SpliceExp l) $ fix s
+    XTag l n ats mexp cs      -> liftM3 (XTag l n) (mapM fix ats) (mapM fix mexp) (mapM fix cs)
+    XETag l n ats mexp        -> liftM2 (XETag l n) (mapM fix ats) (mapM fix mexp)
+    XExpTag l e               -> liftM (XExpTag l) $ fix e
+    Proc l p e                -> liftM2 (Proc l) (fix p) (fix e)
+    LeftArrApp l e1 e2        -> liftM2 (LeftArrApp l) (fix e1) (fix e2)
+    RightArrApp l e1 e2       -> liftM2 (RightArrApp l) (fix e1) (fix e2)
+    LeftArrHighApp l e1 e2    -> liftM2 (LeftArrHighApp l) (fix e1) (fix e2)
+    RightArrHighApp l e1 e2   -> liftM2 (RightArrHighApp l) (fix e1) (fix e2)
+    CorePragma l s e          -> liftM (CorePragma l s) (fix e)
+    SCCPragma l s e           -> liftM (SCCPragma l s) (fix e)
+    GenPragma l s ab cd e     -> liftM (GenPragma l s ab cd) (fix e)
 
-    _                         -> e
+    _                         -> return e
   where
     fix x = applyFixities fixs x
 
 leafFixP fixs p = case p of
-        PNeg l p                -> PNeg l $ fix p
-        PApp l n ps             -> PApp l n $ map fix ps
-        PTuple l ps             -> PTuple l $ map fix ps
-        PList l ps              -> PList l $ map fix ps
-        PParen l p              -> PParen l $ fix p
-        PRec l n pfs            -> PRec l n $ map fix pfs
-        PAsPat l n p            -> PAsPat l n $ fix p
-        PIrrPat l p             -> PIrrPat l $ fix p
-        PatTypeSig l p t        -> PatTypeSig l (fix p) t
-        PViewPat l e p          -> PViewPat l (fix e) (fix p)
-        PRPat l rps             -> PRPat l $ map fix rps
-        PXTag l n ats mp ps     -> PXTag l n (map fix ats) (fmap fix mp) (map fix ps)
-        PXETag l n ats mp       -> PXETag l n (map fix ats) (fmap fix mp)
-        PXPatTag l p            -> PXPatTag l $ fix p
-        PXRPats l rps           -> PXRPats l $ map fix rps
-        PBangPat l p            -> PBangPat l $ fix p
-        _                       -> p
+        PNeg l p                -> liftM (PNeg l) $ fix p
+        PApp l n ps             -> liftM (PApp l n) $ mapM fix ps
+        PTuple l ps             -> liftM (PTuple l) $ mapM fix ps
+        PList l ps              -> liftM (PList l) $ mapM fix ps
+        PParen l p              -> liftM (PParen l) $ fix p
+        PRec l n pfs            -> liftM (PRec l n) $ mapM fix pfs
+        PAsPat l n p            -> liftM (PAsPat l n) $ fix p
+        PIrrPat l p             -> liftM (PIrrPat l) $ fix p
+        PatTypeSig l p t        -> liftM (flip (PatTypeSig l) t) (fix p)
+        PViewPat l e p          -> liftM2 (PViewPat l) (fix e) (fix p)
+        PRPat l rps             -> liftM (PRPat l) $ mapM fix rps
+        PXTag l n ats mp ps     -> liftM3 (PXTag l n) (mapM fix ats) (mapM fix mp) (mapM fix ps)
+        PXETag l n ats mp       -> liftM2 (PXETag l n) (mapM fix ats) (mapM fix mp)
+        PXPatTag l p            -> liftM (PXPatTag l) $ fix p
+        PXRPats l rps           -> liftM (PXRPats l) $ mapM fix rps
+        PBangPat l p            -> liftM (PBangPat l) $ fix p
+        _                       -> return p
       where fix x = applyFixities fixs x
