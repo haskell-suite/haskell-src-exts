@@ -657,9 +657,9 @@ data Asst l
 #endif
 
 -- | /literal/
--- Values of this type hold the abstract value of the literal, not the
+-- Values of this type hold the abstract value of the literal, along with the
 -- precise string representation used.  For example, @10@, @0o12@ and @0xa@
--- have the same representation.
+-- have the same value representation, but each carry a different string representation.
 data Literal l
     = Char       l Char     String     -- ^ character literal
     | String     l String   String     -- ^ string literal
