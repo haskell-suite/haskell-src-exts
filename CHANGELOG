@@ -1,3 +1,15 @@
+** 1.6.x
+
+1.5.3 --> 1.6.0
+===============
+
+* (=~=) turns out to be too general at Functor (for intuitive and not
+  technical reasons), so is specialised to Annotated to closer mirror
+  the original intention.
+
+* applyFixities is hoisted to a monad, and now fails on ambiguous infix
+  expressions.
+
 ** 1.5.x
 
 1.5.2 --> 1.5.3
