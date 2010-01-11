@@ -212,7 +212,16 @@ reserved_ops = [
  ( "-<",  (LeftArrowTail,       Just (Any [Arrows])) ),
  ( ">-",  (RightArrowTail,      Just (Any [Arrows])) ),
  ( "-<<", (LeftDblArrowTail,    Just (Any [Arrows])) ),
- ( ">>-", (RightDblArrowTail,   Just (Any [Arrows])) )
+ ( ">>-", (RightDblArrowTail,   Just (Any [Arrows])) ),
+ -- Unicode notation
+ ( "\x2190",    (LeftArrow,     Just (Any  [UnicodeSyntax])) ),
+ ( "\x2192",    (RightArrow,    Just (Any  [UnicodeSyntax])) ),
+ ( "\x21d2",    (DoubleArrow,   Just (Any  [UnicodeSyntax])) ),
+ ( "\x2919",    (LeftArrowTail,     Just (All [UnicodeSyntax, Arrows])) ),
+ ( "\x291a",    (RightArrowTail,    Just (All [UnicodeSyntax, Arrows])) ),
+ ( "\x291b",    (LeftDblArrowTail,  Just (All [UnicodeSyntax, Arrows])) ),
+ ( "\x291c",    (RightDblArrowTail, Just (All [UnicodeSyntax, Arrows])) ),
+ ( "\x2605",    (Star,              Just (All [UnicodeSyntax, KindSignatures])) )
  ]
 
 special_varops :: [(String,(Token, Maybe ExtScheme))]
