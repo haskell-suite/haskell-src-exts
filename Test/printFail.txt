@@ -1,3 +1,4 @@
 HexPrec.hs
 ParenFunBind.hs
 RealGHC.lhs
+InfixParser.hs
