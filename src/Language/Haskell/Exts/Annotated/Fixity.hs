@@ -166,7 +166,7 @@ instance AppFixity InstDecl where
 instance AppFixity Match where
     applyFixities fixs match = case match of
         Match l n ps rhs bs -> liftM3 (Match l n) (mapM fix ps) (fix rhs) (mapM fix bs)
-        InfixMatch l a n b rhs bs -> liftM4 (flip (InfixMatch l) n) (fix a) (fix b) (fix rhs) (mapM fix bs)
+        InfixMatch l a n ps rhs bs -> liftM4 (flip (InfixMatch l) n) (fix a) (mapM fix ps) (fix rhs) (mapM fix bs)
       where fix x = applyFixities fixs x
 
 instance AppFixity Rhs where

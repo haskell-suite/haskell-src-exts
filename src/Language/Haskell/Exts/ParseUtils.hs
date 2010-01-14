@@ -671,7 +671,7 @@ checkValDef l lhs optsig rhs whereBinds = do
             case optsig of -- only pattern bindings can have signatures
                 Nothing -> return (FunBind l $
                             if b then [Match l f ps rhs whereBinds]
-                                 else let [a,b] = ps in [InfixMatch l a f b rhs whereBinds])
+                                 else let (a:bs) = ps in [InfixMatch l a f bs rhs whereBinds])
                 Just _  -> fail "Cannot give an explicit type signature to a function binding"
      Nothing     -> do
             lhs <- checkPattern lhs

@@ -1422,11 +1422,12 @@ instance ExactP Match where
     mapM_ exactPC ps
     exactPC rhs
     maybeEP (\bds -> printStringAt (pos (head pts)) "where" >> exactPC bds) mbinds
-  exactP (InfixMatch l a n b rhs mbinds) = do
+  exactP (InfixMatch l a n bs rhs mbinds) = do
     let pts = srcInfoPoints l
     exactP a
     epInfixName n
-    exactPC b
+    mapM_ exactPC bs    -- Note that this is inevitably an error of |bs| > 1, 
+                        -- since that would require parentheses that we don't remember
     exactPC rhs
     maybeEP (\bds -> printStringAt (pos (head pts)) "where" >> exactPC bds) mbinds
 

@@ -446,7 +446,7 @@ data IPBind l = IPBind l (IPName l) (Exp l)
 -- | Clauses of a function binding.
 data Match l
      = Match l      (Name l) [Pat l]         (Rhs l) {-where-} (Maybe (Binds l))
-     | InfixMatch l (Pat l) (Name l) (Pat l) (Rhs l) {-where-} (Maybe (Binds l))
+     | InfixMatch l (Pat l) (Name l) [Pat l] (Rhs l) {-where-} (Maybe (Binds l))
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
@@ -1250,8 +1250,8 @@ instance Functor IPBind where
 instance Functor Match where
     fmap f (Match l n ps rhs bs) =
         Match (f l) (fmap f n) (map (fmap f) ps) (fmap f rhs) (fmap (fmap f) bs)
-    fmap f (InfixMatch l a n b rhs bs) =
-        InfixMatch (f l) (fmap f a) (fmap f n) (fmap f b) (fmap f rhs) (fmap (fmap f) bs)
+    fmap f (InfixMatch l a n ps rhs bs) =
+        InfixMatch (f l) (fmap f a) (fmap f n) (map (fmap f) ps) (fmap f rhs) (fmap (fmap f) bs)
 
 instance Functor QualConDecl where
     fmap f (QualConDecl l mtvs mcx cd) = QualConDecl (f l) (fmap (map (fmap f)) mtvs) (fmap (fmap f) mcx) (fmap f cd)

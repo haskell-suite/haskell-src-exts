@@ -208,8 +208,8 @@ sIPBind (IPBind l ipn e) = S.IPBind (getPointLoc l) (sIPName ipn) (sExp e)
 sMatch :: SrcInfo loc => Match loc -> S.Match
 sMatch (Match l n ps rhs mwhere) =
     S.Match (getPointLoc l) (sName n) (map sPat ps) Nothing (sRhs rhs) (maybe (S.BDecls []) sBinds mwhere)
-sMatch (InfixMatch l pa n pb rhs mwhere) =
-    S.Match (getPointLoc l) (sName n) (map sPat [pa,pb]) Nothing (sRhs rhs) (maybe (S.BDecls []) sBinds mwhere)
+sMatch (InfixMatch l pa n pbs rhs mwhere) =
+    S.Match (getPointLoc l) (sName n) (map sPat (pa:pbs)) Nothing (sRhs rhs) (maybe (S.BDecls []) sBinds mwhere)
 
 sQualConDecl :: SrcInfo loc => QualConDecl loc -> S.QualConDecl
 sQualConDecl (QualConDecl l mtvs mctxt cd) =
