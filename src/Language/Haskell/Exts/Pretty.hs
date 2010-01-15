@@ -129,7 +129,7 @@ getPPEnv = DocM id
 type Doc = DocM PPHsMode P.Doc
 
 -- | Things that can be pretty-printed, including all the syntactic objects
--- in "Language.Haskell.Exts.Syntax".
+-- in "Language.Haskell.Exts.Syntax" and "Language.Haskell.Exts.Annotated.Syntax".
 class Pretty a where
         -- | Pretty-print something in isolation.
         pretty :: a -> Doc

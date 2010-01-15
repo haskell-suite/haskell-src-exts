@@ -107,18 +107,6 @@ import Language.Haskell.Exts.SrcLoc (SrcLoc(..))
 
 import Language.Haskell.Exts.Annotated.Syntax (Boxed(..), Tool(..))
 
-{-- | A position in the source.
-data SrcLoc = SrcLoc {
-        srcFilename :: String,
-        srcLine :: Int,
-        srcColumn :: Int
-        }
-#ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Ord,Show,Typeable,Data)
-#else
-  deriving (Eq,Ord,Show)
-#endif
--}
 
 -- | The name of a Haskell module.
 newtype ModuleName = ModuleName String
@@ -131,15 +119,14 @@ newtype ModuleName = ModuleName String
 -- | Constructors with special syntax.
 -- These names are never qualified, and always refer to builtin type or
 -- data constructors.
-
 data SpecialCon
-    = UnitCon     -- ^ unit type and data constructor @()@
-    | ListCon     -- ^ list type constructor @[]@
-    | FunCon      -- ^ function type constructor @->@
+    = UnitCon               -- ^ unit type and data constructor @()@
+    | ListCon               -- ^ list type constructor @[]@
+    | FunCon                -- ^ function type constructor @->@
     | TupleCon Boxed Int    -- ^ /n/-ary tuple type and data
                             --   constructors @(,)@ etc, possibly boxed @(\#,\#)@
-    | Cons              -- ^ list data constructor @(:)@
-    | UnboxedSingleCon  -- ^ unboxed singleton tuple constructor @(\# \#)@
+    | Cons                  -- ^ list data constructor @(:)@
+    | UnboxedSingleCon      -- ^ unboxed singleton tuple constructor @(\# \#)@
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
@@ -147,7 +134,7 @@ data SpecialCon
 #endif
 
 -- | This type is used to represent qualified variables, and also
--- qualified constructors.
+--   qualified constructors.
 data QName
     = Qual ModuleName Name    -- ^ name qualified with a module name
     | UnQual Name             -- ^ unqualified local name
@@ -199,7 +186,7 @@ data Op
 #endif
 
 -- | A name (/cname/) of a component of a class or data type in an @import@
--- or export specification.
+--   or export specification.
 data CName
     = VarName Name  -- ^ name of a method or field
     | ConName Name  -- ^ name of a data constructor
@@ -220,18 +207,18 @@ data Module = Module SrcLoc ModuleName [OptionPragma] (Maybe WarningText)
 
 -- | An item in a module's export specification.
 data ExportSpec
-     = EVar QName           -- ^ variable
-     | EAbs QName           -- ^ @T@:
-                            -- a class or datatype exported abstractly,
-                            -- or a type synonym.
-     | EThingAll QName      -- ^ @T(..)@:
-                            -- a class exported with all of its methods, or
-                            -- a datatype exported with all of its constructors.
-     | EThingWith QName [CName]   -- ^ @T(C_1,...,C_n)@:
-                                  -- a class exported with some of its methods, or
-                                  -- a datatype exported with some of its constructors.
-     | EModuleContents ModuleName     -- ^ @module M@:
-                                      -- re-export a module.
+     = EVar QName                   -- ^ variable
+     | EAbs QName                   -- ^ @T@:
+                                    --   a class or datatype exported abstractly,
+                                    --   or a type synonym.
+     | EThingAll QName              -- ^ @T(..)@:
+                                    --   a class exported with all of its methods, or
+                                    --   a datatype exported with all of its constructors.
+     | EThingWith QName [CName]     -- ^ @T(C_1,...,C_n)@:
+                                    --   a class exported with some of its methods, or
+                                    --   a datatype exported with some of its constructors.
+     | EModuleContents ModuleName   -- ^ @module M@:
+                                    --   re-export a module.
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
@@ -260,15 +247,15 @@ data ImportDecl = ImportDecl
 -- | An import specification, representing a single explicit item imported
 --   (or hidden) from a module.
 data ImportSpec
-     = IVar Name            -- ^ variable
-     | IAbs Name            -- ^ @T@:
-                            -- the name of a class, datatype or type synonym.
+     = IVar Name                -- ^ variable
+     | IAbs Name                -- ^ @T@:
+                                --   the name of a class, datatype or type synonym.
      | IThingAll Name           -- ^ @T(..)@:
-                                -- a class imported with all of its methods, or
-                                -- a datatype imported with all of its constructors.
+                                --   a class imported with all of its methods, or
+                                --   a datatype imported with all of its constructors.
      | IThingWith Name [CName]  -- ^ @T(C_1,...,C_n)@:
-                                -- a class imported with some of its methods, or
-                                -- a datatype imported with some of its constructors.
+                                --   a class imported with some of its methods, or
+                                --   a datatype imported with some of its constructors.
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
@@ -470,7 +457,7 @@ data BangType
 data Rhs
      = UnGuardedRhs Exp -- ^ unguarded right hand side (/exp/)
      | GuardedRhss  [GuardedRhs]
-                -- ^ guarded right hand side (/gdrhs/)
+                        -- ^ guarded right hand side (/gdrhs/)
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
@@ -509,15 +496,6 @@ data Type
 #else
   deriving (Eq,Ord,Show)
 #endif
-
-{-- | Flag denoting whether a tuple is boxed or unboxed.
-data Boxed = Boxed | Unboxed
-#ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Ord,Show,Typeable,Data)
-#else
-  deriving (Eq,Ord,Show)
-#endif
---}
 
 -- | A type variable declaration, optionally with an explicit kind annotation.
 data TyVarBind
@@ -605,8 +583,8 @@ data Exp
     | If Exp Exp Exp            -- ^ @if@ /exp/ @then@ /exp/ @else@ /exp/
     | Case Exp [Alt]            -- ^ @case@ /exp/ @of@ /alts/
     | Do [Stmt]                 -- ^ @do@-expression:
-                                    -- the last statement in the list
-                                    -- should be an expression.
+                                --   the last statement in the list
+                                --   should be an expression.
     | MDo [Stmt]                -- ^ @mdo@-expression
     | Tuple [Exp]               -- ^ tuple expression
     | TupleSection [Maybe Exp]  -- ^ tuple section expression, e.g. @(,,3)@
@@ -615,22 +593,21 @@ data Exp
     | LeftSection Exp QOp       -- ^ left section @(@/exp/ /qop/@)@
     | RightSection QOp Exp      -- ^ right section @(@/qop/ /exp/@)@
     | RecConstr QName [FieldUpdate]
-                                    -- ^ record construction expression
+                                -- ^ record construction expression
     | RecUpdate Exp [FieldUpdate]
-                                    -- ^ record update expression
+                                -- ^ record update expression
     | EnumFrom Exp              -- ^ unbounded arithmetic sequence,
-                                    -- incrementing by 1: @[from ..]@
+                                --   incrementing by 1: @[from ..]@
     | EnumFromTo Exp Exp        -- ^ bounded arithmetic sequence,
-                                    -- incrementing by 1 @[from .. to]@
+                                --   incrementing by 1 @[from .. to]@
     | EnumFromThen Exp Exp      -- ^ unbounded arithmetic sequence,
-                                    -- with first two elements given @[from, then ..]@
+                                --   with first two elements given @[from, then ..]@
     | EnumFromThenTo Exp Exp Exp
                                 -- ^ bounded arithmetic sequence,
-                                    -- with first two elements given @[from, then .. to]@
-    | ListComp Exp  [QualStmt]     -- ^ ordinary list comprehension
-    | ParComp  Exp [[QualStmt]]    -- ^ parallel list comprehension
-    | ExpTypeSig SrcLoc Exp Type
-                                    -- ^ expression with explicit type signature
+                                --   with first two elements given @[from, then .. to]@
+    | ListComp Exp  [QualStmt]    -- ^ ordinary list comprehension
+    | ParComp  Exp [[QualStmt]]   -- ^ parallel list comprehension
+    | ExpTypeSig SrcLoc Exp Type  -- ^ expression with explicit type signature
 
     | VarQuote QName            -- ^ @'x@ for template haskell reifying of expressions
     | TypQuote QName            -- ^ @''T@ for template haskell reifying of types
@@ -738,15 +715,6 @@ data OptionPragma
   deriving (Eq,Ord,Show)
 #endif
 
-{-- | Recognised tools for OPTIONS pragmas.
-data Tool = GHC | HUGS | NHC98 | YHC | HADDOCK | UnknownTool String
-#ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Ord,Show,Typeable,Data)
-#else
-  deriving (Eq,Ord,Show)
-#endif
--}
-
 -- | Activation clause of a RULES pragma.
 data Activation
     = AlwaysActive
@@ -791,25 +759,22 @@ data WarningText
 
 -- | A pattern, to be matched against a value.
 data Pat
-    = PVar Name                 -- ^ variable
-    | PLit Literal              -- ^ literal constant
-    | PNeg Pat                  -- ^ negated pattern
-    | PNPlusK Name Integer      -- ^ n+k pattern
-    | PInfixApp Pat QName Pat
-                                -- ^ pattern with an infix data constructor
-    | PApp QName [Pat]          -- ^ data constructor and argument patterns
-    | PTuple [Pat]              -- ^ tuple pattern
-    | PList [Pat]               -- ^ list pattern
-    | PParen Pat                -- ^ parenthesized pattern
-    | PRec QName [PatField]     -- ^ labelled pattern, record style
-    | PAsPat Name Pat           -- ^ @\@@-pattern
-    | PWildCard                 -- ^ wildcard pattern: @_@
-    | PIrrPat Pat               -- ^ irrefutable pattern: @~/pat/@
+    = PVar Name                     -- ^ variable
+    | PLit Literal                  -- ^ literal constant
+    | PNeg Pat                      -- ^ negated pattern
+    | PNPlusK Name Integer          -- ^ n+k pattern
+    | PInfixApp Pat QName Pat       -- ^ pattern with an infix data constructor
+    | PApp QName [Pat]              -- ^ data constructor and argument patterns
+    | PTuple [Pat]                  -- ^ tuple pattern
+    | PList [Pat]                   -- ^ list pattern
+    | PParen Pat                    -- ^ parenthesized pattern
+    | PRec QName [PatField]         -- ^ labelled pattern, record style
+    | PAsPat Name Pat               -- ^ @\@@-pattern
+    | PWildCard                     -- ^ wildcard pattern: @_@
+    | PIrrPat Pat                   -- ^ irrefutable pattern: @~/pat/@
     | PatTypeSig SrcLoc Pat Type    -- ^ pattern with type signature
-    | PViewPat Exp Pat          -- ^ view patterns of the form @(/exp/ -> /pat/)@
-
-    | PRPat [RPat]              -- ^ regular list pattern
-
+    | PViewPat Exp Pat              -- ^ view patterns of the form @(/exp/ -> /pat/)@
+    | PRPat [RPat]                  -- ^ regular list pattern
     | PXTag SrcLoc XName [PXAttr] (Maybe Pat) [Pat]
                                     -- ^ XML element pattern
     | PXETag SrcLoc XName [PXAttr] (Maybe Pat)
@@ -818,11 +783,8 @@ data Pat
     | PXPatTag Pat                  -- ^ XML embedded pattern
     | PXRPats [RPat]                -- ^ XML regular list pattern
     | PExplTypeArg QName Type       -- ^ Explicit generics style type argument e.g. @f {| Int |} x = ...@
-
     | PQuasiQuote String String     -- ^ quasi quote patter: @[$/name/| /string/ |]@
-
     | PBangPat Pat                  -- ^ strict (bang) pattern: @f !x = ...@
-
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
@@ -853,14 +815,14 @@ data RPatOp
 
 -- | An entity in a regular pattern.
 data RPat
-    = RPOp RPat RPatOp
-    | RPEither RPat RPat
-    | RPSeq [RPat]
-    | RPGuard Pat [Stmt]
-    | RPCAs Name RPat
-    | RPAs Name RPat
-    | RPParen RPat
-    | RPPat Pat
+    = RPOp RPat RPatOp      -- ^ operator pattern, e.g. pat*
+    | RPEither RPat RPat    -- ^ choice pattern, e.g. (1 | 2)
+    | RPSeq [RPat]          -- ^ sequence pattern, e.g. (| 1, 2, 3 |)
+    | RPGuard Pat [Stmt]    -- ^ guarded pattern, e.g. (| p | p < 3 |)
+    | RPCAs Name RPat       -- ^ non-linear variable binding, e.g. (foo@:(1 | 2))*
+    | RPAs Name RPat        -- ^ linear variable binding, e.g. foo@(1 | 2)
+    | RPParen RPat          -- ^ parenthesised pattern, e.g. (2*)
+    | RPPat Pat             -- ^ an ordinary pattern
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
@@ -883,12 +845,12 @@ data PatField
 --   in a pattern guard.
 data Stmt
     = Generator SrcLoc Pat Exp
-                    -- ^ a generator: /pat/ @<-@ /exp/
-    | Qualifier Exp -- ^ an /exp/ by itself: in a @do@-expression,
-                        -- an action whose result is discarded;
-                        -- in a list comprehension and pattern guard,
-                        -- a guard expression
-    | LetStmt Binds -- ^ local bindings
+                        -- ^ a generator: /pat/ @<-@ /exp/
+    | Qualifier Exp     -- ^ an /exp/ by itself: in a @do@-expression,
+                        --   an action whose result is discarded;
+                        --   in a list comprehension and pattern guard,
+                        --   a guard expression
+    | LetStmt Binds     -- ^ local bindings
     | RecStmt [Stmt]    -- ^ a recursive binding group for arrows
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
@@ -957,64 +919,64 @@ data GuardedAlt
 -- Builtin names.
 
 prelude_mod, main_mod :: ModuleName
-prelude_mod       = ModuleName "Prelude"
-main_mod          = ModuleName "Main"
+prelude_mod = ModuleName "Prelude"
+main_mod    = ModuleName "Main"
 
 main_name :: Name
-main_name         = Ident "main"
+main_name = Ident "main"
 
 unit_con_name :: QName
-unit_con_name         = Special UnitCon
+unit_con_name = Special UnitCon
 
 tuple_con_name :: Boxed -> Int -> QName
-tuple_con_name b i      = Special (TupleCon b (i+1))
+tuple_con_name b i = Special (TupleCon b (i+1))
 
 list_cons_name :: QName
-list_cons_name        = Special Cons
+list_cons_name = Special Cons
 
 unboxed_singleton_con_name :: QName
 unboxed_singleton_con_name = Special UnboxedSingleCon
 
 unit_con :: Exp
-unit_con          = Con unit_con_name
+unit_con = Con unit_con_name
 
 tuple_con :: Boxed -> Int -> Exp
-tuple_con b i       = Con (tuple_con_name b i)
+tuple_con b i = Con (tuple_con_name b i)
 
 unboxed_singleton_con :: Exp
 unboxed_singleton_con = Con (unboxed_singleton_con_name)
 
 as_name, qualified_name, hiding_name, minus_name, bang_name, dot_name, star_name :: Name
-as_name               = Ident "as"
-qualified_name        = Ident "qualified"
-hiding_name       = Ident "hiding"
-minus_name        = Symbol "-"
-bang_name        = Symbol "!"
-dot_name          = Symbol "."
-star_name             = Symbol "*"
+as_name        = Ident "as"
+qualified_name = Ident "qualified"
+hiding_name    = Ident "hiding"
+minus_name     = Symbol "-"
+bang_name      = Symbol "!"
+dot_name       = Symbol "."
+star_name      = Symbol "*"
 
 export_name, safe_name, unsafe_name, threadsafe_name, stdcall_name, ccall_name :: Name
 export_name     = Ident "export"
 safe_name       = Ident "safe"
 unsafe_name     = Ident "unsafe"
-threadsafe_name     = Ident "threadsafe"
-stdcall_name        = Ident "stdcall"
+threadsafe_name = Ident "threadsafe"
+stdcall_name    = Ident "stdcall"
 ccall_name      = Ident "ccall"
 
 unit_tycon_name, fun_tycon_name, list_tycon_name, unboxed_singleton_tycon_name :: QName
-unit_tycon_name       = unit_con_name
-fun_tycon_name        = Special FunCon
-list_tycon_name       = Special ListCon
+unit_tycon_name = unit_con_name
+fun_tycon_name  = Special FunCon
+list_tycon_name = Special ListCon
 unboxed_singleton_tycon_name = Special UnboxedSingleCon
 
 tuple_tycon_name :: Boxed -> Int -> QName
-tuple_tycon_name b i    = tuple_con_name b i
+tuple_tycon_name b i = tuple_con_name b i
 
 unit_tycon, fun_tycon, list_tycon, unboxed_singleton_tycon :: Type
-unit_tycon        = TyCon unit_tycon_name
-fun_tycon         = TyCon fun_tycon_name
-list_tycon        = TyCon list_tycon_name
+unit_tycon = TyCon unit_tycon_name
+fun_tycon  = TyCon fun_tycon_name
+list_tycon = TyCon list_tycon_name
 unboxed_singleton_tycon = TyCon unboxed_singleton_tycon_name
 
 tuple_tycon :: Boxed -> Int -> Type
-tuple_tycon b i         = TyCon (tuple_tycon_name b i)
+tuple_tycon b i = TyCon (tuple_tycon_name b i)

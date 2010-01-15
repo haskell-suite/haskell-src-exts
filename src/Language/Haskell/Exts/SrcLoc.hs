@@ -98,29 +98,41 @@ data SrcSpanInfo = SrcSpanInfo
   deriving (Eq,Ord,Show)
 #endif
 
-
+-- | Generate a 'SrcSpanInfo' with no positional information for entities.
 noInfoSpan :: SrcSpan -> SrcSpanInfo
 noInfoSpan ss = SrcSpanInfo ss []
 
+-- | Generate a 'SrcSpanInfo' with the supplied positional information for entities.
 infoSpan :: SrcSpan -> [SrcSpan] -> SrcSpanInfo
-infoSpan x y = SrcSpanInfo x y
+infoSpan = SrcSpanInfo
 
-(<++>), combSpanInfo :: SrcSpanInfo -> SrcSpanInfo -> SrcSpanInfo
+-- | Combine two 'SrcSpanInfo's into one that spans the combined source area of
+--   the two arguments, leaving positional information blank.
+combSpanInfo :: SrcSpanInfo -> SrcSpanInfo -> SrcSpanInfo
 combSpanInfo s1 s2 = SrcSpanInfo
     (mergeSrcSpan (srcInfoSpan s1) (srcInfoSpan s2))
     []
 
+-- | Short name for 'combSpanInfo'
+(<++>) :: SrcSpanInfo -> SrcSpanInfo -> SrcSpanInfo
 (<++>) = combSpanInfo
 
+-- | Optionally combine the first argument with the second,
+--   or return it unchanged if the second argument is 'Nothing'.
 (<+?>) :: SrcSpanInfo -> Maybe SrcSpanInfo -> SrcSpanInfo
 a <+?> b = case b of {Nothing -> a; Just b -> a <++> b}
 
+-- | Optionally combine the second argument with the first,
+--   or return it unchanged if the first argument is 'Nothing'.
 (<?+>) :: Maybe SrcSpanInfo -> SrcSpanInfo -> SrcSpanInfo
 a <?+> b = case a of {Nothing -> b; Just a -> a <++> b}
 
+-- | Add more positional information for entities of a span.
 (<**) :: SrcSpanInfo -> [SrcSpan] -> SrcSpanInfo
 ss@(SrcSpanInfo {srcInfoPoints = ps}) <** xs = ss {srcInfoPoints = ps ++ xs}
 
+-- | Merge two 'SrcSpan's and lift them to a 'SrcInfoSpan' with
+--   no positional information for entities.
 (<^^>) :: SrcSpan -> SrcSpan -> SrcSpanInfo
 a <^^> b = noInfoSpan (mergeSrcSpan a b)
 
@@ -128,6 +140,7 @@ infixl 6 <^^>
 infixl 5 <++>
 infixl 4 <**, <+?>, <?+>
 
+-- | A class to work over all kinds of source location information.
 class SrcInfo si where
   toSrcInfo   :: SrcLoc -> [SrcSpan] -> SrcLoc -> si
   fromSrcInfo :: SrcSpanInfo -> si

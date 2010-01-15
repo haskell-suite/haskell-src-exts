@@ -11,7 +11,12 @@
 -- This module contains code for translating from the annotated
 -- complex AST in Language.Haskell.Exts.Annotated.Syntax
 -- to the simpler, sparsely annotated AST in Language.Haskell.Exts.Syntax.
---
+-- 
+-- A function @sXYZ@ translates an annotated AST node of type @XYZ l@ into
+-- a simple AST node of type @XYZ@. I would have prefered to use a MPTC
+-- with an fd/type family to get a single exported function name, but
+-- I wish to stay Haskell 2010 compliant. Let's hope for Haskell 2011.
+-- 
 -----------------------------------------------------------------------------
 module Language.Haskell.Exts.Annotated.Simplify where
 
@@ -19,49 +24,6 @@ import Language.Haskell.Exts.Annotated.Syntax
 import qualified Language.Haskell.Exts.Syntax as S
 
 import Language.Haskell.Exts.SrcLoc
-
-sModuleName :: ModuleName l -> S.ModuleName
-sModuleName (ModuleName _ str)  = S.ModuleName str
-
-sSpecialCon :: SpecialCon l -> S.SpecialCon
-sSpecialCon sc = case sc of
-    UnitCon _           -> S.UnitCon
-    ListCon _           -> S.ListCon
-    FunCon  _           -> S.FunCon
-    TupleCon _ b k      -> S.TupleCon b k
-    Cons _              -> S.Cons
-    UnboxedSingleCon _  -> S.UnboxedSingleCon
-
-sQName :: QName l -> S.QName
-sQName qn = case qn of
-    Qual    _ mn n  -> S.Qual (sModuleName mn) (sName n)
-    UnQual  _    n  -> S.UnQual (sName n)
-    Special _ sc    -> S.Special (sSpecialCon sc)
-
-sName :: Name l -> S.Name
-sName (Ident _ str) = S.Ident str
-sName (Symbol _ str) = S.Symbol str
-
-sIPName :: IPName l -> S.IPName
-sIPName (IPDup _ str) = S.IPDup str
-sIPName (IPLin _ str) = S.IPLin str
-
-sQOp :: QOp l -> S.QOp
-sQOp (QVarOp _ qn) = S.QVarOp (sQName qn)
-sQOp (QConOp _ qn) = S.QConOp (sQName qn)
-
-sOp :: Op l -> S.Op
-sOp (VarOp _ n) = S.VarOp (sName n)
-sOp (ConOp _ n) = S.ConOp (sName n)
-
-sCName :: CName l -> S.CName
-sCName (VarName _ n) = S.VarName (sName n)
-sCName (ConName _ n) = S.ConName (sName n)
-
-sModuleHead :: Maybe (ModuleHead l) -> (S.ModuleName, Maybe (S.WarningText), Maybe [S.ExportSpec])
-sModuleHead mmh = case mmh of
-    Nothing -> (S.main_mod, Nothing, Just [S.EVar (S.UnQual S.main_name)])
-    Just (ModuleHead _ mn mwt mel) -> (sModuleName mn, fmap sWarningText mwt, fmap sExportSpecList mel)
 
 -- | Translate an annotated AST node representing a Haskell module, into
 --   a simpler version that retains (almost) only abstract information.
@@ -85,54 +47,11 @@ sModule md = case md of
             (mn, mwt, mes) = sModuleHead mmh
          in S.Module loc1 mn (map sOptionPragma oss) mwt mes (map sImportDecl ids)
                 (map sDecl ds ++ [pageFun loc2 $ S.XTag loc2 (sXName xn) (map sXAttr attrs) (fmap sExp mat) (map sExp es)])
+  where pageFun :: SrcLoc -> S.Exp -> S.Decl
+        pageFun loc e = S.PatBind loc namePat Nothing rhs (S.BDecls [])
+            where namePat = S.PVar $ S.Ident "page"
+                  rhs = S.UnGuardedRhs e
 
-pageFun :: SrcLoc -> S.Exp -> S.Decl
-pageFun loc e = S.PatBind loc namePat Nothing rhs (S.BDecls [])
-    where namePat = S.PVar $ S.Ident "page"
-          rhs = S.UnGuardedRhs e
-
-sExportSpecList :: ExportSpecList l -> [S.ExportSpec]
-sExportSpecList (ExportSpecList _ ess) = map sExportSpec ess
-
-sExportSpec :: ExportSpec l -> S.ExportSpec
-sExportSpec es = case es of
-    EVar _ qn           -> S.EVar (sQName qn)
-    EAbs _ qn           -> S.EAbs (sQName qn)
-    EThingAll _ qn      -> S.EThingAll (sQName qn)
-    EThingWith _ qn cns -> S.EThingWith (sQName qn) (map sCName cns)
-    EModuleContents _ mn    -> S.EModuleContents (sModuleName mn)
-
-sImportDecl :: SrcInfo loc => ImportDecl loc -> S.ImportDecl
-sImportDecl (ImportDecl l mn qu src mpkg as misl) =
-    S.ImportDecl (getPointLoc l) (sModuleName mn) qu src mpkg (fmap sModuleName as) (fmap sImportSpecList misl)
-
-sImportSpecList :: ImportSpecList l -> (Bool, [S.ImportSpec])
-sImportSpecList (ImportSpecList _ b iss) = (b, map sImportSpec iss)
-
-sImportSpec :: ImportSpec l -> S.ImportSpec
-sImportSpec is = case is of
-    IVar _ n            -> S.IVar (sName n)
-    IAbs _ n            -> S.IAbs (sName n)
-    IThingAll _ n       -> S.IThingAll (sName n)
-    IThingWith _ n cns  -> S.IThingWith (sName n) (map sCName cns)
-
-sAssoc :: Assoc l -> S.Assoc
-sAssoc a = case a of
-    AssocNone  _ -> S.AssocNone
-    AssocLeft  _ -> S.AssocLeft
-    AssocRight _ -> S.AssocRight
-
-sDeclHead :: DeclHead l -> (S.Name, [S.TyVarBind])
-sDeclHead dh = case dh of
-    DHead _ n tvs       -> (sName n, map sTyVarBind tvs)
-    DHInfix _ tva n tvb -> (sName n, map sTyVarBind [tva,tvb])
-    DHParen _ dh        -> sDeclHead dh
-
-sInstHead :: InstHead l -> (S.QName, [S.Type])
-sInstHead ih = case ih of
-    IHead _ qn ts      -> (sQName qn, map sType ts)
-    IHInfix _ ta qn tb -> (sQName qn, map sType [ta,tb])
-    IHParen _ ih       -> sInstHead ih
 
 -- | Translate an annotated AST node representing a Haskell declaration
 --   into a simpler version. Note that in the simpler version, all declaration
@@ -189,6 +108,92 @@ sDecl decl = case decl of
      InstSig          l mctxt ih    ->
         let (qn, ts) = sInstHead ih
          in S.InstSig (getPointLoc l) (maybe [] sContext mctxt) qn ts
+
+sModuleName :: ModuleName l -> S.ModuleName
+sModuleName (ModuleName _ str)  = S.ModuleName str
+
+sSpecialCon :: SpecialCon l -> S.SpecialCon
+sSpecialCon sc = case sc of
+    UnitCon _           -> S.UnitCon
+    ListCon _           -> S.ListCon
+    FunCon  _           -> S.FunCon
+    TupleCon _ b k      -> S.TupleCon b k
+    Cons _              -> S.Cons
+    UnboxedSingleCon _  -> S.UnboxedSingleCon
+
+sQName :: QName l -> S.QName
+sQName qn = case qn of
+    Qual    _ mn n  -> S.Qual (sModuleName mn) (sName n)
+    UnQual  _    n  -> S.UnQual (sName n)
+    Special _ sc    -> S.Special (sSpecialCon sc)
+
+sName :: Name l -> S.Name
+sName (Ident _ str) = S.Ident str
+sName (Symbol _ str) = S.Symbol str
+
+sIPName :: IPName l -> S.IPName
+sIPName (IPDup _ str) = S.IPDup str
+sIPName (IPLin _ str) = S.IPLin str
+
+sQOp :: QOp l -> S.QOp
+sQOp (QVarOp _ qn) = S.QVarOp (sQName qn)
+sQOp (QConOp _ qn) = S.QConOp (sQName qn)
+
+sOp :: Op l -> S.Op
+sOp (VarOp _ n) = S.VarOp (sName n)
+sOp (ConOp _ n) = S.ConOp (sName n)
+
+sCName :: CName l -> S.CName
+sCName (VarName _ n) = S.VarName (sName n)
+sCName (ConName _ n) = S.ConName (sName n)
+
+sModuleHead :: Maybe (ModuleHead l) -> (S.ModuleName, Maybe (S.WarningText), Maybe [S.ExportSpec])
+sModuleHead mmh = case mmh of
+    Nothing -> (S.main_mod, Nothing, Just [S.EVar (S.UnQual S.main_name)])
+    Just (ModuleHead _ mn mwt mel) -> (sModuleName mn, fmap sWarningText mwt, fmap sExportSpecList mel)
+
+sExportSpecList :: ExportSpecList l -> [S.ExportSpec]
+sExportSpecList (ExportSpecList _ ess) = map sExportSpec ess
+
+sExportSpec :: ExportSpec l -> S.ExportSpec
+sExportSpec es = case es of
+    EVar _ qn           -> S.EVar (sQName qn)
+    EAbs _ qn           -> S.EAbs (sQName qn)
+    EThingAll _ qn      -> S.EThingAll (sQName qn)
+    EThingWith _ qn cns -> S.EThingWith (sQName qn) (map sCName cns)
+    EModuleContents _ mn    -> S.EModuleContents (sModuleName mn)
+
+sImportDecl :: SrcInfo loc => ImportDecl loc -> S.ImportDecl
+sImportDecl (ImportDecl l mn qu src mpkg as misl) =
+    S.ImportDecl (getPointLoc l) (sModuleName mn) qu src mpkg (fmap sModuleName as) (fmap sImportSpecList misl)
+
+sImportSpecList :: ImportSpecList l -> (Bool, [S.ImportSpec])
+sImportSpecList (ImportSpecList _ b iss) = (b, map sImportSpec iss)
+
+sImportSpec :: ImportSpec l -> S.ImportSpec
+sImportSpec is = case is of
+    IVar _ n            -> S.IVar (sName n)
+    IAbs _ n            -> S.IAbs (sName n)
+    IThingAll _ n       -> S.IThingAll (sName n)
+    IThingWith _ n cns  -> S.IThingWith (sName n) (map sCName cns)
+
+sAssoc :: Assoc l -> S.Assoc
+sAssoc a = case a of
+    AssocNone  _ -> S.AssocNone
+    AssocLeft  _ -> S.AssocLeft
+    AssocRight _ -> S.AssocRight
+
+sDeclHead :: DeclHead l -> (S.Name, [S.TyVarBind])
+sDeclHead dh = case dh of
+    DHead _ n tvs       -> (sName n, map sTyVarBind tvs)
+    DHInfix _ tva n tvb -> (sName n, map sTyVarBind [tva,tvb])
+    DHParen _ dh        -> sDeclHead dh
+
+sInstHead :: InstHead l -> (S.QName, [S.Type])
+sInstHead ih = case ih of
+    IHead _ qn ts      -> (sQName qn, map sType ts)
+    IHInfix _ ta qn tb -> (sQName qn, map sType [ta,tb])
+    IHParen _ ih       -> sInstHead ih
 
 sDataOrNew :: DataOrNew l -> S.DataOrNew
 sDataOrNew (DataType _) = S.DataType
@@ -262,8 +267,6 @@ sRhs (GuardedRhss _ grhss) = S.GuardedRhss (map sGuardedRhs grhss)
 sGuardedRhs :: SrcInfo loc => GuardedRhs loc -> S.GuardedRhs
 sGuardedRhs (GuardedRhs l ss e) = S.GuardedRhs (getPointLoc l) (map sStmt ss) (sExp e)
 
--- | Translate an annotated AST node representing a Haskell type into a simpler
---   unannotated form.
 sType :: Type l -> S.Type
 sType t = case t of
     TyForall _ mtvs mctxt t     -> S.TyForall (fmap (map sTyVarBind) mtvs) (maybe [] sContext mctxt) (sType t)
@@ -319,8 +322,6 @@ sLiteral lit = case lit of
     PrimChar   _ c _ -> S.PrimChar c
     PrimString _ s _ -> S.PrimString s
 
--- | Translate an annotated AST node representing a Haskell expression
---   into a simpler unannotated form.
 sExp :: SrcInfo loc => Exp loc -> S.Exp
 sExp e = case e of
     Var _ qn            -> S.Var (sQName qn)
@@ -396,8 +397,6 @@ sCallConv :: CallConv l -> S.CallConv
 sCallConv (StdCall _) = S.StdCall
 sCallConv (CCall _)   = S.CCall
 
--- | Translate an annotated AST node representing a top-level Options pragma
---   into a simpler unannotated form.
 sOptionPragma :: SrcInfo loc => OptionPragma loc -> S.OptionPragma
 sOptionPragma pr = case pr of
     LanguagePragma   l ns   -> S.LanguagePragma (getPointLoc l) (map sName ns)
@@ -422,8 +421,6 @@ sWarningText :: WarningText l -> S.WarningText
 sWarningText (DeprText _ str) = S.DeprText str
 sWarningText (WarnText _ str) = S.WarnText str
 
--- | Translate an annotated AST node representing a Haskell pattern
---   into a simpler unannotated form.
 sPat :: SrcInfo loc => Pat loc -> S.Pat
 sPat pat = case pat of
     PVar _ n            -> S.PVar (sName n)

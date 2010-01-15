@@ -1,3 +1,4 @@
+{-# OPTIONS_HADDOCK hide #-}
 module Language.Haskell.Exts.ParseSyntax where
 
 import Language.Haskell.Exts.Annotated.Syntax hiding ( Type(..), Asst(..), Exp(..), FieldUpdate(..), XAttr(..), Context(..) )
@@ -7,91 +8,92 @@ import qualified Language.Haskell.Exts.Annotated.Syntax as S ( Type(..), Asst(..
 -- Expressions as we parse them (and patters, and regular patterns)
 
 data PExp l
-    = Var l (QName l)                 -- ^ variable
-    | IPVar l (IPName l)              -- ^ implicit parameter variable
-    | Con l (QName l)                 -- ^ data constructor
-    | Lit l (Literal l)               -- ^ literal constant
-    | InfixApp l (PExp l) (QOp l) (PExp l)    -- ^ infix application
-    | App l (PExp l) (PExp l)             -- ^ ordinary application
-    | NegApp l (PExp l)               -- ^ negation expression @-@ /exp/
-    | Lambda l [Pat l] (PExp l) -- ^ lambda expression
-    | Let l (Binds l) (PExp l)           -- ^ local declarations with @let@
-    | If l (PExp l) (PExp l) (PExp l)         -- ^ @if@ /exp/ @then@ /exp/ @else@ /exp/
-    | Case l (PExp l) [Alt l]           -- ^ @case@ /exp/ @of@ /alts/
-    | Do l [Stmt l]                 -- ^ @do@-expression:
-                                    -- the last statement in the list
-                                    -- should be an expression.
-    | MDo l [Stmt l]                -- ^ @mdo@-expression
---    | Tuple [PExp]              -- ^ tuple expression
-    | TupleSection l [Maybe (PExp l)] -- ^ tuple section expression, e.g. @(,,3)@
-    | List l [PExp l]               -- ^ list expression
-    | Paren l (PExp l)                -- ^ parenthesized expression
---     RightSection QOp PExp     -- ^ right section @(@/qop/ /exp/@)@
+    = Var l (QName l)                       -- ^ variable
+    | IPVar l (IPName l)                    -- ^ implicit parameter variable
+    | Con l (QName l)                       -- ^ data constructor
+    | Lit l (Literal l)                     -- ^ literal constant
+    | InfixApp l (PExp l) (QOp l) (PExp l)  -- ^ infix application
+    | App l (PExp l) (PExp l)               -- ^ ordinary application
+    | NegApp l (PExp l)                     -- ^ negation expression @-@ /exp/
+    | Lambda l [Pat l] (PExp l)             -- ^ lambda expression
+    | Let l (Binds l) (PExp l)              -- ^ local declarations with @let@
+    | If l (PExp l) (PExp l) (PExp l)       -- ^ @if@ /exp/ @then@ /exp/ @else@ /exp/
+    | Case l (PExp l) [Alt l]               -- ^ @case@ /exp/ @of@ /alts/
+    | Do l [Stmt l]                         -- ^ @do@-expression:
+                                            --   the last statement in the list
+                                            --   should be an expression.
+    | MDo l [Stmt l]                        -- ^ @mdo@-expression
+--    | Tuple [PExp]                        -- ^ tuple expression
+    | TupleSection l [Maybe (PExp l)]       -- ^ tuple section expression, e.g. @(,,3)@
+    | List l [PExp l]                       -- ^ list expression
+    | Paren l (PExp l)                      -- ^ parenthesized expression
+--     RightSection QOp PExp                -- ^ right section @(@/qop/ /exp/@)@
     | RecConstr l (QName l) [PFieldUpdate l]
-                                -- ^ record construction expression
+                                            -- ^ record construction expression
     | RecUpdate l (PExp l) [PFieldUpdate l]
-                                -- ^ record update expression
-    | EnumFrom l (PExp l)             -- ^ unbounded arithmetic sequence,
-                                    -- incrementing by 1
-    | EnumFromTo l (PExp l) (PExp l)      -- ^ bounded arithmetic sequence,
-                                    -- incrementing by 1
-    | EnumFromThen l (PExp l) (PExp l)   -- ^ unbounded arithmetic sequence,
-                                    -- with first two elements given
+                                            -- ^ record update expression
+    | EnumFrom l (PExp l)                   -- ^ unbounded arithmetic sequence,
+                                            --   incrementing by 1
+    | EnumFromTo l (PExp l) (PExp l)        -- ^ bounded arithmetic sequence,
+                                            --   incrementing by 1
+    | EnumFromThen l (PExp l) (PExp l)      -- ^ unbounded arithmetic sequence,
+                                            --   with first two elements given
     | EnumFromThenTo l (PExp l) (PExp l) (PExp l)
-                                -- ^ bounded arithmetic sequence,
-                                    -- with first two elements given
-    | ParComp l (PExp l) [[QualStmt l]]    -- ^ parallel list comprehension
-    | ExpTypeSig l (PExp l) (S.Type l)
-                                -- ^ expression type signature
-    | AsPat l (Name l) (PExp l)           -- ^ patterns only
-    | WildCard l                 -- ^ patterns only
-    | IrrPat l (PExp l)               -- ^ patterns only
+                                            -- ^ bounded arithmetic sequence,
+                                            --   with first two elements given
+    | ParComp l (PExp l) [[QualStmt l]]     -- ^ parallel list comprehension
+    | ExpTypeSig l (PExp l) (S.Type l)      -- ^ expression type signature
+    | AsPat l (Name l) (PExp l)             -- ^ patterns only
+    | WildCard l                            -- ^ patterns only
+    | IrrPat l (PExp l)                     -- ^ patterns only
 
 -- Post-ops for parsing left sections and regular patterns. Not to be left in the final tree.
-    | PostOp l (PExp l) (QOp l)          -- ^ post-ops
-    | PreOp l (QOp l) (PExp l)            -- ^ pre-ops
+    | PostOp l (PExp l) (QOp l)             -- ^ post-ops
+    | PreOp l (QOp l) (PExp l)              -- ^ pre-ops
 
 -- View patterns
-    | ViewPat l (PExp l) (PExp l)         -- ^ patterns only
+    | ViewPat l (PExp l) (PExp l)           -- ^ patterns only
 
 -- HaRP
-    | SeqRP l [PExp l]              -- ^ regular patterns only
-    | GuardRP l (PExp l) [Stmt l]       -- ^ regular patterns only
-    | EitherRP l (PExp l) (PExp l)        -- ^ regular patterns only
-    | CAsRP l (Name l) (PExp l)           -- ^ regular patterns only
+    | SeqRP l [PExp l]                      -- ^ regular patterns only
+    | GuardRP l (PExp l) [Stmt l]           -- ^ regular patterns only
+    | EitherRP l (PExp l) (PExp l)          -- ^ regular patterns only
+    | CAsRP l (Name l) (PExp l)             -- ^ regular patterns only
 
 -- Template Haskell
-    | VarQuote l (QName l)            -- ^ 'x
-    | TypQuote l (QName l)            -- ^ ''T
+    | VarQuote l (QName l)                  -- ^ 'x
+    | TypQuote l (QName l)                  -- ^ ''T
     | BracketExp l (Bracket l)
     | SpliceExp l (Splice l)
-    | QuasiQuote l String String  -- ^ [$...|...]
+    | QuasiQuote l String String            -- ^ [$...|...]
 
 -- Hsx
     | XTag  l (XName l) [ParseXAttr l] (Maybe (PExp l)) [PExp l]
+                                            -- ^ <Name>...</Name>
     | XETag l (XName l) [ParseXAttr l] (Maybe (PExp l))
-    | XPcdata l String
-    | XExpTag l (PExp l)
-    | XRPats l [PExp l]
+                                            -- ^ <Name />
+    | XPcdata l String                      -- ^ PCDATA
+    | XExpTag l (PExp l)                    -- ^ <% ... %>
+    | XRPats l [PExp l]                     -- ^ <[ ... ]>
 
 -- Pragmas
-    | CorePragma l      String  (PExp l)
-    | SCCPragma  l      String  (PExp l)
+    | CorePragma l      String  (PExp l)    -- ^ {-# CORE #-} pragma
+    | SCCPragma  l      String  (PExp l)    -- ^ {-# SCC #-} pragma
     | GenPragma  l      String (Int, Int) (Int, Int) (PExp l)
---    | UnknownExpPragma  String String
+                                            -- ^ {-# GENERATED ... #-} pragma
 
 -- Generics
-    | ExplTypeArg l (QName l) (S.Type l)   -- ^ f {| Int |} x = ...
+    | ExplTypeArg l (QName l) (S.Type l)    -- ^ f {| Int |} x = ...
 
 -- Bang Patterns
-    | BangPat l (PExp l)              -- ^ f !a = ...
+    | BangPat l (PExp l)                    -- ^ f !a = ...
 
 -- Arrows
-    | Proc l (Pat l) (PExp l)
-    | LeftArrApp      l (PExp l) (PExp l)
-    | RightArrApp     l (PExp l) (PExp l)
-    | LeftArrHighApp  l (PExp l) (PExp l)
-    | RightArrHighApp l (PExp l) (PExp l)
+    | Proc l (Pat l) (PExp l)               -- ^ proc p -> do
+    | LeftArrApp      l (PExp l) (PExp l)   -- ^ e -< e
+    | RightArrApp     l (PExp l) (PExp l)   -- ^ e >- e
+    | LeftArrHighApp  l (PExp l) (PExp l)   -- ^ e -<< e
+    | RightArrHighApp l (PExp l) (PExp l)   -- ^ e >>- e
    deriving (Eq,Show)
 
 data PFieldUpdate l
