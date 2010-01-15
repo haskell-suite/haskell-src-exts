@@ -65,10 +65,13 @@ mkSrcSpan :: SrcLoc -> SrcLoc -> SrcSpan
 mkSrcSpan (SrcLoc fn sl sc) (SrcLoc _ el ec) = SrcSpan fn sl sc el ec
 
 -- | Merge two source spans into a single span from the start of the first
---   to the end of the second. Assumes that the two spans are given in the
---   order they appear in the source.
+--   to the end of the second. Assumes that the two spans relate to the
+--   same source file.
 mergeSrcSpan :: SrcSpan -> SrcSpan -> SrcSpan
-mergeSrcSpan (SrcSpan fn sl sc _ _) (SrcSpan _ _ _ el ec) = SrcSpan fn sl sc el ec
+mergeSrcSpan (SrcSpan fn sl1 sc1 el1 ec1) (SrcSpan _ sl2 sc2 el2 ec2) = 
+    let (sl,sc) = min (sl1,sc1) (sl2,sc2)
+        (el,ec) = max (el1,ec1) (el2,ec2)
+     in SrcSpan fn sl sc el ec
 
 -- | Test if a given span starts and ends at the same location.
 isNullSpan :: SrcSpan -> Bool
