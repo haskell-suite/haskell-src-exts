@@ -266,7 +266,10 @@ reserved_ids = [
  ( "where",     (KW_Where,      Nothing) ),
 
 -- FFI
- ( "foreign",   (KW_Foreign,    Just (Any [ForeignFunctionInterface])) )
+ ( "foreign",   (KW_Foreign,    Just (Any [ForeignFunctionInterface])) ),
+
+-- Unicode
+ ( "\x2200",    (KW_Forall,     Just (All [UnicodeSyntax, ExplicitForall])) )
  ]
 
 
