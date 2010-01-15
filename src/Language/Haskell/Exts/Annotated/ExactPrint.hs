@@ -1418,8 +1418,13 @@ instance ExactP GuardedAlt where
 instance ExactP Match where
   exactP (Match l n ps rhs mbinds) = do
     let pts = srcInfoPoints l
-    exactP n
-    mapM_ exactPC ps
+        len = length pts
+        pars = len `div` 2
+        (oPars,cParsWh) = splitAt pars pts
+        (cPars,whPt) = splitAt pars cParsWh    -- whPt is either singleton or empty
+    printStrs (zip oPars (repeat "("))
+    exactPC n
+    printStreams (zip (map pos cPars) (repeat $ printString ")")) (map (pos . ann &&& exactPC) ps) 
     exactPC rhs
     maybeEP (\bds -> printStringAt (pos (head pts)) "where" >> exactPC bds) mbinds
   exactP (InfixMatch l a n bs rhs mbinds) = do

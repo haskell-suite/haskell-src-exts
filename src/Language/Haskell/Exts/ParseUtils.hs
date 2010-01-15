@@ -665,15 +665,15 @@ getGConName _ = fail "Expression in reification is not a name"
 checkValDef :: L -> PExp L -> Maybe (S.Type L) -> Rhs L -> Maybe (Binds L) -> P (Decl L)
 checkValDef l lhs optsig rhs whereBinds = do
     mlhs <- isFunLhs lhs []
+    let whpt = srcInfoPoints l
     case mlhs of
      Just (f,es,b,pts) -> do
             ps <- mapM checkPattern es
+            let l' = l { srcInfoPoints = pts ++ whpt }
             case optsig of -- only pattern bindings can have signatures
                 Nothing -> return (FunBind l $
-                            if b then [Match l f ps rhs whereBinds]
+                            if b then [Match l' f ps rhs whereBinds]
                                  else let (a:bs) = ps 
-                                          whpt = srcInfoPoints l
-                                          l' = l { srcInfoPoints = pts ++ whpt }
                                        in [InfixMatch l' a f bs rhs whereBinds])
                 Just _  -> fail "Cannot give an explicit type signature to a function binding"
      Nothing     -> do
