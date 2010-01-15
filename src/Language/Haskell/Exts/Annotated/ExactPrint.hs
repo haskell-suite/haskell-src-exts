@@ -1424,12 +1424,16 @@ instance ExactP Match where
     maybeEP (\bds -> printStringAt (pos (head pts)) "where" >> exactPC bds) mbinds
   exactP (InfixMatch l a n bs rhs mbinds) = do
     let pts = srcInfoPoints l
-    exactP a
+        len = length pts
+        pars = len `div` 2
+        (oPars,cParsWh) = splitAt pars pts
+        (cPars,whPt) = splitAt pars cParsWh    -- whPt is either singleton or empty
+    printStrs (zip oPars (repeat "("))
+    exactPC a
     epInfixName n
-    mapM_ exactPC bs    -- Note that this is inevitably an error of |bs| > 1, 
-                        -- since that would require parentheses that we don't remember
+    printInterleaved' (zip cPars (repeat ")")) bs
     exactPC rhs
-    maybeEP (\bds -> printStringAt (pos (head pts)) "where" >> exactPC bds) mbinds
+    maybeEP (\bds -> printStringAt (pos (head whPt)) "where" >> exactPC bds) mbinds
 
 instance ExactP Rhs where
   exactP (UnGuardedRhs l e) = printString "=" >> exactPC e

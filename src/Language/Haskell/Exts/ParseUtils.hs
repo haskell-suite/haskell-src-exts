@@ -666,12 +666,15 @@ checkValDef :: L -> PExp L -> Maybe (S.Type L) -> Rhs L -> Maybe (Binds L) -> P 
 checkValDef l lhs optsig rhs whereBinds = do
     mlhs <- isFunLhs lhs []
     case mlhs of
-     Just (f,es,b) -> do
+     Just (f,es,b,pts) -> do
             ps <- mapM checkPattern es
             case optsig of -- only pattern bindings can have signatures
                 Nothing -> return (FunBind l $
                             if b then [Match l f ps rhs whereBinds]
-                                 else let (a:bs) = ps in [InfixMatch l a f bs rhs whereBinds])
+                                 else let (a:bs) = ps 
+                                          whpt = srcInfoPoints l
+                                          l' = l { srcInfoPoints = pts ++ whpt }
+                                       in [InfixMatch l' a f bs rhs whereBinds])
                 Just _  -> fail "Cannot give an explicit type signature to a function binding"
      Nothing     -> do
             lhs <- checkPattern lhs
@@ -679,19 +682,24 @@ checkValDef l lhs optsig rhs whereBinds = do
 
 -- A variable binding is parsed as a PatBind.
 
-isFunLhs :: PExp L -> [PExp L] -> P (Maybe (Name L, [PExp L], Bool))
-isFunLhs (InfixApp _ l (QVarOp loc (UnQual _ op)) r) es
+isFunLhs :: PExp L -> [PExp L] -> P (Maybe (Name L, [PExp L], Bool, [S]))
+isFunLhs (InfixApp ll l (QVarOp loc (UnQual _ op)) r) es
     | op =~= (Symbol () "!") = do
         exts <- getExtensions
         if BangPatterns `elem` exts
          then let (b,bs) = splitBang r []
                in isFunLhs l (BangPat loc b : bs ++ es)
-         else return $ Just (op, l:r:es, False) -- It's actually a definition of the operator !
-    | otherwise = return $ Just (op, l:r:es, False)
-isFunLhs (App _ (Var _ (UnQual _ f)) e) es = return $ Just (f, e:es, True)
+         else return $ Just (op, l:r:es, False, []) -- It's actually a definition of the operator !
+    | otherwise = return $ Just (op, l:r:es, False, [])
+isFunLhs (App _ (Var _ (UnQual _ f)) e) es = return $ Just (f, e:es, True, [])
 isFunLhs (App _ f e) es = isFunLhs f (e:es)
-isFunLhs (Var _ (UnQual _ f)) es@(_:_) = return $ Just (f, es, True)
-isFunLhs (Paren _ f) es@(_:_) = isFunLhs f es
+isFunLhs (Var _ (UnQual _ f)) es@(_:_) = return $ Just (f, es, True, [])
+isFunLhs (Paren l f) es@(_:_) = do mlhs <- isFunLhs f es 
+                                   case mlhs of
+                                    Just (f,es,b,pts) -> 
+                                       let [x,y] = srcInfoPoints l
+                                        in return $ Just (f,es,b,x:pts++[y])
+                                    _ -> return Nothing
 isFunLhs _ _ = return Nothing
 
 -- Separating between signature declarations and value definitions in
