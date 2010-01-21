@@ -1,3 +1,37 @@
+** 1.7.x
+
+1.7.1 --> 1.7.2
+===============
+
+* Fixes a bug in lexing LINE pragmas (used when ignoreLinePragmas
+  is set to False).
+
+1.7.0 --> 1.7.1
+===============
+
+* UnicodeSyntax now also enables the forall symbol (U+2200).
+
+1.6.1 --> 1.7.0
+===============
+
+* Operators defined on the form
+  
+     (a `op` b) c = ...
+  
+  could not be handled by the (annotated) AST, nor the parser. I had to 
+  change the definition of the AST node for InfixMatch to allow a list
+  of right-hand subpatterns, i.e.
+  
+     InfixMatch l (Pat l) (Name l) (Pat l) ...
+  
+  has become
+  
+     InfixMatch l (Pat l) (Name l) [Pat l] ...
+
+  I also had an epiphany and fixed the issue that would arise with
+  exact printing of prefix definitions including parentheses, so 
+  that now works too!
+
 ** 1.6.x
 
 1.6.0 --> 1.6.1
