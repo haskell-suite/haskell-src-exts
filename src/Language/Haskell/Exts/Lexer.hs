@@ -416,6 +416,7 @@ lexLinePragma = do
     lexWhile isSpace
     i <- lexWhile isDigit
     lexWhile isSpace
+    matchChar '"' "Improperly formatted LINE pragma"
     _ <- lexString
     lexWhile isSpace
     mapM (flip matchChar "Improperly formatted LINE pragma") "#-}"
