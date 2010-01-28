@@ -43,6 +43,7 @@ import Prelude hiding (mapM)
 -- | Operator fixities are represented by their associativity
 --   (left, right or none) and their precedence (0-9).
 data Fixity = Fixity Assoc Int Op
+    deriving Show
 
 -- | All AST elements that may include expressions which in turn may
 --   need fixity tweaking will be instances of this class.
