@@ -819,8 +819,8 @@ data RPat
     | RPEither RPat RPat    -- ^ choice pattern, e.g. (1 | 2)
     | RPSeq [RPat]          -- ^ sequence pattern, e.g. (| 1, 2, 3 |)
     | RPGuard Pat [Stmt]    -- ^ guarded pattern, e.g. (| p | p < 3 |)
-    | RPCAs Name RPat       -- ^ non-linear variable binding, e.g. (foo@:(1 | 2))*
-    | RPAs Name RPat        -- ^ linear variable binding, e.g. foo@(1 | 2)
+    | RPCAs Name RPat       -- ^ non-linear variable binding, e.g. (foo\@:(1 | 2))*
+    | RPAs Name RPat        -- ^ linear variable binding, e.g. foo\@(1 | 2)
     | RPParen RPat          -- ^ parenthesised pattern, e.g. (2*)
     | RPPat Pat             -- ^ an ordinary pattern
 #ifdef __GLASGOW_HASKELL__
