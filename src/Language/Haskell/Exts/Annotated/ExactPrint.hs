@@ -24,6 +24,7 @@ import Language.Haskell.Exts.Comments
 
 import Control.Monad (when)
 import Control.Arrow ((***), (&&&))
+import Data.List (intersperse)
 
 -- import Debug.Trace (trace)
 
@@ -1216,7 +1217,11 @@ instance ExactP Exp where
       exactPC qn
     BracketExp l br -> exactP br
     SpliceExp l sp  -> exactP sp
-    QuasiQuote l name qt    -> printString $ "[$" ++ name ++ "|" ++ qt ++ "]"
+    QuasiQuote l name qt    -> do
+        let qtLines = lines qt
+        printString $ "[$" ++ name ++ "|"
+        sequence_ (intersperse newLine $ map printString qtLines)
+        printString "|]"
     XTag l xn attrs mat es  ->
         case srcInfoPoints l of
          [a,b,c,d,e] -> do

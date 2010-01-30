@@ -759,7 +759,10 @@ lexStdToken = do
                   '\\':_ -> do discard 1
                                str <- lexQQBody
                                return ('\\':str)
-                  _ -> do str <- lexWhile (not . (`elem` "\\|"))
+                  '\n':_ -> do lexNewline
+                               str <- lexQQBody
+                               return ('\n':str)
+                  _ -> do str <- lexWhile (not . (`elem` "\\|\n"))
                           rest <- lexQQBody
                           return (str++rest)
 
