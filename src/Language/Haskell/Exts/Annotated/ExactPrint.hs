@@ -172,7 +172,9 @@ squareList = bracketList ("[",",","]")
 curlyList = bracketList ("{",",","}")
 
 layoutList :: (Functor ast, Show (ast ()), Annotated ast, ExactP ast) => [SrcSpan] -> [ast SrcSpanInfo] -> EP ()
-layoutList poss asts = printInterleaved (lList poss) asts
+layoutList poss asts = printStreams 
+        (map (pos *** printString) $ lList poss) 
+        (map (pos . ann &&& exactP) asts)
 
 lList (p:ps) = (if isNullSpan p then (p,"") else (p,"{")) : lList' ps
 lList' [] = []
