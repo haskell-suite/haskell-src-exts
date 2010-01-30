@@ -1,2 +1,4 @@
 Unicode.hs
 UnicodeSyntax.hs
+SpecializeInstance.hs
+ForeignImport.hs
