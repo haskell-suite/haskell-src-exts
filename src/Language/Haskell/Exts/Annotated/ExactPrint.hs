@@ -1245,7 +1245,9 @@ instance ExactP Exp where
             maybeEP exactPC mat
             printStringAt (pos b) "/>"
          _ -> errorEP "ExactP: Exp: XETag is given wrong number of srcInfoPoints"
-    XPcdata l str   -> printString str
+    XPcdata l str   -> do
+        let strLines = lines str
+        sequence_ (intersperse newLine $ map printString strLines)
     XExpTag l e     ->
         case srcInfoPoints l of
          [a,b] -> do
