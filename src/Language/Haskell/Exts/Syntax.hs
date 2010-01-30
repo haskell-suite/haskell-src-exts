@@ -723,7 +723,7 @@ data CallConv
 data OptionPragma
     = LanguagePragma   SrcLoc [Name]    -- ^ LANGUAGE pragma
     | IncludePragma    SrcLoc String    -- ^ INCLUDE pragma
-    | CFilesPragma     SrcLoc String    -- ^ CFILES pragma
+--    | CFilesPragma     SrcLoc String    -- ^ CFILES pragma
     | OptionsPragma    SrcLoc (Maybe Tool) String
                         -- ^ OPTIONS pragma, possibly qualified with a tool, e.g. OPTIONS_GHC
 #ifdef __GLASGOW_HASKELL__

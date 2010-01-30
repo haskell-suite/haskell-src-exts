@@ -462,9 +462,9 @@ instance ExactP OptionPragma where
     IncludePragma    l str      ->
         let k = length (srcInfoPoints l)
          in printPoints l $ ("{-# INCLUDE " ++ str) : replicate (k-2) "" ++ ["#-}"]
-    CFilesPragma     l str      ->
+{-    CFilesPragma     l str      ->
         let k = length (srcInfoPoints l)
-         in printPoints l $ ("{-# CFILES " ++ str) : replicate (k-2) "" ++ ["#-}"]
+         in printPoints l $ ("{-# CFILES " ++ str) : replicate (k-2) "" ++ ["#-}"] -}
     OptionsPragma    l mt str   ->
         let k = length (srcInfoPoints l)
             opstr = "{-# OPTIONS" ++ case mt of { Just t -> "_" ++ show t ; _ -> "" } ++ " " ++ str

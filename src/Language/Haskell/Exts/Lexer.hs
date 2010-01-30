@@ -139,7 +139,7 @@ data Token
         | CORE
         | UNPACK
         | OPTIONS (Maybe String,String)
-        | CFILES  String
+--        | CFILES  String
         | LANGUAGE
         | INCLUDE String
         | ANN
@@ -303,7 +303,7 @@ pragmas = [
  ( "unpack",            UNPACK          ),
  ( "language",          LANGUAGE        ),
  ( "options",           OPTIONS undefined ), -- we'll tweak it before use - promise!
- ( "cfiles",            CFILES  undefined ), -- same here...
+-- ( "cfiles",            CFILES  undefined ), -- same here...
  ( "include",           INCLUDE undefined )  -- ...and here!
  ]
 
@@ -798,9 +798,9 @@ lexPragmaStart = do
                 rest <- lexRawPragma
                 return $ OPTIONS (Nothing, rest)
              _ -> fail "Malformed Options pragma"
-     Just (CFILES _) -> do
+{-     Just (CFILES _) -> do
             rest <- lexRawPragma
-            return $ CFILES rest
+            return $ CFILES rest -}
      Just (INCLUDE _) -> do
             rest <- lexRawPragma
             return $ INCLUDE rest
@@ -1210,7 +1210,7 @@ showToken t = case t of
   CORE              -> "{-# CORE"
   UNPACK            -> "{-# UNPACK"
   OPTIONS (mt,s)    -> "{-# OPTIONS" ++ maybe "" (':':) mt ++ " ..."
-  CFILES  s         -> "{-# CFILES ..."
+--  CFILES  s         -> "{-# CFILES ..."
   LANGUAGE          -> "{-# LANGUAGE"
   INCLUDE s         -> "{-# INCLUDE ..."
   ANN               -> "{-# ANN"

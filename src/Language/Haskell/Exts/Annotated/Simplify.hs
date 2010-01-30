@@ -409,7 +409,7 @@ sOptionPragma :: SrcInfo loc => OptionPragma loc -> S.OptionPragma
 sOptionPragma pr = case pr of
     LanguagePragma   l ns   -> S.LanguagePragma (getPointLoc l) (map sName ns)
     IncludePragma    l str  -> S.IncludePragma (getPointLoc l) str
-    CFilesPragma     l str  -> S.CFilesPragma (getPointLoc l) str
+--    CFilesPragma     l str  -> S.CFilesPragma (getPointLoc l) str
     OptionsPragma    l mt str -> S.OptionsPragma (getPointLoc l) mt str
 
 sActivation :: Activation l -> S.Activation

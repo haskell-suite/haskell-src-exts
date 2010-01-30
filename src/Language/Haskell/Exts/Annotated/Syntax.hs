@@ -821,7 +821,7 @@ data CallConv l
 data OptionPragma l
     = LanguagePragma   l [Name l]  -- ^ LANGUAGE pragma
     | IncludePragma    l String    -- ^ INCLUDE pragma
-    | CFilesPragma     l String    -- ^ CFILES pragma
+--    | CFilesPragma     l String    -- ^ CFILES pragma
     | OptionsPragma    l (Maybe Tool) String
                         -- ^ OPTIONS pragma, possibly qualified with a tool, e.g. OPTIONS_GHC
 #ifdef __GLASGOW_HASKELL__
@@ -1432,7 +1432,7 @@ instance Functor CallConv where
 instance Functor OptionPragma where
     fmap f (LanguagePragma   l ns) = LanguagePragma (f l) (map (fmap f) ns)
     fmap f (IncludePragma    l s) = IncludePragma (f l) s
-    fmap f (CFilesPragma     l s) = CFilesPragma (f l) s
+--    fmap f (CFilesPragma     l s) = CFilesPragma (f l) s
     fmap f (OptionsPragma    l mt s) = OptionsPragma (f l) mt s
 
 instance Functor Activation where
@@ -2050,7 +2050,7 @@ instance Annotated CallConv where
 instance Annotated OptionPragma where
     ann (LanguagePragma   l ns) = l
     ann (IncludePragma    l s) = l
-    ann (CFilesPragma     l s) = l
+--    ann (CFilesPragma     l s) = l
     ann (OptionsPragma    l mt s) = l
     amap f (LanguagePragma   l ns) = LanguagePragma (f l) ns
     amap f p = fmap f p

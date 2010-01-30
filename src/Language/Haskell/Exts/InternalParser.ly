@@ -256,7 +256,7 @@ Pragmas
 >       '{-# WARNING'           { Loc $$ WARNING }
 >       '{-# UNPACK'            { Loc $$ UNPACK }
 >       '{-# OPTIONS'           { Loc _ (OPTIONS _) }
->       '{-# CFILES'            { Loc _ (CFILES  _) }
+       '{-# CFILES'            { Loc _ (CFILES  _) }
 >       '{-# INCLUDE'           { Loc _ (INCLUDE _) }
 >       '{-# LANGUAGE'          { Loc $$ LANGUAGE }
 >       '{-# ANN'               { Loc $$ ANN }
@@ -324,8 +324,9 @@ TODO: the various pragma starts with content don't record where that content is 
 >           | '{-# INCLUDE' optsemis '#-}'           { let Loc l (INCLUDE s) = $1 in IncludePragma (l <^^> $3 <** (l:reverse $2 ++ [$3])) s }
 >           | '{-# OPTIONS' optsemis '#-}'           { let Loc l (OPTIONS (mc, s)) = $1
 >                                                       in OptionsPragma (l <^^> $3 <** (l:reverse $2 ++ [$3])) (readTool mc) s }
->           | '{-# CFILES'  optsemis '#-}'           { let Loc l (CFILES s) = $1
->                                                       in CFilesPragma  (l <^^> $3 <** (l:reverse $2 ++ [$3])) s }
+
+           | '{-# CFILES'  optsemis '#-}'           { let Loc l (CFILES s) = $1
+                                                       in CFilesPragma  (l <^^> $3 <** (l:reverse $2 ++ [$3])) s }
 
 > conids    :: { ([Name L],[S]) }
 >          : conid ',' conids                  { ($1 : fst $3, $2 : snd $3) }
