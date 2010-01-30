@@ -73,6 +73,7 @@ module Language.Haskell.Exts.Syntax (
     -- * Pragmas
     OptionPragma(..), Tool(..),
     Rule(..), RuleVar(..), Activation(..),
+    Annotation(..),
 
     -- * Builtin names
 
@@ -331,6 +332,22 @@ data Decl
      -- ^ A SPECIALISE INLINE pragma
      | InstSig          SrcLoc Context         QName [Type]
      -- ^ A SPECIALISE instance pragma
+     | AnnPragma        SrcLoc Annotation
+     -- ^ An ANN pragma
+#ifdef __GLASGOW_HASKELL__
+  deriving (Eq,Ord,Show,Typeable,Data)
+#else
+  deriving (Eq,Ord,Show)
+#endif
+
+-- | An annotation through an ANN pragma.
+data Annotation
+    = Ann       Name Exp
+    -- ^ An annotation for a declared name.
+    | TypeAnn   Name Exp
+    -- ^ An annotation for a declared type.
+    | ModuleAnn      Exp
+    -- ^ An annotation for the defining module.
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else

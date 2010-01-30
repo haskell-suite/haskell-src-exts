@@ -741,7 +741,28 @@ instance ExactP Decl where
             maybeEP exactPC mctxt
             exactPC ih
             printStringAt (pos c) "#-}"
-         _ -> errorEP "ExactP: Decl: InstSig is given too few srcInfoPoints"
+         _ -> errorEP "ExactP: Decl: InstSig is given wrong number of srcInfoPoints"
+    AnnPragma       l ann       ->
+        case srcInfoPoints l of
+         [a,b] -> do
+            printString $ "{-# ANN"
+            exactPC ann
+            printStringAt (pos b) "#-}"
+         _ -> errorEP "ExactP: Decl: AnnPragma is given wrong number of srcInfoPoints"
+
+
+instance ExactP Annotation where
+    exactP ann = case ann of
+        Ann     l n e   -> do
+            exactP n
+            exactPC e
+        TypeAnn l n e   -> do
+            printString "type"
+            exactPC n
+            exactPC e
+        ModuleAnn l e   -> do
+            printString "module"
+            exactPC e
 
 printWarndeprs :: [Pos] -> [([Name SrcSpanInfo], String)] -> EP ()
 printWarndeprs _ [] = return ()

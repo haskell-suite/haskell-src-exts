@@ -77,6 +77,7 @@ module Language.Haskell.Exts.Annotated.Syntax (
     -- * Pragmas
     OptionPragma(..), Tool(..),
     Rule(..), RuleVar(..), Activation(..),
+    Annotation(..),
 
     -- * Builtin names
 
@@ -364,11 +365,28 @@ data Decl l
      -- ^ A SPECIALISE INLINE pragma
      | InstSig          l      (Maybe (Context l))    (InstHead l)
      -- ^ A SPECIALISE instance pragma
+     | AnnPragma        l (Annotation l)
+     -- ^ An ANN pragma
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
   deriving (Eq,Ord,Show)
 #endif
+
+-- | An annotation through an ANN pragma.
+data Annotation l
+    = Ann       l (Name l)  (Exp l)
+    -- ^ An annotation for a declared name.
+    | TypeAnn   l (Name l)  (Exp l)
+    -- ^ An annotation for a declared type.
+    | ModuleAnn l           (Exp l)
+    -- ^ An annotation for the defining module.
+#ifdef __GLASGOW_HASKELL__
+  deriving (Eq,Ord,Show,Typeable,Data)
+#else
+  deriving (Eq,Ord,Show)
+#endif
+
 
 -- | A flag stating whether a declaration is a data or newtype declaration.
 data DataOrNew l = DataType l | NewType l
@@ -1205,6 +1223,11 @@ instance Functor Decl where
         InstSig          l mcx ih         -> InstSig (f l) (fmap (fmap f) mcx) (fmap f ih)
       where wp f (ns, s) = (map (fmap f) ns, s)
 
+instance Functor Annotation where
+    fmap f (Ann     l n e) = Ann     (f l) (fmap f n) (fmap f e)
+    fmap f (TypeAnn l n e) = TypeAnn (f l) (fmap f n) (fmap f e)
+    fmap f (ModuleAnn l e) = ModuleAnn (f l) (fmap f e)
+
 instance Functor DataOrNew where
     fmap f (DataType l) = DataType (f l)
     fmap f (NewType  l) = NewType  (f l)
@@ -1698,6 +1721,14 @@ instance Annotated Decl where
         SpecInlineSig    l b act qn ts   -> SpecInlineSig (f l) b act qn ts
         InstSig          l mcx ih        -> InstSig (f l) mcx ih
 
+instance Annotated Annotation where
+    ann (Ann     l n e) = l
+    ann (TypeAnn l n e) = l
+    ann (ModuleAnn l e) = l
+    amap f (Ann     l n e) = Ann     (f l) n e
+    amap f (TypeAnn l n e) = TypeAnn (f l) n e
+    amap f (ModuleAnn l e) = ModuleAnn (f l) e
+    
 instance Annotated DataOrNew where
     ann (DataType l) = l
     ann (NewType  l) = l

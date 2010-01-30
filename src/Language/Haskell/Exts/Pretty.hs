@@ -495,11 +495,15 @@ instance Pretty Decl where
                 mySep $ [text "{-# SPECIALISE", text "instance", ppContext context, pretty name]
                             ++ map ppAType args ++ [text "#-}"]
 
-{-        pretty (UnknownDeclPragma pos n s) =
+        pretty (AnnPragma pos ann) =
                 blankline $
                 markLine pos $
-                mySep $ [text "{-#", text n, text s, text "#-}"] -}
+                mySep $ [text "{-# ANN", pretty ann, text "#-}"]
 
+instance Pretty Annotation where
+        pretty (Ann n e) = myFsep [pretty n, pretty e]
+        pretty (TypeAnn n e) = myFsep [text "type", pretty n, pretty e]
+        pretty (ModuleAnn e) = myFsep [text "module", pretty e]
 
 instance Pretty DataOrNew where
         pretty DataType = text "data"
@@ -1249,6 +1253,9 @@ instance Pretty (A.OptionPragma l) where
         myFsep $ [text "{-# OPTIONS_" <> pretty tool, text s, text "#-}"]
     pretty (A.OptionsPragma _ _ s) =
         myFsep $ [text "{-# OPTIONS", text s, text "#-}"]
+
+instance SrcInfo loc => Pretty (A.Annotation loc) where
+    pretty = pretty . sAnnotation
 
 ------------------------- Data & Newtype Bodies -------------------------
 instance Pretty (A.QualConDecl l) where

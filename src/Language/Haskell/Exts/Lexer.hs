@@ -127,7 +127,6 @@ data Token
 -- Pragmas
 
         | PragmaEnd                     -- #-}
---        | PragmaUnknown (String,String)   -- Any pragma not recognized
         | RULES
         | INLINE Bool
         | SPECIALISE
@@ -143,8 +142,7 @@ data Token
         | CFILES  String
         | LANGUAGE
         | INCLUDE String
--- These are not yet implemented
---        | LINE
+        | ANN
 
 -- Reserved Ids
 
@@ -1215,6 +1213,7 @@ showToken t = case t of
   CFILES  s         -> "{-# CFILES ..."
   LANGUAGE          -> "{-# LANGUAGE"
   INCLUDE s         -> "{-# INCLUDE ..."
+  ANN               -> "{-# ANN"
   KW_As         -> "as"
   KW_By         -> "by"
   KW_Case       -> "case"

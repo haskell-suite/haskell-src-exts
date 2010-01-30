@@ -195,6 +195,7 @@ instance AppFixity Decl where
         SpliceDecl loc spl      -> liftM (SpliceDecl loc) $ fix spl
         FunBind matches         -> liftM FunBind $ mapM fix matches
         PatBind loc p mt rhs bs -> liftM3 (flip (PatBind loc) mt) (fix p) (fix rhs) (fix bs)
+        AnnPragma loc ann       -> liftM (AnnPragma loc) $ fix ann
         _                       -> return decl
       where fix x = applyFixities fixs x
 
@@ -205,6 +206,13 @@ appFixDecls fixs decls =
   where getFixities = concatMap getFixity
         getFixity (InfixDecl _ a p ops) = map (Fixity a p) ops
         getFixity _ = []
+
+instance AppFixity Annotation where
+    applyFixities fixs ann = case ann of
+        Ann     n e   -> liftM (Ann n) $ fix e
+        TypeAnn n e   -> liftM (TypeAnn n) $ fix e
+        ModuleAnn e   -> liftM ModuleAnn $ fix e
+      where fix x = applyFixities fixs x
 
 instance AppFixity ClassDecl where
     applyFixities fixs (ClsDecl decl) = liftM ClsDecl $ applyFixities fixs decl

@@ -259,6 +259,7 @@ Pragmas
 >       '{-# CFILES'            { Loc _ (CFILES  _) }
 >       '{-# INCLUDE'           { Loc _ (INCLUDE _) }
 >       '{-# LANGUAGE'          { Loc $$ LANGUAGE }
+>       '{-# ANN'               { Loc $$ ANN }
 >       '#-}'                   { Loc $$ PragmaEnd }
 
 
@@ -573,6 +574,7 @@ Requires the TemplateHaskell extension, but the lexer will handle that
 through the '$(' lexeme.
 CHANGE: Arbitrary top-level expressions are considered implicit splices
 >       | exp0             {% checkEnabled TemplateHaskell >> checkExpr $1 >>= \e -> return (SpliceDecl (ann e) e) }
+
        | '$(' trueexp ')'  { let l = $1 <^^> $3 <** [$1,$3] in SpliceDecl l $ ParenSplice l $2 }
 
 These require the ForeignFunctionInterface extension, handled by the
@@ -582,9 +584,10 @@ lexer through the 'foreign' (and 'export') keyword.
 >       | 'foreign' 'export' callconv fspec
 >                { let (s,n,t,ss) = $4 in ForExp (nIS $1 <++> ann t <** ($1:$2:ss)) $3    s n t }
 
->       | '{-# RULES'      rules     '#-}'      { RulePragmaDecl ($1 <^^> $3 <** [$1,$3]) $ reverse $2 }
->       | '{-# DEPRECATED' warndeprs '#-}'      { DeprPragmaDecl ($1 <^^> $3 <** ($1:snd $2++[$3])) $ reverse (fst $2) }
->       | '{-# WARNING'    warndeprs '#-}'      { WarnPragmaDecl ($1 <^^> $3 <** ($1:snd $2++[$3])) $ reverse (fst $2) }
+>       | '{-# RULES'      rules      '#-}'     { RulePragmaDecl ($1 <^^> $3 <** [$1,$3]) $ reverse $2 }
+>       | '{-# DEPRECATED' warndeprs  '#-}'     { DeprPragmaDecl ($1 <^^> $3 <** ($1:snd $2++[$3])) $ reverse (fst $2) }
+>       | '{-# WARNING'    warndeprs  '#-}'     { WarnPragmaDecl ($1 <^^> $3 <** ($1:snd $2++[$3])) $ reverse (fst $2) }
+>       | '{-# ANN'        annotation '#-}'     { AnnPragma      ($1 <^^> $3) $2 }
 >       | decl          { $1 }
 
 > data_or_newtype :: { DataOrNew L }
@@ -728,6 +731,11 @@ Pragmas
 > namevar :: { Name L }
 >         : con                         { $1 }
 >         | var                         { $1 }
+
+> annotation :: { Annotation L }
+>       : 'type' conid aexp             {% checkExpr $3 >>= \e -> return (TypeAnn   (nIS $1 <++> ann e <** [$1]) $2 e) }
+>       | 'module' aexp                 {% checkExpr $2 >>= \e -> return (ModuleAnn (nIS $1 <++> ann e <** [$1])    e) }
+>       | namevar aexp                  {% checkExpr $2 >>= \e -> return (Ann ($1 <> e) $1 e) }
 
 -----------------------------------------------------------------------------
 Types

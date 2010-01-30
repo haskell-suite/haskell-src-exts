@@ -108,6 +108,14 @@ sDecl decl = case decl of
      InstSig          l mctxt ih    ->
         let (qn, ts) = sInstHead ih
          in S.InstSig (getPointLoc l) (maybe [] sContext mctxt) qn ts
+     AnnPragma        l ann         ->
+        S.AnnPragma (getPointLoc l) (sAnnotation ann)
+
+sAnnotation :: SrcInfo loc => Annotation loc -> S.Annotation
+sAnnotation ann = case ann of
+    Ann       _ n e   -> S.Ann     (sName n) (sExp e)
+    TypeAnn   _ n e   -> S.TypeAnn (sName n) (sExp e)
+    ModuleAnn _   e   -> S.ModuleAnn         (sExp e)
 
 sModuleName :: ModuleName l -> S.ModuleName
 sModuleName (ModuleName _ str)  = S.ModuleName str
