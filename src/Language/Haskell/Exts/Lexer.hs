@@ -355,8 +355,9 @@ lexWhiteSpace bol = do
         -- If we find a recognised pragma, we don't want to treat it as a comment.
         '{':'-':'#':rest | isRecognisedPragma rest -> return (bol, False)
                          | isLinePragma rest && not ignL -> do 
-                            l <- lexLinePragma
+                            (l, fn) <- lexLinePragma
                             setSrcLineL l
+                            setLineFilenameL fn
                             lexWhiteSpace True
         '{':'-':_ -> do
             loc <- getSrcLocL
@@ -406,7 +407,7 @@ isLinePragma str = let pragma = map toLower . takeWhile isAlphaNum . dropWhile i
                         "line"  -> True
                         _       -> False
 
-lexLinePragma :: Lex a Int
+lexLinePragma :: Lex a (Int, String)
 lexLinePragma = do
     discard 3   -- {-#
     lexWhile isSpace
@@ -415,11 +416,12 @@ lexLinePragma = do
     i <- lexWhile isDigit
     lexWhile isSpace
     matchChar '"' "Improperly formatted LINE pragma"
-    _ <- lexString
+    fn <- lexWhile (/= '"')
+    matchChar '"' "Impossible - lexLinePragma"
     lexWhile isSpace
     mapM (flip matchChar "Improperly formatted LINE pragma") "#-}"
     lexNewline
-    return (read i)
+    return (read i, fn)
 
 lexNestedComment :: Bool -> String -> Lex a (Bool, String)
 lexNestedComment bol str = do

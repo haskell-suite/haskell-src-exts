@@ -25,7 +25,7 @@ module Language.Haskell.Exts.ParseMonad(
         Lex(runL), getInput, discard, lexNewline, lexTab, lexWhile,
         alternative, checkBOL, setBOL, startToken, getOffside,
         pushContextL, popContextL, getExtensionsL, pushComment, 
-        getSrcLocL, setSrcLineL, ignoreLinePragmasL,
+        getSrcLocL, setSrcLineL, ignoreLinePragmasL, setLineFilenameL,
         -- * Harp/Hsx
         ExtContext(..),
         pushExtContextL, popExtContextL, getExtContext,
@@ -413,6 +413,11 @@ ignoreLinePragmasL :: Lex a Bool
 ignoreLinePragmasL = Lex $ \cont -> P $ \r x y loc s m ->
         runP (cont $ ignoreLinePragmas m) r x y loc s m
 
+-- If we read a file name in a LINE pragma, we should update the state.
+setLineFilenameL :: String -> Lex a ()
+setLineFilenameL name = Lex $ \cont -> P $ \r x y loc s m ->
+        runP (cont ()) r x y loc s (m {parseFilename = name})
+        
 -- Comments
 
 pushComment :: Comment -> Lex a ()
