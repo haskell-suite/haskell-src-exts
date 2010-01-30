@@ -19,7 +19,7 @@ module Language.Haskell.Exts.Extension (
     Extension(..), classifyExtension, impliesExts,
 
     -- * Extension groups
-    glasgowExts
+    glasgowExts, knownExtensions
 
     ) where
 
@@ -130,79 +130,6 @@ impliesExts = go
                     PatternSignatures   -> [ScopedTypeVariables]
                     e                   -> []
 
--- | List of all known extensions. Poor man's 'Enum' instance
---   (we can't enum with the 'UnknownExtension' constructor).
-knownExtensions :: [Extension]
-knownExtensions =
-  [ OverlappingInstances
-  , UndecidableInstances
-  , IncoherentInstances
-  , RecursiveDo
-  , ParallelListComp
-  , MultiParamTypeClasses
-  , NoMonomorphismRestriction
-  , FunctionalDependencies
-  , ExplicitForall
-  , Rank2Types
-  , RankNTypes
-  , PolymorphicComponents
-  , ExistentialQuantification
-  , ScopedTypeVariables
-  , ImplicitParams
-  , FlexibleContexts
-  , FlexibleInstances
-  , EmptyDataDecls
-  , CPP
-
-  , KindSignatures
-  , BangPatterns
-  , TypeSynonymInstances
-  , TemplateHaskell
-  , ForeignFunctionInterface
-  , Arrows
-  , Generics
-  , NoImplicitPrelude
-  , NamedFieldPuns
-  , PatternGuards
-  , GeneralizedNewtypeDeriving
-
-  , ExtensibleRecords
-  , RestrictedTypeSynonyms
-  , HereDocuments
-  , MagicHash
-  , TypeFamilies
-  , StandaloneDeriving
-
-  , UnicodeSyntax
-  , PatternSignatures
-  , UnliftedFFITypes
-  , LiberalTypeSynonyms
-  , TypeOperators
---PArr -- not ready yet, and will probably be renamed to ParallelArrays
-  , RecordWildCards
-  , RecordPuns
-  , DisambiguateRecordFields
-  , OverloadedStrings
-  , GADTs
-  , MonoPatBinds
-  , NoMonoPatBinds
-  , RelaxedPolyRec
-  , ExtendedDefaultRules
-  , UnboxedTuples
-  , DeriveDataTypeable
-  , ConstrainedClassMethods
-  , PackageImports
-  , ImpredicativeTypes
-  , NewQualifiedOperators
-  , PostfixOperators
-  , QuasiQuotes
-  , TransformListComp
-  , ViewPatterns
-  , XmlSyntax
-  , RegularPatterns
-  , TupleSections
-  ]
-
 -- | The list of extensions enabled by
 --   GHC's portmanteau -fglasgow-exts flag.
 glasgowExts :: [Extension]
@@ -237,6 +164,75 @@ glasgowExts = [
     , KindSignatures
     , GeneralizedNewtypeDeriving
     , TypeFamilies
+    ]
+
+-- | List of all known extensions. Poor man's 'Enum' instance
+--   (we can't enum with the 'UnknownExtension' constructor).
+knownExtensions :: [Extension]
+knownExtensions = 
+    [ OverlappingInstances
+    , UndecidableInstances
+    , IncoherentInstances
+    , RecursiveDo
+    , ParallelListComp
+    , MultiParamTypeClasses
+    , NoMonomorphismRestriction
+    , FunctionalDependencies
+    , ExplicitForall
+    , Rank2Types
+    , RankNTypes
+    , PolymorphicComponents
+    , ExistentialQuantification
+    , ScopedTypeVariables
+    , ImplicitParams
+    , FlexibleContexts
+    , FlexibleInstances
+    , EmptyDataDecls
+    , CPP
+    , KindSignatures
+    , BangPatterns
+    , TypeSynonymInstances
+    , TemplateHaskell
+    , ForeignFunctionInterface
+    , Arrows
+    , Generics
+    , NoImplicitPrelude
+    , NamedFieldPuns
+    , PatternGuards
+    , GeneralizedNewtypeDeriving
+    , ExtensibleRecords
+    , RestrictedTypeSynonyms
+    , HereDocuments
+    , MagicHash
+    , TypeFamilies
+    , StandaloneDeriving
+    , UnicodeSyntax
+    , PatternSignatures
+    , UnliftedFFITypes
+    , LiberalTypeSynonyms
+    , TypeOperators
+    , RecordWildCards
+    , RecordPuns -- should be deprecated
+    , DisambiguateRecordFields
+    , OverloadedStrings
+    , GADTs
+    , MonoPatBinds
+    , NoMonoPatBinds -- should be deprecated
+    , RelaxedPolyRec
+    , ExtendedDefaultRules
+    , UnboxedTuples
+    , DeriveDataTypeable
+    , ConstrainedClassMethods
+    , PackageImports
+    , ImpredicativeTypes
+    , NewQualifiedOperators
+    , PostfixOperators
+    , QuasiQuotes
+    , TransformListComp
+    , ViewPatterns
+    , XmlSyntax
+    , RegularPatterns
+    , TupleSections
     ]
 
 
