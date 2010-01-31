@@ -129,6 +129,7 @@ data Token
         | PragmaEnd                     -- #-}
         | RULES
         | INLINE Bool
+        | INLINE_CONLIKE
         | SPECIALISE
         | SPECIALISE_INLINE Bool
         | SOURCE
@@ -771,6 +772,13 @@ lexPragmaStart = do
     lexWhile isSpace
     pr <- lexWhile isAlphaNum
     case lookup (map toLower pr) pragmas of
+     Just (INLINE True) -> do
+            s <- getInput
+            case map toLower s of
+             '_':'c':'o':'n':'l':'i':'k':'e':_  -> do
+                      discard 8
+                      return $ INLINE_CONLIKE
+             _ -> return $ INLINE True
      Just SPECIALISE -> do
             s <- getInput
             case dropWhile isSpace $ map toLower s of
@@ -1202,6 +1210,7 @@ showToken t = case t of
   PragmaEnd         -> "#-}"
   RULES             -> "{-# RULES"
   INLINE b          -> "{-# " ++ if b then "INLINE" else "NOINLINE"
+  INLINE_CONLIKE    -> "{-# " ++ "INLINE_CONLIKE"
   SPECIALISE        -> "{-# SPECIALISE"
   SPECIALISE_INLINE b -> "{-# SPECIALISE " ++ if b then "INLINE" else "NOINLINE"
   SOURCE            -> "{-# SOURCE"

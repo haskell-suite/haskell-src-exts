@@ -476,6 +476,11 @@ instance Pretty Decl where
                 markLine pos $
                 mySep [text (if inl then "{-# INLINE" else "{-# NOINLINE"), pretty activ, pretty name, text "#-}"]
 
+        pretty (InlineConlikeSig pos activ name) =
+                blankline $
+                markLine pos $
+                mySep [text "{-# INLINE_CONLIKE", pretty activ, pretty name, text "#-}"]
+
         pretty (SpecSig pos name types) =
                 blankline $
                 markLine pos $
@@ -573,9 +578,9 @@ instance Pretty InstDecl where
                         $$$ ppBody classIndent (map pretty gadtList)
                         $$$ ppDeriving derives
 
-        pretty (InsInline loc inl activ name) =
-                markLine loc $
-                mySep [text (if inl then "{-# INLINE" else "{-# NOINLINE"), pretty activ, pretty name, text "#-}"]
+--        pretty (InsInline loc inl activ name) =
+--                markLine loc $
+--                mySep [text (if inl then "{-# INLINE" else "{-# NOINLINE"), pretty activ, pretty name, text "#-}"]
 
 
 ------------------------- FFI stuff -------------------------------------

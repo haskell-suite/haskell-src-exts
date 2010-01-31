@@ -359,6 +359,8 @@ data Decl l
      -- ^ A WARNING pragma
      | InlineSig        l Bool (Maybe (Activation l)) (QName l)
      -- ^ An INLINE pragma
+     | InlineConlikeSig l      (Maybe (Activation l)) (QName l)
+     -- ^ An INLINE pragma
      | SpecSig          l                             (QName l) [Type l]
      -- ^ A SPECIALISE pragma
      | SpecInlineSig    l Bool (Maybe (Activation l)) (QName l) [Type l]
@@ -532,8 +534,8 @@ data InstDecl l
             -- ^ an associated data type implementation
     | InsGData  l (DataOrNew l) (Type l) (Maybe (Kind l)) [GadtDecl l] (Maybe (Deriving l))
             -- ^ an associated data type implemented using GADT style
-    | InsInline l Bool (Maybe (Activation l)) (QName l)
-            -- ^ an INLINE pragma
+{-    | InsInline l Bool (Maybe (Activation l)) (QName l)
+            -- ^ an INLINE pragma -}
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
@@ -1218,6 +1220,7 @@ instance Functor Decl where
         DeprPragmaDecl   l nss            -> DeprPragmaDecl (f l) (map (wp f) nss)
         WarnPragmaDecl   l nss            -> WarnPragmaDecl (f l) (map (wp f) nss)
         InlineSig        l b mact qn      -> InlineSig (f l) b (fmap (fmap f) mact) (fmap f qn)
+        InlineConlikeSig l   mact qn      -> InlineConlikeSig (f l) (fmap (fmap f) mact) (fmap f qn)
         SpecInlineSig    l b mact qn ts   -> SpecInlineSig (f l) b (fmap (fmap f) mact) (fmap f qn) (map (fmap f) ts)
         SpecSig          l        qn ts   -> SpecSig (f l) (fmap f qn) (map (fmap f) ts)
         InstSig          l mcx ih         -> InstSig (f l) (fmap (fmap f) mcx) (fmap f ih)
@@ -1286,7 +1289,7 @@ instance Functor InstDecl where
             -> InsData  (f l) (fmap f dn) (fmap f t)                    (map (fmap f) cds) (fmap (fmap f) ders)
         InsGData  l dn t mk gds ders
             -> InsGData (f l) (fmap f dn) (fmap f t) (fmap (fmap f) mk) (map (fmap f) gds) (fmap (fmap f) ders)
-        InsInline l b mact qn   -> InsInline (f l) b (fmap (fmap f) mact) (fmap f qn)
+--        InsInline l b mact qn   -> InsInline (f l) b (fmap (fmap f) mact) (fmap f qn)
 
 instance Functor BangType where
      fmap f (BangedTy   l t) = BangedTy (f l) (fmap f t)
@@ -1688,6 +1691,7 @@ instance Annotated Decl where
         DeprPragmaDecl   l nss          -> l
         WarnPragmaDecl   l nss          -> l
         InlineSig        l b act qn     -> l
+        InlineConlikeSig l   act qn     -> l
         SpecSig          l qn ts        -> l
         SpecInlineSig    l b act qn ts  -> l
         InstSig          l cx ih        -> l
@@ -1717,6 +1721,7 @@ instance Annotated Decl where
         DeprPragmaDecl   l nss           -> DeprPragmaDecl (f l) nss
         WarnPragmaDecl   l nss           -> WarnPragmaDecl (f l) nss
         InlineSig        l b act qn      -> InlineSig (f l) b act qn
+        InlineConlikeSig l   act qn      -> InlineConlikeSig (f l) act qn
         SpecSig          l qn ts         -> SpecSig (f l) qn ts
         SpecInlineSig    l b act qn ts   -> SpecInlineSig (f l) b act qn ts
         InstSig          l mcx ih        -> InstSig (f l) mcx ih
@@ -1802,13 +1807,13 @@ instance Annotated InstDecl where
         InsType   l t1 t2       -> l
         InsData   l dn t    cds ders            -> l
         InsGData  l dn t mk gds ders            -> l
-        InsInline l b act qn    -> l
+--        InsInline l b act qn    -> l
     amap f id = case id of
         InsDecl   l d           -> InsDecl (f l) d
         InsType   l t1 t2       -> InsType (f l) t1 t2
         InsData   l dn t    cds ders -> InsData  (f l) dn t    cds ders
         InsGData  l dn t mk gds ders -> InsGData (f l) dn t mk gds ders
-        InsInline l b act qn    -> InsInline (f l) b act qn
+--        InsInline l b act qn    -> InsInline (f l) b act qn
 
 instance Annotated BangType where
      ann (BangedTy   l t) = l

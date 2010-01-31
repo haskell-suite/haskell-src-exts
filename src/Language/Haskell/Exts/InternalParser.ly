@@ -245,6 +245,7 @@ Reserved Ids
 Pragmas
 
 >       '{-# INLINE'            { Loc _ (INLINE _) }
+>       '{-# INLINE_CONLIKE'    { Loc $$ INLINE_CONLIKE }
 >       '{-# SPECIALISE'        { Loc $$ SPECIALISE }
 >       '{-# SPECIALISE_INLINE' { Loc _ (SPECIALISE_INLINE _) }
 >       '{-# SOURCE'            { Loc $$ SOURCE }
@@ -625,7 +626,11 @@ lexer through the 'foreign' (and 'export') keyword.
 >       | exp0b ',' vars '::' truectype                  {% do { v <- checkSigVar $1;
 >                                                                let {(vs,ss,_) = $3 ; l = $1 <> $5 <** ($2 : reverse ss ++ [$4]) } ;
 >                                                                return $ TypeSig l (v : reverse vs) $5 } }
->       | '{-# INLINE' activation qvar '#-}'             { let Loc l (INLINE s) = $1 in InlineSig (l <^^> $4 <** [l,$4]) s $2 $3 }
+>       | specinldecl                   { $1 }
+
+> specinldecl :: { Decl L }
+>       : '{-# INLINE' activation qvar '#-}'             { let Loc l (INLINE s) = $1 in InlineSig (l <^^> $4 <** [l,$4]) s $2 $3 }
+>       | '{-# INLINE_CONLIKE' activation qvar '#-}'     { InlineConlikeSig ($1 <^^> $4 <** [$1,$4]) $2 $3 }
 >       | '{-# SPECIALISE' qvar '::' sigtypes '#-}'      { SpecSig ($1 <^^> $5 <** ($1:$3 : snd $4 ++ [$5])) $2 (fst $4) }
 >       | '{-# SPECIALISE_INLINE' activation qvar '::' sigtypes '#-}'
 >                                                        { let Loc l (SPECIALISE_INLINE s) = $1
@@ -1053,10 +1058,10 @@ Associated types require the TypeFamilies extension enabled.
 > insvaldef :: { InstDecl L }
 >       : valdef                        { InsDecl (ann $1) $1 }
 >       | atinst                        {% checkEnabled TypeFamilies >> return $1 }
->       | inlinst                       { $1 }
+>       | specinldecl                   { InsDecl (ann $1) $1 }
 
-> inlinst :: { InstDecl L }
->       : '{-# INLINE' activation qvar '#-}'     { let Loc l (INLINE s) = $1 in InsInline (l <^^> $4 <** [l,$4]) s $2 $3 }
+ inlinst :: { InstDecl L }
+       : '{-# INLINE' activation qvar '#-}'     { let Loc l (INLINE s) = $1 in InsInline (l <^^> $4 <** [l,$4]) s $2 $3 }
 
 > atinst :: { InstDecl L }
 >       : 'type' truedtype '=' truectype

@@ -102,6 +102,7 @@ sDecl decl = case decl of
      DeprPragmaDecl   l nsstrs  -> S.DeprPragmaDecl (getPointLoc l) (map (\(ns, str) -> (map sName ns, str)) nsstrs)
      WarnPragmaDecl   l nsstrs  -> S.WarnPragmaDecl (getPointLoc l) (map (\(ns, str) -> (map sName ns, str)) nsstrs)
      InlineSig        l b mact qn   -> S.InlineSig (getPointLoc l) b (maybe S.AlwaysActive sActivation mact) (sQName qn)
+     InlineConlikeSig l   mact qn   -> S.InlineConlikeSig (getPointLoc l) (maybe S.AlwaysActive sActivation mact) (sQName qn)
      SpecSig          l qn ts   -> S.SpecSig (getPointLoc l) (sQName qn) (map sType ts)
      SpecInlineSig    l b mact qn ts    ->
         S.SpecInlineSig (getPointLoc l) b (maybe S.AlwaysActive sActivation mact) (sQName qn) (map sType ts)
@@ -260,7 +261,7 @@ sInstDecl id = case id of
         S.InsData (getPointLoc l) (sDataOrNew dn) (sType t) (map sQualConDecl constrs) (maybe [] sDeriving mder)
     InsGData  l dn t mk gds mder    ->
         S.InsGData (getPointLoc l) (sDataOrNew dn) (sType t) (fmap sKind mk) (map sGadtDecl gds) (maybe [] sDeriving mder)
-    InsInline l b mact qn   -> S.InsInline (getPointLoc l) b (maybe S.AlwaysActive sActivation mact) (sQName qn)
+--    InsInline l b mact qn   -> S.InsInline (getPointLoc l) b (maybe S.AlwaysActive sActivation mact) (sQName qn)
 
 sBangType :: BangType l -> S.BangType
 sBangType bt = case bt of

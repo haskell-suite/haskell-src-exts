@@ -720,6 +720,14 @@ instance ExactP Decl where
             exactPC qn
             printStringAt (pos b) "#-}"
          _ -> errorEP "ExactP: Decl: InlineSig is given wrong number of srcInfoPoints"
+    InlineConlikeSig l mact qn    ->
+        case srcInfoPoints l of
+         [a,b] -> do
+            printString "{-# INLINE_CONLIKE"
+            maybeEP exactPC mact
+            exactPC qn
+            printStringAt (pos b) "#-}"
+         _ -> errorEP "ExactP: Decl: InlineConlikeSig is given wrong number of srcInfoPoints"
     SpecSig          l qn ts        ->
         case srcInfoPoints l of
          a:pts -> do
@@ -1011,14 +1019,14 @@ instance ExactP InstDecl where
             mapM_ exactPC gds
             maybeEP exactPC mder
          _ -> errorEP "ExactP: InstDecl: InsGData is given too few srcInfoPoints"
-    InsInline l inl mact qn   -> do
-        case srcInfoPoints l of
-         [a,b] -> do
-            printString $ if inl then "{-# INLINE" else "{-# NOINLINE"
-            maybeEP exactPC mact
-            exactPC qn
-            printStringAt (pos b) "#-}"
-         _ -> errorEP "ExactP: InstDecl: InsInline is given wrong number of srcInfoPoints"
+--  InsInline l inl mact qn   -> do
+--        case srcInfoPoints l of
+--         [a,b] -> do
+--            printString $ if inl then "{-# INLINE" else "{-# NOINLINE"
+--            maybeEP exactPC mact
+--            exactPC qn
+--            printStringAt (pos b) "#-}" 
+--         _ -> errorEP "ExactP: InstDecl: InsInline is given wrong number of srcInfoPoints"
 
 instance ExactP FunDep where
   exactP (FunDep l nxs nys) =
