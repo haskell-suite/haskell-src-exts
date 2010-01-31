@@ -1,3 +1,33 @@
+** 1.8.x
+
+1.7.2 --> 1.8.0
+===============
+
+* Add an instance Show Fixity (derived).
+
+* Support for the new ANN and INLINE_CONLIKE pragmas.
+
+* Remove support for CFILES and INCLUDE pragmas. The support wasn't 
+  correct anyway, as it assumed the pragmas appeared at the top of 
+  files. As CFILES/INCLUDE pragmas can (and do) appear anywhere, 
+  there's no hope to support them in the AST. Better to remove the 
+  support altogether. Files with CFILES/INCLUDE pragmas can still 
+  be parsed of course, but those pragmas will be handled as comments.
+
+* Parsing with ignoreLinePragmas = False now correctly updates the
+  file name.
+
+* Allow the whole SPECIALISE/INLINE family of pragmas in instance
+  declarations. The InsInline constructor is removed, and is now
+  represented by InsDecl (InlineSig ...).
+
+* Fix a bug with line numbering and quasi quotes, and a similar one 
+  with line numbering and CDATA.
+
+* Fix a few minor bugs in the exactPrinter.
+
+* Fix the strange handling of so called strings in LINE pragmas.
+
 ** 1.7.x
 
 1.7.1 --> 1.7.2
