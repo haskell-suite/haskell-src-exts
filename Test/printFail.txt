@@ -1,2 +1,3 @@
 HexPrec.hs
 RealGHC.lhs
+SpecializeInstance.hs
