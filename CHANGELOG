@@ -7,6 +7,8 @@
 
 * Support for the new ANN and INLINE_CONLIKE pragmas.
 
+* Export knownExtensions from .Extension.
+
 * Remove support for CFILES and INCLUDE pragmas. The support wasn't 
   correct anyway, as it assumed the pragmas appeared at the top of 
   files. As CFILES/INCLUDE pragmas can (and do) appear anywhere, 
