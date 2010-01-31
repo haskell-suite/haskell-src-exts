@@ -1,3 +1,3 @@
-Unicode.hs
-UnicodeSyntax.hs
-ForeignImport.hs
+Unicode.hs		Fails if readFile is not Unicode-aware, i.e. if GHC 6.12 is not used.
+UnicodeSyntax.hs	Same as above.
+ForeignImport.hs	Shouldn't succeed. Lacks ForeignFunctionInterface pragma, but complains about missing TemplateHaskell.

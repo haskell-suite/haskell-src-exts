@@ -23,11 +23,11 @@ go testsToRun = do
     hSetBuffering stdout NoBuffering
     files <- if null testsToRun then getDirectoryContents examplesDir else return testsToRun
     putStrLn "Testing parser:"
-    src <- liftM lines . readFile $ "Test" </> "failing.txt"
+    src <- liftM (map (head . words) . lines) . readFile $ "Test" </> "failing.txt"
     results <- sequence [check (x `elem` src) (examplesDir </> x) | x <- files, not $ "." `isPrefixOf` x]
     putStrLn "\nAll parsing tests completed!\n"
     putStrLn "Testing exact printer:"
-    pSrc <- liftM lines . readFile $ "Test" </> "printFail.txt"
+    pSrc <- liftM (map (head . words) . lines) . readFile $ "Test" </> "printFail.txt"
     pResults <- sequence [roundTrip (x `elem` pSrc) (examplesDir </> x)
                             | x <- files, x `notElem` src, not $ "." `isPrefixOf` x]
     putStrLn "\nAll printing tests completed!\n"
