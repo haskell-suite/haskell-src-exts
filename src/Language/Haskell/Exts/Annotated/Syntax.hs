@@ -820,7 +820,7 @@ data CallConv l
 -- | A top level options pragma, preceding the module header.
 data OptionPragma l
     = LanguagePragma   l [Name l]  -- ^ LANGUAGE pragma
-    | IncludePragma    l String    -- ^ INCLUDE pragma
+--    | IncludePragma    l String    -- ^ INCLUDE pragma
 --    | CFilesPragma     l String    -- ^ CFILES pragma
     | OptionsPragma    l (Maybe Tool) String
                         -- ^ OPTIONS pragma, possibly qualified with a tool, e.g. OPTIONS_GHC
@@ -1431,7 +1431,7 @@ instance Functor CallConv where
 
 instance Functor OptionPragma where
     fmap f (LanguagePragma   l ns) = LanguagePragma (f l) (map (fmap f) ns)
-    fmap f (IncludePragma    l s) = IncludePragma (f l) s
+--    fmap f (IncludePragma    l s) = IncludePragma (f l) s
 --    fmap f (CFilesPragma     l s) = CFilesPragma (f l) s
     fmap f (OptionsPragma    l mt s) = OptionsPragma (f l) mt s
 
@@ -2049,7 +2049,7 @@ instance Annotated CallConv where
 
 instance Annotated OptionPragma where
     ann (LanguagePragma   l ns) = l
-    ann (IncludePragma    l s) = l
+--    ann (IncludePragma    l s) = l
 --    ann (CFilesPragma     l s) = l
     ann (OptionsPragma    l mt s) = l
     amap f (LanguagePragma   l ns) = LanguagePragma (f l) ns

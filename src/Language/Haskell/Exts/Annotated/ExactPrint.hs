@@ -459,10 +459,10 @@ instance ExactP OptionPragma where
             k = length ns - 1 -- number of commas
             m = length pts - k - 2 -- number of virtual semis, likely 0
          in printInterleaved (zip pts ("{-# LANGUAGE":replicate k "," ++ replicate m "" ++ ["#-}"])) ns
-    IncludePragma    l str      ->
+{-    IncludePragma    l str      ->
         let k = length (srcInfoPoints l)
          in printPoints l $ ("{-# INCLUDE " ++ str) : replicate (k-2) "" ++ ["#-}"]
-{-    CFilesPragma     l str      ->
+    CFilesPragma     l str      ->
         let k = length (srcInfoPoints l)
          in printPoints l $ ("{-# CFILES " ++ str) : replicate (k-2) "" ++ ["#-}"] -}
     OptionsPragma    l mt str   ->

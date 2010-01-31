@@ -722,7 +722,7 @@ data CallConv
 -- | A top level options pragma, preceding the module header.
 data OptionPragma
     = LanguagePragma   SrcLoc [Name]    -- ^ LANGUAGE pragma
-    | IncludePragma    SrcLoc String    -- ^ INCLUDE pragma
+--    | IncludePragma    SrcLoc String    -- ^ INCLUDE pragma
 --    | CFilesPragma     SrcLoc String    -- ^ CFILES pragma
     | OptionsPragma    SrcLoc (Maybe Tool) String
                         -- ^ OPTIONS pragma, possibly qualified with a tool, e.g. OPTIONS_GHC

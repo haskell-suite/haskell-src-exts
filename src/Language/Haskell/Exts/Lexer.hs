@@ -140,8 +140,8 @@ data Token
         | UNPACK
         | OPTIONS (Maybe String,String)
 --        | CFILES  String
+--        | INCLUDE String
         | LANGUAGE
-        | INCLUDE String
         | ANN
 
 -- Reserved Ids
@@ -302,9 +302,9 @@ pragmas = [
  ( "core",              CORE            ),
  ( "unpack",            UNPACK          ),
  ( "language",          LANGUAGE        ),
- ( "options",           OPTIONS undefined ), -- we'll tweak it before use - promise!
+ ( "options",           OPTIONS undefined ) -- we'll tweak it before use - promise!
 -- ( "cfiles",            CFILES  undefined ), -- same here...
- ( "include",           INCLUDE undefined )  -- ...and here!
+-- ( "include",           INCLUDE undefined )  -- ...and here!
  ]
 
 isIdent, isHSymbol :: Char -> Bool
@@ -802,10 +802,10 @@ lexPragmaStart = do
              _ -> fail "Malformed Options pragma"
 {-     Just (CFILES _) -> do
             rest <- lexRawPragma
-            return $ CFILES rest -}
+            return $ CFILES rest
      Just (INCLUDE _) -> do
             rest <- lexRawPragma
-            return $ INCLUDE rest
+            return $ INCLUDE rest -}
      Just p ->  return p
 
      _      -> fail "Internal error: Unrecognised recognised pragma"
@@ -1213,8 +1213,8 @@ showToken t = case t of
   UNPACK            -> "{-# UNPACK"
   OPTIONS (mt,s)    -> "{-# OPTIONS" ++ maybe "" (':':) mt ++ " ..."
 --  CFILES  s         -> "{-# CFILES ..."
+--  INCLUDE s         -> "{-# INCLUDE ..."
   LANGUAGE          -> "{-# LANGUAGE"
-  INCLUDE s         -> "{-# INCLUDE ..."
   ANN               -> "{-# ANN"
   KW_As         -> "as"
   KW_By         -> "by"
