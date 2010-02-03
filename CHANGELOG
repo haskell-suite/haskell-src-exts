@@ -1,5 +1,11 @@
 ** 1.8.x
 
+1.8.0 --> 1.8.1
+===============
+
+* Fix three bugs with the handling of ANN. I must have been really
+  tired when implementing that support.
+
 1.7.2 --> 1.8.0
 ===============
 
