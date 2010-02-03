@@ -298,6 +298,7 @@ pragmas = [
  ( "source",            SOURCE          ),
  ( "deprecated",        DEPRECATED      ),
  ( "warning",           WARNING         ),
+ ( "ann",               ANN             ),
  ( "scc",               SCC             ),
  ( "generated",         GENERATED       ),
  ( "core",              CORE            ),

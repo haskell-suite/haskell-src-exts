@@ -590,7 +590,7 @@ lexer through the 'foreign' (and 'export') keyword.
 >       | '{-# RULES'      rules      '#-}'     { RulePragmaDecl ($1 <^^> $3 <** [$1,$3]) $ reverse $2 }
 >       | '{-# DEPRECATED' warndeprs  '#-}'     { DeprPragmaDecl ($1 <^^> $3 <** ($1:snd $2++[$3])) $ reverse (fst $2) }
 >       | '{-# WARNING'    warndeprs  '#-}'     { WarnPragmaDecl ($1 <^^> $3 <** ($1:snd $2++[$3])) $ reverse (fst $2) }
->       | '{-# ANN'        annotation '#-}'     { AnnPragma      ($1 <^^> $3) $2 }
+>       | '{-# ANN'        annotation '#-}'     { AnnPragma      ($1 <^^> $3 <** [$1,$3]) $2 }
 >       | decl          { $1 }
 
 > data_or_newtype :: { DataOrNew L }

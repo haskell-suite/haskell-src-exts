@@ -1695,6 +1695,7 @@ instance Annotated Decl where
         SpecSig          l qn ts        -> l
         SpecInlineSig    l b act qn ts  -> l
         InstSig          l cx ih        -> l
+        AnnPragma        l ann          -> l
     amap f decl = case decl of
         TypeDecl     l dh t      -> TypeDecl    (f l) dh t
         TypeFamDecl  l dh mk     -> TypeFamDecl (f l) dh mk
@@ -1725,6 +1726,7 @@ instance Annotated Decl where
         SpecSig          l qn ts         -> SpecSig (f l) qn ts
         SpecInlineSig    l b act qn ts   -> SpecInlineSig (f l) b act qn ts
         InstSig          l mcx ih        -> InstSig (f l) mcx ih
+        AnnPragma        l ann           -> AnnPragma (f l) ann
 
 instance Annotated Annotation where
     ann (Ann     l n e) = l
