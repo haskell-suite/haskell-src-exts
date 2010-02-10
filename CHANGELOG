@@ -1,5 +1,12 @@
 ** 1.8.x
 
+1.8.1 --> 1.8.2
+===============
+
+* Don't insert redundant parentheses around record constructions
+  and updates.
+  
+
 1.8.0 --> 1.8.1
 ===============
 
