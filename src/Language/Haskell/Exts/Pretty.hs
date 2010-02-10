@@ -799,9 +799,9 @@ instance Pretty Exp where
         prettyPrec _ (Paren e) = parens . pretty $ e
         prettyPrec _ (LeftSection e op) = parens (pretty e <+> pretty op)
         prettyPrec _ (RightSection op e) = parens (pretty op <+> pretty e)
-        prettyPrec p (RecConstr c fieldList) = parensIf (p > 0) $ 
+        prettyPrec _ (RecConstr c fieldList) =
                 pretty c <> (braceList . map pretty $ fieldList)
-        prettyPrec p (RecUpdate e fieldList) = parensIf (p > 0) $ 
+        prettyPrec _ (RecUpdate e fieldList) =
                 pretty e <> (braceList . map pretty $ fieldList)
         -- Lists
         prettyPrec _ (List list) =
