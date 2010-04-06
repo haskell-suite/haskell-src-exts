@@ -743,17 +743,16 @@ checkUnQual (Special _ _) = fail "Illegal special name"
 
 -----------------------------------------------------------------------------
 -- Check that two xml tag names are equal
--- Could use Eq directly, but I am not sure whether <dom:name>...</name>
--- would be valid, in that case Eq won't work. TODO
-
 checkEqNames :: XName L -> XName L -> P (XName L)
 checkEqNames n@(XName _ n1) (XName _ n2)
     | n1 == n2  = return n
-    | otherwise = fail "names in matching xml tags are not equal"
 checkEqNames n@(XDomName _ d1 n1) (XDomName _ d2 n2)
     | n1 == n2 && d1 == d2 = return n
-    | otherwise = fail "names in matching xml tags are not equal"
-checkEqNames _ _ = fail "names in matching xml tags are not equal"
+checkEqNames n m = fail $ "opening tag '" ++ showTag n ++
+                   "' does not match closing tag '" ++ showTag m ++ "'"
+    where
+        showTag (XName _ n) = n
+        showTag (XDomName _ d n) = d ++ ":" ++ n
 
 
 -----------------------------------------------------------------------------
