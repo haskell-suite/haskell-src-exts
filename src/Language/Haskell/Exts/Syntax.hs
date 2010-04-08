@@ -71,7 +71,7 @@ module Language.Haskell.Exts.Syntax (
     Safety(..), CallConv(..),
 
     -- * Pragmas
-    OptionPragma(..), Tool(..),
+    ModulePragma(..), Tool(..),
     Rule(..), RuleVar(..), Activation(..),
     Annotation(..),
 
@@ -198,7 +198,7 @@ data CName
 #endif
 
 -- | A complete Haskell source module.
-data Module = Module SrcLoc ModuleName [OptionPragma] (Maybe WarningText)
+data Module = Module SrcLoc ModuleName [ModulePragma] (Maybe WarningText)
                         (Maybe [ExportSpec]) [ImportDecl] [Decl]
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
@@ -722,12 +722,12 @@ data CallConv
 #endif
 
 -- | A top level options pragma, preceding the module header.
-data OptionPragma
+data ModulePragma
     = LanguagePragma   SrcLoc [Name]    -- ^ LANGUAGE pragma
---    | IncludePragma    SrcLoc String    -- ^ INCLUDE pragma
---    | CFilesPragma     SrcLoc String    -- ^ CFILES pragma
     | OptionsPragma    SrcLoc (Maybe Tool) String
                         -- ^ OPTIONS pragma, possibly qualified with a tool, e.g. OPTIONS_GHC
+    | AnnModulePragma  SrcLoc Annotation
+                        -- ^ ANN pragma with module scope
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else

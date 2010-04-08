@@ -615,19 +615,16 @@ instance Pretty RuleVar where
     pretty (RuleVar n) = pretty n
     pretty (TypedRuleVar n t) = mySep [pretty n, text "::", pretty t]
 
-instance Pretty OptionPragma where
+instance Pretty ModulePragma where
     pretty (LanguagePragma _ ns) =
         myFsep $ text "{-# LANGUAGE" : punctuate (char ',') (map pretty ns) ++ [text "#-}"]
-{-    pretty (IncludePragma _ s) =
-        myFsep $ [text "{-# INCLUDE", text s, text "#-}"]
-    pretty (CFilesPragma _ s) =
-        myFsep $ [text "{-# CFILES", text s, text "#-}"] -}
     pretty (OptionsPragma _ (Just tool) s) =
         myFsep $ [text "{-# OPTIONS_" <> pretty tool, text s, text "#-}"]
     pretty (OptionsPragma _ _ s) =
         myFsep $ [text "{-# OPTIONS", text s, text "#-}"]
-{-    pretty (UnknownTopPragma _ n s) =
-        myFsep $ map text ["{-#", n, s, "#-}"] -}
+    pretty (AnnModulePragma _ ann) =
+        myFsep $ [text "{-# ANN", pretty ann, text "#-}"]
+        
 
 instance Pretty Tool where
     pretty (UnknownTool s) = text s
@@ -1247,17 +1244,15 @@ instance Pretty (A.Activation l) where
 instance Pretty (A.RuleVar l) where
     pretty = pretty . sRuleVar
 
-instance Pretty (A.OptionPragma l) where
+instance SrcInfo loc => Pretty (A.ModulePragma loc) where
     pretty (A.LanguagePragma _ ns) =
         myFsep $ text "{-# LANGUAGE" : punctuate (char ',') (map pretty ns) ++ [text "#-}"]
-  {-  pretty (A.IncludePragma _ s) =
-        myFsep $ [text "{-# INCLUDE", text s, text "#-}"]
-    pretty (A.CFilesPragma _ s) =
-        myFsep $ [text "{-# CFILES", text s, text "#-}"] -}
     pretty (A.OptionsPragma _ (Just tool) s) =
         myFsep $ [text "{-# OPTIONS_" <> pretty tool, text s, text "#-}"]
     pretty (A.OptionsPragma _ _ s) =
         myFsep $ [text "{-# OPTIONS", text s, text "#-}"]
+    pretty (A.AnnModulePragma _ ann) =
+        myFsep $ [text "{-# ANN", pretty ann, text "#-}"]
 
 instance SrcInfo loc => Pretty (A.Annotation loc) where
     pretty = pretty . sAnnotation

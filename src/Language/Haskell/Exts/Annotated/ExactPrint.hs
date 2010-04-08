@@ -452,23 +452,24 @@ instance ExactP ModuleHead where
         printStringAt (pos b) "where"
      _ -> errorEP "ExactP: ModuleHead is given wrong number of srcInfoPoints"
 
-instance ExactP OptionPragma where
+instance ExactP ModulePragma where
   exactP op = case op of
     LanguagePragma   l ns       ->
         let pts = srcInfoPoints l
             k = length ns - 1 -- number of commas
             m = length pts - k - 2 -- number of virtual semis, likely 0
          in printInterleaved (zip pts ("{-# LANGUAGE":replicate k "," ++ replicate m "" ++ ["#-}"])) ns
-{-    IncludePragma    l str      ->
-        let k = length (srcInfoPoints l)
-         in printPoints l $ ("{-# INCLUDE " ++ str) : replicate (k-2) "" ++ ["#-}"]
-    CFilesPragma     l str      ->
-        let k = length (srcInfoPoints l)
-         in printPoints l $ ("{-# CFILES " ++ str) : replicate (k-2) "" ++ ["#-}"] -}
     OptionsPragma    l mt str   ->
         let k = length (srcInfoPoints l)
             opstr = "{-# OPTIONS" ++ case mt of { Just t -> "_" ++ show t ; _ -> "" } ++ " " ++ str
          in printPoints l $ opstr : replicate (k-2) "" ++ ["#-}"]
+    AnnModulePragma  l ann       ->
+        case srcInfoPoints l of
+         [a,b] -> do
+            printString $ "{-# ANN"
+            exactPC ann
+            printStringAt (pos b) "#-}"
+         _ -> errorEP "ExactP: ModulePragma: AnnPragma is given wrong number of srcInfoPoints"
 
 instance ExactP WarningText where
     exactP (DeprText l str) = printPoints l ["{-# DEPRECATED", str, "#-}"]

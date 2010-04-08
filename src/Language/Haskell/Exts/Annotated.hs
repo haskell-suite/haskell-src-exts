@@ -108,7 +108,7 @@ readExtensions :: String -> Maybe [Extension]
 readExtensions str = case getTopPragmas str of
         ParseOk pgms -> Just (concatMap getExts pgms)
         _            -> Nothing
-  where getExts :: OptionPragma l -> [Extension]
+  where getExts :: ModulePragma l -> [Extension]
         getExts (LanguagePragma _ ns) = map readExt ns
         getExts _ = []
 

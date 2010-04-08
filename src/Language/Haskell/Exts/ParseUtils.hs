@@ -901,7 +901,7 @@ checkTypes = mapM (flip checkT True)
 ---------------------------------------
 -- Converting a complete page
 
-checkPageModule :: PExp L -> ([OptionPragma L],[S],L) -> P (Module L)
+checkPageModule :: PExp L -> ([ModulePragma L],[S],L) -> P (Module L)
 checkPageModule xml (os,ss,inf) = do
     mod <- getModuleName
     xml <- checkExpr xml

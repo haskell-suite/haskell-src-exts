@@ -31,8 +31,8 @@ import Language.Haskell.Exts.Annotated.Simplify
 import Language.Haskell.Exts.SrcLoc
 import Language.Haskell.Exts.Comments
 
-getTopPragmas :: String -> ParseResult [S.OptionPragma]
-getTopPragmas = fmap (map sOptionPragma) . P.getTopPragmas
+getTopPragmas :: String -> ParseResult [S.ModulePragma]
+getTopPragmas = fmap (map sModulePragma) . P.getTopPragmas
 
 -- | Class to reuse the parse function at many different types.
 class Parseable ast where

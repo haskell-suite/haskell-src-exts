@@ -285,7 +285,7 @@ Testing multiple modules in one file
 > modules :: { [Module L] }
 >         : toppragmas modules1         { let (os,ss,l) = $1 in map (\x -> x os ss l) $2 }
 
-> modules1 :: { [[OptionPragma L] -> [S] -> L -> Module L] }
+> modules1 :: { [[ModulePragma L] -> [S] -> L -> Module L] }
 >         : module modules1             { $1 : $2 }
 >         | module                      { [$1] }
 
@@ -311,24 +311,19 @@ TODO: Yuck, this is messy, needs fixing in the AST!
 >       | '<' name attrs mattr '/>'                              { XETag ($1 <^^> $5 <** [$1,$5]) $2 (reverse $3) $4 }
 
 
-> toppragmas :: { ([OptionPragma L],[S],L) }
+> toppragmas :: { ([ModulePragma L],[S],L) }
 >           : open toppragmasaux close          { let (os,ss,ml) = $2 in (os,$1:ss++[$3],$1 <^^> $3) }
 
-> toppragmasaux :: { ([OptionPragma L],[S],Maybe L) }
+> toppragmasaux :: { ([ModulePragma L],[S],Maybe L) }
 >               : toppragma ';' toppragmasaux         { let (os,ss,ml) = $3 in ($1 : os, $2 : ss, Just $ ann $1 <++> nIS $2 <+?> ml) }
 >               | {- nothing -}                         { ([],[],Nothing) }
 
-TODO: the various pragma starts with content don't record where that content is located.
-
-> toppragma :: { OptionPragma L }
+> toppragma :: { ModulePragma L }
 >           : '{-# LANGUAGE' conids optsemis '#-}'   { LanguagePragma ($1 <^^> $4 <** ($1:snd $2 ++ reverse $3 ++ [$4])) (fst $2) }
 >           | '{-# OPTIONS' optsemis '#-}'           { let Loc l (OPTIONS (mc, s)) = $1
 >                                                       in OptionsPragma (l <^^> $3 <** (l:reverse $2 ++ [$3])) (readTool mc) s }
+>           | '{-# ANN' annotation '#-}'             { AnnModulePragma ($1 <^^> $3 <** [$1,$3]) $2 }
 
-
-           | '{-# INCLUDE' optsemis '#-}'           { let Loc l (INCLUDE s) = $1 in IncludePragma (l <^^> $3 <** (l:reverse $2 ++ [$3])) s }
-           | '{-# CFILES'  optsemis '#-}'           { let Loc l (CFILES s) = $1
-                                                       in CFilesPragma  (l <^^> $3 <** (l:reverse $2 ++ [$3])) s }
 
 > conids    :: { ([Name L],[S]) }
 >          : conid ',' conids                  { ($1 : fst $3, $2 : snd $3) }
@@ -337,7 +332,7 @@ TODO: the various pragma starts with content don't record where that content is 
 -----------------------------------------------------------------------------
 Module Header
 
-> module :: { [OptionPragma L] -> [S] -> L -> Module L }
+> module :: { [ModulePragma L] -> [S] -> L -> Module L }
 >       : optmodulehead body
 >               { let (is,ds,ss1,inf) = $2
 >                  in \os ss l -> Module (l <++> inf <** (ss ++ ss1)) $1 os is ds }
@@ -1806,7 +1801,7 @@ Miscellaneous (mostly renamings)
 >                              return (ast', cs)
 
 > -- | Partial parse of a string starting with a series of top-level option pragmas.
-> getTopPragmas :: String -> ParseResult [OptionPragma SrcSpanInfo]
+> getTopPragmas :: String -> ParseResult [ModulePragma SrcSpanInfo]
 > getTopPragmas = runParser (mfindOptPragmas >>= \(ps,_,_) -> return ps)
 
 > -- | Parse of a string, which should contain a complete Haskell module.

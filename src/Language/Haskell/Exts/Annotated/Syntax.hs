@@ -75,7 +75,7 @@ module Language.Haskell.Exts.Annotated.Syntax (
     Safety(..), CallConv(..),
 
     -- * Pragmas
-    OptionPragma(..), Tool(..),
+    ModulePragma(..), Tool(..),
     Rule(..), RuleVar(..), Activation(..),
     Annotation(..),
 
@@ -202,12 +202,12 @@ data CName l
 
 -- | A complete Haskell source module.
 data Module l
-    = Module l (Maybe (ModuleHead l)) [OptionPragma l] [ImportDecl l] [Decl l]
+    = Module l (Maybe (ModuleHead l)) [ModulePragma l] [ImportDecl l] [Decl l]
     -- ^ an ordinary Haskell module
-    | XmlPage l (ModuleName l) [OptionPragma l] (XName l) [XAttr l] (Maybe (Exp l)) [Exp l]
+    | XmlPage l (ModuleName l) [ModulePragma l] (XName l) [XAttr l] (Maybe (Exp l)) [Exp l]
     -- ^ a module consisting of a single XML document. The ModuleName never appears in the source
     --   but is needed for semantic purposes, it will be the same as the file name.
-    | XmlHybrid l (Maybe (ModuleHead l)) [OptionPragma l] [ImportDecl l] [Decl l]
+    | XmlHybrid l (Maybe (ModuleHead l)) [ModulePragma l] [ImportDecl l] [Decl l]
                 (XName l) [XAttr l] (Maybe (Exp l)) [Exp l]
     -- ^ a hybrid module combining an XML document with an ordinary module
 #ifdef __GLASGOW_HASKELL__
@@ -820,12 +820,12 @@ data CallConv l
 #endif
 
 -- | A top level options pragma, preceding the module header.
-data OptionPragma l
+data ModulePragma l
     = LanguagePragma   l [Name l]  -- ^ LANGUAGE pragma
---    | IncludePragma    l String    -- ^ INCLUDE pragma
---    | CFilesPragma     l String    -- ^ CFILES pragma
     | OptionsPragma    l (Maybe Tool) String
                         -- ^ OPTIONS pragma, possibly qualified with a tool, e.g. OPTIONS_GHC
+    | AnnModulePragma  l (Annotation l)
+                        -- ^ ANN pragma with module scope
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
@@ -1432,11 +1432,10 @@ instance Functor CallConv where
     fmap f (StdCall l) = StdCall (f l)
     fmap f (CCall l) = CCall (f l)
 
-instance Functor OptionPragma where
+instance Functor ModulePragma where
     fmap f (LanguagePragma   l ns) = LanguagePragma (f l) (map (fmap f) ns)
---    fmap f (IncludePragma    l s) = IncludePragma (f l) s
---    fmap f (CFilesPragma     l s) = CFilesPragma (f l) s
     fmap f (OptionsPragma    l mt s) = OptionsPragma (f l) mt s
+    fmap f (AnnModulePragma  l ann) = AnnModulePragma (f l) (fmap f ann)
 
 instance Functor Activation where
     fmap f (ActiveFrom   l k) = ActiveFrom (f l) k
@@ -2054,12 +2053,12 @@ instance Annotated CallConv where
     ann (CCall l) = l
     amap = fmap
 
-instance Annotated OptionPragma where
+instance Annotated ModulePragma where
     ann (LanguagePragma   l ns) = l
---    ann (IncludePragma    l s) = l
---    ann (CFilesPragma     l s) = l
     ann (OptionsPragma    l mt s) = l
+    ann (AnnModulePragma  l a) = l
     amap f (LanguagePragma   l ns) = LanguagePragma (f l) ns
+    amap f (AnnModulePragma  l a) = AnnModulePragma (f l) a
     amap f p = fmap f p
 
 instance Annotated Activation where

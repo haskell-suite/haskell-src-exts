@@ -33,10 +33,10 @@ sModule :: SrcInfo loc => Module loc -> S.Module
 sModule md = case md of
     Module l mmh oss ids ds ->
         let (mn, mwt, mes) = sModuleHead mmh
-         in S.Module (getPointLoc l) mn (map sOptionPragma oss) mwt mes (map sImportDecl ids) (map sDecl ds)
+         in S.Module (getPointLoc l) mn (map sModulePragma oss) mwt mes (map sImportDecl ids) (map sDecl ds)
     XmlPage l mn oss xn attrs mat es   ->
         let loc = getPointLoc l
-         in S.Module loc (sModuleName mn) (map sOptionPragma oss)
+         in S.Module loc (sModuleName mn) (map sModulePragma oss)
                       Nothing
                       (Just [S.EVar $ S.UnQual $ S.Ident "page"])
                         []
@@ -45,7 +45,7 @@ sModule md = case md of
         let loc1 = getPointLoc l
             loc2 = getPointLoc (ann xn)
             (mn, mwt, mes) = sModuleHead mmh
-         in S.Module loc1 mn (map sOptionPragma oss) mwt mes (map sImportDecl ids)
+         in S.Module loc1 mn (map sModulePragma oss) mwt mes (map sImportDecl ids)
                 (map sDecl ds ++ [pageFun loc2 $ S.XTag loc2 (sXName xn) (map sXAttr attrs) (fmap sExp mat) (map sExp es)])
   where pageFun :: SrcLoc -> S.Exp -> S.Decl
         pageFun loc e = S.PatBind loc namePat Nothing rhs (S.BDecls [])
@@ -406,12 +406,11 @@ sCallConv :: CallConv l -> S.CallConv
 sCallConv (StdCall _) = S.StdCall
 sCallConv (CCall _)   = S.CCall
 
-sOptionPragma :: SrcInfo loc => OptionPragma loc -> S.OptionPragma
-sOptionPragma pr = case pr of
+sModulePragma :: SrcInfo loc => ModulePragma loc -> S.ModulePragma
+sModulePragma pr = case pr of
     LanguagePragma   l ns   -> S.LanguagePragma (getPointLoc l) (map sName ns)
---    IncludePragma    l str  -> S.IncludePragma (getPointLoc l) str
---    CFilesPragma     l str  -> S.CFilesPragma (getPointLoc l) str
     OptionsPragma    l mt str -> S.OptionsPragma (getPointLoc l) mt str
+    AnnModulePragma  l ann -> S.AnnModulePragma (getPointLoc l) (sAnnotation ann)
 
 sActivation :: Activation l -> S.Activation
 sActivation act = case act of
