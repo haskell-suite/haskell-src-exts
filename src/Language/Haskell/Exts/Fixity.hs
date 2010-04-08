@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP, DeriveDataTypeable #-}
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Language.Haskell.Exts.Fixity
@@ -40,10 +41,22 @@ import Control.Monad (when, (<=<), liftM, liftM2, liftM3, liftM4)
 import Data.Traversable (mapM)
 import Prelude hiding (mapM)
 
+#ifdef __GLASGOW_HASKELL__
+#ifdef BASE4
+import Data.Data hiding (Fixity)
+#else
+import Data.Generics (Data(..),Typeable(..))
+#endif
+#endif
+
 -- | Operator fixities are represented by their associativity
 --   (left, right or none) and their precedence (0-9).
 data Fixity = Fixity Assoc Int Op
-    deriving Show
+#ifdef __GLASGOW_HASKELL__
+  deriving (Eq,Ord,Show,Typeable,Data)
+#else
+  deriving (Eq,Ord,Show)
+#endif
 
 -- | All AST elements that may include expressions which in turn may
 --   need fixity tweaking will be instances of this class.
