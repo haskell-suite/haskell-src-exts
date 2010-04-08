@@ -1,3 +1,17 @@
+** 1.9.x
+
+1.8.2 --> 1.9.0
+===============
+
+* OptionPragma is renamed to the more descriptive ModulePragma,
+  and adds a constructor AnnModulePragma for handling ANN pragmas
+  preceding module header.
+
+* Add instances for Eq/Ord/Data/Typeable for Fixity.
+
+* More informative error messages when HSX tags are mismatched.
+
+
 ** 1.8.x
 
 1.8.1 --> 1.8.2
@@ -5,7 +19,6 @@
 
 * Don't insert redundant parentheses around record constructions
   and updates.
-  
 
 1.8.0 --> 1.8.1
 ===============
