@@ -360,7 +360,7 @@ data Decl l
      | InlineSig        l Bool (Maybe (Activation l)) (QName l)
      -- ^ An INLINE pragma
      | InlineConlikeSig l      (Maybe (Activation l)) (QName l)
-     -- ^ An INLINE pragma
+     -- ^ An INLINE CONLIKE pragma
      | SpecSig          l                             (QName l) [Type l]
      -- ^ A SPECIALISE pragma
      | SpecInlineSig    l Bool (Maybe (Activation l)) (QName l) [Type l]
@@ -534,8 +534,6 @@ data InstDecl l
             -- ^ an associated data type implementation
     | InsGData  l (DataOrNew l) (Type l) (Maybe (Kind l)) [GadtDecl l] (Maybe (Deriving l))
             -- ^ an associated data type implemented using GADT style
-{-    | InsInline l Bool (Maybe (Activation l)) (QName l)
-            -- ^ an INLINE pragma -}
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else

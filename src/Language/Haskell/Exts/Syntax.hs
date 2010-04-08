@@ -327,7 +327,7 @@ data Decl
      | InlineSig        SrcLoc Bool Activation QName
      -- ^ An INLINE pragma
      | InlineConlikeSig SrcLoc      Activation QName
-     -- ^ An INLINE pragma
+     -- ^ An INLINE CONLIKE pragma
      | SpecSig          SrcLoc                 QName [Type]
      -- ^ A SPECIALISE pragma
      | SpecInlineSig    SrcLoc Bool Activation QName [Type]
@@ -452,8 +452,6 @@ data InstDecl
             -- ^ an associated data type implementation
     | InsGData  SrcLoc DataOrNew Type (Maybe Kind) [GadtDecl] [Deriving]
             -- ^ an associated data type implemented using GADT style
---    | InsInline SrcLoc Bool Activation QName
-            -- ^ an INLINE pragma
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
