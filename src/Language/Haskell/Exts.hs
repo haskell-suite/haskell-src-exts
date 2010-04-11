@@ -26,8 +26,10 @@ module Language.Haskell.Exts (
     , parseFile
     , parseFileWithMode
     , parseFileWithExts
+    , parseFileWithComments
     , parseFileContents
     , parseFileContentsWithMode
+    , parseFileContentsWithComments
     -- * Read extensions declared in LANGUAGE pragmas
     , readExtensions
     ) where
@@ -56,6 +58,10 @@ parseFileWithExts exts fp = parseFileWithMode (defaultParseMode { extensions = e
 parseFileWithMode :: ParseMode -> FilePath -> IO (ParseResult Module)
 parseFileWithMode p fp = readFile fp >>= (return . parseFileContentsWithMode p)
 
+-- | Parse a source file on disk, supplying a custom parse mode, and retaining comments.
+parseFileWithComments :: ParseMode -> FilePath -> IO (ParseResult (Module, [Comment]))
+parseFileWithComments p fp = readFile fp >>= (return . parseFileContentsWithComments p)
+
 -- | Parse a source file from a string using the default parse mode.
 parseFileContents :: String -> ParseResult Module
 parseFileContents = parseFileContentsWithMode defaultParseMode
@@ -73,6 +79,15 @@ parseFileContentsWithMode p@(ParseMode fn exts ign _ _) rawStr =
                                      (False,Just es) -> exts ++ es
                                      _               -> exts
          in parseWithMode (p { extensions = allExts }) md
+
+-- | Parse a source file from a string using a custom parse mode and retaining comments.
+parseFileContentsWithComments :: ParseMode -> String -> ParseResult (Module, [Comment])
+parseFileContentsWithComments p@(ParseMode fn exts ign _ _) rawStr =
+        let md = delit fn $ ppContents rawStr
+            allExts = impliesExts $ case (ign, readExtensions md) of
+                                     (False,Just es) -> exts ++ es
+                                     _               -> exts
+         in parseWithComments (p { extensions = allExts }) md
 
 
 -- | Gather the extensions declared in LANGUAGE pragmas
