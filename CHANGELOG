@@ -1,4 +1,17 @@
+
+
 ** 1.9.x
+
+1.9.1 --> 1.9.2
+===============
+
+* Fix a bug with pretty-printing lexer tokens.
+
+1.9.0 --> 1.9.1
+===============
+
+* Export parseFileContentsWithExts from .Exts.
+
 
 1.8.2 --> 1.9.0
 ===============
@@ -8,6 +21,9 @@
   preceding module header.
 
 * Add instances for Eq/Ord/Data/Typeable for Fixity.
+
+* Add 'parseFileWithComments' and 'parseFileContentsWithComments'
+  to L.H.Exts .
 
 * More informative error messages when HSX tags are mismatched.
 
