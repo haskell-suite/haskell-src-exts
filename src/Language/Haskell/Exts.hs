@@ -29,6 +29,7 @@ module Language.Haskell.Exts (
     , parseFileWithComments
     , parseFileContents
     , parseFileContentsWithMode
+    , parseFileContentsWithExts
     , parseFileContentsWithComments
     -- * Read extensions declared in LANGUAGE pragmas
     , readExtensions
