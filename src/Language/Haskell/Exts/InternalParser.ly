@@ -799,6 +799,7 @@ the (# and #) lexemes. Kinds will be handled at the kind rule.
 > otycon :: { QName L }
 >       : qconid                        { $1 }
 >       | '(' gconsym ')'               { fmap (const ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3])) $2 }
+>       | '(' qvarsym ')'               { fmap (const ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3])) $2 }
 
 These are for infix types
 
