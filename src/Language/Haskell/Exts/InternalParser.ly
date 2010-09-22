@@ -521,7 +521,7 @@ Requires the GADTs extension enabled, handled in gadtlist.
 >                {% do { (cs,dh) <- checkDataHeader $2;
 >                        let { (gs,ss,minf) = $4;
 >                              l = ann $1 <+?> minf <+?> fmap ann $5 <** (snd $3 ++ ss)};
->                        checkDataOrNew $1 gs;
+>                        checkDataOrNewG $1 gs;
 >                        case (gs, fst $3) of
 >                         ([], Nothing) -> return (DataDecl l $1 cs dh [] $5)
 >                         _ -> checkEnabled GADTs >> return (GDataDecl l $1 cs dh (fst $3) (reverse gs) $5) } }
@@ -547,7 +547,7 @@ This style requires both TypeFamilies and GADTs, the latter is handled in gadtli
 >                        checkEnabled TypeFamilies ;
 >                        let {(gs,ss,minf) = $5;
 >                             l = ann $1 <+?> minf <+?> fmap ann $6 <** ($2:snd $4 ++ ss)};
->                        checkDataOrNew $1 gs;
+>                        checkDataOrNewG $1 gs;
 >                        return (GDataInsDecl l $1 $3 (fst $4) (reverse gs) $6) } }
 >       | 'class' ctype fds optcbody
 >                {% do { (cs,dh) <- checkClassHeader $2;
@@ -1071,7 +1071,7 @@ Associated types require the TypeFamilies extension enabled.
 >       | data_or_newtype truectype optkind gadtlist deriving
 >                {% do { -- (cs,c,t) <- checkDataHeader $4;
 >                        let { (gs,ss,minf) = $4 } ;
->                        checkDataOrNew $1 gs;
+>                        checkDataOrNewG $1 gs;
 >                        return $ InsGData (ann $1 <+?> minf <+?> fmap ann $5 <** (snd $3 ++ ss)) $1 $2 (fst $3) (reverse gs) $5 } }
 
 -----------------------------------------------------------------------------

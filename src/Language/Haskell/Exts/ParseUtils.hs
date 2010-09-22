@@ -37,7 +37,8 @@ module Language.Haskell.Exts.ParseUtils (
     , checkRevDecls         -- [Decl] -> P [Decl]
     , checkRevClsDecls      -- [ClassDecl] -> P [ClassDecl]
     , checkRevInstDecls     -- [InstDecl] -> P [InstDecl]
-    , checkDataOrNew        -- DataOrNew -> [a] -> P ()
+    , checkDataOrNew        -- DataOrNew -> [QualConDecl] -> P ()
+    , checkDataOrNewG       -- DataOrNew -> [GadtDecl] -> P ()
     , checkSimpleType       -- PType -> P (Name, [TyVarBind])
     , checkSigVar           -- PExp -> P Name
     , getGConName           -- S.Exp -> P QName
@@ -848,10 +849,18 @@ checkRevInstDecls = mergeInstFunBinds []
 -- Check that newtype declarations have
 -- the right number (1) of constructors
 
-checkDataOrNew :: DataOrNew L -> [a] -> P ()
-checkDataOrNew (NewType _) [x] = return ()
+checkDataOrNew :: DataOrNew L -> [QualConDecl L] -> P ()
 checkDataOrNew (DataType _) _  = return ()
+checkDataOrNew (NewType _) [QualConDecl _ _ _ x] = cX x >> return ()
+  where cX (ConDecl _ _ [_]) = return ()
+        cX (RecDecl _ _ [_]) = return ()
+        cX _ = fail "newtype declaration constructor must have exactly one parameter."
 checkDataOrNew _        _  = fail "newtype declaration must have exactly one constructor."
+
+checkDataOrNewG :: DataOrNew L -> [GadtDecl L] -> P ()
+checkDataOrNewG (DataType _) _  = return ()
+checkDataOrNewG (NewType _) [x] = return ()
+checkDataOrNewG _        _  = fail "newtype declaration must have exactly one constructor."
 
 checkSimpleType :: PType L -> P (DeclHead L)
 checkSimpleType t = checkSimple "test" t []

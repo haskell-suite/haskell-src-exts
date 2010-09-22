@@ -5,6 +5,10 @@
 1.9.2 --> 1.9.3
 ===============
 
+* Constructors for newtype declarations must now have exactly one
+  argument. This is only when using the classic syntax, not with
+  GADT-style syntax.
+
 * Fix a bug where preceding commas in tuple sections were counted
   one too few.
 
