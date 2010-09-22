@@ -2,6 +2,12 @@
 
 ** 1.9.x
 
+1.9.2 --> 1.9.3
+===============
+
+* Fix a bug where preceding commas in tuple sections were counted
+  one too few.
+
 1.9.1 --> 1.9.2
 ===============
 

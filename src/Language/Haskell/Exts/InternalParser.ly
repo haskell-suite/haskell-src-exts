@@ -1235,9 +1235,9 @@ thing we need to look at here is the erpats that use no non-standard lexemes.
 >       | '(' texp ')'                  { Paren ($1 <^^> $3 <** [$1,$3]) $2 }
 >       | '(' texp tsectend             { TupleSection ($1 <^^> head (snd $3) <** $1:reverse (snd $3)) (Just $2 : fst $3) }
 >       | '(' commas texp ')'           { TupleSection ($1 <^^> $4 <** $1:reverse ($4:$2))
->                                                       (replicate (length $2 - 1) Nothing ++ [Just $3]) }
+>                                                       (replicate (length $2) Nothing ++ [Just $3]) }
 >       | '(' commas texp tsectend      { TupleSection ($1 <^^> head (snd $4) <** $1:reverse (snd $4 ++ $2))
->                                                       (replicate (length $2 - 1) Nothing ++ Just $3 : fst $4) }
+>                                                       (replicate (length $2) Nothing ++ Just $3 : fst $4) }
 >       | '[' list ']'                  { amap (\l -> l <** [$3]) $ $2 ($1 <^^> $3 <** [$1]) }
 >       | '_'                           { WildCard (nIS $1) }
 >       | '(' erpats ')'                {% checkEnabled RegularPatterns >> return (Paren ($1 <^^> $3 <** [$1,$3]) $2) }
