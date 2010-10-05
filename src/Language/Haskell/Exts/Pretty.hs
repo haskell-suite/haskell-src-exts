@@ -763,28 +763,28 @@ instance Pretty Literal where
 instance Pretty Exp where
         prettyPrec _ (Lit l) = pretty l
         -- lambda stuff
-        prettyPrec p (InfixApp a op b) = parensIf (p > 0) $ myFsep [pretty a, pretty op, pretty b]
-        prettyPrec _ (NegApp e) = parens $ myFsep [char '-', pretty e]
-        prettyPrec p (App a b) = parensIf (p > 0) $ myFsep [pretty a, prettyPrec 1 b]
-        prettyPrec p (Lambda _loc expList ppBody) = parensIf (p > 0) $ myFsep $
-                char '\\' : map pretty expList ++ [text "->", pretty ppBody]
+        prettyPrec p (InfixApp a op b) = parensIf (p > 2) $ myFsep [prettyPrec 2 a, pretty op, prettyPrec 1 b]
+        prettyPrec p (NegApp e) = parensIf (p > 0) $ char '-' <> prettyPrec 4 e
+        prettyPrec p (App a b) = parensIf (p > 3) $ myFsep [prettyPrec 3 a, prettyPrec 4 b]
+        prettyPrec p (Lambda _loc patList ppBody) = parensIf (p > 1) $ myFsep $
+                char '\\' : map pretty patList ++ [text "->", pretty ppBody]
         -- keywords
         -- two cases for lets
         prettyPrec p (Let (BDecls declList) letBody) =
-                parensIf (p > 0) $ ppLetExp declList letBody
+                parensIf (p > 1) $ ppLetExp declList letBody
         prettyPrec p (Let (IPBinds bindList) letBody) =
-                parensIf (p > 0) $ ppLetExp bindList letBody
+                parensIf (p > 1) $ ppLetExp bindList letBody
 
-        prettyPrec p (If cond thenexp elsexp) = parensIf (p > 0) $
+        prettyPrec p (If cond thenexp elsexp) = parensIf (p > 1) $
                 myFsep [text "if", pretty cond,
                         text "then", pretty thenexp,
                         text "else", pretty elsexp]
-        prettyPrec p (Case cond altList) = parensIf (p > 0) $
+        prettyPrec p (Case cond altList) = parensIf (p > 1) $
                 myFsep [text "case", pretty cond, text "of"]
                 $$$ ppBody caseIndent (map pretty altList)
-        prettyPrec p (Do stmtList) = parensIf (p > 0) $ 
+        prettyPrec p (Do stmtList) = parensIf (p > 1) $ 
                 text "do" $$$ ppBody doIndent (map pretty stmtList)
-        prettyPrec p (MDo stmtList) = parensIf (p > 0) $ 
+        prettyPrec p (MDo stmtList) = parensIf (p > 1) $ 
                 text "mdo" $$$ ppBody doIndent (map pretty stmtList)
         -- Constructors & Vars
         prettyPrec _ (Var name) = pretty name
@@ -846,7 +846,7 @@ instance Pretty Exp where
                             int a, char ':', int b, char '-',
                             int c, char ':', int d, text "#-}", pretty e]
         -- Arrows
-        prettyPrec p (Proc _ pat e) = parensIf (p > 0) $ myFsep $ [text "proc", pretty pat, text "->", pretty e]
+        prettyPrec p (Proc _ pat e) = parensIf (p > 1) $ myFsep $ [text "proc", pretty pat, text "->", pretty e]
         prettyPrec p (LeftArrApp l r)      = parensIf (p > 0) $ myFsep $ [pretty l, text "-<",  pretty r]
         prettyPrec p (RightArrApp l r)     = parensIf (p > 0) $ myFsep $ [pretty l, text ">-",  pretty r]
         prettyPrec p (LeftArrHighApp l r)  = parensIf (p > 0) $ myFsep $ [pretty l, text "-<<", pretty r]

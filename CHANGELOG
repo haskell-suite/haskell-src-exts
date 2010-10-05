@@ -8,6 +8,12 @@
 * Pretty-printer now inserts parentheses in clever places when 
   printing kinds.
 
+* Pretty-printing expressions is now far more accurate in inserting
+  (and not inserting) parentheses when needed.
+  
+* Pretty-printing negative expressions no longer inserts a superfluous
+  space between the - and the expression.
+
 1.9.2 --> 1.9.3
 ===============
 
