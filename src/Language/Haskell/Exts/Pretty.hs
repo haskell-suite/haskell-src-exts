@@ -718,11 +718,11 @@ ppForall (Just vs) =    myFsep (text "forall" : map pretty vs ++ [char '.'])
 ---------------------------- Kinds ----------------------------
 
 instance Pretty Kind where
-        pretty KindStar      = text "*"
-        pretty KindBang      = text "!"
-        pretty (KindFn a b)  = myFsep [pretty a, text "->", pretty b]
-        pretty (KindParen k) = parens $ pretty k
-        pretty (KindVar n)   = pretty n
+        prettyPrec _ KindStar      = text "*"
+        prettyPrec _ KindBang      = text "!"
+        prettyPrec n (KindFn a b)  = parensIf (n > 0) $ myFsep [prettyPrec 1 a, text "->", pretty b]
+        prettyPrec _ (KindParen k) = parens $ pretty k
+        prettyPrec _ (KindVar n)   = pretty n
 
 ppOptKind :: Maybe Kind -> [Doc]
 ppOptKind Nothing  = []

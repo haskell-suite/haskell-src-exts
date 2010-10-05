@@ -2,6 +2,12 @@
 
 ** 1.9.x
 
+1.9.3 --> 1.9.4
+===============
+
+* Pretty-printer now inserts parentheses in clever places when 
+  printing kinds.
+
 1.9.2 --> 1.9.3
 ===============
 
