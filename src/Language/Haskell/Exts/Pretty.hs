@@ -334,8 +334,8 @@ instance Pretty Decl where
                 markLine loc $
                 mySep ( [pretty don, ppContext context, pretty name]
                         ++ map pretty nameList)
-                        <+> (myVcat (zipWith (<+>) (equals : repeat (char '|'))
-                                                   (map pretty constrList))
+                  <+> (myVcat (zipWith (<+>) (equals : repeat (char '|'))
+                                             (map pretty constrList))
                         $$$ ppDeriving derives)
 
         pretty (GDataDecl loc don context name nameList optkind gadtList derives) =
@@ -344,7 +344,7 @@ instance Pretty Decl where
                 mySep ( [pretty don, ppContext context, pretty name]
                         ++ map pretty nameList ++ ppOptKind optkind ++ [text "where"])
                         $$$ ppBody classIndent (map pretty gadtList)
-                        $$$ ppDeriving derives
+                        $$$ ppBody letIndent [ppDeriving derives]
 
         pretty (TypeFamDecl loc name nameList optkind) =
                 blankline $

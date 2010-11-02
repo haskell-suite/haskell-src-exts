@@ -1,6 +1,8 @@
 1.9.4 --> 1.9.5
 ===============
 
+* Fix a bug where deriving clauses for GADT-style data declarations
+  were not properly indented.
 
 ** 1.9.x
 
