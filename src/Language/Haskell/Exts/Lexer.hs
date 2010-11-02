@@ -764,6 +764,7 @@ lexStdToken = do
                   '\n':_ -> do lexNewline
                                str <- lexQQBody
                                return ('\n':str)
+                  []     -> fail "Unexpected end of input while lexing quasi-quoter"
                   _ -> do str <- lexWhile (not . (`elem` "\\|\n"))
                           rest <- lexQQBody
                           return (str++rest)

@@ -1,5 +1,9 @@
-1.9.4 --> 1.9.6
+** 1.9.x
+
+1.9.5 --> 1.9.6
 ===============
+
+* Fix a bug (#203) where the lexer loops on malformed quasi-quoters.
 
 
 1.9.4 --> 1.9.5
@@ -10,8 +14,6 @@
 
 * Pretty-printing patterns is now more accurate in inserting (and not
   inserting) parentheses when needed.
-
-** 1.9.x
 
 1.9.3 --> 1.9.4
 ===============
@@ -48,7 +50,6 @@
 
 * Export parseFileContentsWithExts from .Exts.
 
-
 1.8.2 --> 1.9.0
 ===============
 
@@ -62,6 +63,7 @@
   to L.H.Exts .
 
 * More informative error messages when HSX tags are mismatched.
+
 
 
 ** 1.8.x
