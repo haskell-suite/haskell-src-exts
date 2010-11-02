@@ -4,6 +4,9 @@
 * Fix a bug where deriving clauses for GADT-style data declarations
   were not properly indented.
 
+* Pretty-printing patterns is now more accurate in inserting (and not
+  inserting) parentheses when needed.
+
 ** 1.9.x
 
 1.9.3 --> 1.9.4

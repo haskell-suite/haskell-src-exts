@@ -889,25 +889,25 @@ instance Pretty Splice where
 instance Pretty Pat where
         prettyPrec _ (PVar name) = pretty name
         prettyPrec _ (PLit lit) = pretty lit
-        prettyPrec _ (PNeg p) = myFsep [char '-', pretty p]
+        prettyPrec p (PNeg pat) = parensIf (p > 0) $ myFsep [char '-', pretty pat]
         prettyPrec p (PInfixApp a op b) = parensIf (p > 0) $
-                myFsep [pretty a, pretty (QConOp op), pretty b]
-        prettyPrec p (PApp n ps) = parensIf (p > 1) $
-                myFsep (pretty n : map pretty ps)
+                myFsep [prettyPrec 1 a, pretty (QConOp op), prettyPrec 1 b]
+        prettyPrec p (PApp n ps) = parensIf (p > 1 && not (null ps)) $
+                myFsep (pretty n : map (prettyPrec 2) ps)
         prettyPrec _ (PTuple ps) = parenList . map pretty $ ps
         prettyPrec _ (PList ps) =
                 bracketList . punctuate comma . map pretty $ ps
-        prettyPrec _ (PParen p) = parens . pretty $ p
+        prettyPrec _ (PParen pat) = parens . pretty $ pat
         prettyPrec _ (PRec c fields) =
                 pretty c <> (braceList . map pretty $ fields)
         -- special case that would otherwise be buggy
         prettyPrec _ (PAsPat name (PIrrPat pat)) =
-                myFsep [pretty name <> char '@', char '~' <> pretty pat]
+                myFsep [pretty name <> char '@', char '~' <> prettyPrec 2 pat]
         prettyPrec _ (PAsPat name pat) =
-                hcat [pretty name, char '@', pretty pat]
+                hcat [pretty name, char '@', prettyPrec 2 pat]
         prettyPrec _ PWildCard = char '_'
-        prettyPrec _ (PIrrPat pat) = char '~' <> pretty pat
-        prettyPrec _ (PatTypeSig _pos pat ty) =
+        prettyPrec _ (PIrrPat pat) = char '~' <> prettyPrec 2 pat
+        prettyPrec p (PatTypeSig _pos pat ty) = parensIf (p > 0) $
                 myFsep [pretty pat, text "::", pretty ty]
         prettyPrec p (PViewPat e pat) = parensIf (p > 0) $
                 myFsep [pretty e, text "->", pretty pat]
@@ -934,7 +934,7 @@ instance Pretty Pat where
         prettyPrec _ (PExplTypeArg qn t) =
                 myFsep [pretty qn, text "{|", pretty t, text "|}"]
         -- BangPatterns
-        prettyPrec _ (PBangPat p) = text "!" <> pretty p
+        prettyPrec _ (PBangPat pat) = text "!" <> prettyPrec 2 pat
 
 instance Pretty PXAttr where
         pretty (PXAttr n p) =
