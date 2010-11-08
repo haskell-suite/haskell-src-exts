@@ -613,7 +613,7 @@ instance Pretty Activation where
 
 instance Pretty RuleVar where
     pretty (RuleVar n) = pretty n
-    pretty (TypedRuleVar n t) = mySep [pretty n, text "::", pretty t]
+    pretty (TypedRuleVar n t) = parens $ mySep [pretty n, text "::", pretty t]
 
 instance Pretty ModulePragma where
     pretty (LanguagePragma _ ns) =

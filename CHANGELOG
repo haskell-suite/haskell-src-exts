@@ -5,6 +5,7 @@
 
 * Fix a bug (#203) where the lexer loops on malformed quasi-quoters.
 
+* Fix a bug with pretty-printing RULES pragmas.
 
 1.9.4 --> 1.9.5
 ===============
