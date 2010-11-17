@@ -1287,6 +1287,13 @@ instance ExactP Exp where
             exactPC e
             printString "%>"
          _ -> errorEP "ExactP: Exp: XExpTag is given wrong number of srcInfoPoints"
+    XChildTag l es  ->
+        case srcInfoPoints l of
+         [a,b,c] -> do
+            printString "<%>"
+            mapM_ exactPC es
+            printStringAt (pos b) "</"
+            printStringAt (pos c) "%>"
 
     CorePragma l      str e         ->
         case srcInfoPoints l of

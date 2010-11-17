@@ -639,6 +639,7 @@ data Exp
                                 -- ^ empty xml element, with attributes
     | XPcdata String            -- ^ PCDATA child element
     | XExpTag Exp               -- ^ escaped haskell expression inside xml
+    | XChildTag SrcLoc [Exp]    -- ^ children of an xml element
 
 -- Pragmas
     | CorePragma        String Exp      -- ^ CORE pragma

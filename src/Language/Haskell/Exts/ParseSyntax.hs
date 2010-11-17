@@ -74,6 +74,7 @@ data PExp l
                                             -- ^ <Name />
     | XPcdata l String                      -- ^ PCDATA
     | XExpTag l (PExp l)                    -- ^ <% ... %>
+    | XChildTag l [PExp l]                  -- ^ <%> ... </%>
     | XRPats l [PExp l]                     -- ^ <[ ... ]>
 
 -- Pragmas
@@ -152,6 +153,7 @@ instance Annotated PExp where
         XETag l xn xas me       -> l
         XPcdata l s             -> l
         XExpTag l e             -> l
+        XChildTag l es          -> l
         XRPats l es             -> l
 
         CorePragma l s e   -> l
@@ -216,6 +218,8 @@ instance Annotated PExp where
         XETag l xn xas me       -> XETag (f l) xn xas me
         XPcdata l s             -> XPcdata (f l) s
         XExpTag l e             -> XExpTag (f l) e
+        XChildTag l es          -> XChildTag (f l) es
+        XRPats l es             -> XRPats (f l) es
 
         CorePragma l s e        -> CorePragma (f l) s e
         SCCPragma  l s e        -> SCCPragma  (f l) s e
@@ -277,6 +281,8 @@ instance Functor PExp where
           XETag l xn xas me       -> XETag (f l) (fmap f xn) (map (fmap f) xas) (fmap (fmap f) me)
           XPcdata l s             -> XPcdata (f l) s
           XExpTag l e             -> XExpTag (f l) (fmap f e)
+          XChildTag l es          -> XChildTag (f l) (map (fmap f) es)
+          XRPats l es             -> XRPats (f l) (map (fmap f) es)
 
           CorePragma l s e        -> CorePragma (f l) s (fmap f e)
           SCCPragma  l s e        -> SCCPragma  (f l) s (fmap f e)

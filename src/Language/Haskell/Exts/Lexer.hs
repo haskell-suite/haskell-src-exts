@@ -120,6 +120,7 @@ data Token
         | XStdTagClose      -- >
         | XCloseTagOpen     -- </
         | XEmptyTagClose    -- />
+        | XChildTagOpen     -- <%> (note that close doesn't exist, it's XCloseTagOpen followed by XCodeTagClose)
         | XPCDATA String
         | XRPatOpen             -- <[
         | XRPatClose            -- ]>
@@ -481,6 +482,9 @@ lexChildCtxt = do
     -- if we ever end up here, then XmlSyntax must be on.
     s <- getInput
     case s of
+        '<':'%':'>':_ -> do discard 3
+                            pushExtContextL ChildCtxt
+                            return XChildTagOpen
         '<':'%':_ -> do discard 2
                         pushExtContextL CodeTagCtxt
                         return XCodeTagOpen
@@ -534,6 +538,9 @@ lexCloseTagCtxt = do
     -- if we ever end up here, then XmlSyntax must be on.
     s <- getInput
     case s of
+        '%':'>':_ -> do discard 2
+                        popExtContextL "lexCloseTagCtxt"
+                        return XCodeTagClose
         '>':_     -> do discard 1
                         popExtContextL "lexCloseTagCtxt"
                         return XStdTagClose
@@ -638,10 +645,14 @@ lexStdToken = do
         -- end template haskell
 
         -- hsx
-        '<':'%':_ | XmlSyntax `elem` exts -> do
-                        discard 2
-                        pushExtContextL CodeTagCtxt
-                        return XCodeTagOpen
+        '<':'%':c:_ | XmlSyntax `elem` exts -> do 
+                        case c of
+                         '>' -> do discard 3
+                                   pushExtContextL ChildCtxt
+                                   return XChildTagOpen
+                         _   -> do discard 2
+                                   pushExtContextL CodeTagCtxt
+                                   return XCodeTagOpen
         '<':c:_ | isAlpha c && XmlSyntax `elem` exts -> do
                         discard 1
                         pushExtContextL TagCtxt

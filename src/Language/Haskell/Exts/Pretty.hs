@@ -838,6 +838,9 @@ instance Pretty Exp where
         prettyPrec _ (XPcdata s) = text s
         prettyPrec _ (XExpTag e) =
                 myFsep $ [text "<%", pretty e, text "%>"]
+        prettyPrec _ (XChildTag _ cs) =
+                myFsep $ text "<%>" : map pretty cs ++ [text "</%>"]
+        
         -- Pragmas
         prettyPrec p (CorePragma s e) = myFsep $ map text ["{-# CORE", show s, "#-}"] ++ [pretty e]
         prettyPrec _ (SCCPragma  s e) = myFsep $ map text ["{-# SCC",  show s, "#-}"] ++ [pretty e]
@@ -1564,6 +1567,8 @@ instance SrcInfo loc => Pretty (P.PExp loc) where
         pretty (P.XPcdata _ s) = text s
         pretty (P.XExpTag _ e) =
                 myFsep $ [text "<%", pretty e, text "%>"]
+        pretty (P.XChildTag _ es) =
+                myFsep $ text "<%>" : map pretty es ++ [text "</%>"]
         pretty (P.CorePragma _ s e) = myFsep $ map text ["{-# CORE", show s, "#-}"] ++ [pretty e]
         pretty (P.SCCPragma  _ s e) = myFsep $ map text ["{-# SCC",  show s, "#-}"] ++ [pretty e]
         pretty (P.GenPragma  _ s (a,b) (c,d) e) =

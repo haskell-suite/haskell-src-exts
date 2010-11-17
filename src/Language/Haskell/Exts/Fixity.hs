@@ -363,6 +363,7 @@ leafFix fixs e = case e of
     XTag loc n ats mexp cs  -> liftM3 (XTag loc n) (mapM fix ats) (mapM fix mexp) (mapM fix cs)
     XETag loc n ats mexp    -> liftM2 (XETag loc n) (mapM fix ats) (mapM fix mexp)
     XExpTag e               -> liftM XExpTag $ fix e
+    XChildTag loc cs        -> liftM (XChildTag loc) $ mapM fix cs
     Proc loc p e            -> liftM2 (Proc loc) (fix p) (fix e)
     LeftArrApp e1 e2        -> liftM2 LeftArrApp (fix e1) (fix e2)
     RightArrApp e1 e2       -> liftM2 RightArrApp (fix e1) (fix e2)

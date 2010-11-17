@@ -737,6 +737,8 @@ data Exp l
                                             -- ^ empty xml element, with attributes
     | XPcdata l String                      -- ^ PCDATA child element
     | XExpTag l (Exp l)                     -- ^ escaped haskell expression inside xml
+    | XChildTag l [Exp l]                   -- ^ children of an xml element    
+
 
 -- Pragmas
     | CorePragma l      String (Exp l)      -- ^ CORE pragma
@@ -1394,6 +1396,7 @@ instance Functor Exp where
         XETag l xn xas me        -> XETag (f l) (fmap f xn) (map (fmap f) xas) (fmap (fmap f) me)
         XPcdata l s              -> XPcdata (f l) s
         XExpTag l e              -> XExpTag (f l) (fmap f e)
+        XChildTag l es           -> XChildTag (f l) (map (fmap f) es)
 
         CorePragma l s e   -> CorePragma (f l) s (fmap f e)
         SCCPragma  l s e   -> SCCPragma (f l) s (fmap f e)
@@ -1954,6 +1957,7 @@ instance Annotated Exp where
         XETag l xn xas me        -> l
         XPcdata l s              -> l
         XExpTag l e              -> l
+        XChildTag l es           -> l
 
         CorePragma l s e   -> l
         SCCPragma  l s e   -> l
@@ -2004,6 +2008,7 @@ instance Annotated Exp where
         XETag l xn xas me        -> XETag (f l) xn xas me
         XPcdata l s              -> XPcdata (f l) s
         XExpTag l e              -> XExpTag (f l) e
+        XChildTag l es           -> XChildTag (f l) es
 
         CorePragma l s e   -> CorePragma (f l) s e
         SCCPragma  l s e   -> SCCPragma (f l) s e

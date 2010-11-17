@@ -191,6 +191,7 @@ Hsx
 >       '<'             { Loc $$ XStdTagOpen }
 >       '</'            { Loc $$ XCloseTagOpen }
 >       '<%'            { Loc $$ XCodeTagOpen }
+>       '<%>'           { Loc $$ XChildTagOpen }
 >       '>'             { Loc $$ XStdTagClose }
 >       '/>'            { Loc $$ XEmptyTagClose }
 >       '%>'            { Loc $$ XCodeTagClose }
@@ -1298,6 +1299,7 @@ Hsx Extensions - requires XmlSyntax, but the lexer handles all that.
 >                                                                        return $ XTag l n as $4 cn } }
 >       | '<' name attrs mattr '/>'                              { XETag   ($1 <^^> $5 <** [$1,$5]) $2 (reverse $3) $4 }
 >       | '<%' exp '%>'                                          { XExpTag ($1 <^^> $3 <** [$1,$3]) $2 }
+>       | '<%>' children '</' '%>'                               { XChildTag ($1 <^^> $4 <** [$1,$3,$4]) (reverse $2) }
 
 > children :: { [PExp L] }
 >       : children child                { $2 : $1 }

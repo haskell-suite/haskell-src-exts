@@ -370,6 +370,7 @@ sExp e = case e of
     XETag l xn attrs mat    -> S.XETag (getPointLoc l) (sXName xn) (map sXAttr attrs) (fmap sExp mat)
     XPcdata _ str       -> S.XPcdata str
     XExpTag _ e         -> S.XExpTag (sExp e)
+    XChildTag l es      -> S.XChildTag (getPointLoc l) (map sExp es)
     CorePragma _ str e  -> S.CorePragma str (sExp e)
     SCCPragma  _ str e  -> S.SCCPragma  str (sExp e)
     GenPragma  _ str i12 i34 e  -> S.GenPragma str i12 i34 (sExp e)

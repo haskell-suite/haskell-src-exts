@@ -585,6 +585,8 @@ checkExpr e = case e of
     XPcdata l p       -> return $ S.XPcdata l p
     XExpTag l e       -> do e <- checkExpr e
                             return $ S.XExpTag l e
+    XChildTag l es    -> do es <- mapM checkExpr es
+                            return $ S.XChildTag l es
     -- Pragmas
     CorePragma l s e  -> check1Expr e (S.CorePragma l s)
     SCCPragma  l s e  -> check1Expr e (S.SCCPragma l s)

@@ -1,3 +1,13 @@
+** 1.10.x
+
+1.9.6 --> 1.10.0
+===============
+
+* Add the newly devised <%>...</%> syntax to the XmlSyntax support.
+  This causes changes to pretty much everything, including adding
+  a case to the AST which prompts the major version bump.
+
+
 ** 1.9.x
 
 1.9.5 --> 1.9.6
