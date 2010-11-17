@@ -1285,7 +1285,7 @@ instance ExactP Exp where
          [a,b] -> do
             printString "<%"
             exactPC e
-            printString "%>"
+            printStringAt (pos b) "%>"
          _ -> errorEP "ExactP: Exp: XExpTag is given wrong number of srcInfoPoints"
     XChildTag l es  ->
         case srcInfoPoints l of
