@@ -3,6 +3,9 @@
 1.9.6 --> 1.10.0
 ===============
 
+* Ensure that implied extensions are always picked up, not only
+  when using the parseFile* family of functions as previously.
+
 * Add the newly devised <%>...</%> syntax to the XmlSyntax support.
   This causes changes to pretty much everything, including adding
   a case to the AST which prompts the major version bump.

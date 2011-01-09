@@ -36,7 +36,7 @@ module Language.Haskell.Exts.ParseMonad(
 import Language.Haskell.Exts.SrcLoc(SrcLoc(..))
 import Language.Haskell.Exts.Fixity (Fixity, preludeFixities)
 import Language.Haskell.Exts.Comments
-import Language.Haskell.Exts.Extension (Extension)
+import Language.Haskell.Exts.Extension (Extension, impliesExts)
 
 import Data.List ( intersperse )
 import Control.Applicative
@@ -149,7 +149,7 @@ newtype P a = P { runP ::
         }
 
 runParserWithMode :: ParseMode -> P a -> String -> ParseResult a
-runParserWithMode mode (P m) s = case m s 0 1 start ([],[],(False,False),[]) mode of
+{-runParserWithMode mode (P m) s = case m s 0 1 start ([],[],(False,False),[]) mode of
     Ok _ a -> ParseOk a
     Failed loc msg -> ParseFailed loc msg
     where start = SrcLoc {
@@ -157,19 +157,22 @@ runParserWithMode mode (P m) s = case m s 0 1 start ([],[],(False,False),[]) mod
         srcLine = 1,
         srcColumn = 1
     }
+-}
+runParserWithMode mode pm s = fmap fst $ runParserWithModeComments mode pm s
 
 runParser :: P a -> String -> ParseResult a
 runParser = runParserWithMode defaultParseMode
 
 runParserWithModeComments :: ParseMode -> P a -> String -> ParseResult (a, [Comment])
-runParserWithModeComments mode (P m) s = case m s 0 1 start ([],[],(False,False),[]) mode of
+runParserWithModeComments mode (P m) s = case m s 0 1 start ([],[],(False,False),[]) (allExts mode) of
     Ok (_,_,_,cs) a -> ParseOk (a, reverse cs)
     Failed loc msg -> ParseFailed loc msg
     where start = SrcLoc {
         srcFilename = parseFilename mode,
         srcLine = 1,
         srcColumn = 1
-    }
+        }
+          allExts mode@(ParseMode {extensions = es}) = mode { extensions = impliesExts es }
 
 instance Monad P where
     return a = P $ \_i _x _y _l s _m -> Ok s a
