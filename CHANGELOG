@@ -1,5 +1,11 @@
 ** 1.10.x
 
+1.10.0 --> 1.10.1
+===============
+
+* Enable the unicode version of DoubleColon (x2237). Thanks
+  to Andrés Sicard-Ramírez for the patch!
+
 1.9.6 --> 1.10.0
 ===============
 
