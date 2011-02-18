@@ -1224,6 +1224,7 @@ instance Functor Decl where
         SpecInlineSig    l b mact qn ts   -> SpecInlineSig (f l) b (fmap (fmap f) mact) (fmap f qn) (map (fmap f) ts)
         SpecSig          l        qn ts   -> SpecSig (f l) (fmap f qn) (map (fmap f) ts)
         InstSig          l mcx ih         -> InstSig (f l) (fmap (fmap f) mcx) (fmap f ih)
+        AnnPragma        l ann            -> AnnPragma (f l) (fmap f ann)
       where wp f (ns, s) = (map (fmap f) ns, s)
 
 instance Functor Annotation where

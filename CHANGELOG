@@ -1,5 +1,11 @@
 ** 1.10.x
 
+1.10.1 --> 1.10.2
+===============
+
+* Fix a missing case in the Functor declaration for Decl. Thanks
+  to Malcolm Wallace for the patch!
+
 1.10.0 --> 1.10.1
 ===============
 
