@@ -37,8 +37,8 @@ import Language.Haskell.Exts.Annotated.Syntax
 import Language.Haskell.Exts.SrcLoc
 
 import Language.Haskell.Exts.Fixity ( Fixity(..), infix_, infixl_, infixr_, preludeFixities, baseFixities )
-import qualified Language.Haskell.Exts.Syntax as S ( Assoc(..), QOp(..), Op(..), QName(..), Name(..), SpecialCon(..) )
-import Language.Haskell.Exts.Annotated.Simplify ( sQOp, sOp, sAssoc, sQName )
+import qualified Language.Haskell.Exts.Syntax as S ( Assoc(..), QOp(..), Op(..), QName(..), Name(..), SpecialCon(..), ModuleName )
+import Language.Haskell.Exts.Annotated.Simplify ( sQOp, sOp, sAssoc, sQName, sModuleHead, sName )
 
 import Data.Char (isUpper)
 import Control.Monad (when, (<=<), liftM, liftM2, liftM3, liftM4)
@@ -96,22 +96,20 @@ instance AppFixity Pat where
 askFixity :: [Fixity] -> QOp l -> (S.Assoc, Int)
 askFixity xs k = askFix xs (f $ sQOp k) -- undefined -- \k -> askFixityP xs (f k) -- lookupWithDefault (AssocLeft, 9) (f k) mp
     where
-        f (S.QVarOp x) = S.VarOp (g x)
-        f (S.QConOp x) = S.ConOp (g x)
+        f (S.QVarOp x) = g x
+        f (S.QConOp x) = g x
 
-        g (S.Qual _ x) = x
-        g (S.UnQual x) = x
-        g (S.Special S.Cons) = S.Symbol ":"
+        g (S.Special S.Cons) = S.UnQual (S.Symbol ":")
+        g x                  = x
 
 -- Same using patterns
 askFixityP :: [Fixity] -> QName l -> (S.Assoc, Int)
-askFixityP xs qn = askFix xs (S.ConOp $ g $ sQName qn)
+askFixityP xs qn = askFix xs (g $ sQName qn)
     where
-        g (S.Qual _ x) = x
-        g (S.UnQual x) = x
-        g (S.Special S.Cons) = S.Symbol ":"
+        g (S.Special S.Cons) = S.UnQual (S.Symbol ":")
+        g x                  = x
         
-askFix :: [Fixity] -> S.Op -> (S.Assoc, Int)
+askFix :: [Fixity] -> S.QName -> (S.Assoc, Int)
 askFix xs = \k -> lookupWithDefault (S.AssocLeft, 9) k mp
     where
         lookupWithDefault def k mp = case lookup k mp of
@@ -126,15 +124,17 @@ askFix xs = \k -> lookupWithDefault (S.AssocLeft, 9) k mp
 
 instance AppFixity Module where
     applyFixities fixs (Module l mmh prs imp decls) =
-        liftM (Module l mmh prs imp) $ appFixDecls fixs decls
+        liftM (Module l mmh prs imp) $ appFixDecls (Just mn) fixs decls
+      where (mn, _, _) = sModuleHead mmh
     applyFixities fixs (XmlPage l mn os xn xas mexp cs) =
         liftM3 (XmlPage l mn os xn) (fix xas) (fix mexp) (fix cs)
       where fix xs = mapM (applyFixities fixs) xs
     applyFixities fixs (XmlHybrid l mmh prs imp decls xn xas mexp cs) =
-        liftM4 (flip (XmlHybrid l mmh prs imp) xn) (appFixDecls fixs decls)
+        liftM4 (flip (XmlHybrid l mmh prs imp) xn) (appFixDecls (Just mn) fixs decls)
                 (fixe xas) (fixe mexp) (fixe cs)
-      where fixe xs = let extraFixs = getFixities decls
+      where fixe xs = let extraFixs = getFixities (Just mn) decls
                        in mapM (applyFixities (fixs++extraFixs)) xs
+            (mn, _, _) = sModuleHead mmh
 
 instance AppFixity Decl where
     applyFixities fixs decl = case decl of
@@ -147,14 +147,19 @@ instance AppFixity Decl where
         _                       -> return decl
       where fix x = applyFixities fixs x
 
-appFixDecls :: Monad m => [Fixity] -> [Decl SrcSpanInfo] -> m [Decl SrcSpanInfo]
-appFixDecls fixs decls =
-    let extraFixs = getFixities decls
+appFixDecls :: Monad m => Maybe S.ModuleName -> [Fixity] -> [Decl SrcSpanInfo] -> m [Decl SrcSpanInfo]
+appFixDecls mmdl fixs decls =
+    let extraFixs = getFixities mmdl decls
      in mapM (applyFixities (fixs++extraFixs)) decls
 
-getFixities = concatMap getFixity
-getFixity (InfixDecl _ a mp ops) = let p = maybe 9 id mp in map (Fixity (sAssoc a) p) (map sOp ops)
-getFixity _ = []
+getFixities mmdl = concatMap (getFixity mmdl)
+getFixity mmdl (InfixDecl _ a mp ops) = let p = maybe 9 id mp in map (Fixity (sAssoc a) p) (concatMap g ops)
+  where g (VarOp l x) = f $ sName x
+        g (ConOp l x) = f $ sName x
+        f x = case mmdl of
+              Nothing -> [            S.UnQual x]
+              Just m  -> [S.Qual m x, S.UnQual x]
+getFixity _ _ = []
 
 instance AppFixity Annotation where
     applyFixities fixs ann = case ann of
@@ -216,7 +221,7 @@ instance AppFixity Stmt where
 
 instance AppFixity Binds where
     applyFixities fixs bs = case bs of
-        BDecls l decls        -> liftM (BDecls l) $ appFixDecls fixs decls  -- special behavior
+        BDecls l decls        -> liftM (BDecls l) $ appFixDecls Nothing fixs decls  -- special behavior
         IPBinds l ips         -> liftM (IPBinds l) $ mapM fix ips
       where fix x = applyFixities fixs x
 

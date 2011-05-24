@@ -1,3 +1,23 @@
+** 1.11.x
+
+1.10.2 --> 1.11.1
+===============
+
+* API change: the fixities field in ParseMode is now of type
+  Maybe [Fixity].  If the field is Nothing the parsing will
+  not try to do any fixity resolution whatsoever, otherwise
+  it behaves as before.
+
+* API change, bug fix: The Fixity type contains a QName rather
+  than an Op to name the operator.  The operator must match
+  the given QName exactly (i.e., unqualified names only match
+  unqualified names, and qualified names only match qualified
+  names) for applyFixities to perform fixups.
+
+* Bug fix: End-of-file inside an OPTIONS pragma no longer loops.
+
+
+
 ** 1.10.x
 
 1.10.1 --> 1.10.2

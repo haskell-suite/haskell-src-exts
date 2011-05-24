@@ -119,7 +119,7 @@ data ParseMode = ParseMode {
         --   from LINE pragmas in source files
         ignoreLinePragmas :: Bool,
         -- | list of fixities to be aware of
-        fixities :: [Fixity]
+        fixities :: Maybe [Fixity]
         }
 
 -- | Default parameters for a parse.
@@ -133,7 +133,7 @@ defaultParseMode = ParseMode {
         extensions = [],
         ignoreLanguagePragmas = False,
         ignoreLinePragmas = True,
-        fixities = preludeFixities
+        fixities = Just preludeFixities
         }
 
 -- | Monad for parsing

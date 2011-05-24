@@ -845,6 +845,7 @@ lexRawPragma = do
         s <- getInput
         case s of
          '#':'-':'}':_  -> return rpr
+         "" -> fail "End-of-file inside pragma"
          _ -> do
             discard 1
             rpr' <- lexRawPragma

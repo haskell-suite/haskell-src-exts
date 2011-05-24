@@ -1,5 +1,5 @@
 Name:                   haskell-src-exts
-Version:                1.10.2
+Version:                1.11.1
 License:                BSD3
 License-File:           LICENSE
 Author:                 Niklas Broberg
@@ -28,7 +28,7 @@ Description:            Haskell-Source with Extensions (HSE, haskell-src-exts)
                         as well as HSX-style embedded XML syntax.
 Homepage:               http://code.haskell.org/haskell-src-exts
 Stability:              Stable
-Tested-with:            GHC==6.10.2, GHC==6.10.4
+Tested-with:            GHC==6.10.2, GHC==6.10.4, GHC==6.12.3
 Build-Type:             Custom
 Cabal-Version:          >= 1.2
 Extra-Source-Files:

@@ -51,7 +51,7 @@ import Data.Generics (Data(..),Typeable(..))
 
 -- | Operator fixities are represented by their associativity
 --   (left, right or none) and their precedence (0-9).
-data Fixity = Fixity Assoc Int Op
+data Fixity = Fixity Assoc Int QName
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
@@ -110,22 +110,20 @@ instance AppFixity Pat where
 askFixity :: [Fixity] -> QOp -> (Assoc, Int)
 askFixity xs k = askFix xs (f k) -- undefined -- \k -> askFixityP xs (f k) -- lookupWithDefault (AssocLeft, 9) (f k) mp
     where
-        f (QVarOp x) = VarOp (g x)
-        f (QConOp x) = ConOp (g x)
+        f (QVarOp x) = g x
+        f (QConOp x) = g x
 
-        g (Qual _ x) = x
-        g (UnQual x) = x
-        g (Special Cons) = Symbol ":"
+        g (Special Cons) = UnQual (Symbol ":")
+        g x              = x
 
 -- Same using patterns
 askFixityP :: [Fixity] -> QName -> (Assoc, Int)
-askFixityP xs qn = askFix xs (ConOp $ g qn)
+askFixityP xs qn = askFix xs (g qn)
     where
-        g (Qual _ x) = x
-        g (UnQual x) = x
-        g (Special Cons) = Symbol ":"
+        g (Special Cons) = UnQual (Symbol ":")
+        g x              = x
         
-askFix :: [Fixity] -> Op -> (Assoc, Int)
+askFix :: [Fixity] -> QName -> (Assoc, Int)
 askFix xs = \k -> lookupWithDefault (AssocLeft, 9) k mp
     where
         lookupWithDefault def k mp = case lookup k mp of
@@ -186,8 +184,8 @@ infix_  = fixity AssocNone
 fixity :: Assoc -> Int -> [String] -> [Fixity]
 fixity a p = map (Fixity a p . op)
     where
-        op ('`':xs) = (if isUpper (head xs) then ConOp else VarOp) $ Ident $ init xs
-        op xs = (if head xs == ':' then ConOp else VarOp) $ Symbol xs
+        op ('`':xs) = UnQual $ Ident $ init xs
+        op xs = UnQual $ Symbol xs
 
 
 
@@ -217,8 +215,10 @@ appFixDecls fixs decls =
     let extraFixs = getFixities decls
      in mapM (applyFixities (fixs++extraFixs)) decls
   where getFixities = concatMap getFixity
-        getFixity (InfixDecl _ a p ops) = map (Fixity a p) ops
+        getFixity (InfixDecl _ a p ops) = map (Fixity a p . g) ops
         getFixity _ = []
+        g (VarOp x) = UnQual x
+        g (ConOp x) = UnQual x
 
 instance AppFixity Annotation where
     applyFixities fixs ann = case ann of
