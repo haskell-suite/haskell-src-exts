@@ -632,6 +632,9 @@ lexStdToken = do
         '[':'$':c:_ | isLower c && QuasiQuotes `elem` exts ->
                         discard 2 >> lexQuasiQuote
 
+        '[':c:s | isLower c && QuasiQuotes `elem` exts && case dropWhile isIdent s of { '|':_ -> True;_->False} ->
+                        discard 1 >> lexQuasiQuote
+
         '|':']':_ | TemplateHaskell `elem` exts -> do
                         discard 2
                         return THCloseQuote

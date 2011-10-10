@@ -825,7 +825,7 @@ instance Pretty Exp where
         prettyPrec _ (SpliceExp s) = pretty s
         prettyPrec _ (TypQuote t)  = text "\'\'" <> pretty t
         prettyPrec _ (VarQuote x)  = text "\'" <> pretty x
-        prettyPrec _ (QuasiQuote n qt) = text ("[$" ++ n ++ "|" ++ qt ++ "|]")
+        prettyPrec _ (QuasiQuote n qt) = text ("[" ++ n ++ "|" ++ qt ++ "|]")
         -- Hsx
         prettyPrec _ (XTag _ n attrs mattr cs) =
                 let ax = maybe [] (return . pretty) mattr
