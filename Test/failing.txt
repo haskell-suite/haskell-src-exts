@@ -1,3 +1,4 @@
-Unicode.hs		Fails if readFile is not Unicode-aware, i.e. if GHC 6.12 is not used.
-UnicodeSyntax.hs	Same as above.
+DoRec.hs		DoRec not yet supported.
+GADTRecord.hs		GADT records not yet supported.
 ForeignImport.hs	Shouldn't succeed. Lacks ForeignFunctionInterface pragma, but complains about missing TemplateHaskell.
+CStyleLinePragmas.hs	Shouldn't succeed. HSE does not and will not support C-style line pragmas.

@@ -1,3 +1,5 @@
 HexPrec.hs		Uses hexadecimal notation to specify precedence of infix operator. We don't retain that info.
 RealGHC.lhs		Literate haskell.
 SpecializeInstance.hs	Prints SPECIALISE instead of SPECIALIZE.
+Unicode.hs		Printing is not Unicode-aware.
+UnicodeSyntax.hs	Printing is not Unicode-aware.
