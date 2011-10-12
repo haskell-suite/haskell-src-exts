@@ -234,10 +234,16 @@ checkClassHeader t = do
     return (Nothing,dh)
 
 checkSimple :: String -> PType L -> [TyVarBind L] -> P (DeclHead L)
-checkSimple kw (TyApp _ l t) xs | isTyVarBind t = checkSimple kw l (toTyVarBind t : xs)
-checkSimple _  (TyInfix l t1 (UnQual _ t) t2) []
-    | isTyVarBind t1 && isTyVarBind t2 =
-       checkEnabled TypeOperators >> return (DHInfix l (toTyVarBind t1) t (toTyVarBind t2))
+--checkSimple kw (TyApp _ l t) xs | isTyVarBind t = checkSimple kw l (toTyVarBind t : xs)
+
+checkSimple kw (TyApp _ l t) xs = do
+  tvb <- mkTyVarBind t
+  checkSimple kw l (tvb : xs)
+checkSimple _  (TyInfix l t1 (UnQual _ t) t2) [] = do
+       checkEnabled TypeOperators
+       tv1 <- mkTyVarBind t1
+       tv2 <- mkTyVarBind t2
+       return (DHInfix l tv1 t tv2)
 checkSimple _kw (TyCon l (UnQual _ t))   xs = do
     case t of
       Symbol _ _ -> checkEnabled TypeOperators
@@ -246,16 +252,25 @@ checkSimple _kw (TyCon l (UnQual _ t))   xs = do
 checkSimple kw (TyParen l t) xs = do
     dh <- checkSimple kw t xs
     return (DHParen l dh)
-checkSimple kw _ _ = fail ("Illegal " ++ kw ++ " declaration")
+checkSimple kw l _ = fail ("Illegal " ++ kw ++ " declaration:" ++ show (fmap (const ()) l))
 
+mkTyVarBind :: PType L -> P (TyVarBind L)
+mkTyVarBind (TyVar l n) = return $ UnkindedVar l n
+mkTyVarBind (TyKind l (TyVar _ n) k) = return $ KindedVar l n k
+mkTyVarBind (TyCon l (UnQual _ n@(Symbol _ _))) = checkEnabled TypeOperators >> return (UnkindedVar l n)
+mkTyVarBind (TyKind l (TyCon _ (UnQual _ n@(Symbol _ _))) k) = checkEnabled TypeOperators >> return (KindedVar l n k)
+
+{-
 isTyVarBind :: PType L -> Bool
 isTyVarBind (TyVar _ _) = True
+--isTyVarBind (TyCon _ (UnQual _ n@(Symbol _ _))) = True
 isTyVarBind (TyKind _ (TyVar _ _) _) = True
 isTyVarBind _ = False
 
 toTyVarBind :: PType L -> TyVarBind L
 toTyVarBind (TyVar l n) = UnkindedVar l n
 toTyVarBind (TyKind l (TyVar _ n) k) = KindedVar l n k
+-}
 
 checkInstHeader :: PType L -> P (Maybe (S.Context L), InstHead L)
 checkInstHeader (TyForall _ Nothing cs t) = do
