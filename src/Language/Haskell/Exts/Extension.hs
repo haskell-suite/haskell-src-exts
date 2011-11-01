@@ -36,7 +36,7 @@ data Extension
   | MultiParamTypeClasses
   | NoMonomorphismRestriction
   | FunctionalDependencies
-  | ExplicitForall
+  | ExplicitForAll
   | Rank2Types
   | RankNTypes
   | PolymorphicComponents
@@ -118,13 +118,14 @@ impliesExts = go
 
         implE e = case e of
                     TypeFamilies        -> [KindSignatures]
-                    ScopedTypeVariables -> [TypeOperators, ExplicitForall]
+                    ScopedTypeVariables -> [TypeOperators, ExplicitForAll]
                     XmlSyntax           -> [RegularPatterns]
                     RegularPatterns     -> [PatternGuards]
-                    RankNTypes          -> [Rank2Types]
-                    Rank2Types          -> [PolymorphicComponents]
-                    PolymorphicComponents   -> [ExplicitForall]
-                    LiberalTypeSynonyms -> [ExplicitForall]
+                    RankNTypes          -> [Rank2Types, ExplicitForAll]
+                    Rank2Types          -> [PolymorphicComponents, ExplicitForAll]
+                    PolymorphicComponents   -> [ExplicitForAll]
+                    LiberalTypeSynonyms -> [ExplicitForAll]
+                    ExistentialQuantification -> [ExplicitForAll]
                     -- Deprecations
                     RecordPuns          -> [NamedFieldPuns]
                     PatternSignatures   -> [ScopedTypeVariables]
@@ -178,7 +179,7 @@ knownExtensions =
     , MultiParamTypeClasses
     , NoMonomorphismRestriction
     , FunctionalDependencies
-    , ExplicitForall
+    , ExplicitForAll
     , Rank2Types
     , RankNTypes
     , PolymorphicComponents

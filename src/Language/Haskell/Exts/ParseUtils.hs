@@ -891,11 +891,11 @@ checkType t = checkT t False
 checkT :: PType L -> Bool -> P (S.Type L)
 checkT t simple = case t of
     TyForall l tvs@Nothing cs pt    -> do
-            when (simple) $ checkEnabled ExplicitForall
+            when (simple) $ checkEnabled ExplicitForAll
             ctxt <- checkContext cs
             check1Type pt (S.TyForall l Nothing ctxt)
     TyForall l tvs cs pt -> do
-            checkEnabled ExplicitForall
+            checkEnabled ExplicitForAll
             ctxt <- checkContext cs
             check1Type pt (S.TyForall l tvs ctxt)
     TyFun   l at rt   -> check2Types at rt (S.TyFun l)
