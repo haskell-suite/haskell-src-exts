@@ -1,4 +1,5 @@
-DoRec.hs		DoRec not yet supported.
+IfThenElseLayout.hs	New layout rules for if-then-else not yet supported.
 GADTRecord.hs		GADT records not yet supported.
+DoRec.hs		DoRec not yet supported.
 ForeignImport.hs	Shouldn't succeed. Lacks ForeignFunctionInterface pragma, but complains about missing TemplateHaskell.
 CStyleLinePragmas.hs	Shouldn't succeed. HSE does not and will not support C-style line pragmas.

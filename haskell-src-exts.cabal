@@ -62,6 +62,7 @@ Extra-Source-Files:
 			Test/examples/HexPrec.hs
 			Test/examples/Hyphen.hs
 			Test/examples/ImportSymbol.hs
+                        Test/examples/IfThenElseLayout.hs
 			Test/examples/IndentedWhere.hs
 			Test/examples/InfixParser.hs
 			Test/examples/LanguagePragma.hs
