@@ -767,7 +767,7 @@ instance Pretty Exp where
         prettyPrec p (NegApp e) = parensIf (p > 0) $ char '-' <> prettyPrec 4 e
         prettyPrec p (App a b) = parensIf (p > 3) $ myFsep [prettyPrec 3 a, prettyPrec 4 b]
         prettyPrec p (Lambda _loc patList ppBody) = parensIf (p > 1) $ myFsep $
-                char '\\' : map pretty patList ++ [text "->", pretty ppBody]
+                char '\\' : map (prettyPrec 2) patList ++ [text "->", pretty ppBody]
         -- keywords
         -- two cases for lets
         prettyPrec p (Let (BDecls declList) letBody) =
