@@ -3,7 +3,7 @@
 import Here
 
 str :: String
-str = [here|test 
+str = [$here|test 
 test 
 test test |]
 
