@@ -1251,7 +1251,7 @@ instance ExactP Exp where
     SpliceExp l sp  -> exactP sp
     QuasiQuote l name qt    -> do
         let qtLines = lines qt
-        printString $ "[$" ++ name ++ "|"
+        printString $ "[" ++ name ++ "|"
         sequence_ (intersperse newLine $ map printString qtLines)
         printString "|]"
     XTag l xn attrs mat es  ->
