@@ -4,6 +4,13 @@
 ===============
 
 * Move from old [$...| quasi-quote syntax to the new [...| one.
+  The old syntax is still recognized while parsing.
+
+* Allow symbols as variables when TypeOperators is enabled.
+
+* Rename ExplicitForall in ExplicitForAll, to be consistent
+  with GHC and the Haskell' process.
+
 
 ** 1.11.x
 
