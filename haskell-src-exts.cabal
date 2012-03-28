@@ -3,7 +3,7 @@ Version:                1.13.0
 License:                BSD3
 License-File:           LICENSE
 Author:                 Niklas Broberg
-Maintainer:             Niklas Broberg <d00nibro@chalmers.se>
+Maintainer:             Niklas Broberg <niklas.broberg@chalmers.se>
 Category:               Language
 Synopsis:               Manipulating Haskell source: abstract syntax, lexer, parser, and pretty-printer
 Description:            Haskell-Source with Extensions (HSE, haskell-src-exts)
@@ -28,9 +28,10 @@ Description:            Haskell-Source with Extensions (HSE, haskell-src-exts)
                         as well as HSX-style embedded XML syntax.
 Homepage:               http://code.haskell.org/haskell-src-exts
 Stability:              Stable
-Tested-with:            GHC==6.10.2, GHC==6.10.4, GHC==6.12.3
+Tested-with:            GHC==6.10.2, GHC==6.10.4, GHC==6.12.3, GHC==7.0.2
 Build-Type:             Custom
-Cabal-Version:          >= 1.2
+Cabal-Version:          >= 1.6
+
 Extra-Source-Files:
 			CHANGELOG
 			Test/Runner.hs
@@ -139,3 +140,7 @@ Library
                         Language.Haskell.Exts.ParseUtils,
                         Language.Haskell.Exts.InternalParser
   Hs-source-dirs:       src
+
+Source-Repository head
+        Type:           darcs
+        Location:       http://code.haskell.org/haskell-src-exts
