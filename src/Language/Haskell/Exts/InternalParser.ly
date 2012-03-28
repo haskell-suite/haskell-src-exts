@@ -1154,9 +1154,14 @@ mangle them into the correct form depending on context.
 >       : '\\' apats '->' exp             { Lambda (nIS $1 <++> ann $4 <** [$1,$3]) (reverse $2) $4 }
 A let may bind implicit parameters
 >       | 'let' binds 'in' exp            { Let    (nIS $1 <++> ann $4 <** [$1,$3])    $2 $4 }
->       | 'if' exp 'then' exp 'else' exp  { If     (nIS $1 <++> ann $6 <** [$1,$3,$5]) $2 $4 $6 }
+>       | 'if' exp optlayoutsemi 'then' exp optlayoutsemi 'else' exp  
+>	       	   	      	     	  { If     (nIS $1 <++> ann $8 <** ($1:$3 ++ $4:$6 ++ [$7])) $2 $5 $8 }
 >       | 'proc' apat '->' exp            { Proc   (nIS $1 <++> ann $4 <** [$1,$3])    $2 $4 }
 >       | exppragma                       { $1 }
+
+> optlayoutsemi :: { [S] }
+> 	: ';'				  {% checkEnabled DoAndIfThenElse >> return [$1] }
+>	| {- empty -}			  { [] }
 
 mdo blocks require the RecursiveDo extension enabled, but the lexer handles that.
 

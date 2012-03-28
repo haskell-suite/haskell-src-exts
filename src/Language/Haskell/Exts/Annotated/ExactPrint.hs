@@ -181,6 +181,11 @@ lList' [] = []
 lList' [p] = [if isNullSpan p then (p,"") else (p,"}")]
 lList' (p:ps) = (if isNullSpan p then (p,"") else (p,";")) : lList' ps
 
+printSemi :: SrcSpan -> EP ()
+printSemi p = do
+  printWhitespace (pos p)
+  when (not $ isNullSpan p) $ printString ";"
+                
 
 --------------------------------------------------
 -- Exact printing
@@ -1117,16 +1122,33 @@ instance ExactP Exp where
             printStringAt (pos b) "in"
             exactPC e
          _ -> errorEP "ExactP: Exp: Let is given wrong number of srcInfoPoints"
-    If l ec et ee   ->
+    If l ec et ee   -> -- traceShow (srcInfoPoints l) $ do
         case srcInfoPoints l of
-         [a,b,c] -> do
-            printString "if"
-            exactPC ec
-            printStringAt (pos b) "then"
-            exactPC et
-            printStringAt (pos c) "else"
-            exactPC ee
-         _ -> errorEP "ExactP: Exp: If is given wrong number of srcInfoPoints"
+         (pIf:b:c:rest) -> do
+            let (mpSemi1,pThen,rest2) =
+                           if snd (spanSize b) == 4 -- this is "then", not a semi
+                            then (Nothing, b, c:rest)
+                            else (Just b, c, rest)
+            case rest2 of
+              (c:rest3) -> do
+                let (mpSemi2,rest4) = if snd (spanSize c) == 4 -- this is "else", not a semi
+                                       then (Nothing, rest2) 
+                                       else (Just c, rest3)
+                case rest4 of
+                  [pElse] -> do
+                    printString "if"
+                    exactPC ec
+                    maybeEP printSemi  mpSemi1
+                    printStringAt (pos pThen) "then"
+                    exactPC et
+                    maybeEP printSemi mpSemi2
+                    printStringAt (pos pElse) "else"
+                    exactPC ee
+                  [] -> errorEP "ExactP: Exp: If is given too few srcInfoPoints"
+                  _  -> errorEP "ExactP: Exp: If is given too many srcInfoPoints"
+              _ -> errorEP "ExactP: Exp: If is given too few srcInfoPoints"
+
+         _ -> errorEP "ExactP: Exp: If is given too few srcInfoPoints"
     Case l e alts   ->
         case srcInfoPoints l of
          a:b:pts -> do

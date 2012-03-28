@@ -86,6 +86,7 @@ data Extension
   | ConstrainedClassMethods
 
   | PackageImports
+  | DoAndIfThenElse
 
   | ImpredicativeTypes
   | NewQualifiedOperators

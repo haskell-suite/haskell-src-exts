@@ -1,3 +1,4 @@
+{-# LANGUAGE DoAndIfThenElse #-}
 module IfThenElseLayout where
 
 askCardsForExchange :: Hand -> IO [Card]

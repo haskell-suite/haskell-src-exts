@@ -75,8 +75,13 @@ mergeSrcSpan (SrcSpan fn sl1 sc1 el1 ec1) (SrcSpan _ sl2 sc2 el2 ec2) =
 
 -- | Test if a given span starts and ends at the same location.
 isNullSpan :: SrcSpan -> Bool
-isNullSpan ss = srcSpanStartLine ss == srcSpanEndLine ss &&
+isNullSpan ss = spanSize ss == (0,0)
+{- isNullSpan ss = srcSpanStartLine ss == srcSpanEndLine ss &&
                     srcSpanStartColumn ss >= srcSpanEndColumn ss
+-}
+
+spanSize :: SrcSpan -> (Int, Int)
+spanSize ss = (srcSpanEndLine ss - srcSpanStartLine ss, max 0 (srcSpanEndColumn ss - srcSpanStartColumn ss))
 
 -- | An entity located in the source.
 data Loc a = Loc
