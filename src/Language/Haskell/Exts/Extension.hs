@@ -19,6 +19,8 @@ module Language.Haskell.Exts.Extension (
     Extension(..), classifyExtension, impliesExts,
 
     -- * Extension groups
+    haskell98, haskell2010,
+
     glasgowExts, knownExtensions
 
     ) where
@@ -84,6 +86,7 @@ data Extension
   | UnboxedTuples
   | DeriveDataTypeable
   | ConstrainedClassMethods
+  | NPlusKPatterns
 
   | PackageImports
   | DoAndIfThenElse
@@ -168,6 +171,17 @@ glasgowExts = [
     , TypeFamilies
     ]
 
+haskell98 :: [Extension]
+haskell98 = [NPlusKPatterns]
+
+haskell2010 :: [Extension]
+haskell2010 =
+    [ DoAndIfThenElse
+    , PatternGuards
+    , ForeignFunctionInterface
+    , EmptyDataDecls 
+    ]
+
 -- | List of all known extensions. Poor man's 'Enum' instance
 --   (we can't enum with the 'UnknownExtension' constructor).
 knownExtensions :: [Extension]
@@ -235,6 +249,8 @@ knownExtensions =
     , XmlSyntax
     , RegularPatterns
     , TupleSections
+    , NPlusKPatterns
+    , DoAndIfThenElse
     ]
 
 

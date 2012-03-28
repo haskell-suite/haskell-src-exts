@@ -329,6 +329,7 @@ checkPat e [] = case e of
                     r <- checkPat r []
                     return (PInfixApp loc l c r)
             QVarOp ppos (UnQual _ (Symbol _ "+")) -> do
+                    checkEnabled NPlusKPatterns
                     case (l,r) of
                         (Var _ (UnQual _ n@(Ident _ _)), Lit _ (Int kpos k _)) -> do
                             let pp = srcInfoSpan ppos

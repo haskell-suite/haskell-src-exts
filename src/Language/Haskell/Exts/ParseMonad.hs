@@ -36,7 +36,7 @@ module Language.Haskell.Exts.ParseMonad(
 import Language.Haskell.Exts.SrcLoc(SrcLoc(..))
 import Language.Haskell.Exts.Fixity (Fixity, preludeFixities)
 import Language.Haskell.Exts.Comments
-import Language.Haskell.Exts.Extension (Extension, impliesExts)
+import Language.Haskell.Exts.Extension (Extension, impliesExts, haskell2010)
 
 import Data.List ( intersperse )
 import Control.Applicative
@@ -130,7 +130,7 @@ data ParseMode = ParseMode {
 defaultParseMode :: ParseMode
 defaultParseMode = ParseMode {
         parseFilename = "<unknown>.hs",
-        extensions = [],
+        extensions = haskell2010,
         ignoreLanguagePragmas = False,
         ignoreLinePragmas = True,
         fixities = Just preludeFixities

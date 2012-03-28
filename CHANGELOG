@@ -1,3 +1,24 @@
+** 1.13.x
+
+1.12.0 --> 1.13.0
+===============
+
+* Add extensions DoAndIfThenElse and NPlusKPatterns to
+  Language.Haskell.Exts.Extensions.
+
+* DoAndIfThenElse is now supported, at long last,
+  making HSE compatible with Haskell2010
+
+* Introduce haskell98 and haskell2010 extension groups,
+  exported from Language.Haskell.Exts.Extensions.
+
+* Backwards-incompatible change: default parse mode
+  is now to use haskell2010, which means the following
+  features are recognized by default: DoAndIfThenElse,
+  PatternGuards, ForeignFunctionInterface, EmptyDataDecls.
+  NPlusKPatterns is no longer recognized by default.
+
+
 ** 1.12.x
 
 1.11.1 --> 1.12.0
