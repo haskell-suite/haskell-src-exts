@@ -1123,6 +1123,8 @@ instance ExactP Exp where
             exactPC e
          _ -> errorEP "ExactP: Exp: Let is given wrong number of srcInfoPoints"
     If l ec et ee   -> -- traceShow (srcInfoPoints l) $ do
+        -- First we need to sort out if there are any optional
+        -- semicolons hiding among the srcInfoPoints.
         case srcInfoPoints l of
          (pIf:b:c:rest) -> do
             let (mpSemi1,pThen,rest2) =
@@ -1136,6 +1138,7 @@ instance ExactP Exp where
                                        else (Just c, rest3)
                 case rest4 of
                   [pElse] -> do
+                    -- real work starts here:
                     printString "if"
                     exactPC ec
                     maybeEP printSemi  mpSemi1
@@ -1276,7 +1279,7 @@ instance ExactP Exp where
         printString $ "[" ++ name ++ "|"
         sequence_ (intersperse newLine $ map printString qtLines)
         printString "|]"
-    XTag l xn attrs mat es  ->
+    XTag l xn attrs mat es  -> do
         case srcInfoPoints l of
          [a,b,c,d,e] -> do
             printString "<"
@@ -1285,6 +1288,20 @@ instance ExactP Exp where
             maybeEP exactPC mat
             printStringAt (pos b) ">"
             mapM_ exactPC es
+            printStringAt (pos c) "</"
+            printWhitespace (pos d)
+            exactP xn
+            printStringAt (pos e) ">"
+         -- TODO: Fugly hack/duplication, should be refactored
+         -- For the case when there's an optional semicolon
+         [a,b,semi,c,d,e] -> do
+            printString "<"
+            exactPC xn
+            mapM_ exactPC attrs
+            maybeEP exactPC mat
+            printStringAt (pos b) ">"
+            mapM_ exactPC es
+            printSemi semi
             printStringAt (pos c) "</"
             printWhitespace (pos d)
             exactP xn
@@ -1316,7 +1333,14 @@ instance ExactP Exp where
             mapM_ exactPC es
             printStringAt (pos b) "</"
             printStringAt (pos c) "%>"
-
+         -- Ugly duplication for when there's an optional semi
+         [a,semi,b,c] -> do
+            printString "<%>"
+            mapM_ exactPC es
+            printSemi semi
+            printStringAt (pos b) "</"
+            printStringAt (pos c) "%>"
+         _ -> errorEP "ExactP: Exp: XChildTag is given wrong number of srcInfoPoints"
     CorePragma l      str e         ->
         case srcInfoPoints l of
          [a,b] -> do
@@ -1572,6 +1596,19 @@ instance ExactP Pat where
             maybeEP exactPC mat
             printStringAt (pos b) ">"
             mapM_ exactPC ps
+            printStringAt (pos c) "</"
+            printWhitespace (pos d)
+            exactP xn
+            printStringAt (pos e) ">"
+         -- Optional semi
+         [a,b,semi,c,d,e] -> do
+            printString "<"
+            exactPC xn
+            mapM_ exactPC attrs
+            maybeEP exactPC mat
+            printStringAt (pos b) ">"
+            mapM_ exactPC ps
+            printSemi semi
             printStringAt (pos c) "</"
             printWhitespace (pos d)
             exactP xn

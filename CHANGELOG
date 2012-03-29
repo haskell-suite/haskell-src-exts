@@ -3,7 +3,11 @@
 1.13.0 --> 1.13.1
 ===============
 
-
+* Allow an optional semi before the closing tag of
+  an element. This achieves a similar effect for
+  XmlSyntax in do blocks as DoAndIfThenElse does for
+  the if construct. No more need to indent the closing
+  tag one step further than the opening tag.
 
 
 1.12.0 --> 1.13.0

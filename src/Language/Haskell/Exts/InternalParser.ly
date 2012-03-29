@@ -1163,6 +1163,12 @@ A let may bind implicit parameters
 > 	: ';'				  {% checkEnabled DoAndIfThenElse >> return [$1] }
 >	| {- empty -}			  { [] }
 
+We won't come here unless XmlSyntax is already checked.
+> opthsxsemi :: { [S] }
+> 	: ';'				  { [$1] }
+>	| {- empty -}			  { [] }
+
+
 mdo blocks require the RecursiveDo extension enabled, but the lexer handles that.
 
 > exp10b :: { PExp L }
@@ -1297,14 +1303,15 @@ Either patterns are left associative
 Hsx Extensions - requires XmlSyntax, but the lexer handles all that.
 
 > xml :: { PExp L }
->       : '<' name attrs mattr '>' children '</' name '>'        {% do { n <- checkEqNames $2 $8;
+>       : '<' name attrs mattr '>' children opthsxsemi '</' name '>'        
+>								 {% do { n <- checkEqNames $2 $9;
 >                                                                        let { cn = reverse $6;
 >                                                                              as = reverse $3;
->                                                                              l  = $1 <^^> $9 <** [$1,$5,$7,srcInfoSpan (ann $8),$9] };
+>                                                                              l  = $1 <^^> $10 <** [$1,$5] ++ $7 ++ [$8,srcInfoSpan (ann $9),$10] };
 >                                                                        return $ XTag l n as $4 cn } }
 >       | '<' name attrs mattr '/>'                              { XETag   ($1 <^^> $5 <** [$1,$5]) $2 (reverse $3) $4 }
 >       | '<%' exp '%>'                                          { XExpTag ($1 <^^> $3 <** [$1,$3]) $2 }
->       | '<%>' children '</' '%>'                               { XChildTag ($1 <^^> $4 <** [$1,$3,$4]) (reverse $2) }
+>       | '<%>' children opthsxsemi '</' '%>'                    { XChildTag ($1 <^^> $5 <** ($1:$3++[$4,$5])) (reverse $2) }
 
 > children :: { [PExp L] }
 >       : children child                { $2 : $1 }
