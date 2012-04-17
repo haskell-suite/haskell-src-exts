@@ -236,13 +236,13 @@ checkClassHeader t = do
 checkSimple :: String -> PType L -> [TyVarBind L] -> P (DeclHead L)
 --checkSimple kw (TyApp _ l t) xs | isTyVarBind t = checkSimple kw l (toTyVarBind t : xs)
 
-checkSimple kw (TyApp _ l t) xs = do
-  tvb <- mkTyVarBind t
+checkSimple kw x@(TyApp _ l t) xs = do
+  tvb <- mkTyVarBind kw t
   checkSimple kw l (tvb : xs)
-checkSimple _  (TyInfix l t1 (UnQual _ t) t2) [] = do
+checkSimple kw  x@(TyInfix l t1 (UnQual _ t) t2) [] = do
        checkEnabled TypeOperators
-       tv1 <- mkTyVarBind t1
-       tv2 <- mkTyVarBind t2
+       tv1 <- mkTyVarBind kw t1
+       tv2 <- mkTyVarBind kw t2
        return (DHInfix l tv1 t tv2)
 checkSimple _kw (TyCon l (UnQual _ t))   xs = do
     case t of
@@ -252,13 +252,14 @@ checkSimple _kw (TyCon l (UnQual _ t))   xs = do
 checkSimple kw (TyParen l t) xs = do
     dh <- checkSimple kw t xs
     return (DHParen l dh)
-checkSimple kw l _ = fail ("Illegal " ++ kw ++ " declaration:" ++ show (fmap (const ()) l))
+checkSimple kw _l _ = fail ("Illegal " ++ kw ++ " declaration")
 
-mkTyVarBind :: PType L -> P (TyVarBind L)
-mkTyVarBind (TyVar l n) = return $ UnkindedVar l n
-mkTyVarBind (TyKind l (TyVar _ n) k) = return $ KindedVar l n k
-mkTyVarBind (TyCon l (UnQual _ n@(Symbol _ _))) = checkEnabled TypeOperators >> return (UnkindedVar l n)
-mkTyVarBind (TyKind l (TyCon _ (UnQual _ n@(Symbol _ _))) k) = checkEnabled TypeOperators >> return (KindedVar l n k)
+mkTyVarBind :: String -> PType L -> P (TyVarBind L)
+mkTyVarBind _ (TyVar l n) = return $ UnkindedVar l n
+mkTyVarBind _ (TyKind l (TyVar _ n) k) = return $ KindedVar l n k
+mkTyVarBind _ (TyCon l (UnQual _ n@(Symbol _ _))) = checkEnabled TypeOperators >> return (UnkindedVar l n)
+mkTyVarBind _ (TyKind l (TyCon _ (UnQual _ n@(Symbol _ _))) k) = checkEnabled TypeOperators >> return (KindedVar l n k)
+mkTyVarBind kw _ = fail ("Illegal " ++ kw ++ " declaration")
 
 {-
 isTyVarBind :: PType L -> Bool
