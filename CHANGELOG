@@ -9,6 +9,16 @@
   the if construct. No more need to indent the closing
   tag one step further than the opening tag.
 
+* Add a dummy 'noLoc :: SrcLoc' to L.H.E.SrcLoc, to
+  use when generating code. It could definitely be
+  done more elegantly, but not without inducing another
+  major version bump, so later.
+
+* Fix a regression from 1.11.x where the parser would crash
+  upon encountering non-simple class/data declaration
+  heads, e.g. 'data A [a]'. Now fails with a parse error
+  as intended.
+
 
 1.12.0 --> 1.13.0
 ===============
