@@ -35,6 +35,8 @@ data SrcLoc = SrcLoc
   deriving (Eq,Ord,Show)
 #endif
 
+noLoc :: SrcLoc
+noLoc = SrcLoc "" (-1) (-1)
 
 -- | A portion of the source, spanning one or more lines and zero or more columns.
 data SrcSpan = SrcSpan
