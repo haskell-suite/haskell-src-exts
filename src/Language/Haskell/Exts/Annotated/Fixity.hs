@@ -35,8 +35,9 @@ module Language.Haskell.Exts.Annotated.Fixity
 
 import Language.Haskell.Exts.Annotated.Syntax
 import Language.Haskell.Exts.SrcLoc
+import Language.Haskell.Exts.ParseMonad (ParseResult(..))
 
-import Language.Haskell.Exts.Fixity ( Fixity(..), infix_, infixl_, infixr_, preludeFixities, baseFixities )
+import Language.Haskell.Exts.Fixity ( Fixity(..), infix_, infixl_, infixr_, preludeFixities, baseFixities, prefixMinusFixity )
 import qualified Language.Haskell.Exts.Syntax as S ( Assoc(..), QOp(..), Op(..), QName(..), Name(..), SpecialCon(..), ModuleName )
 import Language.Haskell.Exts.Annotated.Simplify ( sQOp, sOp, sAssoc, sQName, sModuleHead, sName )
 
@@ -61,33 +62,35 @@ instance AppFixity Exp where
     where -- This is the real meat case. We can assume a left-associative list to begin with.
           infFix fixs (InfixApp l2 a op2 z) = do
               e <- infFix fixs a
+              let fixup (a1,p1) (a2,p2) l1 y pre = do
+                      when (p1 == p2 && (a1 /= a2 || a1 == S.AssocNone)) -- Ambiguous infix expression!
+                           $ fail "Ambiguous infix expression"
+                      if (p1 > p2 || p1 == p2 && (a1 == S.AssocLeft || a2 == S.AssocNone)) -- Already right order
+                       then return $ InfixApp l2 e op2 z
+                       else liftM pre (infFix fixs $ InfixApp (ann y <++> ann z) y op2 z)
               case e of
-               InfixApp l1 x op1 y -> do
-                  let (a1,p1) = askFixity fixs op1
-                      (a2,p2) = askFixity fixs op2
-                  when (p1 == p2 && (a1 /= a2 || a1 == S.AssocNone )) -- Ambiguous infix expression!
-                       $ fail "Ambiguous infix expression"
-                  if (p1 > p2 || p1 == p2 && (a1 == S.AssocLeft || a2 == S.AssocNone)) -- Already right order
-                   then return $ InfixApp l2 e op2 z
-                   else liftM (InfixApp l2 x op1) (infFix fixs $ InfixApp (ann y <++> ann z) y op2 z)
+               InfixApp l1 x op1 y -> fixup (askFixity fixs op1) (askFixity fixs op2) l1 y (InfixApp l2 x op1)
+               NegApp   l1       y -> fixup prefixMinusFixity    (askFixity fixs op2) l1 y (NegApp l2)
                _  -> return $ InfixApp l2 e op2 z
 
           infFix _ e = return e
+
+--ambOps l = ParseFailed (getPointLoc l) $ "Ambiguous infix expression"
 
 instance AppFixity Pat where
   applyFixities fixs = infFix fixs <=< leafFixP fixs
     where -- This is the real meat case. We can assume a left-associative list to begin with.
           infFix fixs (PInfixApp l2 a op2 z) = do
               p <- infFix fixs a
+              let fixup (a1,p1) (a2,p2) l1 y pre = do
+                      when (p1 == p2 && (a1 /= a2 || a1 == S.AssocNone )) -- Ambiguous infix expression!
+                           $ fail "Ambiguous infix expression"
+                      if (p1 > p2 || p1 == p2 && (a1 == S.AssocLeft || a2 == S.AssocNone)) -- Already right order
+                       then return $ PInfixApp l2 p op2 z
+                       else liftM pre (infFix fixs $ PInfixApp (ann y <++> ann z) y op2 z)
               case p of
-               PInfixApp l1 x op1 y -> do
-                  let (a1,p1) = askFixityP fixs op1
-                      (a2,p2) = askFixityP fixs op2
-                  when (p1 == p2 && (a1 /= a2 || a1 == S.AssocNone )) -- Ambiguous infix expression!
-                       $ fail "Ambiguous infix expression"
-                  if (p1 > p2 || p1 == p2 && (a1 == S.AssocLeft || a2 == S.AssocNone)) -- Already right order
-                   then return $ PInfixApp l2 p op2 z
-                   else liftM (PInfixApp l2 x op1) (infFix fixs $ PInfixApp (ann y <++> ann z) y op2 z)
+               PInfixApp l1 x op1 y -> fixup (askFixityP fixs op1) (askFixityP fixs op2) l1 y (PInfixApp l2 x op1)
+               PNeg      l1       y -> fixup prefixMinusFixity     (askFixityP fixs op2) l1 y (PNeg l2)
                _  -> return $ PInfixApp l2 p op2 z
 
           infFix _ p = return p

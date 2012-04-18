@@ -28,7 +28,7 @@ module Language.Haskell.Exts.Fixity
     --   /varid/ operators, and /varsym/ operators written as is.
     , infix_, infixl_, infixr_
     -- ** Collections of fixities
-    , preludeFixities, baseFixities
+    , preludeFixities, baseFixities, prefixMinusFixity
 
     -- * Applying fixities to an AST
     , AppFixity(..)
@@ -74,15 +74,15 @@ instance AppFixity Exp where
     where -- This is the real meat case. We can assume a left-associative list to begin with.
           infFix fixs (InfixApp a op2 z) = do
               e <- infFix fixs a
+              let fixup (a1,p1) (a2,p2) y pre = do
+                      when (p1 == p2 && (a1 /= a2 || a1 == AssocNone)) -- Ambiguous infix expression!
+                           $ fail "Ambiguous infix expression"
+                      if (p1 > p2 || p1 == p2 && (a1 == AssocLeft || a2 == AssocNone)) -- Already right order
+                       then return $ InfixApp e op2 z
+                       else liftM pre (infFix fixs $ InfixApp y op2 z)
               case e of
-               InfixApp x op1 y -> do
-                  let (a1,p1) = askFixity fixs op1
-                      (a2,p2) = askFixity fixs op2
-                  when (p1 == p2 && (a1 /= a2 || a1 == AssocNone)) -- Ambiguous infix expression!
-                    $ fail "Ambiguous infix expression"
-                  if (p1 > p2 || p1 == p2 && (a1 == AssocLeft || a2 == AssocNone)) -- Already right order
-                   then return $ InfixApp e op2 z
-                   else liftM (InfixApp x op1) (infFix fixs $ InfixApp y op2 z)
+               InfixApp x op1 y -> fixup (askFixity fixs op1) (askFixity fixs op2) y (InfixApp x op1)
+               NegApp         y -> fixup prefixMinusFixity    (askFixity fixs op2) y  NegApp
                _  -> return $ InfixApp e op2 z
 
           infFix _ e = return e
@@ -92,15 +92,15 @@ instance AppFixity Pat where
     where -- Same for patterns
           infFix fixs (PInfixApp a op2 z) = do
               p <- infFix fixs a
+              let fixup (a1,p1) (a2,p2) y pre = do
+                      when (p1 == p2 && (a1 /= a2 || a1 == AssocNone )) -- Ambiguous infix expression!
+                           $ fail "Ambiguous infix expression"
+                      if (p1 > p2 || p1 == p2 && (a1 == AssocLeft || a2 == AssocNone)) -- Already right order
+                       then return $ PInfixApp p op2 z
+                       else liftM pre (infFix fixs $ PInfixApp y op2 z)
               case p of
-               PInfixApp x op1 y -> do
-                  let (a1,p1) = askFixityP fixs op1
-                      (a2,p2) = askFixityP fixs op2
-                  when (p1 == p2 && (a1 /= a2 || a1 == AssocNone)) -- Ambiguous infix expression!
-                    $ fail "Ambiguous infix expression" 
-                  if (p1 > p2 || p1 == p2 && (a1 == AssocLeft || a2 == AssocNone)) -- Already right order
-                   then return $ PInfixApp p op2 z
-                   else liftM (PInfixApp x op1) (infFix fixs $ PInfixApp y op2 z)
+               PInfixApp x op1 y -> fixup (askFixityP fixs op1) (askFixityP fixs op2) y (PInfixApp x op1)
+               PNeg            y -> fixup prefixMinusFixity     (askFixityP fixs op2) y  PNeg
                _  -> return $ PInfixApp p op2 z
 
           infFix _ p = return p
@@ -132,6 +132,10 @@ askFix xs = \k -> lookupWithDefault (AssocLeft, 9) k mp
 
         mp = [(x,(a,p)) | Fixity a p x <- xs]
 
+
+-- | Built-in fixity for prefix minus
+prefixMinusFixity :: (Assoc, Int)
+prefixMinusFixity = (AssocLeft, 6)
 
 -- | All fixities defined in the Prelude.
 preludeFixities :: [Fixity]

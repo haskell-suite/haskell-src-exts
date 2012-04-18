@@ -1,5 +1,14 @@
 ** 1.13.x
 
+1.13.1 --> 1.13.2
+===============
+
+* Fix the bug with the precedence of unary prefix minus.
+  Previously it was resolved as binding more tightly
+  than any infix operator, now it is correctly treated
+  as having the same fixity as binary infix minus.
+
+
 1.13.0 --> 1.13.1
 ===============
 
