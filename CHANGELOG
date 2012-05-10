@@ -5,6 +5,9 @@
 
 * Fundep premises are now allowed to be empty.
 
+* Fix the bug where the lexer would crash on a LINE pragma
+  that did not include a line number.
+
 
 1.13.1 --> 1.13.2
 ===============
