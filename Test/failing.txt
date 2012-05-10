@@ -4,3 +4,4 @@ CStyleLinePragmas.hs	Shouldn't succeed. HSE does not and will not support C-styl
 QuasiQuoteSplice.hs	Splicing inside quasi-quotes fails
 ExtraEndBrace.hs	Should fail - but gracefully
 ArityMismatch.hs	Should fail - but give error message in the right place
+BadStringLineBreak.hs	Shouldn't succeed.

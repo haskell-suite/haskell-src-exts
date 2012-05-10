@@ -1011,10 +1011,10 @@ lexString = loop ("","")
             '"':_ -> do
                 discard 1
                 return (StringTok (reverse s, reverse raw))
-            c:_ -> do
+            c:_ | c /= '\n' -> do
                 discard 1
                 loop (c:s, c:raw)
-            [] ->   fail "Improperly terminated string"
+            _ ->   fail "Improperly terminated string"
 
     lexWhiteChars :: Lex a String
     lexWhiteChars = do

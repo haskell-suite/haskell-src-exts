@@ -20,6 +20,9 @@
   mismatches. Earlier they were reported at end of file,
   now they are reported where the function is declared.
 
+* Lexer now properly fails on line-breaks in string literals.
+
+
 1.13.1 --> 1.13.2
 ===============
 
