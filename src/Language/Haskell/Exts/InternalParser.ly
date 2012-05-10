@@ -876,7 +876,7 @@ These require the FunctionalDependencies extension to be enabled.
 >       | fd                            { ([$1],[],ann $1) }
 
 > fd :: { FunDep L }
->       : tyvars1 '->' tyvars1            { FunDep (snd $1 <++> snd $3 <** [$2]) (reverse (fst $1)) (reverse (fst $3)) }
+>       : tyvars '->' tyvars1            { FunDep (snd $1 <?+> nIS $2 <++> snd $3 <** [$2]) (reverse (fst $1)) (reverse (fst $3)) }
 
 -----------------------------------------------------------------------------
 Datatype declarations

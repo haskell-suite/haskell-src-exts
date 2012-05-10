@@ -3,6 +3,8 @@
 1.13.2 --> 1.13.3
 ===============
 
+* Fundep premises are now allowed to be empty.
+
 
 1.13.1 --> 1.13.2
 ===============
