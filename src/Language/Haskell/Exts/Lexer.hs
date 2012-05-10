@@ -953,8 +953,10 @@ lexConIdOrQual qual = do
                                               ':' -> QConSym (qual', sym)
                                               _   -> QVarSym (qual', sym)
 
-          '#':c:_
-            | not (isHSymbol c) && not (isIdent c) && MagicHash `elem` exts -> do
+          '#':cs
+            | null cs || 
+              not (isHSymbol $ head cs) && 
+              not (isIdent $ head cs) && MagicHash `elem` exts -> do
                 discard 1
                 case conid of
                  ConId con -> return $ ConId $ con ++ "#"

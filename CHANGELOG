@@ -8,6 +8,10 @@
 * Fix the bug where the lexer would crash on a LINE pragma
   that did not include a line number.
 
+* Fix the bug where the lexer would require the # of a
+  MagicHash-style type constructor to be succeeded by at
+  least one character in the file.
+
 
 1.13.1 --> 1.13.2
 ===============
