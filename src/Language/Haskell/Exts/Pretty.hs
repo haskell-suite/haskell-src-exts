@@ -1095,6 +1095,7 @@ specialName FunCon = "->"
 specialName (TupleCon b n) = "(" ++ hash ++ replicate (n-1) ',' ++ hash ++ ")"
     where hash = if b == Unboxed then "#" else ""
 specialName Cons = ":"
+specialName UnboxedSingleCon = "(# #)"
 
 ppContext :: Context -> Doc
 ppContext []      = empty
