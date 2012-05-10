@@ -749,7 +749,7 @@ checkInstBody decls = do
 checkMethodDef :: Decl L -> P ()
 checkMethodDef (PatBind _ (PVar _ _) _ _ _) = return ()
 checkMethodDef (PatBind loc _ _ _ _) =
-    fail "illegal method definition" -- `atSrcLoc` loc
+    fail "illegal method definition" `atSrcLoc` fromSrcInfo loc
 checkMethodDef _ = return ()
 
 -----------------------------------------------------------------------------
@@ -803,7 +803,7 @@ checkRevDecls = mergeFunBinds []
             | name' =~= name =
             if length ps' /= arity
             then fail ("arity mismatch for '" ++ prettyPrint name ++ "'")
-                    -- `atSrcLoc` loc
+                    `atSrcLoc` fromSrcInfo loc
             else mergeMatches (ms++ms') ds (loc <++> l)
         mergeMatches ms' ds l = mergeFunBinds (FunBind l ms':revDs) ds
     mergeFunBinds revDs (FunBind l ims1@(InfixMatch _ _ name _ _ _:_):ds1) =
@@ -827,7 +827,7 @@ checkRevClsDecls = mergeClsFunBinds []
             | name' =~= name =
             if length ps' /= arity
             then fail ("arity mismatch for '" ++ prettyPrint name ++ "'")
-                    -- `atSrcLoc` loc
+                    `atSrcLoc` fromSrcInfo loc
             else mergeMatches (ms++ms') ds (loc <++> l)
         mergeMatches ms' ds l = mergeClsFunBinds (ClsDecl l (FunBind l ms'):revDs) ds
     mergeClsFunBinds revDs (ClsDecl l (FunBind _ ims1@(InfixMatch _ _ name _ _ _:_)):ds1) =
@@ -852,7 +852,7 @@ checkRevInstDecls = mergeInstFunBinds []
             | name' =~= name =
             if length ps' /= arity
             then fail ("arity mismatch for '" ++ prettyPrint name ++ "'")
-                    -- `atSrcLoc` loc
+                    `atSrcLoc` fromSrcInfo loc
             else mergeMatches (ms++ms') ds (loc <++> l)
         mergeMatches ms' ds l = mergeInstFunBinds (InsDecl l (FunBind l ms'):revDs) ds
     mergeInstFunBinds revDs (InsDecl l (FunBind _ ims1@(InfixMatch _ _ name _ _ _:_)):ds1) =

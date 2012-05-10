@@ -16,6 +16,9 @@
   an ugly "Internal error" error message if encountering
   an extra }.
 
+* Report errors at the right place for function arity
+  mismatches. Earlier they were reported at end of file,
+  now they are reported where the function is declared.
 
 1.13.1 --> 1.13.2
 ===============
