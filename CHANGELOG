@@ -22,6 +22,8 @@
 
 * Lexer now properly fails on line-breaks in string literals.
 
+* Lexer now handles character escapes up to 0x10FFFF (unicode).
+
 
 1.13.1 --> 1.13.2
 ===============

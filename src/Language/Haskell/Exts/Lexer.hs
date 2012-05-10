@@ -1111,7 +1111,7 @@ lexEscape = do
         _       -> fail "Illegal escape sequence"
 
     where
-    checkChar n | n <= 0x01FFFF = return (chr (fromInteger n))
+    checkChar n | n <= 0x10FFFF = return (chr (fromInteger n))
     checkChar _                 = fail "Character constant out of range"
 
 -- Production cntrl from section B.2
