@@ -418,6 +418,7 @@ lexLinePragma = do
     discard 4   -- LINE
     lexWhile isSpace
     i <- lexWhile isDigit
+    when (null i) $ fail "Improperly formatted LINE pragma"
     lexWhile isSpace
     matchChar '"' "Improperly formatted LINE pragma"
     fn <- lexWhile (/= '"')
