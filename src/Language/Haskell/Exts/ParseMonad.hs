@@ -228,11 +228,11 @@ pushContext ctxt =
     P $ \_i _x _y _l (s, e, p, c) _m -> Ok (ctxt:s, e, p, c) ()
 
 popContext :: P ()
-popContext = P $ \_i _x _y _l stk _m ->
+popContext = P $ \_i _x _y loc stk _m ->
       case stk of
         (_:s, e, p, c) -> --trace ("popping lexical scope, context now "++show s ++ "\n") $
                           Ok (s, e, p, c) ()
-        ([],_,_,_)     -> error "Internal error: empty context in popContext"
+        ([],_,_,_)     -> Failed loc "Unexpected }" -- error "Internal error: empty context in popContext"
 
 
 -- HaRP/Hsx
@@ -371,9 +371,9 @@ pushContextL ctxt = Lex $ \cont -> P $ \r x y loc (stk, e, pst, cs) ->
         runP (cont ()) r x y loc (ctxt:stk, e, pst, cs)
 
 popContextL :: String -> Lex a ()
-popContextL fn = Lex $ \cont -> P $ \r x y loc stk -> case stk of
-        (_:ctxt, e, pst, cs) -> runP (cont ()) r x y loc (ctxt, e, pst, cs)
-        ([], _, _, _)        -> error ("Internal error: empty context in " ++ fn)
+popContextL fn = Lex $ \cont -> P $ \r x y loc stk m -> case stk of
+        (_:ctxt, e, pst, cs) -> runP (cont ()) r x y loc (ctxt, e, pst, cs) m
+        ([], _, _, _)        -> Failed loc "Unexpected }"
 
 pullCtxtFlag :: Lex a Bool
 pullCtxtFlag = Lex $ \cont -> P $ \r x y loc (ct, e, (d,c), cs) ->
@@ -399,9 +399,9 @@ pushExtContextL ec = Lex $ \cont -> P $ \r x y loc (s, e, p, c) ->
         runP (cont ()) r x y loc (s, ec:e, p, c)
 
 popExtContextL :: String -> Lex a ()
-popExtContextL fn = Lex $ \cont -> P $ \r x y loc stk@(s,e,p,c) -> case e of
-            (_:ec) -> runP (cont ()) r x y loc (s,ec,p,c)
-            []       -> error ("Internal error: empty tag context in " ++ fn)
+popExtContextL fn = Lex $ \cont -> P $ \r x y loc stk@(s,e,p,c) m -> case e of
+            (_:ec) -> runP (cont ()) r x y loc (s,ec,p,c) m
+            []       -> Failed loc ("Internal error: empty tag context in " ++ fn)
 
 
 -- Extension-aware lexing

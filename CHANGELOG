@@ -12,6 +12,10 @@
   MagicHash-style type constructor to be succeeded by at
   least one character in the file.
 
+* Fix long-standing bug where the parser would crash with
+  an ugly "Internal error" error message if encountering
+  an extra }.
+
 
 1.13.1 --> 1.13.2
 ===============
