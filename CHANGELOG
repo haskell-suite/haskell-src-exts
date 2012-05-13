@@ -4,8 +4,13 @@
 ===============
 
 * Fix bug where operators starting with # written in
-  parentheses would not be parsed when UnboxedTuples
-  is turned on. Now works.
+  parentheses would not be parsed when UnboxedTuples is 
+  turned on. Now works.
+
+* Allow 'family' and 'forall' as (non-type) varid's. This 
+  adds one more shift/reduce conflict to the parser, and 
+  its resolution means that '{-# RULES "name" forall = ... #-}' 
+  is not allowed.
 
 
 1.13.2 --> 1.13.3

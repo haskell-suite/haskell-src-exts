@@ -66,9 +66,9 @@ Most of the code is blatantly stolen from the GHC module Language.Haskell.Parser
 Some of the code for extensions is greatly influenced by GHC's internal parser
 library, ghc/compiler/parser/Parser.y.
 -----------------------------------------------------------------------------
-Conflicts: 6 shift/reduce
+Conflicts: 7 shift/reduce
 
-2 for ambiguity in 'case x of y | let z = y in z :: Bool -> b'  [State 12, 244]
+2 for ambiguity in 'case x of y | let z = y in z :: Bool -> b'  [State 99, 186]
         (don't know whether to reduce 'Bool' as a btype or shift the '->'.
          Similarly lambda and if. The default resolution in favour of the
          shift means that a guard can never end with a type signature.
@@ -77,25 +77,33 @@ Conflicts: 6 shift/reduce
         There are 2 conflicts rather than one because contexts are parsed
         as btypes (cf ctype).
 
-1 for ambiguity in 'let ?x ...'                     [State 712]
+1 for ambiguity in 'let ?x ...'                     [State 604]
         the parser can't tell whether the ?x is the lhs of a normal binding or
         an implicit binding. Fortunately resolving as shift gives it the only
         sensible meaning, namely the lhs of an implicit binding.
 
-1 for ambiguity using hybrid modules                [State 116]
+1 for ambiguity using hybrid modules                [State 159]
         For HSP pages that start with a <% %> block, the parser cannot tell whether
         to reduce a srcloc or shift the starting <%. Since any other body could not
         start with <%, shifting is the only sensible thing to do.
 
-1 for ambiguity using toplevel xml modules          [State 119]
+1 for ambiguity using toplevel xml modules          [State 158]
         For HSP xml pages starting with a <, the parser cannot tell whether to shift
         that < or reduce an implicit 'open'. Since no other body could possibly start
         with <, shifting is the only sensible thing to do.
 
-1 for ambiguity in '{-# RULES "name" [ ... #-}'     [State 318]
-    we don't know whether the '[' starts the activation or not: it
-    might be the start of the declaration with the activation being
-    empty. Resolving with shift means the declaration cannot start with '['.
+1 for ambiguity in '{-# RULES "name" [ ... #-}'     [State 177]
+        we don't know whether the '[' starts the activation or not: it
+        might be the start of the declaration with the activation being
+        empty. Resolving with shift means the declaration cannot start with '['.
+
+1 for ambiguity in '{-# RULES "name" forall = ... #-}' 	[State 544]
+	since 'forall' is a valid variable name, we don't know whether
+	to treat a forall on the input as the beginning of a quantifier
+	or the beginning of the rule itself.  Resolving to shift means
+	it's always treated as a quantifier, hence the above is disallowed.
+	This saves explicitly defining a grammar for the rule lhs that
+	doesn't include 'forall'.
 
 -----------------------------------------------------------------------------
 
@@ -277,7 +285,7 @@ Pragmas
 > %name mparseModules modules
 > %partial mfindOptPragmas toppragmas
 > %tokentype { Loc Token }
-> %expect 6
+> %expect 7
 > %%
 
 -----------------------------------------------------------------------------
@@ -1623,6 +1631,8 @@ Identifiers and Symbols
 >       | 'safe'                { safe_name       (nIS $1) }
 >       | 'unsafe'              { unsafe_name     (nIS $1) }
 >       | 'threadsafe'          { threadsafe_name (nIS $1) }
+>	| 'forall'		{ forall_name	  (nIS $1) }
+>	| 'family'		{ family_name     (nIS $1) }
 
 
 Implicit parameter
@@ -1703,7 +1713,15 @@ Miscellaneous (mostly renamings)
 >       : qcon                  { $1 }
 
 > tyvar :: { Name L }
->       : varid                 { $1 }
+>       : tyvarid               { $1 }
+
+> tyvarid :: { Name L }
+>       : varid_no_safety       { $1 }
+>       | 'safe'                { safe_name       (nIS $1) }
+>       | 'unsafe'              { unsafe_name     (nIS $1) }
+>       | 'threadsafe'          { threadsafe_name (nIS $1) }
+	| 'forall'		{ forall_name	  (nIS $1) }
+	| 'family'		{ family_name     (nIS $1) }
 
 > qtyvarop :: { QName L }
 > qtyvarop : '`' tyvar '`'       { UnQual ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3]) $2 }

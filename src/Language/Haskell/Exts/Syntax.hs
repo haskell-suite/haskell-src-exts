@@ -87,6 +87,7 @@ module Language.Haskell.Exts.Syntax (
     -- ** Special identifiers
     as_name, qualified_name, hiding_name, minus_name, bang_name, dot_name, star_name,
     export_name, safe_name, unsafe_name, threadsafe_name, stdcall_name, ccall_name,
+    forall_name, family_name,
     -- ** Type constructors
     unit_tycon_name, fun_tycon_name, list_tycon_name, tuple_tycon_name, unboxed_singleton_tycon_name,
     unit_tycon, fun_tycon, list_tycon, tuple_tycon, unboxed_singleton_tycon,
@@ -973,13 +974,16 @@ bang_name      = Symbol "!"
 dot_name       = Symbol "."
 star_name      = Symbol "*"
 
-export_name, safe_name, unsafe_name, threadsafe_name, stdcall_name, ccall_name :: Name
+export_name, safe_name, unsafe_name, threadsafe_name, 
+  stdcall_name, ccall_name, forall_name, family_name :: Name
 export_name     = Ident "export"
 safe_name       = Ident "safe"
 unsafe_name     = Ident "unsafe"
 threadsafe_name = Ident "threadsafe"
 stdcall_name    = Ident "stdcall"
 ccall_name      = Ident "ccall"
+forall_name     = Ident "forall"
+family_name     = Ident "family"
 
 unit_tycon_name, fun_tycon_name, list_tycon_name, unboxed_singleton_tycon_name :: QName
 unit_tycon_name = unit_con_name
