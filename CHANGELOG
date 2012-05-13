@@ -3,6 +3,10 @@
 1.13.2 --> 1.13.4
 ===============
 
+* Fix bug where operators starting with # written in
+  parentheses would not be parsed when UnboxedTuples
+  is turned on. Now works.
+
 
 1.13.2 --> 1.13.3
 ===============

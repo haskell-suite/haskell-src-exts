@@ -601,8 +601,8 @@ lexStdToken = do
         -- end implicit parameters
 
         -- harp
-        '(':'|':c:_  | isHSymbol c -> discard 1 >> return LeftParen
-        '(':'|':_ | RegularPatterns `elem` exts ->
+--        '(':'|':c:_  | isHSymbol c -> discard 1 >> return LeftParen
+        '(':'|':c:_ | RegularPatterns `elem` exts && not (isHSymbol c) ->
                      do discard 2
                         return RPGuardOpen
         '|':')':_ | RegularPatterns `elem` exts ->
@@ -664,7 +664,7 @@ lexStdToken = do
                         return XStdTagOpen
         -- end hsx
 
-        '(':'#':_ | UnboxedTuples `elem` exts -> do discard 2 >> return LeftHashParen
+        '(':'#':c:_ | UnboxedTuples `elem` exts && not (isHSymbol c) -> do discard 2 >> return LeftHashParen
 
         '#':')':_ | UnboxedTuples `elem` exts -> do discard 2 >> return RightHashParen
 
