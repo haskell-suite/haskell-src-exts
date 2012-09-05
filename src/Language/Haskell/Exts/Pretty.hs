@@ -589,8 +589,12 @@ instance Pretty Safety where
         pretty (PlaySafe b)     = text $ if b then "threadsafe" else "safe"
 
 instance Pretty CallConv where
-        pretty StdCall  = text "stdcall"
-        pretty CCall    = text "ccall"
+        pretty StdCall   = text "stdcall"
+        pretty CCall     = text "ccall"
+        pretty CPlusPlus = text "cplusplus"
+        pretty DotNet    = text "dotnet"
+        pretty Jvm       = text "jvm"
+        pretty Js        = text "js"
 
 ------------------------- Pragmas ---------------------------------------
 ppWarnDepr :: ([Name], String) -> Doc

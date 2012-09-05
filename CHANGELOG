@@ -12,6 +12,10 @@
   its resolution means that '{-# RULES "name" forall = ... #-}' 
   is not allowed.
 
+* Complete the set of FFI calling conventions from the Haskell
+  2010 report (even if no compiler implements them). Also
+  include the 'js' calling convention, supported by UHC.
+
 
 1.13.2 --> 1.13.3
 ===============

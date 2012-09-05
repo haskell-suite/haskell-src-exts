@@ -189,6 +189,10 @@ data Token
         | KW_Threadsafe
         | KW_StdCall
         | KW_CCall
+        | KW_CPlusPlus
+        | KW_DotNet
+        | KW_Jvm
+        | KW_Js
 
         | EOF
         deriving (Eq,Show)
@@ -286,7 +290,11 @@ special_varids = [
  ( "unsafe",     (KW_Unsafe,        Just (Any [ForeignFunctionInterface])) ),
  ( "threadsafe", (KW_Threadsafe,    Just (Any [ForeignFunctionInterface])) ),
  ( "stdcall",    (KW_StdCall,       Just (Any [ForeignFunctionInterface])) ),
- ( "ccall",      (KW_CCall,         Just (Any [ForeignFunctionInterface])) )
+ ( "ccall",      (KW_CCall,         Just (Any [ForeignFunctionInterface])) ),
+ ( "cplusplus",  (KW_CPlusPlus,     Just (Any [ForeignFunctionInterface])) ),
+ ( "dotnet",     (KW_DotNet,        Just (Any [ForeignFunctionInterface])) ),
+ ( "jvm",        (KW_Jvm,           Just (Any [ForeignFunctionInterface])) ),
+ ( "js",         (KW_Js,            Just (Any [ForeignFunctionInterface])) )
  ]
 
 pragmas :: [(String,Token)]

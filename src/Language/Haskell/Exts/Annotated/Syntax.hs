@@ -90,7 +90,8 @@ module Language.Haskell.Exts.Annotated.Syntax (
     unit_con, tuple_con, unboxed_singleton_con,
     -- ** Special identifiers
     as_name, qualified_name, hiding_name, minus_name, bang_name, dot_name, star_name,
-    export_name, safe_name, unsafe_name, threadsafe_name, stdcall_name, ccall_name,
+    export_name, safe_name, unsafe_name, threadsafe_name, 
+    stdcall_name, ccall_name, cplusplus_name, dotnet_name, jvm_name, js_name,
     forall_name, family_name,
     -- ** Type constructors
     unit_tycon_name, fun_tycon_name, list_tycon_name, tuple_tycon_name, unboxed_singleton_tycon_name,
@@ -814,6 +815,10 @@ data Safety l
 data CallConv l
     = StdCall l
     | CCall l
+    | CPlusPlus l
+    | DotNet l
+    | Jvm l
+    | Js l
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
@@ -1081,13 +1086,18 @@ dot_name       l = Symbol l "."
 star_name      l = Symbol l "*"
 
 export_name, safe_name, unsafe_name, threadsafe_name, 
-  stdcall_name, ccall_name, forall_name, family_name :: l -> Name l
+  stdcall_name, ccall_name, cplusplus_name, dotnet_name, 
+  jvm_name, js_name, forall_name, family_name :: l -> Name l
 export_name     l = Ident l "export"
 safe_name       l = Ident l "safe"
 unsafe_name     l = Ident l "unsafe"
 threadsafe_name l = Ident l "threadsafe"
 stdcall_name    l = Ident l "stdcall"
 ccall_name      l = Ident l "ccall"
+cplusplus_name  l = Ident l "cplusplus"
+dotnet_name     l = Ident l "dotnet"
+jvm_name        l = Ident l "jvm"
+js_name         l = Ident l "js"
 forall_name     l = Ident l "forall"
 family_name     l = Ident l "family"
 

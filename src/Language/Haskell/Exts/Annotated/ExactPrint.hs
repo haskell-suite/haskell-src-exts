@@ -1725,8 +1725,12 @@ instance ExactP Binds where
   exactP (IPBinds l ips) = layoutList (srcInfoPoints l) ips
 
 instance ExactP CallConv where
-  exactP (StdCall _) = printString "stdcall"
-  exactP (CCall   _) = printString "ccall"
+  exactP (StdCall   _) = printString "stdcall"
+  exactP (CCall     _) = printString "ccall"
+  exactP (CPlusPlus _) = printString "cplusplus"
+  exactP (DotNet    _) = printString "dotnet"
+  exactP (Jvm       _) = printString "jvm"
+  exactP (Js        _) = printString "js"
 
 instance ExactP Safety where
   exactP (PlayRisky _) = printString "unsafe"

@@ -215,6 +215,10 @@ FFI
 >       'threadsafe'    { Loc $$ KW_Threadsafe }
 >       'stdcall'       { Loc $$ KW_StdCall }
 >       'ccall'         { Loc $$ KW_CCall }
+>       'cplusplus'     { Loc $$ KW_CPlusPlus }
+>       'dotnet'        { Loc $$ KW_DotNet }
+>       'jvm'           { Loc $$ KW_Jvm }
+>       'js'            { Loc $$ KW_Js }
 
 Reserved Ids
 
@@ -682,8 +686,13 @@ These will only be called on in the presence of a 'foreign' keyword,
 so no need to check for extensions.
 
 > callconv :: { CallConv L }
->          : 'stdcall'                  { StdCall (nIS $1) }
->          | 'ccall'                    { CCall   (nIS $1) }
+>          : 'stdcall'                  { StdCall   (nIS $1) }
+>          | 'ccall'                    { CCall     (nIS $1) }
+>          | 'cplusplus'                { CPlusPlus (nIS $1) }
+>          | 'dotnet'                   { DotNet    (nIS $1) }
+>          | 'jvm'                      { Jvm       (nIS $1) }
+>          | 'js'                       { Js        (nIS $1) }
+
 
 > safety :: { Maybe (Safety L) }
 >        : 'safe'                       { Just $ PlaySafe  (nIS $1) False }
@@ -1352,6 +1361,10 @@ Hsx Extensions - requires XmlSyntax, but the lexer handles all that.
 >       | 'threadsafe'                  { Loc $1 "threadsafe" }
 >       | 'stdcall'                     { Loc $1 "stdcall" }
 >       | 'ccall'                       { Loc $1 "ccall" }
+>       | 'cplusplus'                   { Loc $1 "cplusplus" }
+>       | 'dotnet'                      { Loc $1 "dotnet" }
+>       | 'jvm'                         { Loc $1 "jvm" }
+>       | 'js'                          { Loc $1 "js" }
 >       | 'as'                          { Loc $1 "as" }
 >       | 'by'                          { Loc $1 "by" }
 >       | 'case'                        { Loc $1 "case" }
@@ -1623,8 +1636,12 @@ Identifiers and Symbols
 >       | 'qualified'           { qualified_name (nIS $1) }
 >       | 'hiding'              { hiding_name    (nIS $1) }
 >       | 'export'              { export_name    (nIS $1) }
->       | 'stdcall'             { stdcall_name   (nIS $1)  }
->       | 'ccall'               { ccall_name     (nIS $1)  }
+>       | 'stdcall'             { stdcall_name   (nIS $1) }
+>       | 'ccall'               { ccall_name     (nIS $1) }
+>       | 'cplusplus'           { cplusplus_name (nIS $1) }
+>       | 'dotnet'              { dotnet_name    (nIS $1) }
+>       | 'jvm'                 { jvm_name       (nIS $1) }
+>       | 'js'                  { js_name        (nIS $1) }
 
 > varid :: { Name L }
 >       : varid_no_safety       { $1 }
