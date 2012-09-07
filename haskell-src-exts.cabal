@@ -116,6 +116,7 @@ Library
 
 
   Exposed-modules:      Language.Haskell.Exts,
+                        Language.Haskell.Exts.Lexer,
                         Language.Haskell.Exts.Parser,
                         Language.Haskell.Exts.Pretty,
                         Language.Haskell.Exts.Syntax,
@@ -136,7 +137,7 @@ Library
                         
                         Language.Haskell.Exts.ParseMonad,
                         Language.Haskell.Exts.ParseSyntax,
-                        Language.Haskell.Exts.Lexer,
+                        Language.Haskell.Exts.InternalLexer,
                         Language.Haskell.Exts.ParseUtils,
                         Language.Haskell.Exts.InternalParser
   Hs-source-dirs:       src

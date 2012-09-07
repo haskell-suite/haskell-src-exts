@@ -17,6 +17,7 @@ module Language.Haskell.Exts (
     -- * Re-exported modules
       module Language.Haskell.Exts.Syntax
     , module Language.Haskell.Exts.Build
+    , module Language.Haskell.Exts.Lexer
     , module Language.Haskell.Exts.Parser
     , module Language.Haskell.Exts.Pretty
     , module Language.Haskell.Exts.Extension
@@ -38,6 +39,7 @@ module Language.Haskell.Exts (
 import Language.Haskell.Exts.Build
 import Language.Haskell.Exts.Syntax
 import Language.Haskell.Exts.Parser
+import Language.Haskell.Exts.Lexer
 import Language.Haskell.Exts.Pretty
 import Language.Haskell.Exts.Extension
 import Language.Haskell.Exts.Fixity

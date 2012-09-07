@@ -39,7 +39,7 @@
 > import Language.Haskell.Exts.Annotated.Syntax hiding ( Type(..), Exp(..), Asst(..), XAttr(..), FieldUpdate(..) )
 > import Language.Haskell.Exts.Annotated.Syntax ( Type, Exp, Asst )
 > import Language.Haskell.Exts.ParseMonad
-> import Language.Haskell.Exts.Lexer
+> import Language.Haskell.Exts.InternalLexer
 > import Language.Haskell.Exts.ParseUtils
 > import Language.Haskell.Exts.Annotated.Fixity
 > import Language.Haskell.Exts.SrcLoc

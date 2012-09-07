@@ -3,6 +3,10 @@
 1.13.4 --> 1.13.5
 ===============
 
+* Expose Language.Haskell.Exts.Lexer, which implements
+  a standalone token stream lexer. The module is
+  re-exported both by Language.Haskell.Exts and by 
+  Language.Haskell.Exts.Annotated.
 
 
 1.13.3 --> 1.13.4

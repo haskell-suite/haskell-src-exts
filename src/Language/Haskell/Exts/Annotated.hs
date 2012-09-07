@@ -18,6 +18,7 @@ module Language.Haskell.Exts.Annotated (
       module Language.Haskell.Exts.Annotated.Syntax
     , module Language.Haskell.Exts.Annotated.Build
     , module Language.Haskell.Exts.Parser
+    , module Language.Haskell.Exts.Lexer
     , module Language.Haskell.Exts.Pretty
     , module Language.Haskell.Exts.Annotated.Fixity
     , module Language.Haskell.Exts.Annotated.ExactPrint
@@ -47,6 +48,7 @@ module Language.Haskell.Exts.Annotated (
 import Language.Haskell.Exts.Annotated.Build
 import Language.Haskell.Exts.Annotated.Syntax
 import Language.Haskell.Exts.Parser ( Parseable(..), ParseResult(..), fromParseResult, ParseMode(..), defaultParseMode )
+import Language.Haskell.Exts.Lexer ( lexTokenStream, lexTokenStreamWithMode, Token(..) )
 import Language.Haskell.Exts.Pretty
 import Language.Haskell.Exts.Annotated.Fixity
 import Language.Haskell.Exts.Annotated.ExactPrint

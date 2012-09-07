@@ -1,3 +1,18 @@
+-----------------------------------------------------------------------------
+-- |
+-- Module      :  Language.Haskell.Exts.Parser
+-- Copyright   :  (c) The GHC Team, 1997-2000
+--                (c) Niklas Broberg, 2004-2012
+-- License     :  BSD-style (see the file LICENSE.txt)
+--
+-- Maintainer  :  Niklas Broberg, niklas.broberg@chalmers.se
+-- Stability   :  stable
+-- Portability :  portable
+--
+-- Parser for Haskell with extensions.
+--
+-----------------------------------------------------------------------------
+
 module Language.Haskell.Exts.Parser
             (
                 -- * General parsing
