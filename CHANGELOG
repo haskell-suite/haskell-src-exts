@@ -3,6 +3,8 @@
 1.13.5 --> 1.13.6
 ===============
 
+* Allow 0-parameter type classes when MultiParamTypeClasses is on.
+
 
 1.13.4 --> 1.13.5
 ===============
