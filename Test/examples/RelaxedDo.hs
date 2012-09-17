@@ -1,3 +1,4 @@
+{-# LANGUAGE NondecreasingIndentation #-}
 module Main where
 
 import Control.Monad

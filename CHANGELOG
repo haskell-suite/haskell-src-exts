@@ -5,6 +5,10 @@
 
 * Allow 0-parameter type classes when MultiParamTypeClasses is on.
 
+* Add support for NondecreasingIndentation. Previously it was always on,
+  which is the default behavior in GHC. Now it is on only if enabled, or
+  when using the newly added ghcDefaults extension set (instead of haskell2010).
+
 
 1.13.4 --> 1.13.5
 ===============

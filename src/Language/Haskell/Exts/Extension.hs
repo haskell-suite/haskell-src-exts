@@ -19,7 +19,7 @@ module Language.Haskell.Exts.Extension (
     Extension(..), classifyExtension, impliesExts,
 
     -- * Extension groups
-    haskell98, haskell2010,
+    haskell98, haskell2010, ghcDefault,
 
     glasgowExts, knownExtensions
 
@@ -90,6 +90,7 @@ data Extension
 
   | PackageImports
   | DoAndIfThenElse
+  | NondecreasingIndentation
 
   | ImpredicativeTypes
   | NewQualifiedOperators
@@ -182,6 +183,9 @@ haskell2010 =
     , EmptyDataDecls 
     ]
 
+ghcDefault :: [Extension]
+ghcDefault = NondecreasingIndentation:haskell2010
+
 -- | List of all known extensions. Poor man's 'Enum' instance
 --   (we can't enum with the 'UnknownExtension' constructor).
 knownExtensions :: [Extension]
@@ -251,6 +255,7 @@ knownExtensions =
     , TupleSections
     , NPlusKPatterns
     , DoAndIfThenElse
+    , NondecreasingIndentation
     ]
 
 

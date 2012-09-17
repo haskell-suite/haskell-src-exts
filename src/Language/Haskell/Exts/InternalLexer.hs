@@ -340,7 +340,8 @@ topLexer :: Lex a (Loc Token)
 topLexer = do
     b <- pullCtxtFlag
     if b then -- trace (show cf ++ ": " ++ show VRightCurly) $
-              setBOL >> getSrcLocL >>= \l -> return (Loc (mkSrcSpan l l) VRightCurly) -- the lex context state flags that we must do an empty {} - UGLY
+              -- the lex context state flags that we must do an empty {} - UGLY
+              setBOL >> getSrcLocL >>= \l -> return (Loc (mkSrcSpan l l) VRightCurly)
      else do
         bol <- checkBOL
         (bol, ws) <- lexWhiteSpace bol
@@ -1152,7 +1153,11 @@ parseInteger radix ds =
     foldl1 (\n d -> n * radix + d) (map (toInteger . digitToInt) ds)
 
 flagKW :: Token -> Lex a ()
-flagKW t = when (t `elem` [KW_Do, KW_MDo]) flagDo
+flagKW t = do
+  when (t `elem` [KW_Do, KW_MDo]) $ do
+       exts <- getExtensionsL
+       when (NondecreasingIndentation `elem` exts) $
+            flagDo
 
 ------------------------------------------------------------------
 -- "Pretty" printing for tokens
