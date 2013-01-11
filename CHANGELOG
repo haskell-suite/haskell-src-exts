@@ -3,6 +3,22 @@
 1.13.6 --> 1.14.0
 ===============
 
+* Modernize the Extension datatype in L.H.E.Extension, following the lead
+  of Cabal, to allow negative and positive extension modifiers (turning
+  features on and off). You need to worry about backwards-incompatible 
+  changes if any of the following pertains to you:
+  1) If you use the Extension datatype programmatically - it has changed
+     significantly (see documentation).
+  2) The ParseMode record now has one more field
+     (baseLanguage :: Language), which might give you a type error.
+  3) The behavior of the (extensions :: [Extension]) field has changed,
+     which could bite you if you pass custom extensions in the ParseMode. 
+     Previously, the ParseMode defaulted to the list of extensions accepted 
+     by Haskell2010, and if you set the list explicitly you would override 
+     this. Now, the defaults are { baseLanguage = Haskell2010, extensions = [] },
+     and explicitly setting a list of extensions will be interpreted on top of
+     Haskell2010. See further the documentation for L.H.E.Extension.
+
 
 ** 1.13.x
 

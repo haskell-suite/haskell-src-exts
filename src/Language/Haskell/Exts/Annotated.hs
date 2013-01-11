@@ -68,7 +68,10 @@ parseFile fp = parseFileWithMode (defaultParseMode { parseFilename = fp }) fp
 -- | Parse a source file on disk, with an extra set of extensions to know about
 --   on top of what the file itself declares.
 parseFileWithExts :: [Extension] -> FilePath -> IO (ParseResult (Module SrcSpanInfo))
-parseFileWithExts exts fp = parseFileWithMode (defaultParseMode { extensions = exts, parseFilename = fp }) fp
+parseFileWithExts exts fp = 
+    parseFileWithMode (defaultParseMode { 
+                         extensions = exts, 
+                         parseFilename = fp }) fp
 
 -- | Parse a source file on disk, supplying a custom parse mode.
 parseFileWithMode :: ParseMode -> FilePath -> IO (ParseResult (Module SrcSpanInfo))
@@ -84,38 +87,55 @@ parseFileContents = parseFileContentsWithMode defaultParseMode
 -- | Parse a source file from a string, with an extra set of extensions to know about
 --   on top of what the file itself declares.
 parseFileContentsWithExts :: [Extension] -> String -> ParseResult (Module SrcSpanInfo)
-parseFileContentsWithExts exts = parseFileContentsWithMode (defaultParseMode { extensions = exts })
+parseFileContentsWithExts exts = 
+    parseFileContentsWithMode (defaultParseMode { extensions = exts })
 
 -- | Parse a source file from a string using a custom parse mode.
 parseFileContentsWithMode :: ParseMode -> String -> ParseResult (Module SrcSpanInfo)
-parseFileContentsWithMode p@(ParseMode fn exts ign _ _) rawStr =
+parseFileContentsWithMode p@(ParseMode fn oldLang exts ign _ _) rawStr =
         let md = delit fn $ ppContents rawStr
-            allExts = -- impliesExts $ 
-                            case (ign, readExtensions md) of
-                                     (False,Just es) -> exts ++ es
-                                     _               -> exts
-         in parseModuleWithMode (p { extensions = allExts }) md
+            (bLang, extraExts) = 
+                case (ign, readExtensions md) of
+                  (False, Just (mLang, es)) -> 
+                       (case mLang of {Nothing -> oldLang;Just newLang -> newLang}, es)
+                  _ -> (oldLang, [])
+         in -- trace (fn ++ ": " ++ show extraExts) $
+              parseModuleWithMode (p { baseLanguage = bLang, extensions = exts ++ extraExts }) md
 
 parseFileContentsWithComments :: ParseMode -> String -> ParseResult (Module SrcSpanInfo, [Comment])
-parseFileContentsWithComments p@(ParseMode fn exts ign _ _) rawStr =
+parseFileContentsWithComments p@(ParseMode fn oldLang exts ign _ _) rawStr =
         let md = delit fn $ ppContents rawStr
-            allExts = impliesExts $ case (ign, readExtensions md) of
-                                     (False,Just es) -> exts ++ es
-                                     _               -> exts
-         in parseModuleWithComments (p { extensions = allExts }) md
+            (bLang, extraExts) = 
+                case (ign, readExtensions md) of
+                  (False, Just (mLang, es)) -> 
+                       (case mLang of {Nothing -> oldLang;Just newLang -> newLang}, es)
+                  _ -> (oldLang, [])
+         in parseModuleWithComments (p { baseLanguage = bLang, extensions = exts ++ extraExts }) md
 
 -- | Gather the extensions declared in LANGUAGE pragmas
 --   at the top of the file. Returns 'Nothing' if the
 --   parse of the pragmas fails.
-readExtensions :: String -> Maybe [Extension]
+readExtensions :: String -> Maybe (Maybe Language, [Extension])
 readExtensions str = case getTopPragmas str of
-        ParseOk pgms -> Just (concatMap getExts pgms)
+        ParseOk pgms -> extractLang $ concatMap getExts pgms
         _            -> Nothing
-  where getExts :: ModulePragma l -> [Extension]
+  where getExts :: ModulePragma l -> [Either Language Extension]
         getExts (LanguagePragma _ ns) = map readExt ns
         getExts _ = []
 
-        readExt (Ident _ e) = classifyExtension e
+        readExt (Ident _ e) = 
+            case classifyLanguage e of
+              UnknownLanguage _ -> Right $ classifyExtension e
+              lang -> Left lang
+
+        extractLang = extractLang' Nothing []
+
+        extractLang' lacc eacc [] = Just (lacc, eacc)
+        extractLang' Nothing eacc (Left l : rest) = extractLang' (Just l) eacc rest
+        extractLang' (Just l1) eacc (Left l2:rest)
+            | l1 == l2  = extractLang' (Just l1) eacc rest
+            | otherwise = Nothing
+        extractLang' lacc eacc (Right ext : rest) = extractLang' lacc (ext:eacc) rest
 
 ppContents :: String -> String
 ppContents = unlines . f . lines

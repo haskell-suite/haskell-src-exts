@@ -36,7 +36,7 @@ module Language.Haskell.Exts.ParseMonad(
 import Language.Haskell.Exts.SrcLoc(SrcLoc(..))
 import Language.Haskell.Exts.Fixity (Fixity, preludeFixities)
 import Language.Haskell.Exts.Comments
-import Language.Haskell.Exts.Extension (Extension, impliesExts, haskell2010)
+import Language.Haskell.Exts.Extension -- (Extension, impliesExts, haskell2010)
 
 import Data.List ( intersperse )
 import Control.Applicative
@@ -110,6 +110,8 @@ indentOfParseState _                  = 0
 data ParseMode = ParseMode {
         -- | original name of the file being parsed
         parseFilename :: String,
+        -- | base language (e.g. Haskell98, Haskell2010)
+        baseLanguage :: Language,
         -- | list of extensions enabled for parsing
         extensions :: [Extension],
         -- | if 'True', the parser won't care about further extensions
@@ -130,21 +132,38 @@ data ParseMode = ParseMode {
 defaultParseMode :: ParseMode
 defaultParseMode = ParseMode {
         parseFilename = "<unknown>.hs",
-        extensions = haskell2010,
+        baseLanguage = Haskell2010,
+        extensions = [],
         ignoreLanguagePragmas = False,
         ignoreLinePragmas = True,
         fixities = Just preludeFixities
         }
 
+-- Version of ParseMode used internally,
+-- where the language and extensions have
+-- been expanded
+data InternalParseMode = IParseMode {
+        iParseFilename :: String,
+        iExtensions :: [KnownExtension],
+        iIgnoreLanguagePragmas :: Bool,
+        iIgnoreLinePragmas :: Bool,
+        iFixities :: Maybe [Fixity]
+    }
+
+toInternalParseMode :: ParseMode -> InternalParseMode
+toInternalParseMode (ParseMode pf bLang exts ilang iline fx) =
+    IParseMode pf (impliesExts $ toExtensionList bLang exts) ilang iline fx
+
+
 -- | Monad for parsing
 
 newtype P a = P { runP ::
-                String      -- input string
-             -> Int     -- current column
-             -> Int     -- current line
-             -> SrcLoc      -- location of last token read
-             -> ParseState  -- layout info.
-             -> ParseMode   -- parse parameters
+                String              -- input string
+             -> Int                 -- current column
+             -> Int                 -- current line
+             -> SrcLoc              -- location of last token read
+             -> ParseState          -- layout info.
+             -> InternalParseMode   -- parse parameters
              -> ParseStatus a
         }
 
@@ -164,7 +183,8 @@ runParser :: P a -> String -> ParseResult a
 runParser = runParserWithMode defaultParseMode
 
 runParserWithModeComments :: ParseMode -> P a -> String -> ParseResult (a, [Comment])
-runParserWithModeComments mode (P m) s = case m s 0 1 start ([],[],(False,False),[]) (allExts mode) of
+runParserWithModeComments mode (P m) s = 
+  case m s 0 1 start ([],[],(False,False),[]) (toInternalParseMode mode) of
     Ok (_,_,_,cs) a -> ParseOk (a, reverse cs)
     Failed loc msg -> ParseFailed loc msg
     where start = SrcLoc {
@@ -172,7 +192,9 @@ runParserWithModeComments mode (P m) s = case m s 0 1 start ([],[],(False,False)
         srcLine = 1,
         srcColumn = 1
         }
-          allExts mode@(ParseMode {extensions = es}) = mode { extensions = impliesExts es }
+  --        allExts mode@(ParseMode {extensions = es}) = mode { extensions = impliesExts es }
+
+    --      allExts mode = let imode = to
 
 instance Monad P where
     return a = P $ \_i _x _y _l s _m -> Ok s a
@@ -190,7 +212,7 @@ getSrcLoc = P $ \_i _x _y l s _m -> Ok s l
 
 getModuleName :: P String
 getModuleName = P $ \_i _x _y _l s m ->
-    let fn = parseFilename m
+    let fn = iParseFilename m
         mn = concat $ intersperse "." $ splitPath fn
 
         splitPath :: String -> [String]
@@ -248,9 +270,9 @@ popExtContext = P $ \_i _x _y _l (s, e, p, c) _m ->
 
 
 -- Extension-aware lexing/parsing
-getExtensions :: P [Extension]
+getExtensions :: P [KnownExtension]
 getExtensions = P $ \_i _x _y _l s m ->
-    Ok s $ extensions m
+    Ok s $ iExtensions m
 
 pushCtxtFlag :: P ()
 pushCtxtFlag =
@@ -343,7 +365,7 @@ setBOL = Lex $ \cont -> P $ \r _ -> runP (cont ()) r 0
 startToken :: Lex a ()
 startToken = Lex $ \cont -> P $ \s x y _ stk mode ->
     let loc = SrcLoc {
-        srcFilename = parseFilename mode,
+        srcFilename = iParseFilename mode,
         srcLine = y,
         srcColumn = x
     } in
@@ -406,20 +428,20 @@ popExtContextL fn = Lex $ \cont -> P $ \r x y loc stk@(s,e,p,c) m -> case e of
 
 -- Extension-aware lexing
 
-getExtensionsL :: Lex a [Extension]
+getExtensionsL :: Lex a [KnownExtension]
 getExtensionsL = Lex $ \cont -> P $ \r x y loc s m ->
-        runP (cont $ extensions m) r x y loc s m
+        runP (cont $ iExtensions m) r x y loc s m
 
 -- LINE-aware lexing
 
 ignoreLinePragmasL :: Lex a Bool
 ignoreLinePragmasL = Lex $ \cont -> P $ \r x y loc s m ->
-        runP (cont $ ignoreLinePragmas m) r x y loc s m
+        runP (cont $ iIgnoreLinePragmas m) r x y loc s m
 
 -- If we read a file name in a LINE pragma, we should update the state.
 setLineFilenameL :: String -> Lex a ()
 setLineFilenameL name = Lex $ \cont -> P $ \r x y loc s m ->
-        runP (cont ()) r x y loc s (m {parseFilename = name})
+        runP (cont ()) r x y loc s (m {iParseFilename = name})
         
 -- Comments
 

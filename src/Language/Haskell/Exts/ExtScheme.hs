@@ -17,15 +17,15 @@ module Language.Haskell.Exts.ExtScheme where
 
 import Language.Haskell.Exts.Extension
 
-data ExtScheme = Any [Extension] | All [Extension]
+data ExtScheme = Any [KnownExtension] | All [KnownExtension]
   deriving (Eq,Show)
 
 type MExtScheme = Maybe ExtScheme
 
 class Enabled a where
-  isEnabled :: a -> [Extension] -> Bool
+  isEnabled :: a -> [KnownExtension] -> Bool
 
-instance Enabled Extension where
+instance Enabled KnownExtension where
   isEnabled = elem
 
 instance Enabled ExtScheme where
