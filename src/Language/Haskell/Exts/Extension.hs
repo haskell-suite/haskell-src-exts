@@ -4,7 +4,7 @@
 -- Copyright   :  (c) Niklas Broberg 2009
 -- License     :  BSD-style (see the file LICENSE.txt)
 --
--- Maintainer  :  Niklas Broberg, d00nibro@chalmers.se
+-- Maintainer  :  Niklas Broberg, niklas.broberg@chalmers.se
 -- Stability   :  transient
 -- Portability :  portable
 --
