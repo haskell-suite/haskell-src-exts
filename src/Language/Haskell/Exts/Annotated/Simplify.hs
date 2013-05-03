@@ -409,7 +409,8 @@ sCallConv (CCall     _) = S.CCall
 sCallConv (CPlusPlus _) = S.CPlusPlus
 sCallConv (DotNet    _) = S.DotNet
 sCallConv (Jvm       _) = S.Jvm
-sCallConv (Js        _ ) = S.Js
+sCallConv (Js        _) = S.Js
+sCallConv (CApi      _) = S.CApi
 
 sModulePragma :: SrcInfo loc => ModulePragma loc -> S.ModulePragma
 sModulePragma pr = case pr of

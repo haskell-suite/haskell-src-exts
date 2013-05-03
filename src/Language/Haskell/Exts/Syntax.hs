@@ -720,6 +720,7 @@ data CallConv
     | DotNet
     | Jvm
     | Js
+    | CApi
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else

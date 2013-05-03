@@ -193,6 +193,7 @@ data Token
         | KW_DotNet
         | KW_Jvm
         | KW_Js
+        | KW_CApi
 
         | EOF
         deriving (Eq,Show)
@@ -294,7 +295,8 @@ special_varids = [
  ( "cplusplus",  (KW_CPlusPlus,     Just (Any [ForeignFunctionInterface])) ),
  ( "dotnet",     (KW_DotNet,        Just (Any [ForeignFunctionInterface])) ),
  ( "jvm",        (KW_Jvm,           Just (Any [ForeignFunctionInterface])) ),
- ( "js",         (KW_Js,            Just (Any [ForeignFunctionInterface])) )
+ ( "js",         (KW_Js,            Just (Any [ForeignFunctionInterface])) ),
+ ( "capi",       (KW_CApi,          Just (Any [ForeignFunctionInterface, CApiFFI])) )
  ]
 
 pragmas :: [(String,Token)]

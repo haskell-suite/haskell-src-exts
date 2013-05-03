@@ -219,6 +219,7 @@ FFI
 >       'dotnet'        { Loc $$ KW_DotNet }
 >       'jvm'           { Loc $$ KW_Jvm }
 >       'js'            { Loc $$ KW_Js }
+>       'capi'          { Loc $$ KW_CApi }
 
 Reserved Ids
 
@@ -692,6 +693,7 @@ so no need to check for extensions.
 >          | 'dotnet'                   { DotNet    (nIS $1) }
 >          | 'jvm'                      { Jvm       (nIS $1) }
 >          | 'js'                       { Js        (nIS $1) }
+>          | 'capi'                     { CApi      (nIS $1) }
 
 
 > safety :: { Maybe (Safety L) }

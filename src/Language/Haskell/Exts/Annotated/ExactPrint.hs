@@ -1731,6 +1731,7 @@ instance ExactP CallConv where
   exactP (DotNet    _) = printString "dotnet"
   exactP (Jvm       _) = printString "jvm"
   exactP (Js        _) = printString "js"
+  exactP (CApi      _) = printString "capi"
 
 instance ExactP Safety where
   exactP (PlayRisky _) = printString "unsafe"

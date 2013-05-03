@@ -819,6 +819,7 @@ data CallConv l
     | DotNet l
     | Jvm l
     | Js l
+    | CApi l
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
@@ -1447,6 +1448,11 @@ instance Functor Safety where
 instance Functor CallConv where
     fmap f (StdCall l) = StdCall (f l)
     fmap f (CCall l) = CCall (f l)
+    fmap f (CPlusPlus l) = CPlusPlus (f l)
+    fmap f (DotNet l) = DotNet (f l)
+    fmap f (Jvm l) = Jvm (f l)
+    fmap f (Js l) = Js (f l)
+    fmap f (CApi l) = CApi (f l)
 
 instance Functor ModulePragma where
     fmap f (LanguagePragma   l ns) = LanguagePragma (f l) (map (fmap f) ns)
@@ -2069,6 +2075,11 @@ instance Annotated Safety where
 instance Annotated CallConv where
     ann (StdCall l) = l
     ann (CCall l) = l
+    ann (CPlusPlus l) = l
+    ann (DotNet l) = l
+    ann (Jvm l) = l
+    ann (Js l) = l
+    ann (CApi l) = l
     amap = fmap
 
 instance Annotated ModulePragma where
