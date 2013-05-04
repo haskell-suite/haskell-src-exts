@@ -290,7 +290,7 @@ leafFix fixs e = case e of
     Case l e alts             -> liftM2 (Case l) (fix e) $ mapM fix alts
     Do l stmts                -> liftM (Do l) $ mapM fix stmts
     MDo l stmts               -> liftM (MDo l) $ mapM fix stmts
-    Tuple l exps              -> liftM (Tuple l) $ mapM fix exps
+    Tuple l bx exps           -> liftM (Tuple l bx) $ mapM fix exps
     List l exps               -> liftM (List l) $ mapM fix  exps
     Paren l e                 -> liftM (Paren l) $ fix e
     LeftSection l e op        -> liftM (flip (LeftSection l) op) (fix e)
@@ -326,7 +326,7 @@ leafFix fixs e = case e of
 leafFixP fixs p = case p of
         PNeg l p                -> liftM (PNeg l) $ fix p
         PApp l n ps             -> liftM (PApp l n) $ mapM fix ps
-        PTuple l ps             -> liftM (PTuple l) $ mapM fix ps
+        PTuple l bx ps          -> liftM (PTuple l bx) $ mapM fix ps
         PList l ps              -> liftM (PList l) $ mapM fix ps
         PParen l p              -> liftM (PParen l) $ fix p
         PRec l n pfs            -> liftM (PRec l n) $ mapM fix pfs

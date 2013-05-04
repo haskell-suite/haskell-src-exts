@@ -166,10 +166,11 @@ pList' [] _ = []
 pList' [p] (_,c) = [(p,c)]
 pList' (p:ps) (b,c) = (p, b) : pList' ps (b,c)
 
-parenList, squareList, curlyList :: (Annotated ast, ExactP ast) => [SrcSpan] -> [ast SrcSpanInfo] -> EP ()
+parenList, squareList, curlyList, parenHashList :: (Annotated ast, ExactP ast) => [SrcSpan] -> [ast SrcSpanInfo] -> EP ()
 parenList = bracketList ("(",",",")")
 squareList = bracketList ("[",",","]")
 curlyList = bracketList ("{",",","}")
+parenHashList = bracketList ("(#",",","#)")
 
 layoutList :: (Functor ast, Show (ast ()), Annotated ast, ExactP ast) => [SrcSpan] -> [ast SrcSpanInfo] -> EP ()
 layoutList poss asts = printStreams 
@@ -1172,10 +1173,14 @@ instance ExactP Exp where
             printString "mdo"
             layoutList pts stmts
          _ -> errorEP "ExactP: Exp: Mdo is given wrong number of srcInfoPoints"
-    Tuple l es      -> parenList (srcInfoPoints l) es
-    TupleSection l mexps    -> do
+    Tuple l bx es   ->
+        case bx of
+          Boxed   -> parenList (srcInfoPoints l) es
+          Unboxed -> parenHashList (srcInfoPoints l) es
+    TupleSection l bx mexps -> do
         let pts = srcInfoPoints l
-        printSeq $ interleave (zip (map pos $ init pts) (map printString ("(": repeat ",")) ++ [(pos $ last pts, printString ")")])
+            (o, e) = case bx of Boxed -> ("(", ")"); Unboxed -> ("(#", "#)")
+        printSeq $ interleave (zip (map pos $ init pts) (map printString (o: repeat ",")) ++ [(pos $ last pts, printString e)])
                               (map (maybe (0,0) (pos . ann) &&& maybeEP exactPC) mexps)
     List l es               -> squareList (srcInfoPoints l) es
     Paren l p               -> parenList (srcInfoPoints l) [p]
@@ -1559,7 +1564,10 @@ instance ExactP Pat where
          _ -> errorEP "ExactP: Pat: PNPlusK is given wrong number of srcInfoPoints"
     PInfixApp l pa qn pb -> exactP pa >> epInfixQName qn >> exactPC pb
     PApp l qn ps    -> exactP qn >> mapM_ exactPC ps
-    PTuple l ps -> parenList (srcInfoPoints l) ps
+    PTuple l bx ps ->
+        case bx of
+          Boxed   -> parenList (srcInfoPoints l) ps
+          Unboxed -> parenHashList (srcInfoPoints l) ps
     PList l ps  -> squareList (srcInfoPoints l) ps
     PParen l p  -> parenList (srcInfoPoints l) [p]
     PRec l qn pfs   -> exactP qn >> curlyList (srcInfoPoints l) pfs

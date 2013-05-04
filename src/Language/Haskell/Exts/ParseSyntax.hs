@@ -24,7 +24,7 @@ data PExp l
                                             --   should be an expression.
     | MDo l [Stmt l]                        -- ^ @mdo@-expression
 --    | Tuple [PExp]                        -- ^ tuple expression
-    | TupleSection l [Maybe (PExp l)]       -- ^ tuple section expression, e.g. @(,,3)@
+    | TupleSection l Boxed [Maybe (PExp l)] -- ^ tuple section expression, e.g. @(,,3)@
     | List l [PExp l]                       -- ^ list expression
     | Paren l (PExp l)                      -- ^ parenthesized expression
 --     RightSection QOp PExp                -- ^ right section @(@/qop/ /exp/@)@
@@ -121,7 +121,7 @@ instance Annotated PExp where
         Case l e alts   -> l
         Do l ss         -> l
         MDo l ss        -> l
-        TupleSection l mes  -> l
+        TupleSection l bx mes -> l
         List l es       -> l
         Paren l e       -> l
         RecConstr l qn fups     -> l
@@ -183,7 +183,7 @@ instance Annotated PExp where
         Case l e alts           -> Case (f l) e alts
         Do l ss                 -> Do (f l) ss
         MDo l ss                -> MDo (f l) ss
-        TupleSection l mes      -> TupleSection (f l) mes
+        TupleSection l bx mes   -> TupleSection (f l) bx mes
         List l es               -> List (f l) es
         Paren l e               -> Paren (f l) e
         RecConstr l qn fups     -> RecConstr (f l) qn fups
@@ -246,7 +246,7 @@ instance Functor PExp where
           Case l e alts           -> Case (f l) (fmap f e) (map (fmap f) alts)
           Do l ss                 -> Do (f l) (map (fmap f) ss)
           MDo l ss                -> MDo (f l) (map (fmap f) ss)
-          TupleSection l mes      -> TupleSection (f l) (map (fmap (fmap f)) mes)
+          TupleSection l bx mes   -> TupleSection (f l) bx (map (fmap (fmap f)) mes)
           List l es               -> List (f l) (map (fmap f) es)
           Paren l e               -> Paren (f l) (fmap f e)
           RecConstr l qn fups     -> RecConstr (f l) (fmap f qn) (map (fmap f) fups)

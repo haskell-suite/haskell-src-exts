@@ -1264,10 +1264,16 @@ thing we need to look at here is the erpats that use no non-standard lexemes.
 >       | gcon                          { $1 }
 >       | literal                       { Lit (ann $1) $1 }
 >       | '(' texp ')'                  { Paren ($1 <^^> $3 <** [$1,$3]) $2 }
->       | '(' texp tsectend             { TupleSection ($1 <^^> head (snd $3) <** $1:reverse (snd $3)) (Just $2 : fst $3) }
->       | '(' commas texp ')'           { TupleSection ($1 <^^> $4 <** $1:reverse ($4:$2))
+>       | '(' texp tsectend             { TupleSection ($1 <^^> head (snd $3) <** $1:reverse (snd $3)) Boxed (Just $2 : fst $3) }
+>       | '(' commas texp ')'           { TupleSection ($1 <^^> $4 <** $1:reverse ($4:$2)) Boxed
 >                                                       (replicate (length $2) Nothing ++ [Just $3]) }
->       | '(' commas texp tsectend      { TupleSection ($1 <^^> head (snd $4) <** $1:reverse (snd $4 ++ $2))
+>       | '(' commas texp tsectend      { TupleSection ($1 <^^> head (snd $4) <** $1:reverse (snd $4 ++ $2)) Boxed
+>                                                       (replicate (length $2) Nothing ++ Just $3 : fst $4) }
+>       | '(#' texp thashsectend        { TupleSection ($1 <^^> head (snd $3) <** $1:reverse (snd $3)) Unboxed (Just $2 : fst $3) }
+>       | '(#' texp '#)'                { TupleSection ($1 <^^> $3 <** [$1,$3]) Unboxed [Just $2] }
+>       | '(#' commas texp '#)'         { TupleSection ($1 <^^> $4 <** $1:reverse ($4:$2)) Unboxed
+>                                                       (replicate (length $2) Nothing ++ [Just $3]) }
+>       | '(#' commas texp thashsectend { TupleSection ($1 <^^> head (snd $4) <** $1:reverse (snd $4 ++ $2)) Unboxed
 >                                                       (replicate (length $2) Nothing ++ Just $3 : fst $4) }
 >       | '[' list ']'                  { amap (\l -> l <** [$3]) $ $2 ($1 <^^> $3 <** [$1]) }
 >       | '_'                           { WildCard (nIS $1) }
@@ -1305,6 +1311,11 @@ End Template Haskell
 >       : commas texp tsectend          { let (mes, ss) = $3 in (replicate (length $1 - 1) Nothing ++ Just $2 : mes, ss ++ $1) }
 >       | commas texp ')'               { (replicate (length $1 - 1) Nothing ++ [Just $2], $3 : $1) }
 >       | commas ')'                    { (replicate (length $1) Nothing, $2 : $1) }
+
+> thashsectend :: { ([Maybe (PExp L)],[S]) }
+>       : commas texp thashsectend      { let (mes, ss) = $3 in (replicate (length $1 - 1) Nothing ++ Just $2 : mes, ss ++ $1) }
+>       | commas texp '#)'              { (replicate (length $1 - 1) Nothing ++ [Just $2], $3 : $1) }
+>       | commas '#)'                   { (replicate (length $1) Nothing, $2 : $1) }
 
 -----------------------------------------------------------------------------
 Harp Extensions

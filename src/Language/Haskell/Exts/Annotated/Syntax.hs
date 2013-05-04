@@ -705,8 +705,8 @@ data Exp l
                                             --   the last statement in the list
                                             --   should be an expression.
     | MDo l [Stmt l]                        -- ^ @mdo@-expression
-    | Tuple l [Exp l]                       -- ^ tuple expression
-    | TupleSection l [Maybe (Exp l)]        -- ^ tuple section expression, e.g. @(,,3)@
+    | Tuple l Boxed [Exp l]                 -- ^ tuple expression
+    | TupleSection l Boxed [Maybe (Exp l)]  -- ^ tuple section expression, e.g. @(,,3)@
     | List l [Exp l]                        -- ^ list expression
     | Paren l (Exp l)                       -- ^ parenthesised expression
     | LeftSection l (Exp l) (QOp l)         -- ^ left section @(@/exp/ /qop/@)@
@@ -896,7 +896,7 @@ data Pat l
     | PNPlusK l (Name l) Integer            -- ^ n+k pattern
     | PInfixApp l (Pat l) (QName l) (Pat l) -- ^ pattern with an infix data constructor
     | PApp l (QName l) [Pat l]              -- ^ data constructor and argument patterns
-    | PTuple l [Pat l]                      -- ^ tuple pattern
+    | PTuple l Boxed [Pat l]                -- ^ tuple pattern
     | PList l [Pat l]                       -- ^ list pattern
     | PParen l (Pat l)                      -- ^ parenthesized pattern
     | PRec l (QName l) [PatField l]         -- ^ labelled pattern, record style
@@ -1387,8 +1387,8 @@ instance Functor Exp where
         Case l e alts   -> Case (f l) (fmap f e) (map (fmap f) alts)
         Do l ss         -> Do (f l) (map (fmap f) ss)
         MDo l ss        -> MDo (f l) (map (fmap f) ss)
-        Tuple l es      -> Tuple (f l) (map (fmap f) es)
-        TupleSection l mes  -> TupleSection (f l) (map (fmap (fmap f)) mes)
+        Tuple l bx es   -> Tuple (f l) bx (map (fmap f) es)
+        TupleSection l bx mes -> TupleSection (f l) bx (map (fmap (fmap f)) mes)
         List l es       -> List (f l) (map (fmap f) es)
         Paren l e       -> Paren (f l) (fmap f e)
         LeftSection l e qop     -> LeftSection (f l) (fmap f e) (fmap f qop)
@@ -1483,7 +1483,7 @@ instance Functor Pat where
       PNPlusK l n k     -> PNPlusK (f l) (fmap f n) k
       PInfixApp l pa qn pb  -> PInfixApp (f l) (fmap f pa) (fmap f qn) (fmap f pb)
       PApp l qn ps      -> PApp (f l) (fmap f qn) (map (fmap f) ps)
-      PTuple l ps       -> PTuple (f l) (map (fmap f) ps)
+      PTuple l bx ps    -> PTuple (f l) bx (map (fmap f) ps)
       PList l ps        -> PList (f l) (map (fmap f) ps)
       PParen l p        -> PParen (f l) (fmap f p)
       PRec l qn pfs     -> PRec (f l) (fmap f qn) (map (fmap f) pfs)
@@ -1953,8 +1953,8 @@ instance Annotated Exp where
         Case l e alts   -> l
         Do l ss         -> l
         MDo l ss        -> l
-        Tuple l es      -> l
-        TupleSection l mes  -> l
+        Tuple l bx es   -> l
+        TupleSection l bx mes -> l
         List l es       -> l
         Paren l e       -> l
         LeftSection l e qop     -> l
@@ -2004,8 +2004,8 @@ instance Annotated Exp where
         Case l e alts   -> Case (f l) e alts
         Do l ss         -> Do (f l) ss
         MDo l ss        -> MDo (f l) ss
-        Tuple l es      -> Tuple (f l) es
-        TupleSection l mes  -> TupleSection (f l) mes
+        Tuple l bx es   -> Tuple (f l) bx es
+        TupleSection l bx mes -> TupleSection (f l) bx mes
         List l es       -> List (f l) es
         Paren l e       -> Paren (f l) e
         LeftSection l e qop     -> LeftSection (f l) e qop
@@ -2118,7 +2118,7 @@ instance Annotated Pat where
       PNPlusK l n k     -> l
       PInfixApp l pa qn pb  -> l
       PApp l qn ps      -> l
-      PTuple l ps       -> l
+      PTuple l bx ps    -> l
       PList l ps        -> l
       PParen l p        -> l
       PRec l qn pfs     -> l
@@ -2143,7 +2143,7 @@ instance Annotated Pat where
       PNPlusK l n k     -> PNPlusK (f l) n k
       PInfixApp l pa qn pb  -> PInfixApp (f l) pa qn pb
       PApp l qn ps      -> PApp (f l) qn ps
-      PTuple l ps       -> PTuple (f l) ps
+      PTuple l bx ps    -> PTuple (f l) bx ps
       PList l ps        -> PList (f l) ps
       PParen l p        -> PParen (f l) p
       PRec l qn pfs     -> PRec (f l) qn pfs

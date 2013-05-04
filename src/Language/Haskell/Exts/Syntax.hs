@@ -605,8 +605,8 @@ data Exp
                                 --   the last statement in the list
                                 --   should be an expression.
     | MDo [Stmt]                -- ^ @mdo@-expression
-    | Tuple [Exp]               -- ^ tuple expression
-    | TupleSection [Maybe Exp]  -- ^ tuple section expression, e.g. @(,,3)@
+    | Tuple Boxed [Exp]         -- ^ tuple expression
+    | TupleSection Boxed [Maybe Exp]  -- ^ tuple section expression, e.g. @(,,3)@
     | List [Exp]                -- ^ list expression
     | Paren Exp                 -- ^ parenthesised expression
     | LeftSection Exp QOp       -- ^ left section @(@/exp/ /qop/@)@
@@ -790,7 +790,7 @@ data Pat
     | PNPlusK Name Integer          -- ^ n+k pattern
     | PInfixApp Pat QName Pat       -- ^ pattern with an infix data constructor
     | PApp QName [Pat]              -- ^ data constructor and argument patterns
-    | PTuple [Pat]                  -- ^ tuple pattern
+    | PTuple Boxed [Pat]            -- ^ tuple pattern
     | PList [Pat]                   -- ^ list pattern
     | PParen Pat                    -- ^ parenthesized pattern
     | PRec QName [PatField]         -- ^ labelled pattern, record style

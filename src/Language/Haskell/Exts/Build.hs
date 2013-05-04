@@ -120,11 +120,11 @@ pApp n ps = PApp (UnQual n) ps
 
 -- | A tuple expression.
 tuple :: [Exp] -> Exp
-tuple = Tuple
+tuple = Tuple Boxed
 
 -- | A tuple pattern.
 pTuple :: [Pat] -> Pat
-pTuple = PTuple
+pTuple = PTuple Boxed
 
 -- | A tuple expression consisting of variables only.
 varTuple :: [Name] -> Exp

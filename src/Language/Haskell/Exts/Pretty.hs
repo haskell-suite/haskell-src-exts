@@ -794,8 +794,16 @@ instance Pretty Exp where
         prettyPrec _ (Var name) = pretty name
         prettyPrec _ (IPVar ipname) = pretty ipname
         prettyPrec _ (Con name) = pretty name
-        prettyPrec _ (Tuple expList) = parenList . map pretty $ expList
-        prettyPrec _ (TupleSection mExpList) = parenList . map (maybePP pretty) $ mExpList
+        prettyPrec _ (Tuple bxd expList) =
+                let ds = map pretty expList
+                in case bxd of
+                       Boxed   -> parenList ds
+                       Unboxed -> hashParenList ds
+        prettyPrec _ (TupleSection bxd mExpList) =
+                let ds = map (maybePP pretty) mExpList
+                in case bxd of
+                       Boxed   -> parenList ds
+                       Unboxed -> hashParenList ds
         -- weird stuff
         prettyPrec _ (Paren e) = parens . pretty $ e
         prettyPrec _ (LeftSection e op) = parens (pretty e <+> pretty op)
@@ -901,7 +909,11 @@ instance Pretty Pat where
                 myFsep [prettyPrec 1 a, pretty (QConOp op), prettyPrec 1 b]
         prettyPrec p (PApp n ps) = parensIf (p > 1 && not (null ps)) $
                 myFsep (pretty n : map (prettyPrec 2) ps)
-        prettyPrec _ (PTuple ps) = parenList . map pretty $ ps
+        prettyPrec _ (PTuple bxd ps) =
+                let ds = map pretty ps
+                in case bxd of
+                       Boxed   -> parenList ds
+                       Unboxed -> hashParenList ds
         prettyPrec _ (PList ps) =
                 bracketList . punctuate comma . map pretty $ ps
         prettyPrec _ (PParen pat) = parens . pretty $ pat
@@ -1534,7 +1546,11 @@ instance SrcInfo loc => Pretty (P.PExp loc) where
         pretty (P.Var _ name) = pretty name
         pretty (P.IPVar _ ipname) = pretty ipname
         pretty (P.Con _ name) = pretty name
-        pretty (P.TupleSection _ mExpList) = parenList . map (maybePP pretty) $ mExpList
+        pretty (P.TupleSection _ bxd mExpList) =
+                let ds = map (maybePP pretty) mExpList
+                in case bxd of
+                       Boxed   -> parenList ds
+                       Unboxed -> hashParenList ds
         pretty (P.Paren _ e) = parens . pretty $ e
         pretty (P.RecConstr _ c fieldList) =
                 pretty c <> (braceList . map pretty $ fieldList)
