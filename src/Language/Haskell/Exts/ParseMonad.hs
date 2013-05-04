@@ -309,7 +309,10 @@ discard n = Lex $ \cont -> P $ \r x -> runP (cont ()) (drop n r) (x+n)
 -- | Discard the next character, which must be a newline.
 
 lexNewline :: Lex a ()
-lexNewline = Lex $ \cont -> P $ \(_:r) _x y -> runP (cont ()) r 1 (y+1)
+lexNewline = Lex $ \cont -> P $ \rs _x y loc ->
+  case rs of
+    (_:r) -> runP (cont ()) r 1 (y+1) loc
+    []    -> \_ _ -> Failed loc "Lexer: expected newline."
 
 -- | Discard the next character, which must be a tab.
 
