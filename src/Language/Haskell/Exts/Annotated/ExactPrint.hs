@@ -879,11 +879,9 @@ instance ExactP Type where
             exactPC t2
          _ -> errorEP "ExactP: Type: TyFun is given wrong number of srcInfoPoints"
     TyTuple l bx ts -> do
-        let pts = srcInfoPoints l
-            (o,e) = case bx of
-                     Boxed   -> ("(" , ")")
-                     Unboxed -> ("(#","#)")
-        printInterleaved (zip pts (o: replicate (length pts - 2) "," ++ [e])) ts
+        case bx of
+          Boxed   -> parenList (srcInfoPoints l) ts
+          Unboxed -> parenHashList (srcInfoPoints l) ts
     TyList  l t     -> do
         case srcInfoPoints l of
          [a,b] -> do
