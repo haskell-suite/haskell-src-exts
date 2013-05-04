@@ -13,3 +13,4 @@ IllDataTypeDecl.hs      Parser doesn't handle all declaration heads
 ConstraintKinds.hs      ConstraintKinds in type synonyms not yet supported.
 RCategory.lhs           ConstraintKinds not supported in general.
 IndentedWhereBlock.hs   Bug - needs fixes to layout parsing
+NegPrimWordLiteral.hs   Primitive word literals cannot be negative.

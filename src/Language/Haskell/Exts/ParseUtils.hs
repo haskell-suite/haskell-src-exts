@@ -537,6 +537,8 @@ checkExpr e = case e of
     Lit l lit             -> return $ S.Lit l lit
     InfixApp l e1 op e2   -> check2Exprs e1 e2 (flip (S.InfixApp l) op)
     App l e1 e2           -> check2Exprs e1 e2 (S.App l)
+    NegApp l (Lit _ (PrimWord _ i _))
+                          -> fail $ "Parse error: negative primitive word literal: " ++ prettyPrint e
     NegApp l e            -> check1Expr e (S.NegApp l)
     Lambda loc ps e       -> check1Expr e (S.Lambda loc ps)
     Let l bs e            -> check1Expr e (S.Let l bs)
@@ -693,7 +695,7 @@ checkValDef l lhs optsig rhs whereBinds = do
             case optsig of -- only pattern bindings can have signatures
                 Nothing -> return (FunBind l $
                             if b then [Match l' f ps rhs whereBinds]
-                                 else let (a:bs) = ps 
+                                 else let (a:bs) = ps
                                        in [InfixMatch l' a f bs rhs whereBinds])
                 Just _  -> fail "Cannot give an explicit type signature to a function binding"
      Nothing     -> do
@@ -714,9 +716,9 @@ isFunLhs (InfixApp ll l (QVarOp loc (UnQual _ op)) r) es
 isFunLhs (App _ (Var _ (UnQual _ f)) e) es = return $ Just (f, e:es, True, [])
 isFunLhs (App _ f e) es = isFunLhs f (e:es)
 isFunLhs (Var _ (UnQual _ f)) es@(_:_) = return $ Just (f, es, True, [])
-isFunLhs (Paren l f) es@(_:_) = do mlhs <- isFunLhs f es 
+isFunLhs (Paren l f) es@(_:_) = do mlhs <- isFunLhs f es
                                    case mlhs of
-                                    Just (f,es,b,pts) -> 
+                                    Just (f,es,b,pts) ->
                                        let [x,y] = srcInfoPoints l
                                         in return $ Just (f,es,b,x:pts++[y])
                                     _ -> return Nothing
