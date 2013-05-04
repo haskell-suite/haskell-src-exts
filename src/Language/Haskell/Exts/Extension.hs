@@ -26,6 +26,7 @@ module Language.Haskell.Exts.Extension (
     -- * Extensions
     Extension(..), KnownExtension(..),
     classifyExtension,
+    parseExtension, prettyExtension,
 
     -- * Extension groups
     ghcDefault, glasgowExts, 
@@ -36,8 +37,10 @@ module Language.Haskell.Exts.Extension (
 
     ) where
 
+import Control.Applicative ((<$>), (<|>))
 import Data.Array (Array, accumArray, bounds, Ix(inRange), (!))
 import Data.List (nub, (\\))
+import Data.Maybe (fromMaybe)
 
 -- Copyright notice from Cabal's Language.Haskell.Extension,
 -- from which we borrow plenty of features:
@@ -598,6 +601,27 @@ knownExtensionTable =
     | extension <- [toEnum 0 ..]
     , let str = show extension ]
 
+-- | Parse an enabled or disabled extension; returns
+-- 'UnknownExtension' if the parse fails.
+parseExtension :: String -> Extension
+parseExtension str = fromMaybe (UnknownExtension str) $
+      EnableExtension  <$> readMay str
+  <|> DisableExtension <$> (readMay =<< dropNo str)
+  where
+    dropNo ('N':'o':rest) = Just rest
+    dropNo _              = Nothing
+
+-- | Pretty print an extension. Disabled extensions are prefixed with
+-- \'No\'.
+prettyExtension :: Extension -> String
+prettyExtension (EnableExtension  ext) = show ext
+prettyExtension (DisableExtension ext) = "No" ++ show ext
+prettyExtension (UnknownExtension str) = str
+
+readMay :: Read a => String -> Maybe a
+readMay s = case [x | (x,t) <- reads s, ("","") <- lex t] of
+                [x] -> Just x
+                _ -> Nothing
 
 {-------------------------------------------
  -- Transform a 'Language', and possibly a
