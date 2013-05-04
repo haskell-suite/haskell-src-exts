@@ -5,7 +5,7 @@ import Language.Haskell.Exts.Annotated.Syntax hiding ( Type(..), Asst(..), Exp(.
 import qualified Language.Haskell.Exts.Annotated.Syntax as S ( Type(..), Asst(..), Exp(..), FieldUpdate(..), XAttr(..), Context(..) )
 
 ---------------------------------------
--- Expressions as we parse them (and patters, and regular patterns)
+-- Expressions as we parse them (and patterns, and regular patterns)
 
 data PExp l
     = Var l (QName l)                       -- ^ variable
