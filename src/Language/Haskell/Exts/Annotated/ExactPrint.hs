@@ -741,7 +741,7 @@ instance ExactP Decl where
             printString "{-# SPECIALISE"
             maybeEP exactPC mact
             exactPC qn
-            printInterleaved (zip pts ("::" : repeat "," ++ ["#-}"])) ts
+            printInterleaved (zip pts ("::" : replicate (length pts - 2) "," ++ ["#-}"])) ts
          _ -> errorEP "ExactP: Decl: SpecSig is given too few srcInfoPoints"
     SpecInlineSig    l b mact qn ts ->
         case srcInfoPoints l of
@@ -749,7 +749,7 @@ instance ExactP Decl where
             printString $ "{-# SPECIALISE " ++ if b then "INLINE" else "NOINLINE"
             maybeEP exactPC mact
             exactPC qn
-            printInterleaved (zip pts ("::" : repeat "," ++ ["#-}"])) ts
+            printInterleaved (zip pts ("::" : replicate (length pts - 2) "," ++ ["#-}"])) ts
          _ -> errorEP "ExactP: Decl: SpecInlineSig is given too few srcInfoPoints"
     InstSig          l mctxt ih     ->
         case srcInfoPoints l of
