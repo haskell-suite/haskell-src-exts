@@ -369,7 +369,7 @@ lexWhiteSpace bol = do
     case s of
         -- If we find a recognised pragma, we don't want to treat it as a comment.
         '{':'-':'#':rest | isRecognisedPragma rest -> return (bol, False)
-                         | isLinePragma rest && not ignL -> do 
+                         | isLinePragma rest && not ignL -> do
                             (l, fn) <- lexLinePragma
                             setSrcLineL l
                             setLineFilenameL fn
@@ -587,17 +587,20 @@ lexStdToken :: Lex a Token
 lexStdToken = do
     s <- getInput
     exts <- getExtensionsL
+    let intHash = lexHash IntTok IntTokHash (Right WordTokHash)
     case s of
         [] -> return EOF
 
         '0':c:d:_ | toLower c == 'o' && isOctDigit d -> do
                         discard 2
                         (n, str) <- lexOctal
-                        return (IntTok (n, '0':c:str))
+                        con <- intHash
+                        return (con (n, '0':c:str))
                   | toLower c == 'x' && isHexDigit d -> do
                         discard 2
                         (n, str) <- lexHexadecimal
-                        return (IntTok (n, '0':c:str))
+                        con <- intHash
+                        return (con (n, '0':c:str))
 
         -- implicit parameters
         '?':c:_ | isLower c && ImplicitParams `elem` exts -> do
@@ -661,7 +664,7 @@ lexStdToken = do
         -- end template haskell
 
         -- hsx
-        '<':'%':c:_ | XmlSyntax `elem` exts -> do 
+        '<':'%':c:_ | XmlSyntax `elem` exts -> do
                         case c of
                          '>' -> do discard 3
                                    pushExtContextL ChildCtxt
@@ -965,8 +968,8 @@ lexConIdOrQual qual = do
                                               _   -> QVarSym (qual', sym)
 
           '#':cs
-            | null cs || 
-              not (isHSymbol $ head cs) && 
+            | null cs ||
+              not (isHSymbol $ head cs) &&
               not (isIdent $ head cs) && MagicHash `elem` exts -> do
                 discard 1
                 case conid of
