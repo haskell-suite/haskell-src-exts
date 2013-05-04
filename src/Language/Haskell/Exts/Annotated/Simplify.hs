@@ -11,12 +11,12 @@
 -- This module contains code for translating from the annotated
 -- complex AST in Language.Haskell.Exts.Annotated.Syntax
 -- to the simpler, sparsely annotated AST in Language.Haskell.Exts.Syntax.
--- 
+--
 -- A function @sXYZ@ translates an annotated AST node of type @XYZ l@ into
 -- a simple AST node of type @XYZ@. I would have prefered to use a MPTC
 -- with an fd/type family to get a single exported function name, but
 -- I wish to stay Haskell 2010 compliant. Let's hope for Haskell 2011.
--- 
+--
 -----------------------------------------------------------------------------
 module Language.Haskell.Exts.Annotated.Simplify where
 
@@ -103,7 +103,7 @@ sDecl decl = case decl of
      WarnPragmaDecl   l nsstrs  -> S.WarnPragmaDecl (getPointLoc l) (map (\(ns, str) -> (map sName ns, str)) nsstrs)
      InlineSig        l b mact qn   -> S.InlineSig (getPointLoc l) b (maybe S.AlwaysActive sActivation mact) (sQName qn)
      InlineConlikeSig l   mact qn   -> S.InlineConlikeSig (getPointLoc l) (maybe S.AlwaysActive sActivation mact) (sQName qn)
-     SpecSig          l qn ts   -> S.SpecSig (getPointLoc l) (sQName qn) (map sType ts)
+     SpecSig          l   mact qn ts   -> S.SpecSig (getPointLoc l) (maybe S.AlwaysActive sActivation mact) (sQName qn) (map sType ts)
      SpecInlineSig    l b mact qn ts    ->
         S.SpecInlineSig (getPointLoc l) b (maybe S.AlwaysActive sActivation mact) (sQName qn) (map sType ts)
      InstSig          l mctxt ih    ->

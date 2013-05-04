@@ -86,7 +86,7 @@ module Language.Haskell.Exts.Syntax (
     unit_con, tuple_con, unboxed_singleton_con,
     -- ** Special identifiers
     as_name, qualified_name, hiding_name, minus_name, bang_name, dot_name, star_name,
-    export_name, safe_name, unsafe_name, threadsafe_name, 
+    export_name, safe_name, unsafe_name, threadsafe_name,
     stdcall_name, ccall_name, cplusplus_name, dotnet_name, jvm_name, js_name,
     forall_name, family_name,
     -- ** Type constructors
@@ -330,7 +330,7 @@ data Decl
      -- ^ An INLINE pragma
      | InlineConlikeSig SrcLoc      Activation QName
      -- ^ An INLINE CONLIKE pragma
-     | SpecSig          SrcLoc                 QName [Type]
+     | SpecSig          SrcLoc      Activation QName [Type]
      -- ^ A SPECIALISE pragma
      | SpecInlineSig    SrcLoc Bool Activation QName [Type]
      -- ^ A SPECIALISE INLINE pragma
@@ -980,7 +980,7 @@ bang_name      = Symbol "!"
 dot_name       = Symbol "."
 star_name      = Symbol "*"
 
-export_name, safe_name, unsafe_name, threadsafe_name, 
+export_name, safe_name, unsafe_name, threadsafe_name,
   stdcall_name, ccall_name, cplusplus_name, dotnet_name,
   jvm_name, js_name, forall_name, family_name :: Name
 export_name     = Ident "export"

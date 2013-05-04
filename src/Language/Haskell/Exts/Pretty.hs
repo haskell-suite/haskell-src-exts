@@ -481,10 +481,10 @@ instance Pretty Decl where
                 markLine pos $
                 mySep [text "{-# INLINE_CONLIKE", pretty activ, pretty name, text "#-}"]
 
-        pretty (SpecSig pos name types) =
+        pretty (SpecSig pos activ name types) =
                 blankline $
                 markLine pos $
-                mySep $ [text "{-# SPECIALISE", pretty name, text "::"]
+                mySep $ [text "{-# SPECIALISE", pretty activ, pretty name, text "::"]
                     ++ punctuate comma (map pretty types) ++ [text "#-}"]
 
         pretty (SpecInlineSig pos inl activ name types) =
@@ -628,7 +628,7 @@ instance Pretty ModulePragma where
         myFsep $ [text "{-# OPTIONS", text s, text "#-}"]
     pretty (AnnModulePragma _ ann) =
         myFsep $ [text "{-# ANN", pretty ann, text "#-}"]
-        
+
 
 instance Pretty Tool where
     pretty (UnknownTool s) = text s
@@ -786,9 +786,9 @@ instance Pretty Exp where
         prettyPrec p (Case cond altList) = parensIf (p > 1) $
                 myFsep [text "case", pretty cond, text "of"]
                 $$$ ppBody caseIndent (map pretty altList)
-        prettyPrec p (Do stmtList) = parensIf (p > 1) $ 
+        prettyPrec p (Do stmtList) = parensIf (p > 1) $
                 text "do" $$$ ppBody doIndent (map pretty stmtList)
-        prettyPrec p (MDo stmtList) = parensIf (p > 1) $ 
+        prettyPrec p (MDo stmtList) = parensIf (p > 1) $
                 text "mdo" $$$ ppBody doIndent (map pretty stmtList)
         -- Constructors & Vars
         prettyPrec _ (Var name) = pretty name
@@ -830,7 +830,7 @@ instance Pretty Exp where
         prettyPrec _ (ParComp e qualLists) =
                 bracketList (intersperse (char '|') $
                                 pretty e : (punctuate comma . concatMap (map pretty) $ qualLists))
-        prettyPrec p (ExpTypeSig _pos e ty) = parensIf (p > 0) $ 
+        prettyPrec p (ExpTypeSig _pos e ty) = parensIf (p > 0) $
                 myFsep [pretty e, text "::", pretty ty]
         -- Template Haskell
         prettyPrec _ (BracketExp b) = pretty b
@@ -852,7 +852,7 @@ instance Pretty Exp where
                 myFsep $ [text "<%", pretty e, text "%>"]
         prettyPrec _ (XChildTag _ cs) =
                 myFsep $ text "<%>" : map pretty cs ++ [text "</%>"]
-        
+
         -- Pragmas
         prettyPrec p (CorePragma s e) = myFsep $ map text ["{-# CORE", show s, "#-}"] ++ [pretty e]
         prettyPrec _ (SCCPragma  s e) = myFsep $ map text ["{-# SCC",  show s, "#-}"] ++ [pretty e]

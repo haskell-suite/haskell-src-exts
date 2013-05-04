@@ -90,7 +90,7 @@ module Language.Haskell.Exts.Annotated.Syntax (
     unit_con, tuple_con, unboxed_singleton_con,
     -- ** Special identifiers
     as_name, qualified_name, hiding_name, minus_name, bang_name, dot_name, star_name,
-    export_name, safe_name, unsafe_name, threadsafe_name, 
+    export_name, safe_name, unsafe_name, threadsafe_name,
     stdcall_name, ccall_name, cplusplus_name, dotnet_name, jvm_name, js_name,
     forall_name, family_name,
     -- ** Type constructors
@@ -363,7 +363,7 @@ data Decl l
      -- ^ An INLINE pragma
      | InlineConlikeSig l      (Maybe (Activation l)) (QName l)
      -- ^ An INLINE CONLIKE pragma
-     | SpecSig          l                             (QName l) [Type l]
+     | SpecSig          l      (Maybe (Activation l)) (QName l) [Type l]
      -- ^ A SPECIALISE pragma
      | SpecInlineSig    l Bool (Maybe (Activation l)) (QName l) [Type l]
      -- ^ A SPECIALISE INLINE pragma
@@ -451,7 +451,7 @@ data IPBind l = IPBind l (IPName l) (Exp l)
 -- | Clauses of a function binding.
 data Match l
      = Match l      (Name l) [Pat l]         (Rhs l) {-where-} (Maybe (Binds l))
-        -- ^ A clause defined with prefix notation, i.e. the function name 
+        -- ^ A clause defined with prefix notation, i.e. the function name
         --  followed by its argument patterns, the right-hand side and an
         --  optional where clause.
      | InfixMatch l (Pat l) (Name l) [Pat l] (Rhs l) {-where-} (Maybe (Binds l))
@@ -739,7 +739,7 @@ data Exp l
                                             -- ^ empty xml element, with attributes
     | XPcdata l String                      -- ^ PCDATA child element
     | XExpTag l (Exp l)                     -- ^ escaped haskell expression inside xml
-    | XChildTag l [Exp l]                   -- ^ children of an xml element    
+    | XChildTag l [Exp l]                   -- ^ children of an xml element
 
 
 -- Pragmas
@@ -1086,8 +1086,8 @@ bang_name      l = Symbol l "!"
 dot_name       l = Symbol l "."
 star_name      l = Symbol l "*"
 
-export_name, safe_name, unsafe_name, threadsafe_name, 
-  stdcall_name, ccall_name, cplusplus_name, dotnet_name, 
+export_name, safe_name, unsafe_name, threadsafe_name,
+  stdcall_name, ccall_name, cplusplus_name, dotnet_name,
   jvm_name, js_name, forall_name, family_name :: l -> Name l
 export_name     l = Ident l "export"
 safe_name       l = Ident l "safe"
@@ -1237,7 +1237,7 @@ instance Functor Decl where
         InlineSig        l b mact qn      -> InlineSig (f l) b (fmap (fmap f) mact) (fmap f qn)
         InlineConlikeSig l   mact qn      -> InlineConlikeSig (f l) (fmap (fmap f) mact) (fmap f qn)
         SpecInlineSig    l b mact qn ts   -> SpecInlineSig (f l) b (fmap (fmap f) mact) (fmap f qn) (map (fmap f) ts)
-        SpecSig          l        qn ts   -> SpecSig (f l) (fmap f qn) (map (fmap f) ts)
+        SpecSig          l   mact qn ts   -> SpecSig       (f l)   (fmap (fmap f) mact) (fmap f qn) (map (fmap f) ts)
         InstSig          l mcx ih         -> InstSig (f l) (fmap (fmap f) mcx) (fmap f ih)
         AnnPragma        l ann            -> AnnPragma (f l) (fmap f ann)
       where wp f (ns, s) = (map (fmap f) ns, s)
@@ -1713,7 +1713,7 @@ instance Annotated Decl where
         WarnPragmaDecl   l nss          -> l
         InlineSig        l b act qn     -> l
         InlineConlikeSig l   act qn     -> l
-        SpecSig          l qn ts        -> l
+        SpecSig          l   act qn ts  -> l
         SpecInlineSig    l b act qn ts  -> l
         InstSig          l cx ih        -> l
         AnnPragma        l ann          -> l
@@ -1744,7 +1744,7 @@ instance Annotated Decl where
         WarnPragmaDecl   l nss           -> WarnPragmaDecl (f l) nss
         InlineSig        l b act qn      -> InlineSig (f l) b act qn
         InlineConlikeSig l   act qn      -> InlineConlikeSig (f l) act qn
-        SpecSig          l qn ts         -> SpecSig (f l) qn ts
+        SpecSig          l   act qn ts   -> SpecSig       (f l)   act qn ts
         SpecInlineSig    l b act qn ts   -> SpecInlineSig (f l) b act qn ts
         InstSig          l mcx ih        -> InstSig (f l) mcx ih
         AnnPragma        l ann           -> AnnPragma (f l) ann
@@ -1756,7 +1756,7 @@ instance Annotated Annotation where
     amap f (Ann     l n e) = Ann     (f l) n e
     amap f (TypeAnn l n e) = TypeAnn (f l) n e
     amap f (ModuleAnn l e) = ModuleAnn (f l) e
-    
+
 instance Annotated DataOrNew where
     ann (DataType l) = l
     ann (NewType  l) = l

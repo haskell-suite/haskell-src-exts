@@ -173,8 +173,8 @@ curlyList = bracketList ("{",",","}")
 parenHashList = bracketList ("(#",",","#)")
 
 layoutList :: (Functor ast, Show (ast ()), Annotated ast, ExactP ast) => [SrcSpan] -> [ast SrcSpanInfo] -> EP ()
-layoutList poss asts = printStreams 
-        (map (pos *** printString) $ lList poss) 
+layoutList poss asts = printStreams
+        (map (pos *** printString) $ lList poss)
         (map (pos . ann &&& exactP) asts)
 
 lList (p:ps) = (if isNullSpan p then (p,"") else (p,"{")) : lList' ps
@@ -186,7 +186,7 @@ printSemi :: SrcSpan -> EP ()
 printSemi p = do
   printWhitespace (pos p)
   when (not $ isNullSpan p) $ printString ";"
-                
+
 
 --------------------------------------------------
 -- Exact printing
@@ -434,7 +434,7 @@ instance ExactP Module where
          [a,b,c,d,e] -> do
             printStreams (map (\(p,s) -> (pos p, printString s)) $ lList dPts)
                          (map (\i -> (pos $ ann i, exactPC i)) ids ++ map (\d -> (pos $ ann d, exactPC d)) (sepFunBinds decls))
-    
+
             printStringAt (pos a) "<"
             exactPC xn
             mapM_ exactPC attrs
@@ -523,7 +523,7 @@ instance ExactP Decl where
         exactPC dh
         pts <- case mk of
                 Nothing -> return pts
-                Just kd -> case pts of 
+                Just kd -> case pts of
                             p:pts' -> do
                                printStringAt (pos p) "::"
                                exactPC kd
@@ -577,7 +577,7 @@ instance ExactP Decl where
                 printStringAt (pos x) "where"
                 layoutList pts gds
                 maybeEP exactPC mder
-             _ -> errorEP "ExactP: Decl: GDataInsDecl is given too few srcInfoPoints" 
+             _ -> errorEP "ExactP: Decl: GDataInsDecl is given too few srcInfoPoints"
          _ -> errorEP "ExactP: Decl: GDataInsDecl is given too few srcInfoPoints"
     ClassDecl    l mctxt dh fds mcds    ->
         case srcInfoPoints l of
@@ -597,7 +597,7 @@ instance ExactP Decl where
                     printStringAt (pos p) "where"
                     layoutList pts' $ sepClassFunBinds cds
                  _ -> errorEP "ExactP: Decl: ClassDecl is given too few srcInfoPoints"
-                ) mcds                
+                ) mcds
          _ -> errorEP "ExactP: Decl: ClassDecl is given too few srcInfoPoints"
     InstDecl     l mctxt ih mids        ->
         case srcInfoPoints l of
@@ -666,7 +666,7 @@ instance ExactP Decl where
             maybeEP exactPC msf
             pts <- case mstr of
                       Nothing -> return pts
-                      Just str -> case pts of 
+                      Just str -> case pts of
                                    x:pts' -> do
                                       printStringAt (pos x) (show str)
                                       return pts'
@@ -735,10 +735,11 @@ instance ExactP Decl where
             exactPC qn
             printStringAt (pos b) "#-}"
          _ -> errorEP "ExactP: Decl: InlineConlikeSig is given wrong number of srcInfoPoints"
-    SpecSig          l qn ts        ->
+    SpecSig          l mact qn ts ->
         case srcInfoPoints l of
          a:pts -> do
             printString "{-# SPECIALISE"
+            maybeEP exactPC mact
             exactPC qn
             printInterleaved (zip pts ("::" : repeat "," ++ ["#-}"])) ts
          _ -> errorEP "ExactP: Decl: SpecSig is given too few srcInfoPoints"
@@ -853,7 +854,7 @@ instance ExactP Kind where
             exactPC kd
             printStringAt (pos b) ")"
          _ -> errorEP "ExactP: Kind: KindParen is given wrong number of srcInfoPoints"
-    KindVar l n     -> exactP n       
+    KindVar l n     -> exactP n
 
 instance ExactP Type where
   exactP t = case t of
@@ -1030,7 +1031,7 @@ instance ExactP InstDecl where
 --            printString $ if inl then "{-# INLINE" else "{-# NOINLINE"
 --            maybeEP exactPC mact
 --            exactPC qn
---            printStringAt (pos b) "#-}" 
+--            printStringAt (pos b) "#-}"
 --         _ -> errorEP "ExactP: InstDecl: InsInline is given wrong number of srcInfoPoints"
 
 instance ExactP FunDep where
@@ -1133,7 +1134,7 @@ instance ExactP Exp where
             case rest2 of
               (c:rest3) -> do
                 let (mpSemi2,rest4) = if snd (spanSize c) == 4 -- this is "else", not a semi
-                                       then (Nothing, rest2) 
+                                       then (Nothing, rest2)
                                        else (Just c, rest3)
                 case rest4 of
                   [pElse] -> do
@@ -1519,7 +1520,7 @@ instance ExactP Match where
         (cPars,whPt) = splitAt pars cParsWh    -- whPt is either singleton or empty
     printStrs (zip oPars (repeat "("))
     exactPC n
-    printStreams (zip (map pos cPars) (repeat $ printString ")")) (map (pos . ann &&& exactPC) ps) 
+    printStreams (zip (map pos cPars) (repeat $ printString ")")) (map (pos . ann &&& exactPC) ps)
     exactPC rhs
     maybeEP (\bds -> printStringAt (pos (head pts)) "where" >> exactPC bds) mbinds
   exactP (InfixMatch l a n bs rhs mbinds) = do
