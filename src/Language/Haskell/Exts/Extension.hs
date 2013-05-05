@@ -559,7 +559,8 @@ ghcDefault = map EnableExtension (NondecreasingIndentation:allLangDefault)
 
 -- | List of all known extensions, all enabled.
 knownExtensions :: [Extension]
-knownExtensions = map EnableExtension [minBound..maxBound]
+knownExtensions =
+  concat [ [EnableExtension x, DisableExtension x] | x <- [minBound..maxBound] ]
 
 -- | Extensions that have been deprecated, possibly paired with another
 -- extension that replaces it.
