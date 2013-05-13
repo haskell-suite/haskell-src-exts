@@ -820,8 +820,8 @@ instance Pretty Exp where
                 bracketList ([pretty e, char '|']
                              ++ (punctuate comma . map pretty $ qualList))
         prettyPrec _ (ParComp e qualLists) =
-                bracketList (intersperse (char '|') $
-                                pretty e : (punctuate comma . concatMap (map pretty) $ qualLists))
+                bracketList (punctuate (char '|') $
+                                pretty e : (map (hsep . punctuate comma . map pretty) $ qualLists))
         prettyPrec p (ExpTypeSig _pos e ty) = parensIf (p > 0) $ 
                 myFsep [pretty e, text "::", pretty ty]
         -- Template Haskell
