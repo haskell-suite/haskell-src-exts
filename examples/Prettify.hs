@@ -23,6 +23,7 @@ import qualified System.FilePath as File
 import qualified Language.Haskell.Exts.Parser as Parser
 import Language.Haskell.Exts.Parser
   ( ParseMode   ( .. )
+  , defaultParseMode
   , ParseResult ( .. )
   )
 -- import qualified Language.Haskell.Exts.Pretty as Pretty
@@ -164,7 +165,7 @@ processFile :: Maybe FilePath -> PPHsMode -> FilePath -> IO ()
 processFile mDir printMode file =
   do contents <- readFile file
      let pResult   = Parser.parseModuleWithMode parseMode contents 
-         parseMode = ParseMode { parseFilename = file }
+         parseMode = defaultParseMode { parseFilename = file }
      case pResult of
        ParseOk hModule            -> 
          outputSource $ prettyPrint hModule
