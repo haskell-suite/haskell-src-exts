@@ -34,74 +34,83 @@ Cabal-Version:          >= 1.6
 
 Extra-Source-Files:
 			CHANGELOG
-			Test/Runner.hs
-			Test/failing.txt
-			Test/printFail.txt
+			Test/examples/ArityMismatch.hs
 			Test/examples/ArrowLayout.hs
 			Test/examples/Attributes.hs
+			Test/examples/BadStringLineBreak.hs
 			Test/examples/BangPatterns.hs
 			Test/examples/Bug.hs
 			Test/examples/ByteStringUtils.hs
-			Test/examples/CParser.hs
 			Test/examples/ClassInstType.hs
+			Test/examples/ConstraintKinds.hs
+			Test/examples/CParser.hs
+			Test/examples/CStyleLinePragmas.hs
 			Test/examples/DataHeadParen.hs
 			Test/examples/Directory.hs
+			Test/examples/DoRec.hs
+			Test/examples/DoubleHashOp.hs
 			Test/examples/EmptyAnn.hs
 			Test/examples/EmptyContext.hs
+			Test/examples/EmptyFunDepPremise.hs
 			Test/examples/EmptyInstance.hs
 			Test/examples/EmptyList.hs
-			Test/examples/Ex1.hs
+			Test/examples/ExtraEndBrace.hs
 			Test/examples/FamilyKindSig.hs
+			Test/examples/FamilyVarid.hs
 			Test/examples/FixityTests.hs
+			Test/examples/ForallInInstance.hs
 			Test/examples/ForeignImport.hs
 			Test/examples/GadtDeriving.hs
+			Test/examples/GADTRecord.hs
 			Test/examples/GenericTree.hs
 			Test/examples/GhcDeriving.hs
 			Test/examples/GroupKeyword.hs
 			Test/examples/HappyDoAction.hs
 			Test/examples/HaskellParser.hs
 			Test/examples/HexPrec.hs
-			Test/examples/Hyphen.hs
-			Test/examples/ImportSymbol.hs
-                        Test/examples/IfThenElseLayout.hs
+			Test/examples/IfThenElseLayout.hs
+			Test/examples/IllDataTypeDecl.hs
+			Test/examples/IndentedWhereBlock.hs
 			Test/examples/IndentedWhere.hs
 			Test/examples/InfixParser.hs
-			Test/examples/LanguagePragma.hs
 			Test/examples/LineOptionsPragma.hs
-			Test/examples/LinePragma.hs
-			Test/examples/ListComp1.hs
-			Test/examples/MagicHash.hs
 			Test/examples/MultiCtxt.hs
-			Test/examples/NPlusK.hs
+			Test/examples/NegPrimWordLiteral.hs
 			Test/examples/NestedAsPat.hs
-			Test/examples/PackageImport.hs
+			Test/examples/NonDecreasing.hs
+			Test/examples/NPlusK.hs
 			Test/examples/ParenFunBind.hs
-			Test/examples/Pragma.hs
+			Test/examples/PrimitiveIntHexLiteral.hs
 			Test/examples/QualifiedDot.hs
 			Test/examples/QuasiQuoteLines.hs
-			Test/examples/Rank2Types.hs
+			Test/examples/QuasiQuoteOld.hs
+			Test/examples/QuasiQuoteSplice.hs
+			Test/examples/RCategory.lhs
 			Test/examples/ReadP.hs
 			Test/examples/RealGHC.lhs
-			Test/examples/RealHSE.hs
-			Test/examples/RealHoogle.hs
-			Test/examples/RealTagSoup.hs
 			Test/examples/RecordInfixSelector.hs
-			Test/examples/RecordWildcards.hs
 			Test/examples/RelaxedDo.hs
 			Test/examples/SCCPragmas.hs
 			Test/examples/ScopedTypeVariables.hs
 			Test/examples/SimpleDeriving.hs
 			Test/examples/SingleClassAsst.hs
 			Test/examples/SpecializeInstance.hs
+			Test/examples/SpecializePhaseControl.hs
 			Test/examples/Testing.hs
+			Test/examples/THTypes.hs
 			Test/examples/TupleSections.hs
 			Test/examples/TypeFunctions.hs
+			Test/examples/TypeOperatorAsVariable.hs
 			Test/examples/TypeOperatorsTest.hs
+			Test/examples/UnboxedSingleton.hs
+			Test/examples/UnboxedTuples.hs
 			Test/examples/Unicode.hs
 			Test/examples/UnicodeSyntax.hs
 			Test/examples/UnindentedPragmaClose.hs
 			Test/examples/WhereBlock.hs
-			Test/examples/WithKeyword.hs
+			Test/failing.txt
+			Test/printFail.txt
+			Test/Runner.hs
 
 Flag base4
 
