@@ -22,6 +22,7 @@ module Language.Haskell.Exts.Extension (
     Language(..),
     knownLanguages,
     classifyLanguage,
+    prettyLanguage,
 
     -- * Extensions
     Extension(..), KnownExtension(..),
@@ -105,6 +106,9 @@ classifyLanguage = \str -> case lookup str langTable of
     langTable = [ (show lang, lang)
                 | lang <- knownLanguages ]
 
+prettyLanguage :: Language -> String
+prettyLanguage (UnknownLanguage name) = name
+prettyLanguage lang = show lang
 
 -- | This represents language extensions beyond a base 'Language' definition
 -- (such as 'Haskell98') that are supported by some implementations, usually
