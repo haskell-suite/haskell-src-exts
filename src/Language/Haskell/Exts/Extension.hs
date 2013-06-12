@@ -93,7 +93,7 @@ data Language =
 
   -- | An unknown language, identified by its name.
   | UnknownLanguage String
-  deriving (Show, Read, Eq)
+  deriving (Show, Read, Eq, Ord)
 
 knownLanguages :: [Language]
 knownLanguages = [Haskell98, Haskell2010]
@@ -124,7 +124,7 @@ data Extension =
   -- | An unknown extension, identified by the name of its @LANGUAGE@
   -- pragma.
   | UnknownExtension String
-  deriving (Show, Read, Eq)
+  deriving (Show, Read, Eq, Ord)
 
 
 data KnownExtension =
@@ -481,7 +481,7 @@ data KnownExtension =
 
 -}
 
-  deriving (Show, Read, Eq, Enum, Bounded)
+  deriving (Show, Read, Eq, Ord, Enum, Bounded)
 
 -- | Certain extensions imply other extensions, and this function
 --   makes the implication explicit. This also handles deprecated
