@@ -284,8 +284,8 @@ ppModuleHeader m mbWarn mbExportList = mySep [
         text "where"]
 
 ppWarnTxt :: WarningText -> Doc
-ppWarnTxt (DeprText s) = mySep [text "{-# DEPRECATED", text s, text "#-}"]
-ppWarnTxt (WarnText s) = mySep [text "{-# WARNING",    text s, text "#-}"]
+ppWarnTxt (DeprText s) = mySep [text "{-# DEPRECATED", text (show s), text "#-}"]
+ppWarnTxt (WarnText s) = mySep [text "{-# WARNING",    text (show s), text "#-}"]
 
 instance Pretty ModuleName where
         pretty (ModuleName modName) = text modName
