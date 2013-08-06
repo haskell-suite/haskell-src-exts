@@ -40,7 +40,7 @@ module Language.Haskell.Exts.Extension (
 
 import Control.Applicative ((<$>), (<|>))
 import Data.Array (Array, accumArray, bounds, Ix(inRange), (!))
-import Data.List (nub, (\\))
+import Data.List (nub, (\\), delete)
 import Data.Maybe (fromMaybe)
 
 -- Copyright notice from Cabal's Language.Haskell.Extension,
@@ -629,11 +629,12 @@ readMay s = case [x | (x,t) <- reads s, ("","") <- lex t] of
                 _ -> Nothing
 
 {-------------------------------------------
- -- Transform a 'Language', and possibly a
- -- modifying set of'Extension's, into a list 
- -- of 'KnownExtension's, to be interpreted
- -- as modifying the language you get 
+ -- Transform a 'Language', and possibly a modifying set of'Extension's, into a list 
+ -- of 'KnownExtension's, to be interpreted as modifying the language you get 
  -- when all known extensions are disabled.
+ -- Extensions are interpreted in a right-biased fashion, so the last instance
+ -- of an occurence of 'EnableExtension' or 'DisableExtension' for a given
+ -- 'KnownExtension' takes precedence.
  -------------------------------------------}
 
 toExtensionList :: Language -> [Extension] -> [KnownExtension]
@@ -648,6 +649,13 @@ toExtensionList lang exts =
                     HaskellAllDisabled -> []
                     UnknownLanguage s -> 
                         error $ "toExtensionList: Unknown language " ++ s
+{-
         addExts = [ ke | EnableExtension  ke <- exts ]
         remExts = [ ke | DisableExtension ke <- exts ]
-     in nub $ (langKes ++ addExts) \\ remExts
+     in impliesExts $ nub $ (langKes ++ addExts) \\ remExts
+-}
+  in impliesExts $ go langKes exts
+    where go :: [KnownExtension] -> [Extension] -> [KnownExtension]
+          go acc [] = acc
+          go acc (DisableExtension x : exts) = go (nub (delete x acc)) exts
+          go acc (EnableExtension  x : exts) = go (nub (x : acc))      exts
