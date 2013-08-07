@@ -324,6 +324,7 @@ leafFix fixs e = case e of
     fix x = applyFixities fixs x
 
 leafFixP fixs p = case p of
+        PInfixApp l p1 op p2    -> liftM2 (flip (PInfixApp l) op) (leafFixP fixs p1) (fix p2)
         PNeg l p                -> liftM (PNeg l) $ fix p
         PApp l n ps             -> liftM (PApp l n) $ mapM fix ps
         PTuple l bx ps          -> liftM (PTuple l bx) $ mapM fix ps
