@@ -26,7 +26,7 @@ Description:            Haskell-Source with Extensions (HSE, haskell-src-exts)
                         Apart from these standard extensions,
                         it also handles regular patterns as per the HaRP extension
                         as well as HSX-style embedded XML syntax.
-Homepage:               http://code.haskell.org/haskell-src-exts
+Homepage:               https://github.com/haskell-suite/haskell-src-exts
 Stability:              Stable
 Tested-with:            GHC==6.10.2, GHC==6.10.4, GHC==6.12.3, GHC==7.0.2
 Build-Type:             Custom
@@ -152,5 +152,5 @@ Library
   Hs-source-dirs:       src
 
 Source-Repository head
-        Type:           darcs
-        Location:       http://code.haskell.org/haskell-src-exts
+        Type:           git
+        Location:       https://github.com/haskell-suite/haskell-src-exts.git
