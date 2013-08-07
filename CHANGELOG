@@ -19,6 +19,23 @@
      and explicitly setting a list of extensions will be interpreted on top of
      Haskell2010. See further the documentation for L.H.E.Extension.
 
+* Add support for the 'capi' calling convention. It is enabled with the CApiFFI
+  extension. It's been included since GHC 7.4, and advertised since 7.6.
+
+* Give better error message when lexing newline fails. In particular, fix the bug
+  when the parser would crash if the file didn't end with a newline.
+
+* Support unboxed tuple expressions and patterns.
+
+* Fix bug in lexing of primitive integer literals in hex or octal notation.
+
+* Disallow negative primitive word literals
+  (such as W# (-0x8000000000000000##)).
+
+* Allow phase control for SPECIALIZE pragma.
+
+* Derive Foldable and Traversable instances for all annotated AST types.
+
 
 ** 1.13.x
 

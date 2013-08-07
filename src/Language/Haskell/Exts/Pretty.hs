@@ -284,8 +284,8 @@ ppModuleHeader m mbWarn mbExportList = mySep [
         text "where"]
 
 ppWarnTxt :: WarningText -> Doc
-ppWarnTxt (DeprText s) = mySep [text "{-# DEPRECATED", text s, text "#-}"]
-ppWarnTxt (WarnText s) = mySep [text "{-# WARNING",    text s, text "#-}"]
+ppWarnTxt (DeprText s) = mySep [text "{-# DEPRECATED", text (show s), text "#-}"]
+ppWarnTxt (WarnText s) = mySep [text "{-# WARNING",    text (show s), text "#-}"]
 
 instance Pretty ModuleName where
         pretty (ModuleName modName) = text modName
@@ -828,8 +828,8 @@ instance Pretty Exp where
                 bracketList ([pretty e, char '|']
                              ++ (punctuate comma . map pretty $ qualList))
         prettyPrec _ (ParComp e qualLists) =
-                bracketList (intersperse (char '|') $
-                                pretty e : (punctuate comma . concatMap (map pretty) $ qualLists))
+                bracketList (punctuate (char '|') $
+                                pretty e : (map (hsep . punctuate comma . map pretty) $ qualLists))
         prettyPrec p (ExpTypeSig _pos e ty) = parensIf (p > 0) $
                 myFsep [pretty e, text "::", pretty ty]
         -- Template Haskell
