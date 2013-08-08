@@ -3,35 +3,36 @@
 ========================================================================
 
 haskell-src-exts is a package for handling and manipulating Haskell source 
-code. It is based on the haskell-src package that is part of the standard 
+code. It is a descendant of the haskell-src package that is part of the standard 
 libraries, but extends this to support a number of syntactic 
-extensions, e.g. MPTCs, fundeps, GADTs, TH etc. It is intended as a direct
-replacement for the standard haskell-src package, and exports the same
-functions and data types, plus some more.
+extensions, e.g. MPTCs, fundeps, GADTs, TH etc. The aim is to support all
+extensions recognized by the community, as determined by what is implemented
+in compilers and tools.
 
 Apart from the more standard extensions supported by e.g. GHC, 
-haskell-src-exts also provides support for HaRP (Haskell Regular Patterns) 
+haskell-src-exts provides support for HaRP (Haskell Regular Patterns) 
 and HSX (Haskell Source with XML) syntax.
 
 ------------------------------------------------------------------------
 Package structure:
 
 The modules that comprise haskell-src-exts all reside in the hierarchic 
-namespace Language.Haskell.Exts. The exposed modules are:
+namespace Language.Haskell.Exts, or its more feature-rich sibling
+Language.Haskell.Exts.Annotated. Notable exposed modules include:
 
-* Language.Haskell.Exts.Syntax - The abstract syntax tree that the other 
-  modules work on.
-* Language.Haskell.Exts.Build - Combinators for building abstract syntax.
-* Language.Haskell.Exts.Parser - Functions for parsing Haskell source 
-  code into an abstract syntax representation.
-* Language.Haskell.Exts.Pretty - Pretty-printer for the abstract syntax.
-
-* Language.Haskell.Exts - Imports and re-exports all the above, and
-  also defines some functions that combine functionality from several
+* Language.Haskell.Exts[.Annotated] - Imports and re-exports all the below,
+  and also defines some functions that combine functionality from several
   modules.
 
+* Language.Haskell.Exts[.Annotated].Syntax - The abstract syntax tree 
+  that the other modules work on.
+* Language.Haskell.Exts[.Annotated].Build - Combinators for building 
+  abstract syntax.
+* Language.Haskell.Exts[.Annotated].Parser - Functions for parsing Haskell 
+  source code into an abstract syntax representation.
+
 ------------------------------------------------------------------------
-Supported extensions:
+Non-comprehensive list of supported extensions:
 
 * Multi-parameter type classes (MPTCs)
 * Functional dependencies
@@ -52,13 +53,10 @@ Supported extensions:
 
 As-of-yet unsupported extensions:
 
-* Unboxed functions ( ident# )
-
-Any other out there..?
-
-Unsupported:
-
-* n+k patterns
+* Constraint kinds
+* do-rec notation
+* Multi-way if statements
+* Lambda-case
 
 ------------------------------------------------------------------------
 Portability and dependencies:
