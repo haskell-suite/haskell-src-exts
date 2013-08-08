@@ -22,6 +22,9 @@
 * Add support for the 'capi' calling convention. It is enabled with the CApiFFI
   extension. It's been included since GHC 7.4, and advertised since 7.6.
 
+* Add support for the 'interruptible' FFI safety annotation, enabled with
+  the InterruptibleFFI extension.
+
 * Give better error message when lexing newline fails. In particular, fix the bug
   when the parser would crash if the file didn't end with a newline.
 
