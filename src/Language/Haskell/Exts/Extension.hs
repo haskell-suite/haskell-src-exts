@@ -659,3 +659,5 @@ toExtensionList lang exts =
           go acc [] = acc
           go acc (DisableExtension x : exts) = go (nub (delete x acc)) exts
           go acc (EnableExtension  x : exts) = go (nub (x : acc))      exts
+          -- We just throw away UnknownExtensions
+          go acc (_ : exts) = go acc exts
