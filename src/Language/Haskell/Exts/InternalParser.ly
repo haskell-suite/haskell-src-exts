@@ -213,6 +213,7 @@ FFI
 >       'safe'          { Loc $$ KW_Safe }
 >       'unsafe'        { Loc $$ KW_Unsafe }
 >       'threadsafe'    { Loc $$ KW_Threadsafe }
+>       'interruptible' { Loc $$ KW_Interruptible }
 >       'stdcall'       { Loc $$ KW_StdCall }
 >       'ccall'         { Loc $$ KW_CCall }
 >       'cplusplus'     { Loc $$ KW_CPlusPlus }
@@ -701,6 +702,7 @@ so no need to check for extensions.
 >        : 'safe'                       { Just $ PlaySafe  (nIS $1) False }
 >        | 'unsafe'                     { Just $ PlayRisky (nIS $1) }
 >        | 'threadsafe'                 { Just $ PlaySafe  (nIS $1) True }
+>        | 'interruptible'              { Just $ PlayInterruptible (nIS $1) }
 >        | {- empty -}                  { Nothing }
 
 > fspec :: { (Maybe String, Name L, Type L, [S]) }

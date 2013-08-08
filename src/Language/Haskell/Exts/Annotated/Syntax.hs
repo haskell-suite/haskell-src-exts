@@ -1447,6 +1447,7 @@ instance Functor Splice where
 instance Functor Safety where
     fmap f (PlayRisky l) = PlayRisky (f l)
     fmap f (PlaySafe l b) = PlaySafe (f l) b
+    fmap f (PlayInterruptible l) = PlayInterruptible (f l)
 
 instance Functor CallConv where
     fmap f (StdCall l) = StdCall (f l)
@@ -2073,6 +2074,7 @@ instance Annotated Splice where
 instance Annotated Safety where
     ann (PlayRisky l) = l
     ann (PlaySafe l b) = l
+    ann (PlayInterruptible l) = l
     amap = fmap
 
 instance Annotated CallConv where
