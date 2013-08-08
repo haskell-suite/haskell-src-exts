@@ -587,6 +587,7 @@ instance Pretty InstDecl where
 instance Pretty Safety where
         pretty PlayRisky        = text "unsafe"
         pretty (PlaySafe b)     = text $ if b then "threadsafe" else "safe"
+        pretty PlayInterruptible = text "interruptible"
 
 instance Pretty CallConv where
         pretty StdCall   = text "stdcall"

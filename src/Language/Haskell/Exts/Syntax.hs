@@ -706,6 +706,7 @@ data Splice
 data Safety
     = PlayRisky         -- ^ unsafe
     | PlaySafe Bool     -- ^ safe ('False') or threadsafe ('True')
+    | PlayInterruptible -- ^ interruptible
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else

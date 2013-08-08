@@ -402,6 +402,7 @@ sSplice (ParenSplice _ e) = S.ParenSplice (sExp e)
 sSafety :: Safety l -> S.Safety
 sSafety (PlayRisky _) = S.PlayRisky
 sSafety (PlaySafe _ b) = S.PlaySafe b
+sSafety (PlayInterruptible _) = S.PlayInterruptible
 
 sCallConv :: CallConv l -> S.CallConv
 sCallConv (StdCall   _) = S.StdCall

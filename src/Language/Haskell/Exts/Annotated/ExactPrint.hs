@@ -1743,6 +1743,7 @@ instance ExactP CallConv where
 instance ExactP Safety where
   exactP (PlayRisky _) = printString "unsafe"
   exactP (PlaySafe _ b) = printString $ if b then "threadsafe" else "safe"
+  exactP (PlayInterruptible _) = printString "interruptible"
 
 instance ExactP Rule where
   exactP (Rule l str mact mrvs e1 e2) =

@@ -187,6 +187,7 @@ data Token
         | KW_Safe
         | KW_Unsafe
         | KW_Threadsafe
+        | KW_Interruptible
         | KW_StdCall
         | KW_CCall
         | KW_CPlusPlus
@@ -286,17 +287,18 @@ special_varids = [
  ( "hiding",    (KW_Hiding,     Nothing) ),
 
 -- FFI
- ( "export",     (KW_Export,        Just (Any [ForeignFunctionInterface])) ),
- ( "safe",       (KW_Safe,          Just (Any [ForeignFunctionInterface])) ),
- ( "unsafe",     (KW_Unsafe,        Just (Any [ForeignFunctionInterface])) ),
- ( "threadsafe", (KW_Threadsafe,    Just (Any [ForeignFunctionInterface])) ),
- ( "stdcall",    (KW_StdCall,       Just (Any [ForeignFunctionInterface])) ),
- ( "ccall",      (KW_CCall,         Just (Any [ForeignFunctionInterface])) ),
- ( "cplusplus",  (KW_CPlusPlus,     Just (Any [ForeignFunctionInterface])) ),
- ( "dotnet",     (KW_DotNet,        Just (Any [ForeignFunctionInterface])) ),
- ( "jvm",        (KW_Jvm,           Just (Any [ForeignFunctionInterface])) ),
- ( "js",         (KW_Js,            Just (Any [ForeignFunctionInterface])) ),
- ( "capi",       (KW_CApi,          Just (Any [ForeignFunctionInterface, CApiFFI])) )
+ ( "export",        (KW_Export,        Just (Any [ForeignFunctionInterface])) ),
+ ( "safe",          (KW_Safe,          Just (Any [ForeignFunctionInterface])) ),
+ ( "unsafe",        (KW_Unsafe,        Just (Any [ForeignFunctionInterface])) ),
+ ( "threadsafe",    (KW_Threadsafe,    Just (Any [ForeignFunctionInterface])) ),
+ ( "interruptible", (KW_Interruptible, Just (Any [InterruptibleFFI])) ),
+ ( "stdcall",       (KW_StdCall,       Just (Any [ForeignFunctionInterface])) ),
+ ( "ccall",         (KW_CCall,         Just (Any [ForeignFunctionInterface])) ),
+ ( "cplusplus",     (KW_CPlusPlus,     Just (Any [ForeignFunctionInterface])) ),
+ ( "dotnet",        (KW_DotNet,        Just (Any [ForeignFunctionInterface])) ),
+ ( "jvm",           (KW_Jvm,           Just (Any [ForeignFunctionInterface])) ),
+ ( "js",            (KW_Js,            Just (Any [ForeignFunctionInterface])) ),
+ ( "capi",          (KW_CApi,          Just (Any [CApiFFI])) )
  ]
 
 pragmas :: [(String,Token)]
@@ -1301,6 +1303,7 @@ showToken t = case t of
   KW_Safe       -> "safe"
   KW_Unsafe     -> "unsafe"
   KW_Threadsafe -> "threadsafe"
+  KW_Interruptible -> "interruptible"
   KW_StdCall    -> "stdcall"
   KW_CCall      -> "ccall"
 

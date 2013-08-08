@@ -445,6 +445,9 @@ data KnownExtension =
   -- | Enable non-decreasing indentation for 'do' blocks.
   | NondecreasingIndentation
 
+  -- | [GHC &#xa7; 8.1.4] Enable interruptible FFI.
+  | InterruptibleFFI
+
   -- | [GHC &#xa7; 8.1.5] Enable the 'capi' calling convention in the
   -- foreign function interface.
   | CApiFFI
