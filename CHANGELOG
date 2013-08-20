@@ -39,6 +39,8 @@
 
 * Derive Foldable and Traversable instances for all annotated AST types.
 
+* Fix bug with pretty-printing WARNING and DEPRECATED pragmas.
+
 
 ** 1.13.x
 
