@@ -57,6 +57,7 @@ Extra-Source-Files:
 			Test/examples/ExtraEndBrace.hs
 			Test/examples/FamilyKindSig.hs
 			Test/examples/FamilyVarid.hs
+                        Test/examples/FFIExtensions.hs
 			Test/examples/FixityTests.hs
 			Test/examples/ForallInInstance.hs
 			Test/examples/ForeignImport.hs
@@ -73,14 +74,18 @@ Extra-Source-Files:
 			Test/examples/IndentedWhereBlock.hs
 			Test/examples/IndentedWhere.hs
 			Test/examples/InfixParser.hs
+                        Test/examples/LambdaCase.hs
 			Test/examples/LineOptionsPragma.hs
 			Test/examples/MultiCtxt.hs
+                        Test/examples/MultiWayIf.hs
 			Test/examples/NegPrimWordLiteral.hs
 			Test/examples/NestedAsPat.hs
 			Test/examples/NonDecreasing.hs
 			Test/examples/NPlusK.hs
+                        Test/examples/ParallelListComp.hs
 			Test/examples/ParenFunBind.hs
 			Test/examples/PrimitiveIntHexLiteral.hs
+                        Test/examples/QQType.hs
 			Test/examples/QualifiedDot.hs
 			Test/examples/QuasiQuoteLines.hs
 			Test/examples/QuasiQuoteOld.hs
