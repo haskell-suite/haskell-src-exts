@@ -564,7 +564,7 @@ allLangDefault = [MonomorphismRestriction, MonoPatBinds, ImplicitPrelude]
 ghcDefault :: [Extension]
 ghcDefault = map EnableExtension (NondecreasingIndentation:allLangDefault)
 
--- | List of all known extensions, all enabled.
+-- | List of all known extensions, both \"yes\" and \"no\" versions.
 knownExtensions :: [Extension]
 knownExtensions =
   concat [ [EnableExtension x, DisableExtension x] | x <- [minBound..maxBound] ]
