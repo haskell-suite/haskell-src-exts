@@ -2,6 +2,7 @@ Name:                   haskell-src-exts
 Version:                1.14.0
 License:                BSD3
 License-File:           LICENSE
+Build-Type:             Simple
 Author:                 Niklas Broberg
 Maintainer:             Niklas Broberg <niklas.broberg@chalmers.se>
 Category:               Language
