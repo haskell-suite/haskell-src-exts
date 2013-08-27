@@ -209,7 +209,7 @@ checkAsstParam isSimple t = do
                         f <- checkAsstParam isSimple pf
                         t <- checkType pt
                         return $ S.TyApp l f t
-                _       -> fail "Malformed context: FlexibleContexts not enabled"
+                _       -> fail "Malformed context: FlexibleContexts is not enabled"
 
 -----------------------------------------------------------------------------
 -- Checking Headers
