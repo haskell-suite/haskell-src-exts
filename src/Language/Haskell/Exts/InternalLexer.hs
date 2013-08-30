@@ -195,6 +195,10 @@ data Token
         | KW_Js
         | KW_CApi
 
+                -- Curry
+        | KW_Free
+        | KW_Fcase
+
         | EOF
         deriving (Eq,Show)
 
@@ -273,7 +277,11 @@ reserved_ids = [
  ( "where",     (KW_Where,      Nothing) ),
 
 -- FFI
- ( "foreign",   (KW_Foreign,    Just (Any [ForeignFunctionInterface])) )
+ ( "foreign",   (KW_Foreign,    Just (Any [ForeignFunctionInterface])) ),
+
+-- Curry
+ ( "free",      (KW_Free,       Just (Any [FreeVars])) ),
+ ( "fcase",     (KW_Fcase,      Just (Any [FlexibleCase])) )
  ]
 
 
@@ -1311,5 +1319,8 @@ showToken t = case t of
   KW_Jvm        -> "jvm"
   KW_Js         -> "js"
   KW_CApi       -> "capi"
+  -- Curry
+  KW_Fcase      -> "fcase"
+  KW_Free       -> "free"
 
   EOF           -> "EOF"

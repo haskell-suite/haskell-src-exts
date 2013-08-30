@@ -114,6 +114,8 @@ sDecl decl = case decl of
          in S.InstSig (getPointLoc l) (maybe [] sContext mctxt) qn ts
      AnnPragma        l ann'        ->
         S.AnnPragma (getPointLoc l) (sAnnotation ann')
+     FreeVarsDecl     l ns          -> S.FreeVarsDecl (getPointLoc l) (map sName ns)
+        
 
 sTypeEqn :: SrcInfo l => TypeEqn l -> S.TypeEqn
 sTypeEqn (TypeEqn _ a b) = S.TypeEqn (sType a) (sType b)
@@ -388,6 +390,10 @@ sExp e' = case e' of
     BracketExp _ br     -> S.BracketExp (sBracket br)
     SpliceExp _ sp      -> S.SpliceExp (sSplice sp)
     QuasiQuote _ nm qt  -> S.QuasiQuote nm qt
+    --Curry
+    Fcase _ e alts      -> S.Fcase (sExp e) (map sAlt alts)
+    AnonymousFreeVar _  -> S.AnonymousFreeVar
+    --
     XTag l xn attrs mat es  -> S.XTag  (getPointLoc l) (sXName xn) (map sXAttr attrs) (fmap sExp mat) (map sExp es)
     XETag l xn attrs mat    -> S.XETag (getPointLoc l) (sXName xn) (map sXAttr attrs) (fmap sExp mat)
     XPcdata _ str       -> S.XPcdata str
