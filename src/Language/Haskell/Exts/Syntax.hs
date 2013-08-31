@@ -55,7 +55,7 @@ module Language.Haskell.Exts.Syntax (
     Type(..), Boxed(..), Kind(..), TyVarBind(..),
     -- * Expressions
     Exp(..), Stmt(..), QualStmt(..), FieldUpdate(..),
-    Alt(..), GuardedAlts(..), GuardedAlt(..), XAttr(..),
+    Alt(..), GuardedAlts(..), GuardedAlt(..), XAttr(..), IfAlt(..),
     -- * Patterns
     Pat(..), PatField(..), PXAttr(..), RPat(..), RPatOp(..),
     -- * Literals
@@ -600,6 +600,7 @@ data Exp
     | Lambda SrcLoc [Pat] Exp   -- ^ lambda expression
     | Let Binds Exp             -- ^ local declarations with @let@ ... @in@ ...
     | If Exp Exp Exp            -- ^ @if@ /exp/ @then@ /exp/ @else@ /exp/
+    | MultiIf [IfAlt]           -- ^ @if@ @|@ /exp/ @->@ /exp/ ...
     | Case Exp [Alt]            -- ^ @case@ /exp/ @of@ /alts/
     | Do [Stmt]                 -- ^ @do@-expression:
                                 --   the last statement in the list
@@ -941,6 +942,14 @@ data GuardedAlt
   deriving (Eq,Ord,Show)
 #endif
 
+-- | An alternative in a multiway @if@ expression.
+data IfAlt
+    = IfAlt Exp Exp
+#ifdef __GLASGOW_HASKELL__
+  deriving (Eq,Ord,Show,Typeable,Data)
+#else
+  deriving (Eq,Ord,Show)
+#endif
 -----------------------------------------------------------------------------
 -- Builtin names.
 
