@@ -1,0 +1,3 @@
+language: haskell
+install: /bin/true
+script: travis_retry ./ci-test
