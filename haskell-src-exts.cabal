@@ -170,7 +170,7 @@ Test-Suite test
   Build-depends:       base < 5,
                        haskell-src-exts,
                        smallcheck >= 1.0,
-                       tasty,
+                       tasty >= 0.3,
                        tasty-smallcheck,
                        tasty-hunit,
                        filepath,
