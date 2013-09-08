@@ -655,6 +655,9 @@ data Exp
     | RightArrApp     Exp Exp   -- ^ arrow application (from right): /exp/ @>-@ /exp/
     | LeftArrHighApp  Exp Exp   -- ^ higher-order arrow application (from left): /exp/ @-<<@ /exp/
     | RightArrHighApp Exp Exp   -- ^ higher-order arrow application (from right): /exp/ @>>-@ /exp/
+
+-- LambdaCase
+    | LCase [Alt] -- ^ @\case@ /alts/
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
