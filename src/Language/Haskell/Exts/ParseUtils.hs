@@ -410,9 +410,6 @@ checkPat e [] = case e of
             rps <- mapM checkRPattern es
             return (PXRPats l $ map fixRPOpPrec rps)
 
-    -- Generics
-    ExplTypeArg l qn t -> return $ PExplTypeArg l qn t
-
     -- QuasiQuotation
     QuasiQuote l n q -> return $ PQuasiQuote l n q
 

@@ -83,9 +83,6 @@ data PExp l
     | GenPragma  l      String (Int, Int) (Int, Int) (PExp l)
                                             -- ^ {-# GENERATED ... #-} pragma
 
--- Generics
-    | ExplTypeArg l (QName l) (S.Type l)    -- ^ f {| Int |} x = ...
-
 -- Bang Patterns
     | BangPat l (PExp l)                    -- ^ f !a = ...
 
@@ -160,7 +157,6 @@ instance Annotated PExp where
         SCCPragma  l s e   -> l
         GenPragma  l s n12 n34 e -> l
 
-        ExplTypeArg l qn t      -> l
         BangPat l e             -> l
 
         Proc            l p e   -> l
@@ -205,7 +201,6 @@ instance Annotated PExp where
         GuardRP l e ss          -> GuardRP (f l) e ss
         EitherRP l e1 e2        -> EitherRP (f l) e1 e2
         CAsRP l n e             -> CAsRP (f l) n e
-        ExplTypeArg l n t       -> ExplTypeArg (f l) n t
         BangPat l e             -> BangPat (f l) e
 
         VarQuote l qn           -> VarQuote (f l) qn
@@ -268,7 +263,6 @@ instance Functor PExp where
           GuardRP l e ss          -> GuardRP (f l) (fmap f e) (map (fmap f) ss)
           EitherRP l e1 e2        -> EitherRP (f l) (fmap f e1) (fmap f e2)
           CAsRP l n e             -> CAsRP (f l) (fmap f n) (fmap f e)
-          ExplTypeArg l n t       -> ExplTypeArg (f l) (fmap f n) (fmap f t)
           BangPat l e             -> BangPat (f l) (fmap f e)
 
           VarQuote l qn           -> VarQuote (f l) (fmap f qn)

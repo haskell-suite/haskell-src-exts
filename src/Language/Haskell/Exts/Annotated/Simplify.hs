@@ -459,7 +459,6 @@ sPat pat = case pat of
     PXPcdata _ str      -> S.PXPcdata str
     PXPatTag _ p        -> S.PXPatTag (sPat p)
     PXRPats  _ rps      -> S.PXRPats (map sRPat rps)
-    PExplTypeArg _ qn t -> S.PExplTypeArg (sQName qn) (sType t)
     PQuasiQuote _ nm qt -> S.PQuasiQuote nm qt
     PBangPat _ p        -> S.PBangPat (sPat p)
 

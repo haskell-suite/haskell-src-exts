@@ -950,9 +950,6 @@ instance Pretty Pat where
                 myFsep $ [text "<%", pretty p, text "%>"]
         prettyPrec _ (PXRPats ps) =
                 myFsep $ text "<[" : map pretty ps ++ [text "%>"]
-        -- Generics
-        prettyPrec _ (PExplTypeArg qn t) =
-                myFsep [pretty qn, text "{|", pretty t, text "|}"]
         -- BangPatterns
         prettyPrec _ (PBangPat pat) = text "!" <> prettyPrec 2 pat
 
@@ -1621,8 +1618,6 @@ instance SrcInfo loc => Pretty (P.PExp loc) where
         pretty (P.CAsRP _ n r) = hcat [pretty n, text "@:", pretty r]
         pretty (P.XRPats _ ps) =
                 myFsep $ text "<[" : map pretty ps ++ [text "%>"]
-        pretty (P.ExplTypeArg _ qn t) =
-                myFsep [pretty qn, text "{|", pretty t, text "|}"]
         pretty (P.BangPat _ e) = text "!" <> pretty e
 
 instance SrcInfo loc => Pretty (P.PFieldUpdate loc) where

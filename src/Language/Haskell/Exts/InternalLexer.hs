@@ -62,8 +62,6 @@ data Token
         | RightParen
         | LeftHashParen
         | RightHashParen
-        | LeftCurlyBar
-        | RightCurlyBar
         | SemiColon
         | LeftCurly
         | RightCurly
@@ -684,10 +682,6 @@ lexStdToken = do
 
         '#':')':_ | UnboxedTuples `elem` exts -> do discard 2 >> return RightHashParen
 
-        '{':'|':_ | Generics `elem` exts -> do discard 2 >> return LeftCurlyBar
-
-        '|':'}':_ | Generics `elem` exts -> do discard 2 >> return RightCurlyBar
-
         -- pragmas
 
         '{':'-':'#':_ -> do discard 3 >> lexPragmaStart
@@ -1196,8 +1190,6 @@ showToken t = case t of
   RightParen        -> ")"
   LeftHashParen     -> "(#"
   RightHashParen    -> "#)"
-  LeftCurlyBar      -> "{|"
-  RightCurlyBar     -> "|}"
   SemiColon         -> ";"
   LeftCurly         -> "{"
   RightCurly        -> "}"
