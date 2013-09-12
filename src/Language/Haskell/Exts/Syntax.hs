@@ -1,4 +1,4 @@
-{-# LANGUAGE CPP, DeriveDataTypeable #-}
+{-# LANGUAGE CPP, DeriveDataTypeable, DeriveGeneric #-}
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Language.Haskell.Exts.Syntax
@@ -101,6 +101,9 @@ module Language.Haskell.Exts.Syntax (
 #ifdef __GLASGOW_HASKELL__
 #ifdef BASE4
 import Data.Data
+#if MIN_VERSION_base(4,6,0)
+import GHC.Generics (Generic)
+#endif
 #else
 import Data.Generics (Data(..),Typeable(..))
 #endif
@@ -114,7 +117,11 @@ import Language.Haskell.Exts.Annotated.Syntax (Boxed(..), Tool(..))
 -- | The name of a Haskell module.
 newtype ModuleName = ModuleName String
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -131,7 +138,11 @@ data SpecialCon
     | Cons                  -- ^ list data constructor @(:)@
     | UnboxedSingleCon      -- ^ unboxed singleton tuple constructor @(\# \#)@
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -143,7 +154,11 @@ data QName
     | UnQual Name             -- ^ unqualified local name
     | Special SpecialCon      -- ^ built-in constructor with special syntax
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -153,7 +168,11 @@ data Name
     = Ident String    -- ^ /varid/ or /conid/.
     | Symbol String   -- ^ /varsym/ or /consym/
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -163,7 +182,11 @@ data IPName
     = IPDup String -- ^ ?/ident/, non-linear implicit parameter
     | IPLin String -- ^ %/ident/, linear implicit parameter
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -173,7 +196,11 @@ data QOp
     = QVarOp QName  -- ^ variable operator (/qvarop/)
     | QConOp QName  -- ^ constructor operator (/qconop/)
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -183,7 +210,11 @@ data Op
     = VarOp Name    -- ^ variable operator (/varop/)
     | ConOp Name    -- ^ constructor operator (/conop/)
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -194,7 +225,11 @@ data CName
     = VarName Name  -- ^ name of a method or field
     | ConName Name  -- ^ name of a data constructor
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -203,7 +238,11 @@ data CName
 data Module = Module SrcLoc ModuleName [ModulePragma] (Maybe WarningText)
                         (Maybe [ExportSpec]) [ImportDecl] [Decl]
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -223,7 +262,11 @@ data ExportSpec
      | EModuleContents ModuleName   -- ^ @module M@:
                                     --   re-export a module.
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -242,7 +285,11 @@ data ImportDecl = ImportDecl
             -- by @hiding@.
     }
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -260,7 +307,11 @@ data ImportSpec
                                 --   a class imported with some of its methods, or
                                 --   a datatype imported with some of its constructors.
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -271,7 +322,11 @@ data Assoc
      | AssocLeft  -- ^ left-associative operator (declared with @infixl@).
      | AssocRight -- ^ right-associative operator (declared with @infixr@)
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -339,7 +394,11 @@ data Decl
      | AnnPragma        SrcLoc Annotation
      -- ^ An ANN pragma
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -353,7 +412,11 @@ data Annotation
     | ModuleAnn      Exp
     -- ^ An annotation for the defining module.
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -361,7 +424,11 @@ data Annotation
 -- | A flag stating whether a declaration is a data or newtype declaration.
 data DataOrNew = DataType | NewType
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -371,7 +438,11 @@ data Binds
     = BDecls [Decl]     -- ^ An ordinary binding group
     | IPBinds [IPBind]  -- ^ A binding group for implicit parameters
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -379,7 +450,11 @@ data Binds
 -- | A binding of an implicit parameter.
 data IPBind = IPBind SrcLoc IPName Exp
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -388,7 +463,11 @@ data IPBind = IPBind SrcLoc IPName Exp
 data Match
      = Match SrcLoc Name [Pat] (Maybe Type) Rhs {-where-} Binds
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -400,7 +479,11 @@ data QualConDecl
         {-forall-} [TyVarBind] {- . -} Context
         {- => -} ConDecl
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -414,7 +497,11 @@ data ConDecl
      | RecDecl Name [([Name],BangType)]
                 -- ^ record constructor
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -423,7 +510,11 @@ data ConDecl
 data GadtDecl
     = GadtDecl SrcLoc Name Type
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -439,7 +530,11 @@ data ClassDecl
     | ClsTyDef   SrcLoc Type    Type
             -- ^ default choice for an associated type synonym
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -455,7 +550,11 @@ data InstDecl
     | InsGData  SrcLoc DataOrNew Type (Maybe Kind) [GadtDecl] [Deriving]
             -- ^ an associated data type implemented using GADT style
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -467,7 +566,11 @@ data BangType
      | UnBangedTy Type  -- ^ non-strict component
      | UnpackedTy Type  -- ^ unboxed component, marked with an UNPACK pragma
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -478,7 +581,11 @@ data Rhs
      | GuardedRhss  [GuardedRhs]
                         -- ^ guarded right hand side (/gdrhs/)
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -489,7 +596,11 @@ data Rhs
 data GuardedRhs
      = GuardedRhs SrcLoc [Stmt] Exp
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -511,7 +622,11 @@ data Type
      | TyInfix Type QName Type  -- ^ infix type constructor
      | TyKind  Type Kind        -- ^ type with explicit kind signature
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -521,7 +636,11 @@ data TyVarBind
     = KindedVar Name Kind   -- ^ variable binding with kind annotation
     | UnkindedVar Name      -- ^ ordinary variable binding
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -534,7 +653,11 @@ data Kind
     | KindParen Kind    -- ^ a kind surrounded by parentheses
     | KindVar Name      -- ^ a kind variable (as of yet unsupported by compilers)
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -545,7 +668,11 @@ data Kind
 data FunDep
     = FunDep [Name] [Name]
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -562,7 +689,11 @@ data Asst = ClassA QName [Type]     -- ^ ordinary class assertion
           | IParam IPName Type      -- ^ implicit parameter assertion
           | EqualP Type   Type      -- ^ type equality constraint
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -583,7 +714,11 @@ data Literal
     | PrimChar   Char       -- ^ unboxed character literal
     | PrimString String     -- ^ unboxed string literal
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -656,7 +791,11 @@ data Exp
     | LeftArrHighApp  Exp Exp   -- ^ higher-order arrow application (from left): /exp/ @-<<@ /exp/
     | RightArrHighApp Exp Exp   -- ^ higher-order arrow application (from right): /exp/ @>>-@ /exp/
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -667,7 +806,11 @@ data XName
     = XName String              -- <name ...
     | XDomName String String    -- <dom:name ...
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -675,7 +818,11 @@ data XName
 -- | An xml attribute, which is a name-expression pair.
 data XAttr = XAttr XName Exp
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -687,7 +834,11 @@ data Bracket
     | TypeBracket Type      -- ^ type bracket: @[t| ... |]@
     | DeclBracket [Decl]    -- ^ declaration bracket: @[d| ... |]@
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -697,7 +848,11 @@ data Splice
     = IdSplice String       -- ^ variable splice: @$var@
     | ParenSplice Exp       -- ^ parenthesised expression splice: @$(/exp/)@
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -708,7 +863,11 @@ data Safety
     | PlaySafe Bool     -- ^ safe ('False') or threadsafe ('True')
     | PlayInterruptible -- ^ interruptible
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -723,7 +882,11 @@ data CallConv
     | Js
     | CApi
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -736,7 +899,11 @@ data ModulePragma
     | AnnModulePragma  SrcLoc Annotation
                         -- ^ ANN pragma with module scope
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -747,7 +914,11 @@ data Activation
     | ActiveFrom  Int
     | ActiveUntil Int
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -756,7 +927,11 @@ data Activation
 data Rule
     = Rule String Activation (Maybe [RuleVar]) Exp Exp
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -766,7 +941,11 @@ data RuleVar
     = RuleVar Name
     | TypedRuleVar Name Type
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -777,7 +956,11 @@ data WarningText
     = DeprText String
     | WarnText String
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -812,7 +995,11 @@ data Pat
     | PQuasiQuote String String     -- ^ quasi quote patter: @[$/name/| /string/ |]@
     | PBangPat Pat                  -- ^ strict (bang) pattern: @f !x = ...@
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -820,7 +1007,11 @@ data Pat
 -- | An XML attribute in a pattern.
 data PXAttr = PXAttr XName Pat
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -834,7 +1025,11 @@ data RPatOp
     | RPOpt     -- ^ @?@ = 0 or 1
     | RPOptG    -- ^ @?!@ = 0 or 1, greedy
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -850,7 +1045,11 @@ data RPat
     | RPParen RPat          -- ^ parenthesised pattern, e.g. (2*)
     | RPPat Pat             -- ^ an ordinary pattern
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -861,7 +1060,11 @@ data PatField
     | PFieldPun Name            -- ^ record field pun
     | PFieldWildcard            -- ^ record field wildcard
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -879,7 +1082,11 @@ data Stmt
     | LetStmt Binds     -- ^ local bindings
     | RecStmt [Stmt]    -- ^ a recursive binding group for arrows
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -895,7 +1102,11 @@ data QualStmt
     | GroupUsing   Exp          -- ^ @then@ @group@ @using@ /exp/
     | GroupByUsing Exp Exp      -- ^ @then@ @group@ @by@ /exp/ @using@ /exp/
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -906,7 +1117,11 @@ data FieldUpdate
     | FieldPun Name             -- ^ record field pun
     | FieldWildcard             -- ^ record field wildcard
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -915,7 +1130,11 @@ data FieldUpdate
 data Alt
     = Alt SrcLoc Pat GuardedAlts Binds
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -927,7 +1146,11 @@ data GuardedAlts
     = UnGuardedAlt Exp          -- ^ @->@ /exp/
     | GuardedAlts  [GuardedAlt] -- ^ /gdpat/
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -936,7 +1159,11 @@ data GuardedAlts
 data GuardedAlt
     = GuardedAlt SrcLoc [Stmt] Exp
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
