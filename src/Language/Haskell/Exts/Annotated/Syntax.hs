@@ -1,4 +1,4 @@
-{-# LANGUAGE CPP, DeriveDataTypeable, DeriveFoldable, DeriveTraversable #-}
+{-# LANGUAGE CPP, DeriveDataTypeable, DeriveFoldable, DeriveTraversable, DeriveGeneric #-}
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Language.Haskell.Exts.Annotated.Syntax
@@ -108,6 +108,9 @@ module Language.Haskell.Exts.Annotated.Syntax (
 #ifdef __GLASGOW_HASKELL__
 #ifdef BASE4
 import Data.Data
+#if MIN_VERSION_base(4,6,0)
+import GHC.Generics (Generic)
+#endif
 #else
 import Data.Generics (Data(..),Typeable(..))
 #endif
@@ -603,7 +606,11 @@ data Type l
 -- | Flag denoting whether a tuple is boxed or unboxed.
 data Boxed = Boxed | Unboxed
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -845,7 +852,11 @@ data ModulePragma l
 -- | Recognised tools for OPTIONS pragmas.
 data Tool = GHC | HUGS | NHC98 | YHC | HADDOCK | UnknownTool String
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
