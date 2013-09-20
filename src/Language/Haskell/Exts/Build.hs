@@ -266,13 +266,13 @@ simpleFun s f a e = let rhs = UnGuardedRhs e
 -- there are no guards and no 'where' clause.
 patBind :: SrcLoc -> Pat -> Exp -> Decl
 patBind s p e = let rhs = UnGuardedRhs e
-         in PatBind s p Nothing rhs noBinds
+         in PatBind s p rhs noBinds
 
 -- | A pattern bind where the pattern is a variable, and where
 -- there are no guards, but with a 'where' clause.
 patBindWhere :: SrcLoc -> Pat -> Exp -> [Decl] -> Decl
 patBindWhere s p e ds = let rhs = UnGuardedRhs e
-             in PatBind s p Nothing rhs (binds ds)
+             in PatBind s p rhs (binds ds)
 
 -- | Bind an identifier to an expression.
 nameBind :: SrcLoc -> Name -> Exp -> Decl

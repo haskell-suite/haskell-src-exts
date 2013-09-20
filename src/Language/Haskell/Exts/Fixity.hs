@@ -198,7 +198,7 @@ instance AppFixity Decl where
         InstDecl loc ctxt n ts idecls           -> liftM (InstDecl loc ctxt n ts) $ mapM fix idecls
         SpliceDecl loc spl      -> liftM (SpliceDecl loc) $ fix spl
         FunBind matches         -> liftM FunBind $ mapM fix matches
-        PatBind loc p mt rhs bs -> liftM3 (flip (PatBind loc) mt) (fix p) (fix rhs) (fix bs)
+        PatBind loc p rhs bs    -> liftM3 (PatBind loc) (fix p) (fix rhs) (fix bs)
         AnnPragma loc ann       -> liftM (AnnPragma loc) $ fix ann
         _                       -> return decl
       where fix x = applyFixities fixs x

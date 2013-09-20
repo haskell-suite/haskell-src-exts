@@ -267,13 +267,13 @@ simpleFun l f a e = let rhs = UnGuardedRhs l e
 -- there are no guards and no 'where' clause.
 patBind :: l -> Pat l -> Exp l -> Decl l
 patBind l p e = let rhs = UnGuardedRhs l e
-         in PatBind l p Nothing rhs Nothing
+         in PatBind l p rhs Nothing
 
 -- | A pattern bind where the pattern is a variable, and where
 -- there are no guards, but with a 'where' clause.
 patBindWhere :: l -> Pat l -> Exp l -> [Decl l] -> Decl l
 patBindWhere l p e ds = let rhs = UnGuardedRhs l e
-             in PatBind l p Nothing rhs (Just $ binds l ds)
+             in PatBind l p rhs (Just $ binds l ds)
 
 -- | Bind an identifier to an expression.
 nameBind :: l -> Name l -> Exp l -> Decl l

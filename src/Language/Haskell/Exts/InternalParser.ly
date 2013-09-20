@@ -1171,12 +1171,12 @@ Associated types require the TypeFamilies extension enabled.
 Value definitions
 
 > valdef :: { Decl L }
->       : exp0b optsig rhs optwhere     {% checkValDef (($1 <> $3 <+?> (fmap ann) (fst $4)) <** (snd $2 ++ snd $4)) $1 (fst $2) $3 (fst $4) }
+>       : exp0b optsig rhs optwhere     {% checkValDef (($1 <> $3 <+?> (fmap ann) (fst $4)) <** (snd $4)) $1 $2 $3 (fst $4) }
 >       | '!' aexp rhs optwhere         {% do { checkEnabled BangPatterns ;
 >                                               let { l = nIS $1 <++> ann $2 <** [$1] };
 >                                               p <- checkPattern (BangPat l $2);
 >                                               return $ PatBind (p <> $3 <+?> (fmap ann) (fst $4) <** snd $4)
->                                                           p Nothing $3 (fst $4) } }
+>                                                           p $3 (fst $4) } }
 
 May bind implicit parameters
 > optwhere :: { (Maybe (Binds L),[S]) }
@@ -1185,9 +1185,9 @@ May bind implicit parameters
 
 Type signatures on value definitions require ScopedTypeVariables (or PatternSignatures, which is deprecated).
 
-> optsig :: { (Maybe (Type L),[S]) }
->       : '::' truectype                {% checkEnabled ScopedTypeVariables >> return (Just $2, [$1]) }
->       | {- empty -}                   { (Nothing,[]) }
+> optsig :: { (Maybe (Type L, S)) }
+>       : '::' truectype                {% checkEnabled ScopedTypeVariables >> return (Just ($2, $1)) }
+>       | {- empty -}                   { Nothing }
 
 > rhs   :: { Rhs L }
 >       : '=' trueexp                   { UnGuardedRhs (nIS $1 <++> ann $2 <** [$1]) $2 }

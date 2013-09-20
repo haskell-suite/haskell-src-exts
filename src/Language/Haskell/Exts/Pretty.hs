@@ -454,9 +454,9 @@ instance Pretty Decl where
                 case e of PPOffsideRule -> foldr ($$$) empty (map pretty matches)
                           _ -> foldr (\x y -> x <> semi <> y) empty (map pretty matches)
 
-        pretty (PatBind pos pat optsig rhs whereBinds) =
+        pretty (PatBind pos pat rhs whereBinds) =
                 markLine pos $
-                myFsep [pretty pat, maybePP ppSig optsig, pretty rhs] $$$ ppWhere whereBinds
+                myFsep [pretty pat, pretty rhs] $$$ ppWhere whereBinds
 
         pretty (InfixDecl pos assoc prec opList) =
                 blankline $

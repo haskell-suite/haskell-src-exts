@@ -675,17 +675,9 @@ instance ExactP Decl where
         printInterleaved' (zip pts (replicate (length pts - 1) "," ++ ["::"])) ns
         exactPC t
     FunBind      l ms   -> mapM_ exactPC ms
-    PatBind      l p mt rhs mbs -> do
+    PatBind      l p rhs mbs -> do
         let pts = srcInfoPoints l
         exactP p
-        pts <- case mt of
-                Nothing -> return pts
-                Just t  -> case pts of
-                            x:pts'-> do
-                                printStringAt (pos x) "::"
-                                exactPC t
-                                return pts'
-                            _ -> errorEP "ExactP: Decl: PatBind is given too few srcInfoPoints"
         exactPC rhs
         maybeEP (\bs -> printStringAt (pos (head pts)) "where" >> exactPC bs) mbs
     ForImp       l cc msf mstr n t   ->
