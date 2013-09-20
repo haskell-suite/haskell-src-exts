@@ -1855,13 +1855,13 @@ Miscellaneous (mostly renamings)
 > parseStmtWithComments mode str = runParserWithModeComments mode mparseStmt str
 
 
-> simpleParse :: AppFixity a => P (a L) -> String -> ParseResult (a L)
+> simpleParse :: AppFixity a => P a -> String -> ParseResult a
 > simpleParse p = applyFixities preludeFixities <=< runParser p
 
-> modeParse :: AppFixity a => P (a L) -> ParseMode -> String -> ParseResult (a L)
+> modeParse :: AppFixity a => P a -> ParseMode -> String -> ParseResult a
 > modeParse p mode = applyFixities' (fixities mode) <=< runParserWithMode mode p
 
-> commentParse :: AppFixity a => P (a L) -> ParseMode -> String -> ParseResult (a L, [Comment])
+> commentParse :: AppFixity a => P a -> ParseMode -> String -> ParseResult (a, [Comment])
 > commentParse p mode str = do (ast, cs) <- runParserWithModeComments mode p str
 >                              ast' <- applyFixities' (fixities mode) ast
 >                              return (ast', cs)
@@ -1883,10 +1883,8 @@ Miscellaneous (mostly renamings)
 > parseModulesWithComments mode str = do (ast,cs) <- runParserWithModeComments mode mparseModules str
 >                                        ast' <- mapM (applyFixities' (fixities mode)) ast
 >                                        return (ast', cs)
->
-> applyFixities' :: (AppFixity a) => Maybe [Fixity] -> a L -> ParseResult (a L)
+> applyFixities' :: AppFixity a => Maybe [Fixity] -> a -> ParseResult a
 > applyFixities' Nothing ast = return ast
 > applyFixities' (Just fixs) ast = applyFixities fixs ast
->
 
 > }
