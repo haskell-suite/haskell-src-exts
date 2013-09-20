@@ -530,12 +530,4 @@ sFieldUpdate fu = case fu of
     FieldWildcard _         -> S.FieldWildcard
 
 sAlt :: SrcInfo loc => Alt loc -> S.Alt
-sAlt (Alt l p galts mbs) = S.Alt (getPointLoc l) (sPat p) (sGuardedAlts galts) (maybe (S.BDecls []) sBinds mbs)
-
-sGuardedAlts :: SrcInfo loc => GuardedAlts loc -> S.GuardedAlts
-sGuardedAlts galts = case galts of
-    UnGuardedAlt _ e    -> S.UnGuardedAlt (sExp e)
-    GuardedAlts  _ gs   -> S.GuardedAlts (map sGuardedAlt gs)
-
-sGuardedAlt :: SrcInfo loc => GuardedAlt loc -> S.GuardedAlt
-sGuardedAlt (GuardedAlt l ss e) = S.GuardedAlt (getPointLoc l) (map sStmt ss) (sExp e)
+sAlt (Alt l p galts mbs) = S.Alt (getPointLoc l) (sPat p) (sRhs galts) (maybe (S.BDecls []) sBinds mbs)

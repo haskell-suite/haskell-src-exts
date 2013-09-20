@@ -783,6 +783,18 @@ instance Pretty GuardedRhs where
         pretty (GuardedRhs _pos guards ppBody) =
                 myFsep $ [char '|'] ++ (punctuate comma . map pretty $ guards) ++ [equals, pretty ppBody]
 
+newtype GaltsHack = GaltsHack Rhs
+newtype GaltHack = GaltHack GuardedRhs
+
+instance Pretty GaltsHack where
+        pretty (GaltsHack (UnGuardedRhs e)) = text "->" <+> pretty e
+        pretty (GaltsHack (GuardedRhss guardList)) = myVcat . map (pretty . GaltHack) $ guardList
+
+instance Pretty GaltHack where
+        pretty (GaltHack (GuardedRhs _pos guards ppBody)) =
+                myFsep $ [char '|'] ++ (punctuate comma . map pretty $ guards) ++ [text "->", pretty ppBody]
+
+
 instance Pretty Literal where
         pretty (Int i)        = integer i
         pretty (Char c)       = text (show c)
@@ -1034,15 +1046,7 @@ instance Pretty RPatOp where
 ------------------------- Case bodies  -------------------------
 instance Pretty Alt where
         pretty (Alt _pos e gAlts binds) =
-                pretty e <+> pretty gAlts $$$ ppWhere binds
-
-instance Pretty GuardedAlts where
-        pretty (UnGuardedAlt e) = text "->" <+> pretty e
-        pretty (GuardedAlts altList) = myVcat . map pretty $ altList
-
-instance Pretty GuardedAlt where
-        pretty (GuardedAlt _pos guards body) =
-                myFsep $ char '|': (punctuate comma . map pretty $ guards) ++ [text "->", pretty body]
+                pretty e <+> pretty (GaltsHack gAlts) $$$ ppWhere binds
 
 ------------------------- Statements in monads, guards & list comprehensions -----
 instance Pretty Stmt where
@@ -1405,12 +1409,6 @@ instance Pretty (A.RPatOp l) where
 ------------------------- Case bodies  -------------------------
 instance SrcInfo loc => Pretty (A.Alt loc) where
         pretty = pretty . sAlt
-
-instance SrcInfo loc => Pretty (A.GuardedAlts loc) where
-        pretty = pretty . sGuardedAlts
-
-instance SrcInfo loc => Pretty (A.GuardedAlt loc) where
-        pretty = pretty . sGuardedAlt
 
 ------------------------- Statements in monads, guards & list comprehensions -----
 instance SrcInfo loc => Pretty (A.Stmt loc) where
