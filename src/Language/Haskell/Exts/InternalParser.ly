@@ -1844,15 +1844,15 @@ Miscellaneous (mostly renamings)
 
 > -- | Parse of a string containing a Haskell statement.
 > parseStmt :: String -> ParseResult (Stmt SrcSpanInfo)
-> parseStmt = runParser mparseStmt
+> parseStmt = simpleParse mparseStmt
 
 > -- | Parse of a string containing a Haskell type, using an explicit mode.
 > parseStmtWithMode :: ParseMode -> String -> ParseResult (Stmt SrcSpanInfo)
-> parseStmtWithMode mode = runParserWithMode mode mparseStmt
+> parseStmtWithMode = modeParse mparseStmt
 
 > -- | Parse of a string containing a complete Haskell module, using an explicit mode, retaining comments.
 > parseStmtWithComments :: ParseMode -> String -> ParseResult (Stmt SrcSpanInfo, [Comment])
-> parseStmtWithComments mode str = runParserWithModeComments mode mparseStmt str
+> parseStmtWithComments = commentParse mparseStmt
 
 
 > simpleParse :: AppFixity a => P (a L) -> String -> ParseResult (a L)
