@@ -57,6 +57,8 @@ class AppFixity ast where
                     -> ast                  -- ^ The element to tweak.
                     -> m ast                -- ^ The same element, but with operator expressions updated, or a failure.
 
+instance AppFixity a => AppFixity [a] where
+  applyFixities fixs = mapM (applyFixities fixs)
 
 instance AppFixity (Exp SrcSpanInfo) where
   applyFixities fixs = infFix fixs <=< leafFix fixs
