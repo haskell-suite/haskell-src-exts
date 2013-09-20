@@ -363,7 +363,7 @@ sExp e = case e of
     Lambda l ps e       -> S.Lambda (getPointLoc l) (map sPat ps) (sExp e)
     Let _ bs e          -> S.Let (sBinds bs) (sExp e)
     If _ e1 e2 e3       -> S.If (sExp e1) (sExp e2) (sExp e3)
-    MultiIf _ alts      -> S.MultiIf (map sGuardedAlt alts)
+    MultiIf _ alts      -> S.MultiIf (map sGuardedRhs alts)
     Case _ e alts       -> S.Case (sExp e) (map sAlt alts)
     Do _ ss             -> S.Do (map sStmt ss)
     MDo _ ss            -> S.MDo (map sStmt ss)
@@ -536,12 +536,4 @@ sFieldUpdate fu = case fu of
     FieldWildcard _         -> S.FieldWildcard
 
 sAlt :: SrcInfo loc => Alt loc -> S.Alt
-sAlt (Alt l p galts mbs) = S.Alt (getPointLoc l) (sPat p) (sGuardedAlts galts) (maybe (S.BDecls []) sBinds mbs)
-
-sGuardedAlts :: SrcInfo loc => GuardedAlts loc -> S.GuardedAlts
-sGuardedAlts galts = case galts of
-    UnGuardedAlt _ e    -> S.UnGuardedAlt (sExp e)
-    GuardedAlts  _ gs   -> S.GuardedAlts (map sGuardedAlt gs)
-
-sGuardedAlt :: SrcInfo loc => GuardedAlt loc -> S.GuardedAlt
-sGuardedAlt (GuardedAlt l ss e) = S.GuardedAlt (getPointLoc l) (map sStmt ss) (sExp e)
+sAlt (Alt l p galts mbs) = S.Alt (getPointLoc l) (sPat p) (sRhs galts) (maybe (S.BDecls []) sBinds mbs)

@@ -55,7 +55,7 @@ module Language.Haskell.Exts.Syntax (
     Type(..), Boxed(..), Kind(..), TyVarBind(..), Promoted(..), TypeEqn (..),
     -- * Expressions
     Exp(..), Stmt(..), QualStmt(..), FieldUpdate(..),
-    Alt(..), GuardedAlts(..), GuardedAlt(..), XAttr(..),
+    Alt(..), XAttr(..),
     -- * Patterns
     Pat(..), PatField(..), PXAttr(..), RPat(..), RPatOp(..),
     -- * Literals
@@ -370,14 +370,16 @@ data BangType
      | UnpackedTy Type  -- ^ unboxed component, marked with an UNPACK pragma
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
--- | The right hand side of a function or pattern binding.
+-- | The right hand side of a function binding, pattern binding, or a case
+--   alternative.
 data Rhs
      = UnGuardedRhs Exp -- ^ unguarded right hand side (/exp/)
      | GuardedRhss  [GuardedRhs]
                         -- ^ guarded right hand side (/gdrhs/)
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
--- | A guarded right hand side @|@ /stmts/ @=@ /exp/.
+-- | A guarded right hand side @|@ /stmts/ @=@ /exp/, or @|@ /stmts/ @->@ /exp/
+--   for case alternatives.
 --   The guard is a series of statements when using pattern guards,
 --   otherwise it will be a single qualifier expression.
 data GuardedRhs
@@ -479,7 +481,7 @@ data Exp
     | Lambda SrcLoc [Pat] Exp   -- ^ lambda expression
     | Let Binds Exp             -- ^ local declarations with @let@ ... @in@ ...
     | If Exp Exp Exp            -- ^ @if@ /exp/ @then@ /exp/ @else@ /exp/
-    | MultiIf [GuardedAlt]      -- ^ @if@ @|@ /exp/ @->@ /exp/ ...
+    | MultiIf [GuardedRhs]      -- ^ @if@ @|@ /exp/ @->@ /exp/ ...
     | Case Exp [Alt]            -- ^ @case@ /exp/ @of@ /alts/
     | Do [Stmt]                 -- ^ @do@-expression:
                                 --   the last statement in the list
@@ -715,20 +717,7 @@ data FieldUpdate
 
 -- | An /alt/ alternative in a @case@ expression.
 data Alt
-    = Alt SrcLoc Pat GuardedAlts Binds
-  deriving (Eq,Ord,Show,Typeable,Data,Generic)
-
--- | The right-hand sides of a @case@ alternative,
---   which may be a single right-hand side or a
---   set of guarded ones.
-data GuardedAlts
-    = UnGuardedAlt Exp          -- ^ @->@ /exp/
-    | GuardedAlts  [GuardedAlt] -- ^ /gdpat/
-  deriving (Eq,Ord,Show,Typeable,Data,Generic)
-
--- | A guarded case alternative @|@ /stmts/ @->@ /exp/.
-data GuardedAlt
-    = GuardedAlt SrcLoc [Stmt] Exp
+    = Alt SrcLoc Pat Rhs Binds
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 -----------------------------------------------------------------------------

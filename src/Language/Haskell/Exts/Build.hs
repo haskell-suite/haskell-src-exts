@@ -190,15 +190,15 @@ altGW :: SrcLoc -> Pat -> [Stmt] -> Exp -> Binds -> Alt
 altGW s p gs e w = Alt s p (gAlt s gs e) w
 
 -- | An unguarded righthand side of a @case@ alternative.
-unGAlt :: Exp -> GuardedAlts
-unGAlt = UnGuardedAlt
+unGAlt :: Exp -> Rhs
+unGAlt = UnGuardedRhs
 
 -- | An list of guarded righthand sides for a @case@ alternative.
-gAlts :: SrcLoc -> [([Stmt],Exp)] -> GuardedAlts
-gAlts s as = GuardedAlts $ map (\(gs,e) -> GuardedAlt s gs e) as
+gAlts :: SrcLoc -> [([Stmt],Exp)] -> Rhs
+gAlts s as = GuardedRhss $ map (\(gs,e) -> GuardedRhs s gs e) as
 
 -- | A single guarded righthand side for a @case@ alternative.
-gAlt :: SrcLoc -> [Stmt] -> Exp -> GuardedAlts
+gAlt :: SrcLoc -> [Stmt] -> Exp -> Rhs
 gAlt s gs e = gAlts s [(gs,e)]
 
 -- | A list expression.

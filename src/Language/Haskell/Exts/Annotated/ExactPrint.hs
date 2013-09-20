@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveFunctor #-}
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Language.Haskell.Exts.Annotated.ExactPrint
@@ -1222,7 +1223,7 @@ instance ExactP Exp where
         case srcInfoPoints l of
           a:pts -> do
             printString "if"
-            layoutList pts alts
+            layoutList pts (map GuardedAlt alts)
           _ -> internalError "Exp -> MultiIf"
     Case l e alts   ->
         case srcInfoPoints l of
@@ -1580,17 +1581,8 @@ instance ExactP XAttr where
 instance ExactP Alt where
   exactP (Alt l p galts mbs) = do
     exactP p
-    exactPC galts
+    exactPC (GuardedAlts galts)
     maybeEP (\bs -> printStringAt (pos (head (srcInfoPoints l))) "where" >> exactPC bs) mbs
-
-instance ExactP GuardedAlts where
-  exactP (UnGuardedAlt l e) = printString "->" >> exactPC e
-  exactP (GuardedAlts  l galts) = mapM_ exactPC galts
-
-instance ExactP GuardedAlt where
-  exactP (GuardedAlt l stmts e) = do
-    bracketList ("|",",","->") (srcInfoPoints l) stmts
-    exactPC e
 
 instance ExactP Match where
   exactP (Match l n ps rhs mbinds) = do
@@ -1629,6 +1621,31 @@ instance ExactP GuardedRhs where
         printInterleaved' (zip (init pts) (repeat ",") ++ [(last pts, "=")]) ss
         exactPC e
      _ -> errorEP "ExactP: GuardedRhs is given wrong number of srcInfoPoints"
+
+newtype GuardedAlts l = GuardedAlts (Rhs l)
+    deriving (Functor, Show)
+instance Annotated GuardedAlts where
+    amap f (GuardedAlts v) = GuardedAlts (amap f v)
+    ann (GuardedAlts v) = ann v
+
+newtype GuardedAlt l = GuardedAlt (GuardedRhs l)
+    deriving (Functor, Show)
+instance Annotated GuardedAlt where
+    amap f (GuardedAlt v) = GuardedAlt (amap f v)
+    ann (GuardedAlt v) = ann v
+
+instance ExactP GuardedAlts where
+  exactP (GuardedAlts (UnGuardedRhs l e)) = printString "->" >> exactPC e
+  exactP (GuardedAlts (GuardedRhss  l grhss)) = mapM_ (exactPC . GuardedAlt) grhss
+
+instance ExactP GuardedAlt where
+  exactP (GuardedAlt (GuardedRhs l ss e)) =
+    case srcInfoPoints l of
+     a:pts -> do
+        printString "|"
+        printInterleaved' (zip (init pts) (repeat ",") ++ [(last pts, "->")]) ss
+        exactPC e
+     _ -> errorEP "ExactP: GuardedAlt is given wrong number of srcInfoPoints"
 
 instance ExactP Pat where
   exactP pat = case pat of
