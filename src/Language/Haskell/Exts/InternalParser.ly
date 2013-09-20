@@ -1155,7 +1155,7 @@ Value definitions
 >                                               let { l = nIS $1 <++> ann $2 <** [$1] };
 >                                               p <- checkPattern (BangPat l $2);
 >                                               return $ PatBind (p <> $3 <+?> (fmap ann) (fst $4) <** snd $4)
->                                                           p Nothing $3 (fst $4) } }
+>                                                           p $3 (fst $4) } }
 
 May bind implicit parameters
 > optwhere :: { (Maybe (Binds L),[S]) }

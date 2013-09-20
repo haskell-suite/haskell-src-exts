@@ -254,7 +254,7 @@ data Decl
      -- ^ A type signature declaration
      | FunBind      [Match]
      -- ^ A set of function binding clauses
-     | PatBind      SrcLoc Pat (Maybe Type) Rhs {-where-} Binds
+     | PatBind      SrcLoc Pat Rhs {-where-} Binds
      -- ^ A pattern binding
      | ForImp   SrcLoc CallConv Safety String Name Type
      -- ^ A foreign import declaration
