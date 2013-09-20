@@ -113,6 +113,12 @@ noInfoSpan ss = SrcSpanInfo ss []
 infoSpan :: SrcSpan -> [SrcSpan] -> SrcSpanInfo
 infoSpan = SrcSpanInfo
 
+-- | Generate a 'SrcSpanInfo' with the supplied positional information for entities.
+--   Uses the bounds of the first and last entities for the bounds of the result.
+spansToInfoSpan :: [SrcSpan] -> Maybe SrcSpanInfo
+spansToInfoSpan [] = Nothing
+spansToInfoSpan ss = Just $ SrcSpanInfo (mergeSrcSpan (head ss) (last ss)) ss
+
 -- | Combine two 'SrcSpanInfo's into one that spans the combined source area of
 --   the two arguments, leaving positional information blank.
 combSpanInfo :: SrcSpanInfo -> SrcSpanInfo -> SrcSpanInfo

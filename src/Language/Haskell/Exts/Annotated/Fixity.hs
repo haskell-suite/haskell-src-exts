@@ -98,6 +98,10 @@ instance AppFixity (Pat SrcSpanInfo) where
 
           infFix _ p = return p
 
+--TODO: https://github.com/haskell-suite/haskell-src-exts/issues/47
+instance AppFixity (Type SrcSpanInfo) where
+  applyFixities _ = return
+
 -- Internal: lookup associativity and precedence of an operator
 askFixity :: [Fixity] -> QOp l -> (S.Assoc, Int)
 askFixity xs k = askFix xs (f $ sQOp k) -- undefined -- \k -> askFixityP xs (f k) -- lookupWithDefault (AssocLeft, 9) (f k) mp
@@ -278,6 +282,43 @@ instance AppFixity (Splice SrcSpanInfo) where
 instance AppFixity (XAttr SrcSpanInfo) where
     applyFixities fixs (XAttr l n e) = liftM (XAttr l n) $ applyFixities fixs e
 
+-- Stuff needed for 'AnnotatedParseable'.
+
+instance AppFixity a => AppFixity (a, b) where
+  applyFixities fixs (x, y) = applyFixities fixs x >>= \x' -> return (x', y)
+
+instance AppFixity a => AppFixity (a, b, c) where
+  applyFixities fixs (x, y, z) = applyFixities fixs x >>= \x' -> return (x', y, z)
+
+instance AppFixity (ModuleHead SrcSpanInfo)     where applyFixities = const return
+instance AppFixity (ExportSpecList SrcSpanInfo) where applyFixities = const return
+instance AppFixity (ExportSpec SrcSpanInfo)     where applyFixities = const return
+instance AppFixity (ImportDecl SrcSpanInfo)     where applyFixities = const return
+instance AppFixity (ImportSpecList SrcSpanInfo) where applyFixities = const return
+instance AppFixity (ImportSpec SrcSpanInfo)     where applyFixities = const return
+instance AppFixity (ConDecl SrcSpanInfo)        where applyFixities = const return
+instance AppFixity (FieldDecl SrcSpanInfo)      where applyFixities = const return
+instance AppFixity (QualConDecl SrcSpanInfo)    where applyFixities = const return
+instance AppFixity (GadtDecl SrcSpanInfo)       where applyFixities = const return
+instance AppFixity (BangType SrcSpanInfo)       where applyFixities = const return
+instance AppFixity (FunDep SrcSpanInfo)         where applyFixities = const return
+instance AppFixity (Kind SrcSpanInfo)           where applyFixities = const return
+instance AppFixity (TyVarBind SrcSpanInfo)      where applyFixities = const return
+instance AppFixity (Literal SrcSpanInfo)        where applyFixities = const return
+instance AppFixity (ModuleName SrcSpanInfo)     where applyFixities = const return
+instance AppFixity (QName SrcSpanInfo)          where applyFixities = const return
+instance AppFixity (Name SrcSpanInfo)           where applyFixities = const return
+instance AppFixity (Op SrcSpanInfo)             where applyFixities = const return
+instance AppFixity (QOp SrcSpanInfo)            where applyFixities = const return
+instance AppFixity (CName SrcSpanInfo)          where applyFixities = const return
+instance AppFixity (IPName SrcSpanInfo)         where applyFixities = const return
+instance AppFixity (XName SrcSpanInfo)          where applyFixities = const return
+instance AppFixity (Safety SrcSpanInfo)         where applyFixities = const return
+instance AppFixity (CallConv SrcSpanInfo)       where applyFixities = const return
+instance AppFixity (ModulePragma SrcSpanInfo)   where applyFixities = const return
+instance AppFixity (Rule SrcSpanInfo)           where applyFixities = const return
+instance AppFixity (RuleVar SrcSpanInfo)        where applyFixities = const return
+instance AppFixity (Activation SrcSpanInfo)     where applyFixities = const return
 
 -- the boring boilerplate stuff for expressions too
 -- Recursively fixes the "leaves" of the infix chains,

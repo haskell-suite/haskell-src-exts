@@ -15,6 +15,9 @@
 -----------------------------------------------------------------------------
 
 module Language.Haskell.Exts.ParseMonad(
+        -- * Generic Parsing
+        Parseable(..),
+        Parse, ParseWithMode, ParseWithComments,
         -- * Parsing
         P, ParseResult(..), atSrcLoc, LexContext(..),
         ParseMode(..), defaultParseMode, fromParseResult,
@@ -42,6 +45,30 @@ import Data.List ( intersperse )
 import Control.Applicative
 import Control.Monad (when)
 import Data.Monoid
+
+-- | Class providing function for parsing at many different types.
+--
+--   Note that for convenience of implementation, the default methods have
+--   definitions equivalent to 'undefined'.  The minimal definition is all of
+--   the visible methods.
+class Parseable ast where
+  -- | Parse a string with default mode.
+  parse :: Parse ast
+  parse = runParser $ parser Nothing
+  -- | Parse a string with an explicit 'ParseMode'.
+  parseWithMode :: ParseWithMode ast
+  parseWithMode mode = runParserWithMode mode . parser $ fixities mode
+  -- | Parse a string with an explicit 'ParseMode', returning all comments along
+  --   with the AST.
+  parseWithComments :: ParseWithComments ast
+  parseWithComments mode = runParserWithModeComments mode . parser $ fixities mode
+  -- | Internal parser, used to provide default definitions for the others.
+  parser :: Maybe [Fixity] -> P ast
+  parser = undefined
+
+type Parse a = String -> ParseResult a
+type ParseWithMode a = ParseMode -> String -> ParseResult a
+type ParseWithComments a = ParseMode -> String -> ParseResult (a, [Comment])
 
 -- | The result of a parse.
 data ParseResult a
@@ -196,6 +223,9 @@ runParserWithModeComments mode (P m) s =
   --        allExts mode@(ParseMode {extensions = es}) = mode { extensions = impliesExts es }
 
     --      allExts mode = let imode = to
+
+instance Functor P where
+    fmap f x = x >>= return . f
 
 instance Monad P where
     return a = P $ \_i _x _y _l s _m -> Ok s a

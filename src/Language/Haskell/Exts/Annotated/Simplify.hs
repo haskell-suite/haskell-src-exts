@@ -1,3 +1,6 @@
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE FunctionalDependencies #-}
+{-# LANGUAGE FlexibleInstances #-}
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Language.Haskell.Exts.Annotated.Simplify
@@ -24,6 +27,107 @@ import Language.Haskell.Exts.Annotated.Syntax
 import qualified Language.Haskell.Exts.Syntax as S
 
 import Language.Haskell.Exts.SrcLoc
+
+-- | A generic typeclass for simplification.  Wraps the below functions, and
+--   also provides a few more instances for the possible annotated return types
+--   of 'Language.Haskell.Exts.Annotated.parse'.
+class Simplify ast simple | ast -> simple, simple -> ast where
+  simplify :: ast -> simple
+
+instance Simplify (ModuleHead SrcSpanInfo) (S.ModuleName, Maybe S.WarningText, Maybe [S.ExportSpec]) where
+    simplify = sModuleHead . Just
+
+instance Simplify (Activation SrcSpanInfo)                   S.Activation             where simplify = sActivation
+instance Simplify (Alt SrcSpanInfo)                          S.Alt                    where simplify = sAlt
+instance Simplify (Annotation SrcSpanInfo)                   S.Annotation             where simplify = sAnnotation
+instance Simplify (Assoc SrcSpanInfo)                        S.Assoc                  where simplify = sAssoc
+instance Simplify (Asst SrcSpanInfo)                         S.Asst                   where simplify = sAsst
+instance Simplify (BangType SrcSpanInfo)                     S.BangType               where simplify = sBangType
+instance Simplify (Binds SrcSpanInfo)                        S.Binds                  where simplify = sBinds
+instance Simplify (Bracket SrcSpanInfo)                      S.Bracket                where simplify = sBracket
+instance Simplify (CallConv SrcSpanInfo)                     S.CallConv               where simplify = sCallConv
+instance Simplify (ClassDecl SrcSpanInfo)                    S.ClassDecl              where simplify = sClassDecl
+instance Simplify (CName SrcSpanInfo)                        S.CName                  where simplify = sCName
+instance Simplify (ConDecl SrcSpanInfo)                      S.ConDecl                where simplify = sConDecl
+instance Simplify (Context SrcSpanInfo)                      S.Context                where simplify = sContext
+instance Simplify (DataOrNew SrcSpanInfo)                    S.DataOrNew              where simplify = sDataOrNew
+instance Simplify (Decl SrcSpanInfo)                         S.Decl                   where simplify = sDecl
+instance Simplify (DeclHead SrcSpanInfo)                     (S.Name, [S.TyVarBind])  where simplify = sDeclHead
+instance Simplify (Deriving SrcSpanInfo)                     [(S.QName, [S.Type])]    where simplify = sDeriving
+instance Simplify (Exp SrcSpanInfo)                          S.Exp                    where simplify = sExp
+instance Simplify (ExportSpec SrcSpanInfo)                   S.ExportSpec             where simplify = sExportSpec
+instance Simplify (ExportSpecList SrcSpanInfo)               [S.ExportSpec]           where simplify = sExportSpecList
+instance Simplify (FieldDecl SrcSpanInfo)                    ([S.Name], S.BangType)   where simplify = sFieldDecl
+instance Simplify (FieldUpdate SrcSpanInfo)                  S.FieldUpdate            where simplify = sFieldUpdate
+instance Simplify (FunDep SrcSpanInfo)                       S.FunDep                 where simplify = sFunDep
+instance Simplify (GadtDecl SrcSpanInfo)                     S.GadtDecl               where simplify = sGadtDecl
+instance Simplify (GuardedAlt SrcSpanInfo)                   S.GuardedAlt             where simplify = sGuardedAlt
+instance Simplify (GuardedAlts SrcSpanInfo)                  S.GuardedAlts            where simplify = sGuardedAlts
+instance Simplify (GuardedRhs SrcSpanInfo)                   S.GuardedRhs             where simplify = sGuardedRhs
+instance Simplify (ImportDecl SrcSpanInfo)                   S.ImportDecl             where simplify = sImportDecl
+instance Simplify (ImportSpec SrcSpanInfo)                   S.ImportSpec             where simplify = sImportSpec
+instance Simplify (ImportSpecList SrcSpanInfo)               (Bool, [S.ImportSpec])   where simplify = sImportSpecList
+instance Simplify (InstDecl SrcSpanInfo)                     S.InstDecl               where simplify = sInstDecl
+instance Simplify (InstHead SrcSpanInfo)                     (S.QName, [S.Type])      where simplify = sInstHead
+instance Simplify (IPBind SrcSpanInfo)                       S.IPBind                 where simplify = sIPBind
+instance Simplify (IPName SrcSpanInfo)                       S.IPName                 where simplify = sIPName
+instance Simplify (Kind SrcSpanInfo)                         S.Kind                   where simplify = sKind
+instance Simplify (Literal SrcSpanInfo)                      S.Literal                where simplify = sLiteral
+instance Simplify (Match SrcSpanInfo)                        S.Match                  where simplify = sMatch
+instance Simplify (Module SrcSpanInfo)                       S.Module                 where simplify = sModule
+instance Simplify (ModuleName SrcSpanInfo)                   S.ModuleName             where simplify = sModuleName
+instance Simplify (ModulePragma SrcSpanInfo)                 S.ModulePragma           where simplify = sModulePragma
+instance Simplify (Name SrcSpanInfo)                         S.Name                   where simplify = sName
+instance Simplify (Op SrcSpanInfo)                           S.Op                     where simplify = sOp
+instance Simplify (Pat SrcSpanInfo)                          S.Pat                    where simplify = sPat
+instance Simplify (PatField SrcSpanInfo)                     S.PatField               where simplify = sPatField
+instance Simplify (PXAttr SrcSpanInfo)                       S.PXAttr                 where simplify = sPXAttr
+instance Simplify (QName SrcSpanInfo)                        S.QName                  where simplify = sQName
+instance Simplify (QOp SrcSpanInfo)                          S.QOp                    where simplify = sQOp
+instance Simplify (QualConDecl SrcSpanInfo)                  S.QualConDecl            where simplify = sQualConDecl
+instance Simplify (QualStmt SrcSpanInfo)                     S.QualStmt               where simplify = sQualStmt
+instance Simplify (Rhs SrcSpanInfo)                          S.Rhs                    where simplify = sRhs
+instance Simplify (RPat SrcSpanInfo)                         S.RPat                   where simplify = sRPat
+instance Simplify (RPatOp SrcSpanInfo)                       S.RPatOp                 where simplify = sRPatOp
+instance Simplify (Rule SrcSpanInfo)                         S.Rule                   where simplify = sRule
+instance Simplify (RuleVar SrcSpanInfo)                      S.RuleVar                where simplify = sRuleVar
+instance Simplify (Safety SrcSpanInfo)                       S.Safety                 where simplify = sSafety
+instance Simplify (SpecialCon SrcSpanInfo)                   S.SpecialCon             where simplify = sSpecialCon
+instance Simplify (Splice SrcSpanInfo)                       S.Splice                 where simplify = sSplice
+instance Simplify (Stmt SrcSpanInfo)                         S.Stmt                   where simplify = sStmt
+instance Simplify (Type SrcSpanInfo)                         S.Type                   where simplify = sType
+instance Simplify (TyVarBind SrcSpanInfo)                    S.TyVarBind              where simplify = sTyVarBind
+instance Simplify (WarningText SrcSpanInfo)                  S.WarningText            where simplify = sWarningText
+instance Simplify (XAttr SrcSpanInfo)                        S.XAttr                  where simplify = sXAttr
+instance Simplify (XName SrcSpanInfo)                        S.XName                  where simplify = sXName
+
+instance Simplify [Module         SrcSpanInfo]               [S.Module]               where simplify = map sModule
+instance Simplify [Rule           SrcSpanInfo]               [S.Rule]                 where simplify = map sRule
+instance Simplify [RuleVar        SrcSpanInfo]               [S.RuleVar]              where simplify = map sRuleVar
+
+instance Simplify ([ClassDecl     SrcSpanInfo], SrcSpanInfo) [S.ClassDecl]            where simplify = map sClassDecl    . fst
+instance Simplify ([CName         SrcSpanInfo], SrcSpanInfo) [S.CName]                where simplify = map sCName        . fst
+instance Simplify ([Decl          SrcSpanInfo], SrcSpanInfo) [S.Decl]                 where simplify = map sDecl         . fst
+instance Simplify ([Exp           SrcSpanInfo], SrcSpanInfo) [S.Exp]                  where simplify = map sExp          . fst
+instance Simplify ([FieldDecl     SrcSpanInfo], SrcSpanInfo) [([S.Name], S.BangType)] where simplify = map sFieldDecl    . fst
+instance Simplify ([FunDep        SrcSpanInfo], SrcSpanInfo) [S.FunDep]               where simplify = map sFunDep       . fst
+instance Simplify ([GadtDecl      SrcSpanInfo], SrcSpanInfo) [S.GadtDecl]             where simplify = map sGadtDecl     . fst
+instance Simplify ([GuardedAlt    SrcSpanInfo], SrcSpanInfo) [S.GuardedAlt]           where simplify = map sGuardedAlt   . fst
+instance Simplify ([GuardedRhs    SrcSpanInfo], SrcSpanInfo) [S.GuardedRhs]           where simplify = map sGuardedRhs   . fst
+instance Simplify ([ImportDecl    SrcSpanInfo], SrcSpanInfo) [S.ImportDecl]           where simplify = map sImportDecl   . fst
+instance Simplify ([InstDecl      SrcSpanInfo], SrcSpanInfo) [S.InstDecl]             where simplify = map sInstDecl     . fst
+instance Simplify ([IPBind        SrcSpanInfo], SrcSpanInfo) [S.IPBind]               where simplify = map sIPBind       . fst
+instance Simplify ([ModulePragma  SrcSpanInfo], SrcSpanInfo) [S.ModulePragma]         where simplify = map sModulePragma . fst
+instance Simplify ([Name          SrcSpanInfo], SrcSpanInfo) [S.Name]                 where simplify = map sName         . fst
+instance Simplify ([Op            SrcSpanInfo], SrcSpanInfo) [S.Op]                   where simplify = map sOp           . fst
+instance Simplify ([Pat           SrcSpanInfo], SrcSpanInfo) [S.Pat]                  where simplify = map sPat          . fst
+instance Simplify ([QName         SrcSpanInfo], SrcSpanInfo) [S.QName]                where simplify = map sQName        . fst
+instance Simplify ([QualConDecl   SrcSpanInfo], SrcSpanInfo) [S.QualConDecl]          where simplify = map sQualConDecl  . fst
+instance Simplify ([QualStmt      SrcSpanInfo], SrcSpanInfo) [S.QualStmt]             where simplify = map sQualStmt     . fst
+instance Simplify ([Stmt          SrcSpanInfo], SrcSpanInfo) [S.Stmt]                 where simplify = map sStmt         . fst
+instance Simplify ([TyVarBind     SrcSpanInfo], SrcSpanInfo) [S.TyVarBind]            where simplify = map sTyVarBind    . fst
+
+instance Simplify ([[QualStmt     SrcSpanInfo]],SrcSpanInfo) [[S.QualStmt]]           where simplify = map (map sQualStmt) . fst
 
 -- | Translate an annotated AST node representing a Haskell module, into
 --   a simpler version that retains (almost) only abstract information.
