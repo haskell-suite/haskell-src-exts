@@ -1870,6 +1870,18 @@ Miscellaneous (mostly renamings)
 > parseModuleWithComments :: ParseMode -> String -> ParseResult (Module SrcSpanInfo, [Comment])
 > parseModuleWithComments = commentParse mparseModule
 
+> -- | Parse of a string, which should contain complete Haskell modules.
+> parseModules :: String -> ParseResult [Module SrcSpanInfo]
+> parseModules = simpleParse mparseModules
+
+> -- | Parse of a string containing complete Haskell modules, using an explicit mode.
+> parseModulesWithMode :: ParseMode -> String -> ParseResult [Module SrcSpanInfo]
+> parseModulesWithMode = modeParse mparseModules
+
+> -- | Parse of a string containing complete Haskell modules, using an explicit mode, retaining comments.
+> parseModulesWithComments :: ParseMode -> String -> ParseResult ([Module SrcSpanInfo], [Comment])
+> parseModulesWithComments = commentParse mparseModules
+
 > -- | Parse of a string containing a Haskell expression.
 > parseExp :: String -> ParseResult (Exp SrcSpanInfo)
 > parseExp = simpleParse mparseExp
@@ -1931,13 +1943,13 @@ Miscellaneous (mostly renamings)
 > parseStmtWithComments = commentParse mparseStmt
 
 
-> simpleParse :: AppFixity a => P (a L) -> String -> ParseResult (a L)
+> simpleParse :: AppFixity a => P a -> String -> ParseResult a
 > simpleParse p = applyFixities preludeFixities <=< runParser p
 
-> modeParse :: AppFixity a => P (a L) -> ParseMode -> String -> ParseResult (a L)
+> modeParse :: AppFixity a => P a -> ParseMode -> String -> ParseResult a
 > modeParse p mode = applyFixities' (fixities mode) <=< runParserWithMode mode p
 
-> commentParse :: AppFixity a => P (a L) -> ParseMode -> String -> ParseResult (a L, [Comment])
+> commentParse :: AppFixity a => P a -> ParseMode -> String -> ParseResult (a, [Comment])
 > commentParse p mode str = do (ast, cs) <- runParserWithModeComments mode p str
 >                              ast' <- applyFixities' (fixities mode) ast
 >                              return (ast', cs)
@@ -1946,23 +1958,8 @@ Miscellaneous (mostly renamings)
 > getTopPragmas :: String -> ParseResult [ModulePragma SrcSpanInfo]
 > getTopPragmas = runParser (mfindOptPragmas >>= \(ps,_,_) -> return ps)
 
-> -- | Parse of a string, which should contain a complete Haskell module.
-> parseModules :: String -> ParseResult [Module SrcSpanInfo]
-> parseModules = mapM (applyFixities preludeFixities) <=< runParser mparseModules
-
-> -- | Parse of a string containing a complete Haskell module, using an explicit mode.
-> parseModulesWithMode :: ParseMode -> String -> ParseResult [Module SrcSpanInfo]
-> parseModulesWithMode mode = mapM (applyFixities' (fixities mode)) <=< runParserWithMode mode mparseModules
-
-> -- | Parse of a string containing a complete Haskell module, using an explicit mode, retaining comments.
-> parseModulesWithComments :: ParseMode -> String -> ParseResult ([Module SrcSpanInfo], [Comment])
-> parseModulesWithComments mode str = do (ast,cs) <- runParserWithModeComments mode mparseModules str
->                                        ast' <- mapM (applyFixities' (fixities mode)) ast
->                                        return (ast', cs)
->
-> applyFixities' :: (AppFixity a) => Maybe [Fixity] -> a L -> ParseResult (a L)
+> applyFixities' :: AppFixity a => Maybe [Fixity] -> a -> ParseResult a
 > applyFixities' Nothing ast = return ast
 > applyFixities' (Just fixs) ast = applyFixities fixs ast
->
 
 > }
