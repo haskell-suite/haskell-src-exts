@@ -33,7 +33,7 @@ module Language.Haskell.Exts.ParseMonad(
         getModuleName
     ) where
 
-import Language.Haskell.Exts.SrcLoc(SrcLoc(..))
+import Language.Haskell.Exts.SrcLoc (SrcLoc(..), noLoc)
 import Language.Haskell.Exts.Fixity (Fixity, preludeFixities)
 import Language.Haskell.Exts.Comments
 import Language.Haskell.Exts.Extension -- (Extension, impliesExts, haskell2010)
@@ -69,6 +69,7 @@ instance Applicative ParseResult where
 
 instance Monad ParseResult where
   return = ParseOk
+  fail = ParseFailed noLoc
   ParseOk x           >>= f = f x
   ParseFailed loc msg >>= _ = ParseFailed loc msg
 

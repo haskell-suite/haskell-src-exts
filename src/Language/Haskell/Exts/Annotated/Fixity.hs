@@ -1,3 +1,4 @@
+{-# LANGUAGE FlexibleInstances #-}
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Language.Haskell.Exts.Annotated.Fixity
@@ -53,11 +54,13 @@ class AppFixity ast where
   --   fixities given. Assumes that all operator expressions are
   --   fully left associative chains to begin with.
   applyFixities :: Monad m => [Fixity]      -- ^ The fixities to account for.
-                    -> ast SrcSpanInfo      -- ^ The element to tweak.
-                    -> m (ast SrcSpanInfo)  -- ^ The same element, but with operator expressions updated, or a failure.
+                    -> ast                  -- ^ The element to tweak.
+                    -> m ast                -- ^ The same element, but with operator expressions updated, or a failure.
 
+instance AppFixity a => AppFixity [a] where
+  applyFixities fixs = mapM (applyFixities fixs)
 
-instance AppFixity Exp where
+instance AppFixity (Exp SrcSpanInfo) where
   applyFixities fixs = infFix fixs <=< leafFix fixs
     where -- This is the real meat case. We can assume a left-associative list to begin with.
           infFix fixs (InfixApp l2 a op2 z) = do
@@ -77,7 +80,7 @@ instance AppFixity Exp where
 
 --ambOps l = ParseFailed (getPointLoc l) $ "Ambiguous infix expression"
 
-instance AppFixity Pat where
+instance AppFixity (Pat SrcSpanInfo) where
   applyFixities fixs = infFix fixs <=< leafFixP fixs
     where -- This is the real meat case. We can assume a left-associative list to begin with.
           infFix fixs (PInfixApp l2 a op2 z) = do
@@ -125,7 +128,7 @@ askFix xs = \k -> lookupWithDefault (S.AssocLeft, 9) k mp
 -------------------------------------------------------------------
 -- Boilerplate - yuck!! Everything below here is internal stuff
 
-instance AppFixity Module where
+instance AppFixity (Module SrcSpanInfo) where
     applyFixities fixs (Module l mmh prs imp decls) =
         liftM (Module l mmh prs imp) $ appFixDecls (Just mn) fixs decls
       where (mn, _, _) = sModuleHead mmh
@@ -139,7 +142,7 @@ instance AppFixity Module where
                        in mapM (applyFixities (fixs++extraFixs)) xs
             (mn, _, _) = sModuleHead mmh
 
-instance AppFixity Decl where
+instance AppFixity (Decl SrcSpanInfo) where
     applyFixities fixs decl = case decl of
         ClassDecl l ctxt dh deps cdecls   -> liftM (ClassDecl l ctxt dh deps) $ mapM (mapM fix) cdecls
         InstDecl  l ctxt ih idecls        -> liftM (InstDecl  l ctxt ih)      $ mapM (mapM fix) idecls
@@ -164,42 +167,42 @@ getFixity mmdl (InfixDecl _ a mp ops) = let p = maybe 9 id mp in map (Fixity (sA
               Just m  -> [S.Qual m x, S.UnQual x]
 getFixity _ _ = []
 
-instance AppFixity Annotation where
+instance AppFixity (Annotation SrcSpanInfo) where
     applyFixities fixs ann = case ann of
         Ann     l n e   -> liftM (Ann l n) $ fix e
         TypeAnn l n e   -> liftM (TypeAnn l n) $ fix e
         ModuleAnn l e   -> liftM (ModuleAnn l) $ fix e
       where fix x = applyFixities fixs x
 
-instance AppFixity ClassDecl where
+instance AppFixity (ClassDecl SrcSpanInfo) where
     applyFixities fixs (ClsDecl l decl) = liftM (ClsDecl l) $ applyFixities fixs decl
     applyFixities _ cdecl = return cdecl
 
-instance AppFixity InstDecl where
+instance AppFixity (InstDecl SrcSpanInfo) where
     applyFixities fixs (InsDecl l decl) = liftM (InsDecl l) $ applyFixities fixs decl
     applyFixities _ idecl = return idecl
 
-instance AppFixity Match where
+instance AppFixity (Match SrcSpanInfo) where
     applyFixities fixs match = case match of
         Match l n ps rhs bs -> liftM3 (Match l n) (mapM fix ps) (fix rhs) (mapM fix bs)
         InfixMatch l a n ps rhs bs -> liftM4 (flip (InfixMatch l) n) (fix a) (mapM fix ps) (fix rhs) (mapM fix bs)
       where fix x = applyFixities fixs x
 
-instance AppFixity Rhs where
+instance AppFixity (Rhs SrcSpanInfo) where
     applyFixities fixs rhs = case rhs of
         UnGuardedRhs l e      -> liftM (UnGuardedRhs l) $ fix e
         GuardedRhss l grhss   -> liftM (GuardedRhss l) $ mapM fix grhss
       where fix x = applyFixities fixs x
 
-instance AppFixity GuardedRhs where
+instance AppFixity (GuardedRhs SrcSpanInfo) where
     applyFixities fixs (GuardedRhs l stmts e) = liftM2 (GuardedRhs l) (mapM fix stmts) $ fix e
       where fix x = applyFixities fixs x
 
-instance AppFixity PatField where
+instance AppFixity (PatField SrcSpanInfo) where
     applyFixities fixs (PFieldPat l n p) = liftM (PFieldPat l n) $ applyFixities fixs p
     applyFixities _ pf = return pf
 
-instance AppFixity RPat where
+instance AppFixity (RPat SrcSpanInfo) where
     applyFixities fixs rp = case rp of
         RPOp l rp op          -> liftM (flip (RPOp l) op) $ fix rp
         RPEither l a b        -> liftM2 (RPEither l) (fix a) (fix b)
@@ -211,10 +214,10 @@ instance AppFixity RPat where
         RPPat l p             -> liftM (RPPat l) $ fix p
       where fix x = applyFixities fixs x
 
-instance AppFixity PXAttr where
+instance AppFixity (PXAttr SrcSpanInfo) where
     applyFixities fixs (PXAttr l n p) = liftM (PXAttr l n) $ applyFixities fixs p
 
-instance AppFixity Stmt where
+instance AppFixity (Stmt SrcSpanInfo) where
     applyFixities fixs stmt = case stmt of
         Generator l p e       -> liftM2 (Generator l) (fix p) (fix e)
         Qualifier l e         -> liftM (Qualifier l) $ fix e
@@ -222,35 +225,35 @@ instance AppFixity Stmt where
         RecStmt l stmts       -> liftM (RecStmt l) $ mapM fix stmts
       where fix x = applyFixities fixs x
 
-instance AppFixity Binds where
+instance AppFixity (Binds SrcSpanInfo) where
     applyFixities fixs bs = case bs of
         BDecls l decls        -> liftM (BDecls l) $ appFixDecls Nothing fixs decls  -- special behavior
         IPBinds l ips         -> liftM (IPBinds l) $ mapM fix ips
       where fix x = applyFixities fixs x
 
 
-instance AppFixity IPBind where
+instance AppFixity (IPBind SrcSpanInfo) where
     applyFixities fixs (IPBind l n e) = liftM (IPBind l n) $ applyFixities fixs e
 
-instance AppFixity FieldUpdate where
+instance AppFixity (FieldUpdate SrcSpanInfo) where
     applyFixities fixs (FieldUpdate l n e) = liftM (FieldUpdate l n) $ applyFixities fixs e
     applyFixities _ fup = return fup
 
-instance AppFixity Alt where
+instance AppFixity (Alt SrcSpanInfo) where
     applyFixities fixs (Alt l p galts bs) = liftM3 (Alt l) (fix p) (fix galts) (mapM fix bs)
       where fix x = applyFixities fixs x
 
-instance AppFixity GuardedAlts where
+instance AppFixity (GuardedAlts SrcSpanInfo) where
     applyFixities fixs galts = case galts of
         UnGuardedAlt l e      -> liftM (UnGuardedAlt l) $ fix e
         GuardedAlts  l galts  -> liftM (GuardedAlts l) $ mapM fix galts
       where fix x = applyFixities fixs x
 
-instance AppFixity GuardedAlt where
+instance AppFixity (GuardedAlt SrcSpanInfo) where
     applyFixities fixs (GuardedAlt l stmts e) = liftM2 (GuardedAlt l) (mapM fix stmts) (fix e)
       where fix x = applyFixities fixs x
 
-instance AppFixity QualStmt where
+instance AppFixity (QualStmt SrcSpanInfo) where
     applyFixities fixs qstmt = case qstmt of
         QualStmt     l s      -> liftM (QualStmt l) $ fix s
         ThenTrans    l e      -> liftM (ThenTrans l) $ fix e
@@ -260,7 +263,7 @@ instance AppFixity QualStmt where
         GroupByUsing l e1 e2  -> liftM2 (GroupByUsing l) (fix e1) (fix e2)
       where fix x = applyFixities fixs x
 
-instance AppFixity Bracket where
+instance AppFixity (Bracket SrcSpanInfo) where
     applyFixities fixs br = case br of
         ExpBracket l e    -> liftM (ExpBracket l) $ fix e
         PatBracket l p    -> liftM (PatBracket l) $ fix p
@@ -268,11 +271,11 @@ instance AppFixity Bracket where
         _                 -> return br
       where fix x = applyFixities fixs x
 
-instance AppFixity Splice where
+instance AppFixity (Splice SrcSpanInfo) where
     applyFixities fixs (ParenSplice l e) = liftM (ParenSplice l) $ applyFixities fixs e
     applyFixities _ s = return s
 
-instance AppFixity XAttr where
+instance AppFixity (XAttr SrcSpanInfo) where
     applyFixities fixs (XAttr l n e) = liftM (XAttr l n) $ applyFixities fixs e
 
 
