@@ -16,6 +16,9 @@
 >
 > module Language.Haskell.Exts.InternalParser (
 >               mfindOptPragmas,
+>               mfindModuleName,
+>               mfindModuleHead,
+>               mfindModuleImports,
 >               mparseModule,
 >               mparseModules,
 >               mparseExp,
@@ -336,6 +339,10 @@ Pragmas
 > %monad { P }
 > %lexer { lexer } { Loc _ EOF }
 > %error { parseError }
+> %partial mfindOptPragmas toppragmas
+> %partial mfindModuleName moduletopname
+> %partial mfindModuleHead moduletophead
+> %partial mfindModuleImports moduletopimps
 > %name mparseModule         page
 > %name mparseModules        modules
 > %name mparseExp            trueexp
@@ -409,7 +416,6 @@ Pragmas
 > %name mparseRuleVars       rulevars
 > %name mparseActivation     requireactivation
 > %name mparseAnnotation     annotation
-> %partial mfindOptPragmas toppragmas
 > %tokentype { Loc Token }
 > %expect 7
 > %%
@@ -1949,8 +1955,18 @@ Exported as parsers:
 > checklpats :: { ([Pat L],[S],L) }
 >            : lexps                        {% let (es, ss, l) = $1 in fmap (\ps -> (ps, ss, l)) $ mapM checkPattern es }
 
+Exported as partial parsers:
 
+> moduletopname :: { (([ModulePragma L], [S], L), Maybe (ModuleName L)) }
+>               : toppragmas 'module' modid     { ($1, Just $3) }
+>               | toppragmas {- empty -}        { ($1, Nothing) }
 
+> moduletophead :: { (([ModulePragma L], [S], L), Maybe (ModuleHead L)) }
+>               : toppragmas optmodulehead      { ($1, $2) }
+
+> moduletopimps :: { (([ModulePragma L], [S], L), Maybe (ModuleHead L), Maybe ([ImportDecl L],[S],L)) }
+>               : toppragmas optmodulehead impdeclsblock      { ($1, $2, Just $3) }
+>               | toppragmas optmodulehead {- empty -}        { ($1, $2, Nothing) }
 
 -----------------------------------------------------------------------------
 
