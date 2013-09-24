@@ -1,4 +1,4 @@
-{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE CPP, DeriveDataTypeable, FlexibleInstances #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 -----------------------------------------------------------------------------
 -- |
@@ -35,17 +35,27 @@ module Language.Haskell.Exts.Parser
                 parseDecl, parseDeclWithMode, parseDeclWithComments,
                 -- ** Types
                 parseType, parseTypeWithMode, parseTypeWithComments,
-                -- ** Module pragmas
-                getTopPragmas, parseExtensions, readExtensions
+                -- ** Module head parsers
+                getTopPragmas, readExtensions,
+                NonGreedyTopPragmas(..), NonGreedyExtensions(..),
+                NonGreedyModuleName(..), NonGreedyModuleHead(..), NonGreedyModuleImports(..)
             ) where
 
-import Language.Haskell.Exts.Annotated.Parser (parseExtensions, readExtensions)
+import Language.Haskell.Exts.Annotated.Parser (readExtensions, NonGreedyExtensions(..))
 import Language.Haskell.Exts.Annotated.Simplify
-import Language.Haskell.Exts.ParseMonad
+import Language.Haskell.Exts.ParseMonad hiding (getModuleName)
 import Language.Haskell.Exts.Annotated.Fixity
 
 import qualified Language.Haskell.Exts.Annotated.Parser as P
 import qualified Language.Haskell.Exts.Syntax as S
+
+#ifdef __GLASGOW_HASKELL__
+#ifdef BASE4
+import Data.Data hiding (Fixity)
+#else
+import Data.Generics (Data(..),Typeable(..))
+#endif
+#endif
 
 simpleParser :: (Parseable a, Simplify a a') => Maybe [Fixity] -> P a'
 simpleParser mfixs = parser mfixs >>= return . simplify
@@ -234,5 +244,93 @@ parseStmtWithMode = parseWithMode
 parseStmtWithComments :: ParseWithComments S.Stmt
 parseStmtWithComments = parseWithComments
 
+-- Module head parsers
+
+-- | Partial parse of a string starting with a series of top-level option pragmas.
 getTopPragmas :: Parse [S.ModulePragma]
-getTopPragmas = fmap (map sModulePragma) . P.getTopPragmas
+getTopPragmas = fmap (\(NonGreedyTopPragmas ps) -> ps) . parse
+
+data NonGreedyTopPragmas = NonGreedyTopPragmas [S.ModulePragma]
+#ifdef __GLASGOW_HASKELL__
+  deriving (Eq,Ord,Show,Typeable,Data)
+#else
+  deriving (Eq,Ord,Show)
+#endif
+
+instance Parseable NonGreedyTopPragmas where
+    parser fixs = do
+        P.NonGreedyTopPragmas ps _ <- parser fixs
+        return $ NonGreedyTopPragmas $ map sModulePragma ps
+
+--   Type intended to be used with 'Parseable', with instances that implement a
+--   non-greedy parse of the module name, including top-level pragmas.  This
+--   means that a parse error that comes after the module header won't be
+--   returned. If no module name is found (and no parse error occurs), then
+--   \"Main\" is returned.  This is the same behavior that 'parseModule' has.
+data NonGreedyModuleName = NonGreedyModuleName
+    [S.ModulePragma]
+    S.ModuleName
+#ifdef __GLASGOW_HASKELL__
+  deriving (Eq,Ord,Show,Typeable,Data)
+#else
+  deriving (Eq,Ord,Show)
+#endif
+
+instance Parseable NonGreedyModuleName where
+    parser fixs = do
+        P.NonGreedyModuleName (ps, _) mmn <- parser fixs
+        return $ NonGreedyModuleName
+            (map sModulePragma ps)
+            (maybe S.main_mod sModuleName mmn)
+
+--   Type intended to be used with 'Parseable', with instances that implement a
+--   non-greedy parse of the module name, including top-level pragmas.  This
+--   means that a parse error that comes after the module header won't be
+--   returned. If no module head is found, then a default simple head like
+--   \"module Main where\" is assumed. This is the same behavior that
+--   'parseModule' has.
+--
+--   Note that the 'ParseMode' particularly matters for this due to the
+--   'MagicHash' changing the lexing of identifiers to include \"#\".
+data NonGreedyModuleHead = NonGreedyModuleHead
+    [S.ModulePragma]
+    (S.ModuleName, Maybe S.WarningText, Maybe [S.ExportSpec])
+#ifdef __GLASGOW_HASKELL__
+  deriving (Eq,Ord,Show,Typeable,Data)
+#else
+  deriving (Eq,Ord,Show)
+#endif
+
+instance Parseable NonGreedyModuleHead where
+    parser fixs = do
+        P.NonGreedyModuleHead (ps, _) mmh <- parser fixs
+        return $ NonGreedyModuleHead
+            (map sModulePragma ps)
+            (sModuleHead mmh)
+
+--   Type intended to be used with 'Parseable', with instances that implement a
+--   non-greedy parse of the module head, including top-level pragmas, module
+--   name, export list, and import list. This means that if a parse error that
+--   comes after the imports won't be returned.  If no module head is found,
+--   then a default simple head like \"module Main where\" is assumed. This is
+--   the same behavior that 'parseModule' has.
+--
+--   Note that the 'ParseMode' particularly matters for this due to the
+--   'MagicHash' changing the lexing of identifiers to include \"#\".
+data NonGreedyModuleImports = NonGreedyModuleImports
+    [S.ModulePragma]
+    (S.ModuleName, Maybe S.WarningText, Maybe [S.ExportSpec])
+    [S.ImportDecl]
+#ifdef __GLASGOW_HASKELL__
+  deriving (Eq,Ord,Show,Typeable,Data)
+#else
+  deriving (Eq,Ord,Show)
+#endif
+
+instance Parseable NonGreedyModuleImports where
+    parser fixs = do
+        P.NonGreedyModuleImports (ps, _) mmh (imps, _) <- parser fixs
+        return $ NonGreedyModuleImports
+            (map sModulePragma ps)
+            (sModuleHead mmh)
+            (map sImportDecl imps)

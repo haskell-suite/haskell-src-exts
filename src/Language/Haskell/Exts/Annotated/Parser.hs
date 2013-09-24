@@ -1,4 +1,4 @@
-{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE CPP, DeriveDataTypeable, FlexibleInstances #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 -----------------------------------------------------------------------------
 -- |
@@ -33,16 +33,26 @@ module Language.Haskell.Exts.Annotated.Parser
     , parseDecl, parseDeclWithMode, parseDeclWithComments
     -- ** Types
     , parseType, parseTypeWithMode, parseTypeWithComments
-    -- ** Module pragmas
-    , getTopPragmas, parseExtensions, readExtensions
+    -- ** Module head parsers
+    , getTopPragmas, readExtensions
+    , NonGreedyTopPragmas(..), NonGreedyExtensions(..)
+    , NonGreedyModuleName(..), NonGreedyModuleHead(..), NonGreedyModuleImports(..)
     ) where
 
 import Language.Haskell.Exts.Annotated.Fixity
 import Language.Haskell.Exts.Annotated.Syntax
 import Language.Haskell.Exts.Extension
 import Language.Haskell.Exts.InternalParser
-import Language.Haskell.Exts.ParseMonad
+import Language.Haskell.Exts.ParseMonad hiding (getModuleName)
 import Language.Haskell.Exts.SrcLoc
+
+#ifdef __GLASGOW_HASKELL__
+#ifdef BASE4
+import Data.Data hiding (Fixity)
+#else
+import Data.Generics (Data(..),Typeable(..))
+#endif
+#endif
 
 import Data.Either (partitionEithers)
 
@@ -238,34 +248,118 @@ parseStmtWithMode = parseWithMode
 parseStmtWithComments :: ParseWithComments (Stmt SrcSpanInfo)
 parseStmtWithComments = parseWithComments
 
--- Pragma parsers
+-- Module head parsers
 
--- | Partial parse of a string starting with a series of top-level option pragmas.
+-- | Non-greedy parse of a string starting with a series of top-level option pragmas.
 getTopPragmas :: Parse [ModulePragma SrcSpanInfo]
-getTopPragmas = runParser (mfindOptPragmas >>= \(ps,_,_) -> return ps)
-
--- | Partial parse of the languages and extensions in LANGUAGE pragmas.
-parseExtensions :: Parse ([Language], [Extension])
-parseExtensions str =
-    fmap (partitionEithers . concatMap getExts) $ getTopPragmas str
-  where
-    getExts :: ModulePragma l -> [Either Language Extension]
-    getExts (LanguagePragma _ ns) = map readExt ns
-    getExts _ = []
-
-    readExt (Ident _ e) =
-        case classifyLanguage e of
-          UnknownLanguage _ -> Right $ classifyExtension e
-          lang -> Left lang
+getTopPragmas = fmap (\(NonGreedyTopPragmas ps _) -> ps) . parse
 
 -- | Gather the extensions declared in LANGUAGE pragmas
 --   at the top of the file. Returns 'Nothing' if the
 --   parse of the pragmas fails.
 readExtensions :: String -> Maybe (Maybe Language, [Extension])
 readExtensions str =
-    case parseExtensions str of
-        ParseOk ([], es) -> Just (Nothing, es)
-        ParseOk ([l], es) -> Just (Just l, es)
-        ParseOk (_, _) -> Nothing
+    case parse str of
+        ParseOk (NonGreedyExtensions [] es) -> Just (Nothing, es)
+        ParseOk (NonGreedyExtensions [l] es) -> Just (Just l, es)
+        ParseOk (NonGreedyExtensions _ _) -> Nothing
         ParseFailed _ _ -> Nothing
-{-# DEPRECATED readExtensions "Prefer parseExtensions" #-}
+{-# DEPRECATED readExtensions "Prefer using parse with NonGreedyExtensions" #-}
+
+data NonGreedyTopPragmas = NonGreedyTopPragmas [ModulePragma SrcSpanInfo] SrcSpanInfo
+#ifdef __GLASGOW_HASKELL__
+  deriving (Eq,Ord,Show,Typeable,Data)
+#else
+  deriving (Eq,Ord,Show)
+#endif
+
+instance Parseable NonGreedyTopPragmas where
+    parser _ = do
+        (ps, l) <- fmap handleSpans mfindOptPragmas
+        return $ NonGreedyTopPragmas ps l
+
+data NonGreedyExtensions = NonGreedyExtensions [Language] [Extension]
+#ifdef __GLASGOW_HASKELL__
+  deriving (Eq,Ord,Show,Typeable)
+#else
+  deriving (Eq,Ord,Show)
+#endif
+
+instance Parseable NonGreedyExtensions where
+    parser fixs = do
+        NonGreedyTopPragmas ps _ <- parser fixs
+        let (ls, es) = partitionEithers $ concatMap getExts ps
+        return $ NonGreedyExtensions ls es
+      where
+        getExts :: ModulePragma SrcSpanInfo -> [Either Language Extension]
+        getExts (LanguagePragma _ ns) = map readExt ns
+        getExts _ = []
+
+        readExt (Ident _ e) =
+            case classifyLanguage e of
+                UnknownLanguage _ -> Right $ classifyExtension e
+                lang -> Left lang
+
+--   Type intended to be used with 'Parseable', with instances that implement a
+--   non-greedy parse of the module name, including top-level pragmas.  This
+--   means that a parse error that comes after the module header won't be
+--   returned. If the 'Maybe' value is 'Nothing', then this means that there was
+--   no module header.
+data NonGreedyModuleName = NonGreedyModuleName
+    ([ModulePragma SrcSpanInfo], SrcSpanInfo)
+    (Maybe (ModuleName SrcSpanInfo))
+#ifdef __GLASGOW_HASKELL__
+  deriving (Eq,Ord,Show,Typeable,Data)
+#else
+  deriving (Eq,Ord,Show)
+#endif
+
+instance Parseable NonGreedyModuleName where
+    parser _ = do
+        (ps, mn) <- mfindModuleName
+        return $ NonGreedyModuleName (handleSpans ps) mn
+
+--   Type intended to be used with 'Parseable', with instances that implement a
+--   non-greedy parse of the module name, including top-level pragmas.  This
+--   means that a parse error that comes after the module header won't be
+--   returned. If the 'Maybe' value is 'Nothing', this means that there was no
+--   module head.
+--
+--   Note that the 'ParseMode' particularly matters for this due to the
+--   'MagicHash' changing the lexing of identifiers to include \"#\".
+data NonGreedyModuleHead = NonGreedyModuleHead
+    ([ModulePragma SrcSpanInfo], SrcSpanInfo)
+    (Maybe (ModuleHead SrcSpanInfo))
+#ifdef __GLASGOW_HASKELL__
+  deriving (Eq,Ord,Show,Typeable,Data)
+#else
+  deriving (Eq,Ord,Show)
+#endif
+
+instance Parseable NonGreedyModuleHead where
+    parser _ = do
+        (ps, mh) <- mfindModuleHead
+        return $ NonGreedyModuleHead (handleSpans ps) mh
+
+--   Type intended to be used with 'Parseable', with instances that implement a
+--   non-greedy parse of the module head, including top-level pragmas, module
+--   name, export list, and import list. This means that if a parse error that
+--   comes after the imports won't be returned.  If the 'Maybe' value is
+--   'Nothing', this means that there was no module head.
+--
+--   Note that the 'ParseMode' particularly matters for this due to the
+--   'MagicHash' changing the lexing of identifiers to include \"#\".
+data NonGreedyModuleImports = NonGreedyModuleImports
+    ([ModulePragma SrcSpanInfo], SrcSpanInfo)
+    (Maybe (ModuleHead SrcSpanInfo))
+    ([ImportDecl SrcSpanInfo], SrcSpanInfo)
+#ifdef __GLASGOW_HASKELL__
+  deriving (Eq,Ord,Show,Typeable,Data)
+#else
+  deriving (Eq,Ord,Show)
+#endif
+
+instance Parseable NonGreedyModuleImports where
+    parser _ = do
+        (ps, mh, imps) <- mfindModuleImports
+        return $ NonGreedyModuleImports (handleSpans ps) mh (handleSpans imps)
