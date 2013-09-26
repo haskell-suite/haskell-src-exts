@@ -1964,8 +1964,9 @@ Exported as partial parsers:
 > moduletophead :: { (([ModulePragma L], [S], L), Maybe (ModuleHead L)) }
 >               : toppragmas optmodulehead      { ($1, $2) }
 
-> moduletopimps :: { (([ModulePragma L], [S], L), Maybe (ModuleHead L), ([ImportDecl L],[S],L)) }
->               : toppragmas optmodulehead impdeclsblock      { ($1, $2, $3)}
+> moduletopimps :: { (([ModulePragma L], [S], L), Maybe (ModuleHead L), Maybe ([ImportDecl L],[S],L)) }
+>               : toppragmas optmodulehead impdeclsblock      { ($1, $2, Just $3) }
+>               | toppragmas optmodulehead {- empty -}        { ($1, $2, Nothing) }
 
 -----------------------------------------------------------------------------
 

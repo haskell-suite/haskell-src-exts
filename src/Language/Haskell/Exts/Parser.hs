@@ -51,6 +51,8 @@ import qualified Language.Haskell.Exts.Annotated.Parser as A
 import qualified Language.Haskell.Exts.Annotated.Syntax as A
 import qualified Language.Haskell.Exts.Syntax as S
 
+import Data.Maybe (fromMaybe)
+
 #ifdef __GLASGOW_HASKELL__
 #ifdef BASE4
 import Data.Data hiding (Fixity)
@@ -332,8 +334,8 @@ data NonGreedyModuleImports = NonGreedyModuleImports
 
 instance Parseable NonGreedyModuleImports where
     parser fixs = do
-        A.NonGreedyModuleImports (ps, _) mmh (imps, _) <- parser fixs
+        A.NonGreedyModuleImports (ps, _) mmh mimps <- parser fixs
         return $ NonGreedyModuleImports
             (map sModulePragma (ps :: [A.ModulePragma SrcSpanInfo]))
             (sModuleHead mmh)
-            (map sImportDecl imps)
+            (fromMaybe [] $ fmap (map sImportDecl . fst) mimps)

@@ -352,7 +352,7 @@ instance Parseable (NonGreedyModuleHead SrcSpanInfo) where
 data NonGreedyModuleImports l = NonGreedyModuleImports
     ([ModulePragma l], l)
     (Maybe (ModuleHead l))
-    ([ImportDecl l], l)
+    (Maybe ([ImportDecl l], l))
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
@@ -361,5 +361,8 @@ data NonGreedyModuleImports l = NonGreedyModuleImports
 
 instance Parseable (NonGreedyModuleImports SrcSpanInfo) where
     parser _ = do
-        (ps, mh, imps) <- mfindModuleImports
-        return $ NonGreedyModuleImports (handleSpans ps) mh (handleSpans imps)
+        (ps, mh, mimps) <- mfindModuleImports
+        return $ NonGreedyModuleImports
+            (handleSpans ps)
+            mh
+            (fmap handleSpans mimps)
