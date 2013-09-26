@@ -266,14 +266,14 @@ readExtensions str =
         ParseFailed _ _ -> Nothing
 {-# DEPRECATED readExtensions "Prefer using parse with NonGreedyExtensions" #-}
 
-data NonGreedyTopPragmas = NonGreedyTopPragmas [ModulePragma SrcSpanInfo] SrcSpanInfo
+data NonGreedyTopPragmas l = NonGreedyTopPragmas [ModulePragma l] l
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
   deriving (Eq,Ord,Show)
 #endif
 
-instance Parseable NonGreedyTopPragmas where
+instance Parseable (NonGreedyTopPragmas SrcSpanInfo) where
     parser _ = do
         (ps, l) <- fmap handleSpans mfindOptPragmas
         return $ NonGreedyTopPragmas ps l
@@ -305,16 +305,16 @@ instance Parseable NonGreedyExtensions where
 --   means that a parse error that comes after the module header won't be
 --   returned. If the 'Maybe' value is 'Nothing', then this means that there was
 --   no module header.
-data NonGreedyModuleName = NonGreedyModuleName
-    ([ModulePragma SrcSpanInfo], SrcSpanInfo)
-    (Maybe (ModuleName SrcSpanInfo))
+data NonGreedyModuleName l = NonGreedyModuleName
+    ([ModulePragma l], l)
+    (Maybe (ModuleName l))
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
   deriving (Eq,Ord,Show)
 #endif
 
-instance Parseable NonGreedyModuleName where
+instance Parseable (NonGreedyModuleName SrcSpanInfo) where
     parser _ = do
         (ps, mn) <- mfindModuleName
         return $ NonGreedyModuleName (handleSpans ps) mn
@@ -327,16 +327,16 @@ instance Parseable NonGreedyModuleName where
 --
 --   Note that the 'ParseMode' particularly matters for this due to the
 --   'MagicHash' changing the lexing of identifiers to include \"#\".
-data NonGreedyModuleHead = NonGreedyModuleHead
-    ([ModulePragma SrcSpanInfo], SrcSpanInfo)
-    (Maybe (ModuleHead SrcSpanInfo))
+data NonGreedyModuleHead l = NonGreedyModuleHead
+    ([ModulePragma l], l)
+    (Maybe (ModuleHead l))
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
   deriving (Eq,Ord,Show)
 #endif
 
-instance Parseable NonGreedyModuleHead where
+instance Parseable (NonGreedyModuleHead SrcSpanInfo) where
     parser _ = do
         (ps, mh) <- mfindModuleHead
         return $ NonGreedyModuleHead (handleSpans ps) mh
@@ -349,17 +349,17 @@ instance Parseable NonGreedyModuleHead where
 --
 --   Note that the 'ParseMode' particularly matters for this due to the
 --   'MagicHash' changing the lexing of identifiers to include \"#\".
-data NonGreedyModuleImports = NonGreedyModuleImports
-    ([ModulePragma SrcSpanInfo], SrcSpanInfo)
-    (Maybe (ModuleHead SrcSpanInfo))
-    ([ImportDecl SrcSpanInfo], SrcSpanInfo)
+data NonGreedyModuleImports l = NonGreedyModuleImports
+    ([ModulePragma l], l)
+    (Maybe (ModuleHead l))
+    ([ImportDecl l], l)
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
   deriving (Eq,Ord,Show)
 #endif
 
-instance Parseable NonGreedyModuleImports where
+instance Parseable (NonGreedyModuleImports SrcSpanInfo) where
     parser _ = do
         (ps, mh, imps) <- mfindModuleImports
         return $ NonGreedyModuleImports (handleSpans ps) mh (handleSpans imps)

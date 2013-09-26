@@ -45,8 +45,10 @@ import Language.Haskell.Exts.Annotated.Parser (readExtensions, NonGreedyExtensio
 import Language.Haskell.Exts.Annotated.Simplify
 import Language.Haskell.Exts.ParseMonad hiding (getModuleName)
 import Language.Haskell.Exts.Annotated.Fixity
+import Language.Haskell.Exts.SrcLoc
 
-import qualified Language.Haskell.Exts.Annotated.Parser as P
+import qualified Language.Haskell.Exts.Annotated.Parser as A
+import qualified Language.Haskell.Exts.Annotated.Syntax as A
 import qualified Language.Haskell.Exts.Syntax as S
 
 #ifdef __GLASGOW_HASKELL__
@@ -259,8 +261,9 @@ data NonGreedyTopPragmas = NonGreedyTopPragmas [S.ModulePragma]
 
 instance Parseable NonGreedyTopPragmas where
     parser fixs = do
-        P.NonGreedyTopPragmas ps _ <- parser fixs
-        return $ NonGreedyTopPragmas $ map sModulePragma ps
+        A.NonGreedyTopPragmas ps _ <- parser fixs
+        return $ NonGreedyTopPragmas
+            (map sModulePragma (ps :: [A.ModulePragma SrcSpanInfo]))
 
 --   Type intended to be used with 'Parseable', with instances that implement a
 --   non-greedy parse of the module name, including top-level pragmas.  This
@@ -278,9 +281,9 @@ data NonGreedyModuleName = NonGreedyModuleName
 
 instance Parseable NonGreedyModuleName where
     parser fixs = do
-        P.NonGreedyModuleName (ps, _) mmn <- parser fixs
+        A.NonGreedyModuleName (ps, _) mmn <- parser fixs
         return $ NonGreedyModuleName
-            (map sModulePragma ps)
+            (map sModulePragma (ps :: [A.ModulePragma SrcSpanInfo]))
             (maybe S.main_mod sModuleName mmn)
 
 --   Type intended to be used with 'Parseable', with instances that implement a
@@ -303,9 +306,9 @@ data NonGreedyModuleHead = NonGreedyModuleHead
 
 instance Parseable NonGreedyModuleHead where
     parser fixs = do
-        P.NonGreedyModuleHead (ps, _) mmh <- parser fixs
+        A.NonGreedyModuleHead (ps, _) mmh <- parser fixs
         return $ NonGreedyModuleHead
-            (map sModulePragma ps)
+            (map sModulePragma (ps :: [A.ModulePragma SrcSpanInfo]))
             (sModuleHead mmh)
 
 --   Type intended to be used with 'Parseable', with instances that implement a
@@ -329,8 +332,8 @@ data NonGreedyModuleImports = NonGreedyModuleImports
 
 instance Parseable NonGreedyModuleImports where
     parser fixs = do
-        P.NonGreedyModuleImports (ps, _) mmh (imps, _) <- parser fixs
+        A.NonGreedyModuleImports (ps, _) mmh (imps, _) <- parser fixs
         return $ NonGreedyModuleImports
-            (map sModulePragma ps)
+            (map sModulePragma (ps :: [A.ModulePragma SrcSpanInfo]))
             (sModuleHead mmh)
             (map sImportDecl imps)
