@@ -212,7 +212,7 @@ runParser = runParserWithMode defaultParseMode
 
 runParserWithModeComments :: ParseMode -> P a -> String -> ParseResult (a, [Comment])
 runParserWithModeComments mode (P m) s = 
-  case m s 0 1 start ([],[],(False,False),[]) (toInternalParseMode mode) of
+  case m (dropBom s) 0 1 start ([],[],(False,False),[]) (toInternalParseMode mode) of
     Ok (_,_,_,cs) a -> ParseOk (a, reverse cs)
     Failed loc msg -> ParseFailed loc msg
     where start = SrcLoc {
@@ -223,6 +223,11 @@ runParserWithModeComments mode (P m) s =
   --        allExts mode@(ParseMode {extensions = es}) = mode { extensions = impliesExts es }
 
     --      allExts mode = let imode = to
+
+-- If the string is prefixed with a UTF-8 Byte Order Mark, drop it.
+dropBom :: String -> String
+dropBom ('\xfeff' : str) = str
+dropBom str              = str
 
 instance Functor P where
     fmap f x = x >>= return . f
