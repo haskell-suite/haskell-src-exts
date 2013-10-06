@@ -38,10 +38,12 @@ module Language.Haskell.Exts.Parser
                 -- ** Module head parsers
                 getTopPragmas, readExtensions,
                 NonGreedyTopPragmas(..), NonGreedyExtensions(..),
-                NonGreedyModuleName(..), NonGreedyModuleHead(..), NonGreedyModuleImports(..)
+                NonGreedyModuleName(..), NonGreedyModuleHead(..), NonGreedyModuleImports(..),
+                -- * CPP Utilities
+                ignoreCpp, ignoreCppLines
             ) where
 
-import Language.Haskell.Exts.Annotated.Parser (readExtensions, NonGreedyExtensions(..))
+import Language.Haskell.Exts.Annotated.Parser (readExtensions, NonGreedyExtensions(..), ignoreCpp, ignoreCppLines)
 import Language.Haskell.Exts.Annotated.Simplify
 import Language.Haskell.Exts.ParseMonad hiding (getModuleName)
 import Language.Haskell.Exts.Annotated.Fixity
