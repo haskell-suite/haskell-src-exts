@@ -46,6 +46,7 @@ Extra-Source-Files:
                         Test/examples/ConstraintKinds.hs
                         Test/examples/CParser.hs
                         Test/examples/CStyleLinePragmas.hs
+                        Test/examples/CxtWhitespace.hs
                         Test/examples/DataHeadParen.hs
                         Test/examples/DataKinds.hs
                         Test/examples/Directory.hs
@@ -104,6 +105,7 @@ Extra-Source-Files:
                         Test/examples/SingleClassAsst.hs
                         Test/examples/SpecializeInstance.hs
                         Test/examples/SpecializePhaseControl.hs
+                        Test/examples/TabWhitespace.hs
                         Test/examples/Testing.hs
                         Test/examples/THTypes.hs
                         Test/examples/TupleSections.hs
@@ -115,6 +117,7 @@ Extra-Source-Files:
                         Test/examples/Unicode.hs
                         Test/examples/UnicodeSyntax.hs
                         Test/examples/UnindentedPragmaClose.hs
+                        Test/examples/Unpack.hs
                         Test/examples/WhereBlock.hs
                         Test/failing.txt
                         Test/printFail.txt
