@@ -4,3 +4,5 @@ SpecializeInstance.hs	Prints SPECIALISE instead of SPECIALIZE.
 Unicode.hs		Printing is not Unicode-aware.
 UnicodeSyntax.hs	Printing is not Unicode-aware.
 QuasiQuoteOld.hs	Exact printer always uses new quasi-quote syntax.
+CxtWhitespace.hs        whitespace doesn't match up
+TabWhitespace.hs        tabs are expanded

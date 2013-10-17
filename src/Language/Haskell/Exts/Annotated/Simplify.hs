@@ -171,6 +171,7 @@ sExportSpec es = case es of
     EThingAll _ qn      -> S.EThingAll (sQName qn)
     EThingWith _ qn cns -> S.EThingWith (sQName qn) (map sCName cns)
     EModuleContents _ mn    -> S.EModuleContents (sModuleName mn)
+    EType _ mn          -> S.EType (sExportSpec mn)
 
 sImportDecl :: SrcInfo loc => ImportDecl loc -> S.ImportDecl
 sImportDecl (ImportDecl l mn qu src mpkg as misl) =
@@ -185,6 +186,7 @@ sImportSpec is = case is of
     IAbs _ n            -> S.IAbs (sName n)
     IThingAll _ n       -> S.IThingAll (sName n)
     IThingWith _ n cns  -> S.IThingWith (sName n) (map sCName cns)
+    IType _ i           -> S.IType (sImportSpec i)
 
 sAssoc :: Assoc l -> S.Assoc
 sAssoc a = case a of
@@ -288,6 +290,17 @@ sType t = case t of
     TyParen _ t                 -> S.TyParen (sType t)
     TyInfix _ ta qn tb          -> S.TyInfix (sType ta) (sQName qn) (sType tb)
     TyKind _ t k                -> S.TyKind (sType t) (sKind k)
+    TyPromoted _ t              -> S.TyPromoted (sPromoted t)
+
+sPromoted :: Promoted l -> S.Promoted
+sPromoted p = case p of
+    PromotedInteger _ n _ -> S.PromotedInteger n
+    PromotedString _ s _ -> S.PromotedString s
+    PromotedCon _ b qn -> S.PromotedCon b (sQName qn)
+    PromotedList _ b ps -> S.PromotedList b (map sPromoted ps)
+    PromotedTuple _ ps -> S.PromotedTuple (map sPromoted ps)
+    PromotedUnit _ -> S.PromotedUnit
+
 
 sTyVarBind :: TyVarBind l -> S.TyVarBind
 sTyVarBind (KindedVar _ n k) = S.KindedVar (sName n) (sKind k)
@@ -299,7 +312,10 @@ sKind k = case k of
     KindBang  _     -> S.KindBang
     KindFn _ k1 k2  -> S.KindFn (sKind k1) (sKind k2)
     KindParen _ k   -> S.KindParen (sKind k)
-    KindVar _ n     -> S.KindVar (sName n)
+    KindVar _ n     -> S.KindVar (sQName n)
+    KindApp _ k1 k2 -> S.KindApp (sKind k1) (sKind k2)
+    KindTuple _ ks  -> S.KindTuple (map sKind ks)
+    KindList  _ ks  -> S.KindList  (map sKind ks)
 
 sFunDep :: FunDep l -> S.FunDep
 sFunDep (FunDep _ as bs) = S.FunDep (map sName as) (map sName bs)

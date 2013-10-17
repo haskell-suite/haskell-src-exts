@@ -452,6 +452,15 @@ data KnownExtension =
   -- foreign function interface.
   | CApiFFI
 
+  | ExplicitNamespaces
+
+
+
+  | DataKinds
+  | PolyKinds
+
+
+
  {- Safe Haskell not yet supported by HSE.
 
   -- | [GHC &#xa7; 7.20.3] Allow imports to be qualified with a safe
