@@ -917,6 +917,7 @@ checkT t simple = case t of
     TyKind  l pt k    -> check1Type pt (flip (S.TyKind l) k)
 
     -- TyPred  cannot be a valid type
+    TyPromoted l p -> return $ S.TyPromoted l p -- ??
     _   -> fail $ "Parse error in type: " ++ prettyPrint t
 
 check1Type :: PType L -> (S.Type L -> S.Type L) -> P (S.Type L)

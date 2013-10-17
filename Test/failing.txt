@@ -14,8 +14,14 @@ IllDataTypeDecl.hs       Parser doesn't handle all declaration heads
 ConstraintKinds.hs       ConstraintKinds in type synonyms not yet supported.
 RCategory.lhs            ConstraintKinds not supported in general.
 IndentedWhereBlock.hs    Bug - needs fixes to layout parsing
+CxtWhitespace.hs        whitespace doesn't match up
+TabWhitespace.hs        tabs are expanded
+Unpack.hs               unpack pragmas not supported
 NegPrimWordLiteral.hs    Primitive word literals cannot be negative.
 RecordPuns.hs            Qualified record puns not yet supported.
 IndentedTopLevelWhere.hs Weird layout bug.
 MultiWayIf.hs            Multi-way if statements not yet supported.
 LambdaCase.hs            Lambda-case expressions not yet supported.
+CxtWhitespace.hs        whitespace doesn't match up
+TabWhitespace.hs        tabs are expanded
+Unpack.hs               unpack pragmas not supported

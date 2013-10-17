@@ -52,7 +52,7 @@ module Language.Haskell.Exts.Syntax (
     -- * Class Assertions and Contexts
     Context, FunDep(..), Asst(..),
     -- * Types
-    Type(..), Boxed(..), Kind(..), TyVarBind(..),
+    Type(..), Boxed(..), Kind(..), TyVarBind(..), Promoted(..),
     -- * Expressions
     Exp(..), Stmt(..), QualStmt(..), FieldUpdate(..),
     Alt(..), GuardedAlts(..), GuardedAlt(..), XAttr(..),
@@ -200,6 +200,9 @@ data CName
 #endif
 
 -- | A complete Haskell source module.
+--
+-- @(Bool, ExportSpec)@ has True when the export has the @type@ keyword
+-- (@-XExplicitNamespaces@)
 data Module = Module SrcLoc ModuleName [ModulePragma] (Maybe WarningText)
                         (Maybe [ExportSpec]) [ImportDecl] [Decl]
 #ifdef __GLASGOW_HASKELL__
@@ -222,6 +225,7 @@ data ExportSpec
                                     --   a datatype exported with some of its constructors.
      | EModuleContents ModuleName   -- ^ @module M@:
                                     --   re-export a module.
+     | EType ExportSpec             -- ^ @type x@: enabled under -XExplicitNamespaces
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
@@ -236,7 +240,7 @@ data ImportDecl = ImportDecl
     , importSrc :: Bool             -- ^ imported with @{-\# SOURCE \#-}@?
     , importPkg :: Maybe String     -- ^ imported with explicit package name
     , importAs :: Maybe ModuleName  -- ^ optional alias name in an @as@ clause.
-    , importSpecs :: Maybe (Bool,[ImportSpec])
+    , importSpecs :: Maybe (Bool, [ImportSpec])
             -- ^ optional list of import specifications.
             -- The 'Bool' is 'True' if the names are excluded
             -- by @hiding@.
@@ -259,6 +263,7 @@ data ImportSpec
      | IThingWith Name [CName]  -- ^ @T(C_1,...,C_n)@:
                                 --   a class imported with some of its methods, or
                                 --   a datatype imported with some of its constructors.
+     | IType ImportSpec         -- ^ @type x@: allowed under @-XExplicitNamespaces@
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
@@ -510,11 +515,26 @@ data Type
      | TyParen Type             -- ^ type surrounded by parentheses
      | TyInfix Type QName Type  -- ^ infix type constructor
      | TyKind  Type Kind        -- ^ type with explicit kind signature
+     | TyPromoted Promoted      -- ^ promoted data type (-XDataKinds)
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
   deriving (Eq,Ord,Show)
 #endif
+
+data Promoted
+        = PromotedInteger Integer
+        | PromotedString String
+        | PromotedCon Bool QName
+        | PromotedList Bool [Promoted]
+        | PromotedTuple [Promoted]
+        | PromotedUnit
+#ifdef __GLASGOW_HASKELL__
+  deriving (Eq,Ord,Show,Typeable,Data)
+#else
+  deriving (Eq,Ord,Show)
+#endif
+
 
 -- | A type variable declaration, optionally with an explicit kind annotation.
 data TyVarBind
@@ -532,7 +552,10 @@ data Kind
     | KindBang          -- ^ @!@, the kind of unboxed types
     | KindFn Kind Kind  -- ^ @->@, the kind of a type constructor
     | KindParen Kind    -- ^ a kind surrounded by parentheses
-    | KindVar Name      -- ^ a kind variable (as of yet unsupported by compilers)
+    | KindVar QName     -- ^ a kind variable (as of yet unsupported by compilers)
+    | KindApp Kind Kind -- ^ @k1 k2@
+    | KindTuple [Kind]  -- ^ @'(k1,k2,k3)@, a promoted tuple
+    | KindList  [Kind]  -- ^ @'[k1,k2,k3]@, a promoted list literal
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
