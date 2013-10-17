@@ -231,7 +231,8 @@ data ModuleHead l = ModuleHead l (ModuleName l) (Maybe (WarningText l)) (Maybe (
   deriving (Eq,Ord,Show)
 #endif
 
--- | An explicit export specification.
+-- | An explicit export specification. The 'Bool' is 'True' if the export has
+-- the @type@ keyword (@-XExplicitNamespaces@)
 data ExportSpecList l
     = ExportSpecList l [ExportSpec l]
 #ifdef __GLASGOW_HASKELL__
@@ -254,6 +255,8 @@ data ExportSpec l
                                         --   a datatype exported with some of its constructors.
      | EModuleContents l (ModuleName l) -- ^ @module M@:
                                         --   re-export a module.
+     | EType l (ExportSpec l)           -- ^ @type x@: available with @-XExplicitNamespaces@
+
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable)
 #else
@@ -283,6 +286,9 @@ data ImportSpecList l
             -- A list of import specifications.
             -- The 'Bool' is 'True' if the names are excluded
             -- by @hiding@.
+            --
+            -- The other 'Bool' is true if the 'ImportSpec' has
+            -- the @type@ keyword @-XExplicitNamespaces@
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable)
 #else
@@ -301,6 +307,7 @@ data ImportSpec l
      | IThingWith l (Name l) [CName l]  -- ^ @T(C_1,...,C_n)@:
                                         --   a class imported with some of its methods, or
                                         --   a datatype imported with some of its constructors.
+     | IType l (ImportSpec l)           -- ^ @type ...@ (-XExplicitNamespaces)
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable)
 #else
@@ -1236,6 +1243,7 @@ instance Functor ExportSpec where
         EThingAll l qn  -> EThingAll (f l) (fmap f qn)
         EThingWith l qn cns -> EThingWith (f l) (fmap f qn) (map (fmap f) cns)
         EModuleContents l mn    -> EModuleContents (f l) (fmap f mn)
+        EType l m       -> EType (f l) (fmap f m)
 
 instance Functor ImportDecl where
     fmap f (ImportDecl l mn qual src pkg mmn mis) =
@@ -1250,6 +1258,7 @@ instance Functor ImportSpec where
         IAbs l n        -> IAbs (f l) (fmap f n)
         IThingAll l n   -> IThingAll (f l) (fmap f n)
         IThingWith l n cns  -> IThingWith (f l) (fmap f n) (map (fmap f) cns)
+        IType l m       -> IType (f l) (fmap f m)
 
 instance Functor Assoc where
     fmap f (AssocNone  l) = AssocNone  (f l)
@@ -1737,11 +1746,13 @@ instance Annotated ImportSpec where
         IAbs l n        -> l
         IThingAll l n   -> l
         IThingWith l n cns  -> l
+        IType l m       -> l
     amap f is = case is of
         IVar l n        -> IVar (f l) n
         IAbs l n        -> IAbs (f l) n
         IThingAll l n   -> IThingAll (f l) n
         IThingWith l n cns  -> IThingWith (f l) n cns
+        IType  l m      -> IType (f l) m
 
 instance Annotated Assoc where
     ann (AssocNone  l) = l

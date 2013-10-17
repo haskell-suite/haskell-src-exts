@@ -56,6 +56,7 @@ Extra-Source-Files:
                         Test/examples/EmptyFunDepPremise.hs
                         Test/examples/EmptyInstance.hs
                         Test/examples/EmptyList.hs
+                        Test/examples/ExplicitNamespaces.hs
                         Test/examples/ExtraEndBrace.hs
                         Test/examples/FamilyKindSig.hs
                         Test/examples/FamilyVarid.hs

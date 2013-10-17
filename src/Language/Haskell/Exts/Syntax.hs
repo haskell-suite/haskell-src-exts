@@ -235,6 +235,9 @@ data CName
 #endif
 
 -- | A complete Haskell source module.
+--
+-- @(Bool, ExportSpec)@ has True when the export has the @type@ keyword
+-- (@-XExplicitNamespaces@)
 data Module = Module SrcLoc ModuleName [ModulePragma] (Maybe WarningText)
                         (Maybe [ExportSpec]) [ImportDecl] [Decl]
 #ifdef __GLASGOW_HASKELL__
@@ -261,6 +264,7 @@ data ExportSpec
                                     --   a datatype exported with some of its constructors.
      | EModuleContents ModuleName   -- ^ @module M@:
                                     --   re-export a module.
+     | EType ExportSpec             -- ^ @type x@: enabled under -XExplicitNamespaces
 #ifdef __GLASGOW_HASKELL__
 #if MIN_VERSION_base(4,6,0)
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
@@ -306,6 +310,7 @@ data ImportSpec
      | IThingWith Name [CName]  -- ^ @T(C_1,...,C_n)@:
                                 --   a class imported with some of its methods, or
                                 --   a datatype imported with some of its constructors.
+     | IType ImportSpec         -- ^ @type x@: allowed under @-XExplicitNamespaces@
 #ifdef __GLASGOW_HASKELL__
 #if MIN_VERSION_base(4,6,0)
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
