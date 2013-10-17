@@ -47,6 +47,7 @@ Extra-Source-Files:
                         Test/examples/CParser.hs
                         Test/examples/CStyleLinePragmas.hs
                         Test/examples/DataHeadParen.hs
+                        Test/examples/DataKinds.hs
                         Test/examples/Directory.hs
                         Test/examples/DoRec.hs
                         Test/examples/DoubleHashOp.hs

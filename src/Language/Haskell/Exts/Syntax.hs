@@ -52,7 +52,7 @@ module Language.Haskell.Exts.Syntax (
     -- * Class Assertions and Contexts
     Context, FunDep(..), Asst(..),
     -- * Types
-    Type(..), Boxed(..), Kind(..), TyVarBind(..),
+    Type(..), Boxed(..), Kind(..), TyVarBind(..), Promoted(..),
     -- * Expressions
     Exp(..), Stmt(..), QualStmt(..), FieldUpdate(..),
     Alt(..), GuardedAlts(..), GuardedAlt(..), XAttr(..), IfAlt(..),
@@ -621,6 +621,20 @@ data Type
      | TyParen Type             -- ^ type surrounded by parentheses
      | TyInfix Type QName Type  -- ^ infix type constructor
      | TyKind  Type Kind        -- ^ type with explicit kind signature
+     | TyPromoted Promoted      -- ^ promoted data type (-XDataKinds)
+#ifdef __GLASGOW_HASKELL__
+  deriving (Eq,Ord,Show,Typeable,Data)
+#else
+  deriving (Eq,Ord,Show)
+#endif
+
+data Promoted
+        = PromotedInteger Integer
+        | PromotedString String
+        | PromotedCon Bool QName
+        | PromotedList Bool [Promoted]
+        | PromotedTuple [Promoted]
+        | PromotedUnit
 #ifdef __GLASGOW_HASKELL__
 #if MIN_VERSION_base(4,6,0)
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
@@ -651,7 +665,10 @@ data Kind
     | KindBang          -- ^ @!@, the kind of unboxed types
     | KindFn Kind Kind  -- ^ @->@, the kind of a type constructor
     | KindParen Kind    -- ^ a kind surrounded by parentheses
-    | KindVar Name      -- ^ a kind variable (as of yet unsupported by compilers)
+    | KindVar QName     -- ^ a kind variable (as of yet unsupported by compilers)
+    | KindApp Kind Kind -- ^ @k1 k2@
+    | KindTuple [Kind]  -- ^ @'(k1,k2,k3)@, a promoted tuple
+    | KindList  [Kind]  -- ^ @'[k1,k2,k3]@, a promoted list literal
 #ifdef __GLASGOW_HASKELL__
 #if MIN_VERSION_base(4,6,0)
   deriving (Eq,Ord,Show,Typeable,Data,Generic)

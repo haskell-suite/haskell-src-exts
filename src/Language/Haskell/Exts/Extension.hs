@@ -454,6 +454,10 @@ data KnownExtension =
   -- foreign function interface.
   | CApiFFI
 
+  | DataKinds
+
+  | PolyKinds
+
   -- | [GHC &#xa7; 7.3.16] Enable the multi-way if-expressions
   -- extension to accept conditional expressions with multiple branches.
   | MultiWayIf

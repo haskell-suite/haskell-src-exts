@@ -56,7 +56,7 @@ module Language.Haskell.Exts.Annotated.Syntax (
     -- * Class Assertions and Contexts
     Context(..), FunDep(..), Asst(..),
     -- * Types
-    Type(..), Boxed(..), Kind(..), TyVarBind(..),
+    Type(..), Boxed(..), Kind(..), TyVarBind(..), Promoted(..),
     -- * Expressions
     Exp(..), Stmt(..), QualStmt(..), FieldUpdate(..),
     Alt(..), GuardedAlts(..), GuardedAlt(..), XAttr(..), IfAlt(..),
@@ -597,6 +597,25 @@ data Type l
      | TyParen l (Type l)                       -- ^ type surrounded by parentheses
      | TyInfix l (Type l) (QName l) (Type l)    -- ^ infix type constructor
      | TyKind  l (Type l) (Kind l)              -- ^ type with explicit kind signature
+     | TyPromoted l (Promoted l)                -- ^ @'K@, a promoted data type (-XDataKinds).
+#ifdef __GLASGOW_HASKELL__
+  deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable)
+#else
+  deriving (Eq,Ord,Show)
+#endif
+
+-- | Bools here are True if there was a leading quote which may be
+-- left out. For example @'[k1,k2]@ means the same thing as @[k1,k2]@.
+data Promoted l
+        = PromotedInteger l -- ^ annotation
+                    Integer -- ^ parsed value
+                    String -- ^ raw
+        | PromotedString l String -- ^ parsed string
+                String -- ^ raw
+        | PromotedCon l Bool (QName l)
+        | PromotedList l Bool [Promoted l]
+        | PromotedTuple l [Promoted l]
+        | PromotedUnit l
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable)
 #else
@@ -631,7 +650,10 @@ data Kind l
     | KindBang  l                    -- ^ @!@, the kind of unboxed types
     | KindFn    l (Kind l) (Kind l)  -- ^ @->@, the kind of a type constructor
     | KindParen l (Kind l)           -- ^ a parenthesised kind
-    | KindVar   l (Name l)           -- ^ a kind variable (as-of-yet unsupported by compilers)
+    | KindVar   l (QName l)          -- ^ @k@, a kind variable (-XPolyKinds)
+    | KindApp   l (Kind l) (Kind l)  -- ^ @k1 k2@
+    | KindTuple l [Kind l]           -- ^ @'(k1,k2,k3)@, a promoted tuple
+    | KindList  l [Kind l]           -- ^ @'[k1,k2,k3]@, a promoted list literal
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable)
 #else
@@ -1357,6 +1379,7 @@ instance Functor Type where
       TyParen l t                   -> TyParen (f l) (fmap f t)
       TyInfix l ta qn tb            -> TyInfix (f l) (fmap f ta) (fmap f qn) (fmap f tb)
       TyKind  l t k                 -> TyKind (f l) (fmap f t) (fmap f k)
+      TyPromoted l   p              -> TyPromoted (f l)   (fmap f p)
 
 instance Functor TyVarBind where
     fmap f (KindedVar   l n k) = KindedVar (f l) (fmap f n) (fmap f k)
@@ -1368,6 +1391,9 @@ instance Functor Kind where
     fmap f (KindFn    l k1 k2) = KindFn (f l) (fmap f k1) (fmap f k2)
     fmap f (KindParen l k) = KindParen (f l) (fmap f k)
     fmap f (KindVar   l n) = KindVar (f l) (fmap f n)
+    fmap f (KindApp   l k1 k2) = KindFn (f l) (fmap f k1) (fmap f k2)
+    fmap f (KindTuple l ks) = KindTuple (f l) (map (fmap f) ks)
+    fmap f (KindList  l ks) = KindList  (f l) (map (fmap f) ks)
 
 instance Functor FunDep where
     fmap f (FunDep l ns1 ns2) = FunDep (f l) (map (fmap f) ns1) (map (fmap f) ns2)
@@ -1586,6 +1612,14 @@ instance Functor GuardedAlts where
 
 instance Functor GuardedAlt where
     fmap f (GuardedAlt l ss e) = GuardedAlt (f l) (map (fmap f) ss) (fmap f e)
+
+instance Functor Promoted where
+    fmap f (PromotedInteger l int raw) = PromotedInteger (f l) int raw
+    fmap f (PromotedString l str raw) = PromotedString (f l) str raw
+    fmap f (PromotedCon l b qn)   = PromotedCon (f l) b (fmap f qn)
+    fmap f (PromotedList l b ps)  = PromotedList  (f l) b (map (fmap f) ps)
+    fmap f (PromotedTuple l ps) = PromotedTuple (f l) (map (fmap f) ps)
+    fmap f (PromotedUnit l)     = PromotedUnit (f l)
 
 instance Functor IfAlt where
     fmap f (IfAlt l e1 e2) = IfAlt (f l) (fmap f e1) (fmap f e2)
@@ -1900,6 +1934,7 @@ instance Annotated Type where
       TyParen l t                   -> l
       TyInfix l ta qn tb            -> l
       TyKind  l t k                 -> l
+      TyPromoted l   p              -> l
     amap f t = case t of
       TyForall l mtvs mcx t         -> TyForall (f l) mtvs mcx t
       TyFun   l t1 t2               -> TyFun (f l) t1 t2
@@ -1911,6 +1946,7 @@ instance Annotated Type where
       TyParen l t                   -> TyParen (f l) t
       TyInfix l ta qn tb            -> TyInfix (f l) ta qn tb
       TyKind  l t k                 -> TyKind (f l) t k
+      TyPromoted l   p              -> TyPromoted (f l)   p
 
 instance Annotated TyVarBind where
     ann (KindedVar   l n k) = l
@@ -1924,11 +1960,17 @@ instance Annotated Kind where
     ann (KindFn   l k1 k2) = l
     ann (KindParen l k) = l
     ann (KindVar l v) = l
+    ann (KindApp l k1 k2) = l
+    ann (KindTuple l ks) = l
+    ann (KindList  l ks) = l
     amap f (KindStar l) = KindStar (f l)
     amap f (KindBang l) = KindBang (f l)
     amap f (KindFn   l k1 k2) = KindFn (f l) k1 k2
     amap f (KindParen l k) = KindParen (f l) k
     amap f (KindVar l n) = KindVar (f l) n
+    amap f (KindApp l k1 k2) = KindApp (f l) k1 k2
+    amap f (KindTuple l ks) = KindTuple (f l) ks
+    amap f (KindList  l ks) = KindList  (f l) ks
 
 instance Annotated FunDep where
     ann (FunDep l ns1 ns2) = l
@@ -2286,6 +2328,20 @@ instance Annotated GuardedAlts where
 instance Annotated GuardedAlt where
     ann (GuardedAlt l ss e) = l
     amap f (GuardedAlt l ss e) = GuardedAlt (f l) ss e
+
+instance Annotated Promoted where
+    ann (PromotedInteger l int raw) = l
+    ann (PromotedString l str raw) = l
+    ann (PromotedCon l b qn)   = l
+    ann (PromotedList l b ps)  = l
+    ann (PromotedTuple l ps) = l
+    ann (PromotedUnit l)     = l
+    amap f (PromotedInteger l int raw) = PromotedInteger (f l) int raw
+    amap f (PromotedString l str raw) = PromotedString (f l) str raw
+    amap f (PromotedCon l b qn)   = PromotedCon (f l) b qn
+    amap f (PromotedList l b ps)  = PromotedList  (f l) b ps
+    amap f (PromotedTuple l ps) = PromotedTuple (f l) ps
+    amap f (PromotedUnit l)     = PromotedUnit (f l)
 
 instance Annotated IfAlt where
     ann (IfAlt l e1 e2) = l

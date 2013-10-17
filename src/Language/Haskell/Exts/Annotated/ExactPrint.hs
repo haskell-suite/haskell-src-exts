@@ -862,7 +862,22 @@ instance ExactP Kind where
             exactPC kd
             printStringAt (pos b) ")"
          _ -> errorEP "ExactP: Kind: KindParen is given wrong number of srcInfoPoints"
-    KindVar l n     -> exactP n
+    KindVar l n     -> epQName n
+    KindApp l k1 k2 -> do
+        exactP k1
+        exactPC k2
+    KindTuple l ks ->
+        let o = "("
+            e = ")"
+            pts = srcInfoPoints l
+        in printInterleaved (zip pts (o: replicate (length pts - 2) "," ++ [e])) ks
+    KindList  l ks ->
+        let o = "["
+            e = "]"
+            pts = srcInfoPoints l
+        in printInterleaved (zip pts (o: replicate (length pts - 2) "," ++ [e])) ks
+
+
 
 instance ExactP Type where
   exactP t = case t of
@@ -918,6 +933,31 @@ instance ExactP Type where
             exactPC kd
             printStringAt (pos c) ")"
          _ -> errorEP "ExactP: Type: TyKind is given wrong number of srcInfoPoints"
+    TyPromoted l p -> exactPC p
+
+instance ExactP Promoted where
+  exactP (PromotedInteger _ _ rw) = printString rw
+  exactP (PromotedString _ _ rw)  = printString ('\"':rw ++ "\"")
+  exactP (PromotedCon l True qn)  = case srcInfoPoints l of
+    [a] -> (printStringAt (pos a) "'") >> epQName qn
+    _ -> errorEP "ExactP: Promoted: PromotedCon is given wrong number of srcInfoPoints"
+  exactP (PromotedCon l False qn) = epQName qn
+  exactP (PromotedList l b pl) =
+    let o | b = "'[" | otherwise = "["
+        e = "]"
+        pts = srcInfoPoints l
+    in printInterleaved (zip pts (o: replicate (length pts - 2) "," ++ [e])) pl
+  exactP (PromotedTuple l pl) =
+    let o = "'("
+        e = ")"
+        pts = srcInfoPoints l
+    in printInterleaved (zip pts (o: replicate (length pts - 2) "," ++ [e])) pl
+  exactP (PromotedUnit l) = case srcInfoPoints l of
+    [a,b] -> do
+        printString "("
+        printStringAt (pos b) ")"
+    _ -> errorEP "ExactP: Promoted: PromotedUnit is given wrong number of srcInfoPoints"
+
 
 instance ExactP Context where
   exactP ctxt = do
