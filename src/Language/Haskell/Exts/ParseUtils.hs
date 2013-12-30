@@ -543,6 +543,7 @@ checkExpr e = case e of
     Lambda loc ps e       -> check1Expr e (S.Lambda loc ps)
     Let l bs e            -> check1Expr e (S.Let l bs)
     If l e1 e2 e3         -> check3Exprs e1 e2 e3 (S.If l)
+    MultiIf l alts        -> return (S.MultiIf l alts)
     Case l e alts         -> do
                      e <- checkExpr e
                      return (S.Case l e alts)
