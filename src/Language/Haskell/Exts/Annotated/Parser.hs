@@ -36,6 +36,8 @@ module Language.Haskell.Exts.Annotated.Parser
     , getTopPragmas, readExtensions
     , NonGreedyTopPragmas(..), NonGreedyExtensions(..)
     , NonGreedyModuleName(..), NonGreedyModuleHead(..), NonGreedyModuleImports(..)
+    -- * CPP Utilities
+    , ignoreCpp, ignoreCppLines
     ) where
 
 import Language.Haskell.Exts.Annotated.Fixity
@@ -55,6 +57,7 @@ import Data.Generics (Data(..),Typeable(..))
 #endif
 
 import Data.Either (partitionEithers)
+import Data.Maybe (listToMaybe)
 
 applyFixities' :: AppFixity a => P a -> Maybe [Fixity] -> P a
 applyFixities' p Nothing = p
@@ -366,3 +369,18 @@ instance Parseable (NonGreedyModuleImports SrcSpanInfo) where
             (handleSpans ps)
             mh
             (fmap handleSpans mimps)
+
+-- | Filter out lines which use CPP macros.  This is a convenient wrapper around
+--   'ignoreCppLines' which applies 'lines' / 'unlines'.
+ignoreCpp :: String -> String
+ignoreCpp = unlines . ignoreCppLines . lines
+
+-- | Filter out lines which use CPP macros.
+ignoreCppLines :: [String] -> [String]
+ignoreCppLines = go False
+  where
+    go _           []       = []
+    go isMultiline (x : xs) =
+        let isCpp         = isMultiline || listToMaybe x == Just '#'
+            nextMultiline = isCpp && not (null x) && last x == '\\'
+        in (if isCpp then "" else x) : go nextMultiline xs
