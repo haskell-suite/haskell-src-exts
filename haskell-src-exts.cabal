@@ -152,7 +152,8 @@ Library
                         Language.Haskell.Exts.Annotated.Fixity,
                         Language.Haskell.Exts.Annotated.Build,
                         Language.Haskell.Exts.Annotated.ExactPrint,
-                        Language.Haskell.Exts.Annotated.Simplify
+                        Language.Haskell.Exts.Annotated.Simplify,
+                        Language.Haskell.Exts.Annotated.Parser
 
   Other-modules:        Language.Haskell.Exts.ExtScheme,
                         
