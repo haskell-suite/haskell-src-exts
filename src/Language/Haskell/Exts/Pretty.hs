@@ -786,6 +786,9 @@ instance Pretty Exp where
                 myFsep [text "if", pretty cond,
                         text "then", pretty thenexp,
                         text "else", pretty elsexp]
+        prettyPrec p (MultiIf alts) = parensIf (p > 1) $
+                text "if"
+                $$$ ppBody caseIndent (map pretty alts)
         prettyPrec p (Case cond altList) = parensIf (p > 1) $
                 myFsep [text "case", pretty cond, text "of"]
                 $$$ ppBody caseIndent (map pretty altList)
@@ -1009,6 +1012,10 @@ instance Pretty GuardedAlts where
 instance Pretty GuardedAlt where
         pretty (GuardedAlt _pos guards body) =
                 myFsep $ char '|': (punctuate comma . map pretty $ guards) ++ [text "->", pretty body]
+
+instance Pretty IfAlt where
+        pretty (IfAlt e1 e2) =
+                myFsep $ char '|' : [pretty e1, text "->", pretty e2]
 
 ------------------------- Statements in monads, guards & list comprehensions -----
 instance Pretty Stmt where
@@ -1378,6 +1385,9 @@ instance SrcInfo loc => Pretty (A.GuardedAlts loc) where
 instance SrcInfo loc => Pretty (A.GuardedAlt loc) where
         pretty = pretty . sGuardedAlt
 
+instance SrcInfo loc => Pretty (A.IfAlt loc) where
+        pretty = pretty . sIfAlt
+
 ------------------------- Statements in monads, guards & list comprehensions -----
 instance SrcInfo loc => Pretty (A.Stmt loc) where
         pretty = pretty . sStmt
@@ -1539,6 +1549,9 @@ instance SrcInfo loc => Pretty (P.PExp loc) where
                 myFsep [text "if", pretty cond,
                         text "then", pretty thenexp,
                         text "else", pretty elsexp]
+        pretty (P.MultiIf _ alts) =
+                text "if"
+                $$$ ppBody caseIndent (map pretty alts)
         pretty (P.Case _ cond altList) =
                 myFsep [text "case", pretty cond, text "of"]
                 $$$ ppBody caseIndent (map pretty altList)

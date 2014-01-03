@@ -9,7 +9,6 @@ BadStringLineBreak.hs	 Shouldn't succeed.
 NonDecreasing.hs	 Shouldn't succeed without -XNondecreasingIndentation.
 THTypes.hs		 Type splices not yet supported
 QQType.hs                Same issue as above
-UnicodeSyntax.hs         Unicode forall symbol not working
 IllDataTypeDecl.hs       Parser doesn't handle all declaration heads
 ConstraintKinds.hs       ConstraintKinds in type synonyms not yet supported.
 RCategory.lhs            ConstraintKinds not supported in general.
@@ -18,5 +17,4 @@ Unpack.hs               unpack pragmas not supported
 NegPrimWordLiteral.hs    Primitive word literals cannot be negative.
 RecordPuns.hs            Qualified record puns not yet supported.
 IndentedTopLevelWhere.hs Weird layout bug.
-MultiWayIf.hs            Multi-way if statements not yet supported.
 LambdaCase.hs            Lambda-case expressions not yet supported.

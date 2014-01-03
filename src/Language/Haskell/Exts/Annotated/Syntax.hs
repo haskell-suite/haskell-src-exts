@@ -1,4 +1,4 @@
-{-# LANGUAGE CPP, DeriveDataTypeable, DeriveFoldable, DeriveTraversable #-}
+{-# LANGUAGE CPP, DeriveDataTypeable, DeriveFoldable, DeriveTraversable, DeriveGeneric #-}
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Language.Haskell.Exts.Annotated.Syntax
@@ -59,7 +59,7 @@ module Language.Haskell.Exts.Annotated.Syntax (
     Type(..), Boxed(..), Kind(..), TyVarBind(..), Promoted(..),
     -- * Expressions
     Exp(..), Stmt(..), QualStmt(..), FieldUpdate(..),
-    Alt(..), GuardedAlts(..), GuardedAlt(..), XAttr(..),
+    Alt(..), GuardedAlts(..), GuardedAlt(..), XAttr(..), IfAlt(..),
     -- * Patterns
     Pat(..), PatField(..), PXAttr(..), RPat(..), RPatOp(..),
     -- * Literals
@@ -108,6 +108,9 @@ module Language.Haskell.Exts.Annotated.Syntax (
 #ifdef __GLASGOW_HASKELL__
 #ifdef BASE4
 import Data.Data
+#if MIN_VERSION_base(4,6,0)
+import GHC.Generics (Generic)
+#endif
 #else
 import Data.Generics (Data(..),Typeable(..))
 #endif
@@ -630,7 +633,11 @@ data Promoted l
 -- | Flag denoting whether a tuple is boxed or unboxed.
 data Boxed = Boxed | Unboxed
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -732,6 +739,7 @@ data Exp l
     | Lambda l [Pat l] (Exp l)              -- ^ lambda expression
     | Let l (Binds l) (Exp l)               -- ^ local declarations with @let@ ... @in@ ...
     | If l (Exp l) (Exp l) (Exp l)          -- ^ @if@ /exp/ @then@ /exp/ @else@ /exp/
+    | MultiIf l [IfAlt l]                   -- ^ @if@ @|@ /exp/ @->@ /exp/ ...
     | Case l (Exp l) [Alt l]                -- ^ @case@ /exp/ @of@ /alts/
     | Do l [Stmt l]                         -- ^ @do@-expression:
                                             --   the last statement in the list
@@ -875,7 +883,11 @@ data ModulePragma l
 -- | Recognised tools for OPTIONS pragmas.
 data Tool = GHC | HUGS | NHC98 | YHC | HADDOCK | UnknownTool String
 #ifdef __GLASGOW_HASKELL__
+#if MIN_VERSION_base(4,6,0)
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+#else
   deriving (Eq,Ord,Show,Typeable,Data)
+#endif
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -1079,6 +1091,14 @@ data GuardedAlt l
   deriving (Eq,Ord,Show)
 #endif
 
+-- | An alternative in a multiway @if@ expression.
+data IfAlt l
+    = IfAlt l (Exp l) (Exp l)
+#ifdef __GLASGOW_HASKELL__
+  deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable)
+#else
+  deriving (Eq,Ord,Show)
+#endif
 -----------------------------------------------------------------------------
 -- Builtin names.
 
@@ -1606,6 +1626,8 @@ instance Functor Promoted where
     fmap f (PromotedTuple l ps) = PromotedTuple (f l) (map (fmap f) ps)
     fmap f (PromotedUnit l)     = PromotedUnit (f l)
 
+instance Functor IfAlt where
+    fmap f (IfAlt l e1 e2) = IfAlt (f l) (fmap f e1) (fmap f e2)
 
 -----------------------------------------------------------------------------
 -- Reading annotations
@@ -2009,6 +2031,7 @@ instance Annotated Exp where
         Lambda l ps e   -> l
         Let l bs e      -> l
         If l ec et ee   -> l
+        MultiIf l alts  -> l
         Case l e alts   -> l
         Do l ss         -> l
         MDo l ss        -> l
@@ -2322,3 +2345,7 @@ instance Annotated Promoted where
     amap f (PromotedList l b ps)  = PromotedList  (f l) b ps
     amap f (PromotedTuple l ps) = PromotedTuple (f l) ps
     amap f (PromotedUnit l)     = PromotedUnit (f l)
+
+instance Annotated IfAlt where
+    ann (IfAlt l e1 e2) = l
+    amap f (IfAlt l e1 e2) = IfAlt (f l) e1 e2

@@ -1193,6 +1193,11 @@ instance ExactP Exp where
               _ -> errorEP "ExactP: Exp: If is given too few srcInfoPoints"
 
          _ -> errorEP "ExactP: Exp: If is given too few srcInfoPoints"
+    MultiIf l alts ->
+        case srcInfoPoints l of
+          a:pts -> do
+            printString "if"
+            layoutList pts alts
     Case l e alts   ->
         case srcInfoPoints l of
          a:b:pts -> do
@@ -1551,6 +1556,15 @@ instance ExactP GuardedAlt where
   exactP (GuardedAlt l stmts e) = do
     bracketList ("|",",","->") (srcInfoPoints l) stmts
     exactPC e
+
+instance ExactP IfAlt where
+  exactP (IfAlt l e1 e2) =
+      case srcInfoPoints l of
+        a:b:pts -> do
+            printString "|"
+            exactPC e1
+            printStringAt (pos b) "->"
+            exactPC e2
 
 instance ExactP Match where
   exactP (Match l n ps rhs mbinds) = do
