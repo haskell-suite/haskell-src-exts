@@ -590,7 +590,10 @@ Requires the StandaloneDeriving extension enabled.
 Requires the TemplateHaskell extension, but the lexer will handle that
 through the '$(' lexeme.
 CHANGE: Arbitrary top-level expressions are considered implicit splices
->       | exp0             {% checkEnabled TemplateHaskell >> checkExpr $1 >>= \e -> return (SpliceDecl (ann e) e) }
+>       | exp0             {% do
+>               checkToplevel $1
+>               checkExpr $1 >>= \e -> return (SpliceDecl (ann e) e) 
+>                  }
 
        | '$(' trueexp ')'  { let l = $1 <^^> $3 <** [$1,$3] in SpliceDecl l $ ParenSplice l $2 }
 
