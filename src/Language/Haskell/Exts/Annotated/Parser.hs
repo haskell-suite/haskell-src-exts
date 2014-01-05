@@ -18,6 +18,7 @@ module Language.Haskell.Exts.Annotated.Parser
     (
     -- * General parsing
       Parseable(parse, parseWithMode, parseWithComments)
+    , ListOf(..), unListOf
     -- * Parsing of specific AST elements
     -- ** Modules
     , parseModule, parseModuleWithMode, parseModuleWithComments
@@ -32,10 +33,11 @@ module Language.Haskell.Exts.Annotated.Parser
     , parseDecl, parseDeclWithMode, parseDeclWithComments
     -- ** Types
     , parseType, parseTypeWithMode, parseTypeWithComments
+    -- * Non-greedy parsers
+    , NonGreedy(..)
     -- ** Module head parsers
-    , getTopPragmas, readExtensions
-    , NonGreedyTopPragmas(..), NonGreedyExtensions(..)
-    , NonGreedyModuleName(..), NonGreedyModuleHead(..), NonGreedyModuleImports(..)
+    , getTopPragmas, readExtensions, pragmasToExtensions
+    , PragmasAndModuleName(..), PragmasAndModuleHead(..), ModuleHeadAndImports(..)
     -- * CPP Utilities
     , ignoreCpp, ignoreCppLines
     ) where
@@ -57,19 +59,67 @@ import Data.Generics (Data(..),Typeable(..))
 #endif
 
 import Data.Either (partitionEithers)
+import Data.List (foldl1')
 import Data.Maybe (listToMaybe)
 
-applyFixities' :: AppFixity a => P a -> Maybe [Fixity] -> P a
-applyFixities' p Nothing = p
-applyFixities' p (Just fixs) = p >>= \ast -> applyFixities fixs ast `atSrcLoc` noLoc
+-- | @ListOf a@ stores lists of the AST type @a@, along with a 'SrcSpanInfo',
+--   in order to provide 'Parseable' instances for lists.  These instances are
+--   provided when the type is used as a list in the syntax, and the same
+--   delimiters are used in all of its usages. Some exceptions are made:
+--
+--     * @ListOf (Exp SrcSpanInfo)@ is expected to have syntax like @ e1, e2 @.
+--       'XTag', 'XChildTag', 'XmlPage', and 'XmlHybrid' don't use this syntax.
+--
+--     * @ListOf (Pat SrcSpanInfo)@ is expected to have syntax like @ p1, p2 @.
+--       'Match', 'Lambda', 'PApp', and 'PXTag' don't use this syntax.
+--
+--     * Similarly, @ListOf (Name SrcSpanInfo)@ is expected to have syntax like
+--       @ n1, n2 @.  However, this is only used directly in DEPRECATED and
+--       WARNING pragamas.  Most of the other usages of @[Name l]@ in the AST
+--       are compatible with this, except that they demand specific varieties of
+--       names. 'TypeSig' and 'FieldDecl' expect value identifiers, whereas
+--       'LanguagePragma' expects uppercase identifiers.  Also, 'FunDep' expects
+--       space-separated identifiers.
+--
+--     * @[QName l]@ is never used in the syntax, but a parser for @ qn1, qn2 @
+--       is provided anyway.
+--
+--     * @ListOf [Stmt SrcSpanInfo]@ parses statements used in 'Do', 'MDo', or
+--       'RecStmt'.  However, statements are also separated by commas when used
+--        as guards in 'RPGuard', 'GuardedAlt', and 'GuardedRhs'.
+--
+--     * @ListOf [QualStmt SrcSpanInfo]@ parses the portion of a parallel list
+--       comprehension that comes after the expression.  There aren't any
+--       exceptions to this in the AST, but it's worth pointing out.
+--
+data ListOf a = ListOf SrcSpanInfo [a]
+#ifdef __GLASGOW_HASKELL__
+  deriving (Eq,Ord,Show,Typeable,Data)
+#else
+  deriving (Eq,Ord,Show)
+#endif
+
+unListOf :: ListOf a -> [a]
+unListOf (ListOf _ xs) = xs
 
 -- It's safe to forget about the previous SrcSpanInfo 'srcInfoPoints', because
 -- I've checked all of the relevant parsers, and these particular ones
 -- (presently) are all created with 'noInfoSpan' ('nIS'), '(<^^>)', or '(<++>)',
 -- all of which have empty 'srcInfoPoints'. Ideally, the parsers would return
 -- better types, but this works.
-handleSpans :: (a, [SrcSpan], SrcSpanInfo) -> (a, SrcSpanInfo)
-handleSpans (x, ss, l) = (x, infoSpan (srcInfoSpan l) ss)
+toListOf :: ([a], [SrcSpan], SrcSpanInfo) -> ListOf a
+toListOf (xs, ss, l) = ListOf (infoSpan (srcInfoSpan l) ss) xs
+
+toListOf' :: ([a], SrcSpanInfo) -> ListOf a
+toListOf' (xs, l) = ListOf l xs
+
+toListOf'' :: (a -> SrcSpanInfo) -> [a] -> ListOf a
+toListOf'' f [] = ListOf (noInfoSpan (mkSrcSpan noLoc noLoc)) []
+toListOf'' f xs = ListOf (foldl1' (<++>) $ map f xs) xs
+
+applyFixities' :: AppFixity a => P a -> Maybe [Fixity] -> P a
+applyFixities' p Nothing = p
+applyFixities' p (Just fixs) = p >>= \ast -> applyFixities fixs ast `atSrcLoc` noLoc
 
 instance Parseable (Activation     SrcSpanInfo) where parser = applyFixities' mparseActivation
 instance Parseable (Alt            SrcSpanInfo) where parser = applyFixities' mparseAlt
@@ -118,33 +168,32 @@ instance Parseable (Type           SrcSpanInfo) where parser = applyFixities' mp
 instance Parseable (TyVarBind      SrcSpanInfo) where parser = applyFixities' mparseTyVarBind
 instance Parseable (XName          SrcSpanInfo) where parser = applyFixities' mparseXName
 
-instance Parseable [Module         SrcSpanInfo] where parser = applyFixities' mparseModules
-instance Parseable [Rule           SrcSpanInfo] where parser = applyFixities' mparseRules
-instance Parseable [RuleVar        SrcSpanInfo] where parser = applyFixities' mparseRuleVars
+instance Parseable (ListOf (ClassDecl    SrcSpanInfo)) where parser = fmap toListOf         . applyFixities' mparseClassDecls
+instance Parseable (ListOf (CName        SrcSpanInfo)) where parser = fmap toListOf         . applyFixities' mparseCNames
+instance Parseable (ListOf (Decl         SrcSpanInfo)) where parser = fmap toListOf         . applyFixities' mparseDecls
+instance Parseable (ListOf (Exp          SrcSpanInfo)) where parser = fmap toListOf         . applyFixities' mparseExps
+instance Parseable (ListOf (FieldDecl    SrcSpanInfo)) where parser = fmap toListOf         . applyFixities' mparseFieldDecls
+instance Parseable (ListOf (FunDep       SrcSpanInfo)) where parser = fmap toListOf         . applyFixities' mparseFunDeps
+instance Parseable (ListOf (GadtDecl     SrcSpanInfo)) where parser = fmap toListOf         . applyFixities' mparseGadtDecls
+instance Parseable (ListOf (GuardedAlt   SrcSpanInfo)) where parser = fmap toListOf'        . applyFixities' mparseGuardedAlts
+instance Parseable (ListOf (GuardedRhs   SrcSpanInfo)) where parser = fmap toListOf'        . applyFixities' mparseGuardedRhss
+instance Parseable (ListOf (ImportDecl   SrcSpanInfo)) where parser = fmap toListOf         . applyFixities' mparseImportDecls
+instance Parseable (ListOf (InstDecl     SrcSpanInfo)) where parser = fmap toListOf         . applyFixities' mparseInstDecls
+instance Parseable (ListOf (IPBind       SrcSpanInfo)) where parser = fmap toListOf'        . applyFixities' mparseIPBinds
+instance Parseable (ListOf (Module       SrcSpanInfo)) where parser = fmap (toListOf'' ann) . applyFixities' mparseModules
+instance Parseable (ListOf (ModulePragma SrcSpanInfo)) where parser = fmap toListOf         . applyFixities' mparseModulePragmas
+instance Parseable (ListOf (Name         SrcSpanInfo)) where parser = fmap toListOf         . applyFixities' mparseNames
+instance Parseable (ListOf (Op           SrcSpanInfo)) where parser = fmap toListOf         . applyFixities' mparseOps
+instance Parseable (ListOf (Pat          SrcSpanInfo)) where parser = fmap toListOf         . applyFixities' mparsePats
+instance Parseable (ListOf (QName        SrcSpanInfo)) where parser = fmap toListOf         . applyFixities' mparseQNames
+instance Parseable (ListOf (QualConDecl  SrcSpanInfo)) where parser = fmap toListOf         . applyFixities' mparseQualConDecls
+instance Parseable (ListOf (QualStmt     SrcSpanInfo)) where parser = fmap toListOf         . applyFixities' mparseQualStmts
+instance Parseable (ListOf (Rule         SrcSpanInfo)) where parser = fmap (toListOf'' ann) . applyFixities' mparseRules
+instance Parseable (ListOf (RuleVar      SrcSpanInfo)) where parser = fmap (toListOf'' ann) . applyFixities' mparseRuleVars
+instance Parseable (ListOf (Stmt         SrcSpanInfo)) where parser = fmap toListOf         . applyFixities' mparseStmts
+instance Parseable (ListOf (TyVarBind    SrcSpanInfo)) where parser = fmap toListOf         . applyFixities' mparseTyVarBinds
 
-instance Parseable ([ClassDecl     SrcSpanInfo], SrcSpanInfo) where parser = fmap handleSpans . applyFixities' mparseClassDecls
-instance Parseable ([CName         SrcSpanInfo], SrcSpanInfo) where parser = fmap handleSpans . applyFixities' mparseCNames
-instance Parseable ([Decl          SrcSpanInfo], SrcSpanInfo) where parser = fmap handleSpans . applyFixities' mparseDecls
-instance Parseable ([Exp           SrcSpanInfo], SrcSpanInfo) where parser = fmap handleSpans . applyFixities' mparseExps
-instance Parseable ([FieldDecl     SrcSpanInfo], SrcSpanInfo) where parser = fmap handleSpans . applyFixities' mparseFieldDecls
-instance Parseable ([FunDep        SrcSpanInfo], SrcSpanInfo) where parser = fmap handleSpans . applyFixities' mparseFunDeps
-instance Parseable ([GadtDecl      SrcSpanInfo], SrcSpanInfo) where parser = fmap handleSpans . applyFixities' mparseGadtDecls
-instance Parseable ([GuardedAlt    SrcSpanInfo], SrcSpanInfo) where parser =                    applyFixities' mparseGuardedAlts
-instance Parseable ([GuardedRhs    SrcSpanInfo], SrcSpanInfo) where parser =                    applyFixities' mparseGuardedRhss
-instance Parseable ([ImportDecl    SrcSpanInfo], SrcSpanInfo) where parser = fmap handleSpans . applyFixities' mparseImportDecls
-instance Parseable ([InstDecl      SrcSpanInfo], SrcSpanInfo) where parser = fmap handleSpans . applyFixities' mparseInstDecls
-instance Parseable ([IPBind        SrcSpanInfo], SrcSpanInfo) where parser =                    applyFixities' mparseIPBinds
-instance Parseable ([ModulePragma  SrcSpanInfo], SrcSpanInfo) where parser = fmap handleSpans . applyFixities' mparseModulePragmas
-instance Parseable ([Name          SrcSpanInfo], SrcSpanInfo) where parser = fmap handleSpans . applyFixities' mparseNames
-instance Parseable ([Op            SrcSpanInfo], SrcSpanInfo) where parser = fmap handleSpans . applyFixities' mparseOps
-instance Parseable ([Pat           SrcSpanInfo], SrcSpanInfo) where parser = fmap handleSpans . applyFixities' mparsePats
-instance Parseable ([QName         SrcSpanInfo], SrcSpanInfo) where parser = fmap handleSpans . applyFixities' mparseQNames
-instance Parseable ([QualConDecl   SrcSpanInfo], SrcSpanInfo) where parser = fmap handleSpans . applyFixities' mparseQualConDecls
-instance Parseable ([QualStmt      SrcSpanInfo], SrcSpanInfo) where parser = fmap handleSpans . applyFixities' mparseQualStmts
-instance Parseable ([Stmt          SrcSpanInfo], SrcSpanInfo) where parser = fmap handleSpans . applyFixities' mparseStmts
-instance Parseable ([TyVarBind     SrcSpanInfo], SrcSpanInfo) where parser = fmap handleSpans . applyFixities' mparseTyVarBinds
-
-instance Parseable ([[QualStmt     SrcSpanInfo]],SrcSpanInfo) where parser = fmap handleSpans . applyFixities' mparseParQualStmts
+instance Parseable (ListOf [QualStmt     SrcSpanInfo]) where parser = fmap toListOf . applyFixities' mparseParQualStmts
 
 {-
 instance Parseable (DeclHead       SrcSpanInfo) where parser = applyFixities' mparseDeclHead
@@ -164,7 +213,6 @@ instance Parseable (Tool           SrcSpanInfo) where parser = applyFixities' mp
 instance Parseable (PatField       SrcSpanInfo) where parser = applyFixities' mparsePatField
 -}
 
-
 -- Type-specific functions
 
 -- | Parse of a string, which should contain a complete Haskell module.
@@ -181,15 +229,15 @@ parseModuleWithComments = parseWithComments
 
 -- | Parse of a string, which should contain complete Haskell modules.
 parseModules :: String -> ParseResult [Module SrcSpanInfo]
-parseModules = parse
+parseModules = fmap (fmap unListOf) parse
 
 -- | Parse of a string containing complete Haskell modules, using an explicit 'ParseMode'.
 parseModulesWithMode :: ParseMode -> String -> ParseResult [Module SrcSpanInfo]
-parseModulesWithMode = parseWithMode
+parseModulesWithMode = fmap (fmap (fmap unListOf)) parseWithMode
 
 -- | Parse of a string containing complete Haskell modules, using an explicit 'ParseMode', retaining comments.
 parseModulesWithComments :: ParseMode -> String -> ParseResult ([Module SrcSpanInfo], [Comment])
-parseModulesWithComments = parseWithComments
+parseModulesWithComments = fmap (fmap (fmap (\(x, cs) -> (unListOf x, cs)))) parseWithComments
 
 -- | Parse of a string containing a Haskell expression.
 parseExp :: String -> ParseResult (Exp SrcSpanInfo)
@@ -255,7 +303,7 @@ parseStmtWithComments = parseWithComments
 
 -- | Non-greedy parse of a string starting with a series of top-level option pragmas.
 getTopPragmas :: String -> ParseResult [ModulePragma SrcSpanInfo]
-getTopPragmas = fmap (\(NonGreedyTopPragmas ps _) -> ps) . parse
+getTopPragmas = fmap unListOf . parse
 
 -- | Gather the extensions declared in LANGUAGE pragmas
 --   at the top of the file. Returns 'Nothing' if the
@@ -263,52 +311,57 @@ getTopPragmas = fmap (\(NonGreedyTopPragmas ps _) -> ps) . parse
 readExtensions :: String -> Maybe (Maybe Language, [Extension])
 readExtensions str =
     case parse str of
-        ParseOk (NonGreedyExtensions [] es) -> Just (Nothing, es)
-        ParseOk (NonGreedyExtensions [l] es) -> Just (Just l, es)
-        ParseOk (NonGreedyExtensions _ _) -> Nothing
+        ParseOk xs ->
+            case pragmasToExtensions (unListOf xs :: [ModulePragma SrcSpanInfo]) of
+                ([], es) -> Just (Nothing, es)
+                ([l], es) -> Just (Just l, es)
+                _ -> Nothing
         ParseFailed _ _ -> Nothing
-{-# DEPRECATED readExtensions "Prefer using parse with NonGreedyExtensions" #-}
 
-data NonGreedyTopPragmas l = NonGreedyTopPragmas [ModulePragma l] l
+pragmasToExtensions :: [ModulePragma l] -> ([Language], [Extension])
+pragmasToExtensions = partitionEithers . concatMap getExts
+  where
+    getExts (LanguagePragma _ ns) = map readExt ns
+    getExts _ = []
+    readExt (Ident _ e) =
+        case classifyLanguage e of
+            UnknownLanguage _ -> Right $ classifyExtension e
+            lang -> Left lang
+
+-- | Instances of 'Parseable' for @NonGreedy a@ will only consume the input
+--   until @a@ is fully parsed.  This means that parse errors that come later
+--   in the input will be ignored.  It's also more efficient, as it's fully lazy
+--   in the remainder of the input:
+--
+--   >>> parse (unlines ("module A where" : "main =" : repeat "blah")) :: ParseResult PragmasAndModuleHead
+--   ParseOk (NonGreedy {unNonGreedy = PragmasAndModuleHead [] (ModuleName "A",Nothing,Nothing)})
+--
+--   (this example uses the simplified AST)
+--
+newtype NonGreedy a = NonGreedy { unNonGreedy :: a }
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
 #else
   deriving (Eq,Ord,Show)
 #endif
 
-instance Parseable (NonGreedyTopPragmas SrcSpanInfo) where
-    parser _ = do
-        (ps, l) <- fmap handleSpans mfindOptPragmas
-        return $ NonGreedyTopPragmas ps l
+instance Functor NonGreedy where
+    fmap f (NonGreedy x) = NonGreedy (f x)
 
-data NonGreedyExtensions = NonGreedyExtensions [Language] [Extension]
-#ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Ord,Show,Typeable)
-#else
-  deriving (Eq,Ord,Show)
-#endif
+instance Parseable (NonGreedy (ListOf (ModulePragma SrcSpanInfo))) where
+    parser _ = fmap (NonGreedy . toListOf) mfindOptPragmas
 
-instance Parseable NonGreedyExtensions where
-    parser fixs = do
-        NonGreedyTopPragmas ps _ <- parser fixs
-        let (ls, es) = partitionEithers $ concatMap getExts ps
-        return $ NonGreedyExtensions ls es
-      where
-        getExts :: ModulePragma SrcSpanInfo -> [Either Language Extension]
-        getExts (LanguagePragma _ ns) = map readExt ns
-        getExts _ = []
+handleSpans :: ([a], [SrcSpan], SrcSpanInfo) -> ([a], SrcSpanInfo)
+handleSpans x = (xs, l)
+  where
+    ListOf l xs = toListOf x
 
-        readExt (Ident _ e) =
-            case classifyLanguage e of
-                UnknownLanguage _ -> Right $ classifyExtension e
-                lang -> Left lang
-
---   Type intended to be used with 'Parseable', with instances that implement a
+-- | Type intended to be used with 'Parseable', with instances that implement a
 --   non-greedy parse of the module name, including top-level pragmas.  This
 --   means that a parse error that comes after the module header won't be
 --   returned. If the 'Maybe' value is 'Nothing', then this means that there was
 --   no module header.
-data NonGreedyModuleName l = NonGreedyModuleName
+data PragmasAndModuleName l = PragmasAndModuleName
     ([ModulePragma l], l)
     (Maybe (ModuleName l))
 #ifdef __GLASGOW_HASKELL__
@@ -317,10 +370,10 @@ data NonGreedyModuleName l = NonGreedyModuleName
   deriving (Eq,Ord,Show)
 #endif
 
-instance Parseable (NonGreedyModuleName SrcSpanInfo) where
+instance Parseable (NonGreedy (PragmasAndModuleName SrcSpanInfo)) where
     parser _ = do
         (ps, mn) <- mfindModuleName
-        return $ NonGreedyModuleName (handleSpans ps) mn
+        return $ NonGreedy $ PragmasAndModuleName (handleSpans ps) mn
 
 --   Type intended to be used with 'Parseable', with instances that implement a
 --   non-greedy parse of the module name, including top-level pragmas.  This
@@ -330,7 +383,7 @@ instance Parseable (NonGreedyModuleName SrcSpanInfo) where
 --
 --   Note that the 'ParseMode' particularly matters for this due to the
 --   'MagicHash' changing the lexing of identifiers to include \"#\".
-data NonGreedyModuleHead l = NonGreedyModuleHead
+data PragmasAndModuleHead l = PragmasAndModuleHead
     ([ModulePragma l], l)
     (Maybe (ModuleHead l))
 #ifdef __GLASGOW_HASKELL__
@@ -339,10 +392,10 @@ data NonGreedyModuleHead l = NonGreedyModuleHead
   deriving (Eq,Ord,Show)
 #endif
 
-instance Parseable (NonGreedyModuleHead SrcSpanInfo) where
+instance Parseable (NonGreedy (PragmasAndModuleHead SrcSpanInfo)) where
     parser _ = do
-        (ps, mh) <- mfindModuleHead
-        return $ NonGreedyModuleHead (handleSpans ps) mh
+        (ps, mn) <- mfindModuleHead
+        return $ NonGreedy $ PragmasAndModuleHead (handleSpans ps) mn
 
 --   Type intended to be used with 'Parseable', with instances that implement a
 --   non-greedy parse of the module head, including top-level pragmas, module
@@ -352,7 +405,7 @@ instance Parseable (NonGreedyModuleHead SrcSpanInfo) where
 --
 --   Note that the 'ParseMode' particularly matters for this due to the
 --   'MagicHash' changing the lexing of identifiers to include \"#\".
-data NonGreedyModuleImports l = NonGreedyModuleImports
+data ModuleHeadAndImports l = ModuleHeadAndImports
     ([ModulePragma l], l)
     (Maybe (ModuleHead l))
     (Maybe ([ImportDecl l], l))
@@ -362,10 +415,10 @@ data NonGreedyModuleImports l = NonGreedyModuleImports
   deriving (Eq,Ord,Show)
 #endif
 
-instance Parseable (NonGreedyModuleImports SrcSpanInfo) where
+instance Parseable (NonGreedy (ModuleHeadAndImports SrcSpanInfo)) where
     parser _ = do
         (ps, mh, mimps) <- mfindModuleImports
-        return $ NonGreedyModuleImports
+        return $ NonGreedy $ ModuleHeadAndImports
             (handleSpans ps)
             mh
             (fmap handleSpans mimps)

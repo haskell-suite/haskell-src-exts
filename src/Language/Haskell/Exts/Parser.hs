@@ -14,6 +14,13 @@
 --
 -- Parser for Haskell with extensions.
 --
+-- Along with exporting utilities commonly used with parsers, this module also
+-- provides 'Parseable' instances for the simplified AST (all of the instances
+-- that don't mention 'SrcSpanInfo').  While most of these should be self
+-- explanatory, the instances for lists are a little tricky. See the
+-- documentation for 'Language.Haskell.Exts.Annotated.Parser.ListOf' for an
+-- explanation of these.
+--
 -----------------------------------------------------------------------------
 module Language.Haskell.Exts.Parser
             (
@@ -36,14 +43,14 @@ module Language.Haskell.Exts.Parser
                 parseType, parseTypeWithMode, parseTypeWithComments,
                 -- ** Module head parsers
                 getTopPragmas, readExtensions,
-                NonGreedyTopPragmas(..), NonGreedyExtensions(..),
-                NonGreedyModuleName(..), NonGreedyModuleHead(..), NonGreedyModuleImports(..),
+                PragmasAndModuleName(..), PragmasAndModuleHead(..), ModuleHeadAndImports(..),
+                NonGreedy(..),
                 -- * CPP Utilities
                 ignoreCpp, ignoreCppLines
             ) where
 
 import Language.Haskell.Exts.Annotated.Fixity
-import Language.Haskell.Exts.Annotated.Parser (readExtensions, NonGreedyExtensions(..), ignoreCpp, ignoreCppLines)
+import Language.Haskell.Exts.Annotated.Parser (readExtensions, unListOf, ListOf, NonGreedy(..), ignoreCpp, ignoreCppLines)
 import Language.Haskell.Exts.Annotated.Simplify
 import Language.Haskell.Exts.Annotated.Syntax
 import Language.Haskell.Exts.Comments
@@ -85,6 +92,7 @@ instance Parseable S.Decl                   where parser = parseWithSimplify (a 
 instance Parseable S.Exp                    where parser = parseWithSimplify (a :: Exp            SrcSpanInfo) sExp
 instance Parseable S.ExportSpec             where parser = parseWithSimplify (a :: ExportSpec     SrcSpanInfo) sExportSpec
 instance Parseable [S.ExportSpec]           where parser = parseWithSimplify (a :: ExportSpecList SrcSpanInfo) sExportSpecList
+instance Parseable ([S.Name], S.BangType)   where parser = parseWithSimplify (a :: FieldDecl      SrcSpanInfo) sFieldDecl
 instance Parseable S.FunDep                 where parser = parseWithSimplify (a :: FunDep         SrcSpanInfo) sFunDep
 instance Parseable S.GadtDecl               where parser = parseWithSimplify (a :: GadtDecl       SrcSpanInfo) sGadtDecl
 instance Parseable S.GuardedAlt             where parser = parseWithSimplify (a :: GuardedAlt     SrcSpanInfo) sGuardedAlt
@@ -92,6 +100,7 @@ instance Parseable S.GuardedAlts            where parser = parseWithSimplify (a 
 instance Parseable S.GuardedRhs             where parser = parseWithSimplify (a :: GuardedRhs     SrcSpanInfo) sGuardedRhs
 instance Parseable S.ImportDecl             where parser = parseWithSimplify (a :: ImportDecl     SrcSpanInfo) sImportDecl
 instance Parseable S.ImportSpec             where parser = parseWithSimplify (a :: ImportSpec     SrcSpanInfo) sImportSpec
+instance Parseable (Bool, [S.ImportSpec])   where parser = parseWithSimplify (a :: ImportSpecList SrcSpanInfo) sImportSpecList
 instance Parseable S.InstDecl               where parser = parseWithSimplify (a :: InstDecl       SrcSpanInfo) sInstDecl
 instance Parseable S.IPBind                 where parser = parseWithSimplify (a :: IPBind         SrcSpanInfo) sIPBind
 instance Parseable S.IPName                 where parser = parseWithSimplify (a :: IPName         SrcSpanInfo) sIPName
@@ -116,36 +125,32 @@ instance Parseable S.Type                   where parser = parseWithSimplify (a 
 instance Parseable S.TyVarBind              where parser = parseWithSimplify (a :: TyVarBind      SrcSpanInfo) sTyVarBind
 instance Parseable S.XName                  where parser = parseWithSimplify (a :: XName          SrcSpanInfo) sXName
 
-instance Parseable ([S.Name], S.BangType)   where parser = parseWithSimplify (a :: FieldDecl      SrcSpanInfo) sFieldDecl
-instance Parseable (Bool, [S.ImportSpec])   where parser = parseWithSimplify (a :: ImportSpecList SrcSpanInfo) sImportSpecList
+instance Parseable [S.ClassDecl]            where parser = parseWithSimplify (a :: ListOf (ClassDecl    SrcSpanInfo)) (map sClassDecl      . unListOf)
+instance Parseable [S.CName]                where parser = parseWithSimplify (a :: ListOf (CName        SrcSpanInfo)) (map sCName          . unListOf)
+instance Parseable [S.Decl]                 where parser = parseWithSimplify (a :: ListOf (Decl         SrcSpanInfo)) (map sDecl           . unListOf)
+instance Parseable [S.Exp]                  where parser = parseWithSimplify (a :: ListOf (Exp          SrcSpanInfo)) (map sExp            . unListOf)
+instance Parseable [([S.Name], S.BangType)] where parser = parseWithSimplify (a :: ListOf (FieldDecl    SrcSpanInfo)) (map sFieldDecl      . unListOf)
+instance Parseable [S.FunDep]               where parser = parseWithSimplify (a :: ListOf (FunDep       SrcSpanInfo)) (map sFunDep         . unListOf)
+instance Parseable [S.GadtDecl]             where parser = parseWithSimplify (a :: ListOf (GadtDecl     SrcSpanInfo)) (map sGadtDecl       . unListOf)
+instance Parseable [S.GuardedAlt]           where parser = parseWithSimplify (a :: ListOf (GuardedAlt   SrcSpanInfo)) (map sGuardedAlt     . unListOf)
+instance Parseable [S.GuardedRhs]           where parser = parseWithSimplify (a :: ListOf (GuardedRhs   SrcSpanInfo)) (map sGuardedRhs     . unListOf)
+instance Parseable [S.ImportDecl]           where parser = parseWithSimplify (a :: ListOf (ImportDecl   SrcSpanInfo)) (map sImportDecl     . unListOf)
+instance Parseable [S.InstDecl]             where parser = parseWithSimplify (a :: ListOf (InstDecl     SrcSpanInfo)) (map sInstDecl       . unListOf)
+instance Parseable [S.IPBind]               where parser = parseWithSimplify (a :: ListOf (IPBind       SrcSpanInfo)) (map sIPBind         . unListOf)
+instance Parseable [S.Module]               where parser = parseWithSimplify (a :: ListOf (Module       SrcSpanInfo)) (map sModule         . unListOf)
+instance Parseable [S.ModulePragma]         where parser = parseWithSimplify (a :: ListOf (ModulePragma SrcSpanInfo)) (map sModulePragma   . unListOf)
+instance Parseable [S.Name]                 where parser = parseWithSimplify (a :: ListOf (Name         SrcSpanInfo)) (map sName           . unListOf)
+instance Parseable [S.Op]                   where parser = parseWithSimplify (a :: ListOf (Op           SrcSpanInfo)) (map sOp             . unListOf)
+instance Parseable [S.Pat]                  where parser = parseWithSimplify (a :: ListOf (Pat          SrcSpanInfo)) (map sPat            . unListOf)
+instance Parseable [S.QName]                where parser = parseWithSimplify (a :: ListOf (QName        SrcSpanInfo)) (map sQName          . unListOf)
+instance Parseable [S.QualConDecl]          where parser = parseWithSimplify (a :: ListOf (QualConDecl  SrcSpanInfo)) (map sQualConDecl    . unListOf)
+instance Parseable [S.QualStmt]             where parser = parseWithSimplify (a :: ListOf (QualStmt     SrcSpanInfo)) (map sQualStmt       . unListOf)
+instance Parseable [S.Rule]                 where parser = parseWithSimplify (a :: ListOf (Rule         SrcSpanInfo)) (map sRule           . unListOf)
+instance Parseable [S.RuleVar]              where parser = parseWithSimplify (a :: ListOf (RuleVar      SrcSpanInfo)) (map sRuleVar        . unListOf)
+instance Parseable [S.Stmt]                 where parser = parseWithSimplify (a :: ListOf (Stmt         SrcSpanInfo)) (map sStmt           . unListOf)
+instance Parseable [S.TyVarBind]            where parser = parseWithSimplify (a :: ListOf (TyVarBind    SrcSpanInfo)) (map sTyVarBind      . unListOf)
 
-instance Parseable [S.Module]               where parser = parseWithSimplify (a :: [Module        SrcSpanInfo]) (map sModule)
-instance Parseable [S.Rule]                 where parser = parseWithSimplify (a :: [Rule          SrcSpanInfo]) (map sRule)
-instance Parseable [S.RuleVar]              where parser = parseWithSimplify (a :: [RuleVar       SrcSpanInfo]) (map sRuleVar)
-
-instance Parseable [([S.Name], S.BangType)] where parser = parseWithSimplify (a :: ([FieldDecl    SrcSpanInfo], SrcSpanInfo)) (map sFieldDecl      . fst)
-instance Parseable [S.ClassDecl]            where parser = parseWithSimplify (a :: ([ClassDecl    SrcSpanInfo], SrcSpanInfo)) (map sClassDecl      . fst)
-instance Parseable [S.CName]                where parser = parseWithSimplify (a :: ([CName        SrcSpanInfo], SrcSpanInfo)) (map sCName          . fst)
-instance Parseable [S.Decl]                 where parser = parseWithSimplify (a :: ([Decl         SrcSpanInfo], SrcSpanInfo)) (map sDecl           . fst)
-instance Parseable [S.FunDep]               where parser = parseWithSimplify (a :: ([FunDep       SrcSpanInfo], SrcSpanInfo)) (map sFunDep         . fst)
-instance Parseable [S.GadtDecl]             where parser = parseWithSimplify (a :: ([GadtDecl     SrcSpanInfo], SrcSpanInfo)) (map sGadtDecl       . fst)
-instance Parseable [S.GuardedAlt]           where parser = parseWithSimplify (a :: ([GuardedAlt   SrcSpanInfo], SrcSpanInfo)) (map sGuardedAlt     . fst)
-instance Parseable [S.GuardedRhs]           where parser = parseWithSimplify (a :: ([GuardedRhs   SrcSpanInfo], SrcSpanInfo)) (map sGuardedRhs     . fst)
-instance Parseable [S.ImportDecl]           where parser = parseWithSimplify (a :: ([ImportDecl   SrcSpanInfo], SrcSpanInfo)) (map sImportDecl     . fst)
-instance Parseable [S.InstDecl]             where parser = parseWithSimplify (a :: ([InstDecl     SrcSpanInfo], SrcSpanInfo)) (map sInstDecl       . fst)
-instance Parseable [S.IPBind]               where parser = parseWithSimplify (a :: ([IPBind       SrcSpanInfo], SrcSpanInfo)) (map sIPBind         . fst)
-instance Parseable [S.ModulePragma]         where parser = parseWithSimplify (a :: ([ModulePragma SrcSpanInfo], SrcSpanInfo)) (map sModulePragma   . fst)
-instance Parseable [S.Name]                 where parser = parseWithSimplify (a :: ([Name         SrcSpanInfo], SrcSpanInfo)) (map sName           . fst)
-instance Parseable [S.Op]                   where parser = parseWithSimplify (a :: ([Op           SrcSpanInfo], SrcSpanInfo)) (map sOp             . fst)
-instance Parseable [S.QName]                where parser = parseWithSimplify (a :: ([QName        SrcSpanInfo], SrcSpanInfo)) (map sQName          . fst)
-instance Parseable [S.QualConDecl]          where parser = parseWithSimplify (a :: ([QualConDecl  SrcSpanInfo], SrcSpanInfo)) (map sQualConDecl    . fst)
-instance Parseable [S.QualStmt]             where parser = parseWithSimplify (a :: ([QualStmt     SrcSpanInfo], SrcSpanInfo)) (map sQualStmt       . fst)
-instance Parseable [S.Stmt]                 where parser = parseWithSimplify (a :: ([Stmt         SrcSpanInfo], SrcSpanInfo)) (map sStmt           . fst)
-instance Parseable [S.TyVarBind]            where parser = parseWithSimplify (a :: ([TyVarBind    SrcSpanInfo], SrcSpanInfo)) (map sTyVarBind      . fst)
-instance Parseable [S.Exp]                  where parser = parseWithSimplify (a :: ([Exp          SrcSpanInfo], SrcSpanInfo)) (map sExp            . fst)
-instance Parseable [S.Pat]                  where parser = parseWithSimplify (a :: ([Pat          SrcSpanInfo], SrcSpanInfo)) (map sPat            . fst)
-
-instance Parseable [[S.QualStmt]]           where parser = parseWithSimplify (a :: ([[QualStmt    SrcSpanInfo]],SrcSpanInfo)) (map (map sQualStmt) . fst)
+instance Parseable [[S.QualStmt]]           where parser = parseWithSimplify (a :: ListOf [QualStmt     SrcSpanInfo]) (map (map sQualStmt) . unListOf)
 
 {-
 instance Parseable (S.Name, [S.TyVarBind])  where parser = parseWithSimplify
@@ -166,6 +171,8 @@ instance Parseable S.Splice                 where parser = parseWithSimplify
 instance Parseable S.WarningText            where parser = parseWithSimplify
 instance Parseable S.XAttr                  where parser = parseWithSimplify
 -}
+
+instance Parseable (NonGreedy [S.ModulePragma]) where parser = parseWithSimplify (a :: NonGreedy (ListOf (ModulePragma SrcSpanInfo))) (fmap (map sModulePragma . unListOf))
 
 -- Type-specific instances
 
@@ -257,27 +264,14 @@ parseStmtWithComments = parseWithComments
 
 -- | Partial parse of a string starting with a series of top-level option pragmas.
 getTopPragmas :: String -> ParseResult [S.ModulePragma]
-getTopPragmas = fmap (\(NonGreedyTopPragmas ps) -> ps) . parse
+getTopPragmas = fmap (fmap unNonGreedy) parse
 
-data NonGreedyTopPragmas = NonGreedyTopPragmas [S.ModulePragma]
-#ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Ord,Show,Typeable,Data)
-#else
-  deriving (Eq,Ord,Show)
-#endif
-
-instance Parseable NonGreedyTopPragmas where
-    parser fixs = do
-        A.NonGreedyTopPragmas ps _ <- parser fixs
-        return $ NonGreedyTopPragmas
-            (map sModulePragma (ps :: [A.ModulePragma SrcSpanInfo]))
-
---   Type intended to be used with 'Parseable', with instances that implement a
+-- | Type intended to be used with 'Parseable', with instances that implement a
 --   non-greedy parse of the module name, including top-level pragmas.  This
 --   means that a parse error that comes after the module header won't be
 --   returned. If no module name is found (and no parse error occurs), then
 --   \"Main\" is returned.  This is the same behavior that 'parseModule' has.
-data NonGreedyModuleName = NonGreedyModuleName
+data PragmasAndModuleName = PragmasAndModuleName
     [S.ModulePragma]
     S.ModuleName
 #ifdef __GLASGOW_HASKELL__
@@ -286,14 +280,14 @@ data NonGreedyModuleName = NonGreedyModuleName
   deriving (Eq,Ord,Show)
 #endif
 
-instance Parseable NonGreedyModuleName where
+instance Parseable (NonGreedy PragmasAndModuleName) where
     parser fixs = do
-        A.NonGreedyModuleName (ps, _) mmn <- parser fixs
-        return $ NonGreedyModuleName
+        NonGreedy (A.PragmasAndModuleName (ps, _) mmn) <- parser fixs
+        return $ NonGreedy $ PragmasAndModuleName
             (map sModulePragma (ps :: [A.ModulePragma SrcSpanInfo]))
             (maybe S.main_mod sModuleName mmn)
 
---   Type intended to be used with 'Parseable', with instances that implement a
+-- | Type intended to be used with 'Parseable', with instances that implement a
 --   non-greedy parse of the module name, including top-level pragmas.  This
 --   means that a parse error that comes after the module header won't be
 --   returned. If no module head is found, then a default simple head like
@@ -302,7 +296,7 @@ instance Parseable NonGreedyModuleName where
 --
 --   Note that the 'ParseMode' particularly matters for this due to the
 --   'MagicHash' changing the lexing of identifiers to include \"#\".
-data NonGreedyModuleHead = NonGreedyModuleHead
+data PragmasAndModuleHead = PragmasAndModuleHead
     [S.ModulePragma]
     (S.ModuleName, Maybe S.WarningText, Maybe [S.ExportSpec])
 #ifdef __GLASGOW_HASKELL__
@@ -311,14 +305,14 @@ data NonGreedyModuleHead = NonGreedyModuleHead
   deriving (Eq,Ord,Show)
 #endif
 
-instance Parseable NonGreedyModuleHead where
+instance Parseable (NonGreedy PragmasAndModuleHead) where
     parser fixs = do
-        A.NonGreedyModuleHead (ps, _) mmh <- parser fixs
-        return $ NonGreedyModuleHead
+        NonGreedy (A.PragmasAndModuleHead (ps, _) mmh) <- parser fixs
+        return $ NonGreedy $ PragmasAndModuleHead
             (map sModulePragma (ps :: [A.ModulePragma SrcSpanInfo]))
             (sModuleHead mmh)
 
---   Type intended to be used with 'Parseable', with instances that implement a
+-- | Type intended to be used with 'Parseable', with instances that implement a
 --   non-greedy parse of the module head, including top-level pragmas, module
 --   name, export list, and import list. This means that if a parse error that
 --   comes after the imports won't be returned.  If no module head is found,
@@ -327,7 +321,7 @@ instance Parseable NonGreedyModuleHead where
 --
 --   Note that the 'ParseMode' particularly matters for this due to the
 --   'MagicHash' changing the lexing of identifiers to include \"#\".
-data NonGreedyModuleImports = NonGreedyModuleImports
+data ModuleHeadAndImports = ModuleHeadAndImports
     [S.ModulePragma]
     (S.ModuleName, Maybe S.WarningText, Maybe [S.ExportSpec])
     [S.ImportDecl]
@@ -337,10 +331,10 @@ data NonGreedyModuleImports = NonGreedyModuleImports
   deriving (Eq,Ord,Show)
 #endif
 
-instance Parseable NonGreedyModuleImports where
+instance Parseable (NonGreedy ModuleHeadAndImports) where
     parser fixs = do
-        A.NonGreedyModuleImports (ps, _) mmh mimps <- parser fixs
-        return $ NonGreedyModuleImports
+        NonGreedy (A.ModuleHeadAndImports (ps, _) mmh mimps) <- parser fixs
+        return $ NonGreedy $ ModuleHeadAndImports
             (map sModulePragma (ps :: [A.ModulePragma SrcSpanInfo]))
             (sModuleHead mmh)
             (fromMaybe [] $ fmap (map sImportDecl . fst) mimps)
