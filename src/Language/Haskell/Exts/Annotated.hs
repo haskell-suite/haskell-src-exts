@@ -91,9 +91,11 @@ parseFileContentsWithMode p@(ParseMode fn oldLang exts ign _ _) rawStr =
         let md = delit fn $ ppContents rawStr
             (bLang, extraExts) =
                 case (ign, parse md) of
-                  (False, ParseOk (NonGreedyExtensions [newLang] es)) -> (newLang, es)
-                  (False, ParseOk (NonGreedyExtensions _ es)) -> (oldLang, es)
-                  _ -> (oldLang, [])
+                    (False, ParseOk xs) ->
+                        case pragmasToExtensions (unListOf xs :: [ModulePragma SrcSpanInfo]) of
+                            ([newLang], es) -> (newLang, es)
+                            (_, es) -> (oldLang, es)
+                    _ -> (oldLang, [])
          in -- trace (fn ++ ": " ++ show extraExts) $
               parseModuleWithMode (p { baseLanguage = bLang, extensions = exts ++ extraExts }) md
 
@@ -102,9 +104,11 @@ parseFileContentsWithComments p@(ParseMode fn oldLang exts ign _ _) rawStr =
         let md = delit fn $ ppContents rawStr
             (bLang, extraExts) =
                 case (ign, parse md) of
-                  (False, ParseOk (NonGreedyExtensions [newLang] es)) -> (newLang, es)
-                  (False, ParseOk (NonGreedyExtensions _ es)) -> (oldLang, es)
-                  _ -> (oldLang, [])
+                    (False, ParseOk xs) ->
+                        case pragmasToExtensions (unListOf xs :: [ModulePragma SrcSpanInfo]) of
+                            ([newLang], es) -> (newLang, es)
+                            (_, es) -> (oldLang, es)
+                    _ -> (oldLang, [])
          in parseModuleWithComments (p { baseLanguage = bLang, extensions = exts ++ extraExts }) md
 
 ppContents :: String -> String
