@@ -1406,10 +1406,11 @@ instance ExactP Exp where
 
     LCase l alts   ->
         case srcInfoPoints l of
-         a:pts -> do
-            printString "\\case"
+         a:b:pts -> do
+            printString "\\"
+            printStringAt (pos b) "case"
             layoutList pts alts
-         _ -> errorEP "ExactP: Exp: LCase is given too few srcInfoPoints"
+         _ -> errorEP "ExactP: Exp: LCase is given wrong number of srcInfoPoints"
 
 instance ExactP FieldUpdate where
   exactP fup = case fup of
