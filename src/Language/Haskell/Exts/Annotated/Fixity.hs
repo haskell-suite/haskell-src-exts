@@ -250,6 +250,10 @@ instance AppFixity GuardedAlt where
     applyFixities fixs (GuardedAlt l stmts e) = liftM2 (GuardedAlt l) (mapM fix stmts) (fix e)
       where fix x = applyFixities fixs x
 
+instance AppFixity IfAlt where
+    applyFixities y (IfAlt loc e1 e2) = liftM2 (IfAlt loc) (fix e1) (fix e2)
+      where fix x = applyFixities y x
+
 instance AppFixity QualStmt where
     applyFixities fixs qstmt = case qstmt of
         QualStmt     l s      -> liftM (QualStmt l) $ fix s
@@ -287,6 +291,7 @@ leafFix fixs e = case e of
     Lambda l pats e           -> liftM2 (Lambda l) (mapM fix pats) $ fix e
     Let l bs e                -> liftM2 (Let l) (fix bs) $ fix e
     If l e a b                -> liftM3 (If l) (fix e) (fix a) (fix b)
+    MultiIf l alts            -> liftM (MultiIf l) (mapM fix alts)
     Case l e alts             -> liftM2 (Case l) (fix e) $ mapM fix alts
     Do l stmts                -> liftM (Do l) $ mapM fix stmts
     MDo l stmts               -> liftM (MDo l) $ mapM fix stmts

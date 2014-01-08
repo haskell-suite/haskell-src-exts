@@ -454,6 +454,10 @@ data KnownExtension =
   -- foreign function interface.
   | CApiFFI
 
+  -- | [GHC &#xa7; 7.3.16] Enable the multi-way if-expressions
+  -- extension to accept conditional expressions with multiple branches.
+  | MultiWayIf
+
  {- Safe Haskell not yet supported by HSE.
 
   -- | [GHC &#xa7; 7.20.3] Allow imports to be qualified with a safe

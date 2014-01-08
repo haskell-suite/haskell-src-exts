@@ -228,7 +228,8 @@ reserved_ops = [
  ( "\x291a",    (RightArrowTail,    Just (All [UnicodeSyntax, Arrows])) ),
  ( "\x291b",    (LeftDblArrowTail,  Just (All [UnicodeSyntax, Arrows])) ),
  ( "\x291c",    (RightDblArrowTail, Just (All [UnicodeSyntax, Arrows])) ),
- ( "\x2605",    (Star,              Just (All [UnicodeSyntax, KindSignatures])) )
+ ( "\x2605",    (Star,              Just (All [UnicodeSyntax, KindSignatures])) ),
+ ( "\x2200",    (KW_Forall,         Just (All [UnicodeSyntax, ExplicitForAll])) )
  ]
 
 special_varops :: [(String,(Token, Maybe ExtScheme))]
@@ -273,10 +274,7 @@ reserved_ids = [
  ( "where",     (KW_Where,      Nothing) ),
 
 -- FFI
- ( "foreign",   (KW_Foreign,    Just (Any [ForeignFunctionInterface])) ),
-
--- Unicode
- ( "\x2200",    (KW_Forall,     Just (All [UnicodeSyntax, ExplicitForAll])) )
+ ( "foreign",   (KW_Foreign,    Just (Any [ForeignFunctionInterface])) )
  ]
 
 

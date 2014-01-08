@@ -108,7 +108,7 @@ Conflicts: 7 shift/reduce
 -----------------------------------------------------------------------------
 
 > %token
->       VARID    { Loc _ (VarId _) }
+>       VARID    { Loc _ (VarId _) }       -- 1
 >       QVARID   { Loc _ (QVarId _) }
 >       IDUPID   { Loc _ (IDupVarId _) }       -- duplicable implicit parameter ?x
 >       ILINID   { Loc _ (ILinVarId _) }       -- linear implicit parameter %x
@@ -117,8 +117,8 @@ Conflicts: 7 shift/reduce
 >       DVARID   { Loc _ (DVarId _) }          -- VARID containing dashes
 >       VARSYM   { Loc _ (VarSym _) }
 >       CONSYM   { Loc _ (ConSym _) }
->       QVARSYM  { Loc _ (QVarSym _) }
->       QCONSYM  { Loc _ (QConSym _) }
+>       QVARSYM  { Loc _ (QVarSym _) } -- 10
+>       QCONSYM  { Loc _ (QConSym _) }      
 >       INT      { Loc _ (IntTok _) }
 >       RATIONAL { Loc _ (FloatTok _) }
 >       CHAR     { Loc _ (Character _) }
@@ -128,8 +128,8 @@ Conflicts: 7 shift/reduce
 >       PRIMWORD    { Loc _ (WordTokHash _) }
 >       PRIMFLOAT   { Loc _ (FloatTokHash _) }
 >       PRIMDOUBLE  { Loc _ (DoubleTokHash _) }
->       PRIMCHAR    { Loc _ (CharacterHash _) }
->       PRIMSTRING  { Loc _ (StringHash _) }
+>       PRIMCHAR    { Loc _ (CharacterHash _) } -- 20
+>       PRIMSTRING  { Loc _ (StringHash _) }  
 
 Symbols
 
@@ -141,7 +141,7 @@ Symbols
 >       '|}'    { Loc $$ RightCurlyBar }
 >       ';'     { Loc $$ SemiColon }
 >       '{'     { Loc $$ LeftCurly }
->       '}'     { Loc $$ RightCurly }
+>       '}'     { Loc $$ RightCurly }      -- 30
 >       vccurly { Loc $$ VRightCurly }                 -- a virtual close brace
 >       '['     { Loc $$ LeftSquare }
 >       ']'     { Loc $$ RightSquare }
@@ -154,8 +154,8 @@ Reserved operators
 >       '.'     { Loc $$ Dot }
 >       '..'    { Loc $$ DotDot }
 >       ':'     { Loc $$ Colon }
->       '::'    { Loc $$ DoubleColon }
->       '='     { Loc $$ Equals }
+>       '::'    { Loc $$ DoubleColon }      -- 40
+>       '='     { Loc $$ Equals }           
 >       '\\'    { Loc $$ Backslash }
 >       '|'     { Loc $$ Bar }
 >       '<-'    { Loc $$ LeftArrow }
@@ -164,8 +164,8 @@ Reserved operators
 >       '~'     { Loc $$ Tilde }
 >       '=>'    { Loc $$ DoubleArrow }
 >       '-'     { Loc $$ Minus }
->       '!'     { Loc $$ Exclamation }
->       '*'     { Loc $$ Star }
+>       '!'     { Loc $$ Exclamation }  -- 50
+>       '*'     { Loc $$ Star }           
 
 Arrows
 
@@ -183,8 +183,8 @@ Harp
 Template Haskell
 
 >       IDSPLICE        { Loc _ (THIdEscape _) }   -- $x
->       '$('            { Loc $$ THParenEscape }
->       '[|'            { Loc $$ THExpQuote }
+>       '$('            { Loc $$ THParenEscape } -- 60
+>       '[|'            { Loc $$ THExpQuote }     
 >       '[p|'           { Loc $$ THPatQuote }
 >       '[t|'           { Loc $$ THTypQuote }
 >       '[d|'           { Loc $$ THDecQuote }
@@ -196,8 +196,8 @@ Template Haskell
 Hsx
 
 >       PCDATA          { Loc _ (XPCDATA _) }
->       '<'             { Loc $$ XStdTagOpen }
->       '</'            { Loc $$ XCloseTagOpen }
+>       '<'             { Loc $$ XStdTagOpen }   -- 70
+>       '</'            { Loc $$ XCloseTagOpen }  
 >       '<%'            { Loc $$ XCodeTagOpen }
 >       '<%>'           { Loc $$ XChildTagOpen }
 >       '>'             { Loc $$ XStdTagClose }
@@ -209,8 +209,8 @@ Hsx
 FFI
 
 >       'foreign'       { Loc $$ KW_Foreign }
->       'export'        { Loc $$ KW_Export }
->       'safe'          { Loc $$ KW_Safe }
+>       'export'        { Loc $$ KW_Export }    -- 80
+>       'safe'          { Loc $$ KW_Safe }      
 >       'unsafe'        { Loc $$ KW_Unsafe }
 >       'threadsafe'    { Loc $$ KW_Threadsafe }
 >       'interruptible' { Loc $$ KW_Interruptible }
@@ -219,8 +219,8 @@ FFI
 >       'cplusplus'     { Loc $$ KW_CPlusPlus }
 >       'dotnet'        { Loc $$ KW_DotNet }
 >       'jvm'           { Loc $$ KW_Jvm }
->       'js'            { Loc $$ KW_Js }
->       'capi'          { Loc $$ KW_CApi }
+>       'js'            { Loc $$ KW_Js }          -- 90
+>       'capi'          { Loc $$ KW_CApi }      
 
 Reserved Ids
 
@@ -232,7 +232,7 @@ Reserved Ids
 >       'default'       { Loc $$ KW_Default }
 >       'deriving'      { Loc $$ KW_Deriving }
 >       'do'            { Loc $$ KW_Do }
->       'else'          { Loc $$ KW_Else }
+>       'else'          { Loc $$ KW_Else }     -- 100
 >       'family'        { Loc $$ KW_Family }   -- indexed type families
 >       'forall'        { Loc $$ KW_Forall }   -- universal/existential qualification
 >       'group'         { Loc $$ KW_Group }    -- transform list comprehensions
@@ -242,17 +242,17 @@ Reserved Ids
 >       'in'            { Loc $$ KW_In }
 >       'infix'         { Loc $$ KW_Infix }
 >       'infixl'        { Loc $$ KW_InfixL }
->       'infixr'        { Loc $$ KW_InfixR }
+>       'infixr'        { Loc $$ KW_InfixR }        -- 110
 >       'instance'      { Loc $$ KW_Instance }
 >       'let'           { Loc $$ KW_Let }
 >       'mdo'           { Loc $$ KW_MDo }
->       'module'        { Loc $$ KW_Module }
+>       'module'        { Loc $$ KW_Module }         -- 114
 >       'newtype'       { Loc $$ KW_NewType }
 >       'of'            { Loc $$ KW_Of }
 >       'proc'          { Loc $$ KW_Proc }     -- arrows
 >       'rec'           { Loc $$ KW_Rec }      -- arrows
 >       'then'          { Loc $$ KW_Then }
->       'type'          { Loc $$ KW_Type }
+>       'type'          { Loc $$ KW_Type }     -- 120
 >       'using'         { Loc $$ KW_Using }    -- transform list comprehensions
 >       'where'         { Loc $$ KW_Where }
 >       'qualified'     { Loc $$ KW_Qualified }
@@ -265,8 +265,8 @@ Pragmas
 >       '{-# SPECIALISE_INLINE' { Loc _ (SPECIALISE_INLINE _) }
 >       '{-# SOURCE'            { Loc $$ SOURCE }
 >       '{-# RULES'             { Loc $$ RULES }
->       '{-# CORE'              { Loc $$ CORE }
->       '{-# SCC'               { Loc $$ SCC }
+>       '{-# CORE'              { Loc $$ CORE }         -- 130
+>       '{-# SCC'               { Loc $$ SCC }       
 >       '{-# GENERATED'         { Loc $$ GENERATED }
 >       '{-# DEPRECATED'        { Loc $$ DEPRECATED }
 >       '{-# WARNING'           { Loc $$ WARNING }
@@ -274,9 +274,9 @@ Pragmas
 >       '{-# OPTIONS'           { Loc _ (OPTIONS _) }
        '{-# CFILES'            { Loc _ (CFILES  _) }
        '{-# INCLUDE'           { Loc _ (INCLUDE _) }
->       '{-# LANGUAGE'          { Loc $$ LANGUAGE }
+>       '{-# LANGUAGE'          { Loc $$ LANGUAGE }      -- 137
 >       '{-# ANN'               { Loc $$ ANN }
->       '#-}'                   { Loc $$ PragmaEnd }
+>       '#-}'                   { Loc $$ PragmaEnd }      -- 139
 
 
 > %monad { P }
@@ -1176,8 +1176,11 @@ mangle them into the correct form depending on context.
 >       : '\\' apats '->' exp             { Lambda (nIS $1 <++> ann $4 <** [$1,$3]) (reverse $2) $4 }
 A let may bind implicit parameters
 >       | 'let' binds 'in' exp            { Let    (nIS $1 <++> ann $4 <** [$1,$3])    $2 $4 }
->       | 'if' exp optlayoutsemi 'then' exp optlayoutsemi 'else' exp  
->	       	   	      	     	  { If     (nIS $1 <++> ann $8 <** ($1:$3 ++ $4:$6 ++ [$7])) $2 $5 $8 }
+>       | 'if' exp optlayoutsemi 'then' exp optlayoutsemi 'else' exp
+>                                        { If     (nIS $1 <++> ann $8 <** ($1:$3 ++ $4:$6 ++ [$7])) $2 $5 $8 }
+>       | 'if' ifaltslist                 {% checkEnabled MultiWayIf >>
+>                                            let (alts, inf, ss) = $2
+>                                            in return (MultiIf (nIS $1 <++> inf <** ($1:ss)) alts) }
 >       | 'proc' apat '->' exp            { Proc   (nIS $1 <++> ann $4 <** [$1,$3])    $2 $4 }
 >       | exppragma                       { $1 }
 
@@ -1504,7 +1507,7 @@ Case alternatives
 > gdpats :: { ([GuardedAlt L],L) }
 >       : gdpats gdpat                  { ($2 : fst $1, snd $1 <++> ann $2) }
 >       | gdpat                         { ([$1], ann $1) }
-
+ 
 A guard can be a pattern guard if PatternGuards is enabled, hence quals instead of exp0.
 > gdpat :: { GuardedAlt L }
 >       : '|' quals '->' trueexp {% do { checkPatternGuards (fst $2);
@@ -1514,6 +1517,21 @@ A guard can be a pattern guard if PatternGuards is enabled, hence quals instead 
 > pat :: { Pat L }
 >       : exp                           {% checkPattern $1 }
 >       | '!' aexp                      {% checkPattern (BangPat (nIS $1 <++> ann $2 <** [$1]) $2) }
+
+> ifaltslist :: { ([IfAlt L], L, [S]) }
+>       : '{'  ifalts '}'                 { (fst $2, $1 <^^> $3, $1:snd $2 ++ [$3])  }
+>       | open ifalts close               { (fst $2, $1 <^^> $3, $1:snd $2 ++ [$3]) }
+
+> ifalts :: { ([IfAlt L], [S]) }
+>       : optsemis ifalts1 optsemis       { (reverse $ fst $2, $1 ++ snd $2 ++ $3) }
+
+> ifalts1 :: { ([IfAlt L], [S]) }
+>       : ifalts1 optsemis ifalt           { ($3 : fst $1, snd $1 ++ $2) }
+>       | ifalt                            { ([$1], []) }
+
+> ifalt :: { IfAlt L }
+>       : '|' trueexp '->' trueexp { let l = nIS $1 <++> ann $2 <++> ann $4 <** [$1,$3] in (IfAlt l $2 $4) }
+
 -----------------------------------------------------------------------------
 Statement sequences
 
