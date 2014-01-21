@@ -31,6 +31,8 @@ import Language.Haskell.Exts.SrcLoc
 
 import qualified Text.PrettyPrint as P
 import Data.List (intersperse)
+import Control.Applicative (Applicative(..))
+import Control.Monad (ap)
 
 infixl 5 $$$
 
@@ -93,6 +95,10 @@ newtype DocM s a = DocM (s -> a)
 
 instance Functor (DocM s) where
          fmap f xs = do x <- xs; return (f x)
+
+instance Applicative (DocM s) where
+        pure = retDocM
+        (<*>) = ap
 
 instance Monad (DocM s) where
         (>>=) = thenDocM
