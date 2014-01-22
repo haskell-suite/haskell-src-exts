@@ -22,7 +22,8 @@ import Language.Haskell.Exts.Annotated.Syntax
 import Language.Haskell.Exts.SrcLoc
 import Language.Haskell.Exts.Comments
 
-import Control.Monad (when)
+import Control.Monad (when, liftM, ap)
+import Control.Applicative (Applicative(..))
 import Control.Arrow ((***), (&&&))
 import Data.List (intersperse)
 
@@ -37,6 +38,13 @@ pos :: (SrcInfo loc) => loc -> Pos
 pos ss = (startLine ss, startColumn ss)
 
 newtype EP x = EP (Pos -> [Comment] -> (x, Pos, [Comment], ShowS))
+
+instance Functor EP where
+  fmap = liftM
+  
+instance Applicative EP where
+  pure = return
+  (<*>) = ap
 
 instance Monad EP where
   return x = EP $ \l cs -> (x, l, cs, id)

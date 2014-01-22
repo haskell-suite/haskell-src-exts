@@ -40,7 +40,7 @@ import Language.Haskell.Exts.Extension -- (Extension, impliesExts, haskell2010)
 
 import Data.List ( intersperse )
 import Control.Applicative
-import Control.Monad (when)
+import Control.Monad (when, liftM, ap)
 import Data.Monoid
 
 -- | The result of a parse.
@@ -289,6 +289,13 @@ pullDoStatus = P $ \_i _x _y _l (s, e, (d,c), cs) _m -> Ok (s,e,(False,c),cs) d
 -- a continuation-passing version of the parsing monad
 
 newtype Lex r a = Lex { runL :: (a -> P r) -> P r }
+
+instance Functor (Lex r) where
+    fmap = liftM
+
+instance Applicative (Lex r) where
+    pure = return
+    (<*>) = ap
 
 instance Monad (Lex r) where
     return a = Lex $ \k -> k a
