@@ -1,4 +1,4 @@
-{-# LANGUAGE CPP, DeriveDataTypeable, FlexibleInstances #-}
+{-# LANGUAGE CPP, DeriveDataTypeable, FlexibleInstances, DeriveFunctor #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 -----------------------------------------------------------------------------
 -- |
@@ -94,7 +94,7 @@ import Data.Maybe (listToMaybe)
 --
 data ListOf a = ListOf SrcSpanInfo [a]
 #ifdef __GLASGOW_HASKELL__
-  deriving (Eq,Ord,Show,Typeable,Data)
+  deriving (Eq,Ord,Show,Typeable,Data,Functor)
 #else
   deriving (Eq,Ord,Show)
 #endif
@@ -117,83 +117,179 @@ toListOf'' :: (a -> SrcSpanInfo) -> [a] -> ListOf a
 toListOf'' f [] = ListOf (noInfoSpan (mkSrcSpan noLoc noLoc)) []
 toListOf'' f xs = ListOf (foldl1' (<++>) $ map f xs) xs
 
-applyFixities' :: AppFixity a => P a -> Maybe [Fixity] -> P a
-applyFixities' p Nothing = p
-applyFixities' p (Just fixs) = p >>= \ast -> applyFixities fixs ast `atSrcLoc` noLoc
+normalParser :: AppFixity a => P a -> Maybe [Fixity] -> P a
+normalParser p Nothing = p
+normalParser p (Just fixs) = p >>= \ast -> applyFixities fixs ast `atSrcLoc` noLoc
 
-instance Parseable (Activation     SrcSpanInfo) where parser = applyFixities' mparseActivation
-instance Parseable (Alt            SrcSpanInfo) where parser = applyFixities' mparseAlt
-instance Parseable (Annotation     SrcSpanInfo) where parser = applyFixities' mparseAnnotation
-instance Parseable (BangType       SrcSpanInfo) where parser = applyFixities' mparseBangType -- NOTE: allows type syntax even where it might be invalid (when used in an infix data constructor declaration)
-instance Parseable (Binds          SrcSpanInfo) where parser = applyFixities' mparseBinds -- NOTE: doesn't parse "IPBinds"
-instance Parseable (CallConv       SrcSpanInfo) where parser = applyFixities' mparseCallConv
-instance Parseable (ClassDecl      SrcSpanInfo) where parser = applyFixities' mparseClassDecl
-instance Parseable (CName          SrcSpanInfo) where parser = applyFixities' mparseCName
-instance Parseable (ConDecl        SrcSpanInfo) where parser = applyFixities' mparseConDecl
-instance Parseable (Decl           SrcSpanInfo) where parser = applyFixities' mparseDecl
-instance Parseable (Exp            SrcSpanInfo) where parser = applyFixities' mparseExp
-instance Parseable (ExportSpec     SrcSpanInfo) where parser = applyFixities' mparseExportSpec
-instance Parseable (ExportSpecList SrcSpanInfo) where parser = applyFixities' mparseExportSpecList
-instance Parseable (FieldDecl      SrcSpanInfo) where parser = applyFixities' mparseFieldDecl
-instance Parseable (FunDep         SrcSpanInfo) where parser = applyFixities' mparseFunDep
-instance Parseable (GadtDecl       SrcSpanInfo) where parser = applyFixities' mparseGadtDecl
-instance Parseable (GuardedAlt     SrcSpanInfo) where parser = applyFixities' mparseGuardedAlt
-instance Parseable (GuardedAlts    SrcSpanInfo) where parser = applyFixities' mparseGuardedAlts2
-instance Parseable (GuardedRhs     SrcSpanInfo) where parser = applyFixities' mparseGuardedRhs
-instance Parseable (ImportDecl     SrcSpanInfo) where parser = applyFixities' mparseImportDecl
-instance Parseable (ImportSpec     SrcSpanInfo) where parser = applyFixities' mparseImportSpec
-instance Parseable (ImportSpecList SrcSpanInfo) where parser = applyFixities' mparseImportSpecList
-instance Parseable (InstDecl       SrcSpanInfo) where parser = applyFixities' mparseInstDecl
-instance Parseable (IPBind         SrcSpanInfo) where parser = applyFixities' mparseIPBind
-instance Parseable (IPName         SrcSpanInfo) where parser = applyFixities' mparseIPName
-instance Parseable (Kind           SrcSpanInfo) where parser = applyFixities' mparseKind
-instance Parseable (Literal        SrcSpanInfo) where parser = applyFixities' mparseLiteral
-instance Parseable (Module         SrcSpanInfo) where parser = applyFixities' mparseModule
-instance Parseable (ModuleHead     SrcSpanInfo) where parser = applyFixities' mparseModuleHead
-instance Parseable (ModuleName     SrcSpanInfo) where parser = applyFixities' mparseModuleName
-instance Parseable (ModulePragma   SrcSpanInfo) where parser = applyFixities' mparseModulePragma
-instance Parseable (Name           SrcSpanInfo) where parser = applyFixities' mparseName
-instance Parseable (Op             SrcSpanInfo) where parser = applyFixities' mparseOp
-instance Parseable (Pat            SrcSpanInfo) where parser = applyFixities' mparsePat
-instance Parseable (QName          SrcSpanInfo) where parser = applyFixities' mparseQName
-instance Parseable (QOp            SrcSpanInfo) where parser = applyFixities' mparseQOp
-instance Parseable (QualConDecl    SrcSpanInfo) where parser = applyFixities' mparseQualConDecl
-instance Parseable (QualStmt       SrcSpanInfo) where parser = applyFixities' mparseQualStmt
-instance Parseable (Rhs            SrcSpanInfo) where parser = applyFixities' mparseRhs
-instance Parseable (Rule           SrcSpanInfo) where parser = applyFixities' mparseRule
-instance Parseable (RuleVar        SrcSpanInfo) where parser = applyFixities' mparseRuleVar
-instance Parseable (Safety         SrcSpanInfo) where parser = applyFixities' mparseSafety
-instance Parseable (Stmt           SrcSpanInfo) where parser = applyFixities' mparseStmt
-instance Parseable (Type           SrcSpanInfo) where parser = applyFixities' mparseType
-instance Parseable (TyVarBind      SrcSpanInfo) where parser = applyFixities' mparseTyVarBind
-instance Parseable (XName          SrcSpanInfo) where parser = applyFixities' mparseXName
+listParser :: AppFixity a => P ([a], [SrcSpan], SrcSpanInfo) -> Maybe [Fixity] -> P (ListOf a)
+listParser f = fmap toListOf . normalParser f
 
-instance Parseable (ListOf (ClassDecl    SrcSpanInfo)) where parser = fmap toListOf         . applyFixities' mparseClassDecls
-instance Parseable (ListOf (CName        SrcSpanInfo)) where parser = fmap toListOf         . applyFixities' mparseCNames
-instance Parseable (ListOf (Decl         SrcSpanInfo)) where parser = fmap toListOf         . applyFixities' mparseDecls
-instance Parseable (ListOf (Exp          SrcSpanInfo)) where parser = fmap toListOf         . applyFixities' mparseExps
-instance Parseable (ListOf (FieldDecl    SrcSpanInfo)) where parser = fmap toListOf         . applyFixities' mparseFieldDecls
-instance Parseable (ListOf (FunDep       SrcSpanInfo)) where parser = fmap toListOf         . applyFixities' mparseFunDeps
-instance Parseable (ListOf (GadtDecl     SrcSpanInfo)) where parser = fmap toListOf         . applyFixities' mparseGadtDecls
-instance Parseable (ListOf (GuardedAlt   SrcSpanInfo)) where parser = fmap toListOf'        . applyFixities' mparseGuardedAlts
-instance Parseable (ListOf (GuardedRhs   SrcSpanInfo)) where parser = fmap toListOf'        . applyFixities' mparseGuardedRhss
-instance Parseable (ListOf (ImportDecl   SrcSpanInfo)) where parser = fmap toListOf         . applyFixities' mparseImportDecls
-instance Parseable (ListOf (InstDecl     SrcSpanInfo)) where parser = fmap toListOf         . applyFixities' mparseInstDecls
-instance Parseable (ListOf (IPBind       SrcSpanInfo)) where parser = fmap toListOf'        . applyFixities' mparseIPBinds
-instance Parseable (ListOf (Module       SrcSpanInfo)) where parser = fmap (toListOf'' ann) . applyFixities' mparseModules
-instance Parseable (ListOf (ModulePragma SrcSpanInfo)) where parser = fmap toListOf         . applyFixities' mparseModulePragmas
-instance Parseable (ListOf (Name         SrcSpanInfo)) where parser = fmap toListOf         . applyFixities' mparseNames
-instance Parseable (ListOf (Op           SrcSpanInfo)) where parser = fmap toListOf         . applyFixities' mparseOps
-instance Parseable (ListOf (Pat          SrcSpanInfo)) where parser = fmap toListOf         . applyFixities' mparsePats
-instance Parseable (ListOf (QName        SrcSpanInfo)) where parser = fmap toListOf         . applyFixities' mparseQNames
-instance Parseable (ListOf (QualConDecl  SrcSpanInfo)) where parser = fmap toListOf         . applyFixities' mparseQualConDecls
-instance Parseable (ListOf (QualStmt     SrcSpanInfo)) where parser = fmap toListOf         . applyFixities' mparseQualStmts
-instance Parseable (ListOf (Rule         SrcSpanInfo)) where parser = fmap (toListOf'' ann) . applyFixities' mparseRules
-instance Parseable (ListOf (RuleVar      SrcSpanInfo)) where parser = fmap (toListOf'' ann) . applyFixities' mparseRuleVars
-instance Parseable (ListOf (Stmt         SrcSpanInfo)) where parser = fmap toListOf         . applyFixities' mparseStmts
-instance Parseable (ListOf (TyVarBind    SrcSpanInfo)) where parser = fmap toListOf         . applyFixities' mparseTyVarBinds
+listParser' :: AppFixity a => P ([a], SrcSpanInfo) -> Maybe [Fixity] -> P (ListOf a)
+listParser' f = fmap toListOf' . normalParser f
 
-instance Parseable (ListOf [QualStmt     SrcSpanInfo]) where parser = fmap toListOf . applyFixities' mparseParQualStmts
+listParser'' :: AppFixity a => (a -> SrcSpanInfo) -> P [a] -> Maybe [Fixity] -> P (ListOf a)
+listParser'' ann f = fmap (toListOf'' ann) . normalParser f
+
+instance Parseable (Activation     SrcSpanInfo) where parser = normalParser mparseActivation
+instance Parseable (Alt            SrcSpanInfo) where parser = normalParser mparseAlt
+instance Parseable (Annotation     SrcSpanInfo) where parser = normalParser mparseAnnotation
+instance Parseable (BangType       SrcSpanInfo) where parser = normalParser mparseBangType -- NOTE: allows type syntax even where it might be invalid (when used in an infix data constructor declaration)
+instance Parseable (Binds          SrcSpanInfo) where parser = normalParser mparseBinds -- NOTE: doesn't parse "IPBinds"
+instance Parseable (CallConv       SrcSpanInfo) where parser = normalParser mparseCallConv
+instance Parseable (ClassDecl      SrcSpanInfo) where parser = normalParser mparseClassDecl
+instance Parseable (CName          SrcSpanInfo) where parser = normalParser mparseCName
+instance Parseable (ConDecl        SrcSpanInfo) where parser = normalParser mparseConDecl
+instance Parseable (Decl           SrcSpanInfo) where parser = normalParser mparseDecl
+instance Parseable (Exp            SrcSpanInfo) where parser = normalParser mparseExp
+instance Parseable (ExportSpec     SrcSpanInfo) where parser = normalParser mparseExportSpec
+instance Parseable (ExportSpecList SrcSpanInfo) where parser = normalParser mparseExportSpecList
+instance Parseable (FieldDecl      SrcSpanInfo) where parser = normalParser mparseFieldDecl
+instance Parseable (FunDep         SrcSpanInfo) where parser = normalParser mparseFunDep
+instance Parseable (GadtDecl       SrcSpanInfo) where parser = normalParser mparseGadtDecl
+instance Parseable (GuardedAlt     SrcSpanInfo) where parser = normalParser mparseGuardedAlt
+instance Parseable (GuardedAlts    SrcSpanInfo) where parser = normalParser mparseGuardedAlts2
+instance Parseable (GuardedRhs     SrcSpanInfo) where parser = normalParser mparseGuardedRhs
+instance Parseable (ImportDecl     SrcSpanInfo) where parser = normalParser mparseImportDecl
+instance Parseable (ImportSpec     SrcSpanInfo) where parser = normalParser mparseImportSpec
+instance Parseable (ImportSpecList SrcSpanInfo) where parser = normalParser mparseImportSpecList
+instance Parseable (InstDecl       SrcSpanInfo) where parser = normalParser mparseInstDecl
+instance Parseable (IPBind         SrcSpanInfo) where parser = normalParser mparseIPBind
+instance Parseable (IPName         SrcSpanInfo) where parser = normalParser mparseIPName
+instance Parseable (Kind           SrcSpanInfo) where parser = normalParser mparseKind
+instance Parseable (Literal        SrcSpanInfo) where parser = normalParser mparseLiteral
+instance Parseable (Module         SrcSpanInfo) where parser = normalParser mparseModule
+instance Parseable (ModuleHead     SrcSpanInfo) where parser = normalParser mparseModuleHead
+instance Parseable (ModuleName     SrcSpanInfo) where parser = normalParser mparseModuleName
+instance Parseable (ModulePragma   SrcSpanInfo) where parser = normalParser mparseModulePragma
+instance Parseable (Name           SrcSpanInfo) where parser = normalParser mparseName
+instance Parseable (Op             SrcSpanInfo) where parser = normalParser mparseOp
+instance Parseable (Pat            SrcSpanInfo) where parser = normalParser mparsePat
+instance Parseable (QName          SrcSpanInfo) where parser = normalParser mparseQName
+instance Parseable (QOp            SrcSpanInfo) where parser = normalParser mparseQOp
+instance Parseable (QualConDecl    SrcSpanInfo) where parser = normalParser mparseQualConDecl
+instance Parseable (QualStmt       SrcSpanInfo) where parser = normalParser mparseQualStmt
+instance Parseable (Rhs            SrcSpanInfo) where parser = normalParser mparseRhs
+instance Parseable (Rule           SrcSpanInfo) where parser = normalParser mparseRule
+instance Parseable (RuleVar        SrcSpanInfo) where parser = normalParser mparseRuleVar
+instance Parseable (Safety         SrcSpanInfo) where parser = normalParser mparseSafety
+instance Parseable (Stmt           SrcSpanInfo) where parser = normalParser mparseStmt
+instance Parseable (Type           SrcSpanInfo) where parser = normalParser mparseType
+instance Parseable (TyVarBind      SrcSpanInfo) where parser = normalParser mparseTyVarBind
+instance Parseable (XName          SrcSpanInfo) where parser = normalParser mparseXName
+
+instance Parseable (ListOf (ClassDecl    SrcSpanInfo)) where parser = listParser       mparseClassDecls
+instance Parseable (ListOf (CName        SrcSpanInfo)) where parser = listParser       mparseCNames
+instance Parseable (ListOf (Decl         SrcSpanInfo)) where parser = listParser       mparseDecls
+instance Parseable (ListOf (Exp          SrcSpanInfo)) where parser = listParser       mparseExps
+instance Parseable (ListOf (FieldDecl    SrcSpanInfo)) where parser = listParser       mparseFieldDecls
+instance Parseable (ListOf (FunDep       SrcSpanInfo)) where parser = listParser       mparseFunDeps
+instance Parseable (ListOf (GadtDecl     SrcSpanInfo)) where parser = listParser       mparseGadtDecls
+instance Parseable (ListOf (GuardedAlt   SrcSpanInfo)) where parser = listParser'      mparseGuardedAlts
+instance Parseable (ListOf (GuardedRhs   SrcSpanInfo)) where parser = listParser'      mparseGuardedRhss
+instance Parseable (ListOf (ImportDecl   SrcSpanInfo)) where parser = listParser       mparseImportDecls
+instance Parseable (ListOf (InstDecl     SrcSpanInfo)) where parser = listParser       mparseInstDecls
+instance Parseable (ListOf (IPBind       SrcSpanInfo)) where parser = listParser'      mparseIPBinds
+instance Parseable (ListOf (Module       SrcSpanInfo)) where parser = listParser'' ann mparseModules
+instance Parseable (ListOf (ModulePragma SrcSpanInfo)) where parser = listParser       mparseModulePragmas
+instance Parseable (ListOf (Name         SrcSpanInfo)) where parser = listParser       mparseNames
+instance Parseable (ListOf (Op           SrcSpanInfo)) where parser = listParser       mparseOps
+instance Parseable (ListOf (Pat          SrcSpanInfo)) where parser = listParser       mparsePats
+instance Parseable (ListOf (QName        SrcSpanInfo)) where parser = listParser       mparseQNames
+instance Parseable (ListOf (QualConDecl  SrcSpanInfo)) where parser = listParser       mparseQualConDecls
+instance Parseable (ListOf (QualStmt     SrcSpanInfo)) where parser = listParser       mparseQualStmts
+instance Parseable (ListOf (Rule         SrcSpanInfo)) where parser = listParser'' ann mparseRules
+instance Parseable (ListOf (RuleVar      SrcSpanInfo)) where parser = listParser'' ann mparseRuleVars
+instance Parseable (ListOf (Stmt         SrcSpanInfo)) where parser = listParser       mparseStmts
+instance Parseable (ListOf (TyVarBind    SrcSpanInfo)) where parser = listParser       mparseTyVarBinds
+
+instance Parseable (ListOf [QualStmt     SrcSpanInfo]) where parser = listParser mparseParQualStmts
+
+-- Non-greedy parsers (should use ng- prefixed parses exported by InternalParser)
+
+ngnormalParser :: AppFixity a => P a -> Maybe [Fixity] -> P (NonGreedy a)
+ngnormalParser p = fmap NonGreedy . normalParser p
+
+nglistParser :: AppFixity a => P ([a], [SrcSpan], SrcSpanInfo) -> Maybe [Fixity] -> P (NonGreedy (ListOf a))
+nglistParser f = fmap (NonGreedy . toListOf) . normalParser f
+
+nglistParser' :: AppFixity a => P ([a], SrcSpanInfo) -> Maybe [Fixity] -> P (NonGreedy (ListOf a))
+nglistParser' f = fmap (NonGreedy . toListOf') . normalParser f
+
+nglistParser'' :: AppFixity a => (a -> SrcSpanInfo) -> P [a] -> Maybe [Fixity] -> P (NonGreedy (ListOf a))
+nglistParser'' ann f = fmap (NonGreedy . toListOf'' ann) . normalParser f
+
+instance Parseable (NonGreedy (Activation     SrcSpanInfo)) where parser = ngnormalParser ngparseActivation
+instance Parseable (NonGreedy (Alt            SrcSpanInfo)) where parser = ngnormalParser ngparseAlt
+instance Parseable (NonGreedy (Annotation     SrcSpanInfo)) where parser = ngnormalParser ngparseAnnotation
+instance Parseable (NonGreedy (BangType       SrcSpanInfo)) where parser = ngnormalParser ngparseBangType -- NOTE: allows type syntax even where it might be invalid (when used in an infix data constructor declaration)
+instance Parseable (NonGreedy (Binds          SrcSpanInfo)) where parser = ngnormalParser ngparseBinds -- NOTE: doesn't parse "IPBinds"
+instance Parseable (NonGreedy (CallConv       SrcSpanInfo)) where parser = ngnormalParser ngparseCallConv
+instance Parseable (NonGreedy (ClassDecl      SrcSpanInfo)) where parser = ngnormalParser ngparseClassDecl
+instance Parseable (NonGreedy (CName          SrcSpanInfo)) where parser = ngnormalParser ngparseCName
+instance Parseable (NonGreedy (ConDecl        SrcSpanInfo)) where parser = ngnormalParser ngparseConDecl
+instance Parseable (NonGreedy (Decl           SrcSpanInfo)) where parser = ngnormalParser ngparseDecl
+instance Parseable (NonGreedy (Exp            SrcSpanInfo)) where parser = ngnormalParser ngparseExp
+instance Parseable (NonGreedy (ExportSpec     SrcSpanInfo)) where parser = ngnormalParser ngparseExportSpec
+instance Parseable (NonGreedy (ExportSpecList SrcSpanInfo)) where parser = ngnormalParser ngparseExportSpecList
+instance Parseable (NonGreedy (FieldDecl      SrcSpanInfo)) where parser = ngnormalParser ngparseFieldDecl
+instance Parseable (NonGreedy (FunDep         SrcSpanInfo)) where parser = ngnormalParser ngparseFunDep
+instance Parseable (NonGreedy (GadtDecl       SrcSpanInfo)) where parser = ngnormalParser ngparseGadtDecl
+instance Parseable (NonGreedy (GuardedAlt     SrcSpanInfo)) where parser = ngnormalParser ngparseGuardedAlt
+instance Parseable (NonGreedy (GuardedAlts    SrcSpanInfo)) where parser = ngnormalParser ngparseGuardedAlts2
+instance Parseable (NonGreedy (GuardedRhs     SrcSpanInfo)) where parser = ngnormalParser ngparseGuardedRhs
+instance Parseable (NonGreedy (ImportDecl     SrcSpanInfo)) where parser = ngnormalParser ngparseImportDecl
+instance Parseable (NonGreedy (ImportSpec     SrcSpanInfo)) where parser = ngnormalParser ngparseImportSpec
+instance Parseable (NonGreedy (ImportSpecList SrcSpanInfo)) where parser = ngnormalParser ngparseImportSpecList
+instance Parseable (NonGreedy (InstDecl       SrcSpanInfo)) where parser = ngnormalParser ngparseInstDecl
+instance Parseable (NonGreedy (IPBind         SrcSpanInfo)) where parser = ngnormalParser ngparseIPBind
+instance Parseable (NonGreedy (IPName         SrcSpanInfo)) where parser = ngnormalParser ngparseIPName
+instance Parseable (NonGreedy (Kind           SrcSpanInfo)) where parser = ngnormalParser ngparseKind
+instance Parseable (NonGreedy (Literal        SrcSpanInfo)) where parser = ngnormalParser ngparseLiteral
+instance Parseable (NonGreedy (Module         SrcSpanInfo)) where parser = ngnormalParser ngparseModule
+instance Parseable (NonGreedy (ModuleHead     SrcSpanInfo)) where parser = ngnormalParser ngparseModuleHead
+instance Parseable (NonGreedy (ModuleName     SrcSpanInfo)) where parser = ngnormalParser ngparseModuleName
+instance Parseable (NonGreedy (ModulePragma   SrcSpanInfo)) where parser = ngnormalParser ngparseModulePragma
+instance Parseable (NonGreedy (Name           SrcSpanInfo)) where parser = ngnormalParser ngparseName
+instance Parseable (NonGreedy (Op             SrcSpanInfo)) where parser = ngnormalParser ngparseOp
+instance Parseable (NonGreedy (Pat            SrcSpanInfo)) where parser = ngnormalParser ngparsePat
+instance Parseable (NonGreedy (QName          SrcSpanInfo)) where parser = ngnormalParser ngparseQName
+instance Parseable (NonGreedy (QOp            SrcSpanInfo)) where parser = ngnormalParser ngparseQOp
+instance Parseable (NonGreedy (QualConDecl    SrcSpanInfo)) where parser = ngnormalParser ngparseQualConDecl
+instance Parseable (NonGreedy (QualStmt       SrcSpanInfo)) where parser = ngnormalParser ngparseQualStmt
+instance Parseable (NonGreedy (Rhs            SrcSpanInfo)) where parser = ngnormalParser ngparseRhs
+instance Parseable (NonGreedy (Rule           SrcSpanInfo)) where parser = ngnormalParser ngparseRule
+instance Parseable (NonGreedy (RuleVar        SrcSpanInfo)) where parser = ngnormalParser ngparseRuleVar
+instance Parseable (NonGreedy (Safety         SrcSpanInfo)) where parser = ngnormalParser ngparseSafety
+instance Parseable (NonGreedy (Stmt           SrcSpanInfo)) where parser = ngnormalParser ngparseStmt
+instance Parseable (NonGreedy (Type           SrcSpanInfo)) where parser = ngnormalParser ngparseType
+instance Parseable (NonGreedy (TyVarBind      SrcSpanInfo)) where parser = ngnormalParser ngparseTyVarBind
+instance Parseable (NonGreedy (XName          SrcSpanInfo)) where parser = ngnormalParser ngparseXName
+
+instance Parseable (NonGreedy (ListOf (ClassDecl    SrcSpanInfo))) where parser = nglistParser       ngparseClassDecls
+instance Parseable (NonGreedy (ListOf (CName        SrcSpanInfo))) where parser = nglistParser       ngparseCNames
+instance Parseable (NonGreedy (ListOf (Decl         SrcSpanInfo))) where parser = nglistParser       ngparseDecls
+instance Parseable (NonGreedy (ListOf (Exp          SrcSpanInfo))) where parser = nglistParser       ngparseExps
+instance Parseable (NonGreedy (ListOf (FieldDecl    SrcSpanInfo))) where parser = nglistParser       ngparseFieldDecls
+instance Parseable (NonGreedy (ListOf (FunDep       SrcSpanInfo))) where parser = nglistParser       ngparseFunDeps
+instance Parseable (NonGreedy (ListOf (GadtDecl     SrcSpanInfo))) where parser = nglistParser       ngparseGadtDecls
+instance Parseable (NonGreedy (ListOf (GuardedAlt   SrcSpanInfo))) where parser = nglistParser'      ngparseGuardedAlts
+instance Parseable (NonGreedy (ListOf (GuardedRhs   SrcSpanInfo))) where parser = nglistParser'      ngparseGuardedRhss
+instance Parseable (NonGreedy (ListOf (ImportDecl   SrcSpanInfo))) where parser = nglistParser       ngparseImportDecls
+instance Parseable (NonGreedy (ListOf (InstDecl     SrcSpanInfo))) where parser = nglistParser       ngparseInstDecls
+instance Parseable (NonGreedy (ListOf (IPBind       SrcSpanInfo))) where parser = nglistParser'      ngparseIPBinds
+instance Parseable (NonGreedy (ListOf (ModulePragma SrcSpanInfo))) where parser = nglistParser       ngparseModulePragmas
+instance Parseable (NonGreedy (ListOf (Name         SrcSpanInfo))) where parser = nglistParser       ngparseNames
+instance Parseable (NonGreedy (ListOf (Op           SrcSpanInfo))) where parser = nglistParser       ngparseOps
+instance Parseable (NonGreedy (ListOf (Pat          SrcSpanInfo))) where parser = nglistParser       ngparsePats
+instance Parseable (NonGreedy (ListOf (QName        SrcSpanInfo))) where parser = nglistParser       ngparseQNames
+instance Parseable (NonGreedy (ListOf (QualConDecl  SrcSpanInfo))) where parser = nglistParser       ngparseQualConDecls
+instance Parseable (NonGreedy (ListOf (QualStmt     SrcSpanInfo))) where parser = nglistParser       ngparseQualStmts
+instance Parseable (NonGreedy (ListOf (Rule         SrcSpanInfo))) where parser = nglistParser'' ann ngparseRules
+instance Parseable (NonGreedy (ListOf (RuleVar      SrcSpanInfo))) where parser = nglistParser'' ann ngparseRuleVars
+instance Parseable (NonGreedy (ListOf (Stmt         SrcSpanInfo))) where parser = nglistParser       ngparseStmts
+instance Parseable (NonGreedy (ListOf (TyVarBind    SrcSpanInfo))) where parser = nglistParser       ngparseTyVarBinds
+
+instance Parseable (NonGreedy (ListOf [QualStmt     SrcSpanInfo])) where parser = nglistParser       ngparseParQualStmts
 
 {-
 instance Parseable (DeclHead       SrcSpanInfo) where parser = applyFixities' mparseDeclHead
@@ -348,8 +444,10 @@ newtype NonGreedy a = NonGreedy { unNonGreedy :: a }
 instance Functor NonGreedy where
     fmap f (NonGreedy x) = NonGreedy (f x)
 
+{-
 instance Parseable (NonGreedy (ListOf (ModulePragma SrcSpanInfo))) where
     parser _ = fmap (NonGreedy . toListOf) mfindOptPragmas
+-}
 
 handleSpans :: ([a], [SrcSpan], SrcSpanInfo) -> ([a], SrcSpanInfo)
 handleSpans x = (xs, l)

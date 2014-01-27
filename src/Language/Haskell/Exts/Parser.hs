@@ -152,6 +152,80 @@ instance Parseable [S.TyVarBind]            where parser = parseWithSimplify (a 
 
 instance Parseable [[S.QualStmt]]           where parser = parseWithSimplify (a :: ListOf [QualStmt     SrcSpanInfo]) (map (map sQualStmt) . unListOf)
 
+-- Non greedy parsers
+
+instance Parseable (NonGreedy S.Activation          ) where parser = parseWithSimplify (a :: NonGreedy (Activation     SrcSpanInfo)) (fmap sActivation)
+instance Parseable (NonGreedy S.Alt                 ) where parser = parseWithSimplify (a :: NonGreedy (Alt            SrcSpanInfo)) (fmap sAlt)
+instance Parseable (NonGreedy S.Annotation          ) where parser = parseWithSimplify (a :: NonGreedy (Annotation     SrcSpanInfo)) (fmap sAnnotation)
+instance Parseable (NonGreedy S.BangType            ) where parser = parseWithSimplify (a :: NonGreedy (BangType       SrcSpanInfo)) (fmap sBangType)
+instance Parseable (NonGreedy S.Binds               ) where parser = parseWithSimplify (a :: NonGreedy (Binds          SrcSpanInfo)) (fmap sBinds)
+instance Parseable (NonGreedy S.CallConv            ) where parser = parseWithSimplify (a :: NonGreedy (CallConv       SrcSpanInfo)) (fmap sCallConv)
+instance Parseable (NonGreedy S.ClassDecl           ) where parser = parseWithSimplify (a :: NonGreedy (ClassDecl      SrcSpanInfo)) (fmap sClassDecl)
+instance Parseable (NonGreedy S.CName               ) where parser = parseWithSimplify (a :: NonGreedy (CName          SrcSpanInfo)) (fmap sCName)
+instance Parseable (NonGreedy S.ConDecl             ) where parser = parseWithSimplify (a :: NonGreedy (ConDecl        SrcSpanInfo)) (fmap sConDecl)
+instance Parseable (NonGreedy S.Decl                ) where parser = parseWithSimplify (a :: NonGreedy (Decl           SrcSpanInfo)) (fmap sDecl)
+instance Parseable (NonGreedy S.Exp                 ) where parser = parseWithSimplify (a :: NonGreedy (Exp            SrcSpanInfo)) (fmap sExp)
+instance Parseable (NonGreedy S.ExportSpec          ) where parser = parseWithSimplify (a :: NonGreedy (ExportSpec     SrcSpanInfo)) (fmap sExportSpec)
+instance Parseable (NonGreedy [S.ExportSpec]        ) where parser = parseWithSimplify (a :: NonGreedy (ExportSpecList SrcSpanInfo)) (fmap sExportSpecList)
+instance Parseable (NonGreedy ([S.Name], S.BangType)) where parser = parseWithSimplify (a :: NonGreedy (FieldDecl      SrcSpanInfo)) (fmap sFieldDecl)
+instance Parseable (NonGreedy S.FunDep              ) where parser = parseWithSimplify (a :: NonGreedy (FunDep         SrcSpanInfo)) (fmap sFunDep)
+instance Parseable (NonGreedy S.GadtDecl            ) where parser = parseWithSimplify (a :: NonGreedy (GadtDecl       SrcSpanInfo)) (fmap sGadtDecl)
+instance Parseable (NonGreedy S.GuardedAlt          ) where parser = parseWithSimplify (a :: NonGreedy (GuardedAlt     SrcSpanInfo)) (fmap sGuardedAlt)
+instance Parseable (NonGreedy S.GuardedAlts         ) where parser = parseWithSimplify (a :: NonGreedy (GuardedAlts    SrcSpanInfo)) (fmap sGuardedAlts)
+instance Parseable (NonGreedy S.GuardedRhs          ) where parser = parseWithSimplify (a :: NonGreedy (GuardedRhs     SrcSpanInfo)) (fmap sGuardedRhs)
+instance Parseable (NonGreedy S.ImportDecl          ) where parser = parseWithSimplify (a :: NonGreedy (ImportDecl     SrcSpanInfo)) (fmap sImportDecl)
+instance Parseable (NonGreedy S.ImportSpec          ) where parser = parseWithSimplify (a :: NonGreedy (ImportSpec     SrcSpanInfo)) (fmap sImportSpec)
+instance Parseable (NonGreedy (Bool, [S.ImportSpec])) where parser = parseWithSimplify (a :: NonGreedy (ImportSpecList SrcSpanInfo)) (fmap sImportSpecList)
+instance Parseable (NonGreedy S.InstDecl            ) where parser = parseWithSimplify (a :: NonGreedy (InstDecl       SrcSpanInfo)) (fmap sInstDecl)
+instance Parseable (NonGreedy S.IPBind              ) where parser = parseWithSimplify (a :: NonGreedy (IPBind         SrcSpanInfo)) (fmap sIPBind)
+instance Parseable (NonGreedy S.IPName              ) where parser = parseWithSimplify (a :: NonGreedy (IPName         SrcSpanInfo)) (fmap sIPName)
+instance Parseable (NonGreedy S.Kind                ) where parser = parseWithSimplify (a :: NonGreedy (Kind           SrcSpanInfo)) (fmap sKind)
+instance Parseable (NonGreedy S.Literal             ) where parser = parseWithSimplify (a :: NonGreedy (Literal        SrcSpanInfo)) (fmap sLiteral)
+instance Parseable (NonGreedy S.Module              ) where parser = parseWithSimplify (a :: NonGreedy (Module         SrcSpanInfo)) (fmap sModule)
+instance Parseable (NonGreedy S.ModuleName          ) where parser = parseWithSimplify (a :: NonGreedy (ModuleName     SrcSpanInfo)) (fmap sModuleName)
+instance Parseable (NonGreedy S.ModulePragma        ) where parser = parseWithSimplify (a :: NonGreedy (ModulePragma   SrcSpanInfo)) (fmap sModulePragma)
+instance Parseable (NonGreedy S.Name                ) where parser = parseWithSimplify (a :: NonGreedy (Name           SrcSpanInfo)) (fmap sName)
+instance Parseable (NonGreedy S.Op                  ) where parser = parseWithSimplify (a :: NonGreedy (Op             SrcSpanInfo)) (fmap sOp)
+instance Parseable (NonGreedy S.Pat                 ) where parser = parseWithSimplify (a :: NonGreedy (Pat            SrcSpanInfo)) (fmap sPat)
+instance Parseable (NonGreedy S.QName               ) where parser = parseWithSimplify (a :: NonGreedy (QName          SrcSpanInfo)) (fmap sQName)
+instance Parseable (NonGreedy S.QOp                 ) where parser = parseWithSimplify (a :: NonGreedy (QOp            SrcSpanInfo)) (fmap sQOp)
+instance Parseable (NonGreedy S.QualConDecl         ) where parser = parseWithSimplify (a :: NonGreedy (QualConDecl    SrcSpanInfo)) (fmap sQualConDecl)
+instance Parseable (NonGreedy S.QualStmt            ) where parser = parseWithSimplify (a :: NonGreedy (QualStmt       SrcSpanInfo)) (fmap sQualStmt)
+instance Parseable (NonGreedy S.Rhs                 ) where parser = parseWithSimplify (a :: NonGreedy (Rhs            SrcSpanInfo)) (fmap sRhs)
+instance Parseable (NonGreedy S.Rule                ) where parser = parseWithSimplify (a :: NonGreedy (Rule           SrcSpanInfo)) (fmap sRule)
+instance Parseable (NonGreedy S.RuleVar             ) where parser = parseWithSimplify (a :: NonGreedy (RuleVar        SrcSpanInfo)) (fmap sRuleVar)
+instance Parseable (NonGreedy S.Safety              ) where parser = parseWithSimplify (a :: NonGreedy (Safety         SrcSpanInfo)) (fmap sSafety)
+instance Parseable (NonGreedy S.Stmt                ) where parser = parseWithSimplify (a :: NonGreedy (Stmt           SrcSpanInfo)) (fmap sStmt)
+instance Parseable (NonGreedy S.Type                ) where parser = parseWithSimplify (a :: NonGreedy (Type           SrcSpanInfo)) (fmap sType)
+instance Parseable (NonGreedy S.TyVarBind           ) where parser = parseWithSimplify (a :: NonGreedy (TyVarBind      SrcSpanInfo)) (fmap sTyVarBind)
+instance Parseable (NonGreedy S.XName               ) where parser = parseWithSimplify (a :: NonGreedy (XName          SrcSpanInfo)) (fmap sXName)
+
+instance Parseable (NonGreedy [S.ClassDecl]           ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (ClassDecl    SrcSpanInfo))) (fmap (map sClassDecl    . unListOf))
+instance Parseable (NonGreedy [S.CName]               ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (CName        SrcSpanInfo))) (fmap (map sCName        . unListOf))
+instance Parseable (NonGreedy [S.Decl]                ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (Decl         SrcSpanInfo))) (fmap (map sDecl         . unListOf))
+instance Parseable (NonGreedy [S.Exp]                 ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (Exp          SrcSpanInfo))) (fmap (map sExp          . unListOf))
+instance Parseable (NonGreedy [([S.Name], S.BangType)]) where parser = parseWithSimplify (a :: NonGreedy (ListOf (FieldDecl    SrcSpanInfo))) (fmap (map sFieldDecl    . unListOf))
+instance Parseable (NonGreedy [S.FunDep]              ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (FunDep       SrcSpanInfo))) (fmap (map sFunDep       . unListOf))
+instance Parseable (NonGreedy [S.GadtDecl]            ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (GadtDecl     SrcSpanInfo))) (fmap (map sGadtDecl     . unListOf))
+instance Parseable (NonGreedy [S.GuardedAlt]          ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (GuardedAlt   SrcSpanInfo))) (fmap (map sGuardedAlt   . unListOf))
+instance Parseable (NonGreedy [S.GuardedRhs]          ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (GuardedRhs   SrcSpanInfo))) (fmap (map sGuardedRhs   . unListOf))
+instance Parseable (NonGreedy [S.ImportDecl]          ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (ImportDecl   SrcSpanInfo))) (fmap (map sImportDecl   . unListOf))
+instance Parseable (NonGreedy [S.InstDecl]            ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (InstDecl     SrcSpanInfo))) (fmap (map sInstDecl     . unListOf))
+instance Parseable (NonGreedy [S.IPBind]              ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (IPBind       SrcSpanInfo))) (fmap (map sIPBind       . unListOf))
+instance Parseable (NonGreedy [S.ModulePragma]        ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (ModulePragma SrcSpanInfo))) (fmap (map sModulePragma . unListOf))
+instance Parseable (NonGreedy [S.Name]                ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (Name         SrcSpanInfo))) (fmap (map sName         . unListOf))
+instance Parseable (NonGreedy [S.Op]                  ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (Op           SrcSpanInfo))) (fmap (map sOp           . unListOf))
+instance Parseable (NonGreedy [S.Pat]                 ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (Pat          SrcSpanInfo))) (fmap (map sPat          . unListOf))
+instance Parseable (NonGreedy [S.QName]               ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (QName        SrcSpanInfo))) (fmap (map sQName        . unListOf))
+instance Parseable (NonGreedy [S.QualConDecl]         ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (QualConDecl  SrcSpanInfo))) (fmap (map sQualConDecl  . unListOf))
+instance Parseable (NonGreedy [S.QualStmt]            ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (QualStmt     SrcSpanInfo))) (fmap (map sQualStmt     . unListOf))
+instance Parseable (NonGreedy [S.Rule]                ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (Rule         SrcSpanInfo))) (fmap (map sRule         . unListOf))
+instance Parseable (NonGreedy [S.RuleVar]             ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (RuleVar      SrcSpanInfo))) (fmap (map sRuleVar      . unListOf))
+instance Parseable (NonGreedy [S.Stmt]                ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (Stmt         SrcSpanInfo))) (fmap (map sStmt         . unListOf))
+instance Parseable (NonGreedy [S.TyVarBind]           ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (TyVarBind    SrcSpanInfo))) (fmap (map sTyVarBind    . unListOf))
+
+instance Parseable (NonGreedy [[S.QualStmt]]          ) where parser = parseWithSimplify (a :: NonGreedy (ListOf [QualStmt     SrcSpanInfo])) (fmap (map (map sQualStmt) . unListOf))
+
 {-
 instance Parseable (S.Name, [S.TyVarBind])  where parser = parseWithSimplify
 instance Parseable (S.QName, [S.Type])      where parser = parseWithSimplify
@@ -171,8 +245,6 @@ instance Parseable S.Splice                 where parser = parseWithSimplify
 instance Parseable S.WarningText            where parser = parseWithSimplify
 instance Parseable S.XAttr                  where parser = parseWithSimplify
 -}
-
-instance Parseable (NonGreedy [S.ModulePragma]) where parser = parseWithSimplify (a :: NonGreedy (ListOf (ModulePragma SrcSpanInfo))) (fmap (map sModulePragma . unListOf))
 
 -- Type-specific instances
 
