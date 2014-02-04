@@ -1,5 +1,12 @@
 ** 1.14.x
 
+1.14.0 --> 1.14.0.1
+===============
+
+Nothing has actually changed here (apart from the CHANGELOG). This release is
+done to include InternalParser.hs generated with happy 1.19 so that it compiles
+with GHC 7.8.
+
 1.13.6 --> 1.14.0
 ===============
 
