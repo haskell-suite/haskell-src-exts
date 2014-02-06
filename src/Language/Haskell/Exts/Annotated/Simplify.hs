@@ -288,6 +288,7 @@ sType t = case t of
     TyParen _ t                 -> S.TyParen (sType t)
     TyInfix _ ta qn tb          -> S.TyInfix (sType ta) (sQName qn) (sType tb)
     TyKind _ t k                -> S.TyKind (sType t) (sKind k)
+    TyLit _ t                   -> S.TyLit (sTypeLit t)
 
 sTyVarBind :: TyVarBind l -> S.TyVarBind
 sTyVarBind (KindedVar _ n k) = S.KindedVar (sName n) (sKind k)
@@ -317,6 +318,10 @@ sAsst asst = case asst of
     InfixA _ ta qn tb   -> S.InfixA (sType ta) (sQName qn) (sType tb)
     IParam _ ipn t      -> S.IParam (sIPName ipn) (sType t)
     EqualP _ t1 t2      -> S.EqualP (sType t1) (sType t2)
+
+sTypeLit :: TypeLit l -> S.TypeLit
+sTypeLit (TypeInt _ i _)    = S.TypeInt i
+sTypeLit (TypeString _ s _) = S.TypeString s
 
 sLiteral :: Literal l -> S.Literal
 sLiteral lit = case lit of

@@ -918,7 +918,7 @@ instance ExactP Type where
             exactPC kd
             printStringAt (pos c) ")"
          _ -> errorEP "ExactP: Type: TyKind is given wrong number of srcInfoPoints"
-
+    TyLit l t -> exactP t
 instance ExactP Context where
   exactP ctxt = do
     printContext ctxt
@@ -962,6 +962,11 @@ instance ExactP Asst where
             exactP t1
             printStringAt (pos a) "~"
             exactPC t2
+
+instance ExactP TypeLit where
+  exactP lit = case lit of
+    TypeString _ _ rw -> printString ('\"':rw ++ "\"")
+    TypeInt    _ _ rw -> printString (rw)
 
 instance ExactP Deriving where
   exactP (Deriving l ihs) =
