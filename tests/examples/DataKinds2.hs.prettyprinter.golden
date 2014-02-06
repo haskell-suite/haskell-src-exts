@@ -1,0 +1,10 @@
+{-# LANGUAGE DataKinds #-}
+module Main (main) where
+ 
+data Foo a = Foo
+ 
+type FooB = Foo "a"
+ 
+type FooC = Foo 1
+ 
+instance Show (Foo "bar")
