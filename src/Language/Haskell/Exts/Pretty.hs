@@ -739,6 +739,10 @@ ppOptKind :: Maybe Kind -> [Doc]
 ppOptKind Nothing  = []
 ppOptKind (Just k) = [text "::", pretty k]
 
+instance Pretty TypeLit where
+         pretty (TypeInt i)    = integer i
+         pretty (TypeString s) = text (show s)
+
 ------------------- Functional Dependencies -------------------
 instance Pretty FunDep where
         pretty (FunDep from to) =

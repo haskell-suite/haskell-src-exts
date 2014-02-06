@@ -487,7 +487,7 @@ data KnownExtension =
   | ConstraintKinds
 
 -}
-
+  | DataKinds
   deriving (Show, Read, Eq, Ord, Enum, Bounded)
 
 -- | Certain extensions imply other extensions, and this function
@@ -559,6 +559,7 @@ glasgowExts = map EnableExtension [
     , KindSignatures
     , GeneralizedNewtypeDeriving
     , TypeFamilies
+    , DataKinds
     ]
 
 -- Not exported, just used locally in several places.

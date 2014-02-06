@@ -56,7 +56,7 @@ module Language.Haskell.Exts.Annotated.Syntax (
     -- * Class Assertions and Contexts
     Context(..), FunDep(..), Asst(..),
     -- * Types
-    Type(..), Boxed(..), Kind(..), TyVarBind(..),
+    Type(..), Boxed(..), Kind(..), TyVarBind(..), TypeLit(..),
     -- * Expressions
     Exp(..), Stmt(..), QualStmt(..), FieldUpdate(..),
     Alt(..), GuardedAlts(..), GuardedAlt(..), XAttr(..), IfAlt(..),
@@ -597,6 +597,7 @@ data Type l
      | TyParen l (Type l)                       -- ^ type surrounded by parentheses
      | TyInfix l (Type l) (QName l) (Type l)    -- ^ infix type constructor
      | TyKind  l (Type l) (Kind l)              -- ^ type with explicit kind signature
+     | TyLit   l (TypeLit l)                    -- ^ promoted type literal
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable)
 #else
@@ -675,6 +676,18 @@ data Asst l
 #else
   deriving (Eq,Ord,Show)
 #endif
+
+-- | Type literal
+-- holds value and precise string representation.
+data TypeLit l
+    = TypeString l String   String     -- ^ promoted string literal
+    | TypeInt    l Integer  String     -- ^ promoted integer literal
+#ifdef __GLASGOW_HASKELL__
+  deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable)
+#else
+  deriving (Eq,Ord,Show)
+#endif
+
 
 -- | /literal/
 -- Values of this type hold the abstract value of the literal, along with the
@@ -1354,6 +1367,7 @@ instance Functor Type where
       TyParen l t                   -> TyParen (f l) (fmap f t)
       TyInfix l ta qn tb            -> TyInfix (f l) (fmap f ta) (fmap f qn) (fmap f tb)
       TyKind  l t k                 -> TyKind (f l) (fmap f t) (fmap f k)
+      TyLit   l t                   -> TyLit (f l) (fmap f t)
 
 instance Functor TyVarBind where
     fmap f (KindedVar   l n k) = KindedVar (f l) (fmap f n) (fmap f k)
@@ -1381,6 +1395,10 @@ instance Functor Asst where
         InfixA l ta qn tb   -> InfixA (f l) (fmap f ta) (fmap f qn) (fmap f tb)
         IParam l ipn t      -> IParam (f l) (fmap f ipn) (fmap f t)
         EqualP l t1 t2      -> EqualP (f l) (fmap f t1) (fmap f t2)
+
+instance Functor TypeLit where
+    fmap f (TypeInt l i rw)    = TypeInt (f l) i rw
+    fmap f (TypeString l s rw) = TypeString (f l) s rw
 
 instance Functor Literal where
     fmap f lit = case lit of
@@ -1895,6 +1913,7 @@ instance Annotated Type where
       TyParen l t                   -> l
       TyInfix l ta qn tb            -> l
       TyKind  l t k                 -> l
+      TyLit   l t                   -> l
     amap f t = case t of
       TyForall l mtvs mcx t         -> TyForall (f l) mtvs mcx t
       TyFun   l t1 t2               -> TyFun (f l) t1 t2
@@ -1906,6 +1925,7 @@ instance Annotated Type where
       TyParen l t                   -> TyParen (f l) t
       TyInfix l ta qn tb            -> TyInfix (f l) ta qn tb
       TyKind  l t k                 -> TyKind (f l) t k
+      TyLit   l t                   -> TyLit  (f l) t
 
 instance Annotated TyVarBind where
     ann (KindedVar   l n k) = l
@@ -1950,6 +1970,12 @@ instance Annotated Asst where
         InfixA l ta qn tb   -> InfixA (f l) ta qn tb
         IParam l ipn t      -> IParam (f l) ipn t
         EqualP l t1 t2      -> EqualP (f l) t1 t2
+
+instance Annotated TypeLit where
+    ann lit = case lit of
+        TypeString  l s    rw  -> l
+        TypeInt     l i    rw  -> l
+    amap = fmap
 
 instance Annotated Literal where
     ann lit = case lit of

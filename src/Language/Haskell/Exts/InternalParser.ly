@@ -809,6 +809,8 @@ the (# and #) lexemes. Kinds will be handled at the kind rule.
 >       | '[' type ']'                  { TyList  ($1 <^^> $3 <** [$1,$3]) $2 }
 >       | '(' ctype ')'                 { TyParen ($1 <^^> $3 <** [$1,$3]) $2 }
 >       | '(' ctype '::' kind ')'       { TyKind  ($1 <^^> $5 <** [$1,$3,$5]) $2 $4 }
+>       | typeliteral                   {% do { checkEnabled DataKinds ;
+>	  				        return (TyLit (ann $1) $1) ; } }
 
 > gtycon :: { QName L }
 >       : otycon                        { $1 }
@@ -881,6 +883,9 @@ Equality constraints require the TypeFamilies extension.
 > tyvars1 :: { ([Name L],L) }
 >       : tyvars tyvar                  { ($2 : fst $1, snd $1 <?+> ann $2) }
 
+> typeliteral :: { TypeLit L }
+>       : INT                           { let Loc l (IntTok        (i,raw)) = $1 in TypeInt    (nIS l) i raw }
+>       | STRING                        { let Loc l (StringTok     (s,raw)) = $1 in TypeString (nIS l) s raw }
 
 -----------------------------------------------------------------------------
 Functional Dependencies
