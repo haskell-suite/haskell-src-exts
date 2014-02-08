@@ -41,6 +41,9 @@ module Language.Haskell.Exts.ParseUtils (
     , checkDataOrNewG       -- DataOrNew -> [GadtDecl] -> P ()
     , checkSimpleType       -- PType -> P (Name, [TyVarBind])
     , checkSigVar           -- PExp -> P Name
+    , checkField
+    , checkPatField
+    , checkRPatOp
     , getGConName           -- S.Exp -> P QName
     , mkTyForall            -- Maybe [TyVarBind] -> PContext -> PType -> PType
     -- HaRP
@@ -49,6 +52,8 @@ module Language.Haskell.Exts.ParseUtils (
     , checkEqNames          -- XName -> XName -> P XName
     , checkPageModule
     , checkHybridModule
+    , checkAttr
+    , checkPAttr
     , mkDVar                -- [String] -> String
     -- Pragmas
     , checkRuleExpr         -- PExp -> P Exp
@@ -74,6 +79,7 @@ import Language.Haskell.Exts.ExtScheme
 
 import Data.List (intersperse)
 import Data.Maybe (fromJust)
+import Data.Traversable (forM)
 import Control.Monad (when,liftM)
 
 --- import Debug.Trace (trace)
@@ -157,29 +163,26 @@ isSymbol (UnQual _ (Symbol _ _)) = True
 isSymbol (Qual _ _ (Symbol _ _)) = True
 isSymbol _                       = False
 
-
 -- Checks simple contexts for class and instance
 -- headers. If FlexibleContexts is enabled then
 -- anything goes, otherwise only tyvars are allowed.
-checkSContext :: Maybe (PContext L) -> P (Maybe (S.Context L))
-checkSContext (Just ctxt) = case ctxt of
-    CxEmpty l -> return $ Just $ S.CxEmpty l
-    CxSingle l a -> checkAsst True a >>= return . Just . S.CxSingle l
-    CxTuple l as -> mapM (checkAsst True) as >>= return . Just . S.CxTuple l
-    CxParen l cx -> checkSContext (Just cx) >>= return . fmap (S.CxParen l)
-checkSContext _ = return Nothing
+checkSContext :: PContext L -> P (S.Context L)
+checkSContext ctxt = case ctxt of
+    CxEmpty l -> return $ S.CxEmpty l
+    CxSingle l a -> fmap (S.CxSingle l) $ checkAsst True a
+    CxTuple l as -> fmap (S.CxTuple l) $ mapM (checkAsst True) as
+    CxParen l cx -> fmap (S.CxParen l) $ checkSContext cx
 
 -- Checks ordinary contexts for sigtypes and data type
 -- declarations. If FlexibleContexts is enabled then
 -- anything goes, otherwise only tyvars OR tyvars
 -- applied to types are allowed.
-checkContext :: Maybe (PContext L) -> P (Maybe (S.Context L))
-checkContext (Just ctxt) = case ctxt of
-    CxEmpty l -> return $ Just $ S.CxEmpty l
-    CxSingle l a -> checkAsst False a >>= return . Just . S.CxSingle l
-    CxTuple l as -> mapM (checkAsst False) as >>= return . Just . S.CxTuple l
-    CxParen l cx -> checkSContext (Just cx) >>= return . fmap (S.CxParen l)
-checkContext _ = return Nothing
+checkContext :: PContext L -> P (S.Context L)
+checkContext ctxt = case ctxt of
+    CxEmpty l -> return $ S.CxEmpty l
+    CxSingle l a -> fmap (S.CxSingle l) $ checkAsst False a
+    CxTuple l as -> fmap (S.CxTuple l) $ mapM (checkAsst False) as
+    CxParen l cx -> fmap (S.CxParen l) $ checkSContext cx
 
 checkAsst :: Bool -> PAsst L -> P (S.Asst L)
 checkAsst isSimple asst =
@@ -218,7 +221,7 @@ checkAsstParam isSimple t = do
 checkDataHeader :: PType L -> P (Maybe (S.Context L), DeclHead L)
 checkDataHeader (TyForall _ Nothing cs t) = do
     dh <- checkSimple "data/newtype" t []
-    cs <- checkContext cs
+    cs <- forM cs checkContext
     return (cs,dh)
 checkDataHeader t = do
     dh <- checkSimple "data/newtype" t []
@@ -227,7 +230,7 @@ checkDataHeader t = do
 checkClassHeader :: PType L -> P (Maybe (S.Context L), DeclHead L)
 checkClassHeader (TyForall _ Nothing cs t) = do
     dh <- checkSimple "class" t []
-    cs <- checkSContext cs
+    cs <- forM cs checkSContext
     return (cs,dh)
 checkClassHeader t = do
     dh <- checkSimple "class" t []
@@ -276,7 +279,7 @@ toTyVarBind (TyKind l (TyVar _ n) k) = KindedVar l n k
 checkInstHeader :: PType L -> P (Maybe (S.Context L), InstHead L)
 checkInstHeader (TyForall _ Nothing cs t) = do
     ih <- checkInsts t []
-    cs <- checkSContext cs
+    cs <- forM cs checkSContext
     return (cs, ih)
 checkInstHeader t = do
     ih <- checkInsts t []
@@ -661,15 +664,14 @@ mCheckExpr (Just e) = checkExpr e >>= return . Just
 checkRuleExpr :: PExp L -> P (S.Exp L)
 checkRuleExpr = checkExpr
 
-readTool :: Maybe String -> Maybe Tool
-readTool = fmap readC
- where readC str = case str of
-        "GHC" -> GHC
-        "HUGS" -> HUGS
-        "NHC98" -> NHC98
-        "YHC" -> YHC
-        "HADDOCK" -> HADDOCK
-        _ -> UnknownTool str
+readTool :: String -> Tool
+readTool str = case str of
+    "GHC" -> GHC
+    "HUGS" -> HUGS
+    "NHC98" -> NHC98
+    "YHC" -> YHC
+    "HADDOCK" -> HADDOCK
+    _ -> UnknownTool str
 
 checkField :: PFieldUpdate L -> P (S.FieldUpdate L)
 checkField (FieldUpdate l n e) = check1Expr e (S.FieldUpdate l n)
@@ -896,11 +898,11 @@ checkT :: PType L -> Bool -> P (S.Type L)
 checkT t simple = case t of
     TyForall l tvs@Nothing cs pt    -> do
             when (simple) $ checkEnabled ExplicitForAll
-            ctxt <- checkContext cs
+            ctxt <- forM cs checkContext
             check1Type pt (S.TyForall l Nothing ctxt)
     TyForall l tvs cs pt -> do
             checkEnabled ExplicitForAll
-            ctxt <- checkContext cs
+            ctxt <- forM cs checkContext
             check1Type pt (S.TyForall l tvs ctxt)
     TyFun   l at rt   -> check2Types at rt (S.TyFun l)
     TyTuple l b pts   -> checkTypes pts >>= return . S.TyTuple l b

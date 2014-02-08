@@ -18,7 +18,7 @@ module Language.Haskell.Exts.ParseMonad(
         -- * Generic Parsing
         Parseable(..),
         -- * Parsing
-        P, ParseResult(..), atSrcLoc, LexContext(..),
+        P(..), ParseStatus(..), ParseResult(..), atSrcLoc, LexContext(..),
         ParseMode(..), defaultParseMode, fromParseResult,
         runParserWithMode, runParserWithModeComments, runParser,
         getSrcLoc, pushCurrentContext, popContext,

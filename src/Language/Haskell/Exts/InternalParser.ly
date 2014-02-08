@@ -90,6 +90,15 @@
 >               mparseRuleVars,
 >               mparseActivation,
 >               mparseAnnotation,
+>               mparseFieldUpdate,
+>               mparseFieldUpdates,
+>               mparseXAttr,
+>               mparseXAttrs,
+>               mparseSExp,
+>               mparseSExps,
+>               mparseBracket,
+>               mparseSplice,
+>               mparseContext,
 >
 >               ngparseModule,
 >               ngparseExp,
@@ -161,7 +170,16 @@
 >               ngparseRuleVar,
 >               ngparseRuleVars,
 >               ngparseActivation,
->               ngparseAnnotation
+>               ngparseAnnotation,
+>               ngparseFieldUpdate,
+>               ngparseFieldUpdates,
+>               ngparseXAttr,
+>               ngparseXAttrs,
+>               ngparseSExp,
+>               ngparseSExps,
+>               ngparseBracket,
+>               ngparseSplice,
+>               ngparseContext
 >               ) where
 >
 > import Language.Haskell.Exts.Annotated.Syntax hiding ( Type(..), Exp(..), Asst(..), XAttr(..), FieldUpdate(..) )
@@ -410,9 +428,6 @@ Pragmas
 > %monad { P }
 > %lexer { lexer } { Loc _ EOF }
 > %error { parseError }
-> %partial mfindModuleName moduletopname
-> %partial mfindModuleHead moduletophead
-> %partial mfindModuleImports moduletopimps
 > %name mparseModule         page
 > %name mparseModules        modules
 > %name mparseExp            trueexp
@@ -486,13 +501,26 @@ Pragmas
 > %name mparseRuleVars       rulevars
 > %name mparseActivation     requireactivation
 > %name mparseAnnotation     annotation
->
+> %name mparseFieldUpdate    fbind
+> %name mparseFieldUpdates   fbinds
+> %name mparseXAttr          attr
+> %name mparseXAttrs         attrs
+> %name mparseSExp           exp
+> %name mparseSExps          sexps
+> %name mparseBracket        bracket
+> %name mparseSplice         splice
+> %name mparseContext        context
 
   Partial parsers for the following aren't provided for "modules" as it causes
   a reduce/reduce conflict.
 
   %partial ngparseModules        modules
 
+> %partial ngparsePragmasAndModuleName moduletopname
+> %partial ngparsePragmasAndModuleHead moduletophead
+> %partial ngparseModuleHeadAndImports moduletopimps
+
+> %partial ngparseModuleHead     modulehead
 > %partial ngparseModule         page
 > %partial ngparseExp            trueexp
 > %partial ngparseExps           checklexps
@@ -503,7 +531,6 @@ Pragmas
 > %partial ngparseType           truedtype
 > %partial ngparseStmt           stmt
 > %partial ngparseStmts          stmtlist
-> %partial ngparseModuleHead     modulehead
 > %partial ngparseExportSpecList exports
 > %partial ngparseExportSpec     export
 > %partial ngparseImportDecl     impdecl
@@ -565,7 +592,16 @@ Pragmas
 > %partial ngparseRuleVars       rulevars
 > %partial ngparseActivation     requireactivation
 > %partial ngparseAnnotation     annotation
->
+> %partial ngparseFieldUpdate    fbind
+> %partial ngparseFieldUpdates   fbinds
+> %partial ngparseXAttr          attr
+> %partial ngparseXAttrs         attrs
+> %partial ngparseSExp           exp
+> %partial ngparseSExps          sexps
+> %partial ngparseBracket        bracket
+> %partial ngparseSplice         splice
+> %partial ngparseContext        context
+
 > %tokentype { Loc Token }
 > %expect 7
 > %%
@@ -612,7 +648,7 @@ TODO: Yuck, this is messy, needs fixing in the AST!
 > toppragma :: { ModulePragma L }
 >           : '{-# LANGUAGE' conids optsemis '#-}'   { LanguagePragma ($1 <^^> $4 <** ($1:snd $2 ++ reverse $3 ++ [$4])) (fst $2) }
 >           | '{-# OPTIONS' optsemis '#-}'           { let Loc l (OPTIONS (mc, s)) = $1
->                                                       in OptionsPragma (l <^^> $3 <** (l:reverse $2 ++ [$3])) (readTool mc) s }
+>                                                       in OptionsPragma (l <^^> $3 <** (l:reverse $2 ++ [$3])) (fmap readTool mc) s }
 >           | '{-# ANN' annotation '#-}'             { AnnModulePragma ($1 <^^> $3 <** [$1,$3]) $2 }
 
 
@@ -1229,9 +1265,9 @@ To allow the empty case we need the EmptyDataDecls extension.
 
 > constr :: { QualConDecl L }
 >       : forall context constr1        {% do { checkEnabled ExistentialQuantification ;
->                                                ctxt <- checkContext (Just $2) ;
+>                                                ctxt <- checkContext $2 ;
 >                                                let {(mtvs,ss,ml) = $1} ;
->                                                return $ QualConDecl (ml <?+> ann $3 <** ss) mtvs ctxt $3 } }
+>                                                return $ QualConDecl (ml <?+> ann $3 <** ss) mtvs (Just ctxt) $3 } }
 >       | forall constr1                 { let (mtvs, ss, ml) = $1 in QualConDecl (ml <?+> ann $2 <** ss) mtvs Nothing $2 }
 
 > forall :: { (Maybe [TyVarBind L], [S], Maybe L) }
@@ -1600,13 +1636,8 @@ thing we need to look at here is the erpats that use no non-standard lexemes.
 >       | xml                           { $1 }
 
 Template Haskell - all this is enabled in the lexer.
->       | IDSPLICE                      { let Loc l (THIdEscape s) = $1 in SpliceExp (nIS l) $ IdSplice (nIS l) s }
->       | '$(' trueexp ')'              { SpliceExp  ($1 <^^> $3 <** [$1,$3]) $ ParenSplice (ann $2) $2 }
->       | '[|' trueexp '|]'             { BracketExp ($1 <^^> $3 <** [$1,$3]) $ ExpBracket  (ann $2) $2 }
->       | '[p|' exp0 '|]'               {% do { p <- checkPattern $2;
->                                               return $ BracketExp ($1 <^^> $3 <** [$1,$3]) $ PatBracket (ann p) p } }
->       | '[t|' truectype '|]'              { let l = $1 <^^> $3 <** [$1,$3] in BracketExp l $ TypeBracket l $2 }
->       | '[d|' open topdecls close '|]'    { let l = $1 <^^> $5 <** ($1:snd $3 ++ [$5]) in BracketExp l $ DeclBracket l (fst $3) }
+>       | splice                        { let (x, l) = $1 in SpliceExp l x }
+>       | bracket                       { let (x, ss) = $1 in BracketExp (head ss <^^> last ss <** ss) x }
 >       | VARQUOTE qvar                 { VarQuote (nIS $1 <++> ann $2 <** [$1]) $2 }
 >       | VARQUOTE qcon                 { VarQuote (nIS $1 <++> ann $2 <** [$1]) $2 }
 >       | TYPQUOTE tyvar                { TypQuote (nIS $1 <++> ann $2 <** [$1]) (UnQual (ann $2) $2) }
@@ -1633,6 +1664,21 @@ End Template Haskell
 >       : commas texp thashsectend      { let (mes, ss) = $3 in (replicate (length $1 - 1) Nothing ++ Just $2 : mes, ss ++ $1) }
 >       | commas texp '#)'              { (replicate (length $1 - 1) Nothing ++ [Just $2], $3 : $1) }
 >       | commas '#)'                   { (replicate (length $1) Nothing, $2 : $1) }
+
+> bracket :: { (Bracket L, [S]) }
+>       : '[|' trueexp '|]'             { (ExpBracket (ann $2) $2, [$1, $3]) }
+>       | '[p|' exp0 '|]'               {% do { p <- checkPattern $2;
+>                                               return (PatBracket (ann p) p, [$1, $3]) } }
+>       | '[t|' truectype '|]'              { let { ss = [$1,$3];
+>                                                   l = $1 <^^> $3 <** ss }
+>                                              in (TypeBracket l $2, ss) }
+>       | '[d|' open topdecls close '|]'    { let { ss = $1:snd $3 ++ [$5];
+>                                                   l = $1 <^^> $5 <** ss }
+>                                              in (DeclBracket l (fst $3), ss) }
+
+> splice :: { (Splice L, L)}
+>       : IDSPLICE                      { let Loc l (THIdEscape s) = $1 in (IdSplice (nIS l) s, nIS l) }
+>       | '$(' trueexp ')'              { (ParenSplice (ann $2) $2, $1 <^^> $3 <** [$1,$3])  }
 
 -----------------------------------------------------------------------------
 Harp Extensions

@@ -319,6 +319,9 @@ instance AppFixity (ModulePragma SrcSpanInfo)   where applyFixities = const retu
 instance AppFixity (Rule SrcSpanInfo)           where applyFixities = const return
 instance AppFixity (RuleVar SrcSpanInfo)        where applyFixities = const return
 instance AppFixity (Activation SrcSpanInfo)     where applyFixities = const return
+instance AppFixity (RPatOp SrcSpanInfo)         where applyFixities = const return
+instance AppFixity Tool                         where applyFixities = const return
+instance AppFixity (Context SrcSpanInfo)        where applyFixities = const return
 
 -- the boring boilerplate stuff for expressions too
 -- Recursively fixes the "leaves" of the infix chains,
