@@ -260,6 +260,10 @@ nglistParser'' ann f = fmap (NonGreedy . toListOf'' ann) . normalParser f
 nglistParser''' :: AppFixity a => P ([a], [SrcSpan]) -> Maybe [Fixity] -> P (NonGreedy (ListOf a))
 nglistParser''' f = fmap (NonGreedy . toListOf''' ) . normalParser f
 
+instance Parseable (NonGreedy (ModuleHead     SrcSpanInfo)) where parser = ngnormalParser ngparseModuleHead
+instance Parseable (NonGreedy (ListOf (ModulePragma SrcSpanInfo))) where parser = nglistParser       ngparseModulePragmas
+
+{-
 instance Parseable (NonGreedy (Activation     SrcSpanInfo)) where parser = ngnormalParser ngparseActivation
 instance Parseable (NonGreedy (Alt            SrcSpanInfo)) where parser = ngnormalParser ngparseAlt
 instance Parseable (NonGreedy (Annotation     SrcSpanInfo)) where parser = ngnormalParser ngparseAnnotation
@@ -288,7 +292,6 @@ instance Parseable (NonGreedy (IPName         SrcSpanInfo)) where parser = ngnor
 instance Parseable (NonGreedy (Kind           SrcSpanInfo)) where parser = ngnormalParser ngparseKind
 instance Parseable (NonGreedy (Literal        SrcSpanInfo)) where parser = ngnormalParser ngparseLiteral
 instance Parseable (NonGreedy (Module         SrcSpanInfo)) where parser = ngnormalParser ngparseModule
-instance Parseable (NonGreedy (ModuleHead     SrcSpanInfo)) where parser = ngnormalParser ngparseModuleHead
 instance Parseable (NonGreedy (ModuleName     SrcSpanInfo)) where parser = ngnormalParser ngparseModuleName
 instance Parseable (NonGreedy (ModulePragma   SrcSpanInfo)) where parser = ngnormalParser ngparseModulePragma
 instance Parseable (NonGreedy (Name           SrcSpanInfo)) where parser = ngnormalParser ngparseName
@@ -319,7 +322,6 @@ instance Parseable (NonGreedy (ListOf (GuardedRhs   SrcSpanInfo))) where parser 
 instance Parseable (NonGreedy (ListOf (ImportDecl   SrcSpanInfo))) where parser = nglistParser       ngparseImportDecls
 instance Parseable (NonGreedy (ListOf (InstDecl     SrcSpanInfo))) where parser = nglistParser       ngparseInstDecls
 instance Parseable (NonGreedy (ListOf (IPBind       SrcSpanInfo))) where parser = nglistParser'      ngparseIPBinds
-instance Parseable (NonGreedy (ListOf (ModulePragma SrcSpanInfo))) where parser = nglistParser       ngparseModulePragmas
 instance Parseable (NonGreedy (ListOf (Name         SrcSpanInfo))) where parser = nglistParser       ngparseNames
 instance Parseable (NonGreedy (ListOf (Op           SrcSpanInfo))) where parser = nglistParser       ngparseOps
 instance Parseable (NonGreedy (ListOf (Pat          SrcSpanInfo))) where parser = nglistParser       ngparsePats
@@ -348,6 +350,7 @@ instance Parseable (NonGreedy (ListOf (PatField       SrcSpanInfo))) where parse
 instance Parseable (NonGreedy (ListOf (XAttr          SrcSpanInfo))) where parser = nglistParser'' ann (ngparseXAttrs >>= mapM checkAttr)
 instance Parseable (NonGreedy (ListOf (PXAttr         SrcSpanInfo))) where parser = nglistParser'' ann (ngparseXAttrs >>= mapM checkPAttr)
 instance Parseable (NonGreedy (ListOf (RPat           SrcSpanInfo))) where parser = nglistParser'''    (ngparseSExps >>= onList' checkRPattern)
+-}
 
 {- Types that come from ParseUtils or are generated from multiple places in the parser.
 
