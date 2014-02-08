@@ -1,3 +1,4 @@
+
 {-# LANGUAGE CPP, DeriveDataTypeable, FlexibleInstances #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 -----------------------------------------------------------------------------
@@ -49,6 +50,7 @@ module Language.Haskell.Exts.Parser
                 ignoreCpp, ignoreCppLines
             ) where
 
+import Data.Maybe (fromMaybe)
 import Language.Haskell.Exts.Annotated.Fixity
 import Language.Haskell.Exts.Annotated.Parser (readExtensions, unListOf, ListOf, NonGreedy(..), ignoreCpp, ignoreCppLines)
 import Language.Haskell.Exts.Annotated.Simplify
@@ -56,7 +58,6 @@ import Language.Haskell.Exts.Annotated.Syntax
 import Language.Haskell.Exts.Comments
 import Language.Haskell.Exts.ParseMonad hiding (getModuleName)
 import Language.Haskell.Exts.SrcLoc
-import Data.Maybe (fromMaybe)
 
 import qualified Language.Haskell.Exts.Annotated.Parser as A
 import qualified Language.Haskell.Exts.Annotated.Syntax as A
@@ -152,6 +153,22 @@ instance Parseable [S.TyVarBind]            where parser = parseWithSimplify (a 
 
 instance Parseable [[S.QualStmt]]           where parser = parseWithSimplify (a :: ListOf [QualStmt     SrcSpanInfo]) (map (map sQualStmt) . unListOf)
 
+instance Parseable S.FieldUpdate            where parser = parseWithSimplify (a :: FieldUpdate SrcSpanInfo) sFieldUpdate
+instance Parseable S.PatField               where parser = parseWithSimplify (a :: PatField    SrcSpanInfo) sPatField
+instance Parseable S.XAttr                  where parser = parseWithSimplify (a :: XAttr       SrcSpanInfo) sXAttr
+instance Parseable S.PXAttr                 where parser = parseWithSimplify (a :: PXAttr      SrcSpanInfo) sPXAttr
+instance Parseable S.RPat                   where parser = parseWithSimplify (a :: RPat        SrcSpanInfo) sRPat
+instance Parseable S.RPatOp                 where parser = parseWithSimplify (a :: RPatOp      SrcSpanInfo) sRPatOp
+instance Parseable S.Bracket                where parser = parseWithSimplify (a :: Bracket     SrcSpanInfo) sBracket
+instance Parseable S.Splice                 where parser = parseWithSimplify (a :: Splice      SrcSpanInfo) sSplice
+instance Parseable S.Context                where parser = parseWithSimplify (a :: Context     SrcSpanInfo) sContext
+
+instance Parseable [S.FieldUpdate]          where parser = parseWithSimplify (a :: ListOf (FieldUpdate SrcSpanInfo)) (map sFieldUpdate . unListOf)
+instance Parseable [S.PatField]             where parser = parseWithSimplify (a :: ListOf (PatField    SrcSpanInfo)) (map sPatField    . unListOf)
+instance Parseable [S.XAttr]                where parser = parseWithSimplify (a :: ListOf (XAttr       SrcSpanInfo)) (map sXAttr       . unListOf)
+instance Parseable [S.PXAttr]               where parser = parseWithSimplify (a :: ListOf (PXAttr      SrcSpanInfo)) (map sPXAttr      . unListOf)
+instance Parseable [S.RPat]                 where parser = parseWithSimplify (a :: ListOf (RPat        SrcSpanInfo)) (map sRPat        . unListOf)
+
 -- Non greedy parsers
 
 instance Parseable (NonGreedy S.Activation          ) where parser = parseWithSimplify (a :: NonGreedy (Activation     SrcSpanInfo)) (fmap sActivation)
@@ -226,24 +243,32 @@ instance Parseable (NonGreedy [S.TyVarBind]           ) where parser = parseWith
 
 instance Parseable (NonGreedy [[S.QualStmt]]          ) where parser = parseWithSimplify (a :: NonGreedy (ListOf [QualStmt     SrcSpanInfo])) (fmap (map (map sQualStmt) . unListOf))
 
+instance Parseable (NonGreedy S.FieldUpdate           ) where parser = parseWithSimplify (a :: NonGreedy (FieldUpdate SrcSpanInfo)) (fmap sFieldUpdate)
+instance Parseable (NonGreedy S.PatField              ) where parser = parseWithSimplify (a :: NonGreedy (PatField    SrcSpanInfo)) (fmap sPatField)
+instance Parseable (NonGreedy S.XAttr                 ) where parser = parseWithSimplify (a :: NonGreedy (XAttr       SrcSpanInfo)) (fmap sXAttr)
+instance Parseable (NonGreedy S.PXAttr                ) where parser = parseWithSimplify (a :: NonGreedy (PXAttr      SrcSpanInfo)) (fmap sPXAttr)
+instance Parseable (NonGreedy S.RPat                  ) where parser = parseWithSimplify (a :: NonGreedy (RPat        SrcSpanInfo)) (fmap sRPat)
+instance Parseable (NonGreedy S.RPatOp                ) where parser = parseWithSimplify (a :: NonGreedy (RPatOp      SrcSpanInfo)) (fmap sRPatOp)
+instance Parseable (NonGreedy S.Bracket               ) where parser = parseWithSimplify (a :: NonGreedy (Bracket     SrcSpanInfo)) (fmap sBracket)
+instance Parseable (NonGreedy S.Splice                ) where parser = parseWithSimplify (a :: NonGreedy (Splice      SrcSpanInfo)) (fmap sSplice)
+instance Parseable (NonGreedy S.Context               ) where parser = parseWithSimplify (a :: NonGreedy (Context     SrcSpanInfo)) (fmap sContext)
+
+instance Parseable (NonGreedy [S.FieldUpdate]         ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (FieldUpdate SrcSpanInfo))) (fmap (map sFieldUpdate . unListOf))
+instance Parseable (NonGreedy [S.PatField]            ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (PatField    SrcSpanInfo))) (fmap (map sPatField    . unListOf))
+instance Parseable (NonGreedy [S.XAttr]               ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (XAttr       SrcSpanInfo))) (fmap (map sXAttr       . unListOf))
+instance Parseable (NonGreedy [S.PXAttr]              ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (PXAttr      SrcSpanInfo))) (fmap (map sPXAttr      . unListOf))
+instance Parseable (NonGreedy [S.RPat]                ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (RPat        SrcSpanInfo))) (fmap (map sRPat        . unListOf))
+
 {-
 instance Parseable (S.Name, [S.TyVarBind])  where parser = parseWithSimplify
 instance Parseable (S.QName, [S.Type])      where parser = parseWithSimplify
 instance Parseable [(S.QName, [S.Type])]    where parser = parseWithSimplify
 instance Parseable S.Assoc                  where parser = parseWithSimplify
 instance Parseable S.Asst                   where parser = parseWithSimplify
-instance Parseable S.Bracket                where parser = parseWithSimplify
-instance Parseable S.Context                where parser = parseWithSimplify
-instance Parseable S.FieldUpdate            where parser = parseWithSimplify
 instance Parseable S.Match                  where parser = parseWithSimplify
-instance Parseable S.PatField               where parser = parseWithSimplify
-instance Parseable S.PXAttr                 where parser = parseWithSimplify
-instance Parseable S.RPat                   where parser = parseWithSimplify
-instance Parseable S.RPatOp                 where parser = parseWithSimplify
 instance Parseable S.SpecialCon             where parser = parseWithSimplify
-instance Parseable S.Splice                 where parser = parseWithSimplify
 instance Parseable S.WarningText            where parser = parseWithSimplify
-instance Parseable S.XAttr                  where parser = parseWithSimplify
+instance Parseable [S.Asst]                 where parser = parseWithSimplify
 -}
 
 -- Type-specific instances
