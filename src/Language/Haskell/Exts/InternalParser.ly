@@ -15,9 +15,6 @@
 > -----------------------------------------------------------------------------
 >
 > module Language.Haskell.Exts.InternalParser (
->               mfindModuleName,
->               mfindModuleHead,
->               mfindModuleImports,
 >               mparseModule,
 >               mparseModules,
 >               mparseExp,
@@ -99,87 +96,91 @@
 >               mparseBracket,
 >               mparseSplice,
 >               mparseContext,
->
->               ngparseModule,
->               ngparseExp,
->               ngparseExps,
->               ngparsePat,
->               ngparsePats,
->               ngparseDecl,
->               ngparseDecls,
->               ngparseType,
->               ngparseStmt,
->               ngparseStmts,
+
+>               ngparseModuleHeadAndImports,
 >               ngparseModuleHead,
->               ngparseExportSpecList,
->               ngparseExportSpec,
->               ngparseImportDecl,
->               ngparseImportDecls,
->               ngparseImportSpecList,
->               ngparseImportSpec,
->               ngparseBinds,
->               ngparseIPBind,
->               ngparseIPBinds,
->               ngparseClassDecl,
->               ngparseClassDecls,
->               ngparseInstDecl,
->               ngparseInstDecls,
->               ngparseDeriving,
->               ngparseConDecl,
->               ngparseFieldDecl,
->               ngparseFieldDecls,
->               ngparseQualConDecl,
->               ngparseQualConDecls,
->               ngparseGadtDecl,
->               ngparseGadtDecls,
->               ngparseBangType,
->               ngparseRhs,
->               ngparseGuardedRhs,
->               ngparseGuardedRhss,
->               ngparseFunDep,
->               ngparseFunDeps,
->               ngparseKind,
->               ngparseTyVarBind,
->               ngparseTyVarBinds,
->               ngparseQualStmt,
->               ngparseQualStmts,
->               ngparseParQualStmts,
->               ngparseAlt,
->               ngparseGuardedAlt,
->               ngparseGuardedAlts,
->               ngparseGuardedAlts2,
->               ngparseLiteral,
->               ngparseModuleName,
->               ngparseQName,
->               ngparseQNames,
->               ngparseName,
->               ngparseNames,
->               ngparseQOp,
->               ngparseOp,
->               ngparseOps,
->               ngparseCName,
->               ngparseCNames,
->               ngparseIPName,
->               ngparseXName,
->               ngparseSafety,
->               ngparseCallConv,
->               ngparseModulePragma,
 >               ngparseModulePragmas,
->               ngparseRule,
->               ngparseRules,
->               ngparseRuleVar,
->               ngparseRuleVars,
->               ngparseActivation,
->               ngparseAnnotation,
->               ngparseFieldUpdate,
->               ngparseFieldUpdates,
->               ngparseXAttr,
->               ngparseXAttrs,
->               ngparseSExp,
->               ngparseSExps,
->               ngparseBracket,
->               ngparseSplice,
->               ngparseContext
+>               ngparsePragmasAndModuleHead,
+>               ngparsePragmasAndModuleName
+
+                ngparseModule,
+                ngparseExp,
+                ngparseExps,
+                ngparsePat,
+                ngparsePats,
+                ngparseDecl,
+                ngparseDecls,
+                ngparseType,
+                ngparseStmt,
+                ngparseStmts,
+                ngparseExportSpecList,
+                ngparseExportSpec,
+                ngparseImportDecl,
+                ngparseImportDecls,
+                ngparseImportSpecList,
+                ngparseImportSpec,
+                ngparseBinds,
+                ngparseIPBind,
+                ngparseIPBinds,
+                ngparseClassDecl,
+                ngparseClassDecls,
+                ngparseInstDecl,
+                ngparseInstDecls,
+                ngparseDeriving,
+                ngparseConDecl,
+                ngparseFieldDecl,
+                ngparseFieldDecls,
+                ngparseQualConDecl,
+                ngparseQualConDecls,
+                ngparseGadtDecl,
+                ngparseGadtDecls,
+                ngparseBangType,
+                ngparseRhs,
+                ngparseGuardedRhs,
+                ngparseGuardedRhss,
+                ngparseFunDep,
+                ngparseFunDeps,
+                ngparseKind,
+                ngparseTyVarBind,
+                ngparseTyVarBinds,
+                ngparseQualStmt,
+                ngparseQualStmts,
+                ngparseParQualStmts,
+                ngparseAlt,
+                ngparseGuardedAlt,
+                ngparseGuardedAlts,
+                ngparseGuardedAlts2,
+                ngparseLiteral,
+                ngparseModuleName,
+                ngparseQName,
+                ngparseQNames,
+                ngparseName,
+                ngparseNames,
+                ngparseQOp,
+                ngparseOp,
+                ngparseOps,
+                ngparseCName,
+                ngparseCNames,
+                ngparseIPName,
+                ngparseXName,
+                ngparseSafety,
+                ngparseCallConv,
+                ngparseModulePragma,
+                ngparseRule,
+                ngparseRules,
+                ngparseRuleVar,
+                ngparseRuleVars,
+                ngparseActivation,
+                ngparseAnnotation,
+                ngparseFieldUpdate,
+                ngparseFieldUpdates,
+                ngparseXAttr,
+                ngparseXAttrs,
+                ngparseSExp,
+                ngparseSExps,
+                ngparseBracket,
+                ngparseSplice,
+                ngparseContext
 >               ) where
 >
 > import Language.Haskell.Exts.Annotated.Syntax hiding ( Type(..), Exp(..), Asst(..), XAttr(..), FieldUpdate(..) )
@@ -511,96 +512,99 @@ Pragmas
 > %name mparseSplice         splice
 > %name mparseContext        context
 
-  Partial parsers for the following aren't provided for "modules" as it causes
-  a reduce/reduce conflict.
+  Partial parsers for the "modules" as it causes a reduce/reduce conflict.
 
   %partial ngparseModules        modules
 
-> %partial ngparsePragmasAndModuleName moduletopname
-> %partial ngparsePragmasAndModuleHead moduletophead
-> %partial ngparseModuleHeadAndImports moduletopimps
+  Most of the partial parsers are disabled due to a stack overflow in happy that
+  seems to occur when there are too many exported parsers.
 
-> %partial ngparseModuleHead     modulehead
-> %partial ngparseModule         page
-> %partial ngparseExp            trueexp
-> %partial ngparseExps           checklexps
-> %partial ngparsePat            pat
-> %partial ngparsePats           checklpats
-> %partial ngparseDecl           topdecl
-> %partial ngparseDecls          topdeclsblock
-> %partial ngparseType           truedtype
-> %partial ngparseStmt           stmt
-> %partial ngparseStmts          stmtlist
-> %partial ngparseExportSpecList exports
-> %partial ngparseExportSpec     export
-> %partial ngparseImportDecl     impdecl
-> %partial ngparseImportDecls    impdeclsblock
-> %partial ngparseImportSpecList impspec
-> %partial ngparseImportSpec     importspec
-> %partial ngparseBinds          binds
-> %partial ngparseIPBind         ipbind
-> %partial ngparseIPBinds        ipbindsblock
-> %partial ngparseClassDecl      cldecl
-> %partial ngparseClassDecls     cldeclsblock
-> %partial ngparseInstDecl       insvaldef
-> %partial ngparseInstDecls      valdefsblock
-> %partial ngparseDeriving       requirederiving
-> %partial ngparseConDecl        constr1
-> %partial ngparseFieldDecl      fielddecl
-> %partial ngparseFieldDecls     fielddeclsblock
-> %partial ngparseQualConDecl    constr
-> %partial ngparseQualConDecls   constrs
-> %partial ngparseGadtDecl       gadtconstr
-> %partial ngparseGadtDecls      gadtconstrsblock
-> %partial ngparseBangType       stype
-> %partial ngparseRhs            rhs
-> %partial ngparseGuardedRhs     gdrh
-> %partial ngparseGuardedRhss    gdrhs
-> %partial ngparseFunDep         fd
-> %partial ngparseFunDeps        fds1
-> %partial ngparseKind           kind
-> %partial ngparseTyVarBind      ktyvar
-> %partial ngparseTyVarBinds     requireforall
-> %partial ngparseQualStmt       qualstmt
-> %partial ngparseQualStmts      qualstmts
-> %partial ngparseParQualStmts   pqualstmts
-> %partial ngparseAlt            alt
-> %partial ngparseAlts           altslist
-> %partial ngparseGuardedAlt     gdpat
-> %partial ngparseGuardedAlts    gdpats
-> %partial ngparseGuardedAlts2   ralt
-> %partial ngparseLiteral        literal
-> %partial ngparseModuleName     modid
-> %partial ngparseQName          qnamevar
-> %partial ngparseQNames         qnamevars
-> %partial ngparseName           namevar
-> %partial ngparseNames          namevars
-> %partial ngparseOp             op
-> %partial ngparseOps            ops
-> %partial ngparseQOp            qop
-> %partial ngparseCName          cname
-> %partial ngparseCNames         cnamesblock
-> %partial ngparseIPName         ivar
-> %partial ngparseXName          name
-> %partial ngparseSafety         requiresafety
-> %partial ngparseCallConv       callconv
-> %partial ngparseModulePragma   toppragma
-> %partial ngparseModulePragmas  toppragmas
-> %partial ngparseRule           rule
-> %partial ngparseRules          rules
-> %partial ngparseRuleVar        rulevar
-> %partial ngparseRuleVars       rulevars
-> %partial ngparseActivation     requireactivation
-> %partial ngparseAnnotation     annotation
-> %partial ngparseFieldUpdate    fbind
-> %partial ngparseFieldUpdates   fbinds
-> %partial ngparseXAttr          attr
-> %partial ngparseXAttrs         attrs
-> %partial ngparseSExp           exp
-> %partial ngparseSExps          sexps
-> %partial ngparseBracket        bracket
-> %partial ngparseSplice         splice
-> %partial ngparseContext        context
+
+> %partial ngparseModuleHead           modulehead
+> %partial ngparseModuleHeadAndImports moduletopimps
+> %partial ngparseModulePragmas        toppragmas
+> %partial ngparsePragmasAndModuleHead moduletophead
+> %partial ngparsePragmasAndModuleName moduletopname
+
+  %partial ngparseModule         page
+  %partial ngparseExp            trueexp
+  %partial ngparseExps           checklexps
+  %partial ngparsePat            pat
+  %partial ngparsePats           checklpats
+  %partial ngparseDecl           topdecl
+  %partial ngparseDecls          topdeclsblock
+  %partial ngparseType           truedtype
+  %partial ngparseStmt           stmt
+  %partial ngparseStmts          stmtlist
+  %partial ngparseExportSpecList exports
+  %partial ngparseExportSpec     export
+  %partial ngparseImportDecl     impdecl
+  %partial ngparseImportDecls    impdeclsblock
+  %partial ngparseImportSpecList impspec
+  %partial ngparseImportSpec     importspec
+  %partial ngparseBinds          binds
+  %partial ngparseIPBind         ipbind
+  %partial ngparseIPBinds        ipbindsblock
+  %partial ngparseClassDecl      cldecl
+  %partial ngparseClassDecls     cldeclsblock
+  %partial ngparseInstDecl       insvaldef
+  %partial ngparseInstDecls      valdefsblock
+  %partial ngparseDeriving       requirederiving
+  %partial ngparseConDecl        constr1
+  %partial ngparseFieldDecl      fielddecl
+  %partial ngparseFieldDecls     fielddeclsblock
+  %partial ngparseQualConDecl    constr
+  %partial ngparseQualConDecls   constrs
+  %partial ngparseGadtDecl       gadtconstr
+  %partial ngparseGadtDecls      gadtconstrsblock
+  %partial ngparseBangType       stype
+  %partial ngparseRhs            rhs
+  %partial ngparseGuardedRhs     gdrh
+  %partial ngparseGuardedRhss    gdrhs
+  %partial ngparseFunDep         fd
+  %partial ngparseFunDeps        fds1
+  %partial ngparseKind           kind
+  %partial ngparseTyVarBind      ktyvar
+  %partial ngparseTyVarBinds     requireforall
+  %partial ngparseQualStmt       qualstmt
+  %partial ngparseQualStmts      qualstmts
+  %partial ngparseParQualStmts   pqualstmts
+  %partial ngparseAlt            alt
+  %partial ngparseAlts           altslist
+  %partial ngparseGuardedAlt     gdpat
+  %partial ngparseGuardedAlts    gdpats
+  %partial ngparseGuardedAlts2   ralt
+  %partial ngparseLiteral        literal
+  %partial ngparseModuleName     modid
+  %partial ngparseQName          qnamevar
+  %partial ngparseQNames         qnamevars
+  %partial ngparseName           namevar
+  %partial ngparseNames          namevars
+  %partial ngparseOp             op
+  %partial ngparseOps            ops
+  %partial ngparseQOp            qop
+  %partial ngparseCName          cname
+  %partial ngparseCNames         cnamesblock
+  %partial ngparseIPName         ivar
+  %partial ngparseXName          name
+  %partial ngparseSafety         requiresafety
+  %partial ngparseCallConv       callconv
+  %partial ngparseModulePragma   toppragma
+  %partial ngparseRule           rule
+  %partial ngparseRules          rules
+  %partial ngparseRuleVar        rulevar
+  %partial ngparseRuleVars       rulevars
+  %partial ngparseActivation     requireactivation
+  %partial ngparseAnnotation     annotation
+  %partial ngparseFieldUpdate    fbind
+  %partial ngparseFieldUpdates   fbinds
+  %partial ngparseXAttr          attr
+  %partial ngparseXAttrs         attrs
+  %partial ngparseSExp           exp
+  %partial ngparseSExps          sexps
+  %partial ngparseBracket        bracket
+  %partial ngparseSplice         splice
+  %partial ngparseContext        context
 
 > %tokentype { Loc Token }
 > %expect 7

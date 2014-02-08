@@ -171,6 +171,9 @@ instance Parseable [S.RPat]                 where parser = parseWithSimplify (a 
 
 -- Non greedy parsers
 
+instance Parseable (NonGreedy [S.ModulePragma]        ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (ModulePragma SrcSpanInfo))) (fmap (map sModulePragma . unListOf))
+
+{-
 instance Parseable (NonGreedy S.Activation          ) where parser = parseWithSimplify (a :: NonGreedy (Activation     SrcSpanInfo)) (fmap sActivation)
 instance Parseable (NonGreedy S.Alt                 ) where parser = parseWithSimplify (a :: NonGreedy (Alt            SrcSpanInfo)) (fmap sAlt)
 instance Parseable (NonGreedy S.Annotation          ) where parser = parseWithSimplify (a :: NonGreedy (Annotation     SrcSpanInfo)) (fmap sAnnotation)
@@ -229,7 +232,6 @@ instance Parseable (NonGreedy [S.GuardedRhs]          ) where parser = parseWith
 instance Parseable (NonGreedy [S.ImportDecl]          ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (ImportDecl   SrcSpanInfo))) (fmap (map sImportDecl   . unListOf))
 instance Parseable (NonGreedy [S.InstDecl]            ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (InstDecl     SrcSpanInfo))) (fmap (map sInstDecl     . unListOf))
 instance Parseable (NonGreedy [S.IPBind]              ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (IPBind       SrcSpanInfo))) (fmap (map sIPBind       . unListOf))
-instance Parseable (NonGreedy [S.ModulePragma]        ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (ModulePragma SrcSpanInfo))) (fmap (map sModulePragma . unListOf))
 instance Parseable (NonGreedy [S.Name]                ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (Name         SrcSpanInfo))) (fmap (map sName         . unListOf))
 instance Parseable (NonGreedy [S.Op]                  ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (Op           SrcSpanInfo))) (fmap (map sOp           . unListOf))
 instance Parseable (NonGreedy [S.Pat]                 ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (Pat          SrcSpanInfo))) (fmap (map sPat          . unListOf))
@@ -258,6 +260,7 @@ instance Parseable (NonGreedy [S.PatField]            ) where parser = parseWith
 instance Parseable (NonGreedy [S.XAttr]               ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (XAttr       SrcSpanInfo))) (fmap (map sXAttr       . unListOf))
 instance Parseable (NonGreedy [S.PXAttr]              ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (PXAttr      SrcSpanInfo))) (fmap (map sPXAttr      . unListOf))
 instance Parseable (NonGreedy [S.RPat]                ) where parser = parseWithSimplify (a :: NonGreedy (ListOf (RPat        SrcSpanInfo))) (fmap (map sRPat        . unListOf))
+-}
 
 {-
 instance Parseable (S.Name, [S.TyVarBind])  where parser = parseWithSimplify
