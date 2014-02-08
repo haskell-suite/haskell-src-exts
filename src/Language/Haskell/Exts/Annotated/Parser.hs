@@ -48,6 +48,7 @@ import Language.Haskell.Exts.Comments
 import Language.Haskell.Exts.Extension
 import Language.Haskell.Exts.InternalParser
 import Language.Haskell.Exts.ParseMonad hiding (getModuleName)
+import Language.Haskell.Exts.ParseUtils
 import Language.Haskell.Exts.SrcLoc
 
 #ifdef __GLASGOW_HASKELL__
@@ -117,6 +118,23 @@ toListOf'' :: (a -> SrcSpanInfo) -> [a] -> ListOf a
 toListOf'' f [] = ListOf (noInfoSpan (mkSrcSpan noLoc noLoc)) []
 toListOf'' f xs = ListOf (foldl1' (<++>) $ map f xs) xs
 
+toListOf''' :: ([a], [SrcSpan]) -> ListOf a
+toListOf''' (xs, []) = ListOf (noInfoSpan (mkSrcSpan noLoc noLoc)) xs
+toListOf''' (xs, ss) = ListOf (head ss <^^> last ss <** ss) xs
+
+onList :: Monad m => (a -> m a') -> ([a], b, c) -> m ([a'], b, c)
+onList f (xs, ss, si) = do
+    xs' <- mapM f xs
+    return (xs', ss, si)
+
+onList' :: Monad m => (a -> m a') -> ([a], b) -> m ([a'], b)
+onList' f (xs, si) = do
+    xs' <- mapM f xs
+    return (xs', si)
+
+onListOfM :: Monad m => (a -> m a') -> ListOf a -> m (ListOf a')
+onListOfM f (ListOf sp xs) = mapM f xs >>= return . ListOf sp
+
 normalParser :: AppFixity a => P a -> Maybe [Fixity] -> P a
 normalParser p Nothing = p
 normalParser p (Just fixs) = p >>= \ast -> applyFixities fixs ast `atSrcLoc` noLoc
@@ -129,6 +147,9 @@ listParser' f = fmap toListOf' . normalParser f
 
 listParser'' :: AppFixity a => (a -> SrcSpanInfo) -> P [a] -> Maybe [Fixity] -> P (ListOf a)
 listParser'' ann f = fmap (toListOf'' ann) . normalParser f
+
+listParser''' :: AppFixity a => P ([a], [SrcSpan]) -> Maybe [Fixity] -> P (ListOf a)
+listParser''' f = fmap toListOf''' . normalParser f
 
 instance Parseable (Activation     SrcSpanInfo) where parser = normalParser mparseActivation
 instance Parseable (Alt            SrcSpanInfo) where parser = normalParser mparseAlt
@@ -204,6 +225,24 @@ instance Parseable (ListOf (TyVarBind    SrcSpanInfo)) where parser = listParser
 
 instance Parseable (ListOf [QualStmt     SrcSpanInfo]) where parser = listParser mparseParQualStmts
 
+instance Parseable Tool                         where parser _ = P (\x _ _ _ _ _ -> Ok ([],[],(False,False),[]) (readTool x))
+
+instance Parseable (FieldUpdate SrcSpanInfo) where parser = normalParser (mparseFieldUpdate >>= checkField)
+instance Parseable (PatField    SrcSpanInfo) where parser = normalParser (mparseFieldUpdate >>= checkPatField)
+instance Parseable (XAttr       SrcSpanInfo) where parser = normalParser (mparseXAttr       >>= checkAttr)
+instance Parseable (PXAttr      SrcSpanInfo) where parser = normalParser (mparseXAttr       >>= checkPAttr)
+instance Parseable (RPat        SrcSpanInfo) where parser = normalParser (mparseSExp        >>= checkRPattern)
+instance Parseable (RPatOp      SrcSpanInfo) where parser = normalParser (mparseQOp         >>= checkRPatOp)
+instance Parseable (Bracket     SrcSpanInfo) where parser = normalParser (mparseBracket     >>= return . fst)
+instance Parseable (Splice      SrcSpanInfo) where parser = normalParser (mparseSplice      >>= return . fst)
+instance Parseable (Context     SrcSpanInfo) where parser = normalParser (mparseContext     >>= checkContext)
+
+instance Parseable (ListOf (FieldUpdate SrcSpanInfo)) where parser = listParser'''    (mparseFieldUpdates >>= onList' checkField)
+instance Parseable (ListOf (PatField    SrcSpanInfo)) where parser = listParser'''    (mparseFieldUpdates >>= onList' checkPatField)
+instance Parseable (ListOf (XAttr       SrcSpanInfo)) where parser = listParser'' ann (mparseXAttrs >>= mapM checkAttr)
+instance Parseable (ListOf (PXAttr      SrcSpanInfo)) where parser = listParser'' ann (mparseXAttrs >>= mapM checkPAttr)
+instance Parseable (ListOf (RPat        SrcSpanInfo)) where parser = listParser'''    (mparseSExps >>= onList' checkRPattern)
+
 -- Non-greedy parsers (should use ng- prefixed parses exported by InternalParser)
 
 ngnormalParser :: AppFixity a => P a -> Maybe [Fixity] -> P (NonGreedy a)
@@ -217,6 +256,9 @@ nglistParser' f = fmap (NonGreedy . toListOf') . normalParser f
 
 nglistParser'' :: AppFixity a => (a -> SrcSpanInfo) -> P [a] -> Maybe [Fixity] -> P (NonGreedy (ListOf a))
 nglistParser'' ann f = fmap (NonGreedy . toListOf'' ann) . normalParser f
+
+nglistParser''' :: AppFixity a => P ([a], [SrcSpan]) -> Maybe [Fixity] -> P (NonGreedy (ListOf a))
+nglistParser''' f = fmap (NonGreedy . toListOf''' ) . normalParser f
 
 instance Parseable (NonGreedy (Activation     SrcSpanInfo)) where parser = ngnormalParser ngparseActivation
 instance Parseable (NonGreedy (Alt            SrcSpanInfo)) where parser = ngnormalParser ngparseAlt
@@ -291,22 +333,29 @@ instance Parseable (NonGreedy (ListOf (TyVarBind    SrcSpanInfo))) where parser 
 
 instance Parseable (NonGreedy (ListOf [QualStmt     SrcSpanInfo])) where parser = nglistParser       ngparseParQualStmts
 
-{-
-instance Parseable (DeclHead       SrcSpanInfo) where parser = applyFixities' mparseDeclHead
-instance Parseable (InstHead       SrcSpanInfo) where parser = applyFixities' mparseInstHead
-instance Parseable (Asst           SrcSpanInfo) where parser = applyFixities' mparseAsst
-instance Parseable (Match          SrcSpanInfo) where parser = applyFixities' mparseMatch
-instance Parseable (Context        SrcSpanInfo) where parser = applyFixities' mparseContext
-instance Parseable (FieldUpdate    SrcSpanInfo) where parser = applyFixities' mparseFieldUpdate
-instance Parseable (XAttr          SrcSpanInfo) where parser = applyFixities' mparseXAttr
-instance Parseable (PXAttr         SrcSpanInfo) where parser = applyFixities' mparsePXAttr
-instance Parseable (RPat           SrcSpanInfo) where parser = applyFixities' mparseRPat
-instance Parseable (RPatOp         SrcSpanInfo) where parser = applyFixities' mparseRPatOp
-instance Parseable (SpecialCon     SrcSpanInfo) where parser = applyFixities' mparseSpecialCon
-instance Parseable (Bracket        SrcSpanInfo) where parser = applyFixities' mparseBracket
-instance Parseable (Splice         SrcSpanInfo) where parser = applyFixities' mparseSplice
-instance Parseable (Tool           SrcSpanInfo) where parser = applyFixities' mparseTool
-instance Parseable (PatField       SrcSpanInfo) where parser = applyFixities' mparsePatField
+instance Parseable (NonGreedy (FieldUpdate    SrcSpanInfo)) where parser = ngnormalParser (ngparseFieldUpdate >>= checkField)
+instance Parseable (NonGreedy (PatField       SrcSpanInfo)) where parser = ngnormalParser (ngparseFieldUpdate >>= checkPatField)
+instance Parseable (NonGreedy (XAttr          SrcSpanInfo)) where parser = ngnormalParser (ngparseXAttr       >>= checkAttr)
+instance Parseable (NonGreedy (PXAttr         SrcSpanInfo)) where parser = ngnormalParser (ngparseXAttr       >>= checkPAttr)
+instance Parseable (NonGreedy (RPat           SrcSpanInfo)) where parser = ngnormalParser (ngparseSExp        >>= checkRPattern)
+instance Parseable (NonGreedy (RPatOp         SrcSpanInfo)) where parser = ngnormalParser (ngparseQOp         >>= checkRPatOp)
+instance Parseable (NonGreedy (Bracket        SrcSpanInfo)) where parser = ngnormalParser (ngparseBracket     >>= return . fst)
+instance Parseable (NonGreedy (Splice         SrcSpanInfo)) where parser = ngnormalParser (ngparseSplice      >>= return . fst)
+instance Parseable (NonGreedy (Context        SrcSpanInfo)) where parser = ngnormalParser (ngparseContext     >>= checkContext)
+
+instance Parseable (NonGreedy (ListOf (FieldUpdate    SrcSpanInfo))) where parser = nglistParser'''    (ngparseFieldUpdates >>= onList' checkField)
+instance Parseable (NonGreedy (ListOf (PatField       SrcSpanInfo))) where parser = nglistParser'''    (ngparseFieldUpdates >>= onList' checkPatField)
+instance Parseable (NonGreedy (ListOf (XAttr          SrcSpanInfo))) where parser = nglistParser'' ann (ngparseXAttrs >>= mapM checkAttr)
+instance Parseable (NonGreedy (ListOf (PXAttr         SrcSpanInfo))) where parser = nglistParser'' ann (ngparseXAttrs >>= mapM checkPAttr)
+instance Parseable (NonGreedy (ListOf (RPat           SrcSpanInfo))) where parser = nglistParser'''    (ngparseSExps >>= onList' checkRPattern)
+
+{- Types that come from ParseUtils or are generated from multiple places in the parser.
+
+instance Parseable (DeclHead       SrcSpanInfo) where parser = normalParser mparseDeclHead
+instance Parseable (InstHead       SrcSpanInfo) where parser = normalParser mparseInstHead
+instance Parseable (Asst           SrcSpanInfo) where parser = normalParser mparseAsst
+instance Parseable (Match          SrcSpanInfo) where parser = normalParser mparseMatch
+instance Parseable (SpecialCon     SrcSpanInfo) where parser = normalParser mparseSpecialCon
 -}
 
 -- Type-specific functions
@@ -470,7 +519,7 @@ data PragmasAndModuleName l = PragmasAndModuleName
 
 instance Parseable (NonGreedy (PragmasAndModuleName SrcSpanInfo)) where
     parser _ = do
-        (ps, mn) <- mfindModuleName
+        (ps, mn) <- ngparsePragmasAndModuleName
         return $ NonGreedy $ PragmasAndModuleName (handleSpans ps) mn
 
 --   Type intended to be used with 'Parseable', with instances that implement a
@@ -492,7 +541,7 @@ data PragmasAndModuleHead l = PragmasAndModuleHead
 
 instance Parseable (NonGreedy (PragmasAndModuleHead SrcSpanInfo)) where
     parser _ = do
-        (ps, mn) <- mfindModuleHead
+        (ps, mn) <- ngparsePragmasAndModuleHead
         return $ NonGreedy $ PragmasAndModuleHead (handleSpans ps) mn
 
 --   Type intended to be used with 'Parseable', with instances that implement a
@@ -515,7 +564,7 @@ data ModuleHeadAndImports l = ModuleHeadAndImports
 
 instance Parseable (NonGreedy (ModuleHeadAndImports SrcSpanInfo)) where
     parser _ = do
-        (ps, mh, mimps) <- mfindModuleImports
+        (ps, mh, mimps) <- ngparseModuleHeadAndImports
         return $ NonGreedy $ ModuleHeadAndImports
             (handleSpans ps)
             mh
