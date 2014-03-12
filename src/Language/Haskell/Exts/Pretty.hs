@@ -602,6 +602,7 @@ instance Pretty CallConv where
         pretty DotNet    = text "dotnet"
         pretty Jvm       = text "jvm"
         pretty Js        = text "js"
+        pretty CApi      = text "capi"
 
 ------------------------- Pragmas ---------------------------------------
 ppWarnDepr :: ([Name], String) -> Doc
