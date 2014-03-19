@@ -1412,6 +1412,14 @@ instance ExactP Exp where
             exactPC e2
          _ -> errorEP "ExactP: Exp: RightArrHighApp is given wrong number of srcInfoPoints"
 
+    LCase l alts   ->
+        case srcInfoPoints l of
+         a:b:pts -> do
+            printString "\\"
+            printStringAt (pos b) "case"
+            layoutList pts alts
+         _ -> errorEP "ExactP: Exp: LCase is given wrong number of srcInfoPoints"
+
 instance ExactP FieldUpdate where
   exactP fup = case fup of
     FieldUpdate l qn e  -> do

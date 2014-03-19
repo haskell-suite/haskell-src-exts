@@ -621,6 +621,9 @@ checkExpr e = case e of
     LeftArrHighApp l e1 e2  -> check2Exprs e1 e2 (S.LeftArrHighApp l)
     RightArrHighApp l e1 e2 -> check2Exprs e1 e2 (S.RightArrHighApp l)
 
+    -- LamdaCase
+    LCase l alts -> return $ S.LCase l alts
+
     _             -> fail $ "Parse error in expression: " ++ prettyPrint e
 
 checkAttr :: ParseXAttr L -> P (S.XAttr L)

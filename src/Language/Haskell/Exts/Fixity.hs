@@ -381,6 +381,7 @@ leafFix fixs e = case e of
     CorePragma s e          -> liftM (CorePragma s) (fix e)
     SCCPragma s e           -> liftM (SCCPragma s) (fix e)
     GenPragma s ab cd e     -> liftM (GenPragma s ab cd) (fix e)
+    LCase alts              -> liftM LCase $ mapM fix alts
 
     _                       -> return e
   where

@@ -878,6 +878,10 @@ instance Pretty Exp where
         prettyPrec p (LeftArrHighApp l r)  = parensIf (p > 0) $ myFsep $ [pretty l, text "-<<", pretty r]
         prettyPrec p (RightArrHighApp l r) = parensIf (p > 0) $ myFsep $ [pretty l, text ">>-", pretty r]
 
+        -- LamdaCase
+        prettyPrec p (LCase altList) = parensIf (p > 1) $
+                text "\\case" $$$ ppBody caseIndent (map pretty altList)
+
 
 instance Pretty XAttr where
         pretty (XAttr n v) =
@@ -1644,6 +1648,7 @@ instance SrcInfo loc => Pretty (P.PExp loc) where
         pretty (P.ExplTypeArg _ qn t) =
                 myFsep [pretty qn, text "{|", pretty t, text "|}"]
         pretty (P.BangPat _ e) = text "!" <> pretty e
+        pretty (P.LCase _ altList) = text "\\case" $$$ ppBody caseIndent (map pretty altList)
 
 instance SrcInfo loc => Pretty (P.PFieldUpdate loc) where
         pretty (P.FieldUpdate _ name e) =

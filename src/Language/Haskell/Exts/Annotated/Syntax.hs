@@ -764,6 +764,9 @@ data Exp l
     | RightArrApp     l (Exp l) (Exp l)     -- ^ arrow application (from right): /exp/ @>-@ /exp/
     | LeftArrHighApp  l (Exp l) (Exp l)     -- ^ higher-order arrow application (from left): /exp/ @-<<@ /exp/
     | RightArrHighApp l (Exp l) (Exp l)     -- ^ higher-order arrow application (from right): /exp/ @>>-@ /exp/
+
+-- LambdaCase
+    | LCase l [Alt l]                       -- ^ @\case@ /alts/
 #ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable)
 #else
@@ -1447,6 +1450,8 @@ instance Functor Exp where
         LeftArrHighApp  l e1 e2 -> LeftArrHighApp  (f l) (fmap f e1) (fmap f e2)
         RightArrHighApp l e1 e2 -> RightArrHighApp (f l) (fmap f e1) (fmap f e2)
 
+        LCase l alts -> LCase (f l) (map (fmap f) alts)
+
 instance Functor XName where
     fmap f (XName l s)  = XName (f l) s
     fmap f (XDomName l sd sn) = XDomName (f l) sd sn
@@ -2018,6 +2023,8 @@ instance Annotated Exp where
         LeftArrHighApp  l e1 e2 -> l
         RightArrHighApp l e1 e2 -> l
 
+        LCase l alts -> l
+
     amap f e = case e of
         Var l qn        -> Var (f l) qn
         IPVar l ipn     -> IPVar (f l) ipn
@@ -2068,6 +2075,8 @@ instance Annotated Exp where
         RightArrApp     l e1 e2 -> RightArrApp     (f l) e1 e2
         LeftArrHighApp  l e1 e2 -> LeftArrHighApp  (f l) e1 e2
         RightArrHighApp l e1 e2 -> RightArrHighApp (f l) e1 e2
+
+        LCase l alts -> LCase (f l) alts
 
 
 instance Annotated XName where

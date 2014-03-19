@@ -96,6 +96,9 @@ data PExp l
     | RightArrApp     l (PExp l) (PExp l)   -- ^ e >- e
     | LeftArrHighApp  l (PExp l) (PExp l)   -- ^ e -<< e
     | RightArrHighApp l (PExp l) (PExp l)   -- ^ e >>- e
+
+-- LambdaCase
+    | LCase l [Alt l]                       -- ^ @\case@ /alts/
    deriving (Eq,Show)
 
 data PFieldUpdate l
@@ -170,6 +173,8 @@ instance Annotated PExp where
         LeftArrHighApp  l e1 e2 -> l
         RightArrHighApp l e1 e2 -> l
 
+        LCase l alts -> l
+
     amap f e = case e of
         Var l qn                -> Var   (f l) qn
         IPVar l ipn             -> IPVar (f l) ipn
@@ -231,6 +236,8 @@ instance Annotated PExp where
         RightArrApp     l e1 e2 -> RightArrApp     (f l) e1 e2
         LeftArrHighApp  l e1 e2 -> LeftArrHighApp  (f l) e1 e2
         RightArrHighApp l e1 e2 -> RightArrHighApp (f l) e1 e2
+
+        LCase l alts -> LCase (f l) alts
 
 instance Functor PExp where
       fmap f e = case e of
@@ -295,6 +302,7 @@ instance Functor PExp where
           LeftArrHighApp  l e1 e2 -> LeftArrHighApp  (f l) (fmap f e1) (fmap f e2)
           RightArrHighApp l e1 e2 -> RightArrHighApp (f l) (fmap f e1) (fmap f e2)
 
+          LCase l alts -> LCase (f l) (map (fmap f) alts)
 
 
 instance Functor PFieldUpdate where

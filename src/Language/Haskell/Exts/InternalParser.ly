@@ -1198,6 +1198,9 @@ mdo blocks require the RecursiveDo extension enabled, but the lexer handles that
 
 > exp10b :: { PExp L }
 >       : 'case' exp 'of' altslist      { let (als, inf, ss) = $4 in Case (nIS $1 <++> inf <** ($1:$3:ss)) $2 als }
+>       | '\\' 'case' altslist          {% do { checkEnabled LambdaCase ;
+>                                               let { (als, inf, ss) = $3 } ;
+>                                               return (LCase (nIS $1 <++> inf <** ($1:$2:ss)) als) } }
 >       | '-' fexp                      { NegApp (nIS $1 <++> ann $2 <** [$1]) $2 }
 >       | 'do'  stmtlist                { let (sts, inf, ss) = $2 in Do   (nIS $1 <++> inf <** $1:ss) sts }
 >       | 'mdo' stmtlist                { let (sts, inf, ss) = $2 in MDo  (nIS $1 <++> inf <** $1:ss) sts }
