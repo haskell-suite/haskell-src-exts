@@ -114,6 +114,13 @@ Extra-Source-Files:
 			Test/examples/UnicodeSyntax.hs
 			Test/examples/UnindentedPragmaClose.hs
 			Test/examples/WhereBlock.hs
+
+            Test/examples/ExplicitNamespaces.hs
+            Test/examples/Unpack.hs
+            Test/examples/DataKinds.hs
+            Test/examples/TabWhitespace.hs
+            Test/examples/CxtWhitespace.hs
+
 			Test/failing.txt
 			Test/printFail.txt
 			Test/Runner.hs

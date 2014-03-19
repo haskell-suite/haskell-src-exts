@@ -995,7 +995,7 @@ lexCharacter = do   -- We need to keep track of not only character constants but
                     con <- lexHash Character CharacterHash
                             (Left "Double hash not available for character literals")
                     return (con (c, [c]))
-         _ | TemplateHaskell `elem` exts -> return THVarQuote
+         _ | any (`elem` exts) [TemplateHaskell, DataKinds] -> return THVarQuote
          _ -> fail "Improper character constant or misplaced \'"
 
     where matchQuote = matchChar '\'' "Improperly terminated character constant"

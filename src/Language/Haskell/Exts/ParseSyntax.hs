@@ -2,7 +2,9 @@
 module Language.Haskell.Exts.ParseSyntax where
 
 import Language.Haskell.Exts.Annotated.Syntax hiding ( Type(..), Asst(..), Exp(..), FieldUpdate(..), XAttr(..), Context(..) )
-import qualified Language.Haskell.Exts.Annotated.Syntax as S ( Type(..), Asst(..), Exp(..), FieldUpdate(..), XAttr(..), Context(..) )
+import qualified Language.Haskell.Exts.Annotated.Syntax as S ( Type(..), Asst(..), Exp(..), FieldUpdate(..), XAttr(..), Context(..), Promoted(..) )
+
+
 
 ---------------------------------------
 -- Expressions as we parse them (and patterns, and regular patterns)
@@ -372,6 +374,7 @@ data PType l
      | TyPred  l (PAsst l)                      -- ^ assertion of an implicit parameter
      | TyInfix l (PType l) (QName l) (PType l)  -- ^ infix type constructor
      | TyKind  l (PType l) (Kind l)             -- ^ type with explicit kind signature
+     | TyPromoted l (S.Promoted l)              -- ^ promoted data type
   deriving (Eq, Show)
 
 instance Functor PType where
@@ -387,6 +390,7 @@ instance Functor PType where
       TyPred  l asst                -> TyPred (f l) (fmap f asst)
       TyInfix l ta qn tb            -> TyInfix (f l) (fmap f ta) (fmap f qn) (fmap f tb)
       TyKind  l t k                 -> TyKind (f l) (fmap f t) (fmap f k)
+      TyPromoted l   p              -> TyPromoted (f l)   (fmap f p)
 
 instance Annotated PType where
     ann t = case t of
@@ -400,6 +404,7 @@ instance Annotated PType where
       TyParen l t                   -> l
       TyInfix l ta qn tb            -> l
       TyKind  l t k                 -> l
+      TyPromoted l   p              -> l
     amap f t = case t of
       TyForall l mtvs mcx t         -> TyForall (f l) mtvs mcx t
       TyFun   l t1 t2               -> TyFun (f l) t1 t2
@@ -411,6 +416,7 @@ instance Annotated PType where
       TyParen l t                   -> TyParen (f l) t
       TyInfix l ta qn tb            -> TyInfix (f l) ta qn tb
       TyKind  l t k                 -> TyKind (f l) t k
+      TyPromoted l   p              -> TyPromoted (f l)   p
 
 data PAsst l
     = ClassA l (QName l) [PType l]
