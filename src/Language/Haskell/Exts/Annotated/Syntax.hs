@@ -614,11 +614,8 @@ data Type l
 -- | Bools here are True if there was a leading quote which may be
 -- left out. For example @'[k1,k2]@ means the same thing as @[k1,k2]@.
 data Promoted l
-        = PromotedInteger l -- ^ annotation
-                    Integer -- ^ parsed value
-                    String -- ^ raw
-        | PromotedString l String -- ^ parsed string
-                String -- ^ raw
+        = PromotedInteger l Integer String -- ^ parsed value and raw string
+        | PromotedString l String String -- ^ parsed value and raw string
         | PromotedCon l Bool (QName l)
         | PromotedList l Bool [Promoted l]
         | PromotedTuple l [Promoted l]
