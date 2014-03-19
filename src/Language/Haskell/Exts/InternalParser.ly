@@ -404,6 +404,8 @@ The Export List
 >       |  qtyconorcls '(' ')'                  { EThingWith (ann $1 <++> nIS $3 <** [$2,$3])    $1 [] }
 >       |  qtyconorcls '(' cnames ')'           { EThingWith (ann $1 <++> nIS $4 <** ($2:reverse (snd $3) ++ [$4])) $1 (reverse (fst $3)) }
 >       |  'module' modid                       { EModuleContents (nIS $1 <++> ann $2 <** [$1]) $2 }
+>       |  'type'   export                      {% do { checkEnabled ExplicitNamespaces;
+>                                                       return (EType (nIS $1) $2)} }
 
 -----------------------------------------------------------------------------
 Import Declarations
@@ -463,6 +465,8 @@ Requires the PackageImports extension enabled.
 >       |  tyconorcls '(' '..' ')'              { IThingAll  (ann $1 <++> nIS $4 <** [$2,$3,$4]) $1 }
 >       |  tyconorcls '(' ')'                   { IThingWith (ann $1 <++> nIS $3 <** [$2,$3])    $1 [] }
 >       |  tyconorcls '(' cnames ')'            { IThingWith (ann $1 <++> nIS $4 <** ($2:reverse (snd $3) ++ [$4])) $1 (reverse (fst $3)) }
+>       |  'type'   importspec                  {% do { checkEnabled ExplicitNamespaces;
+>                                                       return (IType (nIS $1) $2)} }
 
 > cnames :: { ([CName L],[S]) }
 >       :  cnames ',' cname                     { ($3 : fst $1, $2 : snd $1) }
@@ -586,7 +590,10 @@ Requires the StandaloneDeriving extension enabled.
 Requires the TemplateHaskell extension, but the lexer will handle that
 through the '$(' lexeme.
 CHANGE: Arbitrary top-level expressions are considered implicit splices
->       | exp0             {% checkEnabled TemplateHaskell >> checkExpr $1 >>= \e -> return (SpliceDecl (ann e) e) }
+>       | exp0             {% do
+>               checkToplevel $1
+>               checkExpr $1 >>= \e -> return (SpliceDecl (ann e) e) 
+>                  }
 
        | '$(' trueexp ')'  { let l = $1 <^^> $3 <** [$1,$3] in SpliceDecl l $ ParenSplice l $2 }
 
@@ -809,6 +816,32 @@ the (# and #) lexemes. Kinds will be handled at the kind rule.
 >       | '[' type ']'                  { TyList  ($1 <^^> $3 <** [$1,$3]) $2 }
 >       | '(' ctype ')'                 { TyParen ($1 <^^> $3 <** [$1,$3]) $2 }
 >       | '(' ctype '::' kind ')'       { TyKind  ($1 <^^> $5 <** [$1,$3,$5]) $2 $4 }
+>       | ptype                         { % checkEnabled DataKinds >> return (TyPromoted (ann $1) $1) }
+
+> ptype :: { Promoted L }
+>       : VARQUOTE '[' ptypes1 ']'      { PromotedList  ($1 <^^> $4 <** ($1: reverse($4:snd $3))) True  (reverse (fst $3)) }
+>       |          '[' ptypes  ']'      { PromotedList  ($1 <^^> $3 <** ($1: reverse($3:snd $2))) False (reverse (fst $2)) }
+>       | VARQUOTE '(' ptypes1 ')'      { PromotedTuple ($1 <^^> $4 <** ($1: reverse($4:snd $3)))       (reverse (fst $3)) }
+>       | VARQUOTE '('         ')'      { PromotedUnit  ($1 <^^> $3 ) }
+>       | VARQUOTE qtyconorcls          { PromotedCon ((noInfoSpan $1 <++> ann $2) <** [$1]) True  $2 }
+>       | INT                           { let Loc l (IntTok  (i,raw)) = $1 in PromotedInteger (nIS l) i raw }
+>       | STRING                        { let Loc l (StringTok (s,raw)) = $1 in PromotedString (nIS l) s raw }
+
+Leading quotes can be left off of promoted types when they make up another promoted
+type...
+
+> ptype1 :: { Promoted L }
+>       : ptype                         { $1 }
+>       | qtyconorcls                   { PromotedCon (ann $1) False $1 }
+
+
+> ptypes :: { ([Promoted L],[S]) }
+>        : ptypes1 ',' ptype1           { ($3 : fst $1, $2 : snd $1)  }
+
+> ptypes1 :: { ([Promoted L],[S]) }
+>       : ptype1                        { ([$1],[]) }
+>       | ptypes1 ',' ptype1            { ($3 : fst $1, $2 : snd $1) }
+
 
 > gtycon :: { QName L }
 >       : otycon                        { $1 }
@@ -1011,12 +1044,34 @@ Kinds
 
 > kind1 :: { Kind L }
 >       : akind                 { $1 }
+>       | akind kind1           { KindApp ($1 <> $2) $1 $2 }
 >       | akind '->' kind1      { KindFn ($1 <> $3 <** [$2]) $1 $3 }
 
 > akind :: { Kind L }
 >       : '*'                   { KindStar  (nIS $1) }
 >       | '!'                   { KindBang  (nIS $1) }
 >       | '(' kind1 ')'         { KindParen ($1 <^^> $3 <** [$1,$3]) $2 }
+>       | pkind                 {% checkEnabled DataKinds >> return $1 }
+>       | qvarid                {% checkEnabled PolyKinds >> return (KindVar (ann $1) $1) }
+
+KindParen covers 1-tuples, KindVar l  while KindTuple is for pairs
+
+> pkind :: { Kind L }
+>         : qtyconorcls         { KindVar (ann $1) $1 }
+>         | '(' ')'             { let l = $1 <^^> $2 in KindVar l (unit_tycon_name l) }
+>         | '(' kinds  ')'      { KindTuple ($1 <^^> $3 <** ($1:reverse ($3:snd $2))) (reverse (fst $2)) }
+>         | '[' kinds1 ']'      { KindList  ($1 <^^> $3 <** ($1:reverse ($3:snd $2))) (reverse (fst $2)) }
+
+
+repeat of what is done for types
+
+> kinds :: { ([Kind L],[S]) }
+>       : kinds1 ',' akind              { ($3 : fst $1, $2 : snd $1)  }
+
+> kinds1 :: { ([Kind L],[S]) }
+>       : akind                         { ([$1],[]) }
+>       | kinds1 ',' akind              { ($3 : fst $1, $2 : snd $1) }
+
 
 > optkind :: { (Maybe (Kind L), [S]) }
 >       : {-empty-}             { (Nothing,[]) }

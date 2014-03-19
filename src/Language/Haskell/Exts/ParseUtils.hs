@@ -17,6 +17,7 @@
 module Language.Haskell.Exts.ParseUtils (
       splitTyConApp         -- PType -> P (Name,[Type])
     , checkEnabled          -- (Show e, Enabled e) => e -> P ()
+    , checkToplevel         -- ??
     , checkPatternGuards    -- [Stmt] -> P ()
     , mkRecConstrOrUpdate   -- PExp -> [PFieldUpdate] -> P Exp
     , checkPrec             -- Integer -> P Int
@@ -74,7 +75,7 @@ import Language.Haskell.Exts.ExtScheme
 
 import Data.List (intersperse)
 import Data.Maybe (fromJust)
-import Control.Monad (when,liftM)
+import Control.Monad (when,unless,liftM)
 
 --- import Debug.Trace (trace)
 
@@ -106,6 +107,13 @@ checkEnabled e = do
 checkPatternGuards :: [Stmt L] -> P ()
 checkPatternGuards [Qualifier _ _] = return ()
 checkPatternGuards _ = checkEnabled PatternGuards
+
+checkToplevel e = do
+    exts <- getExtensions
+    let isQQ = case e of
+            QuasiQuote {} -> isEnabled QuasiQuotes exts
+            _ -> False
+    unless isQQ (checkEnabled TemplateHaskell)
 
 -----------------------------------------------------------------------------
 -- Checking contexts
@@ -921,6 +929,7 @@ checkT t simple = case t of
     TyKind  l pt k    -> check1Type pt (flip (S.TyKind l) k)
 
     -- TyPred  cannot be a valid type
+    TyPromoted l p -> return $ S.TyPromoted l p -- ??
     _   -> fail $ "Parse error in type: " ++ prettyPrint t
 
 check1Type :: PType L -> (S.Type L -> S.Type L) -> P (S.Type L)
