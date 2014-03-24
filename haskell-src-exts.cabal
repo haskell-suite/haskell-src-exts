@@ -169,7 +169,8 @@ Source-Repository head
 
 Test-Suite test
   type:                exitcode-stdio-1.0
-  main-is:             Test/Runner.hs
+  hs-source-dirs:      Test
+  main-is:             Runner.hs
   GHC-Options:         -threaded
   Default-language:    Haskell2010
   Build-depends:       base < 5,
