@@ -154,7 +154,7 @@ instance Parseable (PatField       SrcSpanInfo) where parser = applyFixities' mp
 
 -- Type-specific functions
 
--- | Parse of a string, which should contain a complete Haskell module.
+-- | Parse of a string, which should contain a complete Haskell module, using 'defaultParseMode'.
 parseModule :: String -> ParseResult (Module SrcSpanInfo)
 parseModule = parse
 
@@ -166,7 +166,7 @@ parseModuleWithMode = parseWithMode
 parseModuleWithComments :: ParseMode -> String -> ParseResult (Module SrcSpanInfo, [Comment])
 parseModuleWithComments = parseWithComments
 
--- | Parse of a string, which should contain complete Haskell modules.
+-- | Parse of a string, which should contain complete Haskell modules, using 'defaultParseMode'.
 parseModules :: String -> ParseResult [Module SrcSpanInfo]
 parseModules = parse
 
@@ -178,7 +178,7 @@ parseModulesWithMode = parseWithMode
 parseModulesWithComments :: ParseMode -> String -> ParseResult ([Module SrcSpanInfo], [Comment])
 parseModulesWithComments = parseWithComments
 
--- | Parse of a string containing a Haskell expression.
+-- | Parse of a string containing a Haskell expression, using 'defaultParseMode'.
 parseExp :: String -> ParseResult (Exp SrcSpanInfo)
 parseExp = parse
 
@@ -190,7 +190,7 @@ parseExpWithMode = parseWithMode
 parseExpWithComments :: ParseMode -> String -> ParseResult (Exp SrcSpanInfo, [Comment])
 parseExpWithComments = parseWithComments
 
--- | Parse of a string containing a Haskell pattern.
+-- | Parse of a string containing a Haskell pattern, using 'defaultParseMode'.
 parsePat :: String -> ParseResult (Pat SrcSpanInfo)
 parsePat = parse
 
@@ -202,7 +202,7 @@ parsePatWithMode = parseWithMode
 parsePatWithComments :: ParseMode -> String -> ParseResult (Pat SrcSpanInfo, [Comment])
 parsePatWithComments = parseWithComments
 
--- | Parse of a string containing a Haskell top-level declaration.
+-- | Parse of a string containing a Haskell top-level declaration, using 'defaultParseMode'.
 parseDecl :: String -> ParseResult (Decl SrcSpanInfo)
 parseDecl = parse
 
@@ -214,7 +214,7 @@ parseDeclWithMode = parseWithMode
 parseDeclWithComments :: ParseMode -> String -> ParseResult (Decl SrcSpanInfo, [Comment])
 parseDeclWithComments = parseWithComments
 
--- | Parse of a string containing a Haskell type.
+-- | Parse of a string containing a Haskell type, using 'defaultParseMode'.
 parseType :: String -> ParseResult (Type SrcSpanInfo)
 parseType = parse
 
@@ -226,7 +226,7 @@ parseTypeWithMode = parseWithMode
 parseTypeWithComments :: ParseMode -> String -> ParseResult (Type SrcSpanInfo, [Comment])
 parseTypeWithComments = parseWithComments
 
--- | Parse of a string containing a Haskell statement.
+-- | Parse of a string containing a Haskell statement, using 'defaultParseMode'.
 parseStmt :: String -> ParseResult (Stmt SrcSpanInfo)
 parseStmt = parse
 

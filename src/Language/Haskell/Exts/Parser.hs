@@ -155,7 +155,7 @@ instance Parseable S.XAttr                  where parser = parseWithSimplify
 
 -- Type-specific instances
 
--- | Parse of a string, which should contain a complete Haskell module.
+-- | Parse of a string, which should contain a complete Haskell module, using 'defaultParseMode'.
 parseModule :: String -> ParseResult S.Module
 parseModule = parse
 
@@ -167,7 +167,7 @@ parseModuleWithMode = parseWithMode
 parseModuleWithComments :: ParseMode -> String -> ParseResult (S.Module, [Comment])
 parseModuleWithComments = parseWithComments
 
--- | Parse of a string, which should contain complete Haskell modules.
+-- | Parse of a string, which should contain complete Haskell modules, using 'defaultParseMode'.
 parseModules :: String -> ParseResult [S.Module]
 parseModules = parse
 
@@ -179,7 +179,7 @@ parseModulesWithMode = parseWithMode
 parseModulesWithComments :: ParseMode -> String -> ParseResult ([S.Module], [Comment])
 parseModulesWithComments = parseWithComments
 
--- | Parse of a string containing a Haskell expression.
+-- | Parse of a string containing a Haskell expression, using 'defaultParseMode'.
 parseExp :: String -> ParseResult S.Exp
 parseExp = parse
 
@@ -191,7 +191,7 @@ parseExpWithMode = parseWithMode
 parseExpWithComments :: ParseMode -> String -> ParseResult (S.Exp, [Comment])
 parseExpWithComments = parseWithComments
 
--- | Parse of a string containing a Haskell pattern.
+-- | Parse of a string containing a Haskell pattern, using 'defaultParseMode'.
 parsePat :: String -> ParseResult S.Pat
 parsePat = parse
 
@@ -203,7 +203,7 @@ parsePatWithMode = parseWithMode
 parsePatWithComments :: ParseMode -> String -> ParseResult (S.Pat, [Comment])
 parsePatWithComments = parseWithComments
 
--- | Parse of a string containing a Haskell top-level declaration.
+-- | Parse of a string containing a Haskell top-level declaration, using 'defaultParseMode'
 parseDecl :: String -> ParseResult S.Decl
 parseDecl = parse
 
@@ -215,7 +215,7 @@ parseDeclWithMode = parseWithMode
 parseDeclWithComments :: ParseMode -> String -> ParseResult (S.Decl, [Comment])
 parseDeclWithComments = parseWithComments
 
--- | Parse of a string containing a Haskell type.
+-- | Parse of a string containing a Haskell type, using 'defaultParseMode'.
 parseType :: String -> ParseResult S.Type
 parseType = parse
 
@@ -227,7 +227,7 @@ parseTypeWithMode = parseWithMode
 parseTypeWithComments :: ParseMode -> String -> ParseResult (S.Type, [Comment])
 parseTypeWithComments = parseWithComments
 
--- | Parse of a string containing a Haskell type.
+-- | Parse of a string containing a Haskell type, using 'defaultParseMode'.
 parseStmt :: String -> ParseResult S.Stmt
 parseStmt = parse
 
