@@ -118,7 +118,7 @@ askFixityP xs qn = askFix xs (g $ sQName qn)
     where
         g (S.Special S.Cons) = S.UnQual (S.Symbol ":")
         g x                  = x
-        
+
 askFix :: [Fixity] -> S.QName -> (S.Assoc, Int)
 askFix xs = \k -> lookupWithDefault (S.AssocLeft, 9) k mp
     where
@@ -286,7 +286,7 @@ instance AppFixity (Splice SrcSpanInfo) where
 instance AppFixity (XAttr SrcSpanInfo) where
     applyFixities fixs (XAttr l n e) = liftM (XAttr l n) $ applyFixities fixs e
 
--- Stuff needed for 'AnnotatedParseable'.
+-- Stuff needed for 'Parseable' instances of Annotated ASTs.
 
 instance AppFixity a => AppFixity (a, b) where
   applyFixities fixs (x, y) = applyFixities fixs x >>= \x' -> return (x', y)
