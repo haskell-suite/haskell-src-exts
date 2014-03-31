@@ -87,29 +87,30 @@ parseFileContentsWithExts exts =
 
 -- | Parse a source file from a string using a custom 'ParseMode'.
 parseFileContentsWithMode :: ParseMode -> String -> ParseResult (Module SrcSpanInfo)
-parseFileContentsWithMode p@(ParseMode fn oldLang exts ign _ _) rawStr =
-        let md = delit fn $ ppContents rawStr
-            (bLang, extraExts) =
-                case (ign, parse md) of
-                    (False, ParseOk xs) ->
-                        case pragmasToExtensions (unListOf xs :: [ModulePragma SrcSpanInfo]) of
-                            ([newLang], es) -> (newLang, es)
-                            (_, es) -> (oldLang, es)
-                    _ -> (oldLang, [])
-         in -- trace (fn ++ ": " ++ show extraExts) $
-              parseModuleWithMode (p { baseLanguage = bLang, extensions = exts ++ extraExts }) md
+parseFileContentsWithMode pm rawStr =
+    parseModuleWithMode pm' md
+  where
+    (pm', md) = preprocessFile pm rawStr
 
+-- | Parse a source file from a string using a custom 'ParseMode', including comments
 parseFileContentsWithComments :: ParseMode -> String -> ParseResult (Module SrcSpanInfo, [Comment])
-parseFileContentsWithComments p@(ParseMode fn oldLang exts ign _ _) rawStr =
-        let md = delit fn $ ppContents rawStr
-            (bLang, extraExts) =
-                case (ign, parse md) of
-                    (False, ParseOk xs) ->
-                        case pragmasToExtensions (unListOf xs :: [ModulePragma SrcSpanInfo]) of
-                            ([newLang], es) -> (newLang, es)
-                            (_, es) -> (oldLang, es)
-                    _ -> (oldLang, [])
-         in parseModuleWithComments (p { baseLanguage = bLang, extensions = exts ++ extraExts }) md
+parseFileContentsWithComments pm rawStr =
+    parseModuleWithComments pm' md
+  where
+    (pm', md) = preprocessFile pm rawStr
+
+preprocessFile :: ParseMode -> String -> (ParseMode, String)
+preprocessFile p@(ParseMode fn oldLang exts ign _ _) rawStr =
+    (p { baseLanguage = bLang, extensions = exts ++ extraExts }, md)
+  where
+    md = delit fn $ ppContents rawStr
+    (bLang, extraExts) =
+        case (ign, parse md) of
+            (False, ParseOk xs) ->
+                case pragmasToExtensions (unListOf (unNonGreedy xs) :: [ModulePragma SrcSpanInfo]) of
+                    ([newLang], es) -> (newLang, es)
+                    (_, es) -> (oldLang, es)
+            _ -> (oldLang, [])
 
 ppContents :: String -> String
 ppContents = unlines . f . lines
