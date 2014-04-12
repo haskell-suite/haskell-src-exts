@@ -54,15 +54,15 @@ parseFile = fmap (fmap sModule) . A.parseFile
 -- | Parse a source file on disk, with an extra set of extensions to know about
 --   on top of what the file itself declares.
 parseFileWithExts :: [Extension] -> FilePath -> IO (ParseResult Module)
-parseFileWithExts = (fmap (fmap sModule) .) . A.parseFileWithExts
+parseFileWithExts exts = fmap (fmap sModule) . A.parseFileWithExts exts
 
 -- | Parse a source file on disk, supplying a custom parse mode.
 parseFileWithMode :: ParseMode -> FilePath -> IO (ParseResult Module)
-parseFileWithMode = (fmap (fmap sModule) .) . A.parseFileWithMode
+parseFileWithMode mode = fmap (fmap sModule) . A.parseFileWithMode mode
 
 -- | Parse a source file on disk, supplying a custom parse mode, and retaining comments.
 parseFileWithComments :: ParseMode -> FilePath -> IO (ParseResult (Module, [Comment]))
-parseFileWithComments = (fmap (fmap (first sModule)) .) . A.parseFileWithComments
+parseFileWithComments mode = fmap (fmap (first sModule)) . A.parseFileWithComments mode
 
 -- | Parse a source file from a string using the default parse mode.
 parseFileContents :: String -> ParseResult Module
@@ -71,12 +71,12 @@ parseFileContents = fmap sModule . A.parseFileContents
 -- | Parse a source file from a string, with an extra set of extensions to know about
 --   on top of what the file itself declares.
 parseFileContentsWithExts :: [Extension] -> String -> ParseResult Module
-parseFileContentsWithExts = (fmap sModule .) . A.parseFileContentsWithExts
+parseFileContentsWithExts exts = fmap sModule . A.parseFileContentsWithExts exts
 
 -- | Parse a source file from a string using a custom parse mode.
 parseFileContentsWithMode :: ParseMode -> String -> ParseResult Module
-parseFileContentsWithMode = (fmap sModule .) . A.parseFileContentsWithMode
+parseFileContentsWithMode mode = fmap sModule . A.parseFileContentsWithMode mode
 
 -- | Parse a source file from a string using a custom parse mode and retaining comments.
 parseFileContentsWithComments :: ParseMode -> String -> ParseResult (Module, [Comment])
-parseFileContentsWithComments = (fmap (first sModule) .) . A.parseFileContentsWithComments
+parseFileContentsWithComments mode = fmap (first sModule) . A.parseFileContentsWithComments mode
