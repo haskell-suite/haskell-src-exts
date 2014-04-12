@@ -1,4 +1,4 @@
-{-# LANGUAGE CPP, DeriveDataTypeable #-}
+{-# LANGUAGE DeriveDataTypeable #-}
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Language.Haskell.Exts.Extension
@@ -43,14 +43,7 @@ import Control.Applicative ((<$>), (<|>))
 import Data.Array (Array, accumArray, bounds, Ix(inRange), (!))
 import Data.List (nub, (\\), delete)
 import Data.Maybe (fromMaybe)
-
-#ifdef __GLASGOW_HASKELL__
-#ifdef BASE4
 import Data.Data
-#else
-import Data.Generics (Data(..),Typeable(..))
-#endif
-#endif
 
 -- Copyright notice from Cabal's Language.Haskell.Extension,
 -- from which we borrow plenty of features:

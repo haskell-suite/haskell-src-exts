@@ -1,4 +1,4 @@
-{-# LANGUAGE CPP, DeriveDataTypeable, DeriveGeneric #-}
+{-# LANGUAGE DeriveDataTypeable, DeriveGeneric #-}
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Language.Haskell.Exts.SrcLoc
@@ -15,16 +15,8 @@
 -----------------------------------------------------------------------------
 module Language.Haskell.Exts.SrcLoc where
 
-#ifdef __GLASGOW_HASKELL__
-#ifdef BASE4
 import Data.Data
-#if MIN_VERSION_base(4,6,0)
 import GHC.Generics (Generic)
-#endif
-#else
-import Data.Generics (Data(..),Typeable(..))
-#endif
-#endif
 
 -- | A single position in the source.
 data SrcLoc = SrcLoc
@@ -32,15 +24,7 @@ data SrcLoc = SrcLoc
     , srcLine :: Int
     , srcColumn :: Int
     }
-#ifdef __GLASGOW_HASKELL__
-#if MIN_VERSION_base(4,6,0)
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
-#else
-  deriving (Eq,Ord,Show,Typeable,Data)
-#endif
-#else
-  deriving (Eq,Ord,Show)
-#endif
 
 noLoc :: SrcLoc
 noLoc = SrcLoc "" (-1) (-1)
@@ -53,11 +37,7 @@ data SrcSpan = SrcSpan
     , srcSpanEndLine     :: Int
     , srcSpanEndColumn   :: Int
     }
-#ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
-#else
-  deriving (Eq,Ord,Show)
-#endif
 
 
 -- | Returns 'srcSpanStartLine' and 'srcSpanStartColumn' in a pair.
@@ -106,11 +86,7 @@ data SrcSpanInfo = SrcSpanInfo
 --    , explLayout     :: Bool
     , srcInfoPoints  :: [SrcSpan]    -- Marks the location of specific entities inside the span
     }
-#ifdef __GLASGOW_HASKELL__
   deriving (Eq,Ord,Show,Typeable,Data)
-#else
-  deriving (Eq,Ord,Show)
-#endif
 
 -- | Generate a 'SrcSpanInfo' with no positional information for entities.
 noInfoSpan :: SrcSpan -> SrcSpanInfo
