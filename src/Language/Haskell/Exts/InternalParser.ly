@@ -15,25 +15,172 @@
 > -----------------------------------------------------------------------------
 >
 > module Language.Haskell.Exts.InternalParser (
->               -- * General parsing
->               ParseMode(..), defaultParseMode, ParseResult(..), fromParseResult,
->               -- * Parsing of specific AST elements
->               -- ** Modules
->               parseModule, parseModuleWithMode, parseModuleWithComments,
->               -- ** Expressions
->               parseExp, parseExpWithMode, parseExpWithComments,
->               -- ** Statements
->               parseStmt, parseStmtWithMode, parseStmtWithComments,
->               -- ** Patterns
->               parsePat, parsePatWithMode, parsePatWithComments,
->               -- ** Declarations
->               parseDecl, parseDeclWithMode, parseDeclWithComments,
->               -- ** Types
->               parseType, parseTypeWithMode, parseTypeWithComments,
->               -- ** Multiple modules in one file
->               parseModules, parseModulesWithMode, parseModulesWithComments,
->               -- ** Option pragmas
->               getTopPragmas
+>               mparseModule,
+>               mparseModules,
+>               mparseExp,
+>               mparseExps,
+>               mparsePat,
+>               mparsePats,
+>               mparseDecl,
+>               mparseDecls,
+>               mparseType,
+>               mparseStmt,
+>               mparseStmts,
+>               mparseModuleHead,
+>               mparseExportSpecList,
+>               mparseExportSpec,
+>               mparseImportDecl,
+>               mparseImportDecls,
+>               mparseImportSpecList,
+>               mparseImportSpec,
+>               mparseBinds,
+>               mparseIPBind,
+>               mparseIPBinds,
+>               mparseClassDecl,
+>               mparseClassDecls,
+>               mparseInstDecl,
+>               mparseInstDecls,
+>               mparseDeriving,
+>               mparseConDecl,
+>               mparseFieldDecl,
+>               mparseFieldDecls,
+>               mparseQualConDecl,
+>               mparseQualConDecls,
+>               mparseGadtDecl,
+>               mparseGadtDecls,
+>               mparseBangType,
+>               mparseRhs,
+>               mparseGuardedRhs,
+>               mparseGuardedRhss,
+>               mparseFunDep,
+>               mparseFunDeps,
+>               mparseKind,
+>               mparseTyVarBind,
+>               mparseTyVarBinds,
+>               mparseQualStmt,
+>               mparseQualStmts,
+>               mparseParQualStmts,
+>               mparseAlt,
+>               mparseGuardedAlt,
+>               mparseGuardedAlts,
+>               mparseGuardedAlts2,
+>               mparseLiteral,
+>               mparseModuleName,
+>               mparseQName,
+>               mparseQNames,
+>               mparseName,
+>               mparseNames,
+>               mparseQOp,
+>               mparseOp,
+>               mparseOps,
+>               mparseCName,
+>               mparseCNames,
+>               mparseIPName,
+>               mparseXName,
+>               mparseSafety,
+>               mparseCallConv,
+>               mparseModulePragma,
+>               mparseModulePragmas,
+>               mparseRule,
+>               mparseRules,
+>               mparseRuleVar,
+>               mparseRuleVars,
+>               mparseActivation,
+>               mparseAnnotation,
+>               mparseFieldUpdate,
+>               mparseFieldUpdates,
+>               mparseXAttr,
+>               mparseXAttrs,
+>               mparseSExp,
+>               mparseSExps,
+>               mparseBracket,
+>               mparseSplice,
+>               mparseContext,
+
+>               ngparseModuleHeadAndImports,
+>               ngparseModuleHead,
+>               ngparseModulePragmas,
+>               ngparsePragmasAndModuleHead,
+>               ngparsePragmasAndModuleName
+
+                ngparseModule,
+                ngparseExp,
+                ngparseExps,
+                ngparsePat,
+                ngparsePats,
+                ngparseDecl,
+                ngparseDecls,
+                ngparseType,
+                ngparseStmt,
+                ngparseStmts,
+                ngparseExportSpecList,
+                ngparseExportSpec,
+                ngparseImportDecl,
+                ngparseImportDecls,
+                ngparseImportSpecList,
+                ngparseImportSpec,
+                ngparseBinds,
+                ngparseIPBind,
+                ngparseIPBinds,
+                ngparseClassDecl,
+                ngparseClassDecls,
+                ngparseInstDecl,
+                ngparseInstDecls,
+                ngparseDeriving,
+                ngparseConDecl,
+                ngparseFieldDecl,
+                ngparseFieldDecls,
+                ngparseQualConDecl,
+                ngparseQualConDecls,
+                ngparseGadtDecl,
+                ngparseGadtDecls,
+                ngparseBangType,
+                ngparseRhs,
+                ngparseGuardedRhs,
+                ngparseGuardedRhss,
+                ngparseFunDep,
+                ngparseFunDeps,
+                ngparseKind,
+                ngparseTyVarBind,
+                ngparseTyVarBinds,
+                ngparseQualStmt,
+                ngparseQualStmts,
+                ngparseParQualStmts,
+                ngparseAlt,
+                ngparseGuardedAlt,
+                ngparseGuardedAlts,
+                ngparseGuardedAlts2,
+                ngparseLiteral,
+                ngparseModuleName,
+                ngparseQName,
+                ngparseQNames,
+                ngparseName,
+                ngparseNames,
+                ngparseQOp,
+                ngparseOp,
+                ngparseOps,
+                ngparseCName,
+                ngparseCNames,
+                ngparseIPName,
+                ngparseXName,
+                ngparseSafety,
+                ngparseCallConv,
+                ngparseModulePragma,
+                ngparseRule,
+                ngparseRules,
+                ngparseRuleVar,
+                ngparseRuleVars,
+                ngparseActivation,
+                ngparseAnnotation,
+                ngparseFieldUpdate,
+                ngparseFieldUpdates,
+                ngparseXAttr,
+                ngparseXAttrs,
+                ngparseSExp,
+                ngparseSExps,
+                ngparseBracket,
+                ngparseSplice,
+                ngparseContext
 >               ) where
 >
 > import Language.Haskell.Exts.Annotated.Syntax hiding ( Type(..), Exp(..), Asst(..), XAttr(..), FieldUpdate(..) )
@@ -282,14 +429,183 @@ Pragmas
 > %monad { P }
 > %lexer { lexer } { Loc _ EOF }
 > %error { parseError }
-> %name mparseModule page
-> %name mparseExp trueexp
-> %name mparsePat pat
-> %name mparseDecl topdecl
-> %name mparseType truectype
-> %name mparseStmt stmt
-> %name mparseModules modules
-> %partial mfindOptPragmas toppragmas
+> %name mparseModule         page
+> %name mparseModules        modules
+> %name mparseExp            trueexp
+> %name mparseExps           checklexps
+> %name mparsePat            pat
+> %name mparsePats           checklpats
+> %name mparseDecl           topdecl
+> %name mparseDecls          topdeclsblock
+> %name mparseType           truedtype
+> %name mparseStmt           stmt
+> %name mparseStmts          stmtlist
+> %name mparseModuleHead     modulehead
+> %name mparseExportSpecList exports
+> %name mparseExportSpec     export
+> %name mparseImportDecl     impdecl
+> %name mparseImportDecls    impdeclsblock
+> %name mparseImportSpecList impspec
+> %name mparseImportSpec     importspec
+> %name mparseBinds          binds
+> %name mparseIPBind         ipbind
+> %name mparseIPBinds        ipbindsblock
+> %name mparseClassDecl      cldecl
+> %name mparseClassDecls     cldeclsblock
+> %name mparseInstDecl       insvaldef
+> %name mparseInstDecls      valdefsblock
+> %name mparseDeriving       requirederiving
+> %name mparseConDecl        constr1
+> %name mparseFieldDecl      fielddecl
+> %name mparseFieldDecls     fielddeclsblock
+> %name mparseQualConDecl    constr
+> %name mparseQualConDecls   constrs
+> %name mparseGadtDecl       gadtconstr
+> %name mparseGadtDecls      gadtconstrsblock
+> %name mparseBangType       stype
+> %name mparseRhs            rhs
+> %name mparseGuardedRhs     gdrh
+> %name mparseGuardedRhss    gdrhs
+> %name mparseFunDep         fd
+> %name mparseFunDeps        fds1
+> %name mparseKind           kind
+> %name mparseTyVarBind      ktyvar
+> %name mparseTyVarBinds     requireforall
+> %name mparseQualStmt       qualstmt
+> %name mparseQualStmts      qualstmts
+> %name mparseParQualStmts   pqualstmts
+> %name mparseAlt            alt
+> %name mparseAlts           altslist
+> %name mparseGuardedAlt     gdpat
+> %name mparseGuardedAlts    gdpats
+> %name mparseGuardedAlts2   ralt
+> %name mparseLiteral        literal
+> %name mparseModuleName     modid
+> %name mparseQName          qnamevar
+> %name mparseQNames         qnamevars
+> %name mparseName           namevar
+> %name mparseNames          namevars
+> %name mparseOp             op
+> %name mparseOps            ops
+> %name mparseQOp            qop
+> %name mparseCName          cname
+> %name mparseCNames         cnamesblock
+> %name mparseIPName         ivar
+> %name mparseXName          name
+> %name mparseSafety         requiresafety
+> %name mparseCallConv       callconv
+> %name mparseModulePragma   toppragma
+> %name mparseModulePragmas  toppragmas
+> %name mparseRule           rule
+> %name mparseRules          rules
+> %name mparseRuleVar        rulevar
+> %name mparseRuleVars       rulevars
+> %name mparseActivation     requireactivation
+> %name mparseAnnotation     annotation
+> %name mparseFieldUpdate    fbind
+> %name mparseFieldUpdates   fbinds
+> %name mparseXAttr          attr
+> %name mparseXAttrs         attrs
+> %name mparseSExp           exp
+> %name mparseSExps          sexps
+> %name mparseBracket        bracket
+> %name mparseSplice         splice
+> %name mparseContext        context
+
+  Partial parsers for the "modules" as it causes a reduce/reduce conflict.
+
+  %partial ngparseModules        modules
+
+  Most of the partial parsers are disabled due to a stack overflow in happy that
+  seems to occur when there are too many exported parsers.
+
+
+> %partial ngparseModuleHead           modulehead
+> %partial ngparseModuleHeadAndImports moduletopimps
+> %partial ngparseModulePragmas        toppragmas
+> %partial ngparsePragmasAndModuleHead moduletophead
+> %partial ngparsePragmasAndModuleName moduletopname
+
+  %partial ngparseModule         page
+  %partial ngparseExp            trueexp
+  %partial ngparseExps           checklexps
+  %partial ngparsePat            pat
+  %partial ngparsePats           checklpats
+  %partial ngparseDecl           topdecl
+  %partial ngparseDecls          topdeclsblock
+  %partial ngparseType           truedtype
+  %partial ngparseStmt           stmt
+  %partial ngparseStmts          stmtlist
+  %partial ngparseExportSpecList exports
+  %partial ngparseExportSpec     export
+  %partial ngparseImportDecl     impdecl
+  %partial ngparseImportDecls    impdeclsblock
+  %partial ngparseImportSpecList impspec
+  %partial ngparseImportSpec     importspec
+  %partial ngparseBinds          binds
+  %partial ngparseIPBind         ipbind
+  %partial ngparseIPBinds        ipbindsblock
+  %partial ngparseClassDecl      cldecl
+  %partial ngparseClassDecls     cldeclsblock
+  %partial ngparseInstDecl       insvaldef
+  %partial ngparseInstDecls      valdefsblock
+  %partial ngparseDeriving       requirederiving
+  %partial ngparseConDecl        constr1
+  %partial ngparseFieldDecl      fielddecl
+  %partial ngparseFieldDecls     fielddeclsblock
+  %partial ngparseQualConDecl    constr
+  %partial ngparseQualConDecls   constrs
+  %partial ngparseGadtDecl       gadtconstr
+  %partial ngparseGadtDecls      gadtconstrsblock
+  %partial ngparseBangType       stype
+  %partial ngparseRhs            rhs
+  %partial ngparseGuardedRhs     gdrh
+  %partial ngparseGuardedRhss    gdrhs
+  %partial ngparseFunDep         fd
+  %partial ngparseFunDeps        fds1
+  %partial ngparseKind           kind
+  %partial ngparseTyVarBind      ktyvar
+  %partial ngparseTyVarBinds     requireforall
+  %partial ngparseQualStmt       qualstmt
+  %partial ngparseQualStmts      qualstmts
+  %partial ngparseParQualStmts   pqualstmts
+  %partial ngparseAlt            alt
+  %partial ngparseAlts           altslist
+  %partial ngparseGuardedAlt     gdpat
+  %partial ngparseGuardedAlts    gdpats
+  %partial ngparseGuardedAlts2   ralt
+  %partial ngparseLiteral        literal
+  %partial ngparseModuleName     modid
+  %partial ngparseQName          qnamevar
+  %partial ngparseQNames         qnamevars
+  %partial ngparseName           namevar
+  %partial ngparseNames          namevars
+  %partial ngparseOp             op
+  %partial ngparseOps            ops
+  %partial ngparseQOp            qop
+  %partial ngparseCName          cname
+  %partial ngparseCNames         cnamesblock
+  %partial ngparseIPName         ivar
+  %partial ngparseXName          name
+  %partial ngparseSafety         requiresafety
+  %partial ngparseCallConv       callconv
+  %partial ngparseModulePragma   toppragma
+  %partial ngparseRule           rule
+  %partial ngparseRules          rules
+  %partial ngparseRuleVar        rulevar
+  %partial ngparseRuleVars       rulevars
+  %partial ngparseActivation     requireactivation
+  %partial ngparseAnnotation     annotation
+  %partial ngparseFieldUpdate    fbind
+  %partial ngparseFieldUpdates   fbinds
+  %partial ngparseXAttr          attr
+  %partial ngparseXAttrs         attrs
+  %partial ngparseSExp           exp
+  %partial ngparseSExps          sexps
+  %partial ngparseBracket        bracket
+  %partial ngparseSplice         splice
+  %partial ngparseContext        context
+
 > %tokentype { Loc Token }
 > %expect 7
 > %%
@@ -336,7 +652,7 @@ TODO: Yuck, this is messy, needs fixing in the AST!
 > toppragma :: { ModulePragma L }
 >           : '{-# LANGUAGE' conids optsemis '#-}'   { LanguagePragma ($1 <^^> $4 <** ($1:snd $2 ++ reverse $3 ++ [$4])) (fst $2) }
 >           | '{-# OPTIONS' optsemis '#-}'           { let Loc l (OPTIONS (mc, s)) = $1
->                                                       in OptionsPragma (l <^^> $3 <** (l:reverse $2 ++ [$3])) (readTool mc) s }
+>                                                       in OptionsPragma (l <^^> $3 <** (l:reverse $2 ++ [$3])) (fmap readTool mc) s }
 >           | '{-# ANN' annotation '#-}'             { AnnModulePragma ($1 <^^> $3 <** [$1,$3]) $2 }
 
 
@@ -353,8 +669,12 @@ Module Header
 >                  in \os ss l -> Module (l <++> inf <** (ss ++ ss1)) $1 os is ds }
 
 > optmodulehead :: { Maybe (ModuleHead L) }
->       : 'module' modid maybemodwarning maybeexports 'where'   { Just $ ModuleHead ($1 <^^> $5 <** [$1,$5]) $2 $3 $4 }
->       | {- empty -}                                           { Nothing }
+>       : modulehead                            { Just $1 }
+>       | {- empty -}                           { Nothing }
+
+Only needed for use as an external parser
+> modulehead :: { ModuleHead L }
+>       : 'module' modid maybemodwarning maybeexports 'where'   { ModuleHead ($1 <^^> $5 <** [$1,$5]) $2 $3 $4 }
 
 > maybemodwarning ::  { Maybe (WarningText L) }
 >       : '{-# DEPRECATED' STRING '#-}'         { let Loc l (StringTok (s,_)) = $2 in Just $ DeprText ($1 <^^> $3 <** [$1,l,$3]) s }
@@ -402,7 +722,7 @@ The Export List
 >       |  qtyconorcls                          { EAbs (ann $1) $1 }
 >       |  qtyconorcls '(' '..' ')'             { EThingAll  (ann $1 <++> nIS $4 <** [$2,$3,$4]) $1 }
 >       |  qtyconorcls '(' ')'                  { EThingWith (ann $1 <++> nIS $3 <** [$2,$3])    $1 [] }
->       |  qtyconorcls '(' cnames ')'           { EThingWith (ann $1 <++> nIS $4 <** ($2:reverse (snd $3) ++ [$4])) $1 (reverse (fst $3)) }
+>       |  qtyconorcls cnamesblock              { let (cns, ss, l) = $2 in EThingWith (ann $1 <++> l <** ss) $1 cns }
 >       |  'module' modid                       { EModuleContents (nIS $1 <++> ann $2 <** [$1]) $2 }
 >       |  'type'   export                      {% do { checkEnabled ExplicitNamespaces;
 >                                                       return (EType (nIS $1) $2)} }
@@ -464,9 +784,12 @@ Requires the PackageImports extension enabled.
 >       |  tyconorcls                           { IAbs (ann $1) $1 }
 >       |  tyconorcls '(' '..' ')'              { IThingAll  (ann $1 <++> nIS $4 <** [$2,$3,$4]) $1 }
 >       |  tyconorcls '(' ')'                   { IThingWith (ann $1 <++> nIS $3 <** [$2,$3])    $1 [] }
->       |  tyconorcls '(' cnames ')'            { IThingWith (ann $1 <++> nIS $4 <** ($2:reverse (snd $3) ++ [$4])) $1 (reverse (fst $3)) }
+>       |  tyconorcls cnamesblock               { let (cns, ss, l) = $2 in IThingWith (ann $1 <++> l <** ss) $1 cns }
 >       |  'type'   importspec                  {% do { checkEnabled ExplicitNamespaces;
 >                                                       return (IType (nIS $1) $2)} }
+
+> cnamesblock :: { ([CName L],[S],L) }
+>       : '(' cnames ')'                        { (reverse (fst $2), $1:reverse (snd $2) ++ [$3], $1 <^^> $3) }
 
 > cnames :: { ([CName L],[S]) }
 >       :  cnames ',' cname                     { ($3 : fst $1, $2 : snd $1) }
@@ -670,8 +993,7 @@ binding.
 
 > binds :: { Binds L }
 >       : decllist                      { $1 }
->       | '{' ipbinds '}'               { IPBinds ($1 <^^> $3 <** snd $2) (fst $2) }
->       | open ipbinds close            { IPBinds ($1 <^^> $3 <** snd $2) (fst $2) }
+>       | ipbindsblock                  { let (bs, l) = $1 in IPBinds l bs }
 
 ATTENTION: Dirty Hackery Ahead! If the second alternative of vars is var
 instead of qvar, we get another shift/reduce-conflict. Consider the
@@ -704,13 +1026,16 @@ so no need to check for extensions.
 >          | 'js'                       { Js        (nIS $1) }
 >          | 'capi'                     { CApi      (nIS $1) }
 
-
 > safety :: { Maybe (Safety L) }
->        : 'safe'                       { Just $ PlaySafe  (nIS $1) False }
->        | 'unsafe'                     { Just $ PlayRisky (nIS $1) }
->        | 'threadsafe'                 { Just $ PlaySafe  (nIS $1) True }
->        | 'interruptible'              { Just $ PlayInterruptible (nIS $1) }
+>        : requiresafety                { Just $1 }
 >        | {- empty -}                  { Nothing }
+
+Only needed for use as an external parser
+> requiresafety :: { Safety L }
+>               : 'safe'                { PlaySafe  (nIS $1) False }
+>               | 'unsafe'              { PlayRisky (nIS $1) }
+>               | 'threadsafe'          { PlaySafe  (nIS $1) True }
+>               | 'interruptible'       { PlayInterruptible (nIS $1) }
 
 > fspec :: { (Maybe String, Name L, Type L, [S]) }
 >       : STRING var_no_safety '::' truedtype               { let Loc l (StringTok (s,_)) = $1 in (Just s, $2, $4, [l,$3]) }
@@ -732,8 +1057,12 @@ Pragmas
 
 > activation :: { Maybe (Activation L) }
 >        : {- empty -}          { Nothing }
->        | '[' INT ']'          { let Loc l (IntTok (i,_)) = $2 in Just $ ActiveFrom  ($1 <^^> $3 <** [$1,l,$3])    (fromInteger i) }
->        | '[' '~' INT ']'      { let Loc l (IntTok (i,_)) = $3 in Just $ ActiveUntil ($1 <^^> $4 <** [$1,$2,l,$4]) (fromInteger i) }
+>        | requireactivation    { Just $1 }
+
+Only needed for use as an external parser
+> requireactivation :: { Activation L }
+>        : '[' INT ']'          { let Loc l (IntTok (i,_)) = $2 in ActiveFrom  ($1 <^^> $3 <** [$1,l,$3])    (fromInteger i) }
+>        | '[' '~' INT ']'      { let Loc l (IntTok (i,_)) = $3 in ActiveUntil ($1 <^^> $4 <** [$1,$2,l,$4]) (fromInteger i) }
 
 > ruleforall :: { (Maybe [RuleVar L],[S]) }
 >       : {- empty -}                           { (Nothing,[]) }
@@ -754,11 +1083,13 @@ Pragmas
 >   | {- empty -}                       { ([],[]) }
 
 > warndepr :: { (([Name L], String),[S]) }
->       : namevars STRING               { let Loc l (StringTok (s,_)) = $2 in ((fst $1,s),snd $1 ++ [l]) }
+>       : namevars STRING               { let { Loc l (StringTok (s,_)) = $2;
+>                                               (ns,ss,_) = $1
+>                                             } in ((ns,s),ss ++ [l]) }
 
-> namevars :: { ([Name L],[S]) }
->           : namevar                   { ([$1],[]) }
->           | namevar ',' namevars      { ($1 : fst $3, $2 : snd $3) }
+> namevars :: { ([Name L],[S],L) }
+>           : namevar                   { ([$1],[],ann $1) }
+>           | namevar ',' namevars      { let (ns,ss,l) = $3 in ($1 : ns, $2 : ss, ann $1 <++> l) }
 
 > namevar :: { Name L }
 >         : con                         { $1 }
@@ -942,9 +1273,12 @@ GADTs - require the GADTs extension enabled, but we handle that at the calling s
        : gadtlist1                 {% >> return $1 }
 
 > gadtlist :: { ([GadtDecl L],[S],Maybe L) }
->       : 'where' '{' gadtconstrs1 '}'                  {% return (fst $3, $1 : $2 : snd $3 ++ [$4], Just $ $1 <^^> $4) }
->       | 'where' open gadtconstrs1 close               {% return (fst $3, $1 : $2 : snd $3 ++ [$4], Just $ $1 <^^> $4) }
+>       : 'where' gadtconstrsblock                      { let (gs,ss,l) = $2 in (gs, $1 : ss, Just $ nIS $1 <++> l) }
 >       | {- empty -}                                   {% checkEnabled EmptyDataDecls >> return ([],[],Nothing) }
+
+> gadtconstrsblock :: { ([GadtDecl L],[S],L) }
+>       : '{' gadtconstrs1 '}'                  {% return (fst $2, $1 : snd $2 ++ [$3], $1 <^^> $3) }
+>       | open gadtconstrs1 close               {% return (fst $2, $1 : snd $2 ++ [$3], $1 <^^> $3) }
 
 > gadtconstrs1 :: { ([GadtDecl L],[S]) }
 >       : optsemis gadtconstrs optsemis         { (fst $2, reverse $1 ++ snd $2 ++ reverse $3)  }
@@ -968,14 +1302,20 @@ To allow the empty case we need the EmptyDataDecls extension.
 
 > constr :: { QualConDecl L }
 >       : forall context constr1        {% do { checkEnabled ExistentialQuantification ;
->                                                ctxt <- checkContext (Just $2) ;
+>                                                ctxt <- checkContext $2 ;
 >                                                let {(mtvs,ss,ml) = $1} ;
->                                                return $ QualConDecl (ml <?+> ann $3 <** ss) mtvs ctxt $3 } }
+>                                                return $ QualConDecl (ml <?+> ann $3 <** ss) mtvs (Just ctxt) $3 } }
 >       | forall constr1                 { let (mtvs, ss, ml) = $1 in QualConDecl (ml <?+> ann $2 <** ss) mtvs Nothing $2 }
 
 > forall :: { (Maybe [TyVarBind L], [S], Maybe L) }
->       : 'forall' ktyvars '.'          {% checkEnabled ExistentialQuantification >> return (Just (fst $2), [$1,$3], Just $ $1 <^^> $3) }
+>       : requireforall                 {% do { checkEnabled ExistentialQuantification ;
+>                                               let { (tvs,ss,l) = $1 };
+>                                               return (Just tvs, ss, Just l) } }
 >       | {- empty -}                   { (Nothing, [], Nothing) }
+
+Only needed for use as an external parser
+> requireforall :: { ([TyVarBind L], [S], L) }
+>       : 'forall' ktyvars '.'          {% return (fst $2, [$1,$3], $1 <^^> $3) }
 
 To avoid conflicts when introducing type operators, we need to parse record constructors
 as qcon and then check separately that they are truly unqualified.
@@ -983,9 +1323,9 @@ as qcon and then check separately that they are truly unqualified.
 > constr1 :: { ConDecl L }
 >       : scontype                      { let (n,ts,l) = $1 in ConDecl l n ts }
 >       | sbtype conop sbtype           { InfixConDecl ($1 <> $3) $1 $2 $3 }
->       | qcon '{' '}'                  {% do { c <- checkUnQual $1; return $ RecDecl (ann $1 <++> nIS $3 <** [$2,$3]) c [] } }
->       | qcon '{' fielddecls '}'       {% do { c <- checkUnQual $1;
->                                               return $ RecDecl (ann $1 <++> nIS $4 <** ($2:reverse (snd $3) ++ [$4])) c (reverse (fst $3)) } }
+>       | qcon fielddeclsblock          {% do { c <- checkUnQual $1;
+>                                               let { (rs, ss, l) = $2 };
+>                                               return $ RecDecl (ann $1 <++> l <** ss) c rs } }
 
 > scontype :: { (Name L, [BangType L], L) }
 >       : btype                         {% do { (c,ts) <- splitTyConApp $1;
@@ -1011,6 +1351,10 @@ as qcon and then check separately that they are truly unqualified.
 >       | '!' trueatype                     { BangedTy   (nIS $1 <++> ann $2 <** [$1]) $2 }
 >       | '{-# UNPACK' '#-}' '!' trueatype  { UnpackedTy (nIS $1 <++> ann $4 <** [$1,$2,$3]) $4 }
 
+> fielddeclsblock :: { ([FieldDecl L],[S],L) }
+>       : '{' '}'                  { ([], [$1,$2], nIS $1 <++> nIS $2) }
+>       | '{' fielddecls '}'       { (reverse (fst $2), $1:reverse (snd $2) ++ [$3], nIS $1 <++> nIS $3) }
+
 > fielddecls :: { ([FieldDecl L],[S]) }
 >       : fielddecls ',' fielddecl      { ($3 : fst $1, $2 : snd $1) }
 >       | fielddecl                     { ([$1],[]) }
@@ -1025,9 +1369,13 @@ as qcon and then check separately that they are truly unqualified.
 
 > deriving :: { Maybe (Deriving L) }
 >       : {- empty -}                   { Nothing }
->       | 'deriving' qtycls1            { let l = nIS $1 <++> ann $2 <** [$1] in Just $ Deriving l [IHead (ann $2) $2 []] }
->       | 'deriving' '('          ')'   { Just $ Deriving ($1 <^^> $3 <** [$1,$2,$3]) [] }
->       | 'deriving' '(' dclasses ')'   { Just $ Deriving ($1 <^^> $4 <** $1:$2: reverse (snd $3) ++ [$4]) (reverse (fst $3)) }
+>       | requirederiving               { Just $1 }
+
+Only needed for use as an external parser
+> requirederiving :: { Deriving L }
+>       : 'deriving' qtycls1            { let l = nIS $1 <++> ann $2 <** [$1] in Deriving l [IHead (ann $2) $2 []] }
+>       | 'deriving' '('          ')'   { Deriving ($1 <^^> $3 <** [$1,$2,$3]) [] }
+>       | 'deriving' '(' dclasses ')'   { Deriving ($1 <^^> $4 <** $1:$2: reverse (snd $3) ++ [$4]) (reverse (fst $3)) }
 
 > dclasses :: { ([InstHead L],[S]) }
 >       : types1                        {% checkDeriving (fst $1) >>= \ds -> return (ds, snd $1) }
@@ -1083,9 +1431,12 @@ TODO: Lots of stuff to pass around here.
 
 No implicit parameters in the where clause of a class declaration.
 > optcbody :: { (Maybe [ClassDecl L],[S],Maybe L) }
->       : 'where' '{'  cldecls '}'      {% checkClassBody (fst $3) >>= \vs -> return (Just vs, $1:$2: snd $3 ++ [$4], Just ($1 <^^> $4)) }
->       | 'where' open cldecls close    {% checkClassBody (fst $3) >>= \vs -> return (Just vs, $1:$2: snd $3 ++ [$4], Just ($1 <^^> $4)) }
+>       : 'where' cldeclsblock          { let (i, ss, l) = $2 in (Just i, $1:ss, Just (nIS $1 <++> l)) }
 >       | {- empty -}                   { (Nothing,[],Nothing) }
+
+> cldeclsblock :: { ([ClassDecl L],[S],L) }
+>       : '{' cldecls '}'               {% checkClassBody (fst $2) >>= \vs -> return (vs, $1: snd $2 ++ [$3], ($1 <^^> $3)) }
+>       | open cldecls close            {% checkClassBody (fst $2) >>= \vs -> return (vs, $1: snd $2 ++ [$3], ($1 <^^> $3)) }
 
 > cldecls :: { ([ClassDecl L],[S]) }
 >       : optsemis cldecls1 optsemis    {% checkRevClsDecls (fst $2) >>= \cs -> return (cs, reverse $1 ++ snd $2 ++ reverse $3) }
@@ -1115,9 +1466,12 @@ Associated types require the TypeFamilies extension.
 Instance declarations
 
 > optvaldefs :: { (Maybe [InstDecl L],[S],Maybe L) }
->       : 'where' '{'  valdefs '}'      {% checkInstBody (fst $3) >>= \vs -> return (Just vs, $1:$2: snd $3 ++ [$4], Just ($1 <^^> $4))  }
->       | 'where' open valdefs close    {% checkInstBody (fst $3) >>= \vs -> return (Just vs, $1:$2: snd $3 ++ [$4], Just ($1 <^^> $4)) }
+>       : 'where' valdefsblock          { let (i, ss, l) = $2 in (Just i, $1:ss, Just (nIS $1 <++> l)) }
 >       | {- empty -}                   { (Nothing, [], Nothing) }
+
+> valdefsblock :: { ([InstDecl L],[S],L) }
+>       : '{' valdefs '}'               {% checkInstBody (fst $2) >>= \vs -> return (vs, $1: snd $2 ++ [$3], ($1 <^^> $3)) }
+>       | open valdefs close            {% checkInstBody (fst $2) >>= \vs -> return (vs, $1: snd $2 ++ [$3], ($1 <^^> $3)) }
 
 > valdefs :: { ([InstDecl L],[S]) }
 >       : optsemis valdefs1 optsemis    {% checkRevInstDecls (fst $2) >>= \is -> return (is, reverse $1 ++ snd $2 ++ reverse $3) }
@@ -1257,8 +1611,8 @@ mdo blocks require the RecursiveDo extension enabled, but the lexer handles that
 >                                               let { (als, inf, ss) = $3 } ;
 >                                               return (LCase (nIS $1 <++> inf <** ($1:$2:ss)) als) } }
 >       | '-' fexp                      { NegApp (nIS $1 <++> ann $2 <** [$1]) $2 }
->       | 'do'  stmtlist                { let (sts, inf, ss) = $2 in Do   (nIS $1 <++> inf <** $1:ss) sts }
->       | 'mdo' stmtlist                { let (sts, inf, ss) = $2 in MDo  (nIS $1 <++> inf <** $1:ss) sts }
+>       | 'do'  stmtlist                { let (sts, ss, inf) = $2 in Do   (nIS $1 <++> inf <** $1:ss) sts }
+>       | 'mdo' stmtlist                { let (sts, ss, inf) = $2 in MDo  (nIS $1 <++> inf <** $1:ss) sts }
 >       | fexp                          { $1 }
 
 > exppragma :: { PExp L }
@@ -1347,13 +1701,8 @@ thing we need to look at here is the erpats that use no non-standard lexemes.
 >       | xml                           { $1 }
 
 Template Haskell - all this is enabled in the lexer.
->       | IDSPLICE                      { let Loc l (THIdEscape s) = $1 in SpliceExp (nIS l) $ IdSplice (nIS l) s }
->       | '$(' trueexp ')'              { SpliceExp  ($1 <^^> $3 <** [$1,$3]) $ ParenSplice (ann $2) $2 }
->       | '[|' trueexp '|]'             { BracketExp ($1 <^^> $3 <** [$1,$3]) $ ExpBracket  (ann $2) $2 }
->       | '[p|' exp0 '|]'               {% do { p <- checkPattern $2;
->                                               return $ BracketExp ($1 <^^> $3 <** [$1,$3]) $ PatBracket (ann p) p } }
->       | '[t|' truectype '|]'              { let l = $1 <^^> $3 <** [$1,$3] in BracketExp l $ TypeBracket l $2 }
->       | '[d|' open topdecls close '|]'    { let l = $1 <^^> $5 <** ($1:snd $3 ++ [$5]) in BracketExp l $ DeclBracket l (fst $3) }
+>       | splice                        { let (x, l) = $1 in SpliceExp l x }
+>       | bracket                       { let (x, ss) = $1 in BracketExp (head ss <^^> last ss <** ss) x }
 >       | VARQUOTE qvar                 { VarQuote (nIS $1 <++> ann $2 <** [$1]) $2 }
 >       | VARQUOTE qcon                 { VarQuote (nIS $1 <++> ann $2 <** [$1]) $2 }
 >       | TYPQUOTE tyvar                { TypQuote (nIS $1 <++> ann $2 <** [$1]) (UnQual (ann $2) $2) }
@@ -1380,6 +1729,21 @@ End Template Haskell
 >       : commas texp thashsectend      { let (mes, ss) = $3 in (replicate (length $1 - 1) Nothing ++ Just $2 : mes, ss ++ $1) }
 >       | commas texp '#)'              { (replicate (length $1 - 1) Nothing ++ [Just $2], $3 : $1) }
 >       | commas '#)'                   { (replicate (length $1) Nothing, $2 : $1) }
+
+> bracket :: { (Bracket L, [S]) }
+>       : '[|' trueexp '|]'             { (ExpBracket (ann $2) $2, [$1, $3]) }
+>       | '[p|' exp0 '|]'               {% do { p <- checkPattern $2;
+>                                               return (PatBracket (ann p) p, [$1, $3]) } }
+>       | '[t|' truectype '|]'              { let { ss = [$1,$3];
+>                                                   l = $1 <^^> $3 <** ss }
+>                                              in (TypeBracket l $2, ss) }
+>       | '[d|' open topdecls close '|]'    { let { ss = $1:snd $3 ++ [$5];
+>                                                   l = $1 <^^> $5 <** ss }
+>                                              in (DeclBracket l (fst $3), ss) }
+
+> splice :: { (Splice L, L)}
+>       : IDSPLICE                      { let Loc l (THIdEscape s) = $1 in (IdSplice (nIS l) s, nIS l) }
+>       | '$(' trueexp ')'              { (ParenSplice (ann $2) $2, $1 <^^> $3 <** [$1,$3])  }
 
 -----------------------------------------------------------------------------
 Harp Extensions
@@ -1493,29 +1857,29 @@ avoiding another shift/reduce-conflict.
 
 > list :: { L -> PExp L }
 >       : texp                          { \l -> List l [$1] }
->       | lexps                         { \l -> let (ps,ss) = $1 in List (l <** reverse ss) (reverse ps) }
+>       | lexps                         { \l -> let (ps,ss,_) = $1 in List (l <** reverse ss) (reverse ps) }
 >       | texp '..'                     { \l -> EnumFrom       (l <** [$2]) $1 }
 >       | texp ',' exp '..'             { \l -> EnumFromThen   (l <** [$2,$4]) $1 $3 }
 >       | texp '..' exp                 { \l -> EnumFromTo     (l <** [$2]) $1 $3 }
 >       | texp ',' exp '..' exp         { \l -> EnumFromThenTo (l <** [$2,$4]) $1 $3 $5 }
->       | texp '|' pqualstmts           { \l -> let (stss, ss) = $3 in ParComp (l <** ($2:ss)) $1 (reverse stss) }
+>       | texp '|' pqualstmts           { \l -> let (stss, ss, _) = $3 in ParComp (l <** ($2:ss)) $1 (reverse stss) }
 
-> lexps :: { ([PExp L],[S]) }
->       : lexps ',' texp                { let (es, ss) = $1 in ($3 : es, $2 : ss) }
->       | texp ',' texp                 { ([$3,$1], [$2]) }
+> lexps :: { ([PExp L],[S],L) }
+>       : lexps ',' texp                { let (es, ss, l) = $1 in ($3 : es, $2 : ss, l <++> ann $3) }
+>       | texp ',' texp                 { ([$3,$1], [$2], $1 <> $3) }
 
 -----------------------------------------------------------------------------
 List comprehensions
 
-> pqualstmts :: { ([[QualStmt L]],[S]) }
->       : pqualstmts '|' qualstmts      { let { (stss, ss1) = $1;
->                                               (sts, ss2) = $3 }
->                                          in (reverse sts : stss, ss1 ++ [$2] ++ reverse ss2)  }
->       | qualstmts                     { let (sts, ss) = $1 in ([reverse sts], reverse ss) }
+> pqualstmts :: { ([[QualStmt L]],[S],L) }
+>       : pqualstmts '|' qualstmts      { let { (stss, ss1, l1) = $1;
+>                                               (sts, ss2, l2) = $3 }
+>                                          in (reverse sts : stss, ss1 ++ [$2] ++ reverse ss2, l1 <++> l2)  }
+>       | qualstmts                     { let (sts, ss, l) = $1 in ([reverse sts], reverse ss, l) }
 
-> qualstmts :: { ([QualStmt L],[S]) }
->       : qualstmts ',' qualstmt        { let (sts, ss) = $1 in ($3 : sts, $2 : ss) }
->       | qualstmt                      { ([$1],[]) }
+> qualstmts :: { ([QualStmt L],[S],L) }
+>       : qualstmts ',' qualstmt        { let (sts, ss, l) = $1 in ($3 : sts, $2 : ss, l <++> ann $3) }
+>       | qualstmt                      { ([$1],[],ann $1) }
 
 > qualstmt :: { QualStmt L }
 >       : transformqual                 { $1 }
@@ -1596,9 +1960,9 @@ an expression.
 
 TODO: The points can't be added here, must be propagated!
 
-> stmtlist :: { ([Stmt L],L,[S]) }
->       : '{'  stmts '}'                { (fst $2, $1 <^^> $3, $1:snd $2 ++ [$3])  }
->       | open stmts close              { (fst $2, $1 <^^> $3, $1:snd $2 ++ [$3]) }
+> stmtlist :: { ([Stmt L],[S],L) }
+>       : '{'  stmts '}'                { (fst $2, $1:snd $2 ++ [$3], $1 <^^> $3)  }
+>       | open stmts close              { (fst $2, $1:snd $2 ++ [$3], $1 <^^> $3) }
 
 > stmts :: { ([Stmt L],[S]) }
 >       : stmt stmts1                       { ($1 : fst $2, snd $2) }
@@ -1614,7 +1978,7 @@ A let statement may bind implicit parameters.
 >       : 'let' binds                       { LetStmt (nIS $1 <++> ann $2 <** [$1]) $2 }
 >       | pat '<-' trueexp                  { Generator ($1 <> $3 <** [$2]) $1 $3 }
 >       | trueexp                           { Qualifier (ann $1) $1 }
->       | 'rec' stmtlist                    { let (stms,inf,ss) = $2 in RecStmt (nIS $1 <++> inf <** $1:ss) stms }
+>       | 'rec' stmtlist                    { let (stms,ss,inf) = $2 in RecStmt (nIS $1 <++> inf <** $1:ss) stms }
 
 -----------------------------------------------------------------------------
 Record Field Update/Construction
@@ -1632,6 +1996,10 @@ Puns and wild cards need the respective extensions enabled.
 
 -----------------------------------------------------------------------------
 Implicit parameter bindings - need the ImplicitParameter extension enabled, but the lexer handles that.
+
+> ipbindsblock :: { ([IPBind L], L) }
+>       : '{' ipbinds '}'              { (fst $2, ($1 <^^> $3 <** snd $2)) }
+>       | open ipbinds close           { (fst $2, ($1 <^^> $3 <** snd $2)) }
 
 > ipbinds :: { ([IPBind L],[S]) }
 >       : optsemis ipbinds1 optsemis    { (reverse (fst $2), reverse $1 ++ snd $2 ++ reverse $3) }
@@ -1839,6 +2207,43 @@ Miscellaneous (mostly renamings)
 > tyvarsym :: { Name L }
 > tyvarsym : VARSYM              { let Loc l (VarSym x) = $1 in Symbol (nIS l) x }
 
+Exported as parsers:
+
+> qnamevars :: { ([QName L],[S],L) }
+>           : qnamevar                  { ([$1],[],ann $1) }
+>           | qnamevar ',' qnamevars    { let (qns, ss, l) = $3 in ($1 : qns, $2 : ss, ann $1 <++> l) }
+
+> qnamevar :: { QName L }
+>          : qvar                       { $1 }
+>          | qcon                       { $1 }
+
+> topdeclsblock :: { ([Decl L],[S],L) }
+>               : '{'  optsemis topdecls '}'         { let (ds, ss) = $3 in (ds, $1 : reverse $2 ++ ss ++ [$4], $1 <^^> $4) }
+>               | open optsemis topdecls close       { let (ds, ss) = $3 in (ds, $1 : reverse $2 ++ ss ++ [$4], $1 <^^> $4) }
+
+> impdeclsblock :: { ([ImportDecl L],[S],L) }
+>               : '{'  optsemis impdecls optsemis '}'         { let (ids, ss) = $3 in (ids, $1 : reverse $2 ++ ss ++ reverse $4 ++ [$5], $1 <^^> $5) }
+>               | open optsemis impdecls optsemis close       { let (ids, ss) = $3 in (ids, $1 : reverse $2 ++ ss ++ reverse $4 ++ [$5], $1 <^^> $5) }
+
+> checklexps :: { ([Exp L],[S],L) }
+>            : lexps                        {% let (es, ss, l) = $1 in fmap (\es' -> (es', ss, l)) $ mapM checkExpr es }
+
+> checklpats :: { ([Pat L],[S],L) }
+>            : lexps                        {% let (es, ss, l) = $1 in fmap (\ps -> (ps, ss, l)) $ mapM checkPattern es }
+
+Exported as partial parsers:
+
+> moduletopname :: { (([ModulePragma L], [S], L), Maybe (ModuleName L)) }
+>               : toppragmas 'module' modid     { ($1, Just $3) }
+>               | toppragmas {- empty -}        { ($1, Nothing) }
+
+> moduletophead :: { (([ModulePragma L], [S], L), Maybe (ModuleHead L)) }
+>               : toppragmas optmodulehead      { ($1, $2) }
+
+> moduletopimps :: { (([ModulePragma L], [S], L), Maybe (ModuleHead L), Maybe ([ImportDecl L],[S],L)) }
+>               : toppragmas optmodulehead impdeclsblock      { ($1, $2, Just $3) }
+>               | toppragmas optmodulehead {- empty -}        { ($1, $2, Nothing) }
+
 -----------------------------------------------------------------------------
 
 > {
@@ -1856,113 +2261,5 @@ Miscellaneous (mostly renamings)
 
 > nIS = noInfoSpan
 > iS = infoSpan
-
-
-> -- | Parse of a string, which should contain a complete Haskell module.
-> parseModule :: String -> ParseResult (Module SrcSpanInfo)
-> parseModule = simpleParse mparseModule
-
-> -- | Parse of a string containing a complete Haskell module, using an explicit mode.
-> parseModuleWithMode :: ParseMode -> String -> ParseResult (Module SrcSpanInfo)
-> parseModuleWithMode = modeParse mparseModule
-
-> -- | Parse of a string containing a complete Haskell module, using an explicit mode, retaining comments.
-> parseModuleWithComments :: ParseMode -> String -> ParseResult (Module SrcSpanInfo, [Comment])
-> parseModuleWithComments = commentParse mparseModule
-
-> -- | Parse of a string containing a Haskell expression.
-> parseExp :: String -> ParseResult (Exp SrcSpanInfo)
-> parseExp = simpleParse mparseExp
-
-> -- | Parse of a string containing a Haskell expression, using an explicit mode.
-> parseExpWithMode :: ParseMode -> String -> ParseResult (Exp SrcSpanInfo)
-> parseExpWithMode = modeParse mparseExp
-
-> -- | Parse of a string containing a complete Haskell module, using an explicit mode, retaining comments.
-> parseExpWithComments :: ParseMode -> String -> ParseResult (Exp SrcSpanInfo, [Comment])
-> parseExpWithComments = commentParse mparseExp
-
-> -- | Parse of a string containing a Haskell pattern.
-> parsePat :: String -> ParseResult (Pat SrcSpanInfo)
-> parsePat = simpleParse mparsePat
-
-> -- | Parse of a string containing a Haskell pattern, using an explicit mode.
-> parsePatWithMode :: ParseMode -> String -> ParseResult (Pat SrcSpanInfo)
-> parsePatWithMode = modeParse mparsePat
-
-> -- | Parse of a string containing a complete Haskell module, using an explicit mode, retaining comments.
-> parsePatWithComments :: ParseMode -> String -> ParseResult (Pat SrcSpanInfo, [Comment])
-> parsePatWithComments = commentParse mparsePat
-
-> -- | Parse of a string containing a Haskell top-level declaration.
-> parseDecl :: String -> ParseResult (Decl SrcSpanInfo)
-> parseDecl = simpleParse mparseDecl
-
-> -- | Parse of a string containing a Haskell top-level declaration, using an explicit mode.
-> parseDeclWithMode :: ParseMode -> String -> ParseResult (Decl SrcSpanInfo)
-> parseDeclWithMode = modeParse mparseDecl
-
-> -- | Parse of a string containing a complete Haskell module, using an explicit mode, retaining comments.
-> parseDeclWithComments :: ParseMode -> String -> ParseResult (Decl SrcSpanInfo, [Comment])
-> parseDeclWithComments = commentParse mparseDecl
-
-> -- | Parse of a string containing a Haskell type.
-> parseType :: String -> ParseResult (Type SrcSpanInfo)
-> parseType = runParser mparseType
-
-> -- | Parse of a string containing a Haskell type, using an explicit mode.
-> parseTypeWithMode :: ParseMode -> String -> ParseResult (Type SrcSpanInfo)
-> parseTypeWithMode mode = runParserWithMode mode mparseType
-
-> -- | Parse of a string containing a complete Haskell module, using an explicit mode, retaining comments.
-> parseTypeWithComments :: ParseMode -> String -> ParseResult (Type SrcSpanInfo, [Comment])
-> parseTypeWithComments mode str = runParserWithModeComments mode mparseType str
-
-> -- | Parse of a string containing a Haskell statement.
-> parseStmt :: String -> ParseResult (Stmt SrcSpanInfo)
-> parseStmt = runParser mparseStmt
-
-> -- | Parse of a string containing a Haskell type, using an explicit mode.
-> parseStmtWithMode :: ParseMode -> String -> ParseResult (Stmt SrcSpanInfo)
-> parseStmtWithMode mode = runParserWithMode mode mparseStmt
-
-> -- | Parse of a string containing a complete Haskell module, using an explicit mode, retaining comments.
-> parseStmtWithComments :: ParseMode -> String -> ParseResult (Stmt SrcSpanInfo, [Comment])
-> parseStmtWithComments mode str = runParserWithModeComments mode mparseStmt str
-
-
-> simpleParse :: AppFixity a => P (a L) -> String -> ParseResult (a L)
-> simpleParse p = applyFixities preludeFixities <=< runParser p
-
-> modeParse :: AppFixity a => P (a L) -> ParseMode -> String -> ParseResult (a L)
-> modeParse p mode = applyFixities' (fixities mode) <=< runParserWithMode mode p
-
-> commentParse :: AppFixity a => P (a L) -> ParseMode -> String -> ParseResult (a L, [Comment])
-> commentParse p mode str = do (ast, cs) <- runParserWithModeComments mode p str
->                              ast' <- applyFixities' (fixities mode) ast
->                              return (ast', cs)
-
-> -- | Partial parse of a string starting with a series of top-level option pragmas.
-> getTopPragmas :: String -> ParseResult [ModulePragma SrcSpanInfo]
-> getTopPragmas = runParser (mfindOptPragmas >>= \(ps,_,_) -> return ps)
-
-> -- | Parse of a string, which should contain a complete Haskell module.
-> parseModules :: String -> ParseResult [Module SrcSpanInfo]
-> parseModules = mapM (applyFixities preludeFixities) <=< runParser mparseModules
-
-> -- | Parse of a string containing a complete Haskell module, using an explicit mode.
-> parseModulesWithMode :: ParseMode -> String -> ParseResult [Module SrcSpanInfo]
-> parseModulesWithMode mode = mapM (applyFixities' (fixities mode)) <=< runParserWithMode mode mparseModules
-
-> -- | Parse of a string containing a complete Haskell module, using an explicit mode, retaining comments.
-> parseModulesWithComments :: ParseMode -> String -> ParseResult ([Module SrcSpanInfo], [Comment])
-> parseModulesWithComments mode str = do (ast,cs) <- runParserWithModeComments mode mparseModules str
->                                        ast' <- mapM (applyFixities' (fixities mode)) ast
->                                        return (ast', cs)
->
-> applyFixities' :: (AppFixity a) => Maybe [Fixity] -> a L -> ParseResult (a L)
-> applyFixities' Nothing ast = return ast
-> applyFixities' (Just fixs) ast = applyFixities fixs ast
->
 
 > }

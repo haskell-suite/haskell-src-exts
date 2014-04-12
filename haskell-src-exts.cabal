@@ -152,7 +152,8 @@ Library
                         Language.Haskell.Exts.Annotated.Fixity,
                         Language.Haskell.Exts.Annotated.Build,
                         Language.Haskell.Exts.Annotated.ExactPrint,
-                        Language.Haskell.Exts.Annotated.Simplify
+                        Language.Haskell.Exts.Annotated.Simplify,
+                        Language.Haskell.Exts.Annotated.Parser
 
   Other-modules:        Language.Haskell.Exts.ExtScheme,
                         
@@ -169,7 +170,8 @@ Source-Repository head
 
 Test-Suite test
   type:                exitcode-stdio-1.0
-  main-is:             Test/Runner.hs
+  hs-source-dirs:      Test
+  main-is:             Runner.hs
   GHC-Options:         -threaded
   Default-language:    Haskell2010
   Build-depends:       base < 5,

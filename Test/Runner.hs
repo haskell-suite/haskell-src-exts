@@ -18,7 +18,7 @@ import System.Directory
 import System.Environment (getArgs)
 import System.Exit (exitFailure)
 import System.FilePath
-
+import UnitTests
 
 main :: IO ()
 main = do
@@ -27,7 +27,9 @@ main = do
         sequence
             [ parserTests files
             , printerTests files
-            , return extProperties ]
+            , return extProperties
+            , return unitTests
+            ]
 
 
 -- | Where all the tests are to be found

@@ -1,3 +1,4 @@
+{-# LANGUAGE FlexibleInstances #-}
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Language.Haskell.Exts.Annotated.Simplify

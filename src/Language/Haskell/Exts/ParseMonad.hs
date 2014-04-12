@@ -15,8 +15,10 @@
 -----------------------------------------------------------------------------
 
 module Language.Haskell.Exts.ParseMonad(
+        -- * Generic Parsing
+        Parseable(..),
         -- * Parsing
-        P, ParseResult(..), atSrcLoc, LexContext(..),
+        P(..), ParseStatus(..), ParseResult(..), atSrcLoc, LexContext(..),
         ParseMode(..), defaultParseMode, fromParseResult,
         runParserWithMode, runParserWithModeComments, runParser,
         getSrcLoc, pushCurrentContext, popContext,
@@ -24,7 +26,7 @@ module Language.Haskell.Exts.ParseMonad(
         -- * Lexing
         Lex(runL), getInput, discard, lexNewline, lexTab, lexWhile,
         alternative, checkBOL, setBOL, startToken, getOffside,
-        pushContextL, popContextL, getExtensionsL, pushComment, 
+        pushContextL, popContextL, getExtensionsL, pushComment,
         getSrcLocL, setSrcLineL, ignoreLinePragmasL, setLineFilenameL,
         -- * Harp/Hsx
         ExtContext(..),
@@ -33,7 +35,7 @@ module Language.Haskell.Exts.ParseMonad(
         getModuleName
     ) where
 
-import Language.Haskell.Exts.SrcLoc(SrcLoc(..))
+import Language.Haskell.Exts.SrcLoc (SrcLoc(..), noLoc)
 import Language.Haskell.Exts.Fixity (Fixity, preludeFixities)
 import Language.Haskell.Exts.Comments
 import Language.Haskell.Exts.Extension -- (Extension, impliesExts, haskell2010)
@@ -42,6 +44,25 @@ import Data.List ( intersperse )
 import Control.Applicative
 import Control.Monad (when, liftM, ap)
 import Data.Monoid
+
+-- | Class providing function for parsing at many different types.
+--
+--   Note that for convenience of implementation, the default methods have
+--   definitions equivalent to 'undefined'.  The minimal definition is all of
+--   the visible methods.
+class Parseable ast where
+  -- | Parse a string with default mode.
+  parse :: String -> ParseResult ast
+  parse = parseWithMode defaultParseMode
+  -- | Parse a string with an explicit 'ParseMode'.
+  parseWithMode :: ParseMode -> String -> ParseResult ast
+  parseWithMode mode = runParserWithMode mode . parser $ fixities mode
+  -- | Parse a string with an explicit 'ParseMode', returning all comments along
+  --   with the AST.
+  parseWithComments :: ParseMode -> String -> ParseResult (ast, [Comment])
+  parseWithComments mode = runParserWithModeComments mode . parser $ fixities mode
+  -- | Internal parser, used to provide default definitions for the others.
+  parser :: Maybe [Fixity] -> P ast
 
 -- | The result of a parse.
 data ParseResult a
@@ -69,6 +90,7 @@ instance Applicative ParseResult where
 
 instance Monad ParseResult where
   return = ParseOk
+  fail = ParseFailed noLoc
   ParseOk x           >>= f = f x
   ParseFailed loc msg >>= _ = ParseFailed loc msg
 
@@ -183,7 +205,7 @@ runParser :: P a -> String -> ParseResult a
 runParser = runParserWithMode defaultParseMode
 
 runParserWithModeComments :: ParseMode -> P a -> String -> ParseResult (a, [Comment])
-runParserWithModeComments mode (P m) s = 
+runParserWithModeComments mode (P m) s =
   case m s 0 1 start ([],[],(False,False),[]) (toInternalParseMode mode) of
     Ok (_,_,_,cs) a -> ParseOk (a, reverse cs)
     Failed loc msg -> ParseFailed loc msg
@@ -195,6 +217,9 @@ runParserWithModeComments mode (P m) s =
   --        allExts mode@(ParseMode {extensions = es}) = mode { extensions = impliesExts es }
 
     --      allExts mode = let imode = to
+
+instance Functor P where
+    fmap f x = x >>= return . f
 
 instance Monad P where
     return a = P $ \_i _x _y _l s _m -> Ok s a
@@ -452,7 +477,7 @@ ignoreLinePragmasL = Lex $ \cont -> P $ \r x y loc s m ->
 setLineFilenameL :: String -> Lex a ()
 setLineFilenameL name = Lex $ \cont -> P $ \r x y loc s m ->
         runP (cont ()) r x y loc s (m {iParseFilename = name})
-        
+
 -- Comments
 
 pushComment :: Comment -> Lex a ()
