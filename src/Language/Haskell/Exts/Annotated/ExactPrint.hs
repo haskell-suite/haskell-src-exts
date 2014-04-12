@@ -1710,14 +1710,6 @@ instance ExactP Pat where
             printString "%>"
          _ -> errorEP "ExactP: Pat: PXPatTag is given wrong number of srcInfoPoints"
     PXRPats  l rps  -> bracketList ("<[",",","]>") (srcInfoPoints l) rps
-    PExplTypeArg l qn t ->
-        case srcInfoPoints l of
-         [a,b] -> do
-            exactP qn
-            printStringAt (pos a) "{|"
-            exactPC t
-            printStringAt (pos b) "|}"
-         _ -> errorEP "ExactP: Pat: PExplTypeArg is given wrong number of srcInfoPoints"
     PQuasiQuote l name qt   -> printString $ "[$" ++ name ++ "|" ++ qt ++ "]"
     PBangPat l p    -> printString "!" >> exactPC p
 

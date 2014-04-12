@@ -716,7 +716,6 @@ data Pat l
     | PXPcdata l String                     -- ^ XML PCDATA pattern
     | PXPatTag l (Pat l)                    -- ^ XML embedded pattern
     | PXRPats  l [RPat l]                   -- ^ XML regular list pattern
-    | PExplTypeArg l (QName l) (Type l)     -- ^ Explicit generics style type argument e.g. @f {| Int |} x = ...@
     | PQuasiQuote l String String           -- ^ quasi quote pattern: @[$/name/| /string/ |]@
     | PBangPat l (Pat l)                    -- ^ strict (bang) pattern: @f !x = ...@
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable)
@@ -1270,7 +1269,6 @@ instance Functor Pat where
       PXPcdata l s      -> PXPcdata (f l) s
       PXPatTag l p      -> PXPatTag (f l) (fmap f p)
       PXRPats  l rps    -> PXRPats  (f l) (map (fmap f) rps)
-      PExplTypeArg l qn t   -> PExplTypeArg (f l) (fmap f qn) (fmap f t)
       PQuasiQuote l sn st   -> PQuasiQuote (f l) sn st
       PBangPat l p          -> PBangPat (f l) (fmap f p)
 
@@ -1932,7 +1930,6 @@ instance Annotated Pat where
       PXPcdata l s      -> l
       PXPatTag l p      -> l
       PXRPats  l rps    -> l
-      PExplTypeArg l qn t   -> l
       PQuasiQuote l sn st   -> l
       PBangPat l p          -> l
     amap f p = case p of
@@ -1957,7 +1954,6 @@ instance Annotated Pat where
       PXPcdata l s      -> PXPcdata (f l) s
       PXPatTag l p      -> PXPatTag (f l) p
       PXRPats  l rps    -> PXRPats  (f l) rps
-      PExplTypeArg l qn t   -> PExplTypeArg (f l) qn t
       PQuasiQuote l sn st   -> PQuasiQuote (f l) sn st
       PBangPat l p          -> PBangPat (f l) p
 

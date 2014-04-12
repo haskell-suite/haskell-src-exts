@@ -137,8 +137,6 @@ Symbols
 >       ')'     { Loc $$ RightParen }
 >       '(#'    { Loc $$ LeftHashParen }
 >       '#)'    { Loc $$ RightHashParen }
->       '{|'    { Loc $$ LeftCurlyBar }
->       '|}'    { Loc $$ RightCurlyBar }
 >       ';'     { Loc $$ SemiColon }
 >       '{'     { Loc $$ LeftCurly }
 >       '}'     { Loc $$ RightCurly }      -- 30
@@ -1306,14 +1304,11 @@ Non-linear name binding, @:, requires RegularPatterns, but the lexer handles tha
 
 Note: The first two alternatives of aexp1 are not necessarily record
 updates: they could be labeled constructions.
-Generics-style explicit type arguments need the Generics extension, but
-we check that in the lexer.
 
 > aexp1 :: { PExp L }
 >       : aexp1 '{' '}'                 {% liftM (amap (const (ann $1 <++> nIS $3 <** [$2,$3]))) $ mkRecConstrOrUpdate $1 [] }
 >       | aexp1 '{' fbinds '}'          {% liftM (amap (const (ann $1 <++> nIS $4 <** ($2:reverse (snd $3) ++ [$4]))))
 >                                               $ mkRecConstrOrUpdate $1 (reverse (fst $3)) }
->       | qvar '{|' truetype '|}'       { ExplTypeArg (ann $1 <++> nIS $4 <** [$2,$4]) $1 $3 }
 >       | aexp2                         { $1 }
 
 According to the Report, the left section (e op) is legal iff (e op x)

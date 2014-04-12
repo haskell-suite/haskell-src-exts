@@ -643,7 +643,6 @@ data Pat
     | PXPcdata String               -- ^ XML PCDATA pattern
     | PXPatTag Pat                  -- ^ XML embedded pattern
     | PXRPats [RPat]                -- ^ XML regular list pattern
-    | PExplTypeArg QName Type       -- ^ Explicit generics style type argument e.g. @f {| Int |} x = ...@
     | PQuasiQuote String String     -- ^ quasi quote patter: @[$/name/| /string/ |]@
     | PBangPat Pat                  -- ^ strict (bang) pattern: @f !x = ...@
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
