@@ -197,6 +197,13 @@ runParserWithModeComments mode (P m) s =
 
     --      allExts mode = let imode = to
 
+instance Functor P where
+  fmap = liftM
+
+instance Applicative P where
+  pure = return
+  (<*>) = ap
+
 instance Monad P where
     return a = P $ \_i _x _y _l s _m -> Ok s a
     P m >>= k = P $ \i x y l s mode ->
