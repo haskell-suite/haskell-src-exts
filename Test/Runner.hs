@@ -49,13 +49,29 @@ parserTests files = testGroup "Parser tests" <$> do
     return [check (x `elem` failing) (examplesDir </> x) | x <- files, not $ "." `isPrefixOf` x]
 
 
+readUTF8File :: FilePath -> IO String
+readUTF8File fp = openFile fp ReadMode >>= \h -> do
+        hSetEncoding h utf8
+        hGetContents h
+
+
+parseUTF8File :: FilePath -> IO (ParseResult (Module SrcSpanInfo))
+parseUTF8File fp =
+    let mode = (defaultParseMode { parseFilename = fp })
+    in readUTF8File fp >>= (return . parseFileContentsWithMode mode)
+
+
+parseUTF8FileWithComments :: ParseMode -> FilePath -> IO (ParseResult (Module SrcSpanInfo, [Comment]))
+parseUTF8FileWithComments p fp = readUTF8File fp >>= (return . parseFileContentsWithComments p)
+
+
 check :: Bool -> FilePath -> TestTree
-check expected file = testCase file $ do
-    res <- parseFile file
+check expectedToFail file = testCase file $ do
+    res <- parseUTF8File file
     case res of
-        ParseOk x | expected -> assertFailure $ "Unexpected pass for " ++ file
+        ParseOk x | expectedToFail -> assertFailure $ "Unexpected pass for " ++ file
                   | otherwise -> return ()
-        err | expected -> return ()
+        err | expectedToFail -> return ()
             | otherwise -> assertFailure $ "Failure when parsing " ++ show file ++ "\n" ++ show err
 
 
@@ -71,9 +87,9 @@ printerTests files = testGroup "Exact printer tests" <$> do
 
 
 roundTrip :: Bool -> FilePath -> TestTree
-roundTrip expected file = testCase file $ do
-    fc <- readFile file
-    pr <- parseFileWithComments (defaultParseMode { parseFilename = file }) file
+roundTrip expectedToFail file = testCase file $ do
+    fc <- readUTF8File file
+    pr <- parseUTF8FileWithComments (defaultParseMode { parseFilename = file }) file
     case pr of
      ParseOk (ast,cs) -> do
       let res      = exactPrint ast cs
@@ -81,10 +97,10 @@ roundTrip expected file = testCase file $ do
                         $ zip (map (reverse . dropWhile isSpace . reverse) $ lines fc)
                               (map (reverse . dropWhile isSpace . reverse) $ lines res)
       case xs of
-       [] | expected  -> assertFailure $ "Unexpected pass for " ++ file
+       [] | expectedToFail  -> assertFailure $ "Unexpected pass for " ++ file
           | otherwise -> return ()
        (lfc, lres):_
-          | expected  -> return ()
+          | expectedToFail  -> return ()
           | otherwise -> assertFailure $ unlines
               [ "Result of print does not match input when printing " ++ show file
               , "First unmatching lines are (line length):"
