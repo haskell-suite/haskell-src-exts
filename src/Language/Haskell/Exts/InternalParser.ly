@@ -402,8 +402,6 @@ The Export List
 >       |  qtyconorcls '(' ')'                  { EThingWith (ann $1 <++> nIS $3 <** [$2,$3])    $1 [] }
 >       |  qtyconorcls '(' cnames ')'           { EThingWith (ann $1 <++> nIS $4 <** ($2:reverse (snd $3) ++ [$4])) $1 (reverse (fst $3)) }
 >       |  'module' modid                       { EModuleContents (nIS $1 <++> ann $2 <** [$1]) $2 }
->       |  'type'   export                      {% do { checkEnabled ExplicitNamespaces;
->                                                       return (EType (nIS $1) $2)} }
 
 -----------------------------------------------------------------------------
 Import Declarations
@@ -463,8 +461,6 @@ Requires the PackageImports extension enabled.
 >       |  tyconorcls '(' '..' ')'              { IThingAll  (ann $1 <++> nIS $4 <** [$2,$3,$4]) $1 }
 >       |  tyconorcls '(' ')'                   { IThingWith (ann $1 <++> nIS $3 <** [$2,$3])    $1 [] }
 >       |  tyconorcls '(' cnames ')'            { IThingWith (ann $1 <++> nIS $4 <** ($2:reverse (snd $3) ++ [$4])) $1 (reverse (fst $3)) }
->       |  'type'   importspec                  {% do { checkEnabled ExplicitNamespaces;
->                                                       return (IType (nIS $1) $2)} }
 
 > cnames :: { ([CName L],[S]) }
 >       :  cnames ',' cname                     { ($3 : fst $1, $2 : snd $1) }

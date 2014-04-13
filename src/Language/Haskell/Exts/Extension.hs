@@ -456,8 +456,6 @@ data KnownExtension =
   -- foreign function interface.
   | CApiFFI
 
-  | ExplicitNamespaces
-
   | DataKinds
 
   | PolyKinds

@@ -161,9 +161,6 @@ data CName
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 -- | A complete Haskell source module.
---
--- @(Bool, ExportSpec)@ has True when the export has the @type@ keyword
--- (@-XExplicitNamespaces@)
 data Module = Module SrcLoc ModuleName [ModulePragma] (Maybe WarningText)
                         (Maybe [ExportSpec]) [ImportDecl] [Decl]
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
@@ -182,7 +179,6 @@ data ExportSpec
                                     --   a datatype exported with some of its constructors.
      | EModuleContents ModuleName   -- ^ @module M@:
                                     --   re-export a module.
-     | EType ExportSpec             -- ^ @type x@: enabled under -XExplicitNamespaces
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 -- | An import declaration.
@@ -212,7 +208,6 @@ data ImportSpec
      | IThingWith Name [CName]  -- ^ @T(C_1,...,C_n)@:
                                 --   a class imported with some of its methods, or
                                 --   a datatype imported with some of its constructors.
-     | IType ImportSpec         -- ^ @type x@: allowed under @-XExplicitNamespaces@
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 -- | Associativity of an operator.

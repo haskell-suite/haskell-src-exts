@@ -171,7 +171,6 @@ sExportSpec es = case es of
     EThingAll _ qn      -> S.EThingAll (sQName qn)
     EThingWith _ qn cns -> S.EThingWith (sQName qn) (map sCName cns)
     EModuleContents _ mn    -> S.EModuleContents (sModuleName mn)
-    EType _ mn          -> S.EType (sExportSpec mn)
 
 sImportDecl :: SrcInfo loc => ImportDecl loc -> S.ImportDecl
 sImportDecl (ImportDecl l mn qu src mpkg as misl) =
@@ -186,7 +185,6 @@ sImportSpec is = case is of
     IAbs _ n            -> S.IAbs (sName n)
     IThingAll _ n       -> S.IThingAll (sName n)
     IThingWith _ n cns  -> S.IThingWith (sName n) (map sCName cns)
-    IType _ i           -> S.IType (sImportSpec i)
 
 sAssoc :: Assoc l -> S.Assoc
 sAssoc a = case a of

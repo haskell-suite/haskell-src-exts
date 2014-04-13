@@ -365,7 +365,6 @@ instance ExactP ImportSpec where
     IThingWith l n cns    ->
         let k = length (srcInfoPoints l)
          in exactP n >> printInterleaved (zip (srcInfoPoints l) $ "(":replicate (k-2) "," ++ [")"]) cns
-    IType l n   -> printString "type" >> exactPC n
 
 instance ExactP ImportDecl where
   exactP (ImportDecl l mn qf src mpkg mas mispecs) = do

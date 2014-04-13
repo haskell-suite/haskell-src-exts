@@ -303,7 +303,6 @@ instance Pretty ExportSpec where
         pretty (EThingWith name nameList) =
                 pretty name <> (parenList . map pretty $ nameList)
         pretty (EModuleContents m)        = text "module" <+> pretty m
-        pretty (EType e)                  = text "type" <+> pretty e
 
 instance Pretty ImportDecl where
         pretty (ImportDecl pos m qual src mbPkg mbName mbSpecs) =
@@ -326,7 +325,6 @@ instance Pretty ImportSpec where
         pretty (IThingAll name)           = pretty name <> text "(..)"
         pretty (IThingWith name nameList) =
                 pretty name <> (parenList . map pretty $ nameList)
-        pretty (IType i)                  = text "type" <+> pretty i
 
 -------------------------  Declarations ------------------------------
 instance Pretty Decl where
