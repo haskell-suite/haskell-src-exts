@@ -1,3 +1,19 @@
+** 1.15.x
+
+1.14.0.1 --> 1.15.0
+===============
+
+* Add support for extensions:
+  - MultiWayIf
+  - LambdaCase
+  - DataKinds
+* Remove support for old (deprecated) Generics
+* Derive GHC's Generic instances for datatypes
+* Derive some missing Data and Typeable instances
+* Multiple bug fixes
+* Add missing Functor and Applicative instances for monads
+* Remove support for GHCs older than 7.4
+
 ** 1.14.x
 
 1.14.0 --> 1.14.0.1
