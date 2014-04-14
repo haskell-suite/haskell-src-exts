@@ -716,7 +716,23 @@ instance Pretty Type where
 --        prettyPrec _ (TyPred asst) = pretty asst
         prettyPrec _ (TyInfix a op b) = myFsep [pretty a, ppQNameInfix op, pretty b]
         prettyPrec _ (TyKind t k) = parens (myFsep [pretty t, text "::", pretty k])
+        prettyPrec _ (TyPromoted p) = pretty p
 
+instance Pretty Promoted where
+  pretty p =
+    case p of
+      PromotedInteger n -> integer n
+      PromotedString s -> doubleQuotes $ text s
+      PromotedCon hasQuote qn ->
+        addQuote hasQuote $ pretty qn
+      PromotedList hasQuote list ->
+        addQuote hasQuote $ bracketList . punctuate comma . map pretty $ list
+      PromotedTuple list ->
+        addQuote True $ parenList $ map pretty list
+      PromotedUnit -> addQuote True $ text "()"
+    where
+      addQuote True doc = char '\'' <> doc
+      addQuote False doc = doc
 
 instance Pretty TyVarBind where
         pretty (KindedVar var kind) = parens $ myFsep [pretty var, text "::", pretty kind]
@@ -1689,3 +1705,4 @@ instance SrcInfo loc => Pretty (P.PType loc) where
         prettyPrec _ (P.TyPred _ asst) = pretty asst
         prettyPrec _ (P.TyInfix _ a op b) = myFsep [pretty a, ppQNameInfix (sQName op), pretty b]
         prettyPrec _ (P.TyKind _ t k) = parens (myFsep [pretty t, text "::", pretty k])
+        prettyPrec _ (P.TyPromoted _ p) = pretty $ sPromoted p
