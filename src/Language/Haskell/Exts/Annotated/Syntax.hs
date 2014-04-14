@@ -1377,6 +1377,7 @@ instance Annotated Exp where
         RightArrHighApp l e1 e2 -> RightArrHighApp (f l) e1 e2
 
         LCase l alts -> LCase (f l) alts
+        MultiIf l alts -> MultiIf (f l) alts
 
 
 instance Annotated XName where
