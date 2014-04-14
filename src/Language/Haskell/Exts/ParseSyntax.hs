@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveFunctor #-}
 {-# OPTIONS_HADDOCK hide #-}
 module Language.Haskell.Exts.ParseSyntax where
 
@@ -96,13 +97,13 @@ data PExp l
 
 -- LambdaCase
     | LCase l [Alt l]                       -- ^ @\case@ /alts/
-   deriving (Eq,Show)
+   deriving (Eq,Show,Functor)
 
 data PFieldUpdate l
     = FieldUpdate l (QName l) (PExp l)
     | FieldPun l (Name l)
     | FieldWildcard l
-  deriving (Eq,Show)
+  deriving (Eq,Show,Functor)
 
 data ParseXAttr l = XAttr l (XName l) (PExp l)
   deriving (Eq,Show)
@@ -170,6 +171,7 @@ instance Annotated PExp where
         RightArrHighApp l e1 e2 -> l
 
         LCase l alts -> l
+        MultiIf l alts -> l
 
     amap f e = case e of
         Var l qn                -> Var   (f l) qn
@@ -233,76 +235,7 @@ instance Annotated PExp where
         RightArrHighApp l e1 e2 -> RightArrHighApp (f l) e1 e2
 
         LCase l alts -> LCase (f l) alts
-
-instance Functor PExp where
-      fmap f e = case e of
-          Var l qn                -> Var   (f l) (fmap f qn)
-          IPVar l ipn             -> IPVar (f l) (fmap f ipn)
-          Con l qn                -> Con   (f l) (fmap f qn)
-          Lit l lit               -> Lit   (f l) (fmap f lit)
-          InfixApp l e1 qop e2    -> InfixApp (f l) (fmap f e1) (fmap f qop) (fmap f e2)
-          App l e1 e2             -> App (f l) (fmap f e1) (fmap f e2)
-          NegApp l e              -> NegApp (f l) (fmap f e)
-          Lambda l ps e           -> Lambda (f l) (map (fmap f) ps) (fmap f e)
-          Let l bs e              -> Let (f l) (fmap f bs) (fmap f e)
-          If l ec et ee           -> If (f l) (fmap f ec) (fmap f et) (fmap f ee)
-          Case l e alts           -> Case (f l) (fmap f e) (map (fmap f) alts)
-          Do l ss                 -> Do (f l) (map (fmap f) ss)
-          MDo l ss                -> MDo (f l) (map (fmap f) ss)
-          TupleSection l bx mes   -> TupleSection (f l) bx (map (fmap (fmap f)) mes)
-          List l es               -> List (f l) (map (fmap f) es)
-          Paren l e               -> Paren (f l) (fmap f e)
-          RecConstr l qn fups     -> RecConstr (f l) (fmap f qn) (map (fmap f) fups)
-          RecUpdate l e  fups     -> RecUpdate (f l) (fmap f e)  (map (fmap f) fups)
-          EnumFrom l e            -> EnumFrom (f l) (fmap f e)
-          EnumFromTo l ef et      -> EnumFromTo (f l) (fmap f ef) (fmap f et)
-          EnumFromThen l ef et    -> EnumFromThen (f l) (fmap f ef) (fmap f et)
-          EnumFromThenTo l ef eth eto -> EnumFromThenTo (f l) (fmap f ef) (fmap f eth) (fmap f eto)
-          ParComp  l e qsss       -> ParComp  (f l) (fmap f e) (map (map (fmap f)) qsss)
-          ExpTypeSig l e t        -> ExpTypeSig (f l) (fmap f e) (fmap f t)
-
-          AsPat l n e             -> AsPat (f l) (fmap f n) (fmap f e)
-          WildCard l              -> WildCard (f l)
-          IrrPat l e              -> IrrPat (f l) (fmap f e)
-          PostOp l e op           -> PostOp (f l) (fmap f e) (fmap f op)
-          PreOp l op e            -> PreOp (f l) (fmap f op) (fmap f e)
-          ViewPat l e1 e2         -> ViewPat (f l) (fmap f e1) (fmap f e2)
-          SeqRP l es              -> SeqRP (f l) (map (fmap f) es)
-          GuardRP l e ss          -> GuardRP (f l) (fmap f e) (map (fmap f) ss)
-          EitherRP l e1 e2        -> EitherRP (f l) (fmap f e1) (fmap f e2)
-          CAsRP l n e             -> CAsRP (f l) (fmap f n) (fmap f e)
-          BangPat l e             -> BangPat (f l) (fmap f e)
-
-          VarQuote l qn           -> VarQuote (f l) (fmap f qn)
-          TypQuote l qn           -> TypQuote (f l) (fmap f qn)
-          BracketExp l br         -> BracketExp (f l) (fmap f br)
-          SpliceExp l sp          -> SpliceExp (f l) (fmap f sp)
-          QuasiQuote l sn se      -> QuasiQuote (f l) sn se
-
-          XTag  l xn xas me es    -> XTag  (f l) (fmap f xn) (map (fmap f) xas) (fmap (fmap f) me) (map (fmap f) es)
-          XETag l xn xas me       -> XETag (f l) (fmap f xn) (map (fmap f) xas) (fmap (fmap f) me)
-          XPcdata l s             -> XPcdata (f l) s
-          XExpTag l e             -> XExpTag (f l) (fmap f e)
-          XChildTag l es          -> XChildTag (f l) (map (fmap f) es)
-          XRPats l es             -> XRPats (f l) (map (fmap f) es)
-
-          CorePragma l s e        -> CorePragma (f l) s (fmap f e)
-          SCCPragma  l s e        -> SCCPragma  (f l) s (fmap f e)
-          GenPragma  l s n12 n34 e -> GenPragma  (f l) s n12 n34 (fmap f e)
-
-          Proc            l p e   -> Proc            (f l) (fmap f p) (fmap f e)
-          LeftArrApp      l e1 e2 -> LeftArrApp      (f l) (fmap f e1) (fmap f e2)
-          RightArrApp     l e1 e2 -> RightArrApp     (f l) (fmap f e1) (fmap f e2)
-          LeftArrHighApp  l e1 e2 -> LeftArrHighApp  (f l) (fmap f e1) (fmap f e2)
-          RightArrHighApp l e1 e2 -> RightArrHighApp (f l) (fmap f e1) (fmap f e2)
-
-          LCase l alts -> LCase (f l) (map (fmap f) alts)
-
-
-instance Functor PFieldUpdate where
-    fmap f (FieldUpdate l qn e) = FieldUpdate (f l) (fmap f qn) (fmap f e)
-    fmap f (FieldPun l n)       = FieldPun (f l) (fmap f n)
-    fmap f (FieldWildcard l)    = FieldWildcard (f l)
+        MultiIf l alts -> MultiIf (f l) alts
 
 instance Annotated PFieldUpdate where
     ann (FieldUpdate l qn e) = l
