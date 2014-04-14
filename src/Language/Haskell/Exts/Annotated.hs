@@ -127,6 +127,7 @@ readExtensions str = case getTopPragmas str of
             case classifyLanguage e of
               UnknownLanguage _ -> Right $ classifyExtension e
               lang -> Left lang
+        readExt Symbol {} = error "readExt: Symbol"
 
         extractLang = extractLang' Nothing []
 
