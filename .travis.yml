@@ -13,4 +13,4 @@ before_install:
 install:
  - cabal-1.18 update
  - cabal-1.18 sdist
- - cabal-1.18 install --enable-tests "$(cabal-1.18 info . | awk '{print $2 ".tar.gz";exit}')"
+ - cabal-1.18 install --enable-tests "dist/$(cabal-1.18 info . | awk '{print $2 ".tar.gz";exit}')"
