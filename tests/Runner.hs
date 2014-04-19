@@ -30,7 +30,7 @@ main = do
 
 -- | Where all the tests are to be found
 examplesDir :: FilePath
-examplesDir = "Test" </> "examples"
+examplesDir = "tests" </> "examples"
 
 
 getParserFailing, getPrinterFailing :: IO [FilePath]

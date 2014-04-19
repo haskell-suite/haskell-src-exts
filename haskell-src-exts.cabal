@@ -35,12 +35,12 @@ Cabal-Version:          >= 1.10
 
 Extra-Source-Files:
                         CHANGELOG
-                        Test/examples/*.hs
-                        Test/failing.txt
-                        Test/printFail.txt
-                        Test/Runner.hs
-                        Test/UnitTests.hs
-                        Test/Extensions.hs
+                        tests/examples/*.hs
+                        tests/failing.txt
+                        tests/printFail.txt
+                        tests/Runner.hs
+                        tests/UnitTests.hs
+                        tests/Extensions.hs
 
 Library
   Default-language:     Haskell98
@@ -83,7 +83,7 @@ Source-Repository head
 
 Test-Suite test
   type:                exitcode-stdio-1.0
-  hs-source-dirs:      Test
+  hs-source-dirs:      tests
   main-is:             Runner.hs
   GHC-Options:         -threaded
   Default-language:    Haskell2010
