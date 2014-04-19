@@ -113,6 +113,7 @@ infixApp = InfixApp
 appFun :: [l] -> Exp l -> [Exp l] -> Exp l
 appFun _ f [] = f
 appFun (l:ls) f (a:as) = appFun ls (app l f a) as
+appFun [] f (_:_) = error "haskell-src-exts: Build: appFun: too few annotations supplied"
 
 -- | A constructor pattern, with argument patterns.
 pApp :: l -> Name l -> [Pat l] -> Pat l
