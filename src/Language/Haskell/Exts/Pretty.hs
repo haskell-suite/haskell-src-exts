@@ -986,6 +986,7 @@ instance Pretty Pat where
                 myFsep $ text "<[" : map pretty ps ++ [text "%>"]
         -- BangPatterns
         prettyPrec _ (PBangPat pat) = text "!" <> prettyPrec 2 pat
+        prettyPrec _ (PQuasiQuote n qt) = text ("[$" ++ n ++ "|" ++ qt ++ "|]")
 
 instance Pretty PXAttr where
         pretty (PXAttr n p) =
