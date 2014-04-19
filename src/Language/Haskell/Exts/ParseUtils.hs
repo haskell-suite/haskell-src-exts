@@ -948,6 +948,7 @@ checkPageModule xml (os,ss,inf) = do
     case xml of
         S.XTag  l xn ats mattr cs -> return $ XmlPage (inf<++>l<**(srcInfoPoints l ++ ss)) (ModuleName l mod) os xn ats mattr cs
         S.XETag l xn ats mattr    -> return $ XmlPage (inf<++>l<**(srcInfoPoints l ++ ss)) (ModuleName l mod) os xn ats mattr []
+        _ -> fail "Unexpected expression; tag is expected"
 
 checkHybridModule :: PExp L -> Module L -> S -> S -> P (Module L)
 checkHybridModule xml (Module inf mh os is ds) s1 s2 = do
@@ -957,6 +958,8 @@ checkHybridModule xml (Module inf mh os is ds) s1 s2 = do
                                                 mh os is ds xn ats mattr cs
         S.XETag l xn ats mattr    -> return $ XmlHybrid (inf<++>l<**(s1 : srcInfoPoints inf ++ s2 : srcInfoPoints l))
                                                 mh os is ds xn ats mattr []
+        _ -> fail "Unexpected expression; tag is expected"
+checkHybridModule _ _ _ _ = fail "Hybrid module expected"
 
 ---------------------------------------
 -- Handle dash-identifiers
