@@ -30,7 +30,7 @@ examplesDir = "tests" </> "examples"
 getTestFiles :: MonadIO m => FilePath -> m [FilePath]
 getTestFiles dir = liftIO $ find (return True) (extension ==? ".hs" ||? extension ==? ".lhs") dir
 
-parserTests :: [FilePath] -> TestTree
+parserTests :: [FilePath] -> TestTree -- {{{
 parserTests sources = testGroup "Parser tests" $ do
   -- list monad
   file <- sources
@@ -44,8 +44,9 @@ parserTests sources = testGroup "Parser tests" $ do
           file
       writeBinaryFile out $ show ast ++ "\n"
   return $ goldenVsFile (takeBaseName file) golden out run
+-- }}}
 
-exactPrinterTests :: [FilePath] -> TestTree
+exactPrinterTests :: [FilePath] -> TestTree -- {{{
 exactPrinterTests sources = testGroup "Exact printer tests" $ do
   -- list monad
   file <- sources
@@ -73,8 +74,9 @@ exactPrinterTests sources = testGroup "Exact printer tests" $ do
                   else printed
       writeBinaryFile out $ result ++ "\n"
   return $ goldenVsFile (takeBaseName file) golden out run
+-- }}}
 
-prettyPrinterTests :: [FilePath] -> TestTree
+prettyPrinterTests :: [FilePath] -> TestTree -- {{{
 prettyPrinterTests sources = testGroup "Pretty printer tests" $ do
   -- list monad
   file <- sources
@@ -96,7 +98,9 @@ prettyPrinterTests sources = testGroup "Pretty printer tests" $ do
             ParseOk ast -> prettyPrint ast
       writeBinaryFile out $ result ++ "\n"
   return $ goldenVsFile (takeBaseName file) golden out run
+-- }}}
 
+-- UTF8 utils {{{
 readUTF8File :: FilePath -> IO String
 readUTF8File fp = openFile fp ReadMode >>= \h -> do
         hSetEncoding h utf8
@@ -104,3 +108,4 @@ readUTF8File fp = openFile fp ReadMode >>= \h -> do
 
 parseUTF8FileWithComments :: ParseMode -> FilePath -> IO (ParseResult (Module SrcSpanInfo, [Comment]))
 parseUTF8FileWithComments p fp = readUTF8File fp >>= (return . parseFileContentsWithComments p)
+-- }}}
