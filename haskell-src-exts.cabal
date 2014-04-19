@@ -42,6 +42,8 @@ Extra-Source-Files:
                         tests/examples/*.lhs.exactprinter.golden
                         tests/examples/*.hs.prettyprinter.golden
                         tests/examples/*.lhs.prettyprinter.golden
+                        tests/examples/*.hs.prettyparser.golden
+                        tests/examples/*.lhs.prettyparser.golden
                         tests/Runner.hs
                         tests/Extensions.hs
 

@@ -1,0 +1,10 @@
+Roundtrip test failed
+
+AST 1:
+
+Module (SrcLoc {srcFilename = "", srcLine = -1, srcColumn = -1}) (ModuleName "Main") [] Nothing (Just [EVar (UnQual (Ident "main"))]) [] [TypeSig (SrcLoc {srcFilename = "", srcLine = -1, srcColumn = -1}) [Ident "happyThen"] (TyForall Nothing [] (TyApp (TyCon (UnQual (Ident "P"))) (TyVar (Ident "a"))))]
+
+AST 2:
+
+Module (SrcLoc {srcFilename = "", srcLine = -1, srcColumn = -1}) (ModuleName "Main") [] Nothing (Just [EVar (UnQual (Ident "main"))]) [] [TypeSig (SrcLoc {srcFilename = "", srcLine = -1, srcColumn = -1}) [Ident "happyThen"] (TyApp (TyCon (UnQual (Ident "P"))) (TyVar (Ident "a")))]
+
