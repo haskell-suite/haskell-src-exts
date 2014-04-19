@@ -1,5 +1,12 @@
 ** 1.15.x
 
+1.15.0 --> 1.15.0.1
+===============
+
+* Eliminate inexhaustive patterns (and consequent bugs)
+* The test suite for 1.15.0 wouldn't build due to a missing file in the source
+  distribution. Fixed.
+
 1.14.0.1 --> 1.15.0
 ===============
 
