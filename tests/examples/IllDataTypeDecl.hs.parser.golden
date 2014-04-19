@@ -1,0 +1,1 @@
+ParseFailed (SrcLoc {srcFilename = "tests/examples/IllDataTypeDecl.hs", srcLine = 5, srcColumn = 1}) "Illegal data/newtype declaration"

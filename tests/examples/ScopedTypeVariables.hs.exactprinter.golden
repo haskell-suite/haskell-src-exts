@@ -1,0 +1,1 @@
+ParseFailed (SrcLoc {srcFilename = "tests/examples/ScopedTypeVariables.hs", srcLine = 5, srcColumn = 15}) "ScopedTypeVariables is not enabled"

@@ -1,0 +1,1 @@
+ParseFailed (SrcLoc {srcFilename = "tests/examples/ForallInInstance.hs", srcLine = 5, srcColumn = 1}) "Illegal instance declaration"

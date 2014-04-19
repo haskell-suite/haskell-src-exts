@@ -1,0 +1,1 @@
+ParseFailed (SrcLoc {srcFilename = "tests/examples/GadtDeriving.hs", srcLine = 6, srcColumn = 1}) "GADTs is not enabled"

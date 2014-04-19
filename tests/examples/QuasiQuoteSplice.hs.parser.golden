@@ -1,0 +1,1 @@
+ParseFailed (SrcLoc {srcFilename = "tests/examples/QuasiQuoteSplice.hs", srcLine = 8, srcColumn = 42}) "Parse error: $("

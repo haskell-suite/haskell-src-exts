@@ -1,0 +1,1 @@
+ParseFailed (SrcLoc {srcFilename = "tests/examples/QuasiQuoteToplevel.hs", srcLine = 4, srcColumn = 1}) "Parse error: ;"

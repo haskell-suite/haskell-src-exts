@@ -1,0 +1,1 @@
+ParseFailed (SrcLoc {srcFilename = "tests/examples/CStyleLinePragmas.hs", srcLine = 1, srcColumn = 1}) "Parse error: #"

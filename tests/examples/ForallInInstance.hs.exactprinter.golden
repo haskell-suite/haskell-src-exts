@@ -1,0 +1,1 @@
+ParseFailed (SrcLoc {srcFilename = "tests/examples/ForallInInstance.hs", srcLine = 4, srcColumn = 30}) "TypeOperators is not enabled"

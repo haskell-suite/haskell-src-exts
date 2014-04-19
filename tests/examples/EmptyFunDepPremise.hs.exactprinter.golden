@@ -1,0 +1,1 @@
+ParseFailed (SrcLoc {srcFilename = "tests/examples/EmptyFunDepPremise.hs", srcLine = 4, srcColumn = 17}) "FunctionalDependencies is not enabled"

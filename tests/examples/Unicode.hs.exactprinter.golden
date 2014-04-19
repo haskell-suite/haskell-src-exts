@@ -1,0 +1,1 @@
+ParseFailed (SrcLoc {srcFilename = "tests/examples/Unicode.hs", srcLine = 18, srcColumn = 1}) "TypeOperators is not enabled"

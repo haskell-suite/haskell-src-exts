@@ -1,0 +1,1 @@
+ParseFailed (SrcLoc {srcFilename = "tests/examples/ArityMismatch.hs", srcLine = 3, srcColumn = 1}) "arity mismatch for 'foo'"

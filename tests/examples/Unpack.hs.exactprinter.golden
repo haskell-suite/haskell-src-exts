@@ -1,0 +1,1 @@
+ParseFailed (SrcLoc {srcFilename = "tests/examples/Unpack.hs", srcLine = 4, srcColumn = 21}) "Parse error: {-# UNPACK"

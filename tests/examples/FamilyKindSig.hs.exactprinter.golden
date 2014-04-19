@@ -1,0 +1,1 @@
+ParseFailed (SrcLoc {srcFilename = "tests/examples/FamilyKindSig.hs", srcLine = 4, srcColumn = 31}) "Parse error: *"

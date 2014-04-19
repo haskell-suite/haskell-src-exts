@@ -1,0 +1,1 @@
+ParseFailed (SrcLoc {srcFilename = "tests/examples/FFIExtensions.hs", srcLine = 5, srcColumn = 4}) "Parse error: \"sleep\""

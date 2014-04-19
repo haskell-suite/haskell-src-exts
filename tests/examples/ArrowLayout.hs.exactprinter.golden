@@ -1,0 +1,1 @@
+ParseFailed (SrcLoc {srcFilename = "tests/examples/ArrowLayout.hs", srcLine = 4, srcColumn = 15}) "Parse error: ->"

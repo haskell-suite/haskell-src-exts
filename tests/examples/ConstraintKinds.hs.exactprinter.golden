@@ -1,0 +1,1 @@
+ParseFailed (SrcLoc {srcFilename = "tests/examples/ConstraintKinds.hs", srcLine = 6, srcColumn = 36}) "TypeFamilies is not enabled"

@@ -1,0 +1,1 @@
+ParseFailed (SrcLoc {srcFilename = "tests/examples/NonDecreasing.hs", srcLine = 8, srcColumn = 3}) "Parse error: Last statement in a do-block must be an expression"

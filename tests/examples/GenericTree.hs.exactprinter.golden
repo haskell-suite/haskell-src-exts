@@ -1,0 +1,1 @@
+ParseFailed (SrcLoc {srcFilename = "tests/examples/GenericTree.hs", srcLine = 6, srcColumn = 65}) "Parse error: =>"
