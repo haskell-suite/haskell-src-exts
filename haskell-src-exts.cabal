@@ -35,6 +35,8 @@ Cabal-Version:          >= 1.10
 Extra-Source-Files:
                         CHANGELOG
                         tests/examples/*.hs
+                        tests/examples/*.hs.parser.golden
+                        tests/examples/*.hs.exactprinter.golden
                         tests/Runner.hs
                         tests/UnitTests.hs
                         tests/Extensions.hs
