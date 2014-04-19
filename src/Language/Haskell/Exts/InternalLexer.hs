@@ -524,6 +524,7 @@ lexPCDATA = do
                 case x of
                  XPCDATA p -> return $ XPCDATA $ '\n':p
                  EOF -> return EOF
+                 _ -> fail $ "lexPCDATA: unexpected token: " ++ show x
             '<':_ -> return $ XPCDATA ""
             _ -> do let pcd = takeWhile (\c -> not $ elem c "<\n") s
                         l = length pcd
@@ -532,6 +533,7 @@ lexPCDATA = do
                     case x of
                      XPCDATA pcd' -> return $ XPCDATA $ pcd ++ pcd'
                      EOF -> return EOF
+                     _ -> fail $ "lexPCDATA: unexpected token: " ++ show x
 
 
 lexCodeTagCtxt :: Lex a Token
@@ -969,6 +971,7 @@ lexConIdOrQual qual = do
                 case conid of
                  ConId con -> return $ ConId $ con ++ "#"
                  QConId (q,con) -> return $ QConId (q,con ++ "#")
+                 _ -> fail $ "lexConIdOrQual: unexpected token: " ++ show conid
           _ ->  return conid -- not a qualified thing
 
 lexCharacter :: Lex a Token
@@ -1296,5 +1299,11 @@ showToken t = case t of
   KW_Interruptible -> "interruptible"
   KW_StdCall    -> "stdcall"
   KW_CCall      -> "ccall"
+  XChildTagOpen -> "<%>"
+  KW_CPlusPlus  -> "cplusplus"
+  KW_DotNet     -> "dotnet"
+  KW_Jvm        -> "jvm"
+  KW_Js         -> "js"
+  KW_CApi       -> "capi"
 
   EOF           -> "EOF"
