@@ -33,6 +33,7 @@ Build-Type:             Custom
 Cabal-Version:          >= 1.10
 
 Extra-Source-Files:
+                        README.md
                         CHANGELOG
                         tests/examples/*.hs
                         tests/examples/*.lhs
