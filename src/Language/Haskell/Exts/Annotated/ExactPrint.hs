@@ -149,6 +149,7 @@ printInterleaved sistrs asts = printSeq $
                (map (pos . ann &&& exactP) asts)
 
 printInterleaved' sistrs (a:asts) = exactPC a >> printInterleaved sistrs asts
+printInterleaved' _ _ = internalError
 
 printStreams :: [(Pos, EP ())] -> [(Pos, EP ())] -> EP ()
 printStreams [] ys = printSeq ys
@@ -170,6 +171,7 @@ bracketList :: (Annotated ast, ExactP ast) => (String, String, String) -> [SrcSp
 bracketList (a,b,c) poss asts = printInterleaved (pList poss (a,b,c)) asts
 
 pList (p:ps) (a,b,c) = (p,a) : pList' ps (b,c)
+pList _ _ = internalError
 pList' [] _ = []
 pList' [p] (_,c) = [(p,c)]
 pList' (p:ps) (b,c) = (p, b) : pList' ps (b,c)
@@ -186,6 +188,7 @@ layoutList poss asts = printStreams
         (map (pos . ann &&& exactP) asts)
 
 lList (p:ps) = (if isNullSpan p then (p,"") else (p,"{")) : lList' ps
+lList _ = internalError
 lList' [] = []
 lList' [p] = [if isNullSpan p then (p,"") else (p,"}")]
 lList' (p:ps) = (if isNullSpan p then (p,"") else (p,";")) : lList' ps
@@ -797,6 +800,7 @@ printWarndeprs ps ((ns,str):nsts) = printWd ps ns str nsts
         printWd (p:ps) []  str nsts = printStringAt p (show str) >> printWarndeprs ps nsts
         printWd ps     [n] str nsts = exactPC n >> printWd ps [] str nsts
         printWd (p:ps) (n:ns) str nsts = exactPC n >> printStringAt p "," >> printWd ps ns str nsts
+        printWd _ _ _ _ = internalError
 
 
 sepFunBinds :: [Decl SrcSpanInfo] -> [Decl SrcSpanInfo]
@@ -1002,6 +1006,7 @@ instance ExactP Asst where
             exactP t1
             printStringAt (pos a) "~"
             exactPC t2
+         _ -> internalError
 
 instance ExactP Deriving where
   exactP (Deriving l ihs) =
@@ -1050,6 +1055,7 @@ instance ExactP InstDecl where
             exactPC t1
             printStringAt (pos b) "="
             exactPC t2
+         _ -> internalError
     InsData   l dn t constrs mder -> do
         exactP dn
         exactPC t
@@ -1205,6 +1211,7 @@ instance ExactP Exp where
           a:pts -> do
             printString "if"
             layoutList pts alts
+          _ -> internalError
     Case l e alts   ->
         case srcInfoPoints l of
          a:b:pts -> do
@@ -1315,6 +1322,7 @@ instance ExactP Exp where
          _ -> errorEP "ExactP: Exp: ParComp is given wrong number of srcInfoPoints"
       where pairUp [] = []
             pairUp ((a:as):xs) = ("|", a) : zip (repeat ",") as ++ pairUp xs
+            pairUp _ = internalError
 
     ExpTypeSig l e t    ->
         case srcInfoPoints l of
@@ -1580,6 +1588,7 @@ instance ExactP IfAlt where
             exactPC e1
             printStringAt (pos b) "->"
             exactPC e2
+        _ -> internalError
 
 instance ExactP Match where
   exactP (Match l n ps rhs mbinds) = do
@@ -1863,3 +1872,13 @@ instance ExactP IPBind where
         printStringAt (pos a) "="
         exactPC e
      _ -> errorEP "ExactP: IPBind is given wrong number of srcInfoPoints"
+
+-- Hopefully, this will never fire.
+-- If it does, hopefully by that time https://github.com/sol/rewrite-with-location
+-- will be implemented.
+-- If not, then removing all calls to internalError should give a better
+-- idea where the error comes from.
+-- So far, it's necessary to eliminate non-exhaustive patterns warnings.
+-- We don't want to turn them off, as we want unhandled AST nodes to be
+-- reported.
+internalError = error "haskell-src-exts: ExactPrint: internal error (non-exhaustive pattern)"
