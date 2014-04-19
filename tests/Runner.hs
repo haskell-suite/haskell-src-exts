@@ -42,7 +42,7 @@ parserTests sources = testGroup "Parser tests" $ do
         parseUTF8FileWithComments
           (defaultParseMode { parseFilename = file })
           file
-      writeBinaryFile out $ show ast
+      writeBinaryFile out $ show ast ++ "\n"
   return $ goldenVsFile (takeBaseName file) golden out run
 
 exactPrinterTests :: [FilePath] -> TestTree
@@ -71,7 +71,7 @@ exactPrinterTests sources = testGroup "Exact printer tests" $ do
                 if printed == contents
                   then "Match"
                   else printed
-      writeBinaryFile out result
+      writeBinaryFile out $ result ++ "\n"
   return $ goldenVsFile (takeBaseName file) golden out run
 
 readUTF8File :: FilePath -> IO String
