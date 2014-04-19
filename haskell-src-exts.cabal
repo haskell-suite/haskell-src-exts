@@ -87,10 +87,14 @@ Test-Suite test
   GHC-Options:         -threaded
   Default-language:    Haskell2010
   Build-depends:       base < 5,
+                       mtl,
+                       containers,
+                       filemanip,
                        haskell-src-exts,
                        smallcheck >= 1.0,
                        tasty >= 0.3,
                        tasty-smallcheck,
                        tasty-hunit,
+                       tasty-golden,
                        filepath,
                        directory
