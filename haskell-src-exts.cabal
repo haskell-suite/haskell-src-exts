@@ -81,6 +81,7 @@ Library
                         Language.Haskell.Exts.ParseUtils,
                         Language.Haskell.Exts.InternalParser
   Hs-source-dirs:       src
+  Ghc-options:          -fwarn-incomplete-patterns
 
 Source-Repository head
         Type:           git
