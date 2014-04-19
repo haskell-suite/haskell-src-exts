@@ -106,7 +106,7 @@ data PFieldUpdate l
   deriving (Eq,Show,Functor)
 
 data ParseXAttr l = XAttr l (XName l) (PExp l)
-  deriving (Eq,Show)
+  deriving (Eq,Show,Functor)
 
 instance Annotated PExp where
     ann e = case e of
@@ -245,9 +245,6 @@ instance Annotated PFieldUpdate where
     amap f (FieldPun l n)       = FieldPun (f l) n
     amap f (FieldWildcard l)    = FieldWildcard (f l)
 
-instance Functor ParseXAttr where
-    fmap f (XAttr l xn e) = XAttr (f l) (fmap f xn) (fmap f e)
-
 instance Annotated ParseXAttr where
     ann (XAttr l _ _) = l
     amap f (XAttr l xn e) = XAttr (f l) xn e
@@ -266,13 +263,7 @@ data PContext l
     | CxTuple  l [PAsst l]
     | CxParen  l (PContext l)
     | CxEmpty  l
- deriving (Eq, Show)
-
-instance Functor PContext where
-  fmap f (CxSingle l asst) = CxSingle (f l) (fmap f asst)
-  fmap f (CxTuple l assts) = CxTuple (f l) (map (fmap f) assts)
-  fmap f (CxParen l ctxt)  = CxParen (f l) (fmap f ctxt)
-  fmap f (CxEmpty l)       = CxEmpty (f l)
+ deriving (Eq, Show, Functor)
 
 instance Annotated PContext where
   ann (CxSingle l asst ) = l
@@ -300,22 +291,7 @@ data PType l
      | TyInfix l (PType l) (QName l) (PType l)  -- ^ infix type constructor
      | TyKind  l (PType l) (Kind l)             -- ^ type with explicit kind signature
      | TyPromoted l (S.Promoted l)              -- ^ promoted data type
-  deriving (Eq, Show)
-
-instance Functor PType where
-    fmap f t = case t of
-      TyForall l mtvs mcx t         -> TyForall (f l) (fmap (map (fmap f)) mtvs) (fmap (fmap f) mcx) (fmap f t)
-      TyFun   l t1 t2               -> TyFun (f l) (fmap f t1) (fmap f t2)
-      TyTuple l b ts                -> TyTuple (f l) b (map (fmap f) ts)
-      TyList  l t                   -> TyList (f l) (fmap f t)
-      TyApp   l t1 t2               -> TyApp (f l) (fmap f t1) (fmap f t2)
-      TyVar   l n                   -> TyVar (f l) (fmap f n)
-      TyCon   l qn                  -> TyCon (f l) (fmap f qn)
-      TyParen l t                   -> TyParen (f l) (fmap f t)
-      TyPred  l asst                -> TyPred (f l) (fmap f asst)
-      TyInfix l ta qn tb            -> TyInfix (f l) (fmap f ta) (fmap f qn) (fmap f tb)
-      TyKind  l t k                 -> TyKind (f l) (fmap f t) (fmap f k)
-      TyPromoted l   p              -> TyPromoted (f l)   (fmap f p)
+  deriving (Eq, Show, Functor)
 
 instance Annotated PType where
     ann t = case t of
@@ -348,14 +324,7 @@ data PAsst l
     | InfixA l (PType l) (QName l) (PType l)
     | IParam l (IPName l) (PType l)
     | EqualP l (PType l)  (PType l)
-  deriving (Eq, Show)
-
-instance Functor PAsst where
-    fmap f asst = case asst of
-        ClassA l qn ts      -> ClassA (f l) (fmap f qn) (map (fmap f) ts)
-        InfixA l ta qn tb   -> InfixA (f l) (fmap f ta) (fmap f qn) (fmap f tb)
-        IParam l ipn t      -> IParam (f l) (fmap f ipn) (fmap f t)
-        EqualP l t1 t2      -> EqualP (f l) (fmap f t1) (fmap f t2)
+  deriving (Eq, Show, Functor)
 
 instance Annotated PAsst where
     ann asst = case asst of
