@@ -1,0 +1,6 @@
+{-# LANGUAGE GADTs #-}
+module Main (main) where
+ 
+data Foo where
+        Foo :: Int -> Foo
+    deriving (Eq, Ord, Typeable)

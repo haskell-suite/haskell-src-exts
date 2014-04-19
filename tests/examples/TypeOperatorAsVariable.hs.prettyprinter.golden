@@ -1,0 +1,6 @@
+{-# LANGUAGE TypeOperators #-}
+module Main (main) where
+ 
+type T (~>) = ()
+ 
+type Foo = ()

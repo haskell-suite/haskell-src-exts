@@ -1,0 +1,13 @@
+module Main (main) where
+ 
+{-# SPECIALISE [1] x :: Integer -> Integer -> Integer,
+                 Integer -> Int -> Integer, Int -> Int -> Int #-}
+ 
+x :: (Num a, Integral b) => a -> b -> a
+x = undefined
+ 
+{-# SPECIALISE INLINE [999] y :: Integer -> Integer -> Integer,
+                 Integer -> Int -> Integer, Int -> Int -> Int #-}
+ 
+y :: (Num a, Integral b) => a -> b -> a
+y = undefined

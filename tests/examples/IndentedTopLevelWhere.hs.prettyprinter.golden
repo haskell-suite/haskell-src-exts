@@ -1,0 +1,1 @@
+ParseFailed (SrcLoc {srcFilename = "tests/examples/IndentedTopLevelWhere.hs", srcLine = 8, srcColumn = 1}) "Parse error: virtual }"

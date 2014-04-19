@@ -1,0 +1,6 @@
+module Main (main) where
+ 
+instance Traversable Tree
+ 
+x :: Int
+x = 1

@@ -1,0 +1,5 @@
+module Main (main) where
+ 
+instance (Eq h) => Eq h
+ 
+instance (Eq h, Eq h) => Eq h

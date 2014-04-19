@@ -1,0 +1,423 @@
+{-# OPTIONS -w  #-}
+{-# LANGUAGE PatternGuards #-}
+module Rules
+       (RuleBase, emptyRuleBase, mkRuleBase, extendRuleBaseList,
+        unionRuleBase, pprRuleBase, ruleCheckProgram, mkSpecInfo,
+        extendSpecInfo, addSpecInfo, addIdSpecialisations, rulesOfBinds,
+        getRules, pprRulesForUser, lookupRule, mkLocalRule, roughTopNames)
+       where
+import CoreSyn
+import OccurAnal (occurAnalyseExpr)
+import CoreFVs
+       (exprFreeVars, exprsFreeVars, bindFreeVars, rulesFreeVars)
+import CoreUtils (tcEqExprX, exprType)
+import PprCore (pprRules)
+import Type (Type, TvSubstEnv)
+import Coercion (coercionKind)
+import TcType (tcSplitTyConApp_maybe)
+import CoreTidy (tidyRules)
+import Id
+import IdInfo (SpecInfo(SpecInfo))
+import Var (Var)
+import VarEnv
+import VarSet
+import Name (Name, NamedThing(..))
+import NameEnv
+import Unify (ruleMatchTyX, MatchEnv(..))
+import BasicTypes (Activation)
+import StaticFlags (opt_PprStyle_Debug)
+import Outputable
+import FastString
+import Maybes
+import OrdList
+import Bag
+import Util
+import Data.List
+ 
+mkLocalRule ::
+            RuleName ->
+              Activation ->
+                Name -> [CoreBndr] -> [CoreExpr] -> CoreExpr -> CoreRule
+mkLocalRule name act fn bndrs args rhs
+  = Rule{ru_name = name, ru_fn = fn, ru_act = act, ru_bndrs = bndrs,
+         ru_args = args, ru_rhs = rhs, ru_rough = roughTopNames args,
+         ru_local = True}
+ 
+roughTopNames :: [CoreExpr] -> [Maybe Name]
+roughTopNames args = map roughTopName args
+ 
+roughTopName :: CoreExpr -> Maybe Name
+roughTopName (Type ty)
+  = case tcSplitTyConApp_maybe ty of
+        Just (tc, _) -> Just (getName tc)
+        Nothing -> Nothing
+roughTopName (App f a) = roughTopName f
+roughTopName (Var f)
+  | isGlobalId f = Just (idName f)
+  | otherwise = Nothing
+roughTopName other = Nothing
+ 
+ruleCantMatch :: [Maybe Name] -> [Maybe Name] -> Bool
+ruleCantMatch (Just n1 : ts) (Just n2 : as)
+  = n1 /= n2 || ruleCantMatch ts as
+ruleCantMatch (t : ts) (a : as) = ruleCantMatch ts as
+ruleCantMatch ts as = False
+ 
+pprRulesForUser :: [CoreRule] -> SDoc
+pprRulesForUser rules
+  = withPprStyle defaultUserStyle $
+      pprRules $ sortLe le_rule $ tidyRules emptyTidyEnv rules
+  where le_rule r1 r2 = ru_name r1 <= ru_name r2
+ 
+mkSpecInfo :: [CoreRule] -> SpecInfo
+mkSpecInfo rules = SpecInfo rules (rulesFreeVars rules)
+ 
+extendSpecInfo :: SpecInfo -> [CoreRule] -> SpecInfo
+extendSpecInfo (SpecInfo rs1 fvs1) rs2
+  = SpecInfo (rs2 ++ rs1) (rulesFreeVars rs2 `unionVarSet` fvs1)
+ 
+addSpecInfo :: SpecInfo -> SpecInfo -> SpecInfo
+addSpecInfo (SpecInfo rs1 fvs1) (SpecInfo rs2 fvs2)
+  = SpecInfo (rs1 ++ rs2) (fvs1 `unionVarSet` fvs2)
+ 
+addIdSpecialisations :: Id -> [CoreRule] -> Id
+addIdSpecialisations id [] = id
+addIdSpecialisations id rules
+  = setIdSpecialisation id $
+      extendSpecInfo (idSpecialisation id) rules
+ 
+rulesOfBinds :: [CoreBind] -> [CoreRule]
+rulesOfBinds binds
+  = concatMap (concatMap idCoreRules . bindersOf) binds
+ 
+getRules :: RuleBase -> Id -> [CoreRule]
+getRules rule_base fn
+  | isLocalId fn = idCoreRules fn
+  | otherwise =
+    WARN
+      (not (isPrimOpId fn) && notNull (idCoreRules fn),
+       ppr fn <+> ppr (idCoreRules fn))
+      idCoreRules
+      fn
+      ++ (lookupNameEnv rule_base (idName fn) `orElse` [])
+ 
+type RuleBase = NameEnv [CoreRule]
+emptyRuleBase = emptyNameEnv
+ 
+mkRuleBase :: [CoreRule] -> RuleBase
+mkRuleBase rules = extendRuleBaseList emptyRuleBase rules
+ 
+extendRuleBaseList :: RuleBase -> [CoreRule] -> RuleBase
+extendRuleBaseList rule_base new_guys
+  = foldl extendRuleBase rule_base new_guys
+ 
+unionRuleBase :: RuleBase -> RuleBase -> RuleBase
+unionRuleBase rb1 rb2 = plusNameEnv_C (++) rb1 rb2
+ 
+extendRuleBase :: RuleBase -> CoreRule -> RuleBase
+extendRuleBase rule_base rule
+  = extendNameEnv_Acc (:) singleton rule_base (ruleIdName rule) rule
+ 
+pprRuleBase :: RuleBase -> SDoc
+pprRuleBase rules
+  = vcat
+      [pprRules (tidyRules emptyTidyEnv rs) | rs <- nameEnvElts rules]
+ 
+lookupRule ::
+           (Activation -> Bool) ->
+             InScopeSet ->
+               Id -> [CoreExpr] -> [CoreRule] -> Maybe (CoreRule, CoreExpr)
+lookupRule is_active in_scope fn args rules
+  = case go [] rules of
+        [] -> Nothing
+        (m : ms) -> Just (findBest (fn, args) m ms)
+  where rough_args = map roughTopName args
+         
+        go ::
+           [(CoreRule, CoreExpr)] -> [CoreRule] -> [(CoreRule, CoreExpr)]
+        go ms [] = ms
+        go ms (r : rs)
+          = case (matchRule is_active in_scope args rough_args r) of
+                Just e -> go ((r, e) : ms) rs
+                Nothing -> go ms rs
+ 
+findBest ::
+         (Id, [CoreExpr]) ->
+           (CoreRule, CoreExpr) ->
+             [(CoreRule, CoreExpr)] -> (CoreRule, CoreExpr)
+findBest target (rule, ans) [] = (rule, ans)
+findBest target (rule1, ans1) ((rule2, ans2) : prs)
+  | rule1 `isMoreSpecific` rule2 = findBest target (rule1, ans1) prs
+  | rule2 `isMoreSpecific` rule1 = findBest target (rule2, ans2) prs
+  | debugIsOn =
+    let pp_rule rule
+          | opt_PprStyle_Debug = ppr rule
+          | otherwise = doubleQuotes (ftext (ru_name rule))
+      in
+      pprTrace "Rules.findBest: rule overlap (Rule 1 wins)"
+        (vcat
+           [if opt_PprStyle_Debug then
+              ptext (sLit "Expression to match:") <+> ppr fn <+>
+                sep (map ppr args)
+              else empty,
+            ptext (sLit "Rule 1:") <+> pp_rule rule1,
+            ptext (sLit "Rule 2:") <+> pp_rule rule2])
+        $ findBest target (rule1, ans1) prs
+  | otherwise = findBest target (rule1, ans1) prs
+  where (fn, args) = target
+ 
+isMoreSpecific :: CoreRule -> CoreRule -> Bool
+isMoreSpecific (BuiltinRule{}) r2 = True
+isMoreSpecific r1 (BuiltinRule{}) = False
+isMoreSpecific (Rule{ru_bndrs = bndrs1, ru_args = args1})
+  (Rule{ru_bndrs = bndrs2, ru_args = args2})
+  = isJust (matchN in_scope bndrs2 args2 args1)
+  where in_scope = mkInScopeSet (mkVarSet bndrs1)
+ 
+noBlackList :: Activation -> Bool
+noBlackList act = False
+ 
+matchRule ::
+          (Activation -> Bool) ->
+            InScopeSet ->
+              [CoreExpr] -> [Maybe Name] -> CoreRule -> Maybe CoreExpr
+matchRule is_active in_scope args rough_args
+  (BuiltinRule{ru_name = name, ru_try = match_fn})
+  = case match_fn args of
+        Just expr -> Just expr
+        Nothing -> Nothing
+matchRule is_active in_scope args rough_args
+  (Rule{ru_name = rn, ru_act = act, ru_rough = tpl_tops,
+        ru_bndrs = tpl_vars, ru_args = tpl_args, ru_rhs = rhs})
+  | not (is_active act) = Nothing
+  | ruleCantMatch tpl_tops rough_args = Nothing
+  | otherwise =
+    case matchN in_scope tpl_vars tpl_args args of
+        Nothing -> Nothing
+        Just (binds, tpl_vals) -> Just
+                                    (mkLets binds $ rule_fn `mkApps` tpl_vals)
+  where rule_fn = occurAnalyseExpr (mkLams tpl_vars rhs)
+ 
+matchN ::
+       InScopeSet ->
+         [Var] -> [CoreExpr] -> [CoreExpr] -> Maybe ([CoreBind], [CoreExpr])
+matchN in_scope tmpl_vars tmpl_es target_es
+  = do (tv_subst, id_subst, binds) <- go init_menv emptySubstEnv
+                                        tmpl_es
+                                        target_es
+       return
+         (fromOL binds, map (lookup_tmpl tv_subst id_subst) tmpl_vars')
+  where (init_rn_env, tmpl_vars')
+          = mapAccumL rnBndrL (mkRnEnv2 in_scope) tmpl_vars
+        init_menv
+          = ME{me_tmpls = mkVarSet tmpl_vars', me_env = init_rn_env}
+        go menv subst [] es = Just subst
+        go menv subst ts [] = Nothing
+        go menv subst (t : ts) (e : es)
+          = do subst1 <- match menv subst t e
+               go menv subst1 ts es
+         
+        lookup_tmpl :: TvSubstEnv -> IdSubstEnv -> Var -> CoreExpr
+        lookup_tmpl tv_subst id_subst tmpl_var'
+          | isTyVar tmpl_var' =
+            case lookupVarEnv tv_subst tmpl_var' of
+                Just ty -> Type ty
+                Nothing -> unbound tmpl_var'
+          | otherwise =
+            case lookupVarEnv id_subst tmpl_var' of
+                Just e -> e
+                other -> unbound tmpl_var'
+        unbound var
+          = pprPanic "Template variable unbound in rewrite rule"
+              (ppr var $$ ppr tmpl_vars $$ ppr tmpl_vars' $$ ppr tmpl_es $$
+                 ppr target_es)
+ 
+type SubstEnv = (TvSubstEnv, IdSubstEnv, OrdList CoreBind)
+ 
+type IdSubstEnv = IdEnv CoreExpr
+ 
+emptySubstEnv :: SubstEnv
+emptySubstEnv = (emptyVarEnv, emptyVarEnv, nilOL)
+ 
+match ::
+      MatchEnv -> SubstEnv -> CoreExpr -> CoreExpr -> Maybe SubstEnv
+match menv subst (Var v1) e2
+  | Just subst <- match_var menv subst v1 e2 = Just subst
+match menv subst e1 (Note n e2) = match menv subst e1 e2
+match menv subst e1 (Var v2)
+  | isCheapUnfolding unfolding =
+    match menv subst e1 (unfoldingTemplate unfolding)
+  where rn_env = me_env menv
+        unfolding = idUnfolding (lookupRnInScope rn_env (rnOccR rn_env v2))
+match menv subst@(tv_subst, id_subst, binds) e1 (Let bind e2)
+  | all freshly_bound bndrs, not (any locally_bound bind_fvs) =
+    match (menv{me_env = rn_env'})
+      (tv_subst, id_subst, binds `snocOL` bind')
+      e1
+      e2'
+  where rn_env = me_env menv
+        bndrs = bindersOf bind
+        bind_fvs = varSetElems (bindFreeVars bind)
+        locally_bound x = inRnEnvR rn_env x
+        freshly_bound x = not (x `rnInScope` rn_env)
+        bind' = bind
+        e2' = e2
+        rn_env' = extendRnInScopeList rn_env bndrs
+match menv subst (Lit lit1) (Lit lit2) | lit1 == lit2 = Just subst
+match menv subst (App f1 a1) (App f2 a2)
+  = do subst' <- match menv subst f1 f2
+       match menv subst' a1 a2
+match menv subst (Lam x1 e1) (Lam x2 e2) = match menv' subst e1 e2
+  where menv' = menv{me_env = rnBndr2 (me_env menv) x1 x2}
+match menv subst (Lam x1 e1) e2
+  = match menv' subst e1 (App e2 (varToCoreExpr new_x))
+  where (rn_env', new_x) = rnBndrL (me_env menv) x1
+        menv' = menv{me_env = rn_env'}
+match menv subst e1 (Lam x2 e2)
+  = match menv' subst (App e1 (varToCoreExpr new_x)) e2
+  where (rn_env', new_x) = rnBndrR (me_env menv) x2
+        menv' = menv{me_env = rn_env'}
+match menv subst (Case e1 x1 ty1 alts1) (Case e2 x2 ty2 alts2)
+  = do subst1 <- match_ty menv subst ty1 ty2
+       subst2 <- match menv subst1 e1 e2
+       let menv' = menv{me_env = rnBndr2 (me_env menv) x1 x2}
+       match_alts menv' subst2 alts1 alts2
+match menv subst (Type ty1) (Type ty2)
+  = match_ty menv subst ty1 ty2
+match menv subst (Cast e1 co1) (Cast e2 co2)
+  = do subst1 <- match_ty menv subst co1 co2
+       match menv subst1 e1 e2
+match menv subst e1 e2 = Nothing
+ 
+match_var ::
+          MatchEnv -> SubstEnv -> Var -> CoreExpr -> Maybe SubstEnv
+match_var menv subst@(tv_subst, id_subst, binds) v1 e2
+  | v1' `elemVarSet` me_tmpls menv =
+    case lookupVarEnv id_subst v1' of
+        Nothing | any (inRnEnvR rn_env) (varSetElems (exprFreeVars e2)) ->
+                  Nothing
+                | otherwise ->
+                  do tv_subst' <- Unify.ruleMatchTyX menv tv_subst (idType v1')
+                                    (exprType e2)
+                     return (tv_subst', extendVarEnv id_subst v1' e2, binds)
+        Just e1' | tcEqExprX (nukeRnEnvL rn_env) e1' e2 -> Just subst
+                 | otherwise -> Nothing
+  | otherwise =
+    case e2 of
+        Var v2 | v1' == rnOccR rn_env v2 -> Just subst
+        other -> Nothing
+  where rn_env = me_env menv
+        v1' = rnOccL rn_env v1
+ 
+match_alts ::
+           MatchEnv -> SubstEnv -> [CoreAlt] -> [CoreAlt] -> Maybe SubstEnv
+match_alts menv subst [] [] = return subst
+match_alts menv subst ((c1, vs1, r1) : alts1)
+  ((c2, vs2, r2) : alts2)
+  | c1 == c2 =
+    do subst1 <- match menv' subst r1 r2
+       match_alts menv subst1 alts1 alts2
+  where  
+        menv' :: MatchEnv
+        menv' = menv{me_env = rnBndrs2 (me_env menv) vs1 vs2}
+match_alts menv subst alts1 alts2 = Nothing
+ 
+match_ty :: MatchEnv -> SubstEnv -> Type -> Type -> Maybe SubstEnv
+match_ty menv (tv_subst, id_subst, binds) ty1 ty2
+  = do tv_subst' <- Unify.ruleMatchTyX menv tv_subst ty1 ty2
+       return (tv_subst', id_subst, binds)
+ 
+ruleCheckProgram ::
+                 (Activation -> Bool) -> String -> RuleBase -> [CoreBind] -> SDoc
+ruleCheckProgram is_active rule_pat rule_base binds
+  | isEmptyBag results =
+    text "Rule check results: no rule application sites"
+  | otherwise =
+    vcat
+      [text "Rule check results:", line,
+       vcat [p $$ line | p <- bagToList results]]
+  where results
+          = unionManyBags
+              (map (ruleCheckBind (RuleCheckEnv is_active rule_pat rule_base))
+                 binds)
+        line = text (replicate 20 '-')
+ 
+data RuleCheckEnv = RuleCheckEnv{rc_is_active ::
+                                 Activation -> Bool,
+                                 rc_pattern :: String, rc_rule_base :: RuleBase}
+ 
+ruleCheckBind :: RuleCheckEnv -> CoreBind -> Bag SDoc
+ruleCheckBind env (NonRec b r) = ruleCheck env r
+ruleCheckBind env (Rec prs)
+  = unionManyBags [ruleCheck env r | (b, r) <- prs]
+ 
+ruleCheck :: RuleCheckEnv -> CoreExpr -> Bag SDoc
+ruleCheck env (Var v) = emptyBag
+ruleCheck env (Lit l) = emptyBag
+ruleCheck env (Type ty) = emptyBag
+ruleCheck env (App f a) = ruleCheckApp env (App f a) []
+ruleCheck env (Note n e) = ruleCheck env e
+ruleCheck env (Cast e co) = ruleCheck env e
+ruleCheck env (Let bd e)
+  = ruleCheckBind env bd `unionBags` ruleCheck env e
+ruleCheck env (Lam b e) = ruleCheck env e
+ruleCheck env (Case e _ _ as)
+  = ruleCheck env e `unionBags`
+      unionManyBags [ruleCheck env r | (_, _, r) <- as]
+ruleCheckApp env (App f a) as
+  = ruleCheck env a `unionBags` ruleCheckApp env f (a : as)
+ruleCheckApp env (Var f) as = ruleCheckFun env f as
+ruleCheckApp env other as = ruleCheck env other
+ 
+ruleCheckFun :: RuleCheckEnv -> Id -> [CoreExpr] -> Bag SDoc
+ruleCheckFun env fn args
+  | null name_match_rules = emptyBag
+  | otherwise =
+    unitBag
+      (ruleAppCheck_help (rc_is_active env) fn args name_match_rules)
+  where name_match_rules
+          = filter match (getRules (rc_rule_base env) fn)
+        match rule = (rc_pattern env) `isPrefixOf` unpackFS (ruleName rule)
+ 
+ruleAppCheck_help ::
+                  (Activation -> Bool) -> Id -> [CoreExpr] -> [CoreRule] -> SDoc
+ruleAppCheck_help is_active fn args rules
+  = vcat
+      [text "Expression:" <+> ppr (mkApps (Var fn) args),
+       vcat (map check_rule rules)]
+  where n_args = length args
+        i_args = args `zip` [1 :: Int ..]
+        rough_args = map roughTopName args
+        check_rule rule = rule_herald rule <> colon <+> rule_info rule
+        rule_herald (BuiltinRule{ru_name = name})
+          = ptext (sLit "Builtin rule") <+> doubleQuotes (ftext name)
+        rule_herald (Rule{ru_name = name})
+          = ptext (sLit "Rule") <+> doubleQuotes (ftext name)
+        rule_info rule
+          | Just _ <- matchRule noBlackList emptyInScopeSet args rough_args
+                        rule
+            = text "matches (which is very peculiar!)"
+        rule_info (BuiltinRule{}) = text "does not match"
+        rule_info
+          (Rule{ru_name = name, ru_act = act, ru_bndrs = rule_bndrs,
+                ru_args = rule_args})
+          | not (is_active act) = text "active only in later phase"
+          | n_args < n_rule_args = text "too few arguments"
+          | n_mismatches == n_rule_args = text "no arguments match"
+          | n_mismatches == 0 =
+            text
+              "all arguments match (considered individually), but rule as a whole does not"
+          | otherwise =
+            text "arguments" <+> ppr mismatches <+>
+              text "do not match (1-indexing)"
+          where n_rule_args = length rule_args
+                n_mismatches = length mismatches
+                mismatches
+                  = [i | (rule_arg, (arg, i)) <- rule_args `zip` i_args,
+                     not (isJust (match_fn rule_arg arg))]
+                lhs_fvs = exprsFreeVars rule_args
+                match_fn rule_arg arg = match menv emptySubstEnv rule_arg arg
+                  where in_scope = lhs_fvs `unionVarSet` exprFreeVars arg
+                        menv
+                          = ME{me_env = mkRnEnv2 (mkInScopeSet in_scope),
+                               me_tmpls = mkVarSet rule_bndrs}

@@ -1,0 +1,4 @@
+module Main (main) where
+ 
+data T = T
+       deriving Eq

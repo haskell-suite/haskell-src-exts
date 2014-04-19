@@ -1,0 +1,2 @@
+{-# ANN foo "Hlint: ignore Test4" #-}
+module Main (main) where

@@ -1,0 +1,3 @@
+{-# LANGUAGE UnboxedTuples #-}
+module Main (main) where
+foo a = (#a#)

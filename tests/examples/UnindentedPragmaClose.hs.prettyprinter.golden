@@ -1,0 +1,5 @@
+{-# LANGUAGE MultiParamTypeClasses #-}
+module Main (main) where
+ 
+f :: Int
+f = 4

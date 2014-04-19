@@ -1,0 +1,8 @@
+module Main (main) where
+ 
+instance (Sized a) => Sized (Digit a) where
+         
+        {-# SPECIALISE instance Sized (Digit (Elem a)) #-}
+         
+        {-# SPECIALISE instance Sized (Digit (Node a)) #-}
+        size xs = foldl (\ i x -> i + size x) 0 xs

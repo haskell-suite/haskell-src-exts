@@ -1,0 +1,1718 @@
+module Data.GraphViz.Attributes
+       (Attribute(..), Attributes, usedByGraphs, usedBySubGraphs,
+        usedByClusters, usedByNodes, usedByEdges, EscString, URL(..),
+        ArrowType(..), AspectType(..), Rect(..), ClusterMode(..),
+        DirType(..), DEConstraints(..), DPoint(..), ModeType(..),
+        Model(..), Label(..), Point(..), Overlap(..), LayerRange(..),
+        LayerID(..), LayerList(..), OutputMode(..), Pack(..), PackMode(..),
+        Pos(..), EdgeType(..), PageDir(..), Spline(..), QuadType(..),
+        Root(..), RankType(..), RankDir(..), Shape(..), SmoothType(..),
+        StartType(..), STStyle(..), StyleItem(..), StyleName(..),
+        PortPos(..), CompassPoint(..), ViewPort(..), FocusType(..),
+        VerticalPlacement(..), ScaleType(..), Justification(..),
+        Ratios(..), module Data.GraphViz.Attributes.Colors, ArrowShape(..),
+        ArrowModifier(..), ArrowFill(..), ArrowSide(..), box, crow,
+        diamond, dotArrow, inv, noArrow, normal, tee, vee, oDot, invDot,
+        invODot, oBox, oDiamond, eDiamond, openArr, halfOpen, emptyArr,
+        invEmpty, noMods, openMod, defLayerSep, notLayerSep)
+       where
+import Data.GraphViz.Attributes.Colors
+import Data.GraphViz.Util
+import Data.GraphViz.Parsing
+import Data.GraphViz.Printing
+import Data.Char (toLower)
+import Data.Maybe (isJust)
+import Control.Arrow (first)
+import Control.Monad (liftM, liftM2)
+ 
+data Attribute = Damping Double
+               | K Double
+               | URL URL
+               | ArrowHead ArrowType
+               | ArrowSize Double
+               | ArrowTail ArrowType
+               | Aspect AspectType
+               | Bb Rect
+               | BgColor Color
+               | Center Bool
+               | Charset String
+               | ClusterRank ClusterMode
+               | ColorScheme ColorScheme
+               | Color [Color]
+               | Comment String
+               | Compound Bool
+               | Concentrate Bool
+               | Constraint Bool
+               | Decorate Bool
+               | DefaultDist Double
+               | Dimen Int
+               | Dim Int
+               | Dir DirType
+               | DirEdgeConstraints DEConstraints
+               | Distortion Double
+               | DPI Double
+               | EdgeURL URL
+               | EdgeTarget EscString
+               | EdgeTooltip EscString
+               | Epsilon Double
+               | ESep DPoint
+               | FillColor Color
+               | FixedSize Bool
+               | FontColor Color
+               | FontName String
+               | FontNames String
+               | FontPath String
+               | FontSize Double
+               | Group String
+               | HeadURL URL
+               | HeadClip Bool
+               | HeadLabel Label
+               | HeadPort PortPos
+               | HeadTarget EscString
+               | HeadTooltip EscString
+               | Height Double
+               | ID Label
+               | Image String
+               | ImageScale ScaleType
+               | LabelURL URL
+               | LabelAngle Double
+               | LabelDistance Double
+               | LabelFloat Bool
+               | LabelFontColor Color
+               | LabelFontName String
+               | LabelFontSize Double
+               | LabelJust Justification
+               | LabelLoc VerticalPlacement
+               | LabelTarget EscString
+               | LabelTooltip EscString
+               | Label Label
+               | Landscape Bool
+               | LayerSep String
+               | Layers LayerList
+               | Layer LayerRange
+               | Layout String
+               | Len Double
+               | LevelsGap Double
+               | Levels Int
+               | LHead String
+               | LPos Point
+               | LTail String
+               | Margin DPoint
+               | MaxIter Int
+               | MCLimit Double
+               | MinDist Double
+               | MinLen Int
+               | Model Model
+               | Mode ModeType
+               | Mosek Bool
+               | NodeSep Double
+               | NoJustify Bool
+               | Normalize Bool
+               | Nslimit1 Double
+               | Nslimit Double
+               | Ordering String
+               | Orientation Double
+               | OutputOrder OutputMode
+               | OverlapScaling Double
+               | Overlap Overlap
+               | PackMode PackMode
+               | Pack Pack
+               | Pad DPoint
+               | PageDir PageDir
+               | Page Point
+               | PenColor Color
+               | PenWidth Double
+               | Peripheries Int
+               | Pin Bool
+               | Pos Pos
+               | QuadTree QuadType
+               | Quantum Double
+               | RankDir RankDir
+               | RankSep Double
+               | Rank RankType
+               | Ratio Ratios
+               | Rects Rect
+               | Regular Bool
+               | ReMinCross Bool
+               | RepulsiveForce Double
+               | Root Root
+               | Rotate Int
+               | SameHead String
+               | SameTail String
+               | SamplePoints Int
+               | SearchSize Int
+               | Sep DPoint
+               | ShapeFile String
+               | Shape Shape
+               | ShowBoxes Int
+               | Sides Int
+               | Size Point
+               | Skew Double
+               | Smoothing SmoothType
+               | SortV Int
+               | Splines EdgeType
+               | Start StartType
+               | StyleSheet String
+               | Style [StyleItem]
+               | TailURL URL
+               | TailClip Bool
+               | TailLabel Label
+               | TailPort PortPos
+               | TailTarget EscString
+               | TailTooltip EscString
+               | Target EscString
+               | Tooltip EscString
+               | TrueColor Bool
+               | Vertices [Point]
+               | ViewPort ViewPort
+               | VoroMargin Double
+               | Weight Double
+               | Width Double
+               | Z Double
+               deriving (Eq, Ord, Show, Read)
+ 
+type Attributes = [Attribute]
+ 
+instance PrintDot Attribute where
+        unqtDot (Damping v) = printField "Damping" v
+        unqtDot (K v) = printField "K" v
+        unqtDot (URL v) = printField "URL" v
+        unqtDot (ArrowHead v) = printField "arrowhead" v
+        unqtDot (ArrowSize v) = printField "arrowsize" v
+        unqtDot (ArrowTail v) = printField "arrowtail" v
+        unqtDot (Aspect v) = printField "aspect" v
+        unqtDot (Bb v) = printField "bb" v
+        unqtDot (BgColor v) = printField "bgcolor" v
+        unqtDot (Center v) = printField "center" v
+        unqtDot (Charset v) = printField "charset" v
+        unqtDot (ClusterRank v) = printField "clusterrank" v
+        unqtDot (ColorScheme v) = printField "colorscheme" v
+        unqtDot (Color v) = printField "color" v
+        unqtDot (Comment v) = printField "comment" v
+        unqtDot (Compound v) = printField "compound" v
+        unqtDot (Concentrate v) = printField "concentrate" v
+        unqtDot (Constraint v) = printField "constraint" v
+        unqtDot (Decorate v) = printField "decorate" v
+        unqtDot (DefaultDist v) = printField "defaultdist" v
+        unqtDot (Dimen v) = printField "dimen" v
+        unqtDot (Dim v) = printField "dim" v
+        unqtDot (Dir v) = printField "dir" v
+        unqtDot (DirEdgeConstraints v) = printField "diredgeconstraints" v
+        unqtDot (Distortion v) = printField "distortion" v
+        unqtDot (DPI v) = printField "dpi" v
+        unqtDot (EdgeURL v) = printField "edgeURL" v
+        unqtDot (EdgeTarget v) = printField "edgetarget" v
+        unqtDot (EdgeTooltip v) = printField "edgetooltip" v
+        unqtDot (Epsilon v) = printField "epsilon" v
+        unqtDot (ESep v) = printField "esep" v
+        unqtDot (FillColor v) = printField "fillcolor" v
+        unqtDot (FixedSize v) = printField "fixedsize" v
+        unqtDot (FontColor v) = printField "fontcolor" v
+        unqtDot (FontName v) = printField "fontname" v
+        unqtDot (FontNames v) = printField "fontnames" v
+        unqtDot (FontPath v) = printField "fontpath" v
+        unqtDot (FontSize v) = printField "fontsize" v
+        unqtDot (Group v) = printField "group" v
+        unqtDot (HeadURL v) = printField "headURL" v
+        unqtDot (HeadClip v) = printField "headclip" v
+        unqtDot (HeadLabel v) = printField "headlabel" v
+        unqtDot (HeadPort v) = printField "headport" v
+        unqtDot (HeadTarget v) = printField "headtarget" v
+        unqtDot (HeadTooltip v) = printField "headtooltip" v
+        unqtDot (Height v) = printField "height" v
+        unqtDot (ID v) = printField "id" v
+        unqtDot (Image v) = printField "image" v
+        unqtDot (ImageScale v) = printField "imagescale" v
+        unqtDot (LabelURL v) = printField "labelURL" v
+        unqtDot (LabelAngle v) = printField "labelangle" v
+        unqtDot (LabelDistance v) = printField "labeldistance" v
+        unqtDot (LabelFloat v) = printField "labelfloat" v
+        unqtDot (LabelFontColor v) = printField "labelfontcolor" v
+        unqtDot (LabelFontName v) = printField "labelfontname" v
+        unqtDot (LabelFontSize v) = printField "labelfontsize" v
+        unqtDot (LabelJust v) = printField "labeljust" v
+        unqtDot (LabelLoc v) = printField "labelloc" v
+        unqtDot (LabelTarget v) = printField "labeltarget" v
+        unqtDot (LabelTooltip v) = printField "labeltooltip" v
+        unqtDot (Label v) = printField "label" v
+        unqtDot (Landscape v) = printField "landscape" v
+        unqtDot (LayerSep v) = printField "layersep" v
+        unqtDot (Layers v) = printField "layers" v
+        unqtDot (Layer v) = printField "layer" v
+        unqtDot (Layout v) = printField "layout" v
+        unqtDot (Len v) = printField "len" v
+        unqtDot (LevelsGap v) = printField "levelsgap" v
+        unqtDot (Levels v) = printField "levels" v
+        unqtDot (LHead v) = printField "lhead" v
+        unqtDot (LPos v) = printField "lp" v
+        unqtDot (LTail v) = printField "ltail" v
+        unqtDot (Margin v) = printField "margin" v
+        unqtDot (MaxIter v) = printField "maxiter" v
+        unqtDot (MCLimit v) = printField "mclimit" v
+        unqtDot (MinDist v) = printField "mindist" v
+        unqtDot (MinLen v) = printField "minlen" v
+        unqtDot (Model v) = printField "model" v
+        unqtDot (Mode v) = printField "mode" v
+        unqtDot (Mosek v) = printField "mosek" v
+        unqtDot (NodeSep v) = printField "nodesep" v
+        unqtDot (NoJustify v) = printField "nojustify" v
+        unqtDot (Normalize v) = printField "normalize" v
+        unqtDot (Nslimit1 v) = printField "nslimit1" v
+        unqtDot (Nslimit v) = printField "nslimit" v
+        unqtDot (Ordering v) = printField "ordering" v
+        unqtDot (Orientation v) = printField "orientation" v
+        unqtDot (OutputOrder v) = printField "outputorder" v
+        unqtDot (OverlapScaling v) = printField "overlap_scaling" v
+        unqtDot (Overlap v) = printField "overlap" v
+        unqtDot (PackMode v) = printField "packmode" v
+        unqtDot (Pack v) = printField "pack" v
+        unqtDot (Pad v) = printField "pad" v
+        unqtDot (PageDir v) = printField "pagedir" v
+        unqtDot (Page v) = printField "page" v
+        unqtDot (PenColor v) = printField "pencolor" v
+        unqtDot (PenWidth v) = printField "penwidth" v
+        unqtDot (Peripheries v) = printField "peripheries" v
+        unqtDot (Pin v) = printField "pin" v
+        unqtDot (Pos v) = printField "pos" v
+        unqtDot (QuadTree v) = printField "quadtree" v
+        unqtDot (Quantum v) = printField "quantum" v
+        unqtDot (RankDir v) = printField "rankdir" v
+        unqtDot (RankSep v) = printField "ranksep" v
+        unqtDot (Rank v) = printField "rank" v
+        unqtDot (Ratio v) = printField "ratio" v
+        unqtDot (Rects v) = printField "rects" v
+        unqtDot (Regular v) = printField "regular" v
+        unqtDot (ReMinCross v) = printField "remincross" v
+        unqtDot (RepulsiveForce v) = printField "repulsiveforce" v
+        unqtDot (Root v) = printField "root" v
+        unqtDot (Rotate v) = printField "rotate" v
+        unqtDot (SameHead v) = printField "samehead" v
+        unqtDot (SameTail v) = printField "sametail" v
+        unqtDot (SamplePoints v) = printField "samplepoints" v
+        unqtDot (SearchSize v) = printField "searchsize" v
+        unqtDot (Sep v) = printField "sep" v
+        unqtDot (ShapeFile v) = printField "shapefile" v
+        unqtDot (Shape v) = printField "shape" v
+        unqtDot (ShowBoxes v) = printField "showboxes" v
+        unqtDot (Sides v) = printField "sides" v
+        unqtDot (Size v) = printField "size" v
+        unqtDot (Skew v) = printField "skew" v
+        unqtDot (Smoothing v) = printField "smoothing" v
+        unqtDot (SortV v) = printField "sortv" v
+        unqtDot (Splines v) = printField "splines" v
+        unqtDot (Start v) = printField "start" v
+        unqtDot (StyleSheet v) = printField "stylesheet" v
+        unqtDot (Style v) = printField "style" v
+        unqtDot (TailURL v) = printField "tailURL" v
+        unqtDot (TailClip v) = printField "tailclip" v
+        unqtDot (TailLabel v) = printField "taillabel" v
+        unqtDot (TailPort v) = printField "tailport" v
+        unqtDot (TailTarget v) = printField "tailtarget" v
+        unqtDot (TailTooltip v) = printField "tailtooltip" v
+        unqtDot (Target v) = printField "target" v
+        unqtDot (Tooltip v) = printField "tooltip" v
+        unqtDot (TrueColor v) = printField "truecolor" v
+        unqtDot (Vertices v) = printField "vertices" v
+        unqtDot (ViewPort v) = printField "viewport" v
+        unqtDot (VoroMargin v) = printField "voro_margin" v
+        unqtDot (Weight v) = printField "weight" v
+        unqtDot (Width v) = printField "width" v
+        unqtDot (Z v) = printField "z" v
+        listToDot = unqtListToDot
+ 
+instance ParseDot Attribute where
+        parseUnqt
+          = oneOf
+              [liftM Damping $ parseField "Damping", liftM K $ parseField "K",
+               liftM URL $ parseFields ["URL", "href"],
+               liftM ArrowHead $ parseField "arrowhead",
+               liftM ArrowSize $ parseField "arrowsize",
+               liftM ArrowTail $ parseField "arrowtail",
+               liftM Aspect $ parseField "aspect", liftM Bb $ parseField "bb",
+               liftM BgColor $ parseField "bgcolor",
+               liftM Center $ parseFieldBool "center",
+               liftM Charset $ parseField "charset",
+               liftM ClusterRank $ parseField "clusterrank",
+               liftM ColorScheme $ parseField "colorscheme",
+               liftM Color $ parseField "color",
+               liftM Comment $ parseField "comment",
+               liftM Compound $ parseFieldBool "compound",
+               liftM Concentrate $ parseFieldBool "concentrate",
+               liftM Constraint $ parseFieldBool "constraint",
+               liftM Decorate $ parseFieldBool "decorate",
+               liftM DefaultDist $ parseField "defaultdist",
+               liftM Dimen $ parseField "dimen", liftM Dim $ parseField "dim",
+               liftM Dir $ parseField "dir",
+               liftM DirEdgeConstraints $
+                 parseFieldDef EdgeConstraints "diredgeconstraints",
+               liftM Distortion $ parseField "distortion",
+               liftM DPI $ parseFields ["dpi", "resolution"],
+               liftM EdgeURL $ parseFields ["edgeURL", "edgehref"],
+               liftM EdgeTarget $ parseField "edgetarget",
+               liftM EdgeTooltip $ parseField "edgetooltip",
+               liftM Epsilon $ parseField "epsilon",
+               liftM ESep $ parseField "esep",
+               liftM FillColor $ parseField "fillcolor",
+               liftM FixedSize $ parseFieldBool "fixedsize",
+               liftM FontColor $ parseField "fontcolor",
+               liftM FontName $ parseField "fontname",
+               liftM FontNames $ parseField "fontnames",
+               liftM FontPath $ parseField "fontpath",
+               liftM FontSize $ parseField "fontsize",
+               liftM Group $ parseField "group",
+               liftM HeadURL $ parseFields ["headURL", "headhref"],
+               liftM HeadClip $ parseFieldBool "headclip",
+               liftM HeadLabel $ parseField "headlabel",
+               liftM HeadPort $ parseField "headport",
+               liftM HeadTarget $ parseField "headtarget",
+               liftM HeadTooltip $ parseField "headtooltip",
+               liftM Height $ parseField "height", liftM ID $ parseField "id",
+               liftM Image $ parseField "image",
+               liftM ImageScale $ parseFieldDef UniformScale "imagescale",
+               liftM LabelURL $ parseFields ["labelURL", "labelhref"],
+               liftM LabelAngle $ parseField "labelangle",
+               liftM LabelDistance $ parseField "labeldistance",
+               liftM LabelFloat $ parseFieldBool "labelfloat",
+               liftM LabelFontColor $ parseField "labelfontcolor",
+               liftM LabelFontName $ parseField "labelfontname",
+               liftM LabelFontSize $ parseField "labelfontsize",
+               liftM LabelJust $ parseField "labeljust",
+               liftM LabelLoc $ parseField "labelloc",
+               liftM LabelTarget $ parseField "labeltarget",
+               liftM LabelTooltip $ parseField "labeltooltip",
+               liftM Label $ parseField "label",
+               liftM Landscape $ parseFieldBool "landscape",
+               liftM LayerSep $ parseField "layersep",
+               liftM Layers $ parseField "layers",
+               liftM Layer $ parseField "layer",
+               liftM Layout $ parseField "layout", liftM Len $ parseField "len",
+               liftM LevelsGap $ parseField "levelsgap",
+               liftM Levels $ parseField "levels",
+               liftM LHead $ parseField "lhead", liftM LPos $ parseField "lp",
+               liftM LTail $ parseField "ltail",
+               liftM Margin $ parseField "margin",
+               liftM MaxIter $ parseField "maxiter",
+               liftM MCLimit $ parseField "mclimit",
+               liftM MinDist $ parseField "mindist",
+               liftM MinLen $ parseField "minlen",
+               liftM Model $ parseField "model", liftM Mode $ parseField "mode",
+               liftM Mosek $ parseFieldBool "mosek",
+               liftM NodeSep $ parseField "nodesep",
+               liftM NoJustify $ parseFieldBool "nojustify",
+               liftM Normalize $ parseFieldBool "normalize",
+               liftM Nslimit1 $ parseField "nslimit1",
+               liftM Nslimit $ parseField "nslimit",
+               liftM Ordering $ parseField "ordering",
+               liftM Orientation $ parseField "orientation",
+               liftM OutputOrder $ parseField "outputorder",
+               liftM OverlapScaling $ parseField "overlap_scaling",
+               liftM Overlap $ parseFieldDef KeepOverlaps "overlap",
+               liftM PackMode $ parseField "packmode",
+               liftM Pack $ parseFieldDef DoPack "pack",
+               liftM Pad $ parseField "pad", liftM PageDir $ parseField "pagedir",
+               liftM Page $ parseField "page",
+               liftM PenColor $ parseField "pencolor",
+               liftM PenWidth $ parseField "penwidth",
+               liftM Peripheries $ parseField "peripheries",
+               liftM Pin $ parseFieldBool "pin", liftM Pos $ parseField "pos",
+               liftM QuadTree $ parseFieldDef NormalQT "quadtree",
+               liftM Quantum $ parseField "quantum",
+               liftM RankDir $ parseField "rankdir",
+               liftM RankSep $ parseField "ranksep",
+               liftM Rank $ parseField "rank", liftM Ratio $ parseField "ratio",
+               liftM Rects $ parseField "rects",
+               liftM Regular $ parseFieldBool "regular",
+               liftM ReMinCross $ parseFieldBool "remincross",
+               liftM RepulsiveForce $ parseField "repulsiveforce",
+               liftM Root $ parseFieldDef IsCentral "root",
+               liftM Rotate $ parseField "rotate",
+               liftM SameHead $ parseField "samehead",
+               liftM SameTail $ parseField "sametail",
+               liftM SamplePoints $ parseField "samplepoints",
+               liftM SearchSize $ parseField "searchsize",
+               liftM Sep $ parseField "sep",
+               liftM ShapeFile $ parseField "shapefile",
+               liftM Shape $ parseField "shape",
+               liftM ShowBoxes $ parseField "showboxes",
+               liftM Sides $ parseField "sides", liftM Size $ parseField "size",
+               liftM Skew $ parseField "skew",
+               liftM Smoothing $ parseField "smoothing",
+               liftM SortV $ parseField "sortv",
+               liftM Splines $ parseFieldDef SplineEdges "splines",
+               liftM Start $ parseField "start",
+               liftM StyleSheet $ parseField "stylesheet",
+               liftM Style $ parseField "style",
+               liftM TailURL $ parseFields ["tailURL", "tailhref"],
+               liftM TailClip $ parseFieldBool "tailclip",
+               liftM TailLabel $ parseField "taillabel",
+               liftM TailPort $ parseField "tailport",
+               liftM TailTarget $ parseField "tailtarget",
+               liftM TailTooltip $ parseField "tailtooltip",
+               liftM Target $ parseField "target",
+               liftM Tooltip $ parseField "tooltip",
+               liftM TrueColor $ parseFieldBool "truecolor",
+               liftM Vertices $ parseField "vertices",
+               liftM ViewPort $ parseField "viewport",
+               liftM VoroMargin $ parseField "voro_margin",
+               liftM Weight $ parseField "weight",
+               liftM Width $ parseField "width", liftM Z $ parseField "z"]
+        parse = parseUnqt
+        parseList = parseUnqtList
+ 
+usedByGraphs :: Attribute -> Bool
+usedByGraphs Damping{} = True
+usedByGraphs K{} = True
+usedByGraphs URL{} = True
+usedByGraphs Aspect{} = True
+usedByGraphs Bb{} = True
+usedByGraphs BgColor{} = True
+usedByGraphs Center{} = True
+usedByGraphs Charset{} = True
+usedByGraphs ClusterRank{} = True
+usedByGraphs ColorScheme{} = True
+usedByGraphs Comment{} = True
+usedByGraphs Compound{} = True
+usedByGraphs Concentrate{} = True
+usedByGraphs DefaultDist{} = True
+usedByGraphs Dimen{} = True
+usedByGraphs Dim{} = True
+usedByGraphs DirEdgeConstraints{} = True
+usedByGraphs DPI{} = True
+usedByGraphs Epsilon{} = True
+usedByGraphs ESep{} = True
+usedByGraphs FontColor{} = True
+usedByGraphs FontName{} = True
+usedByGraphs FontNames{} = True
+usedByGraphs FontPath{} = True
+usedByGraphs FontSize{} = True
+usedByGraphs ID{} = True
+usedByGraphs LabelJust{} = True
+usedByGraphs LabelLoc{} = True
+usedByGraphs Label{} = True
+usedByGraphs Landscape{} = True
+usedByGraphs LayerSep{} = True
+usedByGraphs Layers{} = True
+usedByGraphs Layout{} = True
+usedByGraphs LevelsGap{} = True
+usedByGraphs Levels{} = True
+usedByGraphs LPos{} = True
+usedByGraphs Margin{} = True
+usedByGraphs MaxIter{} = True
+usedByGraphs MCLimit{} = True
+usedByGraphs MinDist{} = True
+usedByGraphs Model{} = True
+usedByGraphs Mode{} = True
+usedByGraphs Mosek{} = True
+usedByGraphs NodeSep{} = True
+usedByGraphs NoJustify{} = True
+usedByGraphs Normalize{} = True
+usedByGraphs Nslimit1{} = True
+usedByGraphs Nslimit{} = True
+usedByGraphs Ordering{} = True
+usedByGraphs OutputOrder{} = True
+usedByGraphs OverlapScaling{} = True
+usedByGraphs Overlap{} = True
+usedByGraphs PackMode{} = True
+usedByGraphs Pack{} = True
+usedByGraphs Pad{} = True
+usedByGraphs PageDir{} = True
+usedByGraphs Page{} = True
+usedByGraphs QuadTree{} = True
+usedByGraphs Quantum{} = True
+usedByGraphs RankDir{} = True
+usedByGraphs RankSep{} = True
+usedByGraphs Ratio{} = True
+usedByGraphs ReMinCross{} = True
+usedByGraphs RepulsiveForce{} = True
+usedByGraphs Root{} = True
+usedByGraphs Rotate{} = True
+usedByGraphs SearchSize{} = True
+usedByGraphs Sep{} = True
+usedByGraphs ShowBoxes{} = True
+usedByGraphs Size{} = True
+usedByGraphs Smoothing{} = True
+usedByGraphs SortV{} = True
+usedByGraphs Splines{} = True
+usedByGraphs Start{} = True
+usedByGraphs StyleSheet{} = True
+usedByGraphs Target{} = True
+usedByGraphs TrueColor{} = True
+usedByGraphs ViewPort{} = True
+usedByGraphs VoroMargin{} = True
+usedByGraphs _ = False
+ 
+usedByClusters :: Attribute -> Bool
+usedByClusters K{} = True
+usedByClusters URL{} = True
+usedByClusters BgColor{} = True
+usedByClusters ColorScheme{} = True
+usedByClusters Color{} = True
+usedByClusters FillColor{} = True
+usedByClusters FontColor{} = True
+usedByClusters FontName{} = True
+usedByClusters FontSize{} = True
+usedByClusters LabelJust{} = True
+usedByClusters LabelLoc{} = True
+usedByClusters Label{} = True
+usedByClusters LPos{} = True
+usedByClusters NoJustify{} = True
+usedByClusters PenColor{} = True
+usedByClusters PenWidth{} = True
+usedByClusters Peripheries{} = True
+usedByClusters Rank{} = True
+usedByClusters SortV{} = True
+usedByClusters Style{} = True
+usedByClusters Target{} = True
+usedByClusters Tooltip{} = True
+usedByClusters _ = False
+ 
+usedBySubGraphs :: Attribute -> Bool
+usedBySubGraphs Rank{} = True
+usedBySubGraphs _ = False
+ 
+usedByNodes :: Attribute -> Bool
+usedByNodes URL{} = True
+usedByNodes ColorScheme{} = True
+usedByNodes Color{} = True
+usedByNodes Comment{} = True
+usedByNodes Distortion{} = True
+usedByNodes FillColor{} = True
+usedByNodes FixedSize{} = True
+usedByNodes FontColor{} = True
+usedByNodes FontName{} = True
+usedByNodes FontSize{} = True
+usedByNodes Group{} = True
+usedByNodes Height{} = True
+usedByNodes ID{} = True
+usedByNodes Image{} = True
+usedByNodes ImageScale{} = True
+usedByNodes LabelLoc{} = True
+usedByNodes Label{} = True
+usedByNodes Layer{} = True
+usedByNodes Margin{} = True
+usedByNodes NoJustify{} = True
+usedByNodes Orientation{} = True
+usedByNodes PenWidth{} = True
+usedByNodes Peripheries{} = True
+usedByNodes Pin{} = True
+usedByNodes Pos{} = True
+usedByNodes Rects{} = True
+usedByNodes Regular{} = True
+usedByNodes Root{} = True
+usedByNodes SamplePoints{} = True
+usedByNodes ShapeFile{} = True
+usedByNodes Shape{} = True
+usedByNodes ShowBoxes{} = True
+usedByNodes Sides{} = True
+usedByNodes Skew{} = True
+usedByNodes SortV{} = True
+usedByNodes Style{} = True
+usedByNodes Target{} = True
+usedByNodes Tooltip{} = True
+usedByNodes Vertices{} = True
+usedByNodes Width{} = True
+usedByNodes Z{} = True
+usedByNodes _ = False
+ 
+usedByEdges :: Attribute -> Bool
+usedByEdges URL{} = True
+usedByEdges ArrowHead{} = True
+usedByEdges ArrowSize{} = True
+usedByEdges ArrowTail{} = True
+usedByEdges ColorScheme{} = True
+usedByEdges Color{} = True
+usedByEdges Comment{} = True
+usedByEdges Constraint{} = True
+usedByEdges Decorate{} = True
+usedByEdges Dir{} = True
+usedByEdges EdgeURL{} = True
+usedByEdges EdgeTarget{} = True
+usedByEdges EdgeTooltip{} = True
+usedByEdges FontColor{} = True
+usedByEdges FontName{} = True
+usedByEdges FontSize{} = True
+usedByEdges HeadURL{} = True
+usedByEdges HeadClip{} = True
+usedByEdges HeadLabel{} = True
+usedByEdges HeadPort{} = True
+usedByEdges HeadTarget{} = True
+usedByEdges HeadTooltip{} = True
+usedByEdges ID{} = True
+usedByEdges LabelURL{} = True
+usedByEdges LabelAngle{} = True
+usedByEdges LabelDistance{} = True
+usedByEdges LabelFloat{} = True
+usedByEdges LabelFontColor{} = True
+usedByEdges LabelFontName{} = True
+usedByEdges LabelFontSize{} = True
+usedByEdges LabelTarget{} = True
+usedByEdges LabelTooltip{} = True
+usedByEdges Label{} = True
+usedByEdges Layer{} = True
+usedByEdges Len{} = True
+usedByEdges LHead{} = True
+usedByEdges LPos{} = True
+usedByEdges LTail{} = True
+usedByEdges MinLen{} = True
+usedByEdges NoJustify{} = True
+usedByEdges PenWidth{} = True
+usedByEdges Pos{} = True
+usedByEdges SameHead{} = True
+usedByEdges SameTail{} = True
+usedByEdges ShowBoxes{} = True
+usedByEdges Style{} = True
+usedByEdges TailURL{} = True
+usedByEdges TailClip{} = True
+usedByEdges TailLabel{} = True
+usedByEdges TailPort{} = True
+usedByEdges TailTarget{} = True
+usedByEdges TailTooltip{} = True
+usedByEdges Target{} = True
+usedByEdges Tooltip{} = True
+usedByEdges Weight{} = True
+usedByEdges _ = False
+ 
+type EscString = String
+ 
+newtype URL = UStr{urlString :: EscString}
+            deriving (Eq, Ord, Show, Read)
+ 
+instance PrintDot URL where
+        unqtDot = wrap (char '<') (char '>') . text . urlString
+ 
+instance ParseDot URL where
+        parseUnqt
+          = liftM UStr $
+              bracket (character open) (character close)
+                (many1 $ satisfy ((/=) close))
+          where open = '<'
+                close = '>'
+        parse = parseUnqt
+ 
+newtype ArrowType = AType [(ArrowModifier, ArrowShape)]
+                  deriving (Eq, Ord, Show, Read)
+ 
+box, crow, diamond, dotArrow, inv, noArrow, normal, tee, vee ::
+     ArrowType
+ 
+oDot, invDot, invODot, oBox, oDiamond :: ArrowType
+ 
+eDiamond, openArr, halfOpen, emptyArr, invEmpty :: ArrowType
+normal = AType [(noMods, Normal)]
+inv = AType [(noMods, Inv)]
+dotArrow = AType [(noMods, DotArrow)]
+invDot = AType [(noMods, Inv), (noMods, DotArrow)]
+oDot = AType [(ArrMod OpenArrow BothSides, DotArrow)]
+invODot = AType [(noMods, Inv), (openMod, DotArrow)]
+noArrow = AType [(noMods, NoArrow)]
+tee = AType [(noMods, Tee)]
+emptyArr = AType [(openMod, Normal)]
+invEmpty = AType [(noMods, Inv), (openMod, Normal)]
+diamond = AType [(noMods, Diamond)]
+oDiamond = AType [(openMod, Diamond)]
+eDiamond = oDiamond
+crow = AType [(noMods, Crow)]
+box = AType [(noMods, Box)]
+oBox = AType [(openMod, Box)]
+openArr = vee
+halfOpen = AType [(ArrMod FilledArrow LeftSide, Vee)]
+vee = AType [(noMods, Vee)]
+ 
+instance PrintDot ArrowType where
+        unqtDot (AType mas) = hcat $ map appMod mas
+          where appMod (m, a) = unqtDot m <> unqtDot a
+ 
+instance ParseDot ArrowType where
+        parseUnqt
+          = (do mas <- many1 $
+                         do m <- parseUnqt
+                            a <- parseUnqt
+                            return (m, a)
+                return $ AType mas)
+              `onFail` specialArrowParse
+ 
+specialArrowParse :: Parse ArrowType
+specialArrowParse
+  = oneOf
+      [stringRep eDiamond "ediamond", stringRep openArr "open",
+       stringRep halfOpen "halfopen", stringRep emptyArr "empty",
+       stringRep invEmpty "invempty"]
+ 
+data ArrowShape = Box
+                | Crow
+                | Diamond
+                | DotArrow
+                | Inv
+                | NoArrow
+                | Normal
+                | Tee
+                | Vee
+                deriving (Eq, Ord, Bounded, Enum, Show, Read)
+ 
+instance PrintDot ArrowShape where
+        unqtDot Box = unqtDot "box"
+        unqtDot Crow = unqtDot "crow"
+        unqtDot Diamond = unqtDot "diamond"
+        unqtDot DotArrow = unqtDot "dot"
+        unqtDot Inv = unqtDot "inv"
+        unqtDot NoArrow = unqtDot "none"
+        unqtDot Normal = unqtDot "normal"
+        unqtDot Tee = unqtDot "tee"
+        unqtDot Vee = unqtDot "vee"
+ 
+instance ParseDot ArrowShape where
+        parseUnqt
+          = oneOf
+              [stringRep Box "box", stringRep Crow "crow",
+               stringRep Diamond "diamond", stringRep DotArrow "dot",
+               stringRep Inv "inv", stringRep NoArrow "none",
+               stringRep Normal "normal", stringRep Tee "tee",
+               stringRep Vee "vee"]
+ 
+data ArrowModifier = ArrMod{arrowFill :: ArrowFill,
+                            arrowSide :: ArrowSide}
+                   deriving (Eq, Ord, Show, Read)
+ 
+noMods :: ArrowModifier
+noMods = ArrMod FilledArrow BothSides
+ 
+openMod :: ArrowModifier
+openMod = ArrMod OpenArrow BothSides
+ 
+instance PrintDot ArrowModifier where
+        unqtDot (ArrMod f s) = unqtDot f <> unqtDot s
+ 
+instance ParseDot ArrowModifier where
+        parseUnqt
+          = do f <- parseUnqt
+               s <- parseUnqt
+               return $ ArrMod f s
+ 
+data ArrowFill = OpenArrow
+               | FilledArrow
+               deriving (Eq, Ord, Bounded, Enum, Show, Read)
+ 
+instance PrintDot ArrowFill where
+        unqtDot OpenArrow = char 'o'
+        unqtDot FilledArrow = empty
+ 
+instance ParseDot ArrowFill where
+        parseUnqt
+          = liftM (bool FilledArrow OpenArrow . isJust) $
+              optional (character 'o')
+        parse = parseUnqt
+ 
+data ArrowSide = LeftSide
+               | RightSide
+               | BothSides
+               deriving (Eq, Ord, Bounded, Enum, Show, Read)
+ 
+instance PrintDot ArrowSide where
+        unqtDot LeftSide = char 'l'
+        unqtDot RightSide = char 'r'
+        unqtDot BothSides = empty
+ 
+instance ParseDot ArrowSide where
+        parseUnqt
+          = liftM getSideType $ optional (oneOf $ map character ['l', 'r'])
+          where getSideType
+                  = maybe BothSides (bool RightSide LeftSide . (==) 'l')
+        parse = parseUnqt
+ 
+data AspectType = RatioOnly Double
+                | RatioPassCount Double Int
+                deriving (Eq, Ord, Show, Read)
+ 
+instance PrintDot AspectType where
+        unqtDot (RatioOnly r) = unqtDot r
+        unqtDot (RatioPassCount r p) = commaDel r p
+        toDot at@RatioOnly{} = unqtDot at
+        toDot at@RatioPassCount{} = doubleQuotes $ unqtDot at
+ 
+instance ParseDot AspectType where
+        parseUnqt
+          = liftM (uncurry RatioPassCount) commaSepUnqt `onFail`
+              liftM RatioOnly parseUnqt
+        parse
+          = quotedParse (liftM (uncurry RatioPassCount) commaSepUnqt)
+              `onFail` liftM RatioOnly parse
+ 
+data Rect = Rect Point Point
+          deriving (Eq, Ord, Show, Read)
+ 
+instance PrintDot Rect where
+        unqtDot (Rect p1 p2) = commaDel p1 p2
+        toDot = doubleQuotes . unqtDot
+ 
+instance ParseDot Rect where
+        parseUnqt = liftM (uncurry Rect) commaSepUnqt
+        parse = quotedParse parseUnqt
+ 
+data ClusterMode = Local
+                 | Global
+                 | NoCluster
+                 deriving (Eq, Ord, Bounded, Enum, Show, Read)
+ 
+instance PrintDot ClusterMode where
+        unqtDot Local = unqtDot "local"
+        unqtDot Global = unqtDot "global"
+        unqtDot NoCluster = unqtDot "none"
+ 
+instance ParseDot ClusterMode where
+        parseUnqt
+          = oneOf
+              [stringRep Local "local", stringRep Global "global",
+               stringRep NoCluster "none"]
+ 
+data DirType = Forward
+             | Back
+             | Both
+             | NoDir
+             deriving (Eq, Ord, Bounded, Enum, Show, Read)
+ 
+instance PrintDot DirType where
+        unqtDot Forward = unqtDot "forward"
+        unqtDot Back = unqtDot "back"
+        unqtDot Both = unqtDot "both"
+        unqtDot NoDir = unqtDot "none"
+ 
+instance ParseDot DirType where
+        parseUnqt
+          = oneOf
+              [stringRep Forward "forward", stringRep Back "back",
+               stringRep Both "both", stringRep NoDir "none"]
+ 
+data DEConstraints = EdgeConstraints
+                   | NoConstraints
+                   | HierConstraints
+                   deriving (Eq, Ord, Bounded, Enum, Show, Read)
+ 
+instance PrintDot DEConstraints where
+        unqtDot EdgeConstraints = unqtDot True
+        unqtDot NoConstraints = unqtDot False
+        unqtDot HierConstraints = text "hier"
+ 
+instance ParseDot DEConstraints where
+        parseUnqt
+          = liftM (bool NoConstraints EdgeConstraints) parse `onFail`
+              stringRep HierConstraints "hier"
+ 
+data DPoint = DVal Double
+            | PVal Point
+            deriving (Eq, Ord, Show, Read)
+ 
+instance PrintDot DPoint where
+        unqtDot (DVal d) = unqtDot d
+        unqtDot (PVal p) = unqtDot p
+        toDot (DVal d) = toDot d
+        toDot (PVal p) = toDot p
+ 
+instance ParseDot DPoint where
+        parseUnqt = liftM PVal parseUnqt `onFail` liftM DVal parseUnqt
+        parse = liftM PVal parse `onFail` liftM DVal parse
+ 
+data ModeType = Major
+              | KK
+              | Hier
+              | IpSep
+              deriving (Eq, Ord, Bounded, Enum, Show, Read)
+ 
+instance PrintDot ModeType where
+        unqtDot Major = text "major"
+        unqtDot KK = text "KK"
+        unqtDot Hier = text "hier"
+        unqtDot IpSep = text "ipsep"
+ 
+instance ParseDot ModeType where
+        parseUnqt
+          = oneOf
+              [stringRep Major "major", stringRep KK "KK", stringRep Hier "hier",
+               stringRep IpSep "ipsep"]
+ 
+data Model = ShortPath
+           | SubSet
+           | Circuit
+           deriving (Eq, Ord, Bounded, Enum, Show, Read)
+ 
+instance PrintDot Model where
+        unqtDot ShortPath = text "shortpath"
+        unqtDot SubSet = text "subset"
+        unqtDot Circuit = text "circuit"
+ 
+instance ParseDot Model where
+        parseUnqt
+          = oneOf
+              [stringRep ShortPath "shortpath", stringRep SubSet "subset",
+               stringRep Circuit "circuit"]
+ 
+data Label = StrLabel EscString
+           | URLLabel URL
+           deriving (Eq, Ord, Show, Read)
+ 
+instance PrintDot Label where
+        unqtDot (StrLabel s) = unqtDot s
+        unqtDot (URLLabel u) = unqtDot u
+        toDot (StrLabel s) = toDot s
+        toDot (URLLabel u) = toDot u
+ 
+instance ParseDot Label where
+        parseUnqt
+          = liftM StrLabel parseUnqt `onFail` liftM URLLabel parseUnqt
+        parse = liftM StrLabel parse `onFail` liftM URLLabel parse
+ 
+data Point = Point Int Int
+           | PointD Double Double
+           deriving (Eq, Ord, Show, Read)
+ 
+instance PrintDot Point where
+        unqtDot (Point x y) = commaDel x y
+        unqtDot (PointD x y) = commaDel x y
+        toDot = doubleQuotes . unqtDot
+        unqtListToDot = hsep . map unqtDot
+        listToDot = doubleQuotes . unqtListToDot
+ 
+instance ParseDot Point where
+        parseUnqt
+          = intDblPoint `onFail` liftM (uncurry Point) commaSepUnqt `onFail`
+              liftM (uncurry PointD) commaSepUnqt
+          where intDblPoint
+                  = liftM (uncurry PointD . first fI) $
+                      commaSep' parseUnqt parseStrictFloat
+                 
+                fI :: Int -> Double
+                fI = fromIntegral
+        parse = quotedParse parseUnqt
+        parseUnqtList = sepBy1 parseUnqt whitespace
+ 
+data Overlap = KeepOverlaps
+             | RemoveOverlaps
+             | ScaleOverlaps
+             | ScaleXYOverlaps
+             | PrismOverlap (Maybe Int)
+             | CompressOverlap
+             | VpscOverlap
+             | IpsepOverlap
+             deriving (Eq, Ord, Show, Read)
+ 
+instance PrintDot Overlap where
+        unqtDot KeepOverlaps = unqtDot True
+        unqtDot RemoveOverlaps = unqtDot False
+        unqtDot ScaleOverlaps = text "scale"
+        unqtDot ScaleXYOverlaps = text "scalexy"
+        unqtDot (PrismOverlap i)
+          = maybe id (flip (<>) . unqtDot) i $ text "prism"
+        unqtDot CompressOverlap = text "compress"
+        unqtDot VpscOverlap = text "vpsc"
+        unqtDot IpsepOverlap = text "ipsep"
+ 
+instance ParseDot Overlap where
+        parseUnqt
+          = oneOf
+              [stringRep KeepOverlaps "true", stringRep RemoveOverlaps "false",
+               stringRep ScaleXYOverlaps "scalexy",
+               stringRep ScaleOverlaps "scale",
+               string "prism" >> liftM PrismOverlap (optional parse),
+               stringRep CompressOverlap "compress", stringRep VpscOverlap "vpsc",
+               stringRep IpsepOverlap "ipsep"]
+ 
+data LayerRange = LRID LayerID
+                | LRS LayerID String LayerID
+                deriving (Eq, Ord, Show, Read)
+ 
+instance PrintDot LayerRange where
+        unqtDot (LRID lid) = unqtDot lid
+        unqtDot (LRS id1 s id2) = unqtDot id1 <> unqtDot s <> unqtDot id2
+        toDot (LRID lid) = toDot lid
+        toDot lrs = doubleQuotes $ unqtDot lrs
+ 
+instance ParseDot LayerRange where
+        parseUnqt
+          = (do id1 <- parseUnqt
+                s <- parseLayerSep
+                id2 <- parseUnqt
+                return $ LRS id1 s id2)
+              `onFail` liftM LRID parseUnqt
+        parse
+          = quotedParse
+              (do id1 <- parseUnqt
+                  s <- parseLayerSep
+                  id2 <- parseUnqt
+                  return $ LRS id1 s id2)
+              `onFail` liftM LRID parse
+ 
+parseLayerSep :: Parse String
+parseLayerSep = many1 . oneOf $ map character defLayerSep
+ 
+defLayerSep :: [Char]
+defLayerSep = [' ', ':', '\t']
+ 
+parseLayerName :: Parse String
+parseLayerName
+  = many1 . orQuote $
+      satisfy (liftM2 (&&) notLayerSep ((/=) quoteChar))
+ 
+parseLayerName' :: Parse String
+parseLayerName' = stringBlock `onFail` quotedParse parseLayerName
+ 
+notLayerSep :: Char -> Bool
+notLayerSep = flip notElem defLayerSep
+ 
+data LayerID = AllLayers
+             | LRInt Int
+             | LRName String
+             deriving (Eq, Ord, Show, Read)
+ 
+instance PrintDot LayerID where
+        unqtDot AllLayers = text "all"
+        unqtDot (LRInt n) = unqtDot n
+        unqtDot (LRName nm) = unqtDot nm
+        toDot (LRName nm) = toDot nm
+        toDot li = unqtDot li
+ 
+instance ParseDot LayerID where
+        parseUnqt = liftM checkLayerName parseLayerName
+        parse
+          = oneOf [liftM checkLayerName parseLayerName', liftM LRInt parse]
+ 
+checkLayerName :: String -> LayerID
+checkLayerName str = maybe checkAll LRInt $ stringToInt str
+  where checkAll
+          = if map toLower str == "all" then AllLayers else LRName str
+ 
+data LayerList = LL String [(String, String)]
+               deriving (Eq, Ord, Show, Read)
+ 
+instance PrintDot LayerList where
+        unqtDot (LL l1 ols) = unqtDot l1 <> hcat (map subLL ols)
+          where subLL (s, l) = unqtDot s <> unqtDot l
+        toDot (LL l1 []) = toDot l1
+        toDot ll = doubleQuotes $ unqtDot ll
+ 
+instance ParseDot LayerList where
+        parseUnqt
+          = do l1 <- parseLayerName
+               ols <- many $
+                        do s <- parseLayerSep
+                           lnm <- parseLayerName
+                           return (s, lnm)
+               return $ LL l1 ols
+        parse
+          = quotedParse parseUnqt `onFail`
+              liftM (flip LL []) (parseLayerName' `onFail` numString)
+ 
+data OutputMode = BreadthFirst
+                | NodesFirst
+                | EdgesFirst
+                deriving (Eq, Ord, Bounded, Enum, Show, Read)
+ 
+instance PrintDot OutputMode where
+        unqtDot BreadthFirst = text "breadthfirst"
+        unqtDot NodesFirst = text "nodesfirst"
+        unqtDot EdgesFirst = text "edgesfirst"
+ 
+instance ParseDot OutputMode where
+        parseUnqt
+          = oneOf
+              [stringRep BreadthFirst "breadthfirst",
+               stringRep NodesFirst "nodesfirst",
+               stringRep EdgesFirst "edgesfirst"]
+ 
+data Pack = DoPack
+          | DontPack
+          | PackMargin Int
+          deriving (Eq, Ord, Show, Read)
+ 
+instance PrintDot Pack where
+        unqtDot DoPack = unqtDot True
+        unqtDot DontPack = unqtDot False
+        unqtDot (PackMargin m) = unqtDot m
+ 
+instance ParseDot Pack where
+        parseUnqt
+          = oneOf
+              [liftM PackMargin parseUnqt, liftM (bool DontPack DoPack) onlyBool]
+ 
+data PackMode = PackNode
+              | PackClust
+              | PackGraph
+              | PackArray Bool Bool (Maybe Int)
+              deriving (Eq, Ord, Show, Read)
+ 
+instance PrintDot PackMode where
+        unqtDot PackNode = text "node"
+        unqtDot PackClust = text "clust"
+        unqtDot PackGraph = text "graph"
+        unqtDot (PackArray c u mi)
+          = addNum . isU . isC . isUnder $ text "array"
+          where addNum = maybe id (flip (<>) . unqtDot) mi
+                isUnder = if c || u then flip (<>) $ char '_' else id
+                isC = if c then flip (<>) $ char 'c' else id
+                isU = if u then flip (<>) $ char 'u' else id
+ 
+instance ParseDot PackMode where
+        parseUnqt
+          = oneOf
+              [stringRep PackNode "node", stringRep PackClust "clust",
+               stringRep PackGraph "graph",
+               do string "array"
+                  mcu <- optional $
+                           do character '_'
+                              many1 $ satisfy isCU
+                  let c = hasCharacter mcu 'c'
+                      u = hasCharacter mcu 'u'
+                  mi <- optional parseUnqt
+                  return $ PackArray c u mi]
+          where hasCharacter ms c = maybe False (elem c) ms
+                isCU = flip elem ['c', 'u']
+ 
+data Pos = PointPos Point
+         | SplinePos [Spline]
+         deriving (Eq, Ord, Show, Read)
+ 
+instance PrintDot Pos where
+        unqtDot (PointPos p) = unqtDot p
+        unqtDot (SplinePos ss) = unqtDot ss
+        toDot (PointPos p) = toDot p
+        toDot (SplinePos ss) = toDot ss
+ 
+instance ParseDot Pos where
+        parseUnqt
+          = do splns <- parseUnqt
+               case splns of
+                   [Spline Nothing Nothing [p]] -> return $ PointPos p
+                   _ -> return $ SplinePos splns
+        parse = quotedParse parseUnqt
+ 
+data EdgeType = SplineEdges
+              | LineEdges
+              | NoEdges
+              | PolyLine
+              | CompoundEdge
+              deriving (Eq, Ord, Bounded, Enum, Show, Read)
+ 
+instance PrintDot EdgeType where
+        unqtDot SplineEdges = toDot True
+        unqtDot LineEdges = toDot False
+        unqtDot NoEdges = empty
+        unqtDot PolyLine = text "polyline"
+        unqtDot CompoundEdge = text "compound"
+        toDot NoEdges = doubleQuotes empty
+        toDot et = unqtDot et
+ 
+instance ParseDot EdgeType where
+        parseUnqt
+          = oneOf
+              [liftM (bool LineEdges SplineEdges) parse,
+               stringRep SplineEdges "spline", stringRep LineEdges "line",
+               stringRep PolyLine "polyline", stringRep CompoundEdge "compound"]
+        parse = stringRep NoEdges "\"\"" `onFail` optionalQuoted parseUnqt
+ 
+data PageDir = Bl
+             | Br
+             | Tl
+             | Tr
+             | Rb
+             | Rt
+             | Lb
+             | Lt
+             deriving (Eq, Ord, Bounded, Enum, Show, Read)
+ 
+instance PrintDot PageDir where
+        unqtDot Bl = text "BL"
+        unqtDot Br = text "BR"
+        unqtDot Tl = text "TL"
+        unqtDot Tr = text "TR"
+        unqtDot Rb = text "RB"
+        unqtDot Rt = text "RT"
+        unqtDot Lb = text "LB"
+        unqtDot Lt = text "LT"
+ 
+instance ParseDot PageDir where
+        parseUnqt
+          = oneOf
+              [stringRep Bl "BL", stringRep Br "BR", stringRep Tl "TL",
+               stringRep Tr "TR", stringRep Rb "RB", stringRep Rt "RT",
+               stringRep Lb "LB", stringRep Lt "LT"]
+ 
+data Spline = Spline (Maybe Point) (Maybe Point) [Point]
+            deriving (Eq, Ord, Show, Read)
+ 
+instance PrintDot Spline where
+        unqtDot (Spline ms me ps) = addS . addE . hsep $ map unqtDot ps
+          where addP t = maybe id ((<+>) . commaDel t)
+                addS = addP 's' ms
+                addE = addP 'e' me
+        toDot = doubleQuotes . unqtDot
+        unqtListToDot = hcat . punctuate semi . map unqtDot
+        listToDot = doubleQuotes . unqtListToDot
+ 
+instance ParseDot Spline where
+        parseUnqt
+          = do ms <- parseP 's'
+               me <- parseP 'e'
+               ps <- sepBy1 parseUnqt whitespace
+               return $ Spline ms me ps
+          where parseP t
+                  = optional $
+                      do character t
+                         parseComma
+                         parseUnqt `discard` whitespace
+        parse = quotedParse parseUnqt
+        parseUnqtList = sepBy1 parseUnqt (character ';')
+ 
+data QuadType = NormalQT
+              | FastQT
+              | NoQT
+              deriving (Eq, Ord, Bounded, Enum, Show, Read)
+ 
+instance PrintDot QuadType where
+        unqtDot NormalQT = text "normal"
+        unqtDot FastQT = text "fast"
+        unqtDot NoQT = text "none"
+ 
+instance ParseDot QuadType where
+        parseUnqt
+          = oneOf
+              [stringRep NormalQT "normal", stringRep FastQT "fast",
+               stringRep NoQT "none", character '2' >> return FastQT,
+               liftM (bool NoQT NormalQT) parse]
+ 
+data Root = IsCentral
+          | NotCentral
+          | NodeName String
+          deriving (Eq, Ord, Show, Read)
+ 
+instance PrintDot Root where
+        unqtDot IsCentral = unqtDot True
+        unqtDot NotCentral = unqtDot False
+        unqtDot (NodeName n) = unqtDot n
+        toDot (NodeName n) = toDot n
+        toDot r = unqtDot r
+ 
+instance ParseDot Root where
+        parseUnqt
+          = liftM (bool NotCentral IsCentral) onlyBool `onFail`
+              liftM NodeName parseUnqt
+        parse
+          = optionalQuoted (liftM (bool NotCentral IsCentral) onlyBool)
+              `onFail` liftM NodeName parse
+ 
+data RankType = SameRank
+              | MinRank
+              | SourceRank
+              | MaxRank
+              | SinkRank
+              deriving (Eq, Ord, Bounded, Enum, Show, Read)
+ 
+instance PrintDot RankType where
+        unqtDot SameRank = text "same"
+        unqtDot MinRank = text "min"
+        unqtDot SourceRank = text "source"
+        unqtDot MaxRank = text "max"
+        unqtDot SinkRank = text "sink"
+ 
+instance ParseDot RankType where
+        parseUnqt
+          = oneOf
+              [stringRep SameRank "same", stringRep MinRank "min",
+               stringRep SourceRank "source", stringRep MaxRank "max",
+               stringRep SinkRank "sink"]
+ 
+data RankDir = FromTop
+             | FromLeft
+             | FromBottom
+             | FromRight
+             deriving (Eq, Ord, Bounded, Enum, Show, Read)
+ 
+instance PrintDot RankDir where
+        unqtDot FromTop = text "TB"
+        unqtDot FromLeft = text "LR"
+        unqtDot FromBottom = text "BT"
+        unqtDot FromRight = text "RL"
+ 
+instance ParseDot RankDir where
+        parseUnqt
+          = oneOf
+              [stringRep FromTop "TB", stringRep FromLeft "LR",
+               stringRep FromBottom "BT", stringRep FromRight "RL"]
+ 
+data Shape = BoxShape
+           | Polygon
+           | Ellipse
+           | Circle
+           | PointShape
+           | Egg
+           | Triangle
+           | PlainText
+           | DiamondShape
+           | Trapezium
+           | Parallelogram
+           | House
+           | Pentagon
+           | Hexagon
+           | Septagon
+           | Octagon
+           | DoubleCircle
+           | DoubleOctagon
+           | TripleOctagon
+           | InvTriangle
+           | InvTrapezium
+           | InvHouse
+           | MDiamond
+           | MSquare
+           | MCircle
+           | Note
+           | Tab
+           | Folder
+           | Box3D
+           | Component
+           deriving (Eq, Ord, Bounded, Enum, Show, Read)
+ 
+instance PrintDot Shape where
+        unqtDot BoxShape = text "box"
+        unqtDot Polygon = text "polygon"
+        unqtDot Ellipse = text "ellipse"
+        unqtDot Circle = text "circle"
+        unqtDot PointShape = text "point"
+        unqtDot Egg = text "egg"
+        unqtDot Triangle = text "triangle"
+        unqtDot PlainText = text "plaintext"
+        unqtDot DiamondShape = text "diamond"
+        unqtDot Trapezium = text "trapezium"
+        unqtDot Parallelogram = text "parallelogram"
+        unqtDot House = text "house"
+        unqtDot Pentagon = text "pentagon"
+        unqtDot Hexagon = text "hexagon"
+        unqtDot Septagon = text "septagon"
+        unqtDot Octagon = text "octagon"
+        unqtDot DoubleCircle = text "doublecircle"
+        unqtDot DoubleOctagon = text "doubleoctagon"
+        unqtDot TripleOctagon = text "tripleoctagon"
+        unqtDot InvTriangle = text "invtriangle"
+        unqtDot InvTrapezium = text "invtrapezium"
+        unqtDot InvHouse = text "invhouse"
+        unqtDot MDiamond = text "Mdiamond"
+        unqtDot MSquare = text "Msquare"
+        unqtDot MCircle = text "Mcircle"
+        unqtDot Note = text "note"
+        unqtDot Tab = text "tab"
+        unqtDot Folder = text "folder"
+        unqtDot Box3D = text "box3d"
+        unqtDot Component = text "component"
+ 
+instance ParseDot Shape where
+        parseUnqt
+          = oneOf
+              [stringRep Box3D "box3d",
+               stringReps BoxShape ["box", "rectangle", "rect"],
+               stringRep Polygon "polygon", stringRep Ellipse "ellipse",
+               stringRep Circle "circle", stringRep PointShape "point",
+               stringRep Egg "egg", stringRep Triangle "triangle",
+               stringReps PlainText ["plaintext", "none"],
+               stringRep DiamondShape "diamond", stringRep Trapezium "trapezium",
+               stringRep Parallelogram "parallelogram", stringRep House "house",
+               stringRep Pentagon "pentagon", stringRep Hexagon "hexagon",
+               stringRep Septagon "septagon", stringRep Octagon "octagon",
+               stringRep DoubleCircle "doublecircle",
+               stringRep DoubleOctagon "doubleoctagon",
+               stringRep TripleOctagon "tripleoctagon",
+               stringRep InvTriangle "invtriangle",
+               stringRep InvTrapezium "invtrapezium",
+               stringRep InvHouse "invhouse", stringRep MDiamond "Mdiamond",
+               stringRep MSquare "Msquare", stringRep MCircle "Mcircle",
+               stringRep Note "note", stringRep Tab "tab",
+               stringRep Folder "folder", stringRep Component "component"]
+ 
+data SmoothType = NoSmooth
+                | AvgDist
+                | GraphDist
+                | PowerDist
+                | RNG
+                | Spring
+                | TriangleSmooth
+                deriving (Eq, Ord, Bounded, Enum, Show, Read)
+ 
+instance PrintDot SmoothType where
+        unqtDot NoSmooth = text "none"
+        unqtDot AvgDist = text "avg_dist"
+        unqtDot GraphDist = text "graph_dist"
+        unqtDot PowerDist = text "power_dist"
+        unqtDot RNG = text "rng"
+        unqtDot Spring = text "spring"
+        unqtDot TriangleSmooth = text "triangle"
+ 
+instance ParseDot SmoothType where
+        parseUnqt
+          = oneOf
+              [stringRep NoSmooth "none", stringRep AvgDist "avg_dist",
+               stringRep GraphDist "graph_dist", stringRep PowerDist "power_dist",
+               stringRep RNG "rng", stringRep Spring "spring",
+               stringRep TriangleSmooth "triangle"]
+ 
+data StartType = StartStyle STStyle
+               | StartSeed Int
+               | StartStyleSeed STStyle Int
+               deriving (Eq, Ord, Show, Read)
+ 
+instance PrintDot StartType where
+        unqtDot (StartStyle ss) = unqtDot ss
+        unqtDot (StartSeed s) = unqtDot s
+        unqtDot (StartStyleSeed ss s) = unqtDot ss <> unqtDot s
+ 
+instance ParseDot StartType where
+        parseUnqt
+          = oneOf
+              [do ss <- parseUnqt
+                  s <- parseUnqt
+                  return $ StartStyleSeed ss s,
+               liftM StartStyle parseUnqt, liftM StartSeed parseUnqt]
+ 
+data STStyle = RegularStyle
+             | SelfStyle
+             | RandomStyle
+             deriving (Eq, Ord, Bounded, Enum, Show, Read)
+ 
+instance PrintDot STStyle where
+        unqtDot RegularStyle = text "regular"
+        unqtDot SelfStyle = text "self"
+        unqtDot RandomStyle = text "random"
+ 
+instance ParseDot STStyle where
+        parseUnqt
+          = oneOf
+              [stringRep RegularStyle "regular", stringRep SelfStyle "self",
+               stringRep RandomStyle "random"]
+ 
+data StyleItem = SItem StyleName [String]
+               deriving (Eq, Ord, Show, Read)
+ 
+instance PrintDot StyleItem where
+        unqtDot (SItem nm args)
+          | null args = dnm
+          | otherwise = dnm <> parens args'
+          where dnm = unqtDot nm
+                args' = hcat . punctuate comma $ map unqtDot args
+        toDot si@(SItem nm args)
+          | null args = toDot nm
+          | otherwise = doubleQuotes $ unqtDot si
+        unqtListToDot = hcat . punctuate comma . map unqtDot
+        listToDot [SItem nm []] = toDot nm
+        listToDot sis = doubleQuotes $ unqtListToDot sis
+ 
+instance ParseDot StyleItem where
+        parseUnqt
+          = do nm <- parseUnqt
+               args <- tryParseList' parseArgs
+               return $ SItem nm args
+        parse
+          = quotedParse (liftM2 SItem parseUnqt parseArgs) `onFail`
+              liftM (flip SItem []) parse
+        parseUnqtList = sepBy1 parseUnqt parseComma
+        parseList = quotedParse parseUnqtList `onFail` liftM return parse
+ 
+parseArgs :: Parse [String]
+parseArgs
+  = bracketSep (character '(') parseComma (character ')')
+      parseStyleName
+ 
+data StyleName = Dashed
+               | Dotted
+               | Solid
+               | Bold
+               | Invisible
+               | Filled
+               | Diagonals
+               | Rounded
+               | DD String
+               deriving (Eq, Ord, Show, Read)
+ 
+instance PrintDot StyleName where
+        unqtDot Dashed = text "dashed"
+        unqtDot Dotted = text "dotted"
+        unqtDot Solid = text "solid"
+        unqtDot Bold = text "bold"
+        unqtDot Invisible = text "invis"
+        unqtDot Filled = text "filled"
+        unqtDot Diagonals = text "diagonals"
+        unqtDot Rounded = text "rounded"
+        unqtDot (DD nm) = unqtDot nm
+        toDot (DD nm) = toDot nm
+        toDot sn = unqtDot sn
+ 
+instance ParseDot StyleName where
+        parseUnqt = liftM checkDD parseStyleName
+        parse
+          = liftM checkDD $
+              quotedParse parseStyleName `onFail`
+                do f <- orQuote $ noneOf [quoteChar, '(', ')', ',', ' ', ']']
+                   r <- many (orQuote $ noneOf [quoteChar, '(', ')', ',', ']'])
+                   return $ f : r
+ 
+checkDD :: String -> StyleName
+checkDD str
+  = case map toLower str of
+        "dashed" -> Dashed
+        "dotted" -> Dotted
+        "solid" -> Solid
+        "bold" -> Bold
+        "invis" -> Invisible
+        "filled" -> Filled
+        "diagonals" -> Diagonals
+        "rounded" -> Rounded
+        _ -> DD str
+ 
+parseStyleName :: Parse String
+parseStyleName
+  = do f <- orQuote $ noneOf [quoteChar, '(', ')', ',', ' ']
+       r <- many (orQuote $ noneOf [quoteChar, '(', ')', ','])
+       return $ f : r
+ 
+newtype PortPos = PP CompassPoint
+                deriving (Eq, Ord, Show, Read)
+ 
+instance PrintDot PortPos where
+        unqtDot (PP cp) = unqtDot cp
+        toDot (PP cp) = toDot cp
+ 
+instance ParseDot PortPos where
+        parseUnqt = liftM PP parseUnqt
+ 
+data CompassPoint = North
+                  | NorthEast
+                  | East
+                  | SouthEast
+                  | South
+                  | SouthWest
+                  | West
+                  | NorthWest
+                  | CenterPoint
+                  | NoCP
+                  deriving (Eq, Ord, Bounded, Enum, Show, Read)
+ 
+instance PrintDot CompassPoint where
+        unqtDot NorthEast = text "ne"
+        unqtDot NorthWest = text "nw"
+        unqtDot North = text "n"
+        unqtDot East = text "e"
+        unqtDot SouthEast = text "se"
+        unqtDot SouthWest = text "sw"
+        unqtDot South = text "s"
+        unqtDot West = text "w"
+        unqtDot CenterPoint = text "c"
+        unqtDot NoCP = text "_"
+ 
+instance ParseDot CompassPoint where
+        parseUnqt
+          = oneOf
+              [stringRep NorthEast "ne", stringRep NorthWest "nw",
+               stringRep North "n", stringRep SouthEast "se",
+               stringRep SouthWest "sw", stringRep South "s", stringRep East "e",
+               stringRep West "w", stringRep CenterPoint "c", stringRep NoCP "_"]
+ 
+data ViewPort = VP{wVal :: Double, hVal :: Double, zVal :: Double,
+                   focus :: Maybe FocusType}
+              deriving (Eq, Ord, Show, Read)
+ 
+instance PrintDot ViewPort where
+        unqtDot vp = maybe vs ((<>) (vs <> comma) . unqtDot) $ focus vp
+          where vs
+                  = hcat . punctuate comma $
+                      map (unqtDot . flip ($) vp) [wVal, hVal, zVal]
+        toDot = doubleQuotes . unqtDot
+ 
+instance ParseDot ViewPort where
+        parseUnqt
+          = do wv <- parseUnqt
+               parseComma
+               hv <- parseUnqt
+               parseComma
+               zv <- parseUnqt
+               mf <- optional $ parseComma >> parseUnqt
+               return $ VP wv hv zv mf
+        parse = quotedParse parseUnqt
+ 
+data FocusType = XY Point
+               | NodeFocus String
+               deriving (Eq, Ord, Show, Read)
+ 
+instance PrintDot FocusType where
+        unqtDot (XY p) = unqtDot p
+        unqtDot (NodeFocus nm) = unqtDot nm
+        toDot (XY p) = toDot p
+        toDot (NodeFocus nm) = toDot nm
+ 
+instance ParseDot FocusType where
+        parseUnqt = liftM XY parseUnqt `onFail` liftM NodeFocus parseUnqt
+        parse = liftM XY parse `onFail` liftM NodeFocus parse
+ 
+data VerticalPlacement = VTop
+                       | VCenter
+                       | VBottom
+                       deriving (Eq, Ord, Bounded, Enum, Show, Read)
+ 
+instance PrintDot VerticalPlacement where
+        unqtDot VTop = char 't'
+        unqtDot VCenter = char 'c'
+        unqtDot VBottom = char 'b'
+ 
+instance ParseDot VerticalPlacement where
+        parseUnqt
+          = oneOf
+              [stringRep VTop "t", stringRep VCenter "c", stringRep VBottom "b"]
+ 
+data ScaleType = UniformScale
+               | NoScale
+               | FillWidth
+               | FillHeight
+               | FillBoth
+               deriving (Eq, Ord, Bounded, Enum, Show, Read)
+ 
+instance PrintDot ScaleType where
+        unqtDot UniformScale = unqtDot True
+        unqtDot NoScale = unqtDot False
+        unqtDot FillWidth = text "width"
+        unqtDot FillHeight = text "height"
+        unqtDot FillBoth = text "both"
+ 
+instance ParseDot ScaleType where
+        parseUnqt
+          = oneOf
+              [stringRep UniformScale "true", stringRep NoScale "false",
+               stringRep FillWidth "width", stringRep FillHeight "height",
+               stringRep FillBoth "both"]
+ 
+data Justification = JLeft
+                   | JRight
+                   | JCenter
+                   deriving (Eq, Ord, Bounded, Enum, Show, Read)
+ 
+instance PrintDot Justification where
+        unqtDot JLeft = char 'l'
+        unqtDot JRight = char 'r'
+        unqtDot JCenter = char 'c'
+ 
+instance ParseDot Justification where
+        parseUnqt
+          = oneOf
+              [stringRep JLeft "l", stringRep JRight "r", stringRep JCenter "c"]
+ 
+data Ratios = AspectRatio Double
+            | FillRatio
+            | CompressRatio
+            | ExpandRatio
+            | AutoRatio
+            deriving (Eq, Ord, Show, Read)
+ 
+instance PrintDot Ratios where
+        unqtDot (AspectRatio r) = unqtDot r
+        unqtDot FillRatio = text "fill"
+        unqtDot CompressRatio = text "compress"
+        unqtDot ExpandRatio = text "expand"
+        unqtDot AutoRatio = text "auto"
+ 
+instance ParseDot Ratios where
+        parseUnqt
+          = oneOf
+              [liftM AspectRatio parseUnqt, stringRep FillRatio "fill",
+               stringRep CompressRatio "compress", stringRep ExpandRatio "expand",
+               stringRep AutoRatio "auto"]

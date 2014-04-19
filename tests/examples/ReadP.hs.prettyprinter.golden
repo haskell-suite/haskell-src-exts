@@ -1,0 +1,4 @@
+{-# LANGUAGE TypeOperators #-}
+module Main (main) where
+ 
+newtype ReadP a = R (forall b . (a -> P b) -> P b)

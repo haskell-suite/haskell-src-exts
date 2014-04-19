@@ -1,0 +1,21 @@
+{-# LANGUAGE KindSignatures #-}
+{-# LANGUAGE DataKinds #-}
+module Main (main) where
+ 
+class C1 (a :: Bool) where
+         
+        c :: proxy a -> Int
+ 
+class C2 (a :: [*])
+ 
+class C3 (a :: [(Int, Double)])
+ 
+class C4 (a :: (*))
+ 
+data X (a :: [*])
+x1 = undefined :: X '[Int]
+x2 = undefined :: X '[Int, Double]
+ 
+data Y (a :: (*, Bool))
+y1 = undefined :: Y '(Double, True)
+y2 = undefined :: Y '(Double, 'False)

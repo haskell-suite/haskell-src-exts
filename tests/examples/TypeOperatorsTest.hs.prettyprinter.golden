@@ -1,0 +1,5 @@
+{-# LANGUAGE TypeOperators, FlexibleContexts, FlexibleInstances #-}
+module Main (main) where
+ 
+f :: (ArrowXml (~>)) => a ~> a
+f = undefined
