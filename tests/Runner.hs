@@ -11,7 +11,6 @@ import System.FilePath.Find
 import System.IO
 import Control.Monad.Trans
 import Extensions
-import UnitTests
 
 main :: IO ()
 main = do
@@ -20,7 +19,6 @@ main = do
     [ parserTests sources
     , exactPrinterTests sources
     , extensionProperties
-    , unitTests
     ]
 
 -- | Where all the tests are to be found

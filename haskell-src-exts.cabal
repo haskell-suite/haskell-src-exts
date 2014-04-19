@@ -38,7 +38,6 @@ Extra-Source-Files:
                         tests/examples/*.hs.parser.golden
                         tests/examples/*.hs.exactprinter.golden
                         tests/Runner.hs
-                        tests/UnitTests.hs
                         tests/Extensions.hs
 
 Library
@@ -94,7 +93,6 @@ Test-Suite test
                        smallcheck >= 1.0,
                        tasty >= 0.3,
                        tasty-smallcheck,
-                       tasty-hunit,
                        tasty-golden,
                        filepath,
                        directory
