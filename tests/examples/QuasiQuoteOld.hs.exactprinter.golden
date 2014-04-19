@@ -1,1 +1,13 @@
-ParseFailed (SrcLoc {srcFilename = "tests/examples/QuasiQuoteOld.hs", srcLine = 7, srcColumn = 1}) "Parse error: ;"
+{-# LANGUAGE QuasiQuotes #-}
+
+import Here
+
+str :: String
+str = [here|test 
+test 
+test test |]
+
+
+main :: IO()
+main = do putStrLn str
+

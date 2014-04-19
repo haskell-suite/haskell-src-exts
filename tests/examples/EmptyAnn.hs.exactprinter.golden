@@ -1,1 +1,2 @@
-ParseFailed (SrcLoc {srcFilename = "tests/examples/EmptyAnn.hs", srcLine = 1, srcColumn = 38}) "Parse error: EOF"
+{-# ANN foo "Hlint: ignore Test4" #-}
+

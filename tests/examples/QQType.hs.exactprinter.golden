@@ -1,1 +1,1 @@
-ParseFailed (SrcLoc {srcFilename = "tests/examples/QQType.hs", srcLine = 7, srcColumn = 9}) "Parse error: instance"
+ParseFailed (SrcLoc {srcFilename = "tests/examples/QQType.hs", srcLine = 7, srcColumn = 23}) "Parse error: $("

@@ -1,1 +1,15 @@
-ParseFailed (SrcLoc {srcFilename = "tests/examples/RelaxedDo.hs", srcLine = 9, srcColumn = 3}) "Parse error: Last statement in a do-block must be an expression"
+{-# LANGUAGE NondecreasingIndentation #-}
+module Main where
+
+import Control.Monad
+
+main :: IO ()
+main = do
+  when ( 2 > 1) $ do
+  putStrLn "a"
+  putStrLn "b"
+
+nestedDoBlocks = getChar >>= (\c1 -> do
+                 getChar >>= (\c2 -> do
+                 getChar >>= (\c3 -> return [c1,c2,c3])))
+

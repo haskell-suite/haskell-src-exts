@@ -1,1 +1,3 @@
-ParseFailed (SrcLoc {srcFilename = "tests/examples/ReadP.hs", srcLine = 2, srcColumn = 51}) "TypeOperators is not enabled"
+{-# LANGUAGE TypeOperators #-}
+newtype ReadP a = R (forall b . (a -> P b) -> P b)
+

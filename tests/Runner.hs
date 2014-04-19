@@ -57,7 +57,7 @@ exactPrinterTests sources = testGroup "Exact printer tests" $ do
       let
         -- parse
         mbAst =
-          parseModuleWithComments
+          parseFileContentsWithComments
             (defaultParseMode { parseFilename = file })
             contents
         -- try to pretty-print; summarize the test result

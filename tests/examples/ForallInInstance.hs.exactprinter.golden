@@ -1,1 +1,1 @@
-ParseFailed (SrcLoc {srcFilename = "tests/examples/ForallInInstance.hs", srcLine = 4, srcColumn = 30}) "TypeOperators is not enabled"
+ParseFailed (SrcLoc {srcFilename = "tests/examples/ForallInInstance.hs", srcLine = 5, srcColumn = 1}) "Illegal instance declaration"

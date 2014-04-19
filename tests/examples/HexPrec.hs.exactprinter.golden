@@ -4,3 +4,4 @@ module HexPrec where
 a %% b = 0
 
 infixl 2    %%
+
