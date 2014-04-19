@@ -5,7 +5,7 @@
 -- Module      :  System.Directory
 -- Copyright   :  (c) The University of Glasgow 2001
 -- License     :  BSD-style (see the file libraries/base/LICENSE)
--- 
+--
 -- Maintainer  :  libraries@haskell.org
 -- Stability   :  stable
 -- Portability :  portable
@@ -14,8 +14,8 @@
 --
 -----------------------------------------------------------------------------
 
-module System.Directory 
-   ( 
+module System.Directory
+   (
     -- $intro
 
     -- * Actions on directories
@@ -39,7 +39,7 @@ module System.Directory
     , removeFile        -- :: FilePath -> IO ()
     , renameFile                -- :: FilePath -> FilePath -> IO ()
     , copyFile                  -- :: FilePath -> FilePath -> IO ()
-    
+
     , canonicalizePath
     , makeRelativeToCurrentDirectory
     , findExecutable
@@ -98,7 +98,7 @@ A directory contains a series of entries, each of which is a named
 reference to a file system object (file, directory etc.).  Some
 entries may be hidden, inaccessible, or have some administrative
 function (e.g. `.' or `..' under POSIX
-<http://www.opengroup.org/onlinepubs/009695399/>), but in 
+<http://www.opengroup.org/onlinepubs/009695399/>), but in
 this standard all such entries are considered to form part of the
 directory contents. Entries in sub-directories are not, however,
 considered to form part of the directory contents.
@@ -120,10 +120,10 @@ are relative to the current directory.
  files and directories. For directories, the executable field will be
  'False', and for files the searchable field will be 'False'. Note that
  directories may be searchable without being readable, if permission has
- been given to use them as part of a path, but not to examine the 
+ been given to use them as part of a path, but not to examine the
  directory contents.
 
-Note that to change some, but not all permissions, a construct on the following lines must be used. 
+Note that to change some, but not all permissions, a construct on the following lines must be used.
 
 >  makeReadable f = do
 >     p <- getPermissions f
@@ -133,8 +133,8 @@ Note that to change some, but not all permissions, a construct on the following 
 
 data Permissions
  = Permissions {
-    readable,   writable, 
-    executable, searchable :: Bool 
+    readable,   writable,
+    executable, searchable :: Bool
    } deriving (Eq, Ord, Read, Show)
 
 {- |The 'getPermissions' operation returns the
@@ -228,7 +228,7 @@ The process has insufficient privileges to perform the operation.
 @[EROFS, EACCES]@
 
 * 'isAlreadyExistsError' \/ 'AlreadyExists'
-The operand refers to a directory that already exists.  
+The operand refers to a directory that already exists.
 @ [EEXIST]@
 
 * 'HardwareFault'
@@ -240,7 +240,7 @@ The operand is not a valid directory name.
 @[ENAMETOOLONG, ELOOP]@
 
 * 'NoSuchThing'
-There is no path to the directory. 
+There is no path to the directory.
 @[ENOENT, ENOTDIR]@
 
 * 'ResourceExhausted'
@@ -258,7 +258,7 @@ createDirectory :: FilePath -> IO ()
 createDirectory path = do
   Win32.createDirectory path Nothing
 
--- | @'createDirectoryIfMissing' parents dir@ creates a new directory 
+-- | @'createDirectoryIfMissing' parents dir@ creates a new directory
 -- @dir@ if it doesn\'t exist. If the first argument is 'True'
 -- the function will also create all parent directories if they are missing.
 createDirectoryIfMissing :: Bool     -- ^ Create its parents too?
@@ -319,7 +319,7 @@ The operand is not a valid directory name.
 [ENAMETOOLONG, ELOOP]
 
 * 'isDoesNotExistError' \/ 'NoSuchThing'
-The directory does not exist. 
+The directory does not exist.
 @[ENOENT, ENOTDIR]@
 
 * 'isPermissionError' \/ 'PermissionDenied'
@@ -327,7 +327,7 @@ The process has insufficient privileges to perform the operation.
 @[EROFS, EACCES, EPERM]@
 
 * 'UnsatisfiedConstraints'
-Implementation-dependent constraints are not satisfied.  
+Implementation-dependent constraints are not satisfied.
 @[EBUSY, ENOTEMPTY, EEXIST]@
 
 * 'UnsupportedOperation'
@@ -345,7 +345,7 @@ removeDirectory path =
   Win32.removeDirectory path
 
 -- | @'removeDirectoryRecursive' dir@  removes an existing directory /dir/
--- together with its content and all subdirectories. Be careful, 
+-- together with its content and all subdirectories. Be careful,
 -- if the directory contains symlinks, the function will follow them.
 removeDirectoryRecursive :: FilePath -> IO ()
 removeDirectoryRecursive startLoc = do
@@ -379,7 +379,7 @@ The operand is not a valid file name.
 @[ENAMETOOLONG, ELOOP]@
 
 * 'isDoesNotExistError' \/ 'NoSuchThing'
-The file does not exist. 
+The file does not exist.
 @[ENOENT, ENOTDIR]@
 
 * 'isPermissionError' \/ 'PermissionDenied'
@@ -387,7 +387,7 @@ The process has insufficient privileges to perform the operation.
 @[EROFS, EACCES, EPERM]@
 
 * 'UnsatisfiedConstraints'
-Implementation-dependent constraints are not satisfied.  
+Implementation-dependent constraints are not satisfied.
 @[EBUSY]@
 
 * 'InappropriateType'
@@ -432,7 +432,7 @@ The process has insufficient privileges to perform the operation.
 @[EROFS, EACCES, EPERM]@
 
 * 'ResourceExhausted'
-Insufficient resources are available to perform the operation.  
+Insufficient resources are available to perform the operation.
 @[EDQUOT, ENOSPC, ENOMEM, EMLINK]@
 
 * 'UnsatisfiedConstraints'
@@ -489,7 +489,7 @@ The process has insufficient privileges to perform the operation.
 @[EROFS, EACCES, EPERM]@
 
 * 'ResourceExhausted'
-Insufficient resources are available to perform the operation.  
+Insufficient resources are available to perform the operation.
 @[EDQUOT, ENOSPC, ENOMEM, EMLINK]@
 
 * 'UnsatisfiedConstraints'
@@ -586,7 +586,7 @@ makeRelativeToCurrentDirectory x = do
 -- but notably includes the directory containing the current
 -- executable. See
 -- <http://msdn.microsoft.com/en-us/library/aa365527.aspx> for more
--- details.  
+-- details.
 --
 findExecutable :: String -> IO (Maybe FilePath)
 findExecutable binary =
@@ -594,7 +594,7 @@ findExecutable binary =
 
 
 {- |@'getDirectoryContents' dir@ returns a list of /all/ entries
-in /dir/. 
+in /dir/.
 
 The operation may fail with:
 
@@ -626,7 +626,7 @@ The path refers to an existing non-directory object.
 
 getDirectoryContents :: FilePath -> IO [FilePath]
 getDirectoryContents path =
-  modifyIOError ((`ioeSetFileName` path) . 
+  modifyIOError ((`ioeSetFileName` path) .
                  (`ioeSetLocation` "getDirectoryContents")) $ do
   bracket
      (Win32.findFirstFile (path </> "*"))
@@ -765,7 +765,7 @@ modificationTime stat = do
     mtime <- st_mtime stat
     let realToInteger = round . realToFrac :: Real a => a -> Integer
     return (TOD (realToInteger (mtime :: CTime)) 0)
-    
+
 isDirectory :: Ptr CStat -> IO Bool
 isDirectory stat = do
   mode <- st_mode stat
@@ -793,7 +793,7 @@ instead.
 
 On Unix, 'getHomeDirectory' returns the value of the @HOME@
 environment variable.  On Windows, the system is queried for a
-suitable path; a typical path might be 
+suitable path; a typical path might be
 @C:/Documents And Settings/user@.
 
 The operation may fail with:
@@ -831,7 +831,7 @@ first.  It is expected that the parent directory exists and is
 writable.
 
 On Unix, this function returns @$HOME\/.appName@.  On Windows, a
-typical path might be 
+typical path might be
 
 > C:/Documents And Settings/user/Application Data/appName
 
@@ -859,7 +859,7 @@ instead.
 
 On Unix, 'getUserDocumentsDirectory' returns the value of the @HOME@
 environment variable.  On Windows, the system is queried for a
-suitable path; a typical path might be 
+suitable path; a typical path might be
 @C:\/Documents and Settings\/user\/My Documents@.
 
 The operation may fail with:
@@ -880,17 +880,17 @@ getUserDocumentsDirectory = do
 
 On Unix, 'getTemporaryDirectory' returns the value of the @TMPDIR@
 environment variable or \"\/tmp\" if the variable isn\'t defined.
-On Windows, the function checks for the existence of environment variables in 
+On Windows, the function checks for the existence of environment variables in
 the following order and uses the first path found:
 
-* 
-TMP environment variable. 
+*
+TMP environment variable.
 
 *
-TEMP environment variable. 
+TEMP environment variable.
 
 *
-USERPROFILE environment variable. 
+USERPROFILE environment variable.
 
 *
 The Windows directory

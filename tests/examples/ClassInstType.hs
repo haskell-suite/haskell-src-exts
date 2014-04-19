@@ -6,11 +6,11 @@ class Dir d where
 instance Dir Directory where
   localDir (Local f) = return f
 
-  localDir (Darcs {url=url,darcsVersion=Patch patch,subDirectory=subDir}) = do 
+  localDir (Darcs {url=url,darcsVersion=Patch patch,subDirectory=subDir}) = do
     tmp <- createTempDir 0 "haskelld"
     darcsOut <- runDarcsCommand tmp "get" ["--lazy","--to-match","hash "++ patch,url,"fs"]
     print darcsOut
-    let (ExitSuccess,"",out) = darcsOut 
+    let (ExitSuccess,"",out) = darcsOut
     print out
     return $ tmp </> "fs" </> subDir
 
