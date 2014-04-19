@@ -1,23 +1,19 @@
 -- | Use "runhaskell Setup.hs test" or "cabal test" to run these tests.
-{-# LANGUAGE FlexibleInstances, MultiParamTypeClasses, StandaloneDeriving #-}
 module Main where
 
 import Test.Tasty
 import Test.Tasty.HUnit
-import Test.Tasty.SmallCheck
-import Test.SmallCheck
-import Test.SmallCheck.Series
 import Language.Haskell.Exts.Annotated
 import System.IO
 import Control.Monad
 import Control.Applicative
 import Data.List
 import Data.Char
-import Data.Function
 import System.Directory
 import System.Environment (getArgs)
 import System.Exit (exitFailure)
 import System.FilePath
+import Extensions
 import UnitTests
 
 main :: IO ()
@@ -27,7 +23,7 @@ main = do
         sequence
             [ parserTests files
             , printerTests files
-            , return extProperties
+            , return extensionProperties
             , return unitTests
             ]
 
@@ -108,27 +104,3 @@ roundTrip expectedToFail file = testCase file $ do
               , "  Result (" ++ show (length lres) ++ "): " ++ lres
               ]
      err -> assertFailure $ "Failure when parsing " ++ show file ++ "\n" ++ show err
-
-instance Monad m => Serial m Language where
-  series = generate (const knownLanguages)
-
-instance Monad m => Serial m Extension where
-  series = generate (const knownExtensions)
-
-instance Monad m => Serial m KnownExtension where
-  series = generate $ const [ e | EnableExtension e <- knownExtensions ]
-
-infix 3 ~~
-(~~) :: Monad m => [Extension] -> [Extension] -> Property m
-xts1 ~~ xts2 = forAll $ \lang -> ((==) `on` sort . toExtensionList lang) xts1 xts2
-
-extProperties =
-  localOption (SmallCheckDepth 2) $ testGroup "Properties of LANGUAGE extensions" $
-  [ testProperty "identity" $ \x -> x ~~ x
-  , testProperty "idempotence" $ \x -> x ++ x ~~ x
-  , testProperty "right bias" $ \x y -> x ++ y ++ x ~~ y ++ x
-  , testProperty "closedness of implication" $ \x -> impliesExts (impliesExts x) == impliesExts x
-  , testProperty "closedness of toExtensionList" $ \l x -> let es = toExtensionList l x in es == impliesExts es
-  , testProperty "opposite extensions 1" $ \x -> [EnableExtension x, DisableExtension x] ~~ [DisableExtension x]
-  , testProperty "opposite extensions 2" $ \x -> [DisableExtension x, EnableExtension x] ~~ [EnableExtension x]
-  ]
