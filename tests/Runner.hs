@@ -28,7 +28,7 @@ examplesDir :: FilePath
 examplesDir = "tests" </> "examples"
 
 getTestFiles :: MonadIO m => FilePath -> m [FilePath]
-getTestFiles dir = liftIO $ find (return True) (extension ==? ".hs") dir
+getTestFiles dir = liftIO $ find (return True) (extension ==? ".hs" ||? extension ==? ".lhs") dir
 
 parserTests :: [FilePath] -> TestTree
 parserTests sources = testGroup "Parser tests" $ do

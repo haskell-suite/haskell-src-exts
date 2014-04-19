@@ -1,0 +1,1 @@
+ParseFailed (SrcLoc {srcFilename = "tests/examples/RCategory.lhs", srcLine = 1, srcColumn = 12}) "NamedFieldPuns is not enabled"

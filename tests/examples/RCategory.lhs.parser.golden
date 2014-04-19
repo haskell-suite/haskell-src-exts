@@ -1,0 +1,1 @@
+ParseFailed (SrcLoc {srcFilename = "tests/examples/RCategory.lhs", srcLine = 19, srcColumn = 3}) "DataKinds is not enabled"
