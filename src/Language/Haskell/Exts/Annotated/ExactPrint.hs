@@ -253,6 +253,7 @@ specialName (TupleCon _ b n) = "(" ++ hash ++ replicate (n-1) ',' ++ hash ++ ")"
                    Unboxed -> "#"
                    _       -> ""
 specialName (Cons _) = ":"
+specialName (UnboxedSingleCon _) = "(# #)"
 
 instance ExactP QName where
   exactP qn
