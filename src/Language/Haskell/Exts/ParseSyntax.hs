@@ -306,6 +306,7 @@ instance Annotated PType where
       TyInfix l ta qn tb            -> l
       TyKind  l t k                 -> l
       TyPromoted l   p              -> l
+      TyPred l _                    -> l
     amap f t = case t of
       TyForall l mtvs mcx t         -> TyForall (f l) mtvs mcx t
       TyFun   l t1 t2               -> TyFun (f l) t1 t2
@@ -318,6 +319,7 @@ instance Annotated PType where
       TyInfix l ta qn tb            -> TyInfix (f l) ta qn tb
       TyKind  l t k                 -> TyKind (f l) t k
       TyPromoted l   p              -> TyPromoted (f l)   p
+      TyPred l asst                 -> TyPred (f l) asst
 
 data PAsst l
     = ClassA l (QName l) [PType l]
