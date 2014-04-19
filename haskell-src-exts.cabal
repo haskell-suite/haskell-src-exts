@@ -100,4 +100,5 @@ Test-Suite test
                        tasty-smallcheck,
                        tasty-golden,
                        filepath,
-                       directory
+                       directory,
+                       syb

@@ -1,3 +1,4 @@
+{-# LANGUAGE ViewPatterns #-}
 -- | Use "runhaskell Setup.hs test" or "cabal test" to run these tests.
 module Main where
 
@@ -11,6 +12,8 @@ import System.FilePath
 import System.FilePath.Find
 import System.IO
 import Control.Monad.Trans
+import Control.Applicative
+import Data.Generics
 import Extensions
 
 main :: IO ()
@@ -20,6 +23,7 @@ main = do
     [ parserTests sources
     , exactPrinterTests sources
     , prettyPrinterTests sources
+    , prettyParserTests sources
     , extensionProperties
     ]
 
@@ -97,6 +101,58 @@ prettyPrinterTests sources = testGroup "Pretty printer tests" $ do
             f@ParseFailed{} -> show f
             ParseOk ast -> prettyPrint ast
       writeBinaryFile out $ result ++ "\n"
+  return $ goldenVsFile (takeBaseName file) golden out run
+-- }}}
+
+prettyParserTests :: [FilePath] -> TestTree -- {{{
+prettyParserTests sources = testGroup "Pretty-parser tests" $ do
+  -- list monad
+  file <- sources
+  let
+    out = file <.> "prettyparser" <.> "out"
+    golden = file <.> "prettyparser" <.> "golden"
+    run = do
+      contents <- readUTF8File file
+      let
+        -- parse
+        parse1Result :: ParseResult S.Module
+        parse1Result =
+          S.parseFileContentsWithMode
+            (defaultParseMode { parseFilename = file })
+            contents
+
+        prettyResult :: ParseResult String
+        prettyResult = prettyPrint <$> parse1Result
+
+        parse2Result :: ParseResult (ParseResult S.Module)
+        parse2Result = S.parseFileContents <$> prettyResult
+
+        -- Even the un-annotated AST contains certain locations.
+        -- Obviously, they may differ, so we have to erase them.
+        eraseLocs :: S.Module -> S.Module
+        eraseLocs = everywhere $ mkT $ const noLoc
+
+        summary =
+          case liftA3 (,,) parse1Result prettyResult parse2Result of
+            f@ParseFailed{} -> show f
+            ParseOk (eraseLocs -> ast1, pretty, mbAst2) ->
+              case mbAst2 of
+                f@ParseFailed{} ->
+                  "Failed to parse output of pretty-printer:\n" ++
+                  show f ++ "\n" ++
+                  "The pretty-printer output follows.\n\n" ++
+                  pretty
+                ParseOk (eraseLocs -> ast2) ->
+                  if ast1 == ast2
+                    then "Match"
+                    else
+                      "Roundtrip test failed\n\n" ++
+                      "AST 1:\n\n" ++
+                      show ast1 ++ "\n\n" ++
+                      "AST 2:\n\n" ++
+                      show ast2 ++ "\n"
+
+      writeBinaryFile out $ summary ++ "\n"
   return $ goldenVsFile (takeBaseName file) golden out run
 -- }}}
 
