@@ -1,9 +1,0 @@
-HexPrec.hs		Uses hexadecimal notation to specify precedence of infix operator. We don't retain that info.
-RealGHC.lhs		Literate haskell.
-SpecializeInstance.hs	Prints SPECIALISE instead of SPECIALIZE.
-Unicode.hs		Printing is not Unicode-aware.
-UnicodeSyntax.hs	Printing is not Unicode-aware.
-QuasiQuoteOld.hs	Exact printer always uses new quasi-quote syntax.
-CxtWhitespace.hs        whitespace doesn't match up
-TabWhitespace.hs        tabs are expanded
-QuasiQuoteToplevel.hs Looks like an extra newline issue

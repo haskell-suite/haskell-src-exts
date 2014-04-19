@@ -35,8 +35,6 @@ Cabal-Version:          >= 1.10
 Extra-Source-Files:
                         CHANGELOG
                         tests/examples/*.hs
-                        tests/failing.txt
-                        tests/printFail.txt
                         tests/Runner.hs
                         tests/UnitTests.hs
                         tests/Extensions.hs
