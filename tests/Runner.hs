@@ -2,6 +2,7 @@
 module Main where
 
 import Language.Haskell.Exts.Annotated
+import qualified Language.Haskell.Exts as S -- S for "Simple", i.e. not annotated
 
 import Test.Tasty hiding (defaultMain)
 import Test.Tasty.Golden
@@ -18,6 +19,7 @@ main = do
   defaultMain $ testGroup "Tests" $
     [ parserTests sources
     , exactPrinterTests sources
+    , prettyPrinterTests sources
     , extensionProperties
     ]
 
@@ -69,6 +71,29 @@ exactPrinterTests sources = testGroup "Exact printer tests" $ do
                 if printed == contents
                   then "Match"
                   else printed
+      writeBinaryFile out $ result ++ "\n"
+  return $ goldenVsFile (takeBaseName file) golden out run
+
+prettyPrinterTests :: [FilePath] -> TestTree
+prettyPrinterTests sources = testGroup "Pretty printer tests" $ do
+  -- list monad
+  file <- sources
+  let
+    out = file <.> "prettyprinter" <.> "out"
+    golden = file <.> "prettyprinter" <.> "golden"
+    run = do
+      contents <- readUTF8File file
+      let
+        -- parse
+        mbAst =
+          S.parseFileContentsWithMode
+            (defaultParseMode { parseFilename = file })
+            contents
+        -- try to pretty-print; summarize the test result
+        result =
+          case mbAst of
+            f@ParseFailed{} -> show f
+            ParseOk ast -> prettyPrint ast
       writeBinaryFile out $ result ++ "\n"
   return $ goldenVsFile (takeBaseName file) golden out run
 
