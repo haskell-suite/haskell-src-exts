@@ -29,7 +29,6 @@ Description:            Haskell-Source with Extensions (HSE, haskell-src-exts)
                         as well as HSX-style embedded XML syntax.
 Homepage:               https://github.com/haskell-suite/haskell-src-exts
 Stability:              Stable
-Build-Type:             Custom
 Cabal-Version:          >= 1.10
 
 Extra-Source-Files:
