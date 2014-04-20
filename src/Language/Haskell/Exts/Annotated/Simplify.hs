@@ -357,7 +357,7 @@ sExp e = case e of
     Lambda l ps e       -> S.Lambda (getPointLoc l) (map sPat ps) (sExp e)
     Let _ bs e          -> S.Let (sBinds bs) (sExp e)
     If _ e1 e2 e3       -> S.If (sExp e1) (sExp e2) (sExp e3)
-    MultiIf _ alts      -> S.MultiIf (map sIfAlt alts)
+    MultiIf _ alts      -> S.MultiIf (map sGuardedAlt alts)
     Case _ e alts       -> S.Case (sExp e) (map sAlt alts)
     Do _ ss             -> S.Do (map sStmt ss)
     MDo _ ss            -> S.MDo (map sStmt ss)
@@ -539,6 +539,3 @@ sGuardedAlts galts = case galts of
 
 sGuardedAlt :: SrcInfo loc => GuardedAlt loc -> S.GuardedAlt
 sGuardedAlt (GuardedAlt l ss e) = S.GuardedAlt (getPointLoc l) (map sStmt ss) (sExp e)
-
-sIfAlt :: SrcInfo loc => IfAlt loc -> S.IfAlt
-sIfAlt (IfAlt _ e1 e2) = S.IfAlt (sExp e1) (sExp e2)
