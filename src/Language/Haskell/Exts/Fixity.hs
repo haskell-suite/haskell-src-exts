@@ -297,10 +297,6 @@ instance AppFixity GuardedAlt where
     applyFixities fixs (GuardedAlt loc stmts e) = liftM2 (GuardedAlt loc) (mapM fix stmts) (fix e)
       where fix x = applyFixities fixs x
 
-instance AppFixity IfAlt where
-    applyFixities y (IfAlt e1 e2) = liftM2 IfAlt (fix e1) (fix e2)
-      where fix x = applyFixities y x
-
 instance AppFixity QualStmt where
     applyFixities fixs qstmt = case qstmt of
         QualStmt     s      -> liftM QualStmt $ fix s

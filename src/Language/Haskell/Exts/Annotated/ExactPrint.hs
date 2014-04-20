@@ -1581,16 +1581,6 @@ instance ExactP GuardedAlt where
     bracketList ("|",",","->") (srcInfoPoints l) stmts
     exactPC e
 
-instance ExactP IfAlt where
-  exactP (IfAlt l e1 e2) =
-      case srcInfoPoints l of
-        a:b:pts -> do
-            printString "|"
-            exactPC e1
-            printStringAt (pos b) "->"
-            exactPC e2
-        _ -> internalError
-
 instance ExactP Match where
   exactP (Match l n ps rhs mbinds) = do
     let pts = srcInfoPoints l

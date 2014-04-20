@@ -59,7 +59,7 @@ module Language.Haskell.Exts.Annotated.Syntax (
     Type(..), Boxed(..), Kind(..), TyVarBind(..), Promoted(..),
     -- * Expressions
     Exp(..), Stmt(..), QualStmt(..), FieldUpdate(..),
-    Alt(..), GuardedAlts(..), GuardedAlt(..), XAttr(..), IfAlt(..),
+    Alt(..), GuardedAlts(..), GuardedAlt(..), XAttr(..),
     -- * Patterns
     Pat(..), PatField(..), PXAttr(..), RPat(..), RPatOp(..),
     -- * Literals
@@ -543,7 +543,7 @@ data Exp l
     | Lambda l [Pat l] (Exp l)              -- ^ lambda expression
     | Let l (Binds l) (Exp l)               -- ^ local declarations with @let@ ... @in@ ...
     | If l (Exp l) (Exp l) (Exp l)          -- ^ @if@ /exp/ @then@ /exp/ @else@ /exp/
-    | MultiIf l [IfAlt l]                   -- ^ @if@ @|@ /exp/ @->@ /exp/ ...
+    | MultiIf l [GuardedAlt l]              -- ^ @if@ @|@ /stmts/ @->@ /exp/ ...
     | Case l (Exp l) [Alt l]                -- ^ @case@ /exp/ @of@ /alts/
     | Do l [Stmt l]                         -- ^ @do@-expression:
                                             --   the last statement in the list
@@ -795,11 +795,6 @@ data GuardedAlts l
 -- | A guarded case alternative @|@ /stmts/ @->@ /exp/.
 data GuardedAlt l
     = GuardedAlt l [Stmt l] (Exp l)
-  deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
-
--- | An alternative in a multiway @if@ expression.
-data IfAlt l
-    = IfAlt l (Exp l) (Exp l)
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 -----------------------------------------------------------------------------
 -- Builtin names.
@@ -1599,7 +1594,3 @@ instance Annotated Promoted where
     amap f (PromotedList l b ps)  = PromotedList  (f l) b ps
     amap f (PromotedTuple l ps) = PromotedTuple (f l) ps
     amap f (PromotedUnit l)     = PromotedUnit (f l)
-
-instance Annotated IfAlt where
-    ann (IfAlt l e1 e2) = l
-    amap f (IfAlt l e1 e2) = IfAlt (f l) e1 e2

@@ -19,7 +19,7 @@ data PExp l
     | Lambda l [Pat l] (PExp l)             -- ^ lambda expression
     | Let l (Binds l) (PExp l)              -- ^ local declarations with @let@
     | If l (PExp l) (PExp l) (PExp l)       -- ^ @if@ /exp/ @then@ /exp/ @else@ /exp/
-    | MultiIf l [IfAlt l]                   -- ^ @if@ @|@ /exp/ @->@ /exp/ ...
+    | MultiIf l [GuardedAlt l]              -- ^ @if@ @|@ /stmts/ @->@ /exp/ ...
     | Case l (PExp l) [Alt l]               -- ^ @case@ /exp/ @of@ /alts/
     | Do l [Stmt l]                         -- ^ @do@-expression:
                                             --   the last statement in the list

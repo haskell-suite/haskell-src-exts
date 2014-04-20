@@ -1040,10 +1040,6 @@ instance Pretty GuardedAlt where
         pretty (GuardedAlt _pos guards body) =
                 myFsep $ char '|': (punctuate comma . map pretty $ guards) ++ [text "->", pretty body]
 
-instance Pretty IfAlt where
-        pretty (IfAlt e1 e2) =
-                myFsep $ char '|' : [pretty e1, text "->", pretty e2]
-
 ------------------------- Statements in monads, guards & list comprehensions -----
 instance Pretty Stmt where
         pretty (Generator _loc e from) =
@@ -1411,9 +1407,6 @@ instance SrcInfo loc => Pretty (A.GuardedAlts loc) where
 
 instance SrcInfo loc => Pretty (A.GuardedAlt loc) where
         pretty = pretty . sGuardedAlt
-
-instance SrcInfo loc => Pretty (A.IfAlt loc) where
-        pretty = pretty . sIfAlt
 
 ------------------------- Statements in monads, guards & list comprehensions -----
 instance SrcInfo loc => Pretty (A.Stmt loc) where
