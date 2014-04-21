@@ -27,7 +27,7 @@ import qualified Language.Haskell.Exts.Annotated.Syntax as A
 import Language.Haskell.Exts.Annotated.Simplify
 import qualified Language.Haskell.Exts.ParseSyntax as P
 
-import Language.Haskell.Exts.SrcLoc
+import Language.Haskell.Exts.SrcLoc (SrcInfo (..), SrcSpan (..))
 
 import qualified Text.PrettyPrint as P
 import Data.List (intersperse)
@@ -1123,14 +1123,6 @@ instance Pretty Asst where
         pretty (InfixA a op b) = myFsep $ [pretty a, ppQNameInfix op, pretty b]
         pretty (IParam i t)    = myFsep $ [pretty i, text "::", pretty t]
         pretty (EqualP t1 t2)  = myFsep $ [pretty t1, text "~", pretty t2]
-
--- Pretty print a source location, useful for printing out error messages
-instance Pretty SrcLoc where
-  pretty srcLoc =
-    return $ P.hsep [ colonFollow (P.text $ srcFilename srcLoc)
-                    , colonFollow (P.int  $ srcLine     srcLoc)
-                    , P.int $ srcColumn srcLoc
-                    ]
 
 colonFollow p = P.hcat [ p, P.colon ]
 
