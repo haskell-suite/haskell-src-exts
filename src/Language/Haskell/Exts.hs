@@ -118,7 +118,7 @@ readExtensions str = case getTopPragmas str of
         ParseOk pgms -> extractLang $ concatMap getExts pgms
         _            -> Nothing
   where getExts :: ModulePragma -> [Either Language Extension]
-        getExts (LanguagePragma _ ns) = map readExt ns
+        getExts (LanguagePragma ns) = map readExt ns
         getExts _ = []
 
         readExt (Ident e) = 

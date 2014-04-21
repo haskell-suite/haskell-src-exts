@@ -92,15 +92,11 @@ module Language.Haskell.Exts.Syntax (
     -- ** Type constructors
     unit_tycon_name, fun_tycon_name, list_tycon_name, tuple_tycon_name, unboxed_singleton_tycon_name,
     unit_tycon, fun_tycon, list_tycon, tuple_tycon, unboxed_singleton_tycon,
-
-    -- * Source coordinates
-    SrcLoc(..),
   ) where
 
 
 import Data.Data
 import GHC.Generics (Generic)
-import Language.Haskell.Exts.SrcLoc (SrcLoc(..))
 import Language.Haskell.Exts.Annotated.Syntax (Boxed(..), Tool(..))
 
 
@@ -161,7 +157,7 @@ data CName
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 -- | A complete Haskell source module.
-data Module = Module SrcLoc ModuleName [ModulePragma] (Maybe WarningText)
+data Module = Module ModuleName [ModulePragma] (Maybe WarningText)
                         (Maybe [ExportSpec]) [ImportDecl] [Decl]
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
@@ -183,8 +179,7 @@ data ExportSpec
 
 -- | An import declaration.
 data ImportDecl = ImportDecl
-    { importLoc :: SrcLoc           -- ^ position of the @import@ keyword.
-    , importModule :: ModuleName    -- ^ name of the module imported.
+    { importModule :: ModuleName    -- ^ name of the module imported.
     , importQualified :: Bool       -- ^ imported @qualified@?
     , importSrc :: Bool             -- ^ imported with @{-\# SOURCE \#-}@?
     , importPkg :: Maybe String     -- ^ imported with explicit package name
@@ -222,62 +217,62 @@ type Deriving = (QName, [Type])
 
 -- | A top-level declaration.
 data Decl
-     = TypeDecl     SrcLoc Name [TyVarBind] Type
+     = TypeDecl     Name [TyVarBind] Type
      -- ^ A type declaration
-     | TypeFamDecl  SrcLoc Name [TyVarBind] (Maybe Kind)
+     | TypeFamDecl  Name [TyVarBind] (Maybe Kind)
      -- ^ A type family declaration
-     | DataDecl     SrcLoc DataOrNew Context Name [TyVarBind]              [QualConDecl] [Deriving]
+     | DataDecl     DataOrNew Context Name [TyVarBind]              [QualConDecl] [Deriving]
      -- ^ A data OR newtype declaration
-     | GDataDecl    SrcLoc DataOrNew Context Name [TyVarBind] (Maybe Kind) [GadtDecl]    [Deriving]
+     | GDataDecl    DataOrNew Context Name [TyVarBind] (Maybe Kind) [GadtDecl]    [Deriving]
      -- ^ A data OR newtype declaration, GADT style
-     | DataFamDecl  SrcLoc {-data-}  Context Name [TyVarBind] (Maybe Kind)
+     | DataFamDecl  {-data-}  Context Name [TyVarBind] (Maybe Kind)
      -- ^ A data family declaration
-     | TypeInsDecl  SrcLoc Type Type
+     | TypeInsDecl  Type Type
      -- ^ A type family instance declaration
-     | DataInsDecl  SrcLoc DataOrNew Type              [QualConDecl] [Deriving]
+     | DataInsDecl  DataOrNew Type              [QualConDecl] [Deriving]
      -- ^ A data family instance declaration
-     | GDataInsDecl SrcLoc DataOrNew Type (Maybe Kind) [GadtDecl]    [Deriving]
+     | GDataInsDecl DataOrNew Type (Maybe Kind) [GadtDecl]    [Deriving]
      -- ^ A data family instance declaration, GADT style
-     | ClassDecl    SrcLoc Context Name [TyVarBind] [FunDep] [ClassDecl]
+     | ClassDecl    Context Name [TyVarBind] [FunDep] [ClassDecl]
      -- ^ A declaration of a type class
-     | InstDecl     SrcLoc Context QName [Type] [InstDecl]
+     | InstDecl     Context QName [Type] [InstDecl]
      -- ^ An declaration of a type class instance
-     | DerivDecl    SrcLoc Context QName [Type]
+     | DerivDecl    Context QName [Type]
      -- ^ A standalone deriving declaration
-     | InfixDecl    SrcLoc Assoc Int [Op]
+     | InfixDecl    Assoc Int [Op]
      -- ^ A declaration of operator fixity
-     | DefaultDecl  SrcLoc [Type]
+     | DefaultDecl  [Type]
      -- ^ A declaration of default types
-     | SpliceDecl   SrcLoc Exp
+     | SpliceDecl   Exp
      -- ^ A Template Haskell splicing declaration
-     | TypeSig      SrcLoc [Name] Type
+     | TypeSig      [Name] Type
      -- ^ A type signature declaration
      | FunBind      [Match]
      -- ^ A set of function binding clauses
-     | PatBind      SrcLoc Pat (Maybe Type) Rhs {-where-} Binds
+     | PatBind      Pat (Maybe Type) Rhs {-where-} Binds
      -- ^ A pattern binding
-     | ForImp   SrcLoc CallConv Safety String Name Type
+     | ForImp       CallConv Safety String Name Type
      -- ^ A foreign import declaration
-     | ForExp   SrcLoc CallConv          String Name Type
+     | ForExp       CallConv        String Name Type
      -- ^ A foreign export declaration
 
-     | RulePragmaDecl   SrcLoc [Rule]
+     | RulePragmaDecl   [Rule]
      -- ^ A RULES pragma
-     | DeprPragmaDecl   SrcLoc [([Name], String)]
+     | DeprPragmaDecl   [([Name], String)]
      -- ^ A DEPRECATED pragma
-     | WarnPragmaDecl   SrcLoc [([Name], String)]
+     | WarnPragmaDecl   [([Name], String)]
      -- ^ A WARNING pragma
-     | InlineSig        SrcLoc Bool Activation QName
+     | InlineSig        Bool Activation QName
      -- ^ An INLINE pragma
-     | InlineConlikeSig SrcLoc      Activation QName
+     | InlineConlikeSig      Activation QName
      -- ^ An INLINE CONLIKE pragma
-     | SpecSig          SrcLoc      Activation QName [Type]
+     | SpecSig               Activation QName [Type]
      -- ^ A SPECIALISE pragma
-     | SpecInlineSig    SrcLoc Bool Activation QName [Type]
+     | SpecInlineSig    Bool Activation QName [Type]
      -- ^ A SPECIALISE INLINE pragma
-     | InstSig          SrcLoc Context         QName [Type]
+     | InstSig          Context         QName [Type]
      -- ^ A SPECIALISE instance pragma
-     | AnnPragma        SrcLoc Annotation
+     | AnnPragma        Annotation
      -- ^ An ANN pragma
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
@@ -302,18 +297,18 @@ data Binds
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 -- | A binding of an implicit parameter.
-data IPBind = IPBind SrcLoc IPName Exp
+data IPBind = IPBind IPName Exp
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 -- | Clauses of a function binding.
 data Match
-     = Match SrcLoc Name [Pat] (Maybe Type) Rhs {-where-} Binds
+     = Match Name [Pat] (Maybe Type) Rhs {-where-} Binds
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 -- | A single constructor declaration within a data type declaration,
 --   which may have an existential quantification binding.
 data QualConDecl
-    = QualConDecl SrcLoc
+    = QualConDecl
         {-forall-} [TyVarBind] {- . -} Context
         {- => -} ConDecl
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
@@ -330,18 +325,18 @@ data ConDecl
 
 -- | A single constructor declaration in a GADT data type declaration.
 data GadtDecl
-    = GadtDecl SrcLoc Name Type
+    = GadtDecl Name Type
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 -- | Declarations inside a class declaration.
 data ClassDecl
     = ClsDecl    Decl
             -- ^ ordinary declaration
-    | ClsDataFam SrcLoc Context Name [TyVarBind] (Maybe Kind)
+    | ClsDataFam Context Name [TyVarBind] (Maybe Kind)
             -- ^ declaration of an associated data type
-    | ClsTyFam   SrcLoc         Name [TyVarBind] (Maybe Kind)
+    | ClsTyFam           Name [TyVarBind] (Maybe Kind)
             -- ^ declaration of an associated type synonym
-    | ClsTyDef   SrcLoc Type    Type
+    | ClsTyDef   Type    Type
             -- ^ default choice for an associated type synonym
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
@@ -349,11 +344,11 @@ data ClassDecl
 data InstDecl
     = InsDecl   Decl
             -- ^ ordinary declaration
-    | InsType   SrcLoc Type Type
+    | InsType   Type Type
             -- ^ an associated type definition
-    | InsData   SrcLoc DataOrNew Type [QualConDecl] [Deriving]
+    | InsData   DataOrNew Type [QualConDecl] [Deriving]
             -- ^ an associated data type implementation
-    | InsGData  SrcLoc DataOrNew Type (Maybe Kind) [GadtDecl] [Deriving]
+    | InsGData  DataOrNew Type (Maybe Kind) [GadtDecl] [Deriving]
             -- ^ an associated data type implemented using GADT style
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
@@ -376,7 +371,7 @@ data Rhs
 --   The guard is a series of statements when using pattern guards,
 --   otherwise it will be a single qualifier expression.
 data GuardedRhs
-     = GuardedRhs SrcLoc [Stmt] Exp
+     = GuardedRhs [Stmt] Exp
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 -- | A type qualified with a context.
@@ -471,7 +466,7 @@ data Exp
     | InfixApp Exp QOp Exp      -- ^ infix application
     | App Exp Exp               -- ^ ordinary application
     | NegApp Exp                -- ^ negation expression @-/exp/@ (unary minus)
-    | Lambda SrcLoc [Pat] Exp   -- ^ lambda expression
+    | Lambda [Pat] Exp          -- ^ lambda expression
     | Let Binds Exp             -- ^ local declarations with @let@ ... @in@ ...
     | If Exp Exp Exp            -- ^ @if@ /exp/ @then@ /exp/ @else@ /exp/
     | MultiIf [IfAlt]           -- ^ @if@ @|@ /exp/ @->@ /exp/ ...
@@ -501,7 +496,7 @@ data Exp
                                 --   with first two elements given @[from, then .. to]@
     | ListComp Exp  [QualStmt]    -- ^ ordinary list comprehension
     | ParComp  Exp [[QualStmt]]   -- ^ parallel list comprehension
-    | ExpTypeSig SrcLoc Exp Type  -- ^ expression with explicit type signature
+    | ExpTypeSig Exp Type       -- ^ expression with explicit type signature
 
     | VarQuote QName            -- ^ @'x@ for template haskell reifying of expressions
     | TypQuote QName            -- ^ @''T@ for template haskell reifying of types
@@ -510,13 +505,13 @@ data Exp
     | QuasiQuote String String  -- ^ quasi-quotaion: @[$/name/| /string/ |]@
 
 -- Hsx
-    | XTag SrcLoc XName [XAttr] (Maybe Exp) [Exp]
+    | XTag XName [XAttr] (Maybe Exp) [Exp]
                                 -- ^ xml element, with attributes and children
-    | XETag SrcLoc XName [XAttr] (Maybe Exp)
+    | XETag XName [XAttr] (Maybe Exp)
                                 -- ^ empty xml element, with attributes
     | XPcdata String            -- ^ PCDATA child element
     | XExpTag Exp               -- ^ escaped haskell expression inside xml
-    | XChildTag SrcLoc [Exp]    -- ^ children of an xml element
+    | XChildTag [Exp]           -- ^ children of an xml element
 
 -- Pragmas
     | CorePragma        String Exp      -- ^ CORE pragma
@@ -525,7 +520,7 @@ data Exp
                                         -- ^ GENERATED pragma
 
 -- Arrows
-    | Proc SrcLoc     Pat Exp   -- ^ arrows proc: @proc@ /pat/ @->@ /exp/
+    | Proc            Pat Exp   -- ^ arrows proc: @proc@ /pat/ @->@ /exp/
     | LeftArrApp      Exp Exp   -- ^ arrow application (from left): /exp/ @-<@ /exp/
     | RightArrApp     Exp Exp   -- ^ arrow application (from right): /exp/ @>-@ /exp/
     | LeftArrHighApp  Exp Exp   -- ^ higher-order arrow application (from left): /exp/ @-<<@ /exp/
@@ -580,10 +575,10 @@ data CallConv
 
 -- | A top level options pragma, preceding the module header.
 data ModulePragma
-    = LanguagePragma   SrcLoc [Name]    -- ^ LANGUAGE pragma
-    | OptionsPragma    SrcLoc (Maybe Tool) String
+    = LanguagePragma   [Name]    -- ^ LANGUAGE pragma
+    | OptionsPragma    (Maybe Tool) String
                         -- ^ OPTIONS pragma, possibly qualified with a tool, e.g. OPTIONS_GHC
-    | AnnModulePragma  SrcLoc Annotation
+    | AnnModulePragma  Annotation
                         -- ^ ANN pragma with module scope
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
@@ -628,12 +623,12 @@ data Pat
     | PAsPat Name Pat               -- ^ @\@@-pattern
     | PWildCard                     -- ^ wildcard pattern: @_@
     | PIrrPat Pat                   -- ^ irrefutable pattern: @~/pat/@
-    | PatTypeSig SrcLoc Pat Type    -- ^ pattern with type signature
+    | PatTypeSig Pat Type           -- ^ pattern with type signature
     | PViewPat Exp Pat              -- ^ view patterns of the form @(/exp/ -> /pat/)@
     | PRPat [RPat]                  -- ^ regular list pattern
-    | PXTag SrcLoc XName [PXAttr] (Maybe Pat) [Pat]
+    | PXTag XName [PXAttr] (Maybe Pat) [Pat]
                                     -- ^ XML element pattern
-    | PXETag SrcLoc XName [PXAttr] (Maybe Pat)
+    | PXETag XName [PXAttr] (Maybe Pat)
                                     -- ^ XML singleton element pattern
     | PXPcdata String               -- ^ XML PCDATA pattern
     | PXPatTag Pat                  -- ^ XML embedded pattern
@@ -679,7 +674,7 @@ data PatField
 --   an ordinary /qual/ in a list comprehension, as well as a /stmt/
 --   in a pattern guard.
 data Stmt
-    = Generator SrcLoc Pat Exp
+    = Generator Pat Exp
                         -- ^ a generator: /pat/ @<-@ /exp/
     | Qualifier Exp     -- ^ an /exp/ by itself: in a @do@-expression,
                         --   an action whose result is discarded;
@@ -710,7 +705,7 @@ data FieldUpdate
 
 -- | An /alt/ alternative in a @case@ expression.
 data Alt
-    = Alt SrcLoc Pat GuardedAlts Binds
+    = Alt Pat GuardedAlts Binds
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 -- | The right-hand sides of a @case@ alternative,
@@ -723,7 +718,7 @@ data GuardedAlts
 
 -- | A guarded case alternative @|@ /stmts/ @->@ /exp/.
 data GuardedAlt
-    = GuardedAlt SrcLoc [Stmt] Exp
+    = GuardedAlt [Stmt] Exp
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 -- | An alternative in a multiway @if@ expression.
