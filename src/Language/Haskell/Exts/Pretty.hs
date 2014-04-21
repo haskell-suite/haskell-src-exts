@@ -57,6 +57,9 @@ data PPHsMode = PPHsMode {
                 doIndent :: Indent,
                                 -- | indentation of the body of a
                                 -- @case@ expression
+                multiIfIndent :: Indent,
+                                -- | indentation of the body of a
+                                -- multi-@if@ expression
                 caseIndent :: Indent,
                                 -- | indentation of the declarations in a
                                 -- @let@ expression
@@ -81,6 +84,7 @@ defaultMode :: PPHsMode
 defaultMode = PPHsMode{
                       classIndent = 8,
                       doIndent = 3,
+                      multiIfIndent = 3,
                       caseIndent = 4,
                       letIndent = 4,
                       whereIndent = 6,
@@ -813,7 +817,7 @@ instance Pretty Exp where
                         text "else", pretty elsexp]
         prettyPrec p (MultiIf alts) = parensIf (p > 1) $
                 text "if"
-                $$$ ppBody caseIndent (map pretty alts)
+                $$$ ppBody multiIfIndent (map pretty alts)
         prettyPrec p (Case cond altList) = parensIf (p > 1) $
                 myFsep [text "case", pretty cond, text "of"]
                 $$$ ppBody caseIndent (map pretty altList)
@@ -1039,10 +1043,6 @@ instance Pretty GuardedAlts where
 instance Pretty GuardedAlt where
         pretty (GuardedAlt _pos guards body) =
                 myFsep $ char '|': (punctuate comma . map pretty $ guards) ++ [text "->", pretty body]
-
-instance Pretty IfAlt where
-        pretty (IfAlt e1 e2) =
-                myFsep $ char '|' : [pretty e1, text "->", pretty e2]
 
 ------------------------- Statements in monads, guards & list comprehensions -----
 instance Pretty Stmt where
@@ -1411,9 +1411,6 @@ instance SrcInfo loc => Pretty (A.GuardedAlts loc) where
 
 instance SrcInfo loc => Pretty (A.GuardedAlt loc) where
         pretty = pretty . sGuardedAlt
-
-instance SrcInfo loc => Pretty (A.IfAlt loc) where
-        pretty = pretty . sIfAlt
 
 ------------------------- Statements in monads, guards & list comprehensions -----
 instance SrcInfo loc => Pretty (A.Stmt loc) where

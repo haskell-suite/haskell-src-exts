@@ -1564,19 +1564,16 @@ A guard can be a pattern guard if PatternGuards is enabled, hence quals instead 
 >       : exp                           {% checkPattern $1 }
 >       | '!' aexp                      {% checkPattern (BangPat (nIS $1 <++> ann $2 <** [$1]) $2) }
 
-> ifaltslist :: { ([IfAlt L], L, [S]) }
+> ifaltslist :: { ([GuardedAlt L], L, [S]) }
 >       : '{'  ifalts '}'                 { (fst $2, $1 <^^> $3, $1:snd $2 ++ [$3])  }
 >       | open ifalts close               { (fst $2, $1 <^^> $3, $1:snd $2 ++ [$3]) }
 
-> ifalts :: { ([IfAlt L], [S]) }
+> ifalts :: { ([GuardedAlt L], [S]) }
 >       : optsemis ifalts1 optsemis       { (reverse $ fst $2, $1 ++ snd $2 ++ $3) }
 
-> ifalts1 :: { ([IfAlt L], [S]) }
->       : ifalts1 optsemis ifalt           { ($3 : fst $1, snd $1 ++ $2) }
->       | ifalt                            { ([$1], []) }
-
-> ifalt :: { IfAlt L }
->       : '|' trueexp '->' trueexp { let l = nIS $1 <++> ann $2 <++> ann $4 <** [$1,$3] in (IfAlt l $2 $4) }
+> ifalts1 :: { ([GuardedAlt L], [S]) }
+>       : ifalts1 optsemis gdpat           { ($3 : fst $1, snd $1 ++ $2) }
+>       | gdpat                            { ([$1], []) }
 
 -----------------------------------------------------------------------------
 Statement sequences
