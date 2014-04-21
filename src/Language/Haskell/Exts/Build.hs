@@ -42,18 +42,18 @@ module Language.Haskell.Exts.Build (
     charP,      -- :: Char -> Pat
     intP,       -- :: Integer -> Pat
     doE,        -- :: [Stmt] -> Exp
-    lamE,       -- :: SrcLoc -> [Pat] -> Exp -> Exp
+    lamE,       -- :: [Pat] -> Exp -> Exp
     letE,       -- :: [Decl] -> Exp -> Exp
     caseE,      -- :: Exp -> [Alt] -> Exp
-    alt,        -- :: SrcLoc -> Pat -> Exp -> Alt
-    altGW,      -- :: SrcLoc -> Pat -> [Stmt] -> Exp -> Binds -> Alt
+    alt,        -- :: Pat -> Exp -> Alt
+    altGW,      -- :: Pat -> [Stmt] -> Exp -> Binds -> Alt
     listE,      -- :: [Exp] -> Exp
     eList,      -- :: Exp
     peList,     -- :: Pat
     paren,      -- :: Exp -> Exp
     pParen,     -- :: Pat -> Pat
     qualStmt,   -- :: Exp -> Stmt
-    genStmt,    -- :: SrcLoc -> Pat -> Exp -> Stmt
+    genStmt,    -- :: Pat -> Exp -> Stmt
     letStmt,    -- :: [Decl] -> Stmt
     binds,      -- :: [Decl] -> Binds
     noBinds,    -- :: Binds
@@ -61,11 +61,11 @@ module Language.Haskell.Exts.Build (
     genNames,   -- :: String -> Int -> [Name]
 
     -- * More advanced building
-    sfun,           -- :: SrcLoc -> Name -> [Name] -> Rhs -> Binds -> Decl
-    simpleFun,      -- :: SrcLoc -> Name -> Name -> Exp -> Decl
-    patBind,        -- :: SrcLoc -> Pat -> Exp -> Decl
-    patBindWhere,   -- :: SrcLoc -> Pat -> Exp -> [Decl] -> Decl
-    nameBind,       -- :: SrcLoc -> Name -> Exp -> Decl
+    sfun,           -- :: Name -> [Name] -> Rhs -> Binds -> Decl
+    simpleFun,      -- :: Name -> Name -> Exp -> Decl
+    patBind,        -- :: Pat -> Exp -> Decl
+    patBindWhere,   -- :: Pat -> Exp -> [Decl] -> Decl
+    nameBind,       -- :: Name -> Exp -> Decl
     metaFunction,   -- :: String -> [Exp] -> Exp
     metaConPat      -- :: String -> [Pat] -> Pat
   ) where
@@ -170,7 +170,7 @@ doE = Do
 
 -- | Lambda abstraction, given a list of argument
 --   patterns and an expression body.
-lamE :: SrcLoc -> [Pat] -> Exp -> Exp
+lamE :: [Pat] -> Exp -> Exp
 lamE = Lambda
 
 -- | A @let@ ... @in@ block.
@@ -182,24 +182,24 @@ caseE :: Exp -> [Alt] -> Exp
 caseE = Case
 
 -- | An unguarded alternative in a @case@ expression.
-alt :: SrcLoc -> Pat -> Exp -> Alt
-alt s p e = Alt s p (unGAlt e) noBinds
+alt :: Pat -> Exp -> Alt
+alt p e = Alt p (unGAlt e) noBinds
 
 -- | An alternative with a single guard in a @case@ expression.
-altGW :: SrcLoc -> Pat -> [Stmt] -> Exp -> Binds -> Alt
-altGW s p gs e w = Alt s p (gAlt s gs e) w
+altGW :: Pat -> [Stmt] -> Exp -> Binds -> Alt
+altGW p gs e w = Alt p (gAlt gs e) w
 
 -- | An unguarded righthand side of a @case@ alternative.
 unGAlt :: Exp -> GuardedAlts
 unGAlt = UnGuardedAlt
 
 -- | An list of guarded righthand sides for a @case@ alternative.
-gAlts :: SrcLoc -> [([Stmt],Exp)] -> GuardedAlts
-gAlts s as = GuardedAlts $ map (\(gs,e) -> GuardedAlt s gs e) as
+gAlts :: [([Stmt],Exp)] -> GuardedAlts
+gAlts as = GuardedAlts $ map (\(gs,e) -> GuardedAlt gs e) as
 
 -- | A single guarded righthand side for a @case@ alternative.
-gAlt :: SrcLoc -> [Stmt] -> Exp -> GuardedAlts
-gAlt s gs e = gAlts s [(gs,e)]
+gAlt :: [Stmt] -> Exp -> GuardedAlts
+gAlt gs e = gAlts [(gs,e)]
 
 -- | A list expression.
 listE :: [Exp] -> Exp
@@ -226,7 +226,7 @@ qualStmt :: Exp -> Stmt
 qualStmt = Qualifier
 
 -- | A generator statement: /pat/ @<-@ /exp/
-genStmt :: SrcLoc -> Pat -> Exp -> Stmt
+genStmt :: Pat -> Exp -> Stmt
 genStmt = Generator
 
 -- | A @let@ binding group as a statement.
@@ -253,30 +253,30 @@ genNames s k = [ Ident $ s ++ show i | i <- [1..k] ]
 -- Some more specialised help functions
 
 -- | A function with a single clause
-sfun :: SrcLoc -> Name -> [Name] -> Rhs -> Binds -> Decl
-sfun s f pvs rhs bs = FunBind [Match s f (map pvar pvs) Nothing rhs bs]
+sfun :: Name -> [Name] -> Rhs -> Binds -> Decl
+sfun f pvs rhs bs = FunBind [Match f (map pvar pvs) Nothing rhs bs]
 
 -- | A function with a single clause, a single argument, no guards
 -- and no where declarations
-simpleFun :: SrcLoc -> Name -> Name -> Exp -> Decl
-simpleFun s f a e = let rhs = UnGuardedRhs e
-             in sfun s f [a] rhs noBinds
+simpleFun :: Name -> Name -> Exp -> Decl
+simpleFun f a e = let rhs = UnGuardedRhs e
+             in sfun f [a] rhs noBinds
 
 -- | A pattern bind where the pattern is a variable, and where
 -- there are no guards and no 'where' clause.
-patBind :: SrcLoc -> Pat -> Exp -> Decl
-patBind s p e = let rhs = UnGuardedRhs e
-         in PatBind s p Nothing rhs noBinds
+patBind :: Pat -> Exp -> Decl
+patBind p e = let rhs = UnGuardedRhs e
+         in PatBind p Nothing rhs noBinds
 
 -- | A pattern bind where the pattern is a variable, and where
 -- there are no guards, but with a 'where' clause.
-patBindWhere :: SrcLoc -> Pat -> Exp -> [Decl] -> Decl
-patBindWhere s p e ds = let rhs = UnGuardedRhs e
-             in PatBind s p Nothing rhs (binds ds)
+patBindWhere :: Pat -> Exp -> [Decl] -> Decl
+patBindWhere p e ds = let rhs = UnGuardedRhs e
+             in PatBind p Nothing rhs (binds ds)
 
 -- | Bind an identifier to an expression.
-nameBind :: SrcLoc -> Name -> Exp -> Decl
-nameBind s n e = patBind s (pvar n) e
+nameBind :: Name -> Exp -> Decl
+nameBind n e = patBind (pvar n) e
 
 -- | Apply function of a given name to a list of arguments.
 metaFunction :: String -> [Exp] -> Exp

@@ -33,22 +33,19 @@ sModule :: SrcInfo loc => Module loc -> S.Module
 sModule md = case md of
     Module l mmh oss ids ds ->
         let (mn, mwt, mes) = sModuleHead mmh
-         in S.Module (getPointLoc l) mn (map sModulePragma oss) mwt mes (map sImportDecl ids) (map sDecl ds)
+         in S.Module mn (map sModulePragma oss) mwt mes (map sImportDecl ids) (map sDecl ds)
     XmlPage l mn oss xn attrs mat es   ->
-        let loc = getPointLoc l
-         in S.Module loc (sModuleName mn) (map sModulePragma oss)
+        S.Module (sModuleName mn) (map sModulePragma oss)
                       Nothing
                       (Just [S.EVar $ S.UnQual $ S.Ident "page"])
                         []
-                        [pageFun loc $ S.XTag loc (sXName xn) (map sXAttr attrs) (fmap sExp mat) (map sExp es)]
+                        [pageFun $ S.XTag (sXName xn) (map sXAttr attrs) (fmap sExp mat) (map sExp es)]
     XmlHybrid l mmh oss ids ds xn attrs mat es  ->
-        let loc1 = getPointLoc l
-            loc2 = getPointLoc (ann xn)
-            (mn, mwt, mes) = sModuleHead mmh
-         in S.Module loc1 mn (map sModulePragma oss) mwt mes (map sImportDecl ids)
-                (map sDecl ds ++ [pageFun loc2 $ S.XTag loc2 (sXName xn) (map sXAttr attrs) (fmap sExp mat) (map sExp es)])
-  where pageFun :: SrcLoc -> S.Exp -> S.Decl
-        pageFun loc e = S.PatBind loc namePat Nothing rhs (S.BDecls [])
+        let (mn, mwt, mes) = sModuleHead mmh
+         in S.Module mn (map sModulePragma oss) mwt mes (map sImportDecl ids)
+                (map sDecl ds ++ [pageFun $ S.XTag (sXName xn) (map sXAttr attrs) (fmap sExp mat) (map sExp es)])
+  where pageFun :: S.Exp -> S.Decl
+        pageFun e = S.PatBind namePat Nothing rhs (S.BDecls [])
             where namePat = S.PVar $ S.Ident "page"
                   rhs = S.UnGuardedRhs e
 
@@ -60,57 +57,57 @@ sDecl :: SrcInfo loc => Decl loc -> S.Decl
 sDecl decl = case decl of
      TypeDecl     l dh t        ->
         let (n, tvs) = sDeclHead dh
-         in S.TypeDecl (getPointLoc l) n tvs (sType t)
+         in S.TypeDecl n tvs (sType t)
      TypeFamDecl  l dh mk       ->
         let (n, tvs) = sDeclHead dh
-         in S.TypeFamDecl (getPointLoc l) n tvs (fmap sKind mk)
+         in S.TypeFamDecl n tvs (fmap sKind mk)
      DataDecl     l dn mctxt dh constrs mder    ->
         let (n, tvs) = sDeclHead dh
-         in S.DataDecl (getPointLoc l) (sDataOrNew dn) (maybe [] sContext mctxt) n tvs (map sQualConDecl constrs) (maybe [] sDeriving mder)
+         in S.DataDecl (sDataOrNew dn) (maybe [] sContext mctxt) n tvs (map sQualConDecl constrs) (maybe [] sDeriving mder)
      GDataDecl    l dn mctxt dh mk gds mder     ->
         let (n, tvs) = sDeclHead dh
-         in S.GDataDecl (getPointLoc l) (sDataOrNew dn) (maybe [] sContext mctxt) n tvs (fmap sKind mk) (map sGadtDecl gds) (maybe [] sDeriving mder)
+         in S.GDataDecl (sDataOrNew dn) (maybe [] sContext mctxt) n tvs (fmap sKind mk) (map sGadtDecl gds) (maybe [] sDeriving mder)
      DataFamDecl  l mctxt dh mk ->
         let (n, tvs) = sDeclHead dh
-         in S.DataFamDecl (getPointLoc l) (maybe [] sContext mctxt) n tvs (fmap sKind mk)
-     TypeInsDecl  l t1 t2       -> S.TypeInsDecl (getPointLoc l) (sType t1) (sType t2)
+         in S.DataFamDecl (maybe [] sContext mctxt) n tvs (fmap sKind mk)
+     TypeInsDecl  l t1 t2       -> S.TypeInsDecl (sType t1) (sType t2)
      DataInsDecl  l dn t constrs mder           ->
-        S.DataInsDecl (getPointLoc l) (sDataOrNew dn) (sType t) (map sQualConDecl constrs) (maybe [] sDeriving mder)
+        S.DataInsDecl (sDataOrNew dn) (sType t) (map sQualConDecl constrs) (maybe [] sDeriving mder)
      GDataInsDecl l dn t mk gds mder            ->
-        S.GDataInsDecl (getPointLoc l) (sDataOrNew dn) (sType t) (fmap sKind mk) (map sGadtDecl gds) (maybe [] sDeriving mder)
+        S.GDataInsDecl (sDataOrNew dn) (sType t) (fmap sKind mk) (map sGadtDecl gds) (maybe [] sDeriving mder)
      ClassDecl    l mctxt dh fds mcds           ->
         let (n, tvs) = sDeclHead dh
-         in S.ClassDecl (getPointLoc l) (maybe [] sContext mctxt) n tvs (map sFunDep fds) (maybe [] (map sClassDecl) mcds)
+         in S.ClassDecl (maybe [] sContext mctxt) n tvs (map sFunDep fds) (maybe [] (map sClassDecl) mcds)
      InstDecl     l mctxt ih mids               ->
         let (qn, ts) = sInstHead ih
-         in S.InstDecl (getPointLoc l) (maybe [] sContext mctxt) qn ts (maybe [] (map sInstDecl) mids)
+         in S.InstDecl (maybe [] sContext mctxt) qn ts (maybe [] (map sInstDecl) mids)
      DerivDecl    l mctxt ih    ->
         let (qn, ts) = sInstHead ih
-         in S.DerivDecl (getPointLoc l) (maybe [] sContext mctxt) qn ts
-     InfixDecl    l ass prec ops    -> S.InfixDecl (getPointLoc l) (sAssoc ass) (maybe 9 id prec) (map sOp ops)
-     DefaultDecl  l ts          -> S.DefaultDecl (getPointLoc l) (map sType ts)
-     SpliceDecl   l sp          -> S.SpliceDecl (getPointLoc l) (sExp sp)
-     TypeSig      l ns t        -> S.TypeSig (getPointLoc l) (map sName ns) (sType t)
+         in S.DerivDecl (maybe [] sContext mctxt) qn ts
+     InfixDecl    l ass prec ops    -> S.InfixDecl (sAssoc ass) (maybe 9 id prec) (map sOp ops)
+     DefaultDecl  l ts          -> S.DefaultDecl (map sType ts)
+     SpliceDecl   l sp          -> S.SpliceDecl (sExp sp)
+     TypeSig      l ns t        -> S.TypeSig (map sName ns) (sType t)
      FunBind      _ ms          -> S.FunBind (map sMatch ms)
      PatBind      l p mt rhs mbs    ->
-        S.PatBind (getPointLoc l) (sPat p) (fmap sType mt) (sRhs rhs) (maybe (S.BDecls []) sBinds mbs)
+        S.PatBind (sPat p) (fmap sType mt) (sRhs rhs) (maybe (S.BDecls []) sBinds mbs)
      ForImp       l cc msaf mstr n t    ->
-        S.ForImp (getPointLoc l) (sCallConv cc) (maybe (S.PlaySafe False) sSafety msaf) (maybe "" id mstr) (sName n) (sType t)
+        S.ForImp (sCallConv cc) (maybe (S.PlaySafe False) sSafety msaf) (maybe "" id mstr) (sName n) (sType t)
      ForExp       l cc      mstr n t    ->
-        S.ForExp (getPointLoc l) (sCallConv cc) (maybe "" id mstr) (sName n) (sType t)
-     RulePragmaDecl   l rs      -> S.RulePragmaDecl (getPointLoc l) (map sRule rs)
-     DeprPragmaDecl   l nsstrs  -> S.DeprPragmaDecl (getPointLoc l) (map (\(ns, str) -> (map sName ns, str)) nsstrs)
-     WarnPragmaDecl   l nsstrs  -> S.WarnPragmaDecl (getPointLoc l) (map (\(ns, str) -> (map sName ns, str)) nsstrs)
-     InlineSig        l b mact qn   -> S.InlineSig (getPointLoc l) b (maybe S.AlwaysActive sActivation mact) (sQName qn)
-     InlineConlikeSig l   mact qn   -> S.InlineConlikeSig (getPointLoc l) (maybe S.AlwaysActive sActivation mact) (sQName qn)
-     SpecSig          l   mact qn ts   -> S.SpecSig (getPointLoc l) (maybe S.AlwaysActive sActivation mact) (sQName qn) (map sType ts)
+        S.ForExp (sCallConv cc) (maybe "" id mstr) (sName n) (sType t)
+     RulePragmaDecl   l rs      -> S.RulePragmaDecl (map sRule rs)
+     DeprPragmaDecl   l nsstrs  -> S.DeprPragmaDecl (map (\(ns, str) -> (map sName ns, str)) nsstrs)
+     WarnPragmaDecl   l nsstrs  -> S.WarnPragmaDecl (map (\(ns, str) -> (map sName ns, str)) nsstrs)
+     InlineSig        l b mact qn   -> S.InlineSig b (maybe S.AlwaysActive sActivation mact) (sQName qn)
+     InlineConlikeSig l   mact qn   -> S.InlineConlikeSig (maybe S.AlwaysActive sActivation mact) (sQName qn)
+     SpecSig          l   mact qn ts   -> S.SpecSig (maybe S.AlwaysActive sActivation mact) (sQName qn) (map sType ts)
      SpecInlineSig    l b mact qn ts    ->
-        S.SpecInlineSig (getPointLoc l) b (maybe S.AlwaysActive sActivation mact) (sQName qn) (map sType ts)
+        S.SpecInlineSig b (maybe S.AlwaysActive sActivation mact) (sQName qn) (map sType ts)
      InstSig          l mctxt ih    ->
         let (qn, ts) = sInstHead ih
-         in S.InstSig (getPointLoc l) (maybe [] sContext mctxt) qn ts
+         in S.InstSig (maybe [] sContext mctxt) qn ts
      AnnPragma        l ann         ->
-        S.AnnPragma (getPointLoc l) (sAnnotation ann)
+        S.AnnPragma (sAnnotation ann)
 
 sAnnotation :: SrcInfo loc => Annotation loc -> S.Annotation
 sAnnotation ann = case ann of
@@ -174,7 +171,7 @@ sExportSpec es = case es of
 
 sImportDecl :: SrcInfo loc => ImportDecl loc -> S.ImportDecl
 sImportDecl (ImportDecl l mn qu src mpkg as misl) =
-    S.ImportDecl (getPointLoc l) (sModuleName mn) qu src mpkg (fmap sModuleName as) (fmap sImportSpecList misl)
+    S.ImportDecl (sModuleName mn) qu src mpkg (fmap sModuleName as) (fmap sImportSpecList misl)
 
 sImportSpecList :: ImportSpecList l -> (Bool, [S.ImportSpec])
 sImportSpecList (ImportSpecList _ b iss) = (b, map sImportSpec iss)
@@ -217,17 +214,17 @@ sBinds bs = case bs of
     IPBinds _ ipbds     -> S.IPBinds (map sIPBind ipbds)
 
 sIPBind :: SrcInfo loc => IPBind loc -> S.IPBind
-sIPBind (IPBind l ipn e) = S.IPBind (getPointLoc l) (sIPName ipn) (sExp e)
+sIPBind (IPBind l ipn e) = S.IPBind (sIPName ipn) (sExp e)
 
 sMatch :: SrcInfo loc => Match loc -> S.Match
 sMatch (Match l n ps rhs mwhere) =
-    S.Match (getPointLoc l) (sName n) (map sPat ps) Nothing (sRhs rhs) (maybe (S.BDecls []) sBinds mwhere)
+    S.Match (sName n) (map sPat ps) Nothing (sRhs rhs) (maybe (S.BDecls []) sBinds mwhere)
 sMatch (InfixMatch l pa n pbs rhs mwhere) =
-    S.Match (getPointLoc l) (sName n) (map sPat (pa:pbs)) Nothing (sRhs rhs) (maybe (S.BDecls []) sBinds mwhere)
+    S.Match (sName n) (map sPat (pa:pbs)) Nothing (sRhs rhs) (maybe (S.BDecls []) sBinds mwhere)
 
 sQualConDecl :: SrcInfo loc => QualConDecl loc -> S.QualConDecl
 sQualConDecl (QualConDecl l mtvs mctxt cd) =
-    S.QualConDecl (getPointLoc l) (maybe [] (map sTyVarBind) mtvs) (maybe [] sContext mctxt) (sConDecl cd)
+    S.QualConDecl (maybe [] (map sTyVarBind) mtvs) (maybe [] sContext mctxt) (sConDecl cd)
 
 sConDecl :: ConDecl l -> S.ConDecl
 sConDecl cd = case cd of
@@ -239,29 +236,29 @@ sFieldDecl :: FieldDecl l -> ([S.Name], S.BangType)
 sFieldDecl (FieldDecl _ ns bt) = (map sName ns, sBangType bt)
 
 sGadtDecl :: SrcInfo loc => GadtDecl loc -> S.GadtDecl
-sGadtDecl (GadtDecl l n t) = S.GadtDecl (getPointLoc l) (sName n) (sType t)
+sGadtDecl (GadtDecl l n t) = S.GadtDecl (sName n) (sType t)
 
 sClassDecl :: SrcInfo loc => ClassDecl loc -> S.ClassDecl
 sClassDecl cd = case cd of
     ClsDecl _ d  -> S.ClsDecl (sDecl d)
     ClsDataFam l mctxt dh mk    ->
         let (n, tvs) = sDeclHead dh
-         in S.ClsDataFam (getPointLoc l) (maybe [] sContext mctxt) n tvs (fmap sKind mk)
+         in S.ClsDataFam (maybe [] sContext mctxt) n tvs (fmap sKind mk)
     ClsTyFam l dh mk    ->
         let (n, tvs) = sDeclHead dh
-         in S.ClsTyFam (getPointLoc l) n tvs (fmap sKind mk)
+         in S.ClsTyFam n tvs (fmap sKind mk)
     ClsTyDef l t1 t2    ->
-        S.ClsTyDef (getPointLoc l) (sType t1) (sType t2)
+        S.ClsTyDef (sType t1) (sType t2)
 
 sInstDecl :: SrcInfo loc => InstDecl loc -> S.InstDecl
 sInstDecl id = case id of
     InsDecl   _ d   -> S.InsDecl (sDecl d)
-    InsType   l t1 t2   -> S.InsType (getPointLoc l) (sType t1) (sType t2)
+    InsType   l t1 t2   -> S.InsType (sType t1) (sType t2)
     InsData   l dn t constrs mder   ->
-        S.InsData (getPointLoc l) (sDataOrNew dn) (sType t) (map sQualConDecl constrs) (maybe [] sDeriving mder)
+        S.InsData (sDataOrNew dn) (sType t) (map sQualConDecl constrs) (maybe [] sDeriving mder)
     InsGData  l dn t mk gds mder    ->
-        S.InsGData (getPointLoc l) (sDataOrNew dn) (sType t) (fmap sKind mk) (map sGadtDecl gds) (maybe [] sDeriving mder)
---    InsInline l b mact qn   -> S.InsInline (getPointLoc l) b (maybe S.AlwaysActive sActivation mact) (sQName qn)
+        S.InsGData (sDataOrNew dn) (sType t) (fmap sKind mk) (map sGadtDecl gds) (maybe [] sDeriving mder)
+--    InsInline l b mact qn   -> S.InsInline b (maybe S.AlwaysActive sActivation mact) (sQName qn)
 
 sBangType :: BangType l -> S.BangType
 sBangType bt = case bt of
@@ -274,7 +271,7 @@ sRhs (UnGuardedRhs _ e) = S.UnGuardedRhs (sExp e)
 sRhs (GuardedRhss _ grhss) = S.GuardedRhss (map sGuardedRhs grhss)
 
 sGuardedRhs :: SrcInfo loc => GuardedRhs loc -> S.GuardedRhs
-sGuardedRhs (GuardedRhs l ss e) = S.GuardedRhs (getPointLoc l) (map sStmt ss) (sExp e)
+sGuardedRhs (GuardedRhs l ss e) = S.GuardedRhs (map sStmt ss) (sExp e)
 
 sType :: Type l -> S.Type
 sType t = case t of
@@ -354,7 +351,7 @@ sExp e = case e of
     InfixApp _ e1 op e2 -> S.InfixApp (sExp e1) (sQOp op) (sExp e2)
     App _ e1 e2         -> S.App (sExp e1) (sExp e2)
     NegApp _ e          -> S.NegApp (sExp e)
-    Lambda l ps e       -> S.Lambda (getPointLoc l) (map sPat ps) (sExp e)
+    Lambda l ps e       -> S.Lambda (map sPat ps) (sExp e)
     Let _ bs e          -> S.Let (sBinds bs) (sExp e)
     If _ e1 e2 e3       -> S.If (sExp e1) (sExp e2) (sExp e3)
     MultiIf _ alts      -> S.MultiIf (map sIfAlt alts)
@@ -375,21 +372,21 @@ sExp e = case e of
     EnumFromThenTo _ e1 e2 e3   -> S.EnumFromThenTo (sExp e1) (sExp e2) (sExp e3)
     ListComp _ e qss    -> S.ListComp (sExp e) (map sQualStmt qss)
     ParComp  _ e qsss   -> S.ParComp (sExp e) (map (map sQualStmt) qsss)
-    ExpTypeSig l e t    -> S.ExpTypeSig (getPointLoc l) (sExp e) (sType t)
+    ExpTypeSig l e t    -> S.ExpTypeSig (sExp e) (sType t)
     VarQuote _ qn       -> S.VarQuote (sQName qn)
     TypQuote _ qn       -> S.TypQuote (sQName qn)
     BracketExp _ br     -> S.BracketExp (sBracket br)
     SpliceExp _ sp      -> S.SpliceExp (sSplice sp)
     QuasiQuote _ nm qt  -> S.QuasiQuote nm qt
-    XTag l xn attrs mat es  -> S.XTag  (getPointLoc l) (sXName xn) (map sXAttr attrs) (fmap sExp mat) (map sExp es)
-    XETag l xn attrs mat    -> S.XETag (getPointLoc l) (sXName xn) (map sXAttr attrs) (fmap sExp mat)
+    XTag l xn attrs mat es  -> S.XTag  (sXName xn) (map sXAttr attrs) (fmap sExp mat) (map sExp es)
+    XETag l xn attrs mat    -> S.XETag (sXName xn) (map sXAttr attrs) (fmap sExp mat)
     XPcdata _ str       -> S.XPcdata str
     XExpTag _ e         -> S.XExpTag (sExp e)
-    XChildTag l es      -> S.XChildTag (getPointLoc l) (map sExp es)
+    XChildTag l es      -> S.XChildTag (map sExp es)
     CorePragma _ str e  -> S.CorePragma str (sExp e)
     SCCPragma  _ str e  -> S.SCCPragma  str (sExp e)
     GenPragma  _ str i12 i34 e  -> S.GenPragma str i12 i34 (sExp e)
-    Proc            l p  e  -> S.Proc (getPointLoc l) (sPat p) (sExp e)
+    Proc            l p  e  -> S.Proc (sPat p) (sExp e)
     LeftArrApp      _ e1 e2 -> S.LeftArrApp (sExp e1) (sExp e2)
     RightArrApp     _ e1 e2 -> S.RightArrApp (sExp e1) (sExp e2)
     LeftArrHighApp  _ e1 e2 -> S.LeftArrHighApp (sExp e1) (sExp e2)
@@ -431,9 +428,9 @@ sCallConv (CApi      _) = S.CApi
 
 sModulePragma :: SrcInfo loc => ModulePragma loc -> S.ModulePragma
 sModulePragma pr = case pr of
-    LanguagePragma   l ns   -> S.LanguagePragma (getPointLoc l) (map sName ns)
-    OptionsPragma    l mt str -> S.OptionsPragma (getPointLoc l) mt str
-    AnnModulePragma  l ann -> S.AnnModulePragma (getPointLoc l) (sAnnotation ann)
+    LanguagePragma   l ns   -> S.LanguagePragma (map sName ns)
+    OptionsPragma    l mt str -> S.OptionsPragma mt str
+    AnnModulePragma  l ann -> S.AnnModulePragma (sAnnotation ann)
 
 sActivation :: Activation l -> S.Activation
 sActivation act = case act of
@@ -467,11 +464,11 @@ sPat pat = case pat of
     PAsPat _ n p        -> S.PAsPat (sName n) (sPat p)
     PWildCard _         -> S.PWildCard
     PIrrPat _ p         -> S.PIrrPat (sPat p)
-    PatTypeSig l p t    -> S.PatTypeSig (getPointLoc l) (sPat p) (sType t)
+    PatTypeSig l p t    -> S.PatTypeSig (sPat p) (sType t)
     PViewPat _ e p      -> S.PViewPat (sExp e) (sPat p)
     PRPat _ rps         -> S.PRPat (map sRPat rps)
-    PXTag l xn attrs mat ps -> S.PXTag (getPointLoc l) (sXName xn) (map sPXAttr attrs) (fmap sPat mat) (map sPat ps)
-    PXETag l xn attrs mat   -> S.PXETag (getPointLoc l) (sXName xn) (map sPXAttr attrs) (fmap sPat mat)
+    PXTag l xn attrs mat ps -> S.PXTag (sXName xn) (map sPXAttr attrs) (fmap sPat mat) (map sPat ps)
+    PXETag l xn attrs mat   -> S.PXETag (sXName xn) (map sPXAttr attrs) (fmap sPat mat)
     PXPcdata _ str      -> S.PXPcdata str
     PXPatTag _ p        -> S.PXPatTag (sPat p)
     PXRPats  _ rps      -> S.PXRPats (map sRPat rps)
@@ -509,7 +506,7 @@ sPatField pf = case pf of
 
 sStmt :: SrcInfo loc => Stmt loc -> S.Stmt
 sStmt stmt = case stmt of
-    Generator l p e     -> S.Generator (getPointLoc l) (sPat p) (sExp e)
+    Generator l p e     -> S.Generator (sPat p) (sExp e)
     Qualifier _ e       -> S.Qualifier (sExp e)
     LetStmt _ bs        -> S.LetStmt (sBinds bs)
     RecStmt _ ss        -> S.RecStmt (map sStmt ss)
@@ -530,7 +527,7 @@ sFieldUpdate fu = case fu of
     FieldWildcard _         -> S.FieldWildcard
 
 sAlt :: SrcInfo loc => Alt loc -> S.Alt
-sAlt (Alt l p galts mbs) = S.Alt (getPointLoc l) (sPat p) (sGuardedAlts galts) (maybe (S.BDecls []) sBinds mbs)
+sAlt (Alt l p galts mbs) = S.Alt (sPat p) (sGuardedAlts galts) (maybe (S.BDecls []) sBinds mbs)
 
 sGuardedAlts :: SrcInfo loc => GuardedAlts loc -> S.GuardedAlts
 sGuardedAlts galts = case galts of
@@ -538,7 +535,7 @@ sGuardedAlts galts = case galts of
     GuardedAlts  _ gs   -> S.GuardedAlts (map sGuardedAlt gs)
 
 sGuardedAlt :: SrcInfo loc => GuardedAlt loc -> S.GuardedAlt
-sGuardedAlt (GuardedAlt l ss e) = S.GuardedAlt (getPointLoc l) (map sStmt ss) (sExp e)
+sGuardedAlt (GuardedAlt l ss e) = S.GuardedAlt (map sStmt ss) (sExp e)
 
 sIfAlt :: SrcInfo loc => IfAlt loc -> S.IfAlt
 sIfAlt (IfAlt _ e1 e2) = S.IfAlt (sExp e1) (sExp e2)
