@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveFunctor #-}
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Language.Haskell.Exts.Annotated.ExactPrint
@@ -1611,17 +1612,13 @@ instance ExactP GuardedRhs where
      _ -> errorEP "ExactP: GuardedRhs is given wrong number of srcInfoPoints"
 
 newtype GuardedAlts l = GuardedAlts (Rhs l)
-    deriving Show
-instance Functor GuardedAlts where
-    fmap f (GuardedAlts v) = GuardedAlts (fmap f v)
+    deriving (Functor, Show)
 instance Annotated GuardedAlts where
     amap f (GuardedAlts v) = GuardedAlts (amap f v)
     ann (GuardedAlts v) = ann v
 
 newtype GuardedAlt l = GuardedAlt (GuardedRhs l)
-    deriving Show
-instance Functor GuardedAlt where
-    fmap f (GuardedAlt v) = GuardedAlt (fmap f v)
+    deriving (Functor, Show)
 instance Annotated GuardedAlt where
     amap f (GuardedAlt v) = GuardedAlt (amap f v)
     ann (GuardedAlt v) = ann v
