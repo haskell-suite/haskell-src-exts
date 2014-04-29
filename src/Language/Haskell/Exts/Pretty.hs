@@ -828,7 +828,7 @@ instance Pretty Exp where
                         text "else", pretty elsexp]
         prettyPrec p (MultiIf alts) = parensIf (p > 1) $
                 text "if"
-                $$$ ppBody multiIfIndent (map pretty alts)
+                $$$ ppBody multiIfIndent (map (pretty . GuardedAlt) alts)
         prettyPrec p (Case cond altList) = parensIf (p > 1) $
                 myFsep [text "case", pretty cond, text "of"]
                 $$$ ppBody caseIndent (map pretty altList)

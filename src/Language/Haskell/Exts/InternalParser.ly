@@ -1564,14 +1564,14 @@ A guard can be a pattern guard if PatternGuards is enabled, hence quals instead 
 >       : exp                           {% checkPattern $1 }
 >       | '!' aexp                      {% checkPattern (BangPat (nIS $1 <++> ann $2 <** [$1]) $2) }
 
-> ifaltslist :: { ([GuardedAlt L], L, [S]) }
+> ifaltslist :: { ([GuardedRhs L], L, [S]) }
 >       : '{'  ifalts '}'                 { (fst $2, $1 <^^> $3, $1:snd $2 ++ [$3])  }
 >       | open ifalts close               { (fst $2, $1 <^^> $3, $1:snd $2 ++ [$3]) }
 
-> ifalts :: { ([GuardedAlt L], [S]) }
+> ifalts :: { ([GuardedRhs L], [S]) }
 >       : optsemis ifalts1 optsemis       { (reverse $ fst $2, $1 ++ snd $2 ++ $3) }
 
-> ifalts1 :: { ([GuardedAlt L], [S]) }
+> ifalts1 :: { ([GuardedRhs L], [S]) }
 >       : ifalts1 optsemis gdpat           { ($3 : fst $1, snd $1 ++ $2) }
 >       | gdpat                            { ([$1], []) }
 

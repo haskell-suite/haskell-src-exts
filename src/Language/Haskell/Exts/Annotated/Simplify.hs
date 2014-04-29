@@ -357,7 +357,7 @@ sExp e = case e of
     Lambda l ps e       -> S.Lambda (getPointLoc l) (map sPat ps) (sExp e)
     Let _ bs e          -> S.Let (sBinds bs) (sExp e)
     If _ e1 e2 e3       -> S.If (sExp e1) (sExp e2) (sExp e3)
-    MultiIf _ alts      -> S.MultiIf (map sGuardedAlt alts)
+    MultiIf _ alts      -> S.MultiIf (map sGuardedRhs alts)
     Case _ e alts       -> S.Case (sExp e) (map sAlt alts)
     Do _ ss             -> S.Do (map sStmt ss)
     MDo _ ss            -> S.MDo (map sStmt ss)

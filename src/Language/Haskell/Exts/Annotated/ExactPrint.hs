@@ -1211,7 +1211,7 @@ instance ExactP Exp where
         case srcInfoPoints l of
           a:pts -> do
             printString "if"
-            layoutList pts alts
+            layoutList pts (map GuardedAlt alts)
           _ -> internalError
     Case l e alts   ->
         case srcInfoPoints l of
@@ -1611,6 +1611,7 @@ instance ExactP GuardedRhs where
      _ -> errorEP "ExactP: GuardedRhs is given wrong number of srcInfoPoints"
 
 newtype GuardedAlts l = GuardedAlts (Rhs l)
+    deriving Show
 instance Functor GuardedAlts where
     fmap f (GuardedAlts v) = GuardedAlts (fmap f v)
 instance Annotated GuardedAlts where
@@ -1618,6 +1619,7 @@ instance Annotated GuardedAlts where
     ann (GuardedAlts v) = ann v
 
 newtype GuardedAlt l = GuardedAlt (GuardedRhs l)
+    deriving Show
 instance Functor GuardedAlt where
     fmap f (GuardedAlt v) = GuardedAlt (fmap f v)
 instance Annotated GuardedAlt where
