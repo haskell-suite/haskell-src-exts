@@ -59,7 +59,7 @@ module Language.Haskell.Exts.Annotated.Syntax (
     Type(..), Boxed(..), Kind(..), TyVarBind(..), Promoted(..),
     -- * Expressions
     Exp(..), Stmt(..), QualStmt(..), FieldUpdate(..),
-    Alt(..), GuardedAlts(..), GuardedAlt(..), XAttr(..),
+    Alt(..), XAttr(..),
     -- * Patterns
     Pat(..), PatField(..), PXAttr(..), RPat(..), RPatOp(..),
     -- * Literals
@@ -422,14 +422,16 @@ data BangType l
      | UnpackedTy l (Type l) -- ^ unboxed component, marked with an UNPACK pragma
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
--- | The right hand side of a function or pattern binding.
+-- | The right hand side of a function binding, pattern binding, or a case
+--   alternative.
 data Rhs l
      = UnGuardedRhs l (Exp l) -- ^ unguarded right hand side (/exp/)
      | GuardedRhss  l [GuardedRhs l]
                 -- ^ guarded right hand side (/gdrhs/)
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
--- | A guarded right hand side @|@ /stmts/ @=@ /exp/.
+-- | A guarded right hand side @|@ /stmts/ @=@ /exp/, or @|@ /stmts/ @->@ /exp/
+--   for case alternatives.
 --   The guard is a series of statements when using pattern guards,
 --   otherwise it will be a single qualifier expression.
 data GuardedRhs l
@@ -543,7 +545,7 @@ data Exp l
     | Lambda l [Pat l] (Exp l)              -- ^ lambda expression
     | Let l (Binds l) (Exp l)               -- ^ local declarations with @let@ ... @in@ ...
     | If l (Exp l) (Exp l) (Exp l)          -- ^ @if@ /exp/ @then@ /exp/ @else@ /exp/
-    | MultiIf l [GuardedAlt l]              -- ^ @if@ @|@ /stmts/ @->@ /exp/ ...
+    | MultiIf l [GuardedRhs l]              -- ^ @if@ @|@ /stmts/ @->@ /exp/ ...
     | Case l (Exp l) [Alt l]                -- ^ @case@ /exp/ @of@ /alts/
     | Do l [Stmt l]                         -- ^ @do@-expression:
                                             --   the last statement in the list
@@ -781,21 +783,9 @@ data FieldUpdate l
 
 -- | An /alt/ alternative in a @case@ expression.
 data Alt l
-    = Alt l (Pat l) (GuardedAlts l) (Maybe (Binds l))
+    = Alt l (Pat l) (Rhs l) (Maybe (Binds l))
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
--- | The right-hand sides of a @case@ alternative,
---   which may be a single right-hand side or a
---   set of guarded ones.
-data GuardedAlts l
-    = UnGuardedAlt l (Exp l)         -- ^ @->@ /exp/
-    | GuardedAlts  l [GuardedAlt l]  -- ^ /gdpat/
-  deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
-
--- | A guarded case alternative @|@ /stmts/ @->@ /exp/.
-data GuardedAlt l
-    = GuardedAlt l [Stmt l] (Exp l)
-  deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 -----------------------------------------------------------------------------
 -- Builtin names.
 
@@ -1570,16 +1560,6 @@ instance Annotated FieldUpdate where
 instance Annotated Alt where
     ann (Alt l p gs bs) = l
     amap f (Alt l p gs bs) = Alt (f l) p gs bs
-
-instance Annotated GuardedAlts where
-    ann (UnGuardedAlt l e) = l
-    ann (GuardedAlts  l galts) = l
-    amap f (UnGuardedAlt l e) = UnGuardedAlt (f l) e
-    amap f (GuardedAlts  l galts) = GuardedAlts (f l) galts
-
-instance Annotated GuardedAlt where
-    ann (GuardedAlt l ss e) = l
-    amap f (GuardedAlt l ss e) = GuardedAlt (f l) ss e
 
 instance Annotated Promoted where
     ann (PromotedInteger l int raw) = l

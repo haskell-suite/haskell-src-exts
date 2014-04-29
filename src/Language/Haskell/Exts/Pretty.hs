@@ -783,6 +783,17 @@ instance Pretty GuardedRhs where
         pretty (GuardedRhs _pos guards ppBody) =
                 myFsep $ [char '|'] ++ (punctuate comma . map pretty $ guards) ++ [equals, pretty ppBody]
 
+newtype GuardedAlts = GuardedAlts Rhs
+newtype GuardedAlt = GuardedAlt GuardedRhs
+
+instance Pretty GuardedAlts where
+        pretty (GuardedAlts (UnGuardedRhs e)) = text "->" <+> pretty e
+        pretty (GuardedAlts (GuardedRhss guardList)) = myVcat . map (pretty . GuardedAlt) $ guardList
+
+instance Pretty GuardedAlt where
+        pretty (GuardedAlt (GuardedRhs _pos guards ppBody)) =
+                myFsep $ [char '|'] ++ (punctuate comma . map pretty $ guards) ++ [text "->", pretty ppBody]
+
 instance Pretty Literal where
         pretty (Int i)        = integer i
         pretty (Char c)       = text (show c)
@@ -817,7 +828,7 @@ instance Pretty Exp where
                         text "else", pretty elsexp]
         prettyPrec p (MultiIf alts) = parensIf (p > 1) $
                 text "if"
-                $$$ ppBody multiIfIndent (map pretty alts)
+                $$$ ppBody multiIfIndent (map (pretty . GuardedAlt) alts)
         prettyPrec p (Case cond altList) = parensIf (p > 1) $
                 myFsep [text "case", pretty cond, text "of"]
                 $$$ ppBody caseIndent (map pretty altList)
@@ -1034,15 +1045,7 @@ instance Pretty RPatOp where
 ------------------------- Case bodies  -------------------------
 instance Pretty Alt where
         pretty (Alt _pos e gAlts binds) =
-                pretty e <+> pretty gAlts $$$ ppWhere binds
-
-instance Pretty GuardedAlts where
-        pretty (UnGuardedAlt e) = text "->" <+> pretty e
-        pretty (GuardedAlts altList) = myVcat . map pretty $ altList
-
-instance Pretty GuardedAlt where
-        pretty (GuardedAlt _pos guards body) =
-                myFsep $ char '|': (punctuate comma . map pretty $ guards) ++ [text "->", pretty body]
+                pretty e <+> pretty (GuardedAlts gAlts) $$$ ppWhere binds
 
 ------------------------- Statements in monads, guards & list comprehensions -----
 instance Pretty Stmt where
@@ -1405,12 +1408,6 @@ instance Pretty (A.RPatOp l) where
 ------------------------- Case bodies  -------------------------
 instance SrcInfo loc => Pretty (A.Alt loc) where
         pretty = pretty . sAlt
-
-instance SrcInfo loc => Pretty (A.GuardedAlts loc) where
-        pretty = pretty . sGuardedAlts
-
-instance SrcInfo loc => Pretty (A.GuardedAlt loc) where
-        pretty = pretty . sGuardedAlt
 
 ------------------------- Statements in monads, guards & list comprehensions -----
 instance SrcInfo loc => Pretty (A.Stmt loc) where

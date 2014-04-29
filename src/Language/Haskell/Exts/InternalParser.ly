@@ -1546,32 +1546,32 @@ Case alternatives
 > alt :: { Alt L }
 >       : pat ralt optwhere             { Alt ($1 <> $2 <+?> (fmap ann) (fst $3) <** snd $3) $1 $2 (fst $3) }
 
-> ralt :: { GuardedAlts L }
->       : '->' trueexp                  { UnGuardedAlt (nIS $1 <++> ann $2 <** [$1]) $2 }
->       | gdpats                        { GuardedAlts  (snd $1) (reverse $ fst $1) }
+> ralt :: { Rhs L }
+>       : '->' trueexp                  { UnGuardedRhs (nIS $1 <++> ann $2 <** [$1]) $2 }
+>       | gdpats                        { GuardedRhss  (snd $1) (reverse $ fst $1) }
 
-> gdpats :: { ([GuardedAlt L],L) }
+> gdpats :: { ([GuardedRhs L],L) }
 >       : gdpats gdpat                  { ($2 : fst $1, snd $1 <++> ann $2) }
 >       | gdpat                         { ([$1], ann $1) }
  
 A guard can be a pattern guard if PatternGuards is enabled, hence quals instead of exp0.
-> gdpat :: { GuardedAlt L }
+> gdpat :: { GuardedRhs L }
 >       : '|' quals '->' trueexp {% do { checkPatternGuards (fst $2);
 >                                        let {l = nIS $1 <++> ann $4 <** ($1:snd $2 ++ [$3])};
->                                        return (GuardedAlt l (reverse (fst $2)) $4) } }
+>                                        return (GuardedRhs l (reverse (fst $2)) $4) } }
 
 > pat :: { Pat L }
 >       : exp                           {% checkPattern $1 }
 >       | '!' aexp                      {% checkPattern (BangPat (nIS $1 <++> ann $2 <** [$1]) $2) }
 
-> ifaltslist :: { ([GuardedAlt L], L, [S]) }
+> ifaltslist :: { ([GuardedRhs L], L, [S]) }
 >       : '{'  ifalts '}'                 { (fst $2, $1 <^^> $3, $1:snd $2 ++ [$3])  }
 >       | open ifalts close               { (fst $2, $1 <^^> $3, $1:snd $2 ++ [$3]) }
 
-> ifalts :: { ([GuardedAlt L], [S]) }
+> ifalts :: { ([GuardedRhs L], [S]) }
 >       : optsemis ifalts1 optsemis       { (reverse $ fst $2, $1 ++ snd $2 ++ $3) }
 
-> ifalts1 :: { ([GuardedAlt L], [S]) }
+> ifalts1 :: { ([GuardedRhs L], [S]) }
 >       : ifalts1 optsemis gdpat           { ($3 : fst $1, snd $1 ++ $2) }
 >       | gdpat                            { ([$1], []) }
 
