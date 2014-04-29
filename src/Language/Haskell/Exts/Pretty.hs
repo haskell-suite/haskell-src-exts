@@ -783,17 +783,16 @@ instance Pretty GuardedRhs where
         pretty (GuardedRhs _pos guards ppBody) =
                 myFsep $ [char '|'] ++ (punctuate comma . map pretty $ guards) ++ [equals, pretty ppBody]
 
-newtype GaltsHack = GaltsHack Rhs
-newtype GaltHack = GaltHack GuardedRhs
+newtype GuardedAlts = GuardedAlts Rhs
+newtype GuardedAlt = GuardedAlt GuardedRhs
 
-instance Pretty GaltsHack where
-        pretty (GaltsHack (UnGuardedRhs e)) = text "->" <+> pretty e
-        pretty (GaltsHack (GuardedRhss guardList)) = myVcat . map (pretty . GaltHack) $ guardList
+instance Pretty GuardedAlts where
+        pretty (GuardedAlts (UnGuardedRhs e)) = text "->" <+> pretty e
+        pretty (GuardedAlts (GuardedRhss guardList)) = myVcat . map (pretty . GuardedAlt) $ guardList
 
-instance Pretty GaltHack where
-        pretty (GaltHack (GuardedRhs _pos guards ppBody)) =
+instance Pretty GuardedAlt where
+        pretty (GuardedAlt (GuardedRhs _pos guards ppBody)) =
                 myFsep $ [char '|'] ++ (punctuate comma . map pretty $ guards) ++ [text "->", pretty ppBody]
-
 
 instance Pretty Literal where
         pretty (Int i)        = integer i
@@ -1046,7 +1045,7 @@ instance Pretty RPatOp where
 ------------------------- Case bodies  -------------------------
 instance Pretty Alt where
         pretty (Alt _pos e gAlts binds) =
-                pretty e <+> pretty (GaltsHack gAlts) $$$ ppWhere binds
+                pretty e <+> pretty (GuardedAlts gAlts) $$$ ppWhere binds
 
 ------------------------- Statements in monads, guards & list comprehensions -----
 instance Pretty Stmt where

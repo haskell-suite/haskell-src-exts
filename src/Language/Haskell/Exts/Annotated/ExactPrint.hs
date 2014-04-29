@@ -1569,7 +1569,7 @@ instance ExactP XAttr where
 instance ExactP Alt where
   exactP (Alt l p galts mbs) = do
     exactP p
-    exactPC (GaltsHack galts)
+    exactPC (GuardedAlts galts)
     maybeEP (\bs -> printStringAt (pos (head (srcInfoPoints l))) "where" >> exactPC bs) mbs
 
 instance ExactP Match where
@@ -1610,32 +1610,32 @@ instance ExactP GuardedRhs where
         exactPC e
      _ -> errorEP "ExactP: GuardedRhs is given wrong number of srcInfoPoints"
 
-newtype GaltsHack l = GaltsHack (Rhs l)
-instance Functor GaltsHack where
-    fmap f (GaltsHack v) = GaltsHack (fmap f v)
-instance Annotated GaltsHack where
-    amap f (GaltsHack v) = GaltsHack (amap f v)
-    ann (GaltsHack v) = ann v
+newtype GuardedAlts l = GuardedAlts (Rhs l)
+instance Functor GuardedAlts where
+    fmap f (GuardedAlts v) = GuardedAlts (fmap f v)
+instance Annotated GuardedAlts where
+    amap f (GuardedAlts v) = GuardedAlts (amap f v)
+    ann (GuardedAlts v) = ann v
 
-newtype GaltHack l = GaltHack (GuardedRhs l)
-instance Functor GaltHack where
-    fmap f (GaltHack v) = GaltHack (fmap f v)
-instance Annotated GaltHack where
-    amap f (GaltHack v) = GaltHack (amap f v)
-    ann (GaltHack v) = ann v
+newtype GuardedAlt l = GuardedAlt (GuardedRhs l)
+instance Functor GuardedAlt where
+    fmap f (GuardedAlt v) = GuardedAlt (fmap f v)
+instance Annotated GuardedAlt where
+    amap f (GuardedAlt v) = GuardedAlt (amap f v)
+    ann (GuardedAlt v) = ann v
 
-instance ExactP GaltsHack where
-  exactP (GaltsHack (UnGuardedRhs l e)) = printString "->" >> exactPC e
-  exactP (GaltsHack (GuardedRhss  l grhss)) = mapM_ (exactPC . GaltHack) grhss
+instance ExactP GuardedAlts where
+  exactP (GuardedAlts (UnGuardedRhs l e)) = printString "->" >> exactPC e
+  exactP (GuardedAlts (GuardedRhss  l grhss)) = mapM_ (exactPC . GuardedAlt) grhss
 
-instance ExactP GaltHack where
-  exactP (GaltHack (GuardedRhs l ss e)) =
+instance ExactP GuardedAlt where
+  exactP (GuardedAlt (GuardedRhs l ss e)) =
     case srcInfoPoints l of
      a:pts -> do
         printString "|"
         printInterleaved' (zip (init pts) (repeat ",") ++ [(last pts, "->")]) ss
         exactPC e
-     _ -> errorEP "ExactP: GuardedRhs is given wrong number of srcInfoPoints"
+     _ -> errorEP "ExactP: GuardedAlt is given wrong number of srcInfoPoints"
 
 instance ExactP Pat where
   exactP pat = case pat of
