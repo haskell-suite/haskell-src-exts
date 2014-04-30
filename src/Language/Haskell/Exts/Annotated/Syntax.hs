@@ -279,7 +279,7 @@ data Decl l
      -- ^ A type signature declaration
      | FunBind      l [Match l]
      -- ^ A set of function binding clauses
-     | PatBind      l (Pat l) (Maybe (Type l)) (Rhs l) {-where-} (Maybe (Binds l))
+     | PatBind      l (Pat l) (Rhs l) {-where-} (Maybe (Binds l))
      -- ^ A pattern binding
      | ForImp       l (CallConv l) (Maybe (Safety l)) (Maybe String) (Name l) (Type l)
      -- ^ A foreign import declaration
@@ -1024,7 +1024,7 @@ instance Annotated Decl where
         SpliceDecl   l sp               -> l
         TypeSig      l ns t             -> l
         FunBind      l ms               -> l
-        PatBind      l p mt rhs bs      -> l
+        PatBind      l p rhs bs         -> l
         ForImp       l cc msf s n t     -> l
         ForExp       l cc     s n t     -> l
         RulePragmaDecl   l rs           -> l
@@ -1055,7 +1055,7 @@ instance Annotated Decl where
         SpliceDecl   l sp                -> SpliceDecl (f l) sp
         TypeSig      l ns t              -> TypeSig (f l) ns t
         FunBind      l ms                -> FunBind (f l) ms
-        PatBind      l p mt rhs bs       -> PatBind (f l) p mt rhs bs
+        PatBind      l p rhs bs          -> PatBind (f l) p rhs bs
         ForImp       l cc msf s n t      -> ForImp (f l) cc msf s n t
         ForExp       l cc     s n t      -> ForExp (f l) cc     s n t
         RulePragmaDecl   l rs            -> RulePragmaDecl (f l) rs

@@ -48,7 +48,7 @@ sModule md = case md of
          in S.Module loc1 mn (map sModulePragma oss) mwt mes (map sImportDecl ids)
                 (map sDecl ds ++ [pageFun loc2 $ S.XTag loc2 (sXName xn) (map sXAttr attrs) (fmap sExp mat) (map sExp es)])
   where pageFun :: SrcLoc -> S.Exp -> S.Decl
-        pageFun loc e = S.PatBind loc namePat Nothing rhs (S.BDecls [])
+        pageFun loc e = S.PatBind loc namePat rhs (S.BDecls [])
             where namePat = S.PVar $ S.Ident "page"
                   rhs = S.UnGuardedRhs e
 
@@ -92,8 +92,8 @@ sDecl decl = case decl of
      SpliceDecl   l sp          -> S.SpliceDecl (getPointLoc l) (sExp sp)
      TypeSig      l ns t        -> S.TypeSig (getPointLoc l) (map sName ns) (sType t)
      FunBind      _ ms          -> S.FunBind (map sMatch ms)
-     PatBind      l p mt rhs mbs    ->
-        S.PatBind (getPointLoc l) (sPat p) (fmap sType mt) (sRhs rhs) (maybe (S.BDecls []) sBinds mbs)
+     PatBind      l p rhs mbs    ->
+        S.PatBind (getPointLoc l) (sPat p) (sRhs rhs) (maybe (S.BDecls []) sBinds mbs)
      ForImp       l cc msaf mstr n t    ->
         S.ForImp (getPointLoc l) (sCallConv cc) (maybe (S.PlaySafe False) sSafety msaf) (maybe "" id mstr) (sName n) (sType t)
      ForExp       l cc      mstr n t    ->
