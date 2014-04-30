@@ -441,7 +441,9 @@ checkPat e' [] = case e' of
     NegApp l1 (Lit l2 lit) ->
                   let siSign = last . srcInfoPoints $ l1
                       lSign = infoSpan siSign [siSign]
-                  in return (PLit l1 (Negative lSign) (fmap (const l2) lit))
+                  in do
+                    when (not . isNegatableLiteral $ lit) (patFail $ prettyPrint e)
+                    return (PLit l1 (Negative lSign) (fmap (const l2) lit))
     ExpTypeSig l e t -> do
                   -- patterns cannot have signatures unless ScopedTypeVariables is enabled.
                   checkEnabled ScopedTypeVariables
@@ -489,6 +491,14 @@ checkPat e' [] = case e' of
     e -> patFail $ prettyPrint e
 
 checkPat e _ = patFail $ prettyPrint e
+
+isNegatableLiteral :: Literal a -> Bool
+isNegatableLiteral (Int _ _ _) = True
+isNegatableLiteral (Frac _ _ _) = True
+isNegatableLiteral (PrimInt _ _ _) = True
+isNegatableLiteral (PrimFloat _ _ _) = True
+isNegatableLiteral (PrimDouble _ _ _) = True
+isNegatableLiteral _ = False
 
 splitBang :: PExp L -> [PExp L] -> (PExp L, [PExp L])
 splitBang (App _ f x) es = splitBang f (x:es)
