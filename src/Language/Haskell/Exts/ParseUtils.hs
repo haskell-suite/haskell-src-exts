@@ -386,7 +386,8 @@ checkPat (InfixApp _ l op r) args
         checkPat l (ps++args)
 checkPat e' [] = case e' of
     Var _ (UnQual l x)   -> return (PVar l x)
-    Lit l lit            -> return (PLit l lit)
+    Lit l lit            -> return (PLit l (Signless l2) lit)
+            where l2 = noInfoSpan . srcInfoSpan $ l
     InfixApp loc l op r  ->
         case op of
             QConOp _ c -> do
@@ -442,7 +443,12 @@ checkPat e' [] = case e' of
     RecConstr l c fs   -> do
                   fs' <- mapM checkPatField fs
                   return (PRec l c fs')
-    NegApp l1 (Lit l2 lit) -> return (PNeg l1 (PLit l2 lit))
+    NegApp l (Lit _ lit) ->
+                  let siSign = last . srcInfoPoints $ l
+                      lSign = infoSpan siSign [siSign]
+                  in do
+                    when (not . isNegatableLiteral $ lit) (patFail $ prettyPrint e')
+                    return (PLit l (Negative lSign) lit)
     ExpTypeSig l e t -> do
                   -- patterns cannot have signatures unless ScopedTypeVariables is enabled.
                   checkEnabled ScopedTypeVariables
@@ -490,6 +496,14 @@ checkPat e' [] = case e' of
     e -> patFail $ prettyPrint e
 
 checkPat e _ = patFail $ prettyPrint e
+
+isNegatableLiteral :: Literal a -> Bool
+isNegatableLiteral (Int _ _ _) = True
+isNegatableLiteral (Frac _ _ _) = True
+isNegatableLiteral (PrimInt _ _ _) = True
+isNegatableLiteral (PrimFloat _ _ _) = True
+isNegatableLiteral (PrimDouble _ _ _) = True
+isNegatableLiteral _ = False
 
 splitBang :: PExp L -> [PExp L] -> (PExp L, [PExp L])
 splitBang (App _ f x) es = splitBang f (x:es)

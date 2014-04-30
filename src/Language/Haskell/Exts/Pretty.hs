@@ -575,10 +575,10 @@ instance Pretty Match where
             where
                 lhs = case ps of
                         l:r:ps' | isSymbolName f ->
-                                let hd = [pretty l, ppName f, pretty r] in
+                                let hd = [prettyPrec 2 l, ppName f, prettyPrec 2 r] in
                                 if null ps' then hd
-                                else parens (myFsep hd) : map (prettyPrec 2) ps'
-                        _ -> pretty f : map (prettyPrec 2) ps
+                                else parens (myFsep hd) : map (prettyPrec 3) ps'
+                        _ -> pretty f : map (prettyPrec 3) ps
 
 ppWhere :: Binds -> Doc
 ppWhere (BDecls []) = empty
@@ -876,7 +876,7 @@ instance Pretty Exp where
         prettyPrec p (NegApp e) = parensIf (p > 0) $ char '-' <> prettyPrec 2 e
         prettyPrec p (App a b) = parensIf (p > 3) $ myFsep [prettyPrec 3 a, prettyPrec 4 b]
         prettyPrec p (Lambda _loc patList ppBody') = parensIf (p > 1) $ myFsep $
-                char '\\' : map (prettyPrec 2) patList ++ [text "->", pretty ppBody']
+                char '\\' : map (prettyPrec 3) patList ++ [text "->", pretty ppBody']
         -- keywords
         -- two cases for lets
         prettyPrec p (Let (BDecls declList) letBody) =
@@ -1028,12 +1028,12 @@ instance Pretty Splice where
 
 instance Pretty Pat where
         prettyPrec _ (PVar name) = pretty name
-        prettyPrec _ (PLit lit) = pretty lit
-        prettyPrec p (PNeg pat) = parensIf (p > 0) $ myFsep [char '-', pretty pat]
+        prettyPrec _ (PLit Signless lit) = pretty lit
+        prettyPrec p (PLit Negative lit) = parensIf (p > 1) $ char '-' <> pretty lit
         prettyPrec p (PInfixApp a op b) = parensIf (p > 0) $
                 myFsep [prettyPrec 1 a, pretty (QConOp op), prettyPrec 1 b]
-        prettyPrec p (PApp n ps) = parensIf (p > 1 && not (null ps)) $
-                myFsep (pretty n : map (prettyPrec 2) ps)
+        prettyPrec p (PApp n ps) = parensIf (p > 2 && not (null ps)) $
+                myFsep (pretty n : map (prettyPrec 3) ps)
         prettyPrec _ (PTuple bxd ps) =
                 let ds = map pretty ps
                 in case bxd of
@@ -1046,11 +1046,11 @@ instance Pretty Pat where
                 pretty c <> (braceList . map pretty $ fields)
         -- special case that would otherwise be buggy
         prettyPrec _ (PAsPat name (PIrrPat pat)) =
-                myFsep [pretty name <> char '@', char '~' <> prettyPrec 2 pat]
+                myFsep [pretty name <> char '@', char '~' <> prettyPrec 3 pat]
         prettyPrec _ (PAsPat name pat) =
-                hcat [pretty name, char '@', prettyPrec 2 pat]
+                hcat [pretty name, char '@', prettyPrec 3 pat]
         prettyPrec _ PWildCard = char '_'
-        prettyPrec _ (PIrrPat pat) = char '~' <> prettyPrec 2 pat
+        prettyPrec _ (PIrrPat pat) = char '~' <> prettyPrec 3 pat
         prettyPrec p (PatTypeSig _pos pat ty) = parensIf (p > 0) $
                 myFsep [pretty pat, text "::", pretty ty]
         prettyPrec p (PViewPat e pat) = parensIf (p > 0) $
@@ -1075,7 +1075,7 @@ instance Pretty Pat where
         prettyPrec _ (PXRPats ps) =
                 myFsep $ text "<[" : map pretty ps ++ [text "%>"]
         -- BangPatterns
-        prettyPrec _ (PBangPat pat) = text "!" <> prettyPrec 2 pat
+        prettyPrec _ (PBangPat pat) = text "!" <> prettyPrec 3 pat
         prettyPrec _ (PQuasiQuote n qt) = text ("[$" ++ n ++ "|" ++ qt ++ "|]")
 
 instance Pretty PXAttr where

@@ -225,6 +225,11 @@ instance ExactP Literal where
     PrimChar   _ _ rw -> printString ('\'':rw ++ "\'#" )
     PrimString _ _ rw -> printString ('\"':rw ++ "\"#" )
 
+instance ExactP Sign where
+  exactP sg = case sg of
+    Signless _ -> return ()
+    Negative l -> printStringAt (pos l) "-"
+
 instance ExactP ModuleName where
   exactP (ModuleName _ str) = printString str
 
@@ -1800,8 +1805,7 @@ instance ExactP GuardedAlt where
 instance ExactP Pat where
   exactP pat = case pat of
     PVar l n    -> exactPC (fmap (const l) n)
-    PLit _ lit  -> exactP lit
-    PNeg _ p    -> printString "-" >> exactPC p
+    PLit _ sg lit -> exactPC sg >> exactPC lit
     PNPlusK l n k   ->
         case srcInfoPoints l of
          [a,b] -> do

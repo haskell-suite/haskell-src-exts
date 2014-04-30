@@ -64,7 +64,7 @@ module Language.Haskell.Exts.Annotated.Syntax (
     -- * Patterns
     Pat(..), PatField(..), PXAttr(..), RPat(..), RPatOp(..),
     -- * Literals
-    Literal(..),
+    Literal(..), Sign(..),
     -- * Variables, Constructors and Operators
     ModuleName(..), QName(..), Name(..), QOp(..), Op(..),
     SpecialCon(..), CName(..), IPName(..), XName(..),
@@ -656,6 +656,12 @@ data Literal l
     | PrimString l String   String     -- ^ unboxed string literal
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
+-- | An indication whether a literal pattern has been negated or not.
+data Sign l
+    = Signless l
+    | Negative l
+  deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
+
 -- | Haskell expressions.
 data Exp l
     = Var l (QName l)                       -- ^ variable
@@ -826,8 +832,7 @@ data WarningText l
 -- | A pattern, to be matched against a value.
 data Pat l
     = PVar l (Name l)                       -- ^ variable
-    | PLit l (Literal l)                    -- ^ literal constant
-    | PNeg l (Pat l)                        -- ^ negated pattern
+    | PLit l (Sign l) (Literal l)           -- ^ literal constant
     | PNPlusK l (Name l) Integer            -- ^ n+k pattern
     | PInfixApp l (Pat l) (QName l) (Pat l) -- ^ pattern with an infix data constructor
     | PApp l (QName l) [Pat l]              -- ^ data constructor and argument patterns
@@ -1440,6 +1445,12 @@ instance Annotated Literal where
         PrimString l _ _  -> l
     amap = fmap
 
+instance Annotated Sign where
+    ann sg = case sg of
+        Signless l -> l
+        Negative l -> l
+    amap = fmap
+
 instance Annotated Exp where
     ann e = case e of
         Var l _                -> l
@@ -1636,8 +1647,7 @@ instance Annotated WarningText where
 instance Annotated Pat where
     ann p = case p of
       PVar l _          -> l
-      PLit l _          -> l
-      PNeg l _          -> l
+      PLit l _ _        -> l
       PNPlusK l _ _     -> l
       PInfixApp l _ _ _ -> l
       PApp l _ _        -> l
@@ -1660,8 +1670,7 @@ instance Annotated Pat where
       PBangPat l _      -> l
     amap f p1 = case p1 of
       PVar l n          -> PVar (f l) n
-      PLit l lit        -> PLit (f l) lit
-      PNeg l p          -> PNeg (f l) p
+      PLit l sg lit     -> PLit (f l) sg lit
       PNPlusK l n k     -> PNPlusK (f l) n k
       PInfixApp l pa qn pb  -> PInfixApp (f l) pa qn pb
       PApp l qn ps      -> PApp (f l) qn ps
