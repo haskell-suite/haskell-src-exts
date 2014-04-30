@@ -442,7 +442,7 @@ checkPat e' [] = case e' of
                   let siSign = last . srcInfoPoints $ l1
                       lSign = infoSpan siSign [siSign]
                   in do
-                    when (not . isNegatableLiteral $ lit) (patFail $ prettyPrint e)
+                    when (not . isNegatableLiteral $ lit) (patFail $ prettyPrint e')
                     return (PLit l1 (Negative lSign) (fmap (const l2) lit))
     ExpTypeSig l e t -> do
                   -- patterns cannot have signatures unless ScopedTypeVariables is enabled.

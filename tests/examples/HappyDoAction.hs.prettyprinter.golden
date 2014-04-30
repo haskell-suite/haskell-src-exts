@@ -5,7 +5,7 @@ foo :: Int#
 happyDoAction i tk st
   = case action of
         0# -> happyFail i tk st
-        - 1# -> happyAccept i tk st
+        -1# -> happyAccept i tk st
         n | (n <# (0# :: Int#)) -> (happyReduceArr ! rule) i tk st
           where rule = (I# ((negateInt# ((n +# (1# :: Int#))))))
         n -> happyShift new_state i tk st
