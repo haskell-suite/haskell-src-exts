@@ -382,7 +382,7 @@ checkPat (InfixApp _ l op r) args
         checkPat l (ps++args)
 checkPat e' [] = case e' of
     Var _ (UnQual l x)   -> return (PVar l x)
-    Lit l lit            -> return (PLit l lit)
+    Lit l lit            -> return (PLit l (Positive l) lit) -- FIXME: which l?
     InfixApp loc l op r  ->
         case op of
             QConOp _ c -> do
@@ -438,7 +438,10 @@ checkPat e' [] = case e' of
     RecConstr l c fs   -> do
                   fs' <- mapM checkPatField fs
                   return (PRec l c fs')
-    NegApp l1 (Lit l2 lit) -> return (PNeg l1 (PLit l2 lit))
+    NegApp l1 (Lit l2 lit) ->
+                  let siSign = last . srcInfoPoints $ l1
+                      lSign = infoSpan siSign [siSign]
+                  in return (PLit l1 (Negative lSign) (fmap (const l2) lit))
     ExpTypeSig l e t -> do
                   -- patterns cannot have signatures unless ScopedTypeVariables is enabled.
                   checkEnabled ScopedTypeVariables

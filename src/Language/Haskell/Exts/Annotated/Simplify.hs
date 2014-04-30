@@ -388,6 +388,11 @@ sLiteral lit = case lit of
     PrimChar   _ c _ -> S.PrimChar c
     PrimString _ s _ -> S.PrimString s
 
+sSign :: Sign l -> S.Sign
+sSign sg = case sg of
+    Positive _ -> S.Positive
+    Negative _ -> S.Negative
+
 sExp :: SrcInfo loc => Exp loc -> S.Exp
 sExp e' = case e' of
     Var _ qn            -> S.Var (sQName qn)
@@ -508,8 +513,7 @@ sWarningText (WarnText _ str) = S.WarnText str
 sPat :: SrcInfo loc => Pat loc -> S.Pat
 sPat pat = case pat of
     PVar _ n            -> S.PVar (sName n)
-    PLit _ lit          -> S.PLit (sLiteral lit)
-    PNeg _ p            -> S.PNeg (sPat p)
+    PLit _ sg lit       -> S.PLit (sSign sg) (sLiteral lit)
     PNPlusK _ n k       -> S.PNPlusK (sName n) k
     PInfixApp _ pa qn pb -> S.PInfixApp (sPat pa) (sQName qn) (sPat pb)
     PApp _ qn ps        -> S.PApp (sQName qn) (map sPat ps)

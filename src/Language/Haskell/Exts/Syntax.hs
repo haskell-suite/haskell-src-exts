@@ -60,7 +60,7 @@ module Language.Haskell.Exts.Syntax (
     -- * Patterns
     Pat(..), PatField(..), PXAttr(..), RPat(..), RPatOp(..),
     -- * Literals
-    Literal(..),
+    Literal(..), Sign(..),
     -- * Variables, Constructors and Operators
     ModuleName(..), QName(..), Name(..), QOp(..), Op(..),
     SpecialCon(..), CName(..), IPName(..), XName(..),
@@ -491,6 +491,12 @@ data Literal
     | PrimString String     -- ^ unboxed string literal
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
+-- | An indication whether a literal pattern has been negated or not.
+data Sign
+    = Positive
+    | Negative
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+
 -- | Haskell expressions.
 data Exp
     = Var QName                 -- ^ variable
@@ -660,8 +666,7 @@ data WarningText
 -- | A pattern, to be matched against a value.
 data Pat
     = PVar Name                     -- ^ variable
-    | PLit Literal                  -- ^ literal constant
-    | PNeg Pat                      -- ^ negated pattern
+    | PLit Sign Literal             -- ^ literal constant
     | PNPlusK Name Integer          -- ^ n+k pattern
     | PInfixApp Pat QName Pat       -- ^ pattern with an infix data constructor
     | PApp QName [Pat]              -- ^ data constructor and argument patterns
