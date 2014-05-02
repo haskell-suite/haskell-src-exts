@@ -17,6 +17,7 @@
 module Language.Haskell.Exts.ParseUtils (
       splitTyConApp         -- PType -> P (Name,[Type])
     , checkEnabled          -- (Show e, Enabled e) => e -> P ()
+    , checkEnabledOneOf
     , checkToplevel         -- ??
     , checkPatternGuards    -- [Stmt] -> P ()
     , mkRecConstrOrUpdate   -- PExp -> [PFieldUpdate] -> P Exp
@@ -103,6 +104,12 @@ checkEnabled e = do
     if isEnabled e exts
      then return ()
      else fail $ show e ++ " is not enabled"
+
+checkEnabledOneOf :: (Show e, Enabled e) => [e] -> P ()
+checkEnabledOneOf es = do
+    exts <- getExtensions
+    unless (any (`isEnabled` exts) es) $
+        fail $ (foldr1 (\x s -> x ++ " or " ++ s) . map show $ es) ++ " is not enabled"
 
 checkPatternGuards :: [Stmt L] -> P ()
 checkPatternGuards [Qualifier _ _] = return ()
