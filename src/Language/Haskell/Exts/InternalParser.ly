@@ -776,7 +776,7 @@ Type equality contraints need the TypeFamilies extension.
 >       | btype qtyconop dtype          { TyInfix ($1 <> $3) $1 $2 $3 }
 >       | btype qtyvarop dtype          { TyInfix ($1 <> $3) $1 $2 $3 } -- FIXME
 >       | btype '->' ctype              { TyFun ($1 <> $3 <** [$2]) $1 $3 }
->       | btype '~' btype               {% do { checkEnabled TypeFamilies ;
+>       | btype '~' btype               {% do { checkEnabledOneOf [TypeFamilies, GADTs] ;
 >                                               let {l = $1 <> $3 <** [$2]};
 >                                               return $ TyPred l $ EqualP l $1 $3 } }
 
@@ -882,7 +882,7 @@ Equality constraints require the TypeFamilies extension.
 
 > context :: { PContext L }
 >       : btype '=>'                    {% checkPContext $ (amap (\l -> l <++> nIS $2 <** (srcInfoPoints l ++ [$2]))) $1 }
->       | btype '~' btype '=>'          {% do { checkEnabled TypeFamilies;
+>       | btype '~' btype '=>'          {% do { checkEnabledOneOf [TypeFamilies, GADTs];
 >                                               let {l = $1 <> $3 <** [$2,$4]};
 >                                               checkPContext (TyPred l $ EqualP l $1 $3) } }
 
