@@ -105,13 +105,11 @@ checkEnabled e = do
      then return ()
      else fail $ show e ++ " is not enabled"
 
-checkEnabledOneOf :: (Show e, Enabled e) => [e]  -> P ()
+checkEnabledOneOf :: (Show e, Enabled e) => [e] -> P ()
 checkEnabledOneOf es = do
     exts <- getExtensions
-    if or . map (`isEnabled` exts) $ es
-     then return ()
-     else fail $ (foldr1 (\x s -> x ++ " or " ++ s) . map show $ es) ++ " is not enabled"
-
+    unless (any (`isEnabled` exts) es) $ 
+        fail $ (foldr1 (\x s -> x ++ " or " ++ s) . map show $ es) ++ " is not enabled"
 
 checkPatternGuards :: [Stmt L] -> P ()
 checkPatternGuards [Qualifier _ _] = return ()
