@@ -49,12 +49,6 @@ Non-comprehensive list of supported extensions
 * Haskell XML, HSX style
 * Pragmas
 
-Portability and dependencies
-----------------------------
-
-The package itself is Haskell98-compliant and should build with any
-Haskell compiler.
-
 License
 -------
 
