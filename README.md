@@ -49,13 +49,6 @@ Non-comprehensive list of supported extensions
 * Haskell XML, HSX style
 * Pragmas
 
-As-of-yet unsupported extensions:
-
-* Constraint kinds
-* do-rec notation
-* Multi-way if statements
-* Lambda-case
-
 Portability and dependencies
 ----------------------------
 
