@@ -52,7 +52,7 @@ module Language.Haskell.Exts.Syntax (
     -- * Class Assertions and Contexts
     Context, FunDep(..), Asst(..),
     -- * Types
-    Type(..), Boxed(..), Kind(..), TyVarBind(..), Promoted(..),
+    Type(..), Boxed(..), Kind(..), TyVarBind(..), Promoted(..), TypeEqn (..),
     -- * Expressions
     Exp(..), Stmt(..), QualStmt(..), FieldUpdate(..),
     Alt(..), GuardedAlts(..), GuardedAlt(..), XAttr(..),
@@ -226,6 +226,8 @@ data Decl
      -- ^ A type declaration
      | TypeFamDecl  SrcLoc Name [TyVarBind] (Maybe Kind)
      -- ^ A type family declaration
+     | ClosedTypeFamDecl  SrcLoc Name [TyVarBind] (Maybe Kind) [TypeEqn]
+     -- ^ A closed type family declaration
      | DataDecl     SrcLoc DataOrNew Context Name [TyVarBind]              [QualConDecl] [Deriving]
      -- ^ A data OR newtype declaration
      | GDataDecl    SrcLoc DataOrNew Context Name [TyVarBind] (Maybe Kind) [GadtDecl]    [Deriving]
@@ -280,6 +282,9 @@ data Decl
      | AnnPragma        SrcLoc Annotation
      -- ^ An ANN pragma
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
+
+-- | A type equation of the form @rhs = lhs@ used in closed type families.
+data TypeEqn = TypeEqn Type Type deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 -- | An annotation through an ANN pragma.
 data Annotation

@@ -503,6 +503,15 @@ instance ExactP DataOrNew where
   exactP (DataType l) = printString "data"
   exactP (NewType  l) = printString "newtype"
 
+instance ExactP TypeEqn where
+  exactP (TypeEqn l t1 t2) =
+    case srcInfoPoints l of
+      [a] -> do
+         exactPC t1
+         printStringAt (pos a) "="
+         exactPC t2
+      _ -> errorEP "ExactP: TypeEqn is given wrong number of srcInfoPoints"
+
 instance ExactP Decl where
   exactP decl = case decl of
     TypeDecl     l dh t      ->
@@ -521,6 +530,16 @@ instance ExactP Decl where
             exactPC dh
             maybeEP (\k -> printStringAt (pos (head ps)) "::" >> exactPC k) mk
          _ -> errorEP "ExactP: Decl: TypeFamDecl is given wrong number of srcInfoPoints"
+    ClosedTypeFamDecl  l dh mk eqns ->
+        case srcInfoPoints l of
+         a:b:c:ps -> do
+            printStringAt (pos a) "type"
+            printStringAt (pos b) "family"
+            exactPC dh
+            maybeEP (\k -> printStringAt (pos (head ps)) "::" >> exactPC k) mk
+            printStringAt (pos c) "where"
+            mapM_ exactP eqns 
+         _ -> errorEP "ExactP: Decl: ClosedTypeFamDecl is given wrong number of srcInfoPoints"
     DataDecl     l dn mctxt dh constrs mder -> do
         exactP dn
         maybeEP exactPC mctxt
