@@ -56,7 +56,7 @@ module Language.Haskell.Exts.Annotated.Syntax (
     -- * Class Assertions and Contexts
     Context(..), FunDep(..), Asst(..),
     -- * Types
-    Type(..), Boxed(..), Kind(..), TyVarBind(..), Promoted(..),
+    Type(..), Boxed(..), Kind(..), TyVarBind(..), Promoted(..), TypeEqn (..),
     -- * Expressions
     Exp(..), Stmt(..), QualStmt(..), FieldUpdate(..),
     Alt(..), GuardedAlts(..), GuardedAlt(..), XAttr(..),
@@ -251,6 +251,8 @@ data Decl l
      -- ^ A type declaration
      | TypeFamDecl  l (DeclHead l) (Maybe (Kind l))
      -- ^ A type family declaration
+     | ClosedTypeFamDecl  l (DeclHead l) (Maybe (Kind l))  [TypeEqn l]
+     -- ^ A closed type family declaration
      | DataDecl     l (DataOrNew l) (Maybe (Context l)) (DeclHead l)                  [QualConDecl l] (Maybe (Deriving l))
      -- ^ A data OR newtype declaration
      | GDataDecl    l (DataOrNew l) (Maybe (Context l)) (DeclHead l) (Maybe (Kind l)) [GadtDecl l]    (Maybe (Deriving l))
@@ -304,6 +306,9 @@ data Decl l
      | AnnPragma        l (Annotation l)
      -- ^ An ANN pragma
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
+
+-- | A type equation as found in closed type families.
+data TypeEqn l = TypeEqn l (Type l) (Type l) deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | An annotation through an ANN pragma.
 data Annotation l
@@ -1006,10 +1011,15 @@ instance Annotated Deriving where
     ann (Deriving l ihs)    = l
     amap f (Deriving l ihs) = Deriving (f l) ihs
 
+instance Annotated TypeEqn where
+    ann (TypeEqn l _ _) = l
+    amap f (TypeEqn l a b) = TypeEqn (f l) a b
+
 instance Annotated Decl where
     ann decl = case decl of
         TypeDecl     l dh t         -> l
         TypeFamDecl  l dh mk        -> l
+        ClosedTypeFamDecl  l _ _ _  -> l
         DataDecl     l dn cx dh cds ders -> l
         GDataDecl    l dn cx dh mk gds ders -> l
         DataFamDecl  l    cx dh mk  -> l
@@ -1039,6 +1049,7 @@ instance Annotated Decl where
     amap f decl = case decl of
         TypeDecl     l dh t      -> TypeDecl    (f l) dh t
         TypeFamDecl  l dh mk     -> TypeFamDecl (f l) dh mk
+        ClosedTypeFamDecl  l dh mk eqns  -> ClosedTypeFamDecl (f l) dh mk eqns
         DataDecl     l dn mcx dh cds ders ->
             DataDecl (f l) dn mcx dh cds ders
         GDataDecl    l dn mcx dh mk gds ders ->

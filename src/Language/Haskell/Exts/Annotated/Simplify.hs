@@ -64,6 +64,9 @@ sDecl decl = case decl of
      TypeFamDecl  l dh mk       ->
         let (n, tvs) = sDeclHead dh
          in S.TypeFamDecl (getPointLoc l) n tvs (fmap sKind mk)
+     ClosedTypeFamDecl  l dh mk eqs ->
+        let (n, tvs) = sDeclHead dh
+         in S.ClosedTypeFamDecl (getPointLoc l) n tvs (fmap sKind mk) (map sTypeEqn eqs)
      DataDecl     l dn mctxt dh constrs mder    ->
         let (n, tvs) = sDeclHead dh
          in S.DataDecl (getPointLoc l) (sDataOrNew dn) (maybe [] sContext mctxt) n tvs (map sQualConDecl constrs) (maybe [] sDeriving mder)
@@ -111,6 +114,9 @@ sDecl decl = case decl of
          in S.InstSig (getPointLoc l) (maybe [] sContext mctxt) qn ts
      AnnPragma        l ann         ->
         S.AnnPragma (getPointLoc l) (sAnnotation ann)
+
+sTypeEqn :: TypeEqn l -> S.TypeEqn
+sTypeEqn (TypeEqn _ a b) = S.TypeEqn (sType a) (sType b)
 
 sAnnotation :: SrcInfo loc => Annotation loc -> S.Annotation
 sAnnotation ann = case ann of

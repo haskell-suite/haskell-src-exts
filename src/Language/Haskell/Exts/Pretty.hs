@@ -330,6 +330,9 @@ instance Pretty ImportSpec where
         pretty (IThingWith name nameList) =
                 pretty name <> (parenList . map pretty $ nameList)
 
+instance Pretty TypeEqn where
+        pretty (TypeEqn pat eqn) = mySep [pretty pat, equals, pretty eqn]
+
 -------------------------  Declarations ------------------------------
 instance Pretty Decl where
         pretty (TypeDecl loc name nameList htype) =
@@ -362,6 +365,13 @@ instance Pretty Decl where
                 mySep ([text "type", text "family", pretty name]
                         ++ map pretty nameList
                         ++ ppOptKind optkind)
+
+        pretty (ClosedTypeFamDecl loc name nameList optkind eqns) =
+                blankline $
+                markLine loc $
+                mySep ([text "type", text "family", pretty name]
+                        ++ map pretty nameList
+                        ++ ppOptKind optkind ++ [text "where"]) $$$ ppBody classIndent (map pretty eqns)
 
         pretty (DataFamDecl loc context name nameList optkind) =
                 blankline $
