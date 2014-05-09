@@ -371,7 +371,7 @@ instance Pretty Decl where
                 markLine loc $
                 mySep ([text "type", text "family", pretty name]
                         ++ map pretty nameList
-                        ++ ppOptKind optkind) $$$ ppBody classIndent (map pretty eqns)
+                        ++ ppOptKind optkind ++ [text "where"]) $$$ ppBody classIndent (map pretty eqns)
 
         pretty (DataFamDecl loc context name nameList optkind) =
                 blankline $

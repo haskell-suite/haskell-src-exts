@@ -515,8 +515,8 @@ that through the 'family' keyword.
 >                {% do { dh <- checkSimpleType $3;
 >                        let {l = nIS $1 <++> ann $3 <+?> (fmap ann) (fst $4) <** ($1:$2:snd $4)};
 >                        case $5 of {
->                          Nothing -> return (TypeFamDecl l dh (fst $4));
->                          Just x  -> return (ClosedTypeFamDecl l dh (fst $4) x); }}}
+>                          Nothing    -> return (TypeFamDecl l dh (fst $4));
+>                          Just (x,a) -> return (ClosedTypeFamDecl (l <** [a]) dh (fst $4) x); }}}
 
 Here there is no special keyword so we must do the check.
 >       | 'type' 'instance' truedtype '=' truectype
@@ -607,9 +607,9 @@ lexer through the 'foreign' (and 'export') keyword.
 >       | decl          { $1 }
 
 Parsing the body of a closed type family, partially stolen from the source of GHC.
-> where_type_family :: { Maybe [TypeEqn L] }
+> where_type_family :: { Maybe ([TypeEqn L], S) }
 >         : {- empty -}                  { Nothing }                     
->         | 'where' ty_fam_inst_eqn_list { Just $2 }
+>         | 'where' ty_fam_inst_eqn_list { Just ($2, $1) }
 
 > ty_fam_inst_eqn_list :: { [TypeEqn L] }
 >         : '{'  ty_fam_inst_eqns '}'     { $2 }
@@ -623,7 +623,7 @@ Parsing the body of a closed type family, partially stolen from the source of GH
 > ty_fam_inst_eqn :: { TypeEqn L }
 >         : truedtype '=' truectype
 >                 {% do { checkEnabled TypeFamilies ;
->                         return (TypeEqn (ann $3 <++> ann $1) $1 $3) } }
+>                         return (TypeEqn (ann $1 <++> ann $3 <** [$2]) $1 $3) } }
 
 > data_or_newtype :: { DataOrNew L }
 >       : 'data'    { DataType $ nIS $1 }

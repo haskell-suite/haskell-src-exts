@@ -506,7 +506,7 @@ instance ExactP DataOrNew where
 instance ExactP TypeEqn where
   exactP (TypeEqn l t1 t2) =
     case srcInfoPoints l of
-      [a] -> do
+      a:_ -> do
          exactPC t1
          printStringAt (pos a) "="
          exactPC t2
