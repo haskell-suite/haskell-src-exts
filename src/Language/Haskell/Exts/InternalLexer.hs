@@ -803,7 +803,7 @@ lexPragmaStart = do
      Just (INLINE True) -> do
             s <- getInput
             case map toLower s of
-             '_':'c':'o':'n':'l':'i':'k':'e':_  -> do
+             ' ':'c':'o':'n':'l':'i':'k':'e':_  -> do
                       discard 8
                       return $ INLINE_CONLIKE
              _ -> return $ INLINE True
@@ -1244,7 +1244,7 @@ showToken t = case t of
   PragmaEnd         -> "#-}"
   RULES             -> "{-# RULES"
   INLINE b          -> "{-# " ++ if b then "INLINE" else "NOINLINE"
-  INLINE_CONLIKE    -> "{-# " ++ "INLINE_CONLIKE"
+  INLINE_CONLIKE    -> "{-# " ++ "INLINE CONLIKE"
   SPECIALISE        -> "{-# SPECIALISE"
   SPECIALISE_INLINE b -> "{-# SPECIALISE " ++ if b then "INLINE" else "NOINLINE"
   SOURCE            -> "{-# SOURCE"
