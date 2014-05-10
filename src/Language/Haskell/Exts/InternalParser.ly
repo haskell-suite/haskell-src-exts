@@ -641,10 +641,10 @@ lexer through the 'foreign' (and 'export') keyword.
 
 > specinldecl :: { Decl L }
 >       : '{-# INLINE' activation qvar '#-}'             { let Loc l (INLINE s) = $1 in InlineSig (l <^^> $4 <** [l,$4]) s $2 $3 }
->       | '{-# INLINE_CONLIKE' activation qvar '#-}'     { InlineConlikeSig ($1 <^^> $4 <** [$1,$4]) $2 $3 }
+>       | '{-# INLINE CONLIKE' activation qvar '#-}'     { InlineConlikeSig ($1 <^^> $4 <** [$1,$4]) $2 $3 }
 >       | '{-# SPECIALISE' activation qvar '::' sigtypes '#-}'      
 >             { SpecSig ($1 <^^> $6 <** ($1: $4 : snd $5 ++ [$6])) $2 $3 (fst $5) }
->       | '{-# SPECIALISE_INLINE' activation qvar '::' sigtypes '#-}'
+>       | '{-# SPECIALISE INLINE' activation qvar '::' sigtypes '#-}'
 >             { let Loc l (SPECIALISE_INLINE s) = $1
 >                in SpecInlineSig (l <^^> $6 <** (l:$4:snd $5++[$6])) s $2 $3 (fst $5) }
 >       | '{-# SPECIALISE' 'instance' ctype '#-}'        {% do { (cs,ih) <- checkInstHeader $3;
