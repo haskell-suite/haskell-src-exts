@@ -18,7 +18,7 @@ import Extensions
 
 main :: IO ()
 main = do
-  sources <- getTestFiles examplesDir
+  sources <- map (map (\x -> if x == '\\' then '/' else x)) <$> getTestFiles examplesDir
   defaultMain $ testGroup "Tests" $
     [ parserTests sources
     , exactPrinterTests sources
