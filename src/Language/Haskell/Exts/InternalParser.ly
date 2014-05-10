@@ -258,9 +258,9 @@ Reserved Ids
 Pragmas
 
 >       '{-# INLINE'            { Loc _ (INLINE _) }
->       '{-# INLINE_CONLIKE'    { Loc $$ INLINE_CONLIKE }
+>       '{-# INLINE CONLIKE'    { Loc $$ INLINE_CONLIKE }
 >       '{-# SPECIALISE'        { Loc $$ SPECIALISE }
->       '{-# SPECIALISE_INLINE' { Loc _ (SPECIALISE_INLINE _) }
+>       '{-# SPECIALISE INLINE' { Loc _ (SPECIALISE_INLINE _) }
 >       '{-# SOURCE'            { Loc $$ SOURCE }
 >       '{-# RULES'             { Loc $$ RULES }
 >       '{-# CORE'              { Loc $$ CORE }         -- 130
