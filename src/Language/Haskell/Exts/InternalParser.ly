@@ -152,6 +152,7 @@ Reserved operators
 >       '.'     { Loc $$ Dot }
 >       '..'    { Loc $$ DotDot }
 >       ':'     { Loc $$ Colon }
+>  quotecolon   { Loc $$ QuoteColon }
 >       '::'    { Loc $$ DoubleColon }      -- 40
 >       '='     { Loc $$ Equals }           
 >       '\\'    { Loc $$ Backslash }
@@ -289,7 +290,7 @@ Pragmas
 > %name mparseModules modules
 > %partial mfindOptPragmas toppragmas
 > %tokentype { Loc Token }
-> %expect 15
+> %expect 7
 > %%
 
 -----------------------------------------------------------------------------
@@ -861,6 +862,7 @@ type...
 
 > gtycon :: { QName L }
 >       : otycon                        { $1 }
+        | quotecolon                    { quotecolon_tycon_name (noInfoSpan $1) }
 >       | '(' ')'                       { unit_tycon_name              ($1 <^^> $2 <** [$1,$2]) }
 >       | '(' '->' ')'                  { fun_tycon_name               ($1 <^^> $3 <** [$1,$2,$3]) }
 >       | '[' ']'                       { list_tycon_name              ($1 <^^> $2 <** [$1,$2]) }
@@ -1722,7 +1724,6 @@ Implicit parameter
 
 > gconsym :: { QName L }
 >       : ':'                   { list_cons_name (nIS $1) }
->       | VARQUOTE ':'          { list_cons_name (nIS $1) }
 >       | qconsym               { $1 }
 
 -----------------------------------------------------------------------------
@@ -1770,6 +1771,7 @@ Implicit parameter
 > qconsym :: { QName L }
 >       : consym                { UnQual (ann $1) $1 }
 >       | QCONSYM               { let {Loc l (QConSym q) = $1; nis = nIS l} in Qual nis (ModuleName nis (fst q)) (Symbol nis (snd q)) }
+>       | quotecolon            { quotecolon_tycon_name (noInfoSpan $1) }
 
 > consym :: { Name L }
 >       : CONSYM                { let Loc l (ConSym c) = $1 in Symbol (nIS l) c }
