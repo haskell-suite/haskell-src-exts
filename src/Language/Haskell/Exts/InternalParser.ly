@@ -289,7 +289,7 @@ Pragmas
 > %name mparseModules modules
 > %partial mfindOptPragmas toppragmas
 > %tokentype { Loc Token }
-> %expect 9
+> %expect 7
 > %%
 
 -----------------------------------------------------------------------------
@@ -797,7 +797,7 @@ Type equality contraints need the TypeFamilies extension.
 >       | btype qtyconop dtype          { TyInfix ($1 <> $3) $1 $2 $3 }
 >       | btype qtyvarop dtype          { TyInfix ($1 <> $3) $1 $2 $3 } -- FIXME
 >       | btype '->' ctype              { TyFun ($1 <> $3 <** [$2]) $1 $3 }
->       | dtype '~' dtype               {% do { checkEnabled TypeFamilies ;
+>       | btype '~' btype               {% do { checkEnabled TypeFamilies ;
 >                                               let {l = $1 <> $3 <** [$2]};
 >                                               return $ TyPred l $ EqualP l $1 $3 } }
 
@@ -835,7 +835,6 @@ the (# and #) lexemes. Kinds will be handled at the kind rule.
 
 > ptype :: { Promoted L }
 >       : VARQUOTE '[' ptypes1 ']'      { PromotedList  ($1 <^^> $4 <** ($1: reverse($4:snd $3))) True  (reverse (fst $3)) }
->       | VARQUOTE '['         ']'      { PromotedList  ($1 <^^> $3 <** [$1, $3])                 True  []                 }
 >       |          '[' ptypes  ']'      { PromotedList  ($1 <^^> $3 <** ($1: reverse($3:snd $2))) False (reverse (fst $2)) }
 >       | VARQUOTE '(' ptypes1 ')'      { PromotedTuple ($1 <^^> $4 <** ($1: reverse($4:snd $3)))       (reverse (fst $3)) }
 >       | VARQUOTE '('         ')'      { PromotedUnit  ($1 <^^> $3 ) }
@@ -1722,7 +1721,6 @@ Implicit parameter
 
 > gconsym :: { QName L }
 >       : ':'                   { list_cons_name (nIS $1) }
->       | VARQUOTE ':'          { list_cons_name (nIS $1) }
 >       | qconsym               { $1 }
 
 -----------------------------------------------------------------------------
