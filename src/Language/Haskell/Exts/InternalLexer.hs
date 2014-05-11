@@ -690,7 +690,9 @@ lexStdToken = do
 
         '#':'-':'}':_ -> do discard 3 >> return PragmaEnd
 
-        '\'':':':_ -> discard 2 >> return QuoteColon
+        '\'':':':c:_ -> case c of 
+                          '\'' -> discard 3 >> return (Character (':',":"))  -- if a close quote follows, it is the character literal ':'
+                          _    -> discard 2 >> return QuoteColon             -- if it is something else, it is the lifted colon operator
 
         c:_ | isDigit c -> lexDecimalOrFloat
 

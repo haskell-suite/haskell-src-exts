@@ -931,19 +931,9 @@ checkT t simple = case t of
     -- TyPred can be a valid type if ConstraintKinds is enabled, unless it is an implicit parameter, which is not a valid type (?)
     TyPred _ (ClassA l className cvars) -> mapM checkType cvars >>= \vars -> return (foldl1 (S.TyApp l) (S.TyCon l className:vars))
     TyPred _ (InfixA l t0 op t1)        -> S.TyInfix l <$> checkType t0 <*> pure op <*> checkType t1 
-    TyPred _ (EqualP l t0    t1)        -> S.TyInfix l <$> checkType t0 <*> pure tildeName <*> checkType t1 where 
-                                             tildeName = UnQual l (Symbol l "~")
+    TyPred _ (EqualP l t0    t1)        -> S.TyEquals l <$> checkType t0 <*> checkType t1 where 
 
     _   -> fail $ "Parse error in type: " ++ prettyPrint t
-
---  TyPred  l (PAsst l) 
-
--- data PAsst l
---     = ClassA l (QName l) [PType l]
---     | InfixA l (PType l) (QName l) (PType l)
---     | IParam l (IPName l) (PType l)
---     | EqualP l (PType l)  (PType l)
---   deriving (Eq, Show, Functor)
 
 check1Type :: PType L -> (S.Type L -> S.Type L) -> P (S.Type L)
 check1Type pt f = checkT pt True >>= return . f

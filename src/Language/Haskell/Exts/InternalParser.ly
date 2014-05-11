@@ -796,6 +796,7 @@ Type equality contraints need the TypeFamilies extension.
 > dtype :: { PType L }
 >       : btype                         { $1 }
 >       | btype qtyconop dtype          { TyInfix ($1 <> $3) $1 $2 $3 }
+>       | btype quotecolon dtype        { TyInfix ($1 <> $3) $1 (quotecolon_tycon_name (noInfoSpan $2)) $3 }
 >       | btype qtyvarop dtype          { TyInfix ($1 <> $3) $1 $2 $3 } -- FIXME
 >       | btype '->' ctype              { TyFun ($1 <> $3 <** [$2]) $1 $3 }
 >       | btype '~' btype               {% do { checkEnabled TypeFamilies ;
@@ -1771,7 +1772,7 @@ Implicit parameter
 > qconsym :: { QName L }
 >       : consym                { UnQual (ann $1) $1 }
 >       | QCONSYM               { let {Loc l (QConSym q) = $1; nis = nIS l} in Qual nis (ModuleName nis (fst q)) (Symbol nis (snd q)) }
->       | quotecolon            { quotecolon_tycon_name (noInfoSpan $1) }
+        | quotecolon            { quotecolon_tycon_name (noInfoSpan $1) }
 
 > consym :: { Name L }
 >       : CONSYM                { let Loc l (ConSym c) = $1 in Symbol (nIS l) c }

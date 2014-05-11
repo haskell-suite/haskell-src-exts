@@ -458,6 +458,7 @@ data Type l
      | TyInfix l (Type l) (QName l) (Type l)    -- ^ infix type constructor
      | TyKind  l (Type l) (Kind l)              -- ^ type with explicit kind signature
      | TyPromoted l (Promoted l)                -- ^ @'K@, a promoted data type (-XDataKinds).
+     | TyEquals l (Type l) (Type l)             -- ^ type equality predicate enabled by ConstraintKinds 
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | Bools here are True if there was a leading quote which may be
@@ -1200,6 +1201,7 @@ instance Annotated Type where
       TyInfix l ta qn tb            -> l
       TyKind  l t k                 -> l
       TyPromoted l   p              -> l
+      TyEquals l a b                -> l
     amap f t = case t of
       TyForall l mtvs mcx t         -> TyForall (f l) mtvs mcx t
       TyFun   l t1 t2               -> TyFun (f l) t1 t2
@@ -1212,6 +1214,7 @@ instance Annotated Type where
       TyInfix l ta qn tb            -> TyInfix (f l) ta qn tb
       TyKind  l t k                 -> TyKind (f l) t k
       TyPromoted l   p              -> TyPromoted (f l)   p
+      TyEquals l a b                -> TyEquals (f l) a b
 
 instance Annotated TyVarBind where
     ann (KindedVar   l n k) = l
