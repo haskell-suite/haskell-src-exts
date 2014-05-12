@@ -464,8 +464,6 @@ data KnownExtension =
   -- extension to accept conditional expressions with multiple branches.
   | MultiWayIf
 
- {- Safe Haskell not yet supported by HSE.
-
   -- | [GHC &#xa7; 7.20.3] Allow imports to be qualified with a safe
   -- keyword that requires the imported module be trusted as according
   -- to the Safe Haskell definition of trust.
@@ -484,7 +482,6 @@ data KnownExtension =
   -- trusted.
   | Trustworthy
 
--}
 
 {- ConstraintKinds not yet supported by HSE
 
