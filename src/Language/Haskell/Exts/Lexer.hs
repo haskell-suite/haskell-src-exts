@@ -17,7 +17,9 @@ module Language.Haskell.Exts.Lexer
     (
       lexTokenStream, lexTokenStreamWithMode,
 
-      Token(..), Loc(..)
+      Token(..), Loc(..),
+
+      showToken
 
     ) where
 
