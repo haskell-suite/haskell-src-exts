@@ -742,7 +742,7 @@ instance ExactP Decl where
     InlineConlikeSig l mact qn    ->
         case srcInfoPoints l of
          [a,b] -> do
-            printString "{-# INLINE_CONLIKE"
+            printString "{-# INLINE CONLIKE"
             maybeEP exactPC mact
             exactPC qn
             printStringAt (pos b) "#-}"

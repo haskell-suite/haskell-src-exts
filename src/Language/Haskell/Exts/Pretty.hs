@@ -489,7 +489,7 @@ instance Pretty Decl where
         pretty (InlineConlikeSig pos activ name) =
                 blankline $
                 markLine pos $
-                mySep [text "{-# INLINE_CONLIKE", pretty activ, pretty name, text "#-}"]
+                mySep [text "{-# INLINE CONLIKE", pretty activ, pretty name, text "#-}"]
 
         pretty (SpecSig pos activ name types) =
                 blankline $
