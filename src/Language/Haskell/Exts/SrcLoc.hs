@@ -16,6 +16,7 @@
 module Language.Haskell.Exts.SrcLoc where
 
 import Data.Data
+import Data.List
 import GHC.Generics (Generic)
 
 -- | A single position in the source.
@@ -37,7 +38,10 @@ data SrcSpan = SrcSpan
     , srcSpanEndLine     :: Int
     , srcSpanEndColumn   :: Int
     }
-  deriving (Eq,Ord,Show,Typeable,Data)
+  deriving (Eq,Ord,Typeable,Data)
+
+instance Show SrcSpan where
+  show (SrcSpan fn sl sc el ec) = "SrcSpan " ++ fn ++ " " ++ (intercalate " " $ map show [sl,sc,el,ec])
 
 
 -- | Returns 'srcSpanStartLine' and 'srcSpanStartColumn' in a pair.
