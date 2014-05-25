@@ -41,7 +41,7 @@ data SrcSpan = SrcSpan
   deriving (Eq,Ord,Typeable,Data)
 
 instance Show SrcSpan where
-  show (SrcSpan fn sl sc el ec) = "SrcSpan " ++ fn ++ " " ++ (intercalate " " $ map show [sl,sc,el,ec])
+  show (SrcSpan fn sl sc el ec) = "SrcSpan " ++ show fn ++ " " ++ (intercalate " " $ map show [sl,sc,el,ec])
 
 
 -- | Returns 'srcSpanStartLine' and 'srcSpanStartColumn' in a pair.
