@@ -96,7 +96,7 @@ module Language.Haskell.Exts.Annotated.Syntax (
     capi_name, forall_name, family_name,
     -- ** Type constructors
     unit_tycon_name, fun_tycon_name, list_tycon_name, tuple_tycon_name, unboxed_singleton_tycon_name,
-    unit_tycon, fun_tycon, list_tycon, tuple_tycon, unboxed_singleton_tycon,
+    unit_tycon, fun_tycon, list_tycon, tuple_tycon, unboxed_singleton_tycon, quotecolon_tycon_name,
 
     -- * Source coordinates
     -- SrcLoc(..),
@@ -896,11 +896,12 @@ capi_name       l = Ident l "capi"
 forall_name     l = Ident l "forall"
 family_name     l = Ident l "family"
 
-unit_tycon_name, fun_tycon_name, list_tycon_name, unboxed_singleton_tycon_name :: l -> QName l
+unit_tycon_name, fun_tycon_name, list_tycon_name, unboxed_singleton_tycon_name, quotecolon_tycon_name :: l -> QName l
 unit_tycon_name l = unit_con_name l
 fun_tycon_name  l = Special l (FunCon l)
 list_tycon_name l = Special l (ListCon l)
 unboxed_singleton_tycon_name l = Special l (UnboxedSingleCon l)
+quotecolon_tycon_name l = UnQual l (Symbol l "':")
 
 tuple_tycon_name :: l -> Boxed -> Int -> QName l
 tuple_tycon_name l b i = tuple_con_name l b i

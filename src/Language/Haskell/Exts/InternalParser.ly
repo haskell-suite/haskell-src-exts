@@ -154,6 +154,7 @@ Reserved operators
 >       '.'     { Loc $$ Dot }
 >       '..'    { Loc $$ DotDot }
 >       ':'     { Loc $$ Colon }
+>  quotecolon   { Loc $$ QuoteColon }
 >       '::'    { Loc $$ DoubleColon }      -- 40
 >       '='     { Loc $$ Equals }           
 >       '\\'    { Loc $$ Backslash }
@@ -833,6 +834,7 @@ Type equality contraints need the TypeFamilies extension.
 > dtype :: { PType L }
 >       : btype                         { $1 }
 >       | btype qtyconop dtype          { TyInfix ($1 <> $3) $1 $2 $3 }
+>       | btype quotecolon dtype        { TyInfix ($1 <> $3) $1 (quotecolon_tycon_name (noInfoSpan $2)) $3 }
 >       | btype qtyvarop dtype          { TyInfix ($1 <> $3) $1 $2 $3 } -- FIXME
 >       | btype '->' ctype              { TyFun ($1 <> $3 <** [$2]) $1 $3 }
 >       | btype '~' btype               {% do { checkEnabledOneOf [TypeFamilies, GADTs] ;
@@ -876,6 +878,7 @@ the (# and #) lexemes. Kinds will be handled at the kind rule.
 
 > ptype :: { Promoted L }
 >       : VARQUOTE '[' ptypes1 ']'      { PromotedList  ($1 <^^> $4 <** ($1: reverse($4:snd $3))) True  (reverse (fst $3)) }
+>       | VARQUOTE '['         ']'      { PromotedList  ($1 <^^> $3 <** [$1, $3])                 True  []                 }
 >       |          '[' ptypes  ']'      { PromotedList  ($1 <^^> $3 <** ($1: reverse($3:snd $2))) False (reverse (fst $2)) }
 >       | VARQUOTE '(' ptypes1 ')'      { PromotedTuple ($1 <^^> $4 <** ($1: reverse($4:snd $3)))       (reverse (fst $3)) }
 >       | VARQUOTE '('         ')'      { PromotedUnit  ($1 <^^> $3 ) }

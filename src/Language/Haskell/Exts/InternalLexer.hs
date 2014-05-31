@@ -80,6 +80,7 @@ data Token
         | Dot           -- reserved for use with 'forall x . x'
         | DotDot
         | Colon
+        | QuoteColon
         | DoubleColon
         | Equals
         | Backslash
@@ -208,6 +209,7 @@ reserved_ops :: [(String,(Token, Maybe ExtScheme))]
 reserved_ops = [
  ( "..", (DotDot,       Nothing) ),
  ( ":",  (Colon,        Nothing) ),
+ ( "':",  (QuoteColon,   Just (All [DataKinds])) ),
  ( "::", (DoubleColon,  Nothing) ),
  ( "=",  (Equals,       Nothing) ),
  ( "\\", (Backslash,    Nothing) ),
@@ -721,6 +723,11 @@ lexStdToken = do
         '[':':':_ | ParallelArrays `elem` exts -> discard 2 >> return ParArrayLeftSquare
 
         ':':']':_ | ParallelArrays `elem` exts -> discard 2 >> return ParArrayRightSquare
+
+        '\'':':':c:_ ->
+            case c of
+              '\'' -> discard 3 >> return (Character (':',":"))  -- if a close quote follows, it is the character literal ':'
+              _    -> discard 2 >> return QuoteColon             -- if it is something else, it is the lifted colon operator
 
         c:_ | isDigit c -> lexDecimalOrFloat
 
@@ -1264,6 +1271,7 @@ showToken t = case t of
   Comma             -> ","
   Underscore        -> "_"
   BackQuote         -> "`"
+  QuoteColon        -> "':"
   Dot               -> "."
   DotDot            -> ".."
   Colon             -> ":"
