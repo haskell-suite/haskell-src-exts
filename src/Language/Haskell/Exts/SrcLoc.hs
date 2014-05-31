@@ -25,7 +25,10 @@ data SrcLoc = SrcLoc
     , srcLine :: Int
     , srcColumn :: Int
     }
-  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+  deriving (Eq,Ord,Typeable,Data,Generic)
+
+instance Show SrcLoc where
+  show (SrcLoc fn sl sc) = "SrcLoc " ++ show fn ++ " " ++ (intercalate " " $ map show [sl,sc])
 
 noLoc :: SrcLoc
 noLoc = SrcLoc "" (-1) (-1)
