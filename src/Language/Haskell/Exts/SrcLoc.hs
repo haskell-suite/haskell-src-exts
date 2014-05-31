@@ -28,7 +28,9 @@ data SrcLoc = SrcLoc
   deriving (Eq,Ord,Typeable,Data,Generic)
 
 instance Show SrcLoc where
-  show (SrcLoc fn sl sc) = "SrcLoc " ++ show fn ++ " " ++ (intercalate " " $ map show [sl,sc])
+  showsPrec n (SrcLoc fn sl sc) =
+    showParen (n >= 11) $
+      showString $ "SrcLoc " ++ show fn ++ " " ++ (intercalate " " $ map show [sl,sc])
 
 noLoc :: SrcLoc
 noLoc = SrcLoc "" (-1) (-1)
@@ -44,7 +46,9 @@ data SrcSpan = SrcSpan
   deriving (Eq,Ord,Typeable,Data)
 
 instance Show SrcSpan where
-  show (SrcSpan fn sl sc el ec) = "SrcSpan " ++ show fn ++ " " ++ (intercalate " " $ map show [sl,sc,el,ec])
+  showsPrec n (SrcSpan fn sl sc el ec) =
+    showParen (n >= 11) $
+      showString $ "SrcSpan " ++ show fn ++ " " ++ (intercalate " " $ map show [sl,sc,el,ec])
 
 
 -- | Returns 'srcSpanStartLine' and 'srcSpanStartColumn' in a pair.
