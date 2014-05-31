@@ -1,1 +1,1 @@
-ParseFailed (SrcLoc {srcFilename = "tests/examples/DoRec.hs", srcLine = 3, srcColumn = 15}) "Parse error: let"
+ParseFailed (SrcLoc "tests/examples/DoRec.hs" 3 15) "Parse error: let"

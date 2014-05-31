@@ -1,1 +1,1 @@
-ParseFailed (SrcLoc {srcFilename = "tests/examples/THTypes.hs", srcLine = 9, srcColumn = 23}) "Parse error: $("
+ParseFailed (SrcLoc "tests/examples/THTypes.hs" 9 23) "Parse error: $("

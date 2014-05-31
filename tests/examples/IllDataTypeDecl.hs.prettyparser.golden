@@ -1,1 +1,1 @@
-ParseFailed (SrcLoc {srcFilename = "tests/examples/IllDataTypeDecl.hs", srcLine = 5, srcColumn = 1}) "Illegal data/newtype declaration"
+ParseFailed (SrcLoc "tests/examples/IllDataTypeDecl.hs" 5 1) "Illegal data/newtype declaration"

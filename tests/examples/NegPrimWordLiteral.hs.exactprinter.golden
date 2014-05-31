@@ -1,1 +1,1 @@
-ParseFailed (SrcLoc {srcFilename = "tests/examples/NegPrimWordLiteral.hs", srcLine = 3, srcColumn = 1}) "Parse error: negative primitive word literal: - 9223372036854775808##"
+ParseFailed (SrcLoc "tests/examples/NegPrimWordLiteral.hs" 3 1) "Parse error: negative primitive word literal: - 9223372036854775808##"

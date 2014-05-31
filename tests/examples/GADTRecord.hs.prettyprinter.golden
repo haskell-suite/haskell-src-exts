@@ -1,1 +1,1 @@
-ParseFailed (SrcLoc {srcFilename = "tests/examples/GADTRecord.hs", srcLine = 4, srcColumn = 8}) "Parse error: {"
+ParseFailed (SrcLoc "tests/examples/GADTRecord.hs" 4 8) "Parse error: {"

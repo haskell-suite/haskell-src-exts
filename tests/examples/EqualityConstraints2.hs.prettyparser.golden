@@ -1,1 +1,1 @@
-ParseFailed (SrcLoc {srcFilename = "tests/examples/EqualityConstraints2.hs", srcLine = 1, srcColumn = 19}) "TypeFamilies or GADTs is not enabled"
+ParseFailed (SrcLoc "tests/examples/EqualityConstraints2.hs" 1 19) "TypeFamilies or GADTs is not enabled"

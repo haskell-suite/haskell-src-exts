@@ -1,1 +1,1 @@
-ParseFailed (SrcLoc {srcFilename = "tests/examples/RecordPuns.hs", srcLine = 3, srcColumn = 29}) "NamedFieldPuns is not enabled"
+ParseFailed (SrcLoc "tests/examples/RecordPuns.hs" 3 29) "NamedFieldPuns is not enabled"
