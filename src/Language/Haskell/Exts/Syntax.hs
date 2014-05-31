@@ -401,6 +401,7 @@ data Type
      | TyInfix Type QName Type  -- ^ infix type constructor
      | TyKind  Type Kind        -- ^ type with explicit kind signature
      | TyPromoted Promoted      -- ^ promoted data type (-XDataKinds)
+     | TyEquals Type Type       -- ^ type equality predicate enabled by ConstraintKinds
   deriving (Eq,Ord,Show,Typeable,Data)
 
 data Promoted

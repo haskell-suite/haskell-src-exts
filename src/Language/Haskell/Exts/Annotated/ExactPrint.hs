@@ -958,7 +958,10 @@ instance ExactP Type where
             printStringAt (pos c) ")"
          _ -> errorEP "ExactP: Type: TyKind is given wrong number of srcInfoPoints"
     TyPromoted l p -> exactPC p
-
+    TyEquals l t0 t1 -> case srcInfoPoints l of 
+                          a:_ -> exactPC t0 >> printStringAt (pos a) "~" >> exactPC t1
+                          _   -> errorEP "ExactP: Type: TyEquals is given wrong number of srcInfoPoints"
+             
 instance ExactP Promoted where
   exactP (PromotedInteger _ _ rw) = printString rw
   exactP (PromotedString _ _ rw)  = printString ('\"':rw ++ "\"")
