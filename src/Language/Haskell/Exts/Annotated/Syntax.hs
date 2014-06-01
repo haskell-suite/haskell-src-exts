@@ -95,7 +95,7 @@ module Language.Haskell.Exts.Annotated.Syntax (
     forall_name, family_name,
     -- ** Type constructors
     unit_tycon_name, fun_tycon_name, list_tycon_name, tuple_tycon_name, unboxed_singleton_tycon_name,
-    unit_tycon, fun_tycon, list_tycon, tuple_tycon, unboxed_singleton_tycon,
+    unit_tycon, fun_tycon, list_tycon, tuple_tycon, unboxed_singleton_tycon, quotecolon_tycon_name,
 
     -- * Source coordinates
     -- SrcLoc(..),
@@ -460,6 +460,7 @@ data Type l
      | TyInfix l (Type l) (QName l) (Type l)    -- ^ infix type constructor
      | TyKind  l (Type l) (Kind l)              -- ^ type with explicit kind signature
      | TyPromoted l (Promoted l)                -- ^ @'K@, a promoted data type (-XDataKinds).
+     | TyEquals l (Type l) (Type l)             -- ^ type equality predicate enabled by ConstraintKinds 
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | Bools here are True if there was a leading quote which may be
@@ -847,11 +848,12 @@ js_name         l = Ident l "js"
 forall_name     l = Ident l "forall"
 family_name     l = Ident l "family"
 
-unit_tycon_name, fun_tycon_name, list_tycon_name, unboxed_singleton_tycon_name :: l -> QName l
+unit_tycon_name, fun_tycon_name, list_tycon_name, unboxed_singleton_tycon_name, quotecolon_tycon_name :: l -> QName l
 unit_tycon_name l = unit_con_name l
 fun_tycon_name  l = Special l (FunCon l)
 list_tycon_name l = Special l (ListCon l)
 unboxed_singleton_tycon_name l = Special l (UnboxedSingleCon l)
+quotecolon_tycon_name l = UnQual l (Symbol l "':")
 
 tuple_tycon_name :: l -> Boxed -> Int -> QName l
 tuple_tycon_name l b i = tuple_con_name l b i
@@ -1189,6 +1191,7 @@ instance Annotated Type where
       TyInfix l ta qn tb            -> l
       TyKind  l t k                 -> l
       TyPromoted l   p              -> l
+      TyEquals l a b                -> l
     amap f t = case t of
       TyForall l mtvs mcx t         -> TyForall (f l) mtvs mcx t
       TyFun   l t1 t2               -> TyFun (f l) t1 t2
@@ -1201,6 +1204,7 @@ instance Annotated Type where
       TyInfix l ta qn tb            -> TyInfix (f l) ta qn tb
       TyKind  l t k                 -> TyKind (f l) t k
       TyPromoted l   p              -> TyPromoted (f l)   p
+      TyEquals l a b                -> TyEquals (f l) a b
 
 instance Annotated TyVarBind where
     ann (KindedVar   l n k) = l
