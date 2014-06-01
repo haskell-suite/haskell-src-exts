@@ -47,6 +47,8 @@ For best results, please follow these guidelines:
     changes with a hard dependency on each other.)
 1.  Typically, a pull request should consist of just a few commits. Rewrite the
     history (see `git rebase`) to make commits logical, not historical.
+1.  Write descriptive commit messages. Here's an [example of a good commit
+    message][commitmsg]
 1.  If you want to amend a pull request, rewrite your branch and leave a
     comment. Do not add commits to the branch or open new pull requests for that.
 1.  Make sure the tests pass:
@@ -72,6 +74,8 @@ For best results, please follow these guidelines:
     don't generate new warnings.
 1.  Run `git diff --check` on your changes to check that you aren't committing any
     sinful whitespace.
+
+[commitmsg]: https://github.com/haskell-suite/haskell-src-exts/commit/ed3e51aaa8c05d0ebc7c26b5ff70ff0dfce4af11
 
 ### Refactoring or architectural changes
 
