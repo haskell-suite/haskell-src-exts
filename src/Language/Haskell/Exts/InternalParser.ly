@@ -1447,6 +1447,7 @@ Hsx Extensions - requires XmlSyntax, but the lexer handles all that.
 >       | 'export'                      { Loc $1 "export" }
 >       | 'safe'                        { Loc $1 "safe" }
 >       | 'unsafe'                      { Loc $1 "unsafe" }
+>       | 'interruptible'               { Loc $1 "interruptible" }
 >       | 'threadsafe'                  { Loc $1 "threadsafe" }
 >       | 'stdcall'                     { Loc $1 "stdcall" }
 >       | 'ccall'                       { Loc $1 "ccall" }
@@ -1750,6 +1751,7 @@ Identifiers and Symbols
 >       : varid_no_safety       { $1 }
 >       | 'safe'                { safe_name       (nIS $1) }
 >       | 'unsafe'              { unsafe_name     (nIS $1) }
+>       | 'interruptible'       { interruptible_name (nIS $1) }
 >       | 'threadsafe'          { threadsafe_name (nIS $1) }
 >	| 'forall'		{ forall_name	  (nIS $1) }
 >	| 'family'		{ family_name     (nIS $1) }
