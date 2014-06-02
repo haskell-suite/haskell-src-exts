@@ -1454,6 +1454,7 @@ Hsx Extensions - requires XmlSyntax, but the lexer handles all that.
 >       | 'dotnet'                      { Loc $1 "dotnet" }
 >       | 'jvm'                         { Loc $1 "jvm" }
 >       | 'js'                          { Loc $1 "js" }
+>       | 'capi'                        { Loc $1 "capi" }
 >       | 'as'                          { Loc $1 "as" }
 >       | 'by'                          { Loc $1 "by" }
 >       | 'case'                        { Loc $1 "case" }
@@ -1743,6 +1744,7 @@ Identifiers and Symbols
 >       | 'dotnet'              { dotnet_name    (nIS $1) }
 >       | 'jvm'                 { jvm_name       (nIS $1) }
 >       | 'js'                  { js_name        (nIS $1) }
+>       | 'capi'                { capi_name      (nIS $1) }
 
 > varid :: { Name L }
 >       : varid_no_safety       { $1 }
