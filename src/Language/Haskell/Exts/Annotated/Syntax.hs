@@ -104,6 +104,7 @@ module Language.Haskell.Exts.Annotated.Syntax (
     Annotated(..), (=~=),
   ) where
 
+import Prelude hiding (id)
 
 import Data.Data
 import GHC.Generics (Generic)
@@ -902,46 +903,46 @@ instance Annotated SpecialCon where
 
 instance Annotated QName where
     ann qn = case qn of
-        Qual    l mn n  -> l
-        UnQual  l    n  -> l
-        Special l sc    -> l
+        Qual    l _ _  -> l
+        UnQual  l   _  -> l
+        Special l _    -> l
     amap f qn = case qn of
         Qual    l mn n  -> Qual    (f l) mn n
         UnQual  l    n  -> UnQual  (f l)    n
         Special l sc    -> Special (f l) sc
 
 instance Annotated Name where
-    ann (Ident  l s) = l
-    ann (Symbol l s) = l
+    ann (Ident  l _) = l
+    ann (Symbol l _) = l
     amap = fmap
 
 instance Annotated IPName where
-    ann (IPDup l s) = l
-    ann (IPLin l s) = l
+    ann (IPDup l _) = l
+    ann (IPLin l _) = l
     amap = fmap
 
 instance Annotated QOp where
-    ann (QVarOp l qn) = l
-    ann (QConOp l qn) = l
+    ann (QVarOp l _) = l
+    ann (QConOp l _) = l
     amap f (QVarOp l qn) = QVarOp (f l) qn
     amap f (QConOp l qn) = QConOp (f l) qn
 
 instance Annotated Op where
-    ann (VarOp l n) = l
-    ann (ConOp l n) = l
+    ann (VarOp l _) = l
+    ann (ConOp l _) = l
     amap f (VarOp l n) = VarOp (f l) n
     amap f (ConOp l n) = ConOp (f l) n
 
 instance Annotated CName where
-    ann (VarName l n) = l
-    ann (ConName l n) = l
+    ann (VarName l _) = l
+    ann (ConName l _) = l
     amap f (VarName l n) = VarName (f l) n
     amap f (ConName l n) = ConName (f l) n
 
 instance Annotated Module where
-    ann (Module l mmh ops iss dcls) = l
-    ann (XmlPage l mn os xn xas me es) = l
-    ann (XmlHybrid l mmh ops iss dcls xn xas me es) = l
+    ann (Module l _ _ _ _)            = l
+    ann (XmlPage l _ _ _ _ _ _)       = l
+    ann (XmlHybrid l _ _ _ _ _ _ _ _) = l
 
     amap f (Module l mmh ops iss dcls) =
         Module (f l) mmh ops iss dcls
@@ -951,20 +952,20 @@ instance Annotated Module where
         XmlHybrid (f l) mmh ops iss dcls xn xas me es
 
 instance Annotated ModuleHead where
-    ann (ModuleHead l n mwt mesl) = l
+    ann (ModuleHead l _ _ _)         = l
     amap f (ModuleHead l n mwt mesl) = ModuleHead (f l) n mwt mesl
 
 instance Annotated ExportSpecList where
-    ann (ExportSpecList l ess) = l
+    ann (ExportSpecList l _)      = l
     amap f (ExportSpecList l ess) = ExportSpecList (f l) ess
 
 instance Annotated ExportSpec where
     ann es = case es of
-        EVar l qn       -> l
-        EAbs l qn       -> l
-        EThingAll l qn  -> l
-        EThingWith l qn cns -> l
-        EModuleContents l mn    -> l
+        EVar l _            -> l
+        EAbs l _            -> l
+        EThingAll l _       -> l
+        EThingWith l _ _    -> l
+        EModuleContents l _ -> l
     amap f es = case es of
         EVar l qn       -> EVar (f l) qn
         EAbs l qn       -> EAbs (f l) qn
@@ -973,20 +974,20 @@ instance Annotated ExportSpec where
         EModuleContents l mn    -> EModuleContents (f l) mn
 
 instance Annotated ImportDecl where
-    ann (ImportDecl l mn qual src pkg mmn mis) = l
+    ann (ImportDecl l _ _ _ _ _ _) = l
     amap f (ImportDecl l mn qual src pkg mmn mis) =
         ImportDecl (f l) mn qual src pkg mmn mis
 
 instance Annotated ImportSpecList where
-    ann (ImportSpecList l b iss) = l
+    ann (ImportSpecList l _ _)      = l
     amap f (ImportSpecList l b iss) = ImportSpecList (f l) b iss
 
 instance Annotated ImportSpec where
     ann is = case is of
-        IVar l n        -> l
-        IAbs l n        -> l
-        IThingAll l n   -> l
-        IThingWith l n cns  -> l
+        IVar l _         -> l
+        IAbs l _         -> l
+        IThingAll l _    -> l
+        IThingWith l _ _ -> l
     amap f is = case is of
         IVar l n        -> IVar (f l) n
         IAbs l n        -> IAbs (f l) n
@@ -1000,7 +1001,7 @@ instance Annotated Assoc where
     amap = fmap
 
 instance Annotated Deriving where
-    ann (Deriving l ihs)    = l
+    ann (Deriving l _)      = l
     amap f (Deriving l ihs) = Deriving (f l) ihs
 
 instance Annotated TypeEqn where
@@ -1009,35 +1010,35 @@ instance Annotated TypeEqn where
 
 instance Annotated Decl where
     ann decl = case decl of
-        TypeDecl     l dh t         -> l
-        TypeFamDecl  l dh mk        -> l
-        ClosedTypeFamDecl  l _ _ _  -> l
-        DataDecl     l dn cx dh cds ders -> l
-        GDataDecl    l dn cx dh mk gds ders -> l
-        DataFamDecl  l    cx dh mk  -> l
-        TypeInsDecl  l t1 t2        -> l
-        DataInsDecl  l dn t cds ders    -> l
-        GDataInsDecl l dn t mk gds ders -> l
-        ClassDecl    l cx dh fds cds    -> l
-        InstDecl     l cx ih ids        -> l
-        DerivDecl    l cx ih            -> l
-        InfixDecl    l a k ops          -> l
-        DefaultDecl  l ts               -> l
-        SpliceDecl   l sp               -> l
-        TypeSig      l ns t             -> l
-        FunBind      l ms               -> l
-        PatBind      l p rhs bs         -> l
-        ForImp       l cc msf s n t     -> l
-        ForExp       l cc     s n t     -> l
-        RulePragmaDecl   l rs           -> l
-        DeprPragmaDecl   l nss          -> l
-        WarnPragmaDecl   l nss          -> l
-        InlineSig        l b act qn     -> l
-        InlineConlikeSig l   act qn     -> l
-        SpecSig          l   act qn ts  -> l
-        SpecInlineSig    l b act qn ts  -> l
-        InstSig          l cx ih        -> l
-        AnnPragma        l ann          -> l
+        TypeDecl     l _ _              -> l
+        TypeFamDecl  l _ _              -> l
+        ClosedTypeFamDecl  l _ _ _      -> l
+        DataDecl     l _ _ _ _ _        -> l
+        GDataDecl    l _ _ _ _ _ _      -> l
+        DataFamDecl  l    _ _ _         -> l
+        TypeInsDecl  l _  _             -> l
+        DataInsDecl  l _ _ _ _          -> l
+        GDataInsDecl l _ _ _ _ _        -> l
+        ClassDecl    l _ _ _ _          -> l
+        InstDecl     l _ _ _            -> l
+        DerivDecl    l _ _              -> l
+        InfixDecl    l _ _ _            -> l
+        DefaultDecl  l _                -> l
+        SpliceDecl   l _                -> l
+        TypeSig      l _ _              -> l
+        FunBind      l _                -> l
+        PatBind      l _ _ _            -> l
+        ForImp       l _ _ _ _ _        -> l
+        ForExp       l _ _ _ _          -> l
+        RulePragmaDecl   l _            -> l
+        DeprPragmaDecl   l _            -> l
+        WarnPragmaDecl   l _            -> l
+        InlineSig        l _ _ _        -> l
+        InlineConlikeSig l   _ _        -> l
+        SpecSig          l   _ _ _      -> l
+        SpecInlineSig    l _ _ _ _      -> l
+        InstSig          l _ _          -> l
+        AnnPragma        l _            -> l
     amap f decl = case decl of
         TypeDecl     l dh t      -> TypeDecl    (f l) dh t
         TypeFamDecl  l dh mk     -> TypeFamDecl (f l) dh mk
@@ -1069,12 +1070,12 @@ instance Annotated Decl where
         SpecSig          l   act qn ts   -> SpecSig       (f l)   act qn ts
         SpecInlineSig    l b act qn ts   -> SpecInlineSig (f l) b act qn ts
         InstSig          l mcx ih        -> InstSig (f l) mcx ih
-        AnnPragma        l ann           -> AnnPragma (f l) ann
+        AnnPragma        l ann'          -> AnnPragma (f l) ann'
 
 instance Annotated Annotation where
-    ann (Ann     l n e) = l
-    ann (TypeAnn l n e) = l
-    ann (ModuleAnn l e) = l
+    ann (Ann     l _ _) = l
+    ann (TypeAnn l _ _) = l
+    ann (ModuleAnn l _) = l
     amap f (Ann     l n e) = Ann     (f l) n e
     amap f (TypeAnn l n e) = TypeAnn (f l) n e
     amap f (ModuleAnn l e) = ModuleAnn (f l) e
@@ -1085,62 +1086,62 @@ instance Annotated DataOrNew where
     amap = fmap
 
 instance Annotated DeclHead where
-    ann (DHead l n tvs)       = l
-    ann (DHInfix l tva n tvb) = l
-    ann (DHParen l dh)        = l
+    ann (DHead l _ _)     = l
+    ann (DHInfix l _ _ _) = l
+    ann (DHParen l _)     = l
     amap f (DHead l n tvs)       = DHead (f l) n tvs
     amap f (DHInfix l tva n tvb) = DHInfix (f l) tva n tvb
     amap f (DHParen l dh)        = DHParen (f l) dh
 
 instance Annotated InstHead where
-    ann (IHead l qn ts) = l
-    ann (IHInfix l ta qn tb) = l
-    ann (IHParen l ih) = l
+    ann (IHead l _ _)     = l
+    ann (IHInfix l _ _ _) = l
+    ann (IHParen l _)     = l
     amap f (IHead l qn ts)       = IHead (f l) qn ts
     amap f (IHInfix l ta qn tb)  = IHInfix (f l) ta qn tb
     amap f (IHParen l ih)        = IHParen (f l) ih
 
 instance Annotated Binds where
-    ann (BDecls  l decls) = l
-    ann (IPBinds l ibs)   = l
+    ann (BDecls  l _) = l
+    ann (IPBinds l _) = l
     amap f (BDecls  l decls) = BDecls (f l) decls
     amap f (IPBinds l ibs)   = IPBinds (f l) ibs
 
 instance Annotated IPBind where
-    ann (IPBind l ipn e) = l
+    ann (IPBind l _ _) = l
     amap f (IPBind l ipn e) = IPBind (f l) ipn e
 
 instance Annotated Match where
-    ann (Match l n ps rhs bs) = l
-    ann (InfixMatch l a n b rhs bs) = l
+    ann (Match l _ _ _ _)        = l
+    ann (InfixMatch l _ _ _ _ _) = l
     amap f (Match l n ps rhs bs) = Match (f l) n ps rhs bs
     amap f (InfixMatch l a n b rhs bs) = InfixMatch (f l) a n b rhs bs
 
 instance Annotated QualConDecl where
-    ann (QualConDecl l tvs cx cd) = l
+    ann (QualConDecl l _ _ _) = l
     amap f (QualConDecl l tvs cx cd) = QualConDecl (f l) tvs cx cd
 
 instance Annotated ConDecl where
-    ann (ConDecl l n bts) = l
-    ann (InfixConDecl l ta n tb) = l
-    ann (RecDecl l n nsbts) = l
+    ann (ConDecl l _ _)        = l
+    ann (InfixConDecl l _ _ _) = l
+    ann (RecDecl l _ _)        = l
     amap f (ConDecl l n bts) = ConDecl (f l) n bts
     amap f (InfixConDecl l ta n tb) = InfixConDecl (f l) ta n tb
     amap f (RecDecl l n fds) = RecDecl (f l) n fds
 
 instance Annotated FieldDecl where
-    ann (FieldDecl l ns t) = l
+    ann (FieldDecl l _ _) = l
     amap f (FieldDecl l ns t) = FieldDecl (f l) ns t
 
 instance Annotated GadtDecl where
-    ann (GadtDecl l n t) = l
+    ann (GadtDecl l _ _) = l
     amap f (GadtDecl l n t) = GadtDecl (f l) n t
 
 instance Annotated ClassDecl where
-    ann (ClsDecl    l d) = l
-    ann (ClsDataFam l cx dh mk) = l
-    ann (ClsTyFam   l    dh mk) = l
-    ann (ClsTyDef   l t1 t2) = l
+    ann (ClsDecl    l _)      = l
+    ann (ClsDataFam l _ _ _)  = l
+    ann (ClsTyFam   l    _ _) = l
+    ann (ClsTyDef   l _ _)    = l
     amap f (ClsDecl    l d) = ClsDecl (f l) d
     amap f (ClsDataFam l mcx dh mk) = ClsDataFam (f l) mcx dh mk
     amap f (ClsTyFam   l     dh mk) = ClsTyFam   (f l)     dh mk
@@ -1148,11 +1149,11 @@ instance Annotated ClassDecl where
 
 instance Annotated InstDecl where
     ann id = case id of
-        InsDecl   l d           -> l
-        InsType   l t1 t2       -> l
-        InsData   l dn t    cds ders            -> l
-        InsGData  l dn t mk gds ders            -> l
---        InsInline l b act qn    -> l
+        InsDecl   l _            -> l
+        InsType   l _ _          -> l
+        InsData   l _ _  _ _     -> l
+        InsGData  l _ _ _ _ _    -> l
+--        InsInline l _ _ _    -> l
     amap f id = case id of
         InsDecl   l d           -> InsDecl (f l) d
         InsType   l t1 t2       -> InsType (f l) t1 t2
@@ -1161,42 +1162,42 @@ instance Annotated InstDecl where
 --        InsInline l b act qn    -> InsInline (f l) b act qn
 
 instance Annotated BangType where
-     ann (BangedTy   l t) = l
-     ann (UnBangedTy l t) = l
-     ann (UnpackedTy l t) = l
+     ann (BangedTy   l _) = l
+     ann (UnBangedTy l _) = l
+     ann (UnpackedTy l _) = l
      amap f (BangedTy   l t) = BangedTy (f l)   t
      amap f (UnBangedTy l t) = UnBangedTy (f l) t
      amap f (UnpackedTy l t) = UnpackedTy (f l) t
 
 instance Annotated Rhs where
-     ann (UnGuardedRhs l e) = l
-     ann (GuardedRhss  l grhss) = l
+     ann (UnGuardedRhs l _) = l
+     ann (GuardedRhss  l _) = l
      amap f (UnGuardedRhs l e)     = UnGuardedRhs (f l) e
      amap f (GuardedRhss  l grhss) = GuardedRhss  (f l) grhss
 
 instance Annotated GuardedRhs where
-     ann (GuardedRhs l ss e) = l
+     ann (GuardedRhs l _ _) = l
      amap f (GuardedRhs l ss e) = GuardedRhs (f l) ss e
 
 instance Annotated Type where
     ann t = case t of
-      TyForall l mtvs cx t          -> l
-      TyFun   l t1 t2               -> l
-      TyTuple l b ts                -> l
-      TyList  l t                   -> l
-      TyApp   l t1 t2               -> l
-      TyVar   l n                   -> l
-      TyCon   l qn                  -> l
-      TyParen l t                   -> l
-      TyInfix l ta qn tb            -> l
-      TyKind  l t k                 -> l
-      TyPromoted l   p              -> l
-    amap f t = case t of
+      TyForall l _ _ _              -> l
+      TyFun   l _ _                 -> l
+      TyTuple l _ _                 -> l
+      TyList  l _                   -> l
+      TyApp   l _ _                 -> l
+      TyVar   l _                   -> l
+      TyCon   l _                   -> l
+      TyParen l _                   -> l
+      TyInfix l _ _ _               -> l
+      TyKind  l _ _                 -> l
+      TyPromoted l   _              -> l
+    amap f t1 = case t1 of
       TyForall l mtvs mcx t         -> TyForall (f l) mtvs mcx t
-      TyFun   l t1 t2               -> TyFun (f l) t1 t2
+      TyFun   l t1' t2              -> TyFun (f l) t1' t2
       TyTuple l b ts                -> TyTuple (f l) b ts
       TyList  l t                   -> TyList (f l) t
-      TyApp   l t1 t2               -> TyApp (f l) t1 t2
+      TyApp   l t1' t2              -> TyApp (f l) t1' t2
       TyVar   l n                   -> TyVar (f l) n
       TyCon   l qn                  -> TyCon (f l) qn
       TyParen l t                   -> TyParen (f l) t
@@ -1205,20 +1206,20 @@ instance Annotated Type where
       TyPromoted l   p              -> TyPromoted (f l)   p
 
 instance Annotated TyVarBind where
-    ann (KindedVar   l n k) = l
-    ann (UnkindedVar l n)   = l
+    ann (KindedVar   l _ _) = l
+    ann (UnkindedVar l _)   = l
     amap f (KindedVar   l n k) = KindedVar   (f l) n k
     amap f (UnkindedVar l n)   = UnkindedVar (f l) n
 
 instance Annotated Kind where
     ann (KindStar l) = l
     ann (KindBang l) = l
-    ann (KindFn   l k1 k2) = l
-    ann (KindParen l k) = l
-    ann (KindVar l v) = l
-    ann (KindApp l k1 k2) = l
-    ann (KindTuple l ks) = l
-    ann (KindList  l ks) = l
+    ann (KindFn   l _ _) = l
+    ann (KindParen l _)  = l
+    ann (KindVar l _)    = l
+    ann (KindApp l _ _)  = l
+    ann (KindTuple l _)  = l
+    ann (KindList  l _)  = l
     amap f (KindStar l) = KindStar (f l)
     amap f (KindBang l) = KindBang (f l)
     amap f (KindFn   l k1 k2) = KindFn (f l) k1 k2
@@ -1229,14 +1230,14 @@ instance Annotated Kind where
     amap f (KindList  l ks) = KindList  (f l) ks
 
 instance Annotated FunDep where
-    ann (FunDep l ns1 ns2) = l
+    ann (FunDep l _ _) = l
     amap f (FunDep l ns1 ns2) = FunDep (f l) ns1 ns2
 
 instance Annotated Context where
-    ann (CxSingle l asst ) = l
-    ann (CxTuple  l assts) = l
-    ann (CxParen  l ctxt )  = l
-    ann (CxEmpty  l)       = l
+    ann (CxSingle l _) = l
+    ann (CxTuple  l _) = l
+    ann (CxParen  l _) = l
+    ann (CxEmpty  l)   = l
     amap f (CxSingle l asst ) = CxSingle (f l) asst
     amap f (CxTuple  l assts) = CxTuple  (f l) assts
     amap f (CxParen  l ctxt ) = CxParen  (f l) ctxt
@@ -1244,10 +1245,10 @@ instance Annotated Context where
 
 instance Annotated Asst where
     ann asst = case asst of
-        ClassA l qn ts      -> l
-        InfixA l ta qn tb   -> l
-        IParam l ipn t      -> l
-        EqualP l t1 t2      -> l
+        ClassA l _ _     -> l
+        InfixA l _ _ _   -> l
+        IParam l _ _     -> l
+        EqualP l _ _     -> l
     amap f asst = case asst of
         ClassA l qn ts      -> ClassA (f l) qn ts
         InfixA l ta qn tb   -> InfixA (f l) ta qn tb
@@ -1256,80 +1257,80 @@ instance Annotated Asst where
 
 instance Annotated Literal where
     ann lit = case lit of
-        Char    l c    rw  -> l
-        String  l s    rw  -> l
-        Int     l i    rw  -> l
-        Frac    l r    rw  -> l
-        PrimInt    l i rw  -> l
-        PrimWord   l i rw  -> l
-        PrimFloat  l r rw  -> l
-        PrimDouble l r rw  -> l
-        PrimChar   l c rw  -> l
-        PrimString l s rw  -> l
+        Char    l _    _  -> l
+        String  l _    _  -> l
+        Int     l _    _  -> l
+        Frac    l _    _  -> l
+        PrimInt    l _ _  -> l
+        PrimWord   l _ _  -> l
+        PrimFloat  l _ _  -> l
+        PrimDouble l _ _  -> l
+        PrimChar   l _ _  -> l
+        PrimString l _ _  -> l
     amap = fmap
 
 instance Annotated Exp where
     ann e = case e of
-        Var l qn        -> l
-        IPVar l ipn     -> l
-        Con l qn        -> l
-        Lit l lit       -> l
-        InfixApp l e1 qop e2    -> l
-        App l e1 e2     -> l
-        NegApp l e      -> l
-        Lambda l ps e   -> l
-        Let l bs e      -> l
-        If l ec et ee   -> l
-        MultiIf l alts  -> l
-        Case l e alts   -> l
-        Do l ss         -> l
-        MDo l ss        -> l
-        Tuple l bx es   -> l
-        TupleSection l bx mes -> l
-        List l es       -> l
-        Paren l e       -> l
-        LeftSection l e qop     -> l
-        RightSection l qop e    -> l
-        RecConstr l qn fups     -> l
-        RecUpdate l e  fups     -> l
-        EnumFrom l e            -> l
-        EnumFromTo l ef et      -> l
-        EnumFromThen l ef et    -> l
-        EnumFromThenTo l ef eth eto -> l
-        ListComp l e qss        -> l
-        ParComp  l e qsss       -> l
-        ExpTypeSig l e t        -> l
-        VarQuote l qn           -> l
-        TypQuote l qn           -> l
-        BracketExp l br         -> l
-        SpliceExp l sp          -> l
-        QuasiQuote l sn se      -> l
+        Var l _                -> l
+        IPVar l _              -> l
+        Con l _                -> l
+        Lit l _                -> l
+        InfixApp l _ _ _       -> l
+        App l _ _              -> l
+        NegApp l _             -> l
+        Lambda l _ _           -> l
+        Let l _ _              -> l
+        If l _ _ _             -> l
+        MultiIf l _            -> l
+        Case l _ _             -> l
+        Do l _                 -> l
+        MDo l _                -> l
+        Tuple l _ _            -> l
+        TupleSection l _ _     -> l
+        List l _               -> l
+        Paren l _              -> l
+        LeftSection l _ _      -> l
+        RightSection l _ _     -> l
+        RecConstr l _ _        -> l
+        RecUpdate l _ _        -> l
+        EnumFrom l _           -> l
+        EnumFromTo l _ _       -> l
+        EnumFromThen l _ _     -> l
+        EnumFromThenTo l _ _ _ -> l
+        ListComp l _ _         -> l
+        ParComp  l _ _         -> l
+        ExpTypeSig l _ _       -> l
+        VarQuote l _           -> l
+        TypQuote l _           -> l
+        BracketExp l _         -> l
+        SpliceExp l _          -> l
+        QuasiQuote l _ _       -> l
 
-        XTag  l xn xas me es     -> l
-        XETag l xn xas me        -> l
-        XPcdata l s              -> l
-        XExpTag l e              -> l
-        XChildTag l es           -> l
+        XTag  l _ _ _ _        -> l
+        XETag l _ _ _          -> l
+        XPcdata l _            -> l
+        XExpTag l _            -> l
+        XChildTag l _          -> l
 
-        CorePragma l s e   -> l
-        SCCPragma  l s e   -> l
-        GenPragma  l s n12 n34 e -> l
+        CorePragma l _ _       -> l
+        SCCPragma  l _ _       -> l
+        GenPragma  l _ _ _ _   -> l
 
-        Proc            l p e   -> l
-        LeftArrApp      l e1 e2 -> l
-        RightArrApp     l e1 e2 -> l
-        LeftArrHighApp  l e1 e2 -> l
-        RightArrHighApp l e1 e2 -> l
+        Proc            l _ _  -> l
+        LeftArrApp      l _ _  -> l
+        RightArrApp     l _ _  -> l
+        LeftArrHighApp  l _ _  -> l
+        RightArrHighApp l _ _  -> l
 
-        LCase l alts -> l
+        LCase l _              -> l
 
-    amap f e = case e of
+    amap f e1 = case e1 of
         Var l qn        -> Var (f l) qn
         IPVar l ipn     -> IPVar (f l) ipn
         Con l qn        -> Con (f l) qn
         Lit l lit       -> Lit (f l) lit
-        InfixApp l e1 qop e2    -> InfixApp (f l) e1 qop e2
-        App l e1 e2     -> App (f l) e1 e2
+        InfixApp l e1' qop e2    -> InfixApp (f l) e1' qop e2
+        App l e1' e2    -> App (f l) e1' e2
         NegApp l e      -> NegApp (f l) e
         Lambda l ps e   -> Lambda (f l) ps e
         Let l bs e      -> Let (f l) bs e
@@ -1368,44 +1369,44 @@ instance Annotated Exp where
         SCCPragma  l s e   -> SCCPragma (f l) s e
         GenPragma  l s n12 n34 e -> GenPragma (f l) s n12 n34 e
 
-        Proc            l p e   -> Proc (f l) p e
-        LeftArrApp      l e1 e2 -> LeftArrApp      (f l) e1 e2
-        RightArrApp     l e1 e2 -> RightArrApp     (f l) e1 e2
-        LeftArrHighApp  l e1 e2 -> LeftArrHighApp  (f l) e1 e2
-        RightArrHighApp l e1 e2 -> RightArrHighApp (f l) e1 e2
+        Proc            l p e  -> Proc (f l) p e
+        LeftArrApp      l e1' e2 -> LeftArrApp      (f l) e1' e2
+        RightArrApp     l e1' e2 -> RightArrApp     (f l) e1' e2
+        LeftArrHighApp  l e1' e2 -> LeftArrHighApp  (f l) e1' e2
+        RightArrHighApp l e1' e2 -> RightArrHighApp (f l) e1' e2
 
         LCase l alts -> LCase (f l) alts
         MultiIf l alts -> MultiIf (f l) alts
 
 
 instance Annotated XName where
-    ann (XName l s)  = l
-    ann (XDomName l sd sn) = l
+    ann (XName l _)      = l
+    ann (XDomName l _ _) = l
     amap = fmap
 
 instance Annotated XAttr where
-    ann (XAttr l xn e) = l
+    ann (XAttr l _ _) = l
     amap f (XAttr l xn e) = XAttr (f l) xn e
 
 instance Annotated Bracket where
-    ann (ExpBracket l e) = l
-    ann (PatBracket l p) = l
-    ann (TypeBracket l t) = l
-    ann (DeclBracket l ds) = l
+    ann (ExpBracket l _)  = l
+    ann (PatBracket l _)  = l
+    ann (TypeBracket l _) = l
+    ann (DeclBracket l _) = l
     amap f (ExpBracket l e) = ExpBracket (f l) e
     amap f (PatBracket l p) = PatBracket (f l) p
     amap f (TypeBracket l t) = TypeBracket (f l) t
     amap f (DeclBracket l ds) = DeclBracket (f l) ds
 
 instance Annotated Splice where
-    ann (IdSplice l s) = l
-    ann (ParenSplice l e) = l
+    ann (IdSplice l _)    = l
+    ann (ParenSplice l _) = l
     amap f (IdSplice l s) = IdSplice (f l) s
     amap f (ParenSplice l e) = ParenSplice (f l) e
 
 instance Annotated Safety where
     ann (PlayRisky l) = l
-    ann (PlaySafe l b) = l
+    ann (PlaySafe l _) = l
     ann (PlayInterruptible l) = l
     amap = fmap
 
@@ -1420,59 +1421,59 @@ instance Annotated CallConv where
     amap = fmap
 
 instance Annotated ModulePragma where
-    ann (LanguagePragma   l ns) = l
-    ann (OptionsPragma    l mt s) = l
-    ann (AnnModulePragma  l a) = l
+    ann (LanguagePragma   l _)   = l
+    ann (OptionsPragma    l _ _) = l
+    ann (AnnModulePragma  l _)   = l
     amap f (LanguagePragma   l ns) = LanguagePragma (f l) ns
     amap f (AnnModulePragma  l a) = AnnModulePragma (f l) a
     amap f p = fmap f p
 
 instance Annotated Activation where
-    ann (ActiveFrom   l k) = l
-    ann (ActiveUntil  l k) = l
+    ann (ActiveFrom   l _) = l
+    ann (ActiveUntil  l _) = l
     amap = fmap
 
 instance Annotated Rule where
-    ann (Rule l s act mrvs e1 e2) = l
+    ann (Rule l _ _ _ _ _) = l
     amap f (Rule l s act mrvs e1 e2) = Rule (f l) s act mrvs e1 e2
 
 instance Annotated RuleVar where
-    ann (RuleVar l n) = l
-    ann (TypedRuleVar l n t) = l
+    ann (RuleVar l _)        = l
+    ann (TypedRuleVar l _ _) = l
     amap f (RuleVar l n) = RuleVar (f l) n
     amap f (TypedRuleVar l n t) = TypedRuleVar (f l) n t
 
 instance Annotated WarningText where
-    ann (DeprText l s) = l
-    ann (WarnText l s) = l
+    ann (DeprText l _) = l
+    ann (WarnText l _) = l
     amap = fmap
 
 instance Annotated Pat where
     ann p = case p of
-      PVar l n          -> l
-      PLit l lit        -> l
-      PNeg l p          -> l
-      PNPlusK l n k     -> l
-      PInfixApp l pa qn pb  -> l
-      PApp l qn ps      -> l
-      PTuple l bx ps    -> l
-      PList l ps        -> l
-      PParen l p        -> l
-      PRec l qn pfs     -> l
-      PAsPat l n p      -> l
+      PVar l _          -> l
+      PLit l _          -> l
+      PNeg l _          -> l
+      PNPlusK l _ _     -> l
+      PInfixApp l _ _ _ -> l
+      PApp l _ _        -> l
+      PTuple l _ _      -> l
+      PList l _         -> l
+      PParen l _        -> l
+      PRec l _ _        -> l
+      PAsPat l _ _      -> l
       PWildCard l       -> l
-      PIrrPat l p       -> l
-      PatTypeSig l p t  -> l
-      PViewPat l e p    -> l
-      PRPat l rps       -> l
-      PXTag l xn pxas mp ps -> l
-      PXETag l xn pxas mp   -> l
-      PXPcdata l s      -> l
-      PXPatTag l p      -> l
-      PXRPats  l rps    -> l
-      PQuasiQuote l sn st   -> l
-      PBangPat l p          -> l
-    amap f p = case p of
+      PIrrPat l _       -> l
+      PatTypeSig l _ _  -> l
+      PViewPat l _ _    -> l
+      PRPat l _         -> l
+      PXTag l _ _ _ _   -> l
+      PXETag l _ _ _    -> l
+      PXPcdata l _      -> l
+      PXPatTag l _      -> l
+      PXRPats  l _      -> l
+      PQuasiQuote l _ _ -> l
+      PBangPat l _      -> l
+    amap f p1 = case p1 of
       PVar l n          -> PVar (f l) n
       PLit l lit        -> PLit (f l) lit
       PNeg l p          -> PNeg (f l) p
@@ -1498,7 +1499,7 @@ instance Annotated Pat where
       PBangPat l p          -> PBangPat (f l) p
 
 instance Annotated PXAttr where
-    ann (PXAttr l xn p) = l
+    ann (PXAttr l _ _) = l
     amap f (PXAttr l xn p) = PXAttr (f l) xn p
 
 instance Annotated RPatOp where
@@ -1512,17 +1513,17 @@ instance Annotated RPatOp where
 
 instance Annotated RPat where
     ann rp = case rp of
-      RPOp l rp rop         -> l
-      RPEither l rp1 rp2    -> l
-      RPSeq l rps           -> l
-      RPGuard l p ss        -> l
-      RPCAs l n rp          -> l
-      RPAs l n rp           -> l
-      RPParen l rp          -> l
-      RPPat l p             -> l
-    amap f rp = case rp of
+      RPOp l _ _            -> l
+      RPEither l _ _        -> l
+      RPSeq l _             -> l
+      RPGuard l _ _         -> l
+      RPCAs l _ _           -> l
+      RPAs l _ _            -> l
+      RPParen l _           -> l
+      RPPat l _             -> l
+    amap f rp1 = case rp1 of
       RPOp l rp rop         -> RPOp (f l) rp rop
-      RPEither l rp1 rp2    -> RPEither (f l) rp1 rp2
+      RPEither l rp1' rp2   -> RPEither (f l) rp1' rp2
       RPSeq l rps           -> RPSeq (f l) rps
       RPGuard l p ss        -> RPGuard (f l) p ss
       RPCAs l n rp          -> RPCAs (f l) n rp
@@ -1531,30 +1532,30 @@ instance Annotated RPat where
       RPPat l p             -> RPPat (f l) p
 
 instance Annotated PatField where
-    ann (PFieldPat l qn p) = l
-    ann (PFieldPun l n) = l
+    ann (PFieldPat l _ _)  = l
+    ann (PFieldPun l _)    = l
     ann (PFieldWildcard l) = l
     amap f (PFieldPat l qn p) = PFieldPat (f l) qn p
     amap f (PFieldPun l n) = PFieldPun (f l) n
     amap f (PFieldWildcard l) = PFieldWildcard (f l)
 
 instance Annotated Stmt where
-    ann (Generator l p e) = l
-    ann (Qualifier l e)   = l
-    ann (LetStmt l bs)    = l
-    ann (RecStmt l ss)    = l
+    ann (Generator l _ _) = l
+    ann (Qualifier l _)   = l
+    ann (LetStmt l _)     = l
+    ann (RecStmt l _)     = l
     amap f (Generator l p e) = Generator (f l) p e
     amap f (Qualifier l e)   = Qualifier (f l) e
     amap f (LetStmt l bs)    = LetStmt (f l) bs
     amap f (RecStmt l ss)    = RecStmt (f l) ss
 
 instance Annotated QualStmt where
-    ann (QualStmt     l s) = l
-    ann (ThenTrans    l e) = l
-    ann (ThenBy       l e1 e2) = l
-    ann (GroupBy      l e) = l
-    ann (GroupUsing   l e) = l
-    ann (GroupByUsing l e1 e2) = l
+    ann (QualStmt     l _)   = l
+    ann (ThenTrans    l _)   = l
+    ann (ThenBy       l _ _) = l
+    ann (GroupBy      l _)   = l
+    ann (GroupUsing   l _)   = l
+    ann (GroupByUsing l _ _) = l
     amap f (QualStmt     l s) = QualStmt (f l) s
     amap f (ThenTrans    l e) = ThenTrans (f l) e
     amap f (ThenBy       l e1 e2) = ThenBy (f l) e1 e2
@@ -1563,24 +1564,24 @@ instance Annotated QualStmt where
     amap f (GroupByUsing l e1 e2) = GroupByUsing (f l) e1 e2
 
 instance Annotated FieldUpdate where
-    ann (FieldUpdate l qn e) = l
-    ann (FieldPun l n)       = l
+    ann (FieldUpdate l _ _)  = l
+    ann (FieldPun l _)       = l
     ann (FieldWildcard l)    = l
     amap f (FieldUpdate l qn e) = FieldUpdate (f l) qn e
     amap f (FieldPun l n)       = FieldPun (f l) n
     amap f (FieldWildcard l)    = FieldWildcard (f l)
 
 instance Annotated Alt where
-    ann (Alt l p gs bs) = l
+    ann (Alt l _ _ _) = l
     amap f (Alt l p gs bs) = Alt (f l) p gs bs
 
 instance Annotated Promoted where
-    ann (PromotedInteger l int raw) = l
-    ann (PromotedString l str raw) = l
-    ann (PromotedCon l b qn)   = l
-    ann (PromotedList l b ps)  = l
-    ann (PromotedTuple l ps) = l
-    ann (PromotedUnit l)     = l
+    ann (PromotedInteger l _ _) = l
+    ann (PromotedString l _ _)  = l
+    ann (PromotedCon l _ _)     = l
+    ann (PromotedList l _ _)    = l
+    ann (PromotedTuple l _)     = l
+    ann (PromotedUnit l)        = l
     amap f (PromotedInteger l int raw) = PromotedInteger (f l) int raw
     amap f (PromotedString l str raw) = PromotedString (f l) str raw
     amap f (PromotedCon l b qn)   = PromotedCon (f l) b qn
