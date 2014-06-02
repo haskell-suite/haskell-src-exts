@@ -1,0 +1,3 @@
+{-# LANGUAGE CApiFFI #-}
+foo = capi
+

@@ -1,0 +1,3 @@
+{-# LANGUAGE CApiFFI #-}
+module Main (main) where
+foo = capi
