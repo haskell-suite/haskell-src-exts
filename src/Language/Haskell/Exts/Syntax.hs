@@ -86,7 +86,7 @@ module Language.Haskell.Exts.Syntax (
     unit_con, tuple_con, unboxed_singleton_con,
     -- ** Special identifiers
     as_name, qualified_name, hiding_name, minus_name, bang_name, dot_name, star_name,
-    export_name, safe_name, unsafe_name, threadsafe_name,
+    export_name, safe_name, unsafe_name, interruptible_name, threadsafe_name,
     stdcall_name, ccall_name, cplusplus_name, dotnet_name, jvm_name, js_name,
     capi_name, forall_name, family_name,
     -- ** Type constructors
@@ -760,12 +760,13 @@ bang_name      = Symbol "!"
 dot_name       = Symbol "."
 star_name      = Symbol "*"
 
-export_name, safe_name, unsafe_name, threadsafe_name,
+export_name, safe_name, unsafe_name, interruptible_name, threadsafe_name,
   stdcall_name, ccall_name, cplusplus_name, dotnet_name,
   jvm_name, js_name, capi_name, forall_name, family_name :: Name
 export_name     = Ident "export"
 safe_name       = Ident "safe"
 unsafe_name     = Ident "unsafe"
+interruptible_name = Ident "interruptible"
 threadsafe_name = Ident "threadsafe"
 stdcall_name    = Ident "stdcall"
 ccall_name      = Ident "ccall"
