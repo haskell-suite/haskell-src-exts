@@ -1,0 +1,3 @@
+{-# LANGUAGE InterruptibleFFI #-}
+module Main (main) where
+foo = interruptible
