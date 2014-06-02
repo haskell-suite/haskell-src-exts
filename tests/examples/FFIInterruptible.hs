@@ -1,0 +1,3 @@
+{-# LANGUAGE InterruptibleFFI #-}
+foo = interruptible
+
