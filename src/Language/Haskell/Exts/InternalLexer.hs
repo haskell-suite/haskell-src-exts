@@ -21,11 +21,12 @@
 module Language.Haskell.Exts.InternalLexer (Token(..), showToken, lexer, topLexer) where
 
 import Language.Haskell.Exts.ParseMonad
-import Language.Haskell.Exts.SrcLoc
+import Language.Haskell.Exts.SrcLoc hiding (loc)
 import Language.Haskell.Exts.Comments
 import Language.Haskell.Exts.Extension
 import Language.Haskell.Exts.ExtScheme
 
+import Prelude hiding (id, exponent)
 import Data.Char
 import Data.Ratio
 import Data.List (intersperse)
@@ -344,7 +345,7 @@ topLexer = do
               setBOL >> getSrcLocL >>= \l -> return (Loc (mkSrcSpan l l) VRightCurly)
      else do
         bol <- checkBOL
-        (bol, ws) <- lexWhiteSpace bol
+        (bol', ws) <- lexWhiteSpace bol
         -- take care of whitespace in PCDATA
         ec <- getExtContext
         case ec of
@@ -352,11 +353,11 @@ topLexer = do
          -- then we want to care about the whitespace.
          -- We don't bother to test for XmlSyntax, since we
          -- couldn't end up in ChildCtxt otherwise.
-         Just ChildCtxt | not bol && ws -> getSrcLocL >>= \l -> return $ Loc (mkSrcSpan l l) $ XPCDATA " "
+         Just ChildCtxt | not bol' && ws -> getSrcLocL >>= \l -> return $ Loc (mkSrcSpan l l) $ XPCDATA " "
          _ -> do startToken
                  sl <- getSrcLocL
-                 t <- if bol then lexBOL    -- >>= \t -> trace ("BOL: " ++ show t) (return t)
-                             else lexToken  -- >>= \t -> trace (show t) (return t)
+                 t <- if bol' then lexBOL    -- >>= \t -> trace ("BOL: " ++ show t) (return t)
+                              else lexToken  -- >>= \t -> trace (show t) (return t)
                  el <- getSrcLocL
                  return $ Loc (mkSrcSpan sl el) t
 
@@ -375,12 +376,12 @@ lexWhiteSpace bol = do
         '{':'-':_ -> do
             loc <- getSrcLocL
             discard 2
-            (bol, c) <- lexNestedComment bol ""
+            (bol1, c) <- lexNestedComment bol ""
             loc2 <- getSrcLocL
             pushComment $ Comment True (mkSrcSpan loc loc2) (reverse c)
-            (bol, _) <- lexWhiteSpace bol
-            return (bol, True)
-        '-':'-':s | all (== '-') (takeWhile isHSymbol s) -> do
+            (bol2, _) <- lexWhiteSpace bol1
+            return (bol2, True)
+        '-':'-':s1 | all (== '-') (takeWhile isHSymbol s1) -> do
             loc    <- getSrcLocL
             discard 2
             dashes <- lexWhile (== '-')
@@ -393,21 +394,26 @@ lexWhiteSpace bol = do
                 _ -> do
                     pushComment com
                     lexNewline
-                    lexWhiteSpace True
+                    lexWhiteSpace_ True
                     return (True, True)
         '\n':_ -> do
             lexNewline
-            lexWhiteSpace True
+            lexWhiteSpace_ True
             return (True, True)
         '\t':_ -> do
             lexTab
-            (bol, _) <- lexWhiteSpace bol
-            return (bol, True)
+            (bol', _) <- lexWhiteSpace bol
+            return (bol', True)
         c:_ | isSpace c -> do
             discard 1
-            (bol, _) <- lexWhiteSpace bol
-            return (bol, True)
+            (bol', _) <- lexWhiteSpace bol
+            return (bol', True)
         _ -> return (bol, False)
+
+-- | lexWhiteSpace without the return value.
+lexWhiteSpace_ :: Bool -> Lex a ()
+lexWhiteSpace_ bol =  do _ <- lexWhiteSpace bol
+                         return ()
 
 isRecognisedPragma, isLinePragma :: String -> Bool
 isRecognisedPragma str = let pragma = map toLower . takeWhile isAlphaNum . dropWhile isSpace $ str
@@ -423,17 +429,17 @@ isLinePragma str = let pragma = map toLower . takeWhile isAlphaNum . dropWhile i
 lexLinePragma :: Lex a (Int, String)
 lexLinePragma = do
     discard 3   -- {-#
-    lexWhile isSpace
+    lexWhile_ isSpace
     discard 4   -- LINE
-    lexWhile isSpace
+    lexWhile_ isSpace
     i <- lexWhile isDigit
     when (null i) $ fail "Improperly formatted LINE pragma"
-    lexWhile isSpace
+    lexWhile_ isSpace
     matchChar '"' "Improperly formatted LINE pragma"
     fn <- lexWhile (/= '"')
     matchChar '"' "Impossible - lexLinePragma"
-    lexWhile isSpace
-    mapM (flip matchChar "Improperly formatted LINE pragma") "#-}"
+    lexWhile_ isSpace
+    mapM_ (flip matchChar "Improperly formatted LINE pragma") "#-}"
     lexNewline
     return (read i, fn)
 
@@ -444,8 +450,8 @@ lexNestedComment bol str = do
         '-':'}':_ -> discard 2 >> return (bol, str)
         '{':'-':_ -> do
             discard 2
-            (bol, c) <- lexNestedComment bol ("-{" ++ str) -- rest of the subcomment
-            lexNestedComment bol ("}-" ++ c  ) -- rest of this comment
+            (bol', c) <- lexNestedComment bol ("-{" ++ str) -- rest of the subcomment
+            lexNestedComment bol' ("}-" ++ c  ) -- rest of this comment
         '\t':_    -> lexTab >> lexNestedComment bol ('\t':str)
         '\n':_    -> lexNewline >> lexNestedComment True ('\n':str)
         c:_       -> discard 1 >> lexNestedComment bol (c:str)
@@ -647,7 +653,7 @@ lexStdToken = do
         '[':'$':c:_ | isLower c && QuasiQuotes `elem` exts ->
                         discard 2 >> lexQuasiQuote
 
-        '[':c:s | isLower c && QuasiQuotes `elem` exts && case dropWhile isIdent s of { '|':_ -> True;_->False} ->
+        '[':c:s' | isLower c && QuasiQuotes `elem` exts && case dropWhile isIdent s' of { '|':_ -> True;_->False} ->
                         discard 1 >> lexQuasiQuote
 
         '|':']':_ | TemplateHaskell `elem` exts -> do
@@ -797,7 +803,7 @@ lexStdToken = do
 
 lexPragmaStart :: Lex a Token
 lexPragmaStart = do
-    lexWhile isSpace
+    lexWhile_ isSpace
     pr <- lexWhile isAlphaNum
     case lookup (map toLower pr) pragmas of
      Just (INLINE True) -> do
@@ -811,15 +817,15 @@ lexPragmaStart = do
             s <- getInput
             case dropWhile isSpace $ map toLower s of
              'i':'n':'l':'i':'n':'e':_ -> do
-                      lexWhile isSpace
+                      lexWhile_ isSpace
                       discard 6
                       return $ SPECIALISE_INLINE True
              'n':'o':'i':'n':'l':'i':'n':'e':_ -> do
-                        lexWhile isSpace
+                        lexWhile_ isSpace
                         discard 8
                         return $ SPECIALISE_INLINE False
              'n':'o':'t':'i':'n':'l':'i':'n':'e':_ -> do
-                        lexWhile isSpace
+                        lexWhile_ isSpace
                         discard 9
                         return $ SPECIALISE_INLINE False
              _ -> return SPECIALISE
@@ -917,7 +923,7 @@ lexHash a b c = do
         r <- getInput
         case r of
          '#':'#':_ -> case c of
-                       Right c -> discard 2 >> return c
+                       Right c' -> discard 2 >> return c'
                        Left s  -> fail s
          '#':_     -> discard 1 >> return b
          _         ->              return a
@@ -939,13 +945,13 @@ lexConIdOrQual qual = do
                     discard 1
                     ident <- lexWhile isIdent
                     s <- getInput
-                    exts <- getExtensionsL
+                    exts' <- getExtensionsL
                     ident' <- case s of
-                               '#':_ | MagicHash `elem` exts -> discard 1 >> return (ident ++ "#")
+                               '#':_ | MagicHash `elem` exts' -> discard 1 >> return (ident ++ "#")
                                _ -> return ident
                     case lookup ident' reserved_ids of
                        -- cannot qualify a reserved word
-                       Just (_,scheme) | isEnabled scheme exts  -> just_a_conid
+                       Just (_,scheme) | isEnabled scheme exts'  -> just_a_conid
                        _ -> return (QVarId (qual', ident'))
 
              | isUpper c -> do      -- qualified conid?
@@ -955,10 +961,10 @@ lexConIdOrQual qual = do
              | isHSymbol c -> do    -- qualified symbol?
                     discard 1
                     sym <- lexWhile isHSymbol
-                    exts <- getExtensionsL
+                    exts' <- getExtensionsL
                     case lookup sym reserved_ops of
                         -- cannot qualify a reserved operator
-                        Just (_,scheme) | isEnabled scheme exts -> just_a_conid
+                        Just (_,scheme) | isEnabled scheme exts' -> just_a_conid
                         _        -> return $ case c of
                                               ':' -> QConSym (qual', sym)
                                               _   -> QVarSym (qual', sym)
@@ -969,8 +975,8 @@ lexConIdOrQual qual = do
               not (isIdent $ head cs) && MagicHash `elem` exts -> do
                 discard 1
                 case conid of
-                 ConId con -> return $ ConId $ con ++ "#"
-                 QConId (q,con) -> return $ QConId (q,con ++ "#")
+                 ConId con' -> return $ ConId $ con' ++ "#"
+                 QConId (q,con') -> return $ QConId (q,con' ++ "#")
                  _ -> fail $ "lexConIdOrQual: unexpected token: " ++ show conid
           _ ->  return conid -- not a qualified thing
 
@@ -1107,17 +1113,17 @@ lexEscape = do
         'o':c:_ | isOctDigit c -> do
                     discard 1
                     (n, raw) <- lexOctal
-                    n <- checkChar n
-                    return (n, 'o':raw)
+                    n' <- checkChar n
+                    return (n', 'o':raw)
         'x':c:_ | isHexDigit c -> do
                     discard 1
                     (n, raw) <- lexHexadecimal
-                    n <- checkChar n
-                    return (n, 'x':raw)
+                    n' <- checkChar n
+                    return (n', 'x':raw)
         c:_ | isDigit c -> do
                     (n, raw) <- lexDecimal
-                    n <- checkChar n
-                    return (n, raw)
+                    n' <- checkChar n
+                    return (n', raw)
 
         _       -> fail "Illegal escape sequence"
 
@@ -1254,7 +1260,7 @@ showToken t = case t of
   GENERATED         -> "{-# GENERATED"
   CORE              -> "{-# CORE"
   UNPACK            -> "{-# UNPACK"
-  OPTIONS (mt,s)    -> "{-# OPTIONS" ++ maybe "" (':':) mt ++ " ..."
+  OPTIONS (mt,_)    -> "{-# OPTIONS" ++ maybe "" (':':) mt ++ " ..."
 --  CFILES  s         -> "{-# CFILES ..."
 --  INCLUDE s         -> "{-# INCLUDE ..."
   LANGUAGE          -> "{-# LANGUAGE"
