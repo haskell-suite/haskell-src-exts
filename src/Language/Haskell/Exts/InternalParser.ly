@@ -248,7 +248,7 @@ Reserved Ids
 >       'newtype'       { Loc $$ KW_NewType }
 >       'of'            { Loc $$ KW_Of }
 >       'proc'          { Loc $$ KW_Proc }     -- arrows
->       'rec'           { Loc $$ KW_Rec }      -- arrows
+>       'rec'           { Loc $$ KW_Rec }      -- arrows or RecursiveDo
 >       'then'          { Loc $$ KW_Then }
 >       'type'          { Loc $$ KW_Type }     -- 120
 >       'using'         { Loc $$ KW_Using }    -- transform list comprehensions
