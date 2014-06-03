@@ -1,1 +1,3 @@
-ParseFailed (SrcLoc "tests/examples/RecordPuns.hs" 3 29) "NamedFieldPuns is not enabled"
+{-# LANGUAGE NamedFieldPuns #-}
+module RecordPuns where
+cotile = tile{Kind.ospeedup}

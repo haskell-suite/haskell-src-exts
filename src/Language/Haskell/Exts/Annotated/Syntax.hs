@@ -750,7 +750,7 @@ data RPat l
 -- | An /fpat/ in a labeled record pattern.
 data PatField l
     = PFieldPat l (QName l) (Pat l)     -- ^ ordinary label-pattern pair
-    | PFieldPun l (Name l)              -- ^ record field pun
+    | PFieldPun l (QName l)             -- ^ record field pun
     | PFieldWildcard l                  -- ^ record field wildcard
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
@@ -783,7 +783,7 @@ data QualStmt l
 -- | An /fbind/ in a labeled construction or update expression.
 data FieldUpdate l
     = FieldUpdate l (QName l) (Exp l)    -- ^ ordinary label-expresion pair
-    | FieldPun l (Name l)                -- ^ record field pun
+    | FieldPun l (QName l)               -- ^ record field pun
     | FieldWildcard l                    -- ^ record field wildcard
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
