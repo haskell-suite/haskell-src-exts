@@ -22,7 +22,7 @@ module Language.Haskell.Exts.ParseMonad(
         getSrcLoc, pushCurrentContext, popContext,
         getExtensions,
         -- * Lexing
-        Lex(runL), getInput, discard, lexNewline, lexTab, lexWhile,
+        Lex(runL), getInput, discard, lexNewline, lexTab, lexWhile, lexWhile_,
         alternative, checkBOL, setBOL, startToken, getOffside,
         pushContextL, popContextL, getExtensionsL, pushComment, 
         getSrcLocL, setSrcLineL, ignoreLinePragmasL, setLineFilenameL,
@@ -346,6 +346,11 @@ lexWhile :: (Char -> Bool) -> Lex a String
 lexWhile p = Lex $ \cont -> P $ \r x ->
     let (cs,rest) = span p r in
     runP (cont cs) rest (x + length cs)
+
+-- | lexWhile without the return value.
+lexWhile_ :: (Char -> Bool) -> Lex a ()
+lexWhile_ p = do _ <- lexWhile p
+                 return ()
 
 -- An alternative scan, to which we can return if subsequent scanning
 -- is unsuccessful.
