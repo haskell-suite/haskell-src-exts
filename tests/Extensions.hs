@@ -3,7 +3,6 @@ module Extensions (extensionProperties) where
 
 import Test.Tasty
 import Test.Tasty.SmallCheck
-import Test.SmallCheck
 import Test.SmallCheck.Series
 import Language.Haskell.Exts.Annotated
 import Data.Function
@@ -22,6 +21,7 @@ infix 3 ~~
 (~~) :: Monad m => [Extension] -> [Extension] -> Property m
 xts1 ~~ xts2 = forAll $ \lang -> ((==) `on` sort . toExtensionList lang) xts1 xts2
 
+extensionProperties :: TestTree
 extensionProperties =
   localOption (SmallCheckDepth 2) $ testGroup "Properties of LANGUAGE extensions" $
   [ testProperty "identity" $ \x -> x ~~ x
