@@ -525,6 +525,7 @@ impliesExts = go
                     PolymorphicComponents   -> [ExplicitForAll]
                     LiberalTypeSynonyms -> [ExplicitForAll]
                     ExistentialQuantification -> [ExplicitForAll]
+                    ImpredicativeTypes   -> [ExplicitForAll]
                     -- Deprecations
                     RecordPuns          -> [NamedFieldPuns]
                     PatternSignatures   -> [ScopedTypeVariables]
