@@ -36,6 +36,7 @@ module Language.Haskell.Exts.ParseUtils (
     , checkClassBody        -- [ClassDecl] -> P [ClassDecl]
     , checkInstBody         -- [InstDecl] -> P [InstDecl]
     , checkUnQual           -- QName -> P Name
+    , checkQualOrUnQual     -- QName -> P QName
     , checkRevDecls         -- [Decl] -> P [Decl]
     , checkRevClsDecls      -- [ClassDecl] -> P [ClassDecl]
     , checkRevInstDecls     -- [InstDecl] -> P [InstDecl]
@@ -802,6 +803,11 @@ checkUnQual :: QName L -> P (Name L)
 checkUnQual (Qual  _ _ _) = fail "Illegal qualified name"
 checkUnQual (UnQual  _ n) = return n
 checkUnQual (Special _ _) = fail "Illegal special name"
+
+checkQualOrUnQual :: QName L -> P (QName L)
+checkQualOrUnQual n@(Qual  _ _ _) = return n
+checkQualOrUnQual n@(UnQual  _ _) = return n
+checkQualOrUnQual (Special _ _)   = fail "Illegal special name"
 
 -----------------------------------------------------------------------------
 -- Check that two xml tag names are equal

@@ -101,7 +101,7 @@ data PExp l
 
 data PFieldUpdate l
     = FieldUpdate l (QName l) (PExp l)
-    | FieldPun l (Name l)
+    | FieldPun l (QName l)
     | FieldWildcard l
   deriving (Eq,Show,Functor)
 

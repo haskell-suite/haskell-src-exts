@@ -510,7 +510,7 @@ sRPat rp = case rp of
 sPatField :: SrcInfo loc => PatField loc -> S.PatField
 sPatField pf = case pf of
     PFieldPat _ qn p    -> S.PFieldPat (sQName qn) (sPat p)
-    PFieldPun _ n       -> S.PFieldPun (sName n)
+    PFieldPun _ qn      -> S.PFieldPun (sQName qn)
     PFieldWildcard _    -> S.PFieldWildcard
 
 sStmt :: SrcInfo loc => Stmt loc -> S.Stmt
@@ -532,7 +532,7 @@ sQualStmt qs = case qs of
 sFieldUpdate :: SrcInfo loc => FieldUpdate loc -> S.FieldUpdate
 sFieldUpdate fu = case fu of
     FieldUpdate _ qn e      -> S.FieldUpdate (sQName qn) (sExp e)
-    FieldPun _ n            -> S.FieldPun (sName n)
+    FieldPun _ qn           -> S.FieldPun (sQName qn)
     FieldWildcard _         -> S.FieldWildcard
 
 sAlt :: SrcInfo loc => Alt loc -> S.Alt

@@ -678,7 +678,7 @@ data RPat
 -- | An /fpat/ in a labeled record pattern.
 data PatField
     = PFieldPat QName Pat       -- ^ ordinary label-pattern pair
-    | PFieldPun Name            -- ^ record field pun
+    | PFieldPun QName           -- ^ record field pun
     | PFieldWildcard            -- ^ record field wildcard
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
@@ -711,7 +711,7 @@ data QualStmt
 -- | An /fbind/ in a labeled construction or update expression.
 data FieldUpdate
     = FieldUpdate QName Exp     -- ^ ordinary label-expresion pair
-    | FieldPun Name             -- ^ record field pun
+    | FieldPun QName            -- ^ record field pun
     | FieldWildcard             -- ^ record field wildcard
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
