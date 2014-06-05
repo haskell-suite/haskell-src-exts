@@ -406,6 +406,8 @@ data ClassDecl l
             -- ^ declaration of an associated type synonym
     | ClsTyDef   l (Type l) (Type l)
             -- ^ default choice for an associated type synonym
+    | ClsDefSig  l (Name l) (Type l)
+            -- ^ default signature
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | Declarations inside an instance declaration.
@@ -1142,10 +1144,12 @@ instance Annotated ClassDecl where
     ann (ClsDataFam l _ _ _)  = l
     ann (ClsTyFam   l    _ _) = l
     ann (ClsTyDef   l _ _)    = l
+    ann (ClsDefSig  l _ _)    = l
     amap f (ClsDecl    l d) = ClsDecl (f l) d
     amap f (ClsDataFam l mcx dh mk) = ClsDataFam (f l) mcx dh mk
     amap f (ClsTyFam   l     dh mk) = ClsTyFam   (f l)     dh mk
     amap f (ClsTyDef   l t1 t2) = ClsTyDef (f l) t1 t2
+    amap f (ClsDefSig  l n t) = ClsDefSig (f l) n t
 
 instance Annotated InstDecl where
     ann id = case id of

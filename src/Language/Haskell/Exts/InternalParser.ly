@@ -1115,6 +1115,7 @@ Associated types require the TypeFamilies extension.
 > cldecl :: { ClassDecl L }
 >       : decl                          { ClsDecl (ann $1) $1 }
 >       | atdecl                        {% checkEnabled TypeFamilies >> return $1 }
+>       | 'default' signdecl            {% checkEnabled DefaultSignatures >> checkDefSigDef $2 >>= \(n,t,l) -> return (ClsDefSig (nIS $1 <++> ann $2 <** [$1,l]) n t) }
 
 > atdecl :: { ClassDecl L }
 >       : 'type' type optkind

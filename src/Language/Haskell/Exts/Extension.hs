@@ -482,6 +482,11 @@ data KnownExtension =
   -- trusted.
   | Trustworthy
 
+  -- | [GHC &#xa7; 7.6.1.4] Allow default signatures in class
+  -- definitions. They apply to default methods implemented in this
+  -- class.
+  | DefaultSignatures
+
 
 {- ConstraintKinds not yet supported by HSE
 

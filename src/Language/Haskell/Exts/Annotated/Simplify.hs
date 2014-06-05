@@ -258,6 +258,8 @@ sClassDecl cd = case cd of
          in S.ClsTyFam (getPointLoc l) n tvs (fmap sKind mk)
     ClsTyDef l t1 t2    ->
         S.ClsTyDef (getPointLoc l) (sType t1) (sType t2)
+    ClsDefSig l n t ->
+        S.ClsDefSig (getPointLoc l) (sName n) (sType t)
 
 sInstDecl :: SrcInfo loc => InstDecl loc -> S.InstDecl
 sInstDecl id' = case id' of
