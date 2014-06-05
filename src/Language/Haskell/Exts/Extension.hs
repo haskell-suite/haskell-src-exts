@@ -41,7 +41,7 @@ module Language.Haskell.Exts.Extension (
 
 import Control.Applicative ((<$>), (<|>))
 import Data.Array (Array, accumArray, bounds, Ix(inRange), (!))
-import Data.List (nub, (\\), delete)
+import Data.List (nub, delete)
 import Data.Maybe (fromMaybe)
 import Data.Data
 
@@ -529,7 +529,7 @@ impliesExts = go
                     -- Deprecations
                     RecordPuns          -> [NamedFieldPuns]
                     PatternSignatures   -> [ScopedTypeVariables]
-                    e                   -> []
+                    _                   -> []
 
 -- | The list of extensions enabled by
 --   GHC's portmanteau -fglasgow-exts flag.
@@ -651,7 +651,7 @@ readMay s = case [x | (x,t) <- reads s, ("","") <- lex t] of
  -------------------------------------------}
 
 toExtensionList :: Language -> [Extension] -> [KnownExtension]
-toExtensionList lang exts =
+toExtensionList lang exts' =
     let langKes = case lang of
                     Haskell98 -> NPlusKPatterns:allLangDefault
                     Haskell2010 -> [DoAndIfThenElse
@@ -667,7 +667,7 @@ toExtensionList lang exts =
         remExts = [ ke | DisableExtension ke <- exts ]
      in impliesExts $ nub $ (langKes ++ addExts) \\ remExts
 -}
-  in impliesExts $ go langKes exts
+  in impliesExts $ go langKes exts'
     where go :: [KnownExtension] -> [Extension] -> [KnownExtension]
           go acc [] = acc
           go acc (DisableExtension x : exts) = go (nub (delete x acc)) exts
