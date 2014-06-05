@@ -46,6 +46,8 @@ import Language.Haskell.Exts.Annotated.Simplify
 import Language.Haskell.Exts.SrcLoc
 import Language.Haskell.Exts.Comments
 
+import Prelude hiding (mod)
+
 getTopPragmas :: String -> ParseResult [S.ModulePragma]
 getTopPragmas = fmap (map sModulePragma) . P.getTopPragmas
 
