@@ -485,6 +485,11 @@ data KnownExtension =
   -- trusted.
   | Trustworthy
 
+  -- | [GHC &#xa7; 7.6.1.4] Allow default signatures in class
+  -- definitions. They apply to default methods implemented in this
+  -- class.
+  | DefaultSignatures
+
 
 -- ConstraintKinds not generally supported by HSE. This flag makes RCategory2.hs
 -- pass testing though.
