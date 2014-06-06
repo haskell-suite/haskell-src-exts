@@ -66,18 +66,18 @@ module Language.Haskell.Exts.ParseUtils (
 
 import Language.Haskell.Exts.Annotated.Syntax hiding ( Type(..), Asst(..), Exp(..), FieldUpdate(..), XAttr(..), Context(..) )
 import qualified Language.Haskell.Exts.Annotated.Syntax as S ( Type(..), Asst(..), Exp(..), FieldUpdate(..), XAttr(..), Context(..) )
-import Language.Haskell.Exts.Annotated.Build
 
 import Language.Haskell.Exts.ParseSyntax
 import Language.Haskell.Exts.ParseMonad
 import Language.Haskell.Exts.Pretty
-import Language.Haskell.Exts.SrcLoc
+import Language.Haskell.Exts.SrcLoc hiding (loc)
 import Language.Haskell.Exts.Extension
 import Language.Haskell.Exts.ExtScheme
 
+import Prelude hiding (mod)
 import Data.List (intersperse)
 import Data.Maybe (fromJust)
-import Control.Monad (when,unless,liftM)
+import Control.Monad (when,unless)
 
 --- import Debug.Trace (trace)
 
@@ -116,6 +116,7 @@ checkPatternGuards :: [Stmt L] -> P ()
 checkPatternGuards [Qualifier _ _] = return ()
 checkPatternGuards _ = checkEnabled PatternGuards
 
+checkToplevel :: PExp t -> P ()
 checkToplevel e = do
     exts <- getExtensions
     let isQQ = case e of
@@ -171,7 +172,7 @@ checkAssertion (TyPred _ p@(IParam _ _ _)) = return p
 -- N.B.: this is called only when the equality assertion is part of a
 -- tuple
 checkAssertion (TyPred _ p@(EqualP _ _ _)) = return p
-checkAssertion t = checkAssertion' id [] t
+checkAssertion t' = checkAssertion' id [] t'
     where   -- class assertions must have at least one argument
             checkAssertion' fl ts (TyCon l c) = do
                 when (length ts /= 1) $ checkEnabled MultiParamTypeClasses
@@ -180,7 +181,7 @@ checkAssertion t = checkAssertion' id [] t
             checkAssertion' fl ts (TyApp l a t) = do
                 -- no check on t at this stage
                 checkAssertion' (const (fl l)) (t:ts) a
-            checkAssertion' fl ts (TyInfix l a op b) = do
+            checkAssertion' fl _ (TyInfix l a op b) = do
                 -- infix operators require TypeOperators
                 checkEnabled TypeOperators
                 return $ InfixA (fl l) a op b
@@ -224,8 +225,8 @@ checkAsst isSimple asst =
                 ts <- mapM (checkAsstParam isSimple) pts
                 return $ S.ClassA l qn ts
       InfixA l a op b -> do
-                [a,b] <- mapM (checkAsstParam isSimple) [a,b]
-                return $ S.InfixA l a op b
+                [a',b'] <- mapM (checkAsstParam isSimple) [a,b]
+                return $ S.InfixA l a' op b'
       IParam l ipn pt -> do
                 t <- checkType pt
                 return $ S.IParam l ipn t
@@ -243,8 +244,8 @@ checkAsstParam isSimple t = do
                 TyVar l n     -> return $ S.TyVar l n
                 TyApp l pf pt | not isSimple    -> do
                         f <- checkAsstParam isSimple pf
-                        t <- checkType pt
-                        return $ S.TyApp l f t
+                        t' <- checkType pt
+                        return $ S.TyApp l f t'
                 _       -> fail "Malformed context: FlexibleContexts is not enabled"
 
 -----------------------------------------------------------------------------
@@ -254,8 +255,8 @@ checkAsstParam isSimple t = do
 checkDataHeader :: PType L -> P (Maybe (S.Context L), DeclHead L)
 checkDataHeader (TyForall _ Nothing cs t) = do
     dh <- checkSimple "data/newtype" t []
-    cs <- checkContext cs
-    return (cs,dh)
+    cs' <- checkContext cs
+    return (cs',dh)
 checkDataHeader t = do
     dh <- checkSimple "data/newtype" t []
     return (Nothing,dh)
@@ -263,8 +264,8 @@ checkDataHeader t = do
 checkClassHeader :: PType L -> P (Maybe (S.Context L), DeclHead L)
 checkClassHeader (TyForall _ Nothing cs t) = do
     dh <- checkSimple "class" t []
-    cs <- checkSContext cs
-    return (cs,dh)
+    cs' <- checkSContext cs
+    return (cs',dh)
 checkClassHeader t = do
     dh <- checkSimple "class" t []
     return (Nothing,dh)
@@ -272,10 +273,10 @@ checkClassHeader t = do
 checkSimple :: String -> PType L -> [TyVarBind L] -> P (DeclHead L)
 --checkSimple kw (TyApp _ l t) xs | isTyVarBind t = checkSimple kw l (toTyVarBind t : xs)
 
-checkSimple kw x@(TyApp _ l t) xs = do
+checkSimple kw (TyApp _ l t) xs = do
   tvb <- mkTyVarBind kw t
   checkSimple kw l (tvb : xs)
-checkSimple kw  x@(TyInfix l t1 (UnQual _ t) t2) [] = do
+checkSimple kw  (TyInfix l t1 (UnQual _ t) t2) [] = do
        checkEnabled TypeOperators
        tv1 <- mkTyVarBind kw t1
        tv2 <- mkTyVarBind kw t2
@@ -312,8 +313,8 @@ toTyVarBind (TyKind l (TyVar _ n) k) = KindedVar l n k
 checkInstHeader :: PType L -> P (Maybe (S.Context L), InstHead L)
 checkInstHeader (TyForall _ Nothing cs t) = do
     ih <- checkInsts t []
-    cs <- checkSContext cs
-    return (cs, ih)
+    cs' <- checkSContext cs
+    return (cs', ih)
 checkInstHeader t = do
     ih <- checkInsts t []
     return (Nothing, ih)
@@ -323,8 +324,8 @@ checkInsts :: PType L -> [PType L] -> P (InstHead L)
 checkInsts (TyApp _ l t) ts = checkInsts l (t:ts)
 checkInsts (TyCon l c)   ts = do
     when (isSymbol c) $ checkEnabled TypeOperators
-    ts <- checkTypes ts
-    return $ IHead l c ts
+    ts' <- checkTypes ts
+    return $ IHead l c ts'
 checkInsts (TyInfix l a op b) [] = do
     checkEnabled TypeOperators
     [ta,tb] <- checkTypes [a,b]
@@ -346,9 +347,9 @@ checkPattern e = checkPat e []
 
 checkPat :: PExp L -> [Pat L] -> P (Pat L)
 checkPat (Con l c) args = return (PApp l c args)
-checkPat (App l f x) args = do
-    x <- checkPat x []
-    checkPat f (x:args)
+checkPat (App _ f x) args = do
+    x' <- checkPat x []
+    checkPat f (x':args)
 checkPat (InfixApp _ l op r) args
     | op =~= (QVarOp () (UnQual () (Symbol () "!"))) = do
         -- We must have BangPatterns on
@@ -356,15 +357,15 @@ checkPat (InfixApp _ l op r) args
         let (e,es) = splitBang r []
         ps <- mapM checkPattern (BangPat (ann op) e:es)
         checkPat l (ps++args)
-checkPat e [] = case e of
+checkPat e' [] = case e' of
     Var l (UnQual _ x)   -> return (PVar l x)
     Lit l lit            -> return (PLit l lit)
     InfixApp loc l op r  ->
         case op of
             QConOp _ c -> do
-                    l <- checkPat l []
-                    r <- checkPat r []
-                    return (PInfixApp loc l c r)
+                    l' <- checkPat l []
+                    r' <- checkPat r []
+                    return (PInfixApp loc l' c r')
             QVarOp ppos (UnQual _ (Symbol _ "+")) -> do
                     checkEnabled NPlusKPatterns
                     case (l,r) of
@@ -393,8 +394,8 @@ checkPat e [] = case e of
                   isStdPat _           = False
                   stripRP :: RPat L -> Pat L
                   stripRP (RPPat  _ p) = p
-                  stripRP (RPAs l n p) = PAsPat l n (stripRP p)
-                  stripRP (RPParen l p) = PParen l (stripRP p)
+                  stripRP (RPAs l' n p) = PAsPat l' n (stripRP p)
+                  stripRP (RPParen l' p) = PParen l' (stripRP p)
                   stripRP _           = error "cannot strip RP wrapper if not all patterns are base"
 
     Paren l e      -> do
@@ -408,12 +409,12 @@ checkPat e [] = case e of
                   p <- checkPat e []
                   return (PIrrPat l p)
     ViewPat l e p  -> do
-                  e <- checkExpr e
-                  p <- checkPat p []
-                  return (PViewPat l e p)
+                  e1 <- checkExpr e
+                  p1 <- checkPat p []
+                  return (PViewPat l e1 p1)
     RecConstr l c fs   -> do
-                  fs <- mapM checkPatField fs
-                  return (PRec l c fs)
+                  fs' <- mapM checkPatField fs
+                  return (PRec l c fs')
     NegApp l1 (Lit l2 lit) -> return (PNeg l1 (PLit l2 lit))
     ExpTypeSig l e t -> do
                   -- patterns cannot have signatures unless ScopedTypeVariables is enabled.
@@ -482,7 +483,7 @@ patFail :: String -> P a
 patFail s = fail $ "Parse error in pattern: " ++ s
 
 checkRPattern :: PExp L -> P (RPat L)
-checkRPattern e = case e of
+checkRPattern e' = case e' of
     SeqRP l es -> do
         rps <- mapM checkRPattern es
         return $ RPSeq l rps
@@ -507,7 +508,7 @@ checkRPattern e = case e of
         rp <- checkRPattern e
         return $ RPParen l rp
     _          -> do
-        p <- checkPattern e
+        p <- checkPattern e'
         return $ RPPat (ann p) p
 
 checkRPatOp :: QOp L -> P (RPatOp L)
@@ -522,17 +523,18 @@ checkRPatOp o@(QVarOp l (UnQual _ (Symbol _ sym))) =
      _    -> rpOpFail o
 checkRPatOp o = rpOpFail o
 
+rpOpFail :: Pretty a => a -> P b
 rpOpFail sym = fail $ "Unrecognized regular pattern operator: " ++ prettyPrint sym
 
 fixRPOpPrec :: RPat L -> RPat L
-fixRPOpPrec rp = case rp of
+fixRPOpPrec rp' = case rp' of
     RPOp l rp rpop      -> fPrecOp rp (flip (RPOp l) rpop)
     RPEither l rp1 rp2  -> RPEither l (fixRPOpPrec rp1) (fixRPOpPrec rp2)
     RPSeq l rps         -> RPSeq l $ map fixRPOpPrec rps
     RPCAs l n rp        -> RPCAs l n $ fixRPOpPrec rp
     RPAs l n rp         -> RPAs l n $ fixRPOpPrec rp
     RPParen l rp        -> RPParen l $ fixRPOpPrec rp
-    _                   -> rp
+    _                   -> rp'
 
   where fPrecOp :: RPat L -> (RPat L -> RPat L) -> RPat L
         fPrecOp (RPOp l rp rpop) f = fPrecOp rp (f . flip (RPOp l) rpop)
@@ -546,7 +548,7 @@ fixRPOpPrec rp = case rp of
 
 
 mkChildrenPat :: [Pat L] -> [Pat L]
-mkChildrenPat ps = mkCPAux ps []
+mkChildrenPat ps' = mkCPAux ps' []
   where mkCPAux :: [Pat L] -> [Pat L] -> [Pat L]
         mkCPAux [] qs = reverse qs
         mkCPAux (p:ps) qs = case p of
@@ -563,23 +565,23 @@ mkChildrenPat ps = mkCPAux ps []
 -- Check Expression Syntax
 
 checkExpr :: PExp L -> P (S.Exp L)
-checkExpr e = case e of
+checkExpr e' = case e' of
     Var l v               -> return $ S.Var l v
     IPVar l v             -> return $ S.IPVar l v
     Con l c               -> return $ S.Con l c
     Lit l lit             -> return $ S.Lit l lit
     InfixApp l e1 op e2   -> check2Exprs e1 e2 (flip (S.InfixApp l) op)
     App l e1 e2           -> check2Exprs e1 e2 (S.App l)
-    NegApp l (Lit _ (PrimWord _ i _))
-                          -> fail $ "Parse error: negative primitive word literal: " ++ prettyPrint e
+    NegApp _ (Lit _ (PrimWord _ _ _))
+                          -> fail $ "Parse error: negative primitive word literal: " ++ prettyPrint e'
     NegApp l e            -> check1Expr e (S.NegApp l)
     Lambda loc ps e       -> check1Expr e (S.Lambda loc ps)
     Let l bs e            -> check1Expr e (S.Let l bs)
     If l e1 e2 e3         -> check3Exprs e1 e2 e3 (S.If l)
     MultiIf l alts        -> return (S.MultiIf l alts)
     Case l e alts         -> do
-                     e <- checkExpr e
-                     return (S.Case l e alts)
+                     e1 <- checkExpr e
+                     return (S.Case l e1 alts)
     Do l stmts            -> checkDo stmts >> return (S.Do l stmts)
     MDo l stmts           -> checkDo stmts >> return (S.MDo l stmts)
     TupleSection l bx mes -> if not (any ((==) Nothing) mes)
@@ -596,25 +598,25 @@ checkExpr e = case e of
                           PreOp  _ op e2 -> check1Expr e2 (S.RightSection l op)
                           _            -> check1Expr e (S.Paren l)
     RecConstr l c fields      -> do
-                     fields <- mapM checkField fields
-                     return (S.RecConstr l c fields)
+                     fields1 <- mapM checkField fields
+                     return (S.RecConstr l c fields1)
     RecUpdate l e fields      -> do
-                     fields <- mapM checkField fields
-                     e <- checkExpr e
-                     return (S.RecUpdate l e fields)
+                     fields1 <- mapM checkField fields
+                     e1 <- checkExpr e
+                     return (S.RecUpdate l e1 fields1)
     EnumFrom l e          -> check1Expr e (S.EnumFrom l)
     EnumFromTo l e1 e2    -> check2Exprs e1 e2 (S.EnumFromTo l)
     EnumFromThen l e1 e2      -> check2Exprs e1 e2 (S.EnumFromThen l)
     EnumFromThenTo l e1 e2 e3 -> check3Exprs e1 e2 e3 (S.EnumFromThenTo l)
     -- a parallel list comprehension, which could be just a simple one
     ParComp l e qualss        -> do
-                     e <- checkExpr e
+                     e1 <- checkExpr e
                      case qualss of
-                      [quals] -> return (S.ListComp l e quals)
-                      _       -> return (S.ParComp l e qualss)
+                      [quals] -> return (S.ListComp l e1 quals)
+                      _       -> return (S.ParComp l e1 qualss)
     ExpTypeSig loc e ty     -> do
-                     e <- checkExpr e
-                     return (S.ExpTypeSig loc e ty)
+                     e1 <- checkExpr e
+                     return (S.ExpTypeSig loc e1 ty)
 
     --Template Haskell
     BracketExp l e        -> return $ S.BracketExp l e
@@ -624,22 +626,22 @@ checkExpr e = case e of
     QuasiQuote l n q      -> return $ S.QuasiQuote l n q
 
     -- Hsx
-    XTag l n attrs mattr cs -> do attrs <- mapM checkAttr attrs
-                                  cs <- mapM checkExpr cs
-                                  mattr <- maybe (return Nothing)
+    XTag l n attrs mattr cs -> do attrs1 <- mapM checkAttr attrs
+                                  cs1 <- mapM checkExpr cs
+                                  mattr1 <- maybe (return Nothing)
                                               (\e -> checkExpr e >>= return . Just)
                                               mattr
-                                  return $ S.XTag l n attrs mattr cs
-    XETag l n attrs mattr   -> do attrs <- mapM checkAttr attrs
-                                  mattr <- maybe (return Nothing)
+                                  return $ S.XTag l n attrs1 mattr1 cs1
+    XETag l n attrs mattr   -> do attrs1 <- mapM checkAttr attrs
+                                  mattr1 <- maybe (return Nothing)
                                               (\e -> checkExpr e >>= return . Just)
                                               mattr
-                                  return $ S.XETag l n attrs mattr
+                                  return $ S.XETag l n attrs1 mattr1
     XPcdata l p       -> return $ S.XPcdata l p
-    XExpTag l e       -> do e <- checkExpr e
-                            return $ S.XExpTag l e
-    XChildTag l es    -> do es <- mapM checkExpr es
-                            return $ S.XChildTag l es
+    XExpTag l e       -> do e1 <- checkExpr e
+                            return $ S.XExpTag l e1
+    XChildTag l es    -> do es1 <- mapM checkExpr es
+                            return $ S.XChildTag l es1
     -- Pragmas
     CorePragma l s e  -> check1Expr e (S.CorePragma l s)
     SCCPragma  l s e  -> check1Expr e (S.SCCPragma l s)
@@ -647,8 +649,8 @@ checkExpr e = case e of
 --    UnknownExpPragma n s -> return $ S.UnknownExpPragma n s
 
     -- Arrows
-    Proc l p e        -> do e <- checkExpr e
-                            return $ S.Proc l p e
+    Proc l p e              -> do e1 <- checkExpr e
+                                  return $ S.Proc l p e1
     LeftArrApp l e1 e2      -> check2Exprs e1 e2 (S.LeftArrApp l)
     RightArrApp l e1 e2     -> check2Exprs e1 e2 (S.RightArrApp l)
     LeftArrHighApp l e1 e2  -> check2Exprs e1 e2 (S.LeftArrHighApp l)
@@ -657,12 +659,13 @@ checkExpr e = case e of
     -- LamdaCase
     LCase l alts -> return $ S.LCase l alts
 
-    _             -> fail $ "Parse error in expression: " ++ prettyPrint e
+    _             -> fail $ "Parse error in expression: " ++ prettyPrint e'
 
 checkAttr :: ParseXAttr L -> P (S.XAttr L)
-checkAttr (XAttr l n v) = do v <- checkExpr v
-                             return $ S.XAttr l n v
+checkAttr (XAttr l n v) = do v' <- checkExpr v
+                             return $ S.XAttr l n v'
 
+checkDo :: [Stmt t] -> P ()
 checkDo [] = fail "Parse error: Last statement in a do-block must be an expression"
 checkDo [Qualifier _ _] = return ()
 checkDo (_:xs) = checkDo xs
@@ -670,26 +673,26 @@ checkDo (_:xs) = checkDo xs
 -- type signature for polymorphic recursion!!
 check1Expr :: PExp L -> (S.Exp L -> a) -> P a
 check1Expr e1 f = do
-    e1 <- checkExpr e1
-    return (f e1)
+    e1' <- checkExpr e1
+    return (f e1')
 
 check2Exprs :: PExp L -> PExp L -> (S.Exp L -> S.Exp L -> a) -> P a
 check2Exprs e1 e2 f = do
-    e1 <- checkExpr e1
-    e2 <- checkExpr e2
-    return (f e1 e2)
+    e1' <- checkExpr e1
+    e2' <- checkExpr e2
+    return (f e1' e2')
 
 check3Exprs :: PExp L -> PExp L -> PExp L -> (S.Exp L -> S.Exp L -> S.Exp L -> a) -> P a
 check3Exprs e1 e2 e3 f = do
-    e1 <- checkExpr e1
-    e2 <- checkExpr e2
-    e3 <- checkExpr e3
-    return (f e1 e2 e3)
+    e1' <- checkExpr e1
+    e2' <- checkExpr e2
+    e3' <- checkExpr e3
+    return (f e1' e2' e3')
 
 checkManyExprs :: [PExp L] -> ([S.Exp L] -> a) -> P a
 checkManyExprs es f = do
-    es <- mapM checkExpr es
-    return (f es)
+    es' <- mapM checkExpr es
+    return (f es')
 
 mCheckExpr :: Maybe (PExp L) -> P (Maybe (S.Exp L))
 mCheckExpr Nothing = return Nothing
@@ -736,17 +739,17 @@ checkValDef l lhs optsig rhs whereBinds = do
                                        in [InfixMatch l' a f bs rhs whereBinds])
                 Just _  -> fail "Cannot give an explicit type signature to a function binding"
      Nothing     -> do
-            lhs <- checkPattern lhs
+            lhs1 <- checkPattern lhs
             let lhs' = case optsig of
-                        Nothing -> lhs
-                        Just (ty, pt) -> let lp = (ann lhs <++> ann ty) <** [pt]
-                                         in PatTypeSig lp lhs ty
+                        Nothing -> lhs1
+                        Just (ty, pt) -> let lp = (ann lhs1 <++> ann ty) <** [pt]
+                                         in PatTypeSig lp lhs1 ty
             return (PatBind l lhs' rhs whereBinds)
 
 -- A variable binding is parsed as a PatBind.
 
 isFunLhs :: PExp L -> [PExp L] -> P (Maybe (Name L, [PExp L], Bool, [S]))
-isFunLhs (InfixApp ll l (QVarOp loc (UnQual _ op)) r) es
+isFunLhs (InfixApp _ l (QVarOp loc (UnQual _ op)) r) es
     | op =~= (Symbol () "!") = do
         exts <- getExtensions
         if BangPatterns `elem` exts
@@ -759,9 +762,9 @@ isFunLhs (App _ f e) es = isFunLhs f (e:es)
 isFunLhs (Var _ (UnQual _ f)) es@(_:_) = return $ Just (f, es, True, [])
 isFunLhs (Paren l f) es@(_:_) = do mlhs <- isFunLhs f es
                                    case mlhs of
-                                    Just (f,es,b,pts) ->
+                                    Just (f',es',b,pts) ->
                                        let [x,y] = srcInfoPoints l
-                                        in return $ Just (f,es,b,x:pts++[y])
+                                        in return $ Just (f',es',b,x:pts++[y])
                                     _ -> return Nothing
 isFunLhs _ _ = return Nothing
 
@@ -819,8 +822,8 @@ checkEqNames n@(XDomName _ d1 n1) (XDomName _ d2 n2)
 checkEqNames n m = fail $ "opening tag '" ++ showTag n ++
                    "' does not match closing tag '" ++ showTag m ++ "'"
     where
-        showTag (XName _ n) = n
-        showTag (XDomName _ d n) = d ++ ":" ++ n
+        showTag (XName _ n') = n'
+        showTag (XDomName _ d n') = d ++ ":" ++ n'
 
 
 -----------------------------------------------------------------------------
@@ -843,8 +846,8 @@ checkRevDecls :: [Decl L] -> P [Decl L]
 checkRevDecls = mergeFunBinds []
     where
     mergeFunBinds revDs [] = return revDs
-    mergeFunBinds revDs (FunBind l ms1@(Match _ name ps _ _:_):ds1) =
-        mergeMatches ms1 ds1 l
+    mergeFunBinds revDs (FunBind l' ms1@(Match _ name ps _ _:_):ds1) =
+        mergeMatches ms1 ds1 l'
         where
         arity = length ps
         mergeMatches ms' (FunBind _ ms@(Match loc name' ps' _ _:_):ds) l
@@ -854,8 +857,8 @@ checkRevDecls = mergeFunBinds []
                     `atSrcLoc` fromSrcInfo loc
             else mergeMatches (ms++ms') ds (loc <++> l)
         mergeMatches ms' ds l = mergeFunBinds (FunBind l ms':revDs) ds
-    mergeFunBinds revDs (FunBind l ims1@(InfixMatch _ _ name _ _ _:_):ds1) =
-        mergeInfix ims1 ds1 l
+    mergeFunBinds revDs (FunBind l' ims1@(InfixMatch _ _ name _ _ _:_):ds1) =
+        mergeInfix ims1 ds1 l'
         where
         mergeInfix ims' (FunBind _ ims@(InfixMatch loc _ name' _ _ _:_):ds) l
             | name' =~= name =
@@ -867,8 +870,8 @@ checkRevClsDecls :: [ClassDecl L] -> P [ClassDecl L]
 checkRevClsDecls = mergeClsFunBinds []
     where
     mergeClsFunBinds revDs [] = return revDs
-    mergeClsFunBinds revDs (ClsDecl l (FunBind _ ms1@(Match _ name ps _ _:_)):ds1) =
-        mergeMatches ms1 ds1 l
+    mergeClsFunBinds revDs (ClsDecl l' (FunBind _ ms1@(Match _ name ps _ _:_)):ds1) =
+        mergeMatches ms1 ds1 l'
         where
         arity = length ps
         mergeMatches ms' (ClsDecl _ (FunBind _ ms@(Match loc name' ps' _ _:_)):ds) l
@@ -878,8 +881,8 @@ checkRevClsDecls = mergeClsFunBinds []
                     `atSrcLoc` fromSrcInfo loc
             else mergeMatches (ms++ms') ds (loc <++> l)
         mergeMatches ms' ds l = mergeClsFunBinds (ClsDecl l (FunBind l ms'):revDs) ds
-    mergeClsFunBinds revDs (ClsDecl l (FunBind _ ims1@(InfixMatch _ _ name _ _ _:_)):ds1) =
-        mergeInfix ims1 ds1 l
+    mergeClsFunBinds revDs (ClsDecl l' (FunBind _ ims1@(InfixMatch _ _ name _ _ _:_)):ds1) =
+        mergeInfix ims1 ds1 l'
         where
         mergeInfix ims' (ClsDecl _ (FunBind _ ims@(InfixMatch loc _ name' _ _ _:_)):ds) l
             | name' =~= name =
@@ -892,8 +895,8 @@ checkRevInstDecls = mergeInstFunBinds []
     where
     mergeInstFunBinds :: [InstDecl L] -> [InstDecl L] -> P [InstDecl L]
     mergeInstFunBinds revDs [] = return revDs
-    mergeInstFunBinds revDs (InsDecl l (FunBind _ ms1@(Match _ name ps _ _:_)):ds1) =
-        mergeMatches ms1 ds1 l
+    mergeInstFunBinds revDs (InsDecl l' (FunBind _ ms1@(Match _ name ps _ _:_)):ds1) =
+        mergeMatches ms1 ds1 l'
         where
         arity = length ps
         mergeMatches ms' (InsDecl _ (FunBind _ ms@(Match loc name' ps' _ _:_)):ds) l
@@ -903,8 +906,8 @@ checkRevInstDecls = mergeInstFunBinds []
                     `atSrcLoc` fromSrcInfo loc
             else mergeMatches (ms++ms') ds (loc <++> l)
         mergeMatches ms' ds l = mergeInstFunBinds (InsDecl l (FunBind l ms'):revDs) ds
-    mergeInstFunBinds revDs (InsDecl l (FunBind _ ims1@(InfixMatch _ _ name _ _ _:_)):ds1) =
-        mergeInfix ims1 ds1 l
+    mergeInstFunBinds revDs (InsDecl l' (FunBind _ ims1@(InfixMatch _ _ name _ _ _:_)):ds1) =
+        mergeInfix ims1 ds1 l'
         where
         mergeInfix ims' (InsDecl _ (FunBind _ ims@(InfixMatch loc _ name' _ _ _:_)):ds) l
             | name' =~= name =
@@ -926,7 +929,7 @@ checkDataOrNew _        _  = fail "newtype declaration must have exactly one con
 
 checkDataOrNewG :: DataOrNew L -> [GadtDecl L] -> P ()
 checkDataOrNewG (DataType _) _  = return ()
-checkDataOrNewG (NewType _) [x] = return ()
+checkDataOrNewG (NewType _) [_] = return ()
 checkDataOrNewG _        _  = fail "newtype declaration must have exactly one constructor."
 
 checkSimpleType :: PType L -> P (DeclHead L)
@@ -940,7 +943,7 @@ checkType t = checkT t False
 
 checkT :: PType L -> Bool -> P (S.Type L)
 checkT t simple = case t of
-    TyForall l tvs@Nothing cs pt    -> do
+    TyForall l Nothing cs pt    -> do
             when (simple) $ checkEnabled ExplicitForAll
             ctxt <- checkContext cs
             check1Type pt (S.TyForall l Nothing ctxt)
@@ -981,16 +984,16 @@ checkTypes = mapM (flip checkT True)
 checkPageModule :: PExp L -> ([ModulePragma L],[S],L) -> P (Module L)
 checkPageModule xml (os,ss,inf) = do
     mod <- getModuleName
-    xml <- checkExpr xml
-    case xml of
+    xml' <- checkExpr xml
+    case xml' of
         S.XTag  l xn ats mattr cs -> return $ XmlPage (inf<++>l<**(srcInfoPoints l ++ ss)) (ModuleName l mod) os xn ats mattr cs
         S.XETag l xn ats mattr    -> return $ XmlPage (inf<++>l<**(srcInfoPoints l ++ ss)) (ModuleName l mod) os xn ats mattr []
         _ -> fail "Unexpected expression; tag is expected"
 
 checkHybridModule :: PExp L -> Module L -> S -> S -> P (Module L)
 checkHybridModule xml (Module inf mh os is ds) s1 s2 = do
-    xml <- checkExpr xml
-    case xml of
+    xml' <- checkExpr xml
+    case xml' of
         S.XTag  l xn ats mattr cs -> return $ XmlHybrid (inf<++>l<**(s1 : srcInfoPoints inf ++ s2 : srcInfoPoints l))
                                                 mh os is ds xn ats mattr cs
         S.XETag l xn ats mattr    -> return $ XmlHybrid (inf<++>l<**(s1 : srcInfoPoints inf ++ s2 : srcInfoPoints l))
