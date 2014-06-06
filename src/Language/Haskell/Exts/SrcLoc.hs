@@ -121,12 +121,12 @@ combSpanInfo s1 s2 = SrcSpanInfo
 -- | Optionally combine the first argument with the second,
 --   or return it unchanged if the second argument is 'Nothing'.
 (<+?>) :: SrcSpanInfo -> Maybe SrcSpanInfo -> SrcSpanInfo
-a <+?> b = case b of {Nothing -> a; Just b -> a <++> b}
+a <+?> b = case b of {Nothing -> a; Just b' -> a <++> b'}
 
 -- | Optionally combine the second argument with the first,
 --   or return it unchanged if the first argument is 'Nothing'.
 (<?+>) :: Maybe SrcSpanInfo -> SrcSpanInfo -> SrcSpanInfo
-a <?+> b = case a of {Nothing -> b; Just a -> a <++> b}
+a <?+> b = case a of {Nothing -> b; Just a' -> a' <++> b}
 
 -- | Add more positional information for entities of a span.
 (<**) :: SrcSpanInfo -> [SrcSpan] -> SrcSpanInfo
