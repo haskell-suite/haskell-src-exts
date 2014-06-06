@@ -242,6 +242,8 @@ checkAsstParam isSimple t = do
          then checkType t
          else case t of
                 TyVar l n     -> return $ S.TyVar l n
+                TyParen l t1  -> do t1' <- checkAsstParam isSimple t1
+                                    return $ S.TyParen l t1'
                 TyApp l pf pt | not isSimple    -> do
                         f <- checkAsstParam isSimple pf
                         t' <- checkType pt
