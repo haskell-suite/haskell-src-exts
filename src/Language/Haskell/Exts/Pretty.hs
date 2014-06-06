@@ -363,7 +363,7 @@ instance Pretty Decl where
                 mySep ( [pretty don, ppContext context, pretty name]
                         ++ map pretty nameList ++ ppOptKind optkind ++ [text "where"])
                         $$$ ppBody classIndent (map pretty gadtList)
-                        $$$ ppBody letIndent [ppDeriving derives]
+                        $$$ ppIndent letIndent [ppDeriving derives]
 
         pretty (TypeFamDecl loc name nameList optkind) =
                 blankline $
@@ -1525,6 +1525,12 @@ ppBody f dl = do
                    indent  = do{i <-fmap f getPPEnv;nest i . vcat $ dl}
                    indentExplicit = do {i <- fmap f getPPEnv;
                            nest i . prettyBlock $ dl}
+
+-- | Indent without braces. Useful for deriving clauses etc.
+ppIndent :: (PPHsMode -> Int) -> [Doc] -> Doc
+ppIndent f dl = do
+            i <- fmap f getPPEnv
+            nest i . vcat $ dl
 
 ($$$) :: Doc -> Doc -> Doc
 a $$$ b = layoutChoice (a $$) (a <+>) b
