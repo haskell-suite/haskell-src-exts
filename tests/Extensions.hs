@@ -1,4 +1,5 @@
 {-# LANGUAGE FlexibleInstances, MultiParamTypeClasses, StandaloneDeriving #-}
+{-# OPTIONS_GHC -fno-warn-orphans #-}
 module Extensions (extensionProperties) where
 
 import Test.Tasty
