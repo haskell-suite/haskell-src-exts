@@ -146,14 +146,14 @@ defaultParseMode = ParseMode {
 data InternalParseMode = IParseMode {
         iParseFilename :: String,
         iExtensions :: [KnownExtension],
-        iIgnoreLanguagePragmas :: Bool,
-        iIgnoreLinePragmas :: Bool,
-        iFixities :: Maybe [Fixity]
+        -- iIgnoreLanguagePragmas :: Bool,
+        iIgnoreLinePragmas :: Bool
+        -- iFixities :: Maybe [Fixity]
     }
 
 toInternalParseMode :: ParseMode -> InternalParseMode
-toInternalParseMode (ParseMode pf bLang exts ilang iline fx) =
-    IParseMode pf (impliesExts $ toExtensionList bLang exts) ilang iline fx
+toInternalParseMode (ParseMode pf bLang exts _ilang iline _fx) =
+    IParseMode pf (impliesExts $ toExtensionList bLang exts) {-_ilang -} iline {- _fx -}
 
 
 -- | Monad for parsing
@@ -264,7 +264,7 @@ popContext = P $ \_i _x _y loc stk _m ->
                           Ok (s, e, p, c) ()
         ([],_,_,_)     -> Failed loc "Unexpected }" -- error "Internal error: empty context in popContext"
 
-
+{-
 -- HaRP/Hsx
 pushExtContext :: ExtContext -> P ()
 pushExtContext ctxt = P $ \_i _x _y _l (s, e, p, c) _m -> Ok (s, ctxt:e, p, c) ()
@@ -275,7 +275,7 @@ popExtContext = P $ \_i _x _y _l (s, e, p, c) _m ->
      (_:e') ->
        Ok (s, e', p, c) ()
      [] -> error "Internal error: empty context in popExtContext"
-
+-}
 
 -- Extension-aware lexing/parsing
 getExtensions :: P [KnownExtension]
