@@ -23,7 +23,7 @@ module Language.Haskell.Exts.Annotated.Simplify where
 import Language.Haskell.Exts.Annotated.Syntax
 import qualified Language.Haskell.Exts.Syntax as S
 
-import Language.Haskell.Exts.SrcLoc
+import Language.Haskell.Exts.SrcLoc hiding (loc)
 
 -- | Translate an annotated AST node representing a Haskell module, into
 --   a simpler version that retains (almost) only abstract information.
@@ -112,14 +112,14 @@ sDecl decl = case decl of
      InstSig          l mctxt ih    ->
         let (qn, ts) = sInstHead ih
          in S.InstSig (getPointLoc l) (maybe [] sContext mctxt) qn ts
-     AnnPragma        l ann         ->
-        S.AnnPragma (getPointLoc l) (sAnnotation ann)
+     AnnPragma        l ann'        ->
+        S.AnnPragma (getPointLoc l) (sAnnotation ann')
 
 sTypeEqn :: TypeEqn l -> S.TypeEqn
 sTypeEqn (TypeEqn _ a b) = S.TypeEqn (sType a) (sType b)
 
 sAnnotation :: SrcInfo loc => Annotation loc -> S.Annotation
-sAnnotation ann = case ann of
+sAnnotation ann' = case ann' of
     Ann       _ n e   -> S.Ann     (sName n) (sExp e)
     TypeAnn   _ n e   -> S.TypeAnn (sName n) (sExp e)
     ModuleAnn _   e   -> S.ModuleAnn         (sExp e)
@@ -199,13 +199,13 @@ sAssoc a = case a of
     AssocRight _ -> S.AssocRight
 
 sDeclHead :: DeclHead l -> (S.Name, [S.TyVarBind])
-sDeclHead dh = case dh of
+sDeclHead dh' = case dh' of
     DHead _ n tvs       -> (sName n, map sTyVarBind tvs)
     DHInfix _ tva n tvb -> (sName n, map sTyVarBind [tva,tvb])
     DHParen _ dh        -> sDeclHead dh
 
 sInstHead :: InstHead l -> (S.QName, [S.Type])
-sInstHead ih = case ih of
+sInstHead ih' = case ih' of
     IHead _ qn ts      -> (sQName qn, map sType ts)
     IHInfix _ ta qn tb -> (sQName qn, map sType [ta,tb])
     IHParen _ ih       -> sInstHead ih
@@ -260,7 +260,7 @@ sClassDecl cd = case cd of
         S.ClsTyDef (getPointLoc l) (sType t1) (sType t2)
 
 sInstDecl :: SrcInfo loc => InstDecl loc -> S.InstDecl
-sInstDecl id = case id of
+sInstDecl id' = case id' of
     InsDecl   _ d   -> S.InsDecl (sDecl d)
     InsType   l t1 t2   -> S.InsType (getPointLoc l) (sType t1) (sType t2)
     InsData   l dn t constrs mder   ->
@@ -283,7 +283,7 @@ sGuardedRhs :: SrcInfo loc => GuardedRhs loc -> S.GuardedRhs
 sGuardedRhs (GuardedRhs l ss e) = S.GuardedRhs (getPointLoc l) (map sStmt ss) (sExp e)
 
 sType :: Type l -> S.Type
-sType t = case t of
+sType t' = case t' of
     TyForall _ mtvs mctxt t     -> S.TyForall (fmap (map sTyVarBind) mtvs) (maybe [] sContext mctxt) (sType t)
     TyFun _ t1 t2               -> S.TyFun (sType t1) (sType t2)
     TyTuple _ bx ts             -> S.TyTuple bx (map sType ts)
@@ -311,7 +311,7 @@ sTyVarBind (KindedVar _ n k) = S.KindedVar (sName n) (sKind k)
 sTyVarBind (UnkindedVar _ n) = S.UnkindedVar (sName n)
 
 sKind :: Kind l -> S.Kind
-sKind k = case k of
+sKind k' = case k' of
     KindStar  _     -> S.KindStar
     KindBang  _     -> S.KindBang
     KindFn _ k1 k2  -> S.KindFn (sKind k1) (sKind k2)
@@ -352,7 +352,7 @@ sLiteral lit = case lit of
     PrimString _ s _ -> S.PrimString s
 
 sExp :: SrcInfo loc => Exp loc -> S.Exp
-sExp e = case e of
+sExp e' = case e' of
     Var _ qn            -> S.Var (sQName qn)
     IPVar _ ipn         -> S.IPVar (sIPName ipn)
     Con _ qn            -> S.Con (sQName qn)
@@ -439,7 +439,7 @@ sModulePragma :: SrcInfo loc => ModulePragma loc -> S.ModulePragma
 sModulePragma pr = case pr of
     LanguagePragma   l ns   -> S.LanguagePragma (getPointLoc l) (map sName ns)
     OptionsPragma    l mt str -> S.OptionsPragma (getPointLoc l) mt str
-    AnnModulePragma  l ann -> S.AnnModulePragma (getPointLoc l) (sAnnotation ann)
+    AnnModulePragma  l ann' -> S.AnnModulePragma (getPointLoc l) (sAnnotation ann')
 
 sActivation :: Activation l -> S.Activation
 sActivation act = case act of
@@ -497,7 +497,7 @@ sRPatOp rpop = case rpop of
     RPOptG  _ -> S.RPOptG
 
 sRPat :: SrcInfo loc => RPat loc -> S.RPat
-sRPat rp = case rp of
+sRPat rp' = case rp' of
     RPOp _ rp rop       -> S.RPOp (sRPat rp) (sRPatOp rop)
     RPEither _ rp1 rp2  -> S.RPEither (sRPat rp1) (sRPat rp2)
     RPSeq _ rps         -> S.RPSeq (map sRPat rps)
