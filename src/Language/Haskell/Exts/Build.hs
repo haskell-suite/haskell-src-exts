@@ -280,7 +280,7 @@ nameBind s n e = patBind s (pvar n) e
 
 -- | Apply function of a given name to a list of arguments.
 metaFunction :: String -> [Exp] -> Exp
-metaFunction s es = mf s (reverse es)
+metaFunction s' es' = mf s' (reverse es')
   where mf s []     = var $ name s
         mf s (e:es) = app (mf s es) e
 
