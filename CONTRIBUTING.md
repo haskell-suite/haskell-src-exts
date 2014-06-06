@@ -70,7 +70,7 @@ For best results, please follow these guidelines:
     `--pattern NAME` option to run only these new tests.
 
     Tests should be added in a commit separate from the code changes.
-1.  Build with `cabal build --ghc-options=-Wall` and check that your changes
+1.  Build with `cabal build` and check that your changes
     don't generate new warnings.
 1.  Run `git diff --check` on your changes to check that you aren't committing any
     sinful whitespace.
@@ -90,10 +90,6 @@ directly.
 You can help by reviewing pull requests submitted by others. If you've found any
 issues, raise them in the comments. If you've done a review and think that
 everything is fine, please say so, too, — it does help!
-
-### Fix warnings
-
-Make haskell-src-exts build cleanly with `-Wall`.
 
 ### Fix tests
 

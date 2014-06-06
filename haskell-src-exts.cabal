@@ -81,7 +81,7 @@ Library
                         Language.Haskell.Exts.ParseUtils,
                         Language.Haskell.Exts.InternalParser
   Hs-source-dirs:       src
-  Ghc-options:          -fwarn-incomplete-patterns
+  Ghc-options:          -Wall
 
 Source-Repository head
         Type:           git
@@ -91,7 +91,7 @@ Test-Suite test
   type:                exitcode-stdio-1.0
   hs-source-dirs:      tests
   main-is:             Runner.hs
-  GHC-Options:         -threaded
+  GHC-Options:         -threaded -Wall
   Default-language:    Haskell2010
   Build-depends:       base < 5,
                        mtl,
