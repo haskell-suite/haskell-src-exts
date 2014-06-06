@@ -3,7 +3,7 @@
 module Language.Haskell.Exts.ParseSyntax where
 
 import Language.Haskell.Exts.Annotated.Syntax hiding ( Type(..), Asst(..), Exp(..), FieldUpdate(..), XAttr(..), Context(..) )
-import qualified Language.Haskell.Exts.Annotated.Syntax as S ( Type(..), Asst(..), Exp(..), FieldUpdate(..), XAttr(..), Context(..), Promoted(..) )
+import qualified Language.Haskell.Exts.Annotated.Syntax as S ( Type(..), Promoted(..) )
 
 ---------------------------------------
 -- Expressions as we parse them (and patterns, and regular patterns)
@@ -110,70 +110,70 @@ data ParseXAttr l = XAttr l (XName l) (PExp l)
 
 instance Annotated PExp where
     ann e = case e of
-        Var l qn        -> l
-        IPVar l ipn     -> l
-        Con l qn        -> l
-        Lit l lit       -> l
-        InfixApp l e1 qop e2    -> l
-        App l e1 e2     -> l
-        NegApp l e      -> l
-        Lambda l ps e   -> l
-        Let l bs e      -> l
-        If l ec et ee   -> l
-        Case l e alts   -> l
-        Do l ss         -> l
-        MDo l ss        -> l
-        TupleSection l bx mes -> l
-        List l es       -> l
-        Paren l e       -> l
-        RecConstr l qn fups     -> l
-        RecUpdate l e  fups     -> l
-        EnumFrom l e            -> l
-        EnumFromTo l ef et      -> l
-        EnumFromThen l ef et    -> l
-        EnumFromThenTo l ef eth eto -> l
-        ParComp  l e qsss       -> l
-        ExpTypeSig l e t        -> l
-        AsPat l n e             -> l
+        Var l _                 -> l
+        IPVar l _               -> l
+        Con l _                 -> l
+        Lit l _                 -> l
+        InfixApp l _ _ _        -> l
+        App l _ _               -> l
+        NegApp l _              -> l
+        Lambda l _ _            -> l
+        Let l _ _               -> l
+        If l _ _ _              -> l
+        Case l _ _              -> l
+        Do l _                  -> l
+        MDo l _                 -> l
+        TupleSection l _ _      -> l
+        List l _                -> l
+        Paren l _               -> l
+        RecConstr l _ _         -> l
+        RecUpdate l _  _        -> l
+        EnumFrom l _            -> l
+        EnumFromTo l _ _        -> l
+        EnumFromThen l _ _      -> l
+        EnumFromThenTo l _ _ _  -> l
+        ParComp  l _ _          -> l
+        ExpTypeSig l _ _        -> l
+        AsPat l _ _             -> l
         WildCard l              -> l
-        IrrPat l e              -> l
-        PostOp l e op           -> l
-        PreOp l op e            -> l
-        ViewPat l e1 e2         -> l
-        SeqRP l es              -> l
-        GuardRP l e ss          -> l
-        EitherRP l e1 e2        -> l
-        CAsRP l n e             -> l
+        IrrPat l _              -> l
+        PostOp l _ _            -> l
+        PreOp l _ _             -> l
+        ViewPat l _ _           -> l
+        SeqRP l _               -> l
+        GuardRP l _ _           -> l
+        EitherRP l _ _          -> l
+        CAsRP l _ _             -> l
 
-        VarQuote l qn           -> l
-        TypQuote l qn           -> l
-        BracketExp l br         -> l
-        SpliceExp l sp          -> l
-        QuasiQuote l sn se      -> l
+        VarQuote l _            -> l
+        TypQuote l _            -> l
+        BracketExp l _          -> l
+        SpliceExp l _           -> l
+        QuasiQuote l _ _        -> l
 
-        XTag  l xn xas me es    -> l
-        XETag l xn xas me       -> l
-        XPcdata l s             -> l
-        XExpTag l e             -> l
-        XChildTag l es          -> l
-        XRPats l es             -> l
+        XTag  l _ _ _ _         -> l
+        XETag l _  _ _          -> l
+        XPcdata l _             -> l
+        XExpTag l _             -> l
+        XChildTag l _           -> l
+        XRPats l _              -> l
 
-        CorePragma l s e   -> l
-        SCCPragma  l s e   -> l
-        GenPragma  l s n12 n34 e -> l
+        CorePragma l _ _        -> l
+        SCCPragma  l _ _        -> l
+        GenPragma  l _ _ _ _    -> l
 
-        BangPat l e             -> l
+        BangPat l _             -> l
 
-        Proc            l p e   -> l
-        LeftArrApp      l e1 e2 -> l
-        RightArrApp     l e1 e2 -> l
-        LeftArrHighApp  l e1 e2 -> l
-        RightArrHighApp l e1 e2 -> l
+        Proc            l _ _   -> l
+        LeftArrApp      l _ _   -> l
+        RightArrApp     l _ _   -> l
+        LeftArrHighApp  l _ _   -> l
+        RightArrHighApp l _ _   -> l
 
-        LCase l alts -> l
-        MultiIf l alts -> l
+        LCase l _               -> l
+        MultiIf l _             -> l
 
-    amap f e = case e of
+    amap f e' = case e' of
         Var l qn                -> Var   (f l) qn
         IPVar l ipn             -> IPVar (f l) ipn
         Con l qn                -> Con   (f l) qn
@@ -238,8 +238,8 @@ instance Annotated PExp where
         MultiIf l alts -> MultiIf (f l) alts
 
 instance Annotated PFieldUpdate where
-    ann (FieldUpdate l qn e) = l
-    ann (FieldPun l n)       = l
+    ann (FieldUpdate l _  _) = l
+    ann (FieldPun l _)       = l
     ann (FieldWildcard l)    = l
     amap f (FieldUpdate l qn e) = FieldUpdate (f l) qn e
     amap f (FieldPun l n)       = FieldPun (f l) n
@@ -266,9 +266,9 @@ data PContext l
  deriving (Eq, Show, Functor)
 
 instance Annotated PContext where
-  ann (CxSingle l asst ) = l
-  ann (CxTuple  l assts) = l
-  ann (CxParen  l ctxt ) = l
+  ann (CxSingle l _ ) = l
+  ann (CxTuple  l _)  = l
+  ann (CxParen  l _ ) = l
   ann (CxEmpty  l)       = l
   amap f (CxSingle l asst ) = CxSingle (f l) asst
   amap f (CxTuple  l assts) = CxTuple  (f l) assts
@@ -295,19 +295,19 @@ data PType l
 
 instance Annotated PType where
     ann t = case t of
-      TyForall l mtvs cx t          -> l
-      TyFun   l t1 t2               -> l
-      TyTuple l b ts                -> l
-      TyList  l t                   -> l
-      TyApp   l t1 t2               -> l
-      TyVar   l n                   -> l
-      TyCon   l qn                  -> l
-      TyParen l t                   -> l
-      TyInfix l ta qn tb            -> l
-      TyKind  l t k                 -> l
-      TyPromoted l   p              -> l
+      TyForall l _ _ _              -> l
+      TyFun   l _ _                 -> l
+      TyTuple l _ _                 -> l
+      TyList  l _                   -> l
+      TyApp   l _ _                 -> l
+      TyVar   l _                   -> l
+      TyCon   l _                   -> l
+      TyParen l _                   -> l
+      TyInfix l _ _ _               -> l
+      TyKind  l _ _                 -> l
+      TyPromoted l   _              -> l
       TyPred l _                    -> l
-    amap f t = case t of
+    amap f t' = case t' of
       TyForall l mtvs mcx t         -> TyForall (f l) mtvs mcx t
       TyFun   l t1 t2               -> TyFun (f l) t1 t2
       TyTuple l b ts                -> TyTuple (f l) b ts
@@ -330,10 +330,10 @@ data PAsst l
 
 instance Annotated PAsst where
     ann asst = case asst of
-        ClassA l qn ts      -> l
-        InfixA l ta qn tb   -> l
-        IParam l ipn t      -> l
-        EqualP l t1 t2      -> l
+        ClassA l _ _        -> l
+        InfixA l _ _ _      -> l
+        IParam l _ _        -> l
+        EqualP l _ _        -> l
     amap f asst = case asst of
         ClassA l qn ts      -> ClassA (f l) qn ts
         InfixA l ta qn tb   -> InfixA (f l) ta qn tb
