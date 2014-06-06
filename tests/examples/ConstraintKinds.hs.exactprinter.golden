@@ -1,1 +1,11 @@
-ParseFailed (SrcLoc "tests/examples/ConstraintKinds.hs" 8 1) "Parse error in type: Bar a ~ Maybe b"
+{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE ConstraintKinds #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+class Foo a where
+
+data Bar a
+type Bazable a b = (Bar a ~ Maybe b)
+
+baz :: Bazable a b => a -> a
+baz = id
+
