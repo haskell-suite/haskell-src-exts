@@ -113,7 +113,7 @@ infixApp = InfixApp
 appFun :: [l] -> Exp l -> [Exp l] -> Exp l
 appFun _ f [] = f
 appFun (l:ls) f (a:as) = appFun ls (app l f a) as
-appFun [] f (_:_) = error "haskell-src-exts: Build: appFun: too few annotations supplied"
+appFun [] _ (_:_) = error "haskell-src-exts: Build: appFun: too few annotations supplied"
 
 -- | A constructor pattern, with argument patterns.
 pApp :: l -> Name l -> [Pat l] -> Pat l
@@ -281,7 +281,7 @@ nameBind l n e = patBind l (pvar l n) e
 
 -- | Apply function of a given name to a list of arguments.
 metaFunction :: l -> String -> [Exp l] -> Exp l
-metaFunction l s es = mf l s (reverse es)
+metaFunction l' s' es' = mf l' s' (reverse es')
   where mf l s []     = var l $ name l s
         mf l s (e:es) = app l (mf l s es) e
 
