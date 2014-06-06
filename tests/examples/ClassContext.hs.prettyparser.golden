@@ -1,0 +1,8 @@
+Failed to parse output of pretty-printer:
+ParseFailed (SrcLoc "<unknown>.hs" 4 1) "Malformed context: FlexibleContexts is not enabled"
+The pretty-printer output follows.
+
+module Main (main) where
+ 
+f :: (Ord (i Int)) => i Int -> i Int
+f = undefined
