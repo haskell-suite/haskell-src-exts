@@ -1032,6 +1032,10 @@ instance ExactP Type where
             printStringAt (pos c) ")"
          _ -> errorEP "ExactP: Type: TyKind is given wrong number of srcInfoPoints"
     TyPromoted _ p -> exactPC p
+    TyEquals l t0 t1 -> case srcInfoPoints l of
+                          a:_ -> exactPC t0 >> printStringAt (pos a) "~" >> exactPC t1
+                          _   -> errorEP "ExactP: Type: TyEquals is given wrong number of srcInfoPoints"
+
     TySplice _ sp  -> exactP sp
     TyBang _ b t -> exactPC b >> exactPC t
 

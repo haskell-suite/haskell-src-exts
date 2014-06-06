@@ -490,6 +490,7 @@ data Type l
      | TyInfix l (Type l) (QName l) (Type l)    -- ^ infix type constructor
      | TyKind  l (Type l) (Kind l)              -- ^ type with explicit kind signature
      | TyPromoted l (Promoted l)                -- ^ @'K@, a promoted data type (-XDataKinds).
+     | TyEquals l (Type l) (Type l)             -- ^ type equality predicate enabled by ConstraintKinds
      | TySplice l (Splice l)                    -- ^ template haskell splice type
      | TyBang l (BangType l) (Type l)           -- ^ Strict type marked with \"@!@\" or type marked with UNPACK pragma.
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
@@ -1268,6 +1269,7 @@ instance Annotated Type where
       TyInfix l _ _ _               -> l
       TyKind  l _ _                 -> l
       TyPromoted l   _              -> l
+      TyEquals l _ _                -> l
       TySplice l _                  -> l
       TyBang l _ _                  -> l
     amap f t1 = case t1 of
@@ -1283,6 +1285,7 @@ instance Annotated Type where
       TyInfix l ta qn tb            -> TyInfix (f l) ta qn tb
       TyKind  l t k                 -> TyKind (f l) t k
       TyPromoted l   p              -> TyPromoted (f l)   p
+      TyEquals l a b                -> TyEquals (f l) a b
       TySplice l s                  -> TySplice (f l) s
       TyBang l b t                  -> TyBang (f l) b t
 

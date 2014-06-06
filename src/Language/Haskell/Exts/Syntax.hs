@@ -421,6 +421,7 @@ data Type
      | TyInfix Type QName Type  -- ^ infix type constructor
      | TyKind  Type Kind        -- ^ type with explicit kind signature
      | TyPromoted Promoted      -- ^ promoted data type (-XDataKinds)
+     | TyEquals Type Type       -- ^ type equality predicate enabled by ConstraintKinds
      | TySplice Splice          -- ^ template haskell splice type
      | TyBang BangType Type     -- ^ Strict type marked with \"@!@\" or type marked with UNPACK pragma.
   deriving (Eq,Ord,Show,Typeable,Data)

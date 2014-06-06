@@ -329,6 +329,7 @@ sType t' = case t' of
     TyInfix _ ta qn tb          -> S.TyInfix (sType ta) (sQName qn) (sType tb)
     TyKind _ t k                -> S.TyKind (sType t) (sKind k)
     TyPromoted _ t              -> S.TyPromoted (sPromoted t)
+    TyEquals _ t1 t2            -> S.TyEquals (sType t1) (sType t2)
     TySplice _ s                -> S.TySplice (sSplice s)
     TyBang _ b t                -> S.TyBang (sBangType b) (sType t)
 

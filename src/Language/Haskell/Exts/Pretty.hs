@@ -780,6 +780,7 @@ instance Pretty Type where
         prettyPrec _ (TyInfix a op b) = myFsep [pretty a, ppQNameInfix op, pretty b]
         prettyPrec _ (TyKind t k) = parens (myFsep [pretty t, text "::", pretty k])
         prettyPrec _ (TyPromoted p) = pretty p
+        prettyPrec p (TyEquals a b) = parensIf (p > 0) (myFsep [pretty a, text "~", pretty b])
         prettyPrec _ (TySplice s) = pretty s
         prettyPrec _ (TyBang b t) = pretty b <> pretty t
 

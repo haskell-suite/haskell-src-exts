@@ -83,6 +83,7 @@ import Prelude hiding (mod)
 import Data.List (intercalate)
 import Data.Maybe (fromJust, fromMaybe)
 import Control.Monad (when,unless)
+import Control.Applicative (Applicative (..), (<$>))
 
 --- import Debug.Trace (trace)
 
@@ -1011,7 +1012,11 @@ checkT t simple = case t of
     TyInfix l at op bt -> checkAndWarnTypeOperators op >> check2Types at bt (flip (S.TyInfix l) op)
     TyKind  l pt k    -> check1Type pt (flip (S.TyKind l) k)
 
-    -- TyPred  cannot be a valid type
+     -- TyPred can be a valid type if ConstraintKinds is enabled, unless it is an implicit parameter, which is not a valid type 
+    TyPred _ (ClassA l className cvars) -> mapM checkType cvars >>= \vars -> return (foldl1 (S.TyApp l) (S.TyCon l className:vars))
+    TyPred _ (InfixA l t0 op t1)        -> S.TyInfix l <$> checkType t0 <*> pure op <*> checkType t1 
+    TyPred _ (EqualP l t0    t1)        -> S.TyEquals l <$> checkType t0 <*> checkType t1 where 
+
     TyPromoted l p -> return $ S.TyPromoted l p -- ??
     TySplice l s        -> do
                               checkEnabled TemplateHaskell
