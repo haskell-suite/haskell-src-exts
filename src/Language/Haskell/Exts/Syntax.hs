@@ -187,6 +187,7 @@ data ImportDecl = ImportDecl
     , importModule :: ModuleName    -- ^ name of the module imported.
     , importQualified :: Bool       -- ^ imported @qualified@?
     , importSrc :: Bool             -- ^ imported with @{-\# SOURCE \#-}@?
+    , importSafe :: Bool            -- ^ Import @safe@?
     , importPkg :: Maybe String     -- ^ imported with explicit package name
     , importAs :: Maybe ModuleName  -- ^ optional alias name in an @as@ clause.
     , importSpecs :: Maybe (Bool,[ImportSpec])

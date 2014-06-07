@@ -286,7 +286,7 @@ special_varids = [
 
 -- FFI
  ( "export",        (KW_Export,        Just (Any [ForeignFunctionInterface])) ),
- ( "safe",          (KW_Safe,          Just (Any [ForeignFunctionInterface])) ),
+ ( "safe",          (KW_Safe,          Just (Any [ForeignFunctionInterface, SafeImports, Safe, Trustworthy])) ),
  ( "unsafe",        (KW_Unsafe,        Just (Any [ForeignFunctionInterface])) ),
  ( "threadsafe",    (KW_Threadsafe,    Just (Any [ForeignFunctionInterface])) ),
  ( "interruptible", (KW_Interruptible, Just (Any [InterruptibleFFI])) ),

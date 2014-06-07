@@ -380,7 +380,7 @@ instance ExactP ImportSpec where
          in exactP n >> printInterleaved (zip (srcInfoPoints l) $ "(":replicate (k-2) "," ++ [")"]) cns
 
 instance ExactP ImportDecl where
-  exactP (ImportDecl l mn qf src mpkg mas mispecs) = do
+  exactP (ImportDecl l mn qf src safe mpkg mas mispecs) = do
     printString "import"
     case srcInfoPoints l of
      (_:pts) -> do
@@ -392,31 +392,38 @@ instance ExactP ImportDecl where
                      return pts'
                   _ -> errorEP "ExactP: ImportDecl is given too few srcInfoPoints"
                 else return pts
-        pts2 <- if qf then
+        pts2 <- if safe then
                  case pts1 of
+                  x:pts' -> do
+                     printStringAt (pos x) "safe"
+                     return pts'
+                  _ -> errorEP "ExactP: ImportDecl is given too few srcInfoPoints"
+                else return pts1
+        pts3 <- if qf then
+                 case pts2 of
                   x:pts' -> do
                      printStringAt (pos x) "qualified"
                      return pts'
                   _ -> errorEP "ExactP: ImportDecl is given too few srcInfoPoints"
-                else return pts1
-        pts3 <- case mpkg of
+                else return pts2
+        pts4 <- case mpkg of
                 Just pkg ->
-                  case pts2 of
+                  case pts3 of
                    x:pts' -> do
                       printStringAt (pos x) $ show pkg
                       return pts'
                    _ -> errorEP "ExactP: ImportDecl is given too few srcInfoPoints"
-                _ -> return pts2
+                _ -> return pts3
         exactPC mn
         _ <- case mas of
                 Just as ->
-                 case pts3 of
+                 case pts4 of
                   x:pts' -> do
                      printStringAt (pos x) "as"
                      exactPC as
                      return pts'
                   _ -> errorEP "ExactP: ImportDecl is given too few srcInfoPoints"
-                _ -> return pts3
+                _ -> return pts4
         case mispecs of
          Nothing -> return ()
          Just ispecs -> exactPC ispecs
