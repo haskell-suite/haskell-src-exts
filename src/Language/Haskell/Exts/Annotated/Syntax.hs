@@ -210,6 +210,7 @@ data ImportDecl l = ImportDecl
     , importModule :: (ModuleName l)   -- ^ name of the module imported.
     , importQualified :: Bool          -- ^ imported @qualified@?
     , importSrc :: Bool                -- ^ imported with @{-\# SOURCE \#-}@?
+    , importSafe :: Bool               -- ^ Import @safe@?
     , importPkg :: Maybe String        -- ^ imported with explicit package name
     , importAs :: Maybe (ModuleName l) -- ^ optional alias name in an @as@ clause.
     , importSpecs :: Maybe (ImportSpecList l)
@@ -974,9 +975,9 @@ instance Annotated ExportSpec where
         EModuleContents l mn    -> EModuleContents (f l) mn
 
 instance Annotated ImportDecl where
-    ann (ImportDecl l _ _ _ _ _ _) = l
-    amap f (ImportDecl l mn qual src pkg mmn mis) =
-        ImportDecl (f l) mn qual src pkg mmn mis
+    ann (ImportDecl l _ _ _ _ _ _ _) = l
+    amap f (ImportDecl l mn qual src safe pkg mmn mis) =
+        ImportDecl (f l) mn qual src safe pkg mmn mis
 
 instance Annotated ImportSpecList where
     ann (ImportSpecList l _ _)      = l

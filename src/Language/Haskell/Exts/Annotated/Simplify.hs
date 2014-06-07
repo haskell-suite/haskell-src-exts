@@ -179,8 +179,8 @@ sExportSpec es = case es of
     EModuleContents _ mn    -> S.EModuleContents (sModuleName mn)
 
 sImportDecl :: SrcInfo loc => ImportDecl loc -> S.ImportDecl
-sImportDecl (ImportDecl l mn qu src mpkg as misl) =
-    S.ImportDecl (getPointLoc l) (sModuleName mn) qu src mpkg (fmap sModuleName as) (fmap sImportSpecList misl)
+sImportDecl (ImportDecl l mn qu src safe mpkg as misl) =
+    S.ImportDecl (getPointLoc l) (sModuleName mn) qu src safe mpkg (fmap sModuleName as) (fmap sImportSpecList misl)
 
 sImportSpecList :: ImportSpecList l -> (Bool, [S.ImportSpec])
 sImportSpecList (ImportSpecList _ b iss) = (b, map sImportSpec iss)
