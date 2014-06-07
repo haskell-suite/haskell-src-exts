@@ -1,0 +1,3 @@
+{-# LANGUAGE Trustworthy #-}
+module Main (main) where
+import safe Prelude as P
