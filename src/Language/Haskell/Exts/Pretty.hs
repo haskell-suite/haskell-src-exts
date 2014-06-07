@@ -307,7 +307,8 @@ instance Pretty ModuleName where
         pretty (ModuleName modName) = text modName
 
 instance Pretty ExportSpec where
-        pretty (EVar name)                = pretty name
+        pretty (EVar t name)              =
+                (if t then text "type" else empty) <+> pretty name
         pretty (EAbs name)                = pretty name
         pretty (EThingAll name)           = pretty name <> text "(..)"
         pretty (EThingWith name nameList) =
@@ -331,7 +332,8 @@ instance Pretty ImportDecl where
                     where specs = parenList . map pretty $ specList
 
 instance Pretty ImportSpec where
-        pretty (IVar name)                = pretty name
+        pretty (IVar t name)              =
+                (if t then text "type" else empty) <+> pretty name
         pretty (IAbs name)                = pretty name
         pretty (IThingAll name)           = pretty name <> text "(..)"
         pretty (IThingWith name nameList) =
