@@ -6182,7 +6182,7 @@ instance Pos (Located a) where
  
 {-# INLINE withNodeInfo #-}
  
-withNodeInfo :: (Pos node) => node -> (NodeInfo -> a) -> P a
+withNodeInfo :: Pos node => node -> (NodeInfo -> a) -> P a
 withNodeInfo node mkAttrNode
   = do name <- getNewName
        lastTok <- getSavedToken
@@ -6217,7 +6217,7 @@ instance Pos (CDeclrR) where
 {-# INLINE withAttribute #-}
  
 withAttribute ::
-                (Pos node) => node -> [CAttr] -> (NodeInfo -> CDeclrR) -> P CDeclrR
+                Pos node => node -> [CAttr] -> (NodeInfo -> CDeclrR) -> P CDeclrR
 withAttribute node cattrs mkDeclrNode
   = do name <- getNewName
        let attrs = mkNodeInfo (posOf node) name
@@ -6227,7 +6227,7 @@ withAttribute node cattrs mkDeclrNode
 {-# INLINE withAttributePF #-}
  
 withAttributePF ::
-                  (Pos node) =>
+                  Pos node =>
                   node ->
                     [CAttr] ->
                       (NodeInfo -> CDeclrR -> CDeclrR) -> P (CDeclrR -> CDeclrR)
@@ -6338,10 +6338,10 @@ addTrailingAttrs declspecs new_attrs
                                 node))
         _ -> declspecs `rappend` (liftCAttrs new_attrs)
  
-instance (Pos a) => Pos [a] where
+instance Pos a => Pos [a] where
         posOf (x : _) = posOf x
  
-instance (Pos a) => Pos (Reversed a) where
+instance Pos a => Pos (Reversed a) where
         posOf (Reversed x) = posOf x
  
 emptyDeclr :: CDeclrR

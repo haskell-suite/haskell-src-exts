@@ -1175,6 +1175,7 @@ specialName UnboxedSingleCon = "(# #)"
 
 ppContext :: Context -> Doc
 ppContext []      = empty
+ppContext [ctxt]  = pretty ctxt <+> text "=>"
 ppContext context = mySep [parenList (map pretty context), text "=>"]
 
 -- hacked for multi-parameter type classes
