@@ -190,7 +190,7 @@ data ExportSpecList l
 
 -- | An item in a module's export specification.
 data ExportSpec l
-     = EVar l (QName l)                 -- ^ variable
+     = EVar l Bool (QName l)            -- ^ variable. Bool indicates type keyword.
      | EAbs l (QName l)                 -- ^ @T@:
                                         --   a class or datatype exported abstractly,
                                         --   or a type synonym.
@@ -228,7 +228,7 @@ data ImportSpecList l
 -- | An import specification, representing a single explicit item imported
 --   (or hidden) from a module.
 data ImportSpec l
-     = IVar l (Name l)                  -- ^ variable
+     = IVar l Bool (Name l)             -- ^ variable. Bool indicates type keyword.
      | IAbs l (Name l)                  -- ^ @T@:
                                         --   the name of a class, datatype or type synonym.
      | IThingAll l (Name l)             -- ^ @T(..)@:
@@ -961,13 +961,13 @@ instance Annotated ExportSpecList where
 
 instance Annotated ExportSpec where
     ann es = case es of
-        EVar l _            -> l
+        EVar l _ _          -> l
         EAbs l _            -> l
         EThingAll l _       -> l
         EThingWith l _ _    -> l
         EModuleContents l _ -> l
     amap f es = case es of
-        EVar l qn       -> EVar (f l) qn
+        EVar l t qn     -> EVar (f l) t qn
         EAbs l qn       -> EAbs (f l) qn
         EThingAll l qn  -> EThingAll (f l) qn
         EThingWith l qn cns -> EThingWith (f l) qn cns
@@ -984,12 +984,12 @@ instance Annotated ImportSpecList where
 
 instance Annotated ImportSpec where
     ann is = case is of
-        IVar l _         -> l
+        IVar l _ _       -> l
         IAbs l _         -> l
         IThingAll l _    -> l
         IThingWith l _ _ -> l
     amap f is = case is of
-        IVar l n        -> IVar (f l) n
+        IVar l t n      -> IVar (f l) t n
         IAbs l n        -> IAbs (f l) n
         IThingAll l n   -> IThingAll (f l) n
         IThingWith l n cns  -> IThingWith (f l) n cns
