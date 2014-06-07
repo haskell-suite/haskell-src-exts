@@ -315,10 +315,11 @@ instance Pretty ExportSpec where
         pretty (EModuleContents m)        = text "module" <+> pretty m
 
 instance Pretty ImportDecl where
-        pretty (ImportDecl pos m qual src mbPkg mbName mbSpecs) =
+        pretty (ImportDecl pos m qual src safe mbPkg mbName mbSpecs) =
                 markLine pos $
                 mySep [text "import",
                        if src  then text "{-# SOURCE #-}" else empty,
+                       if safe then text "safe" else empty,
                        if qual then text "qualified" else empty,
                        maybePP (\s -> text (show s)) mbPkg,
                        pretty m,

@@ -411,14 +411,19 @@ Import Declarations
 >       | impdecl                               { ([$1],[]) }
 
 > impdecl :: { ImportDecl L }
->       : 'import' optsrc optqualified maybepkg modid maybeas maybeimpspec
->                               { let { (mmn,ss,ml) = $6 ;
->                                       l = nIS $1 <++> ann $5 <+?> ml <+?> (fmap ann) $7 <** ($1:snd $2 ++ snd $3 ++ snd $4 ++ ss)}
->                                  in ImportDecl l $5 (fst $3) (fst $2) (fst $4) mmn $7 }
+>       : 'import' optsrc optsafe optqualified maybepkg modid maybeas maybeimpspec
+>                               { let { (mmn,ss,ml) = $7 ;
+>                                       l = nIS $1 <++> ann $6 <+?> ml <+?> (fmap ann) $8 <** ($1:snd $2 ++ snd $3 ++ snd $4 ++ snd $5 ++ ss)}
+>                                  in ImportDecl l $6 (fst $4) (fst $2) (fst $3) (fst $5) mmn $8 }
 
 > optsrc :: { (Bool,[S]) }
 >       : '{-# SOURCE' '#-}'                    { (True,[$1,$2]) }
 >       | {- empty -}                           { (False,[]) }
+
+> optsafe :: { (Bool,[S]) }
+>       : 'safe'                           {% do { checkEnabledOneOf [Safe, SafeImports, Trustworthy] ;
+>                                                  return (True, [$1]) } }
+>       | {- empty -}                      { (False, []) }
 
 > optqualified :: { (Bool,[S]) }
 >       : 'qualified'                           { (True,[$1]) }
