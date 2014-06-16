@@ -1,0 +1,1 @@
+ParseFailed (SrcLoc "tests/examples/RecordWildcardError.hs" 1 12) "RecordWildCards is not enabled"
