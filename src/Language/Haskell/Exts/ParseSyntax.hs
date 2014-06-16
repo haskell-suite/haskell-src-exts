@@ -291,6 +291,7 @@ data PType l
      | TyInfix l (PType l) (QName l) (PType l)  -- ^ infix type constructor
      | TyKind  l (PType l) (Kind l)             -- ^ type with explicit kind signature
      | TyPromoted l (S.Promoted l)              -- ^ promoted data type
+     | TySplice l (Splice l)                    -- ^ template haskell splice type
   deriving (Eq, Show, Functor)
 
 instance Annotated PType where
@@ -307,6 +308,7 @@ instance Annotated PType where
       TyKind  l _ _                 -> l
       TyPromoted l   _              -> l
       TyPred l _                    -> l
+      TySplice l _                  -> l
     amap f t' = case t' of
       TyForall l mtvs mcx t         -> TyForall (f l) mtvs mcx t
       TyFun   l t1 t2               -> TyFun (f l) t1 t2
@@ -320,6 +322,7 @@ instance Annotated PType where
       TyKind  l t k                 -> TyKind (f l) t k
       TyPromoted l   p              -> TyPromoted (f l)   p
       TyPred l asst                 -> TyPred (f l) asst
+      TySplice l s                  -> TySplice (f l) s
 
 data PAsst l
     = ClassA l (QName l) [PType l]

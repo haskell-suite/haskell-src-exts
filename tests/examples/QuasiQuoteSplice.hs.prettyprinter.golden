@@ -1,1 +1,10 @@
-ParseFailed (SrcLoc "tests/examples/QuasiQuoteSplice.hs" 8 42) "Parse error: $("
+{-# LANGUAGE TemplateHaskell, RankNTypes #-}
+{-# OPTIONS_GHC -F -pgmFtrhsx  #-}
+module Main (main) where
+import Language.Haskell.TH
+ 
+data PageFunction m a = PF
+main
+  = let a = mkName "a" in
+      runQ [t| forall m . PageFunction m $( conT (mkName "a") ) |] >>=
+        print

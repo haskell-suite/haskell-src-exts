@@ -831,6 +831,8 @@ the (# and #) lexemes. Kinds will be handled at the kind rule.
 >       | '[' type ']'                  { TyList  ($1 <^^> $3 <** [$1,$3]) $2 }
 >       | '(' ctype ')'                 { TyParen ($1 <^^> $3 <** [$1,$3]) $2 }
 >       | '(' ctype '::' kind ')'       { TyKind  ($1 <^^> $5 <** [$1,$3,$5]) $2 $4 }
+>       | '$(' trueexp ')'              { let l = ($1 <^^> $3 <** [$1,$3]) in TySplice l $ ParenSplice l $2 }
+>       | IDSPLICE                      { let Loc l (THIdEscape s) = $1 in TySplice (nIS l) $ IdSplice (nIS l) s }
 >       | ptype                         { % checkEnabled DataKinds >> return (TyPromoted (ann $1) $1) }
 
 > ptype :: { Promoted L }

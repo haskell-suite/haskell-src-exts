@@ -115,7 +115,7 @@ sDecl decl = case decl of
      AnnPragma        l ann'        ->
         S.AnnPragma (getPointLoc l) (sAnnotation ann')
 
-sTypeEqn :: TypeEqn l -> S.TypeEqn
+sTypeEqn :: SrcInfo l => TypeEqn l -> S.TypeEqn
 sTypeEqn (TypeEqn _ a b) = S.TypeEqn (sType a) (sType b)
 
 sAnnotation :: SrcInfo loc => Annotation loc -> S.Annotation
@@ -204,7 +204,7 @@ sDeclHead dh' = case dh' of
     DHInfix _ tva n tvb -> (sName n, map sTyVarBind [tva,tvb])
     DHParen _ dh        -> sDeclHead dh
 
-sInstHead :: InstHead l -> (S.QName, [S.Type])
+sInstHead :: SrcInfo l => InstHead l -> (S.QName, [S.Type])
 sInstHead ih' = case ih' of
     IHead _ qn ts      -> (sQName qn, map sType ts)
     IHInfix _ ta qn tb -> (sQName qn, map sType [ta,tb])
@@ -214,7 +214,7 @@ sDataOrNew :: DataOrNew l -> S.DataOrNew
 sDataOrNew (DataType _) = S.DataType
 sDataOrNew (NewType _) = S.NewType
 
-sDeriving :: (Deriving l) -> [(S.QName, [S.Type])]
+sDeriving :: SrcInfo l => (Deriving l) -> [(S.QName, [S.Type])]
 sDeriving (Deriving _ ihs) = map sInstHead ihs
 
 sBinds :: SrcInfo loc => Binds loc -> S.Binds
@@ -235,13 +235,13 @@ sQualConDecl :: SrcInfo loc => QualConDecl loc -> S.QualConDecl
 sQualConDecl (QualConDecl l mtvs mctxt cd) =
     S.QualConDecl (getPointLoc l) (maybe [] (map sTyVarBind) mtvs) (maybe [] sContext mctxt) (sConDecl cd)
 
-sConDecl :: ConDecl l -> S.ConDecl
+sConDecl :: SrcInfo l => ConDecl l -> S.ConDecl
 sConDecl cd = case cd of
     ConDecl _ n bts     -> S.ConDecl (sName n) (map sBangType bts)
     InfixConDecl _ bta n btb -> S.InfixConDecl (sBangType bta) (sName n) (sBangType btb)
     RecDecl _ n fds -> S.RecDecl (sName n) (map sFieldDecl fds)
 
-sFieldDecl :: FieldDecl l -> ([S.Name], S.BangType)
+sFieldDecl :: SrcInfo l => FieldDecl l -> ([S.Name], S.BangType)
 sFieldDecl (FieldDecl _ ns bt) = (map sName ns, sBangType bt)
 
 sGadtDecl :: SrcInfo loc => GadtDecl loc -> S.GadtDecl
@@ -269,7 +269,7 @@ sInstDecl id' = case id' of
         S.InsGData (getPointLoc l) (sDataOrNew dn) (sType t) (fmap sKind mk) (map sGadtDecl gds) (maybe [] sDeriving mder)
 --    InsInline l b mact qn   -> S.InsInline (getPointLoc l) b (maybe S.AlwaysActive sActivation mact) (sQName qn)
 
-sBangType :: BangType l -> S.BangType
+sBangType :: SrcInfo l => BangType l -> S.BangType
 sBangType bt = case bt of
     BangedTy   _ t  -> S.BangedTy (sType t)
     UnBangedTy _ t  -> S.UnBangedTy (sType t)
@@ -282,7 +282,7 @@ sRhs (GuardedRhss _ grhss) = S.GuardedRhss (map sGuardedRhs grhss)
 sGuardedRhs :: SrcInfo loc => GuardedRhs loc -> S.GuardedRhs
 sGuardedRhs (GuardedRhs l ss e) = S.GuardedRhs (getPointLoc l) (map sStmt ss) (sExp e)
 
-sType :: Type l -> S.Type
+sType :: SrcInfo l => Type l -> S.Type
 sType t' = case t' of
     TyForall _ mtvs mctxt t     -> S.TyForall (fmap (map sTyVarBind) mtvs) (maybe [] sContext mctxt) (sType t)
     TyFun _ t1 t2               -> S.TyFun (sType t1) (sType t2)
@@ -295,6 +295,7 @@ sType t' = case t' of
     TyInfix _ ta qn tb          -> S.TyInfix (sType ta) (sQName qn) (sType tb)
     TyKind _ t k                -> S.TyKind (sType t) (sKind k)
     TyPromoted _ t              -> S.TyPromoted (sPromoted t)
+    TySplice _ s                -> S.TySplice (sSplice s)
 
 sPromoted :: Promoted l -> S.Promoted
 sPromoted p = case p of
@@ -324,14 +325,14 @@ sKind k' = case k' of
 sFunDep :: FunDep l -> S.FunDep
 sFunDep (FunDep _ as bs) = S.FunDep (map sName as) (map sName bs)
 
-sContext :: Context l -> S.Context
+sContext :: SrcInfo l => Context l -> S.Context
 sContext ctxt = case ctxt of
     CxSingle _ asst     -> [sAsst asst]
     CxTuple  _ assts    -> map sAsst assts
     CxParen  _ ct       -> sContext ct
     CxEmpty  _          -> []
 
-sAsst :: Asst l -> S.Asst
+sAsst :: SrcInfo l => Asst l -> S.Asst
 sAsst asst = case asst of
     ClassA _ qn ts      -> S.ClassA (sQName qn) (map sType ts)
     InfixA _ ta qn tb   -> S.InfixA (sType ta) (sQName qn) (sType tb)
@@ -450,7 +451,7 @@ sRule :: SrcInfo loc => Rule loc -> S.Rule
 sRule (Rule _ str mact mrvs e1 e2) =
     S.Rule str (maybe S.AlwaysActive sActivation mact) (fmap (map sRuleVar) mrvs) (sExp e1) (sExp e2)
 
-sRuleVar :: RuleVar l -> S.RuleVar
+sRuleVar :: SrcInfo l => RuleVar l -> S.RuleVar
 sRuleVar (RuleVar _ n) = S.RuleVar (sName n)
 sRuleVar (TypedRuleVar _ n t) = S.TypedRuleVar (sName n) (sType t)
 

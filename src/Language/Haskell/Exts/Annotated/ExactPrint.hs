@@ -956,6 +956,7 @@ instance ExactP Type where
             printStringAt (pos c) ")"
          _ -> errorEP "ExactP: Type: TyKind is given wrong number of srcInfoPoints"
     TyPromoted _ p -> exactPC p
+    TySplice _ sp  -> exactP sp
 
 instance ExactP Promoted where
   exactP (PromotedInteger _ _ rw) = printString rw

@@ -461,6 +461,7 @@ data Type l
      | TyInfix l (Type l) (QName l) (Type l)    -- ^ infix type constructor
      | TyKind  l (Type l) (Kind l)              -- ^ type with explicit kind signature
      | TyPromoted l (Promoted l)                -- ^ @'K@, a promoted data type (-XDataKinds).
+     | TySplice l (Splice l)                    -- ^ template haskell splice type
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | Bools here are True if there was a leading quote which may be
@@ -1192,6 +1193,7 @@ instance Annotated Type where
       TyInfix l _ _ _               -> l
       TyKind  l _ _                 -> l
       TyPromoted l   _              -> l
+      TySplice l _                  -> l
     amap f t1 = case t1 of
       TyForall l mtvs mcx t         -> TyForall (f l) mtvs mcx t
       TyFun   l t1' t2              -> TyFun (f l) t1' t2
@@ -1204,6 +1206,7 @@ instance Annotated Type where
       TyInfix l ta qn tb            -> TyInfix (f l) ta qn tb
       TyKind  l t k                 -> TyKind (f l) t k
       TyPromoted l   p              -> TyPromoted (f l)   p
+      TySplice l s                  -> TySplice (f l) s
 
 instance Annotated TyVarBind where
     ann (KindedVar   l _ _) = l

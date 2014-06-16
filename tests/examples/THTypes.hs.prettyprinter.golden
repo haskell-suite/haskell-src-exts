@@ -1,1 +1,12 @@
-ParseFailed (SrcLoc "tests/examples/THTypes.hs" 9 23) "Parse error: $("
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE QuasiQuotes #-}
+module THTypes where
+import Language.Haskell.TH
+ 
+x :: DecsQ
+x = [d|
+       
+      instance Show $( conT (mkName "Int") )
+      |]
+unit x = [t| $x |]

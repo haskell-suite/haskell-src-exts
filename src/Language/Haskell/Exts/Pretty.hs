@@ -737,6 +737,7 @@ instance Pretty Type where
         prettyPrec _ (TyInfix a op b) = myFsep [pretty a, ppQNameInfix op, pretty b]
         prettyPrec _ (TyKind t k) = parens (myFsep [pretty t, text "::", pretty k])
         prettyPrec _ (TyPromoted p) = pretty p
+        prettyPrec _ (TySplice s) = pretty s
 
 instance Pretty Promoted where
   pretty p =
@@ -1288,7 +1289,7 @@ instance Pretty (A.DeclHead l) where
     pretty (A.DHInfix _ tva n tvb) = mySep [pretty tva, pretty n, pretty tvb]
     pretty (A.DHParen _ dh)        = parens (pretty dh)
 
-instance Pretty (A.InstHead l) where
+instance SrcInfo l => Pretty (A.InstHead l) where
     pretty (A.IHead _ qn ts)       = mySep (pretty qn : map pretty ts)
     pretty (A.IHInfix _ ta qn tb)  = mySep [pretty ta, pretty qn, pretty tb]
     pretty (A.IHParen _ ih)        = parens (pretty ih)
@@ -1322,7 +1323,7 @@ instance SrcInfo loc => Pretty (A.Rule loc) where
 instance Pretty (A.Activation l) where
     pretty = pretty . sActivation
 
-instance Pretty (A.RuleVar l) where
+instance SrcInfo l => Pretty (A.RuleVar l) where
     pretty = pretty . sRuleVar
 
 instance SrcInfo loc => Pretty (A.ModulePragma loc) where
@@ -1339,33 +1340,33 @@ instance SrcInfo loc => Pretty (A.Annotation loc) where
     pretty = pretty . sAnnotation
 
 ------------------------- Data & Newtype Bodies -------------------------
-instance Pretty (A.QualConDecl l) where
+instance SrcInfo l => Pretty (A.QualConDecl l) where
         pretty (A.QualConDecl _pos mtvs ctxt con) =
                 myFsep [ppForall (fmap (map sTyVarBind) mtvs), ppContext $ maybe [] sContext ctxt, pretty con]
 
-instance Pretty (A.GadtDecl l) where
+instance SrcInfo l => Pretty (A.GadtDecl l) where
         pretty (A.GadtDecl _pos name ty) =
                 myFsep [pretty name, text "::", pretty ty]
 
-instance Pretty (A.ConDecl l) where
+instance SrcInfo l => Pretty (A.ConDecl l) where
         pretty = pretty . sConDecl
 
-instance Pretty (A.FieldDecl l) where
+instance SrcInfo l => Pretty (A.FieldDecl l) where
         pretty (A.FieldDecl _ names ty) =
                 myFsepSimple $ (punctuate comma . map pretty $ names) ++
                        [text "::", pretty ty]
 
 
-instance Pretty (A.BangType l) where
+instance SrcInfo l => Pretty (A.BangType l) where
         pretty = pretty . sBangType
 
-instance Pretty (A.Deriving l) where
+instance SrcInfo l => Pretty (A.Deriving l) where
         pretty (A.Deriving _ []) = text "deriving" <+> parenList []
         pretty (A.Deriving _ [A.IHead _ d []]) = text "deriving" <+> pretty d
         pretty (A.Deriving _ ihs) = text "deriving" <+> parenList (map pretty ihs)
 
 ------------------------- Types -------------------------
-instance Pretty (A.Type l) where
+instance SrcInfo l => Pretty (A.Type l) where
         pretty = pretty . sType
 
 instance Pretty (A.TyVarBind l) where
@@ -1463,14 +1464,14 @@ instance SrcInfo loc => Pretty (A.IPBind loc) where
 instance Pretty (A.CName l) where
         pretty = pretty . sCName
 
-instance Pretty (A.Context l) where
+instance SrcInfo l => Pretty (A.Context l) where
         pretty (A.CxEmpty _) = mySep [text "()", text "=>"]
         pretty (A.CxSingle _ asst) = mySep [pretty asst, text "=>"]
         pretty (A.CxTuple _ assts) = myFsep $ [parenList (map pretty assts), text "=>"]
         pretty (A.CxParen _ asst)  = parens (pretty asst)
 
 -- hacked for multi-parameter type classes
-instance Pretty (A.Asst l) where
+instance SrcInfo l => Pretty (A.Asst l) where
         pretty = pretty . sAsst
 
 ------------------------- pp utils -------------------------
@@ -1732,3 +1733,4 @@ instance SrcInfo loc => Pretty (P.PType loc) where
         prettyPrec _ (P.TyInfix _ a op b) = myFsep [pretty a, ppQNameInfix (sQName op), pretty b]
         prettyPrec _ (P.TyKind _ t k) = parens (myFsep [pretty t, text "::", pretty k])
         prettyPrec _ (P.TyPromoted _ p) = pretty $ sPromoted p
+        prettyPrec _ (P.TySplice _ s) = pretty s

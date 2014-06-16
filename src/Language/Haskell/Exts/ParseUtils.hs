@@ -969,6 +969,9 @@ checkT t simple = case t of
 
     -- TyPred  cannot be a valid type
     TyPromoted l p -> return $ S.TyPromoted l p -- ??
+    TySplice l s        -> do
+                              checkEnabled TemplateHaskell
+                              return $ S.TySplice l s
     _   -> fail $ "Parse error in type: " ++ prettyPrint t
 
 check1Type :: PType L -> (S.Type L -> S.Type L) -> P (S.Type L)
