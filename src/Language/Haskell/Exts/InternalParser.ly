@@ -1643,7 +1643,8 @@ Puns and wild cards need the respective extensions enabled.
 > fbind :: { PFieldUpdate L }
 >       : qvar '=' exp                  { FieldUpdate ($1 <>$3 <** [$2]) $1 $3 }
 >       | qvar                          {% checkEnabled NamedFieldPuns >> checkQualOrUnQual $1 >>= return . FieldPun (ann $1) }
->       | '..'                          {% checkEnabled RecordWildCards >> return (FieldWildcard (nIS $1)) }
+>       | '..'                          {% do { checkEnabled RecordWildCards`atSrcLoc` (getPointLoc $1);
+>                                               return (FieldWildcard (nIS $1)) } }
 
 -----------------------------------------------------------------------------
 Implicit parameter bindings - need the ImplicitParameter extension enabled, but the lexer handles that.
