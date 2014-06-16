@@ -1,0 +1,3 @@
+module Main (main) where
+ 
+instance Bounded a => Bounded [a]
