@@ -1360,12 +1360,14 @@ thing we need to look at here is the erpats that use no non-standard lexemes.
 
 Template Haskell - all this is enabled in the lexer.
 >       | IDSPLICE                      { let Loc l (THIdEscape s) = $1 in SpliceExp (nIS l) $ IdSplice (nIS l) s }
->       | '$(' trueexp ')'              { SpliceExp  ($1 <^^> $3 <** [$1,$3]) $ ParenSplice (ann $2) $2 }
->       | '[|' trueexp '|]'             { BracketExp ($1 <^^> $3 <** [$1,$3]) $ ExpBracket  (ann $2) $2 }
+>       | '$(' trueexp ')'              { let l = ($1 <^^> $3 <** [$1,$3]) in SpliceExp l $ ParenSplice l $2 }
+>       | '[|' trueexp '|]'             { let l = ($1 <^^> $3 <** [$1,$3]) in BracketExp l $ ExpBracket l $2 }
 >       | '[p|' exp0 '|]'               {% do { p <- checkPattern $2;
->                                               return $ BracketExp ($1 <^^> $3 <** [$1,$3]) $ PatBracket (ann p) p } }
+>                                               let {l = ($1 <^^> $3 <** [$1,$3]) };
+>                                               return $ BracketExp l $ PatBracket l p } }
 >       | '[t|' truectype '|]'              { let l = $1 <^^> $3 <** [$1,$3] in BracketExp l $ TypeBracket l $2 }
->       | '[d|' open topdecls close '|]'    { let l = $1 <^^> $5 <** ($1:snd $3 ++ [$5]) in BracketExp l $ DeclBracket l (fst $3) }
+>       | '[d|' open topdecls close '|]'    { let l = $1 <^^> $5 <** ($1:snd $3 ++ [$5])
+>                                             in BracketExp l $ DeclBracket ($1 <^^> $5 <** ($2:snd $3 ++ [$4,$5])) (fst $3) }
 >       | VARQUOTE qvar                 { VarQuote (nIS $1 <++> ann $2 <** [$1]) $2 }
 >       | VARQUOTE qcon                 { VarQuote (nIS $1 <++> ann $2 <** [$1]) $2 }
 >       | TYPQUOTE tyvar                { TypQuote (nIS $1 <++> ann $2 <** [$1]) (UnQual (ann $2) $2) }

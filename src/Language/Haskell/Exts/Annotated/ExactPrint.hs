@@ -1569,7 +1569,7 @@ instance ExactP Bracket where
          _ -> errorEP "ExactP: Bracket: TypeBracket is given wrong number of srcInfoPoints"
     DeclBracket l ds ->
         case srcInfoPoints l of
-         _:pts -> do
+         pts@(_:_) -> do
             printString "[d|"
             layoutList (init pts) (sepFunBinds ds)
             printStringAt (pos (last pts)) "|]"
