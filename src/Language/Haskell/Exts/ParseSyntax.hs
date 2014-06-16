@@ -261,18 +261,15 @@ p_unboxed_singleton_con l = Con l (unboxed_singleton_con_name l)
 data PContext l
     = CxSingle l (PAsst l)
     | CxTuple  l [PAsst l]
-    | CxParen  l (PContext l)
     | CxEmpty  l
  deriving (Eq, Show, Functor)
 
 instance Annotated PContext where
   ann (CxSingle l _ ) = l
   ann (CxTuple  l _)  = l
-  ann (CxParen  l _ ) = l
   ann (CxEmpty  l)       = l
   amap f (CxSingle l asst ) = CxSingle (f l) asst
   amap f (CxTuple  l assts) = CxTuple  (f l) assts
-  amap f (CxParen  l ctxt ) = CxParen  (f l) ctxt
   amap f (CxEmpty l) = CxEmpty (f l)
 
 data PType l
@@ -329,6 +326,7 @@ data PAsst l
     | InfixA l (PType l) (QName l) (PType l)
     | IParam l (IPName l) (PType l)
     | EqualP l (PType l)  (PType l)
+    | ParenA l (PAsst l)
   deriving (Eq, Show, Functor)
 
 instance Annotated PAsst where
@@ -337,11 +335,13 @@ instance Annotated PAsst where
         InfixA l _ _ _      -> l
         IParam l _ _        -> l
         EqualP l _ _        -> l
+        ParenA l _          -> l
     amap f asst = case asst of
         ClassA l qn ts      -> ClassA (f l) qn ts
         InfixA l ta qn tb   -> InfixA (f l) ta qn tb
         IParam l ipn t      -> IParam (f l) ipn t
         EqualP l t1 t2      -> EqualP (f l) t1 t2
+        ParenA l a          -> ParenA (f l) a
 
 
 unit_tycon, fun_tycon, list_tycon, unboxed_singleton_tycon :: l -> PType l

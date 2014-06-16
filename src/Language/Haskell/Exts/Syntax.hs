@@ -451,6 +451,7 @@ data Asst = ClassA QName [Type]     -- ^ ordinary class assertion
           | InfixA Type QName Type  -- ^ class assertion where the class name is given infix
           | IParam IPName Type      -- ^ implicit parameter assertion
           | EqualP Type   Type      -- ^ type equality constraint
+          | ParenA Asst             -- ^ parenthesised class assertion
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 -- | /literal/

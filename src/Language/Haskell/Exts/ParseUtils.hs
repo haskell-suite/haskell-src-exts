@@ -137,8 +137,8 @@ checkPContext (TyTuple l Boxed ts) =
 checkPContext (TyCon l (Special _ (UnitCon _))) =
     return $ CxEmpty l
 checkPContext (TyParen l t) = do
-    c <- checkPContext t
-    return $ CxParen l c
+    c <- checkAssertion t
+    return $ CxSingle l (ParenA l c)
 checkPContext (TyPred _ p@(EqualP l _ _)) =
   -- Depending on where EqualP is found, it may contain either 1 or 2 info
   -- points.
@@ -203,7 +203,6 @@ checkSContext (Just ctxt) = case ctxt of
     CxEmpty l -> return $ Just $ S.CxEmpty l
     CxSingle l a -> checkAsst True a >>= return . Just . S.CxSingle l
     CxTuple l as -> mapM (checkAsst True) as >>= return . Just . S.CxTuple l
-    CxParen l cx -> checkSContext (Just cx) >>= return . fmap (S.CxParen l)
 checkSContext _ = return Nothing
 
 -- Checks ordinary contexts for sigtypes and data type
@@ -215,7 +214,6 @@ checkContext (Just ctxt) = case ctxt of
     CxEmpty l -> return $ Just $ S.CxEmpty l
     CxSingle l a -> checkAsst False a >>= return . Just . S.CxSingle l
     CxTuple l as -> mapM (checkAsst False) as >>= return . Just . S.CxTuple l
-    CxParen l cx -> checkSContext (Just cx) >>= return . fmap (S.CxParen l)
 checkContext _ = return Nothing
 
 checkAsst :: Bool -> PAsst L -> P (S.Asst L)
@@ -234,6 +232,9 @@ checkAsst isSimple asst =
                 a <- checkType pa
                 b <- checkType pb
                 return $ S.EqualP l a b
+      ParenA l a      -> do
+                a' <- checkAsst isSimple a
+                return $ S.ParenA l a'
 
 checkAsstParam :: Bool -> PType L -> P (S.Type L)
 checkAsstParam isSimple t = do

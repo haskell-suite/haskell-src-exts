@@ -992,13 +992,6 @@ printContext ctxt = do
     let l = ann ctxt
         pts = init $ srcInfoPoints l
     case ctxt of
-     CxParen _ ctxt' ->
-        case pts of
-         [a,b] -> do
-            printStringAt (pos a) "("
-            printContext ctxt'
-            printStringAt (pos b) ")"
-         _ -> errorEP "ExactP: Context: CxParen is given wrong number of srcInfoPoints"
      CxSingle _ asst -> exactP asst
      CxEmpty _ ->
         case pts of
@@ -1027,6 +1020,13 @@ instance ExactP Asst where
             printStringAt (pos a) "~"
             exactPC t2
          _ -> internalError "Asst -> EqualP"
+    ParenA l asst' ->
+        case srcInfoPoints l of
+         [a,b,_] -> do
+            printStringAt (pos a) "("
+            exactPC asst'
+            printStringAt (pos b) ")"
+         _ -> errorEP "ExactP: Asst: ParenA is given wrong number of srcInfoPoints"
 
 instance ExactP Deriving where
   exactP (Deriving l ihs) =

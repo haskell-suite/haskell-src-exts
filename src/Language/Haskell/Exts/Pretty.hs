@@ -1174,8 +1174,13 @@ specialName (TupleCon b n) = "(" ++ hash ++ replicate (n-1) ',' ++ hash ++ ")"
 specialName Cons = ":"
 specialName UnboxedSingleCon = "(# #)"
 
+-- Contexts are "sets" of assertions. Several members really means it's a
+-- CxTuple, but we can't represent that in our list of assertions.
+-- Therefore: print single member contexts without parenthesis, and treat
+--            larger contexts as tuples.
 ppContext :: Context -> Doc
 ppContext []      = empty
+ppContext [ctxt]  = pretty ctxt <+> text "=>"
 ppContext context = mySep [parenList (map pretty context), text "=>"]
 
 -- hacked for multi-parameter type classes
@@ -1184,6 +1189,7 @@ instance Pretty Asst where
         pretty (InfixA a op b) = myFsep $ [pretty a, ppQNameInfix op, pretty b]
         pretty (IParam i t)    = myFsep $ [pretty i, text "::", pretty t]
         pretty (EqualP t1 t2)  = myFsep $ [pretty t1, text "~", pretty t2]
+        pretty (ParenA a)      = parens (pretty a)
 
 -- Pretty print a source location, useful for printing out error messages
 instance Pretty SrcLoc where
@@ -1468,7 +1474,6 @@ instance SrcInfo l => Pretty (A.Context l) where
         pretty (A.CxEmpty _) = mySep [text "()", text "=>"]
         pretty (A.CxSingle _ asst) = mySep [pretty asst, text "=>"]
         pretty (A.CxTuple _ assts) = myFsep $ [parenList (map pretty assts), text "=>"]
-        pretty (A.CxParen _ asst)  = parens (pretty asst)
 
 -- hacked for multi-parameter type classes
 instance SrcInfo l => Pretty (A.Asst l) where
@@ -1702,13 +1707,13 @@ instance SrcInfo loc => Pretty (P.PContext loc) where
         pretty (P.CxEmpty _) = mySep [text "()", text "=>"]
         pretty (P.CxSingle _ asst) = mySep [pretty asst, text "=>"]
         pretty (P.CxTuple _ assts) = myFsep $ [parenList (map pretty assts), text "=>"]
-        pretty (P.CxParen _ asst)  = parens (pretty asst)
 
 instance SrcInfo loc => Pretty (P.PAsst loc) where
         pretty (P.ClassA _ a ts)   = myFsep $ ppQName (sQName a) : map (prettyPrec prec_atype) ts
         pretty (P.InfixA _ a op b) = myFsep $ [pretty a, ppQNameInfix (sQName op), pretty b]
         pretty (P.IParam _ i t)    = myFsep $ [pretty i, text "::", pretty t]
         pretty (P.EqualP _ t1 t2)  = myFsep $ [pretty t1, text "~", pretty t2]
+        pretty (P.ParenA _ a)      = parens (pretty a)
 
 instance SrcInfo loc => Pretty (P.PType loc) where
         prettyPrec p (P.TyForall _ mtvs ctxt htype) = parensIf (p > 0) $

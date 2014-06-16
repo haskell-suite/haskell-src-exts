@@ -329,7 +329,6 @@ sContext :: SrcInfo l => Context l -> S.Context
 sContext ctxt = case ctxt of
     CxSingle _ asst     -> [sAsst asst]
     CxTuple  _ assts    -> map sAsst assts
-    CxParen  _ ct       -> sContext ct
     CxEmpty  _          -> []
 
 sAsst :: SrcInfo l => Asst l -> S.Asst
@@ -338,6 +337,7 @@ sAsst asst = case asst of
     InfixA _ ta qn tb   -> S.InfixA (sType ta) (sQName qn) (sType tb)
     IParam _ ipn t      -> S.IParam (sIPName ipn) (sType t)
     EqualP _ t1 t2      -> S.EqualP (sType t1) (sType t2)
+    ParenA _ a          -> S.ParenA (sAsst a)
 
 sLiteral :: Literal l -> S.Literal
 sLiteral lit = case lit of

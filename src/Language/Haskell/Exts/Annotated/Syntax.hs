@@ -508,7 +508,6 @@ data FunDep l
 data Context l
     = CxSingle l (Asst l)
     | CxTuple  l [Asst l]
-    | CxParen  l (Context l)
     | CxEmpty  l
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
@@ -521,6 +520,7 @@ data Asst l
         | InfixA l (Type l) (QName l) (Type l)  -- ^ class assertion where the class name is given infix
         | IParam l (IPName l) (Type l)          -- ^ implicit parameter assertion
         | EqualP l (Type l) (Type l)            -- ^ type equality constraint
+        | ParenA l (Asst l)                     -- ^ parenthesised class assertion
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | /literal/
@@ -1239,11 +1239,9 @@ instance Annotated FunDep where
 instance Annotated Context where
     ann (CxSingle l _) = l
     ann (CxTuple  l _) = l
-    ann (CxParen  l _) = l
     ann (CxEmpty  l)   = l
     amap f (CxSingle l asst ) = CxSingle (f l) asst
     amap f (CxTuple  l assts) = CxTuple  (f l) assts
-    amap f (CxParen  l ctxt ) = CxParen  (f l) ctxt
     amap f (CxEmpty l) = CxEmpty (f l)
 
 instance Annotated Asst where
@@ -1252,11 +1250,13 @@ instance Annotated Asst where
         InfixA l _ _ _   -> l
         IParam l _ _     -> l
         EqualP l _ _     -> l
+        ParenA l _       -> l
     amap f asst = case asst of
         ClassA l qn ts      -> ClassA (f l) qn ts
         InfixA l ta qn tb   -> InfixA (f l) ta qn tb
         IParam l ipn t      -> IParam (f l) ipn t
         EqualP l t1 t2      -> EqualP (f l) t1 t2
+        ParenA l a          -> ParenA (f l) a
 
 instance Annotated Literal where
     ann lit = case lit of
