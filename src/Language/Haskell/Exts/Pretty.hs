@@ -651,7 +651,7 @@ instance Pretty ModulePragma where
     pretty (LanguagePragma _ ns) =
         myFsep $ text "{-# LANGUAGE" : punctuate (char ',') (map pretty ns) ++ [text "#-}"]
     pretty (OptionsPragma _ (Just tool) s) =
-        myFsep $ [text "{-# OPTIONS_" <> pretty tool, text s, text "#-}"]
+        myFsep $ [text "{-# OPTIONS_" <> pretty tool, text s <> text "#-}"]
     pretty (OptionsPragma _ _ s) =
         myFsep $ [text "{-# OPTIONS", text s, text "#-}"]
     pretty (AnnModulePragma _ ann) =

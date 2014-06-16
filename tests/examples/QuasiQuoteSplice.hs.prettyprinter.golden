@@ -1,5 +1,5 @@
 {-# LANGUAGE TemplateHaskell, RankNTypes #-}
-{-# OPTIONS_GHC -F -pgmFtrhsx  #-}
+{-# OPTIONS_GHC -F -pgmFtrhsx #-}
 module Main (main) where
 import Language.Haskell.TH
  
