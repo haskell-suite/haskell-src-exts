@@ -317,6 +317,7 @@ toTyVarBind (TyKind l (TyVar _ n) k) = KindedVar l n k
 -}
 
 checkInstHeader :: PType L -> P (Maybe (S.Context L), InstHead L)
+checkInstHeader (TyParen _ t) = checkInstHeader t -- See bug #7.
 checkInstHeader (TyForall _ Nothing cs t) = do
     ih <- checkInsts t []
     cs' <- checkSContext cs
