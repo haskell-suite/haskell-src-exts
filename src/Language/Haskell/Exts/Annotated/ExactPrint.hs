@@ -1021,8 +1021,8 @@ instance ExactP Asst where
             exactPC t2
          _ -> internalError "Asst -> EqualP"
     ParenA l asst' ->
-        case srcInfoPoints l of
-         [a,b,_] -> do
+        case take 2 $ srcInfoPoints l of
+         [a,b] -> do
             printStringAt (pos a) "("
             exactPC asst'
             printStringAt (pos b) ")"

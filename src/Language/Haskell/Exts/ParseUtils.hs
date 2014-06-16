@@ -167,6 +167,9 @@ checkPContext t = do
 -- the class assertion parameters for later.
 checkAssertion :: PType L -> P (PAsst L)
 -- We cannot even get here unless ImplicitParameters is enabled.
+checkAssertion (TyParen l asst) = do
+    asst' <- checkAssertion asst
+    return $ ParenA l asst'
 checkAssertion (TyPred _ p@(IParam _ _ _)) = return p
 -- We cannot even get here unless TypeFamilies or GADTs is enabled.
 -- N.B.: this is called only when the equality assertion is part of a
