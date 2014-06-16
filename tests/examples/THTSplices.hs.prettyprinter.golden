@@ -1,0 +1,4 @@
+{-# LANGUAGE TemplateHaskell #-}
+module Main (main) where
+import Language.Haskell.TH
+main = undefined :: $( undefined )
