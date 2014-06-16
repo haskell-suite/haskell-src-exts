@@ -29,10 +29,12 @@ main = do
 
 -- | Where all the tests are to be found
 examplesDir :: FilePath
-examplesDir = "tests" </> "examples"
+examplesDir = "tests/examples"
+
+replaceAll c with = map (\x -> if x == c then with else x)
 
 getTestFiles :: MonadIO m => FilePath -> m [FilePath]
-getTestFiles dir = liftIO $ find (return True) (extension ==? ".hs" ||? extension ==? ".lhs") dir
+getTestFiles dir = liftIO $ fmap (map (replaceAll '\\' '/')) $ find (return True) (extension ==? ".hs" ||? extension ==? ".lhs") dir
 
 parserTests :: [FilePath] -> TestTree -- {{{
 parserTests sources = testGroup "Parser tests" $ do

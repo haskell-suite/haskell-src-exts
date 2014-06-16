@@ -1,1 +1,1 @@
-ParseFailed (SrcLoc "tests/examples/ConstraintKinds.hs" 8 1) "Parse error in type: Bar a ~ Maybe b"
+Match
