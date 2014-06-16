@@ -1,0 +1,6 @@
+{-# LANGUAGE TemplateHaskell #-}
+module Main (main) where
+ 
+[| f :: $ty |]
+ 
+[| f :: $( fun ty ) |]
