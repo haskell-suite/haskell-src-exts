@@ -96,6 +96,7 @@ Test-Suite test
   Build-depends:       base < 5,
                        mtl,
                        containers,
+                       easy-file,
                        filemanip,
                        haskell-src-exts,
                        smallcheck >= 1.0,

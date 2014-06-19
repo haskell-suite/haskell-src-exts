@@ -8,13 +8,14 @@ import qualified Language.Haskell.Exts as S -- S for "Simple", i.e. not annotate
 import Test.Tasty hiding (defaultMain)
 import Test.Tasty.Golden
 import Test.Tasty.Golden.Manage
-import System.FilePath
+import System.FilePath hiding (normalise)
 import System.FilePath.Find
 import System.IO
 import Control.Monad.Trans
 import Control.Applicative
 import Data.Generics
 import Extensions
+import System.EasyFile(normalise)
 
 main :: IO ()
 main = do
@@ -44,7 +45,7 @@ parserTests sources = testGroup "Parser tests" $ do
     run = do
       ast <-
         parseUTF8FileWithComments
-          (defaultParseMode { parseFilename = file })
+          (defaultParseMode { parseFilename = normalise file })
           file
       writeBinaryFile out $ show ast ++ "\n"
   return $ goldenVsFile (takeBaseName file) golden out run
@@ -63,7 +64,7 @@ exactPrinterTests sources = testGroup "Exact printer tests" $ do
         -- parse
         mbAst =
           parseFileContentsWithComments
-            (defaultParseMode { parseFilename = file })
+            (defaultParseMode { parseFilename = normalise file })
             contents
         -- try to pretty-print; summarize the test result
         result =
@@ -93,7 +94,7 @@ prettyPrinterTests sources = testGroup "Pretty printer tests" $ do
         -- parse
         mbAst =
           S.parseFileContentsWithMode
-            (defaultParseMode { parseFilename = file })
+            (defaultParseMode { parseFilename = normalise file })
             contents
         -- try to pretty-print; summarize the test result
         result =
@@ -118,7 +119,7 @@ prettyParserTests sources = testGroup "Pretty-parser tests" $ do
         parse1Result :: ParseResult S.Module
         parse1Result =
           S.parseFileContentsWithMode
-            (defaultParseMode { parseFilename = file })
+            (defaultParseMode { parseFilename = normalise file })
             contents
 
         prettyResult :: ParseResult String
