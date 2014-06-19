@@ -456,6 +456,9 @@ data KnownExtension =
   -- foreign function interface.
   | CApiFFI
 
+  -- | [GHC &#xa7; 7.3.27] Enable explicit namespaces in import/export.
+  | ExplicitNamespaces
+
   | DataKinds
 
   | PolyKinds

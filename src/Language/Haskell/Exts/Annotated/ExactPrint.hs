@@ -343,7 +343,15 @@ instance ExactP CName where
 
 instance ExactP ExportSpec where
   exactP espec = case espec of
-     EVar _ qn      -> exactP qn
+     EVar l t qn
+        | t -> do
+             case srcInfoPoints l of
+              [a,b] -> do
+                 printStringAt (pos a) "type"
+                 printWhitespace (pos b)
+                 exactP qn
+              _ -> errorEP "ExactP: EVar is given wrong number of srcInfoPoints"
+        | otherwise -> exactP qn
      EAbs _ qn      -> exactP qn
      EThingAll l qn -> exactP qn >> printPoints l ["(","..",")"]
      EThingWith l qn cns    ->
@@ -369,7 +377,15 @@ instance ExactP ImportSpecList where
 
 instance ExactP ImportSpec where
   exactP ispec = case ispec of
-    IVar _ n    -> exactP n
+    IVar l t qn
+       | t -> do
+             case srcInfoPoints l of
+               [a,b] -> do
+                  printStringAt (pos a) "type"
+                  printWhitespace (pos b)
+                  exactP qn
+               _ -> errorEP "ExactP: IVar is given wrong number of srcInfoPoints"
+          | otherwise -> exactP qn
     IAbs _ n    -> exactP n
     IThingAll l n   -> exactP n >> printPoints l ["(","..",")"]
     IThingWith l n cns    ->
