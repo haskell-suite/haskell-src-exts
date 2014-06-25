@@ -32,6 +32,7 @@ module Language.Haskell.Exts.ParseUtils (
     , checkPattern          -- PExp -> P Pat
     , checkExpr             -- PExp -> P Exp
     , checkType             -- PType -> P Type
+    , checkKind             -- Kind -> P ()
     , checkValDef           -- SrcLoc -> PExp -> Maybe Type -> Rhs -> Binds -> P Decl
     , checkClassBody        -- [ClassDecl] -> P [ClassDecl]
     , checkInstBody         -- [InstDecl] -> P [InstDecl]
@@ -987,6 +988,20 @@ check2Types at bt f = checkT at True >>= \a -> checkT bt True >>= \b -> return (
 
 checkTypes :: [PType L] -> P [S.Type L]
 checkTypes = mapM (flip checkT True)
+
+---------------------------------------
+-- Check kinds
+
+-- ConstraintKinds allow the kind "Constraint", but not "Nat", etc. Specifically
+-- test for that.
+checkKind :: Show l => Kind l -> P ()
+checkKind k = case k of
+        KindVar _ q | constrKind q -> checkEnabledOneOf [ConstraintKinds, DataKinds]
+            where constrKind name = case name of
+                    (UnQual _ (Ident _ n)) -> n == "Constraint"
+                    _                      -> False
+
+        _ -> checkEnabled DataKinds
 
 ---------------------------------------
 -- Converting a complete page

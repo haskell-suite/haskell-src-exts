@@ -483,7 +483,8 @@ data KnownExtension =
   | Trustworthy
 
 
-{- ConstraintKinds not yet supported by HSE
+-- ConstraintKinds not generally supported by HSE. This flag makes RCategory2.hs
+-- pass testing though.
 
   -- | [GHC &#xa7; 7.40] Allow type class/implicit parameter/equality
   -- constraints to be used as types with the special kind Constraint.
@@ -491,7 +492,6 @@ data KnownExtension =
   -- Constraint can occur before the arrow.
   | ConstraintKinds
 
--}
 
   deriving (Show, Read, Eq, Ord, Enum, Bounded, Data, Typeable)
 
