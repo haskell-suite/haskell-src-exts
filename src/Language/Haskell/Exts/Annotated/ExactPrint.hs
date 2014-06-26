@@ -231,7 +231,9 @@ instance ExactP SpecialCon where
   exactP sc = case sc of
     UnitCon l   -> printPoints l ["(",")"]
     ListCon l   -> printPoints l ["[","]"]
-    FunCon  l   -> printPoints l ["(","->",")"]
+    FunCon  l   -> case srcInfoPoints l of
+                    [_,b,_] -> printStringAt (pos b) "->"
+                    _ -> errorEP "ExactP: SpecialCon is given wrong number of srcInfoPoints"
     TupleCon l b n -> printPoints l $
         case b of
          Unboxed -> "(#": replicate (n-1) "," ++ ["#)"]
@@ -301,6 +303,7 @@ instance ExactP Name where
             printWhitespace (pos b)
             printString str
             printStringAt (pos c) ")"
+         [] -> printString str
          _ -> errorEP "ExactP: Name is given wrong number of srcInfoPoints"
 
 epName :: Name SrcSpanInfo -> EP ()
@@ -864,7 +867,14 @@ instance ExactP TyVarBind where
             exactPC k
             printStringAt (pos c) ")"
          _ -> errorEP "ExactP: TyVarBind: KindedVar is given wrong number of srcInfoPoints"
-  exactP (UnkindedVar _ n) = exactP n
+  exactP (UnkindedVar l n) =
+        case srcInfoPoints l of
+                 [a,_,c] -> do
+                    printStringAt (pos a) "("
+                    exactPC n
+                    printStringAt (pos c) ")"
+                 [] -> exactPC n
+                 _ -> errorEP "ExactP: TyVarBind: UnkindedVar is given wrong number of srcInfoPoints"
 
 instance ExactP Kind where
   exactP kd' = case kd' of
@@ -1656,7 +1666,7 @@ instance ExactP GuardedAlt where
 
 instance ExactP Pat where
   exactP pat = case pat of
-    PVar _ n    -> exactP n
+    PVar l n    -> exactPC (fmap (const l) n)
     PLit _ lit  -> exactP lit
     PNeg _ p    -> printString "-" >> exactPC p
     PNPlusK l n k   ->

@@ -57,6 +57,8 @@ module Language.Haskell.Exts.ParseUtils (
     -- Pragmas
     , checkRuleExpr         -- PExp -> P Exp
     , readTool              -- Maybe String -> Maybe Tool
+    -- Helpers
+    , updateQNameLoc        -- l -> QName l -> QName l
 
     -- Parsed expressions and types
     , PExp(..), PFieldUpdate(..), ParseXAttr(..), PType(..), PContext, PAsst(..)
@@ -288,7 +290,7 @@ checkSimple kw  (TyInfix l t1 (UnQual _ t) t2) [] = do
        tv1 <- mkTyVarBind kw t1
        tv2 <- mkTyVarBind kw t2
        return (DHInfix l tv1 t tv2)
-checkSimple _kw (TyCon l (UnQual _ t))   xs = do
+checkSimple _kw (TyCon _ (UnQual l t))   xs = do
     case t of
       Symbol _ _ -> checkEnabled TypeOperators
       _ -> return ()
@@ -366,7 +368,7 @@ checkPat (InfixApp _ l op r) args
         ps <- mapM checkPattern (BangPat (ann op) e:es)
         checkPat l (ps++args)
 checkPat e' [] = case e' of
-    Var l (UnQual _ x)   -> return (PVar l x)
+    Var _ (UnQual l x)   -> return (PVar l x)
     Lit l lit            -> return (PLit l lit)
     InfixApp loc l op r  ->
         case op of
@@ -780,7 +782,7 @@ isFunLhs _ _ = return Nothing
 -- a post-processing step
 
 checkSigVar :: PExp L -> P (Name L)
-checkSigVar (Var _ (UnQual _ n)) = return n
+checkSigVar (Var _ (UnQual l n)) = return $ fmap (const l) n
 checkSigVar e = fail $ "Left-hand side of type signature is not a variable: " ++ prettyPrint e
 
 -----------------------------------------------------------------------------
@@ -812,7 +814,7 @@ checkMethodDef _ = return ()
 
 checkUnQual :: QName L -> P (Name L)
 checkUnQual (Qual  _ _ _) = fail "Illegal qualified name"
-checkUnQual (UnQual  _ n) = return n
+checkUnQual (UnQual  l n) = return $ fmap (const l) n
 checkUnQual (Special _ _) = fail "Illegal special name"
 
 checkQualOrUnQual :: QName L -> P (QName L)
@@ -845,6 +847,11 @@ mkRecConstrOrUpdate :: PExp L -> [PFieldUpdate L] -> P (PExp L)
 mkRecConstrOrUpdate (Con l c) fs       = return (RecConstr l c fs)
 mkRecConstrOrUpdate e         fs@(_:_) = return (RecUpdate (ann e) e fs)
 mkRecConstrOrUpdate _         _        = fail "Empty record update"
+
+updateQNameLoc :: l -> QName l -> QName l
+updateQNameLoc l (Qual _ mn n) = Qual l mn n
+updateQNameLoc l (UnQual _ n)  = UnQual l n
+updateQNameLoc l (Special _ s) = Special l s
 
 -----------------------------------------------------------------------------
 -- Reverse a list of declarations, merging adjacent FunBinds of the

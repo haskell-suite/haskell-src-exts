@@ -871,8 +871,8 @@ type...
 
 > otycon :: { QName L }
 >       : qconid                        { $1 }
->       | '(' gconsym ')'               { fmap (const ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3])) $2 }
->       | '(' qvarsym ')'               { fmap (const ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3])) $2 }
+>       | '(' gconsym ')'               { updateQNameLoc ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3]) $2 }
+>       | '(' qvarsym ')'               { updateQNameLoc ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3]) $2 }
 
 These are for infix types
 
@@ -1680,7 +1680,7 @@ Variables, Constructors and Operators.
 
 > qvar  :: { QName L }
 >       : qvarid                { $1 }
->       | '(' qvarsym ')'       { fmap (const ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3])) $2 }
+>       | '(' qvarsym ')'       { updateQNameLoc ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3]) $2 }
 
 Implicit parameter
 > ivar  :: { IPName L }
@@ -1692,7 +1692,7 @@ Implicit parameter
 
 > qcon  :: { QName L }
 >       : qconid                { $1 }
->       | '(' gconsym ')'       { fmap (const ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3])) $2 }
+>       | '(' gconsym ')'       { updateQNameLoc ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3]) $2 }
 
 > varop :: { Name L }
 >       : varsym                { $1 }
@@ -1700,11 +1700,11 @@ Implicit parameter
 
 > qvarop :: { QName L }
 >       : qvarsym               { $1 }
->       | '`' qvarid '`'        { fmap (const ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3])) $2 }
+>       | '`' qvarid '`'        { updateQNameLoc ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3]) $2 }
 
 > qvaropm :: { QName L }
 >       : qvarsymm              { $1 }
->       | '`' qvarid '`'        { fmap (const ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3])) $2 }
+>       | '`' qvarid '`'        { updateQNameLoc ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3]) $2 }
 
 > conop :: { Name L }
 >       : consym                { $1 }
@@ -1712,7 +1712,7 @@ Implicit parameter
 
 > qconop :: { QName L }
 >       : gconsym               { $1 }
->       | '`' qconid '`'        { fmap (const ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3])) $2 }
+>       | '`' qconid '`'        { updateQNameLoc ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3]) $2 }
 
 > op    :: { Op L }
 >       : varop                 { VarOp (ann $1) $1 }
