@@ -1,1 +1,41 @@
-ParseFailed (SrcLoc "tests/examples/RCategory.lhs" 20 9) "MultiParamTypeClasses is not enabled"
+{-# LANGUAGE TypeFamilies, ConstraintKinds, MultiParamTypeClasses
+  #-}
+module Control.RCategory where
+import qualified Prelude
+import GHC.Prim
+ 
+infixr 9 .
+ 
+infixr 1 >>>, <<<
+ 
+class RCategory cat where
+        type RCategoryCtxt cat a b :: Constraint
+         
+        id :: RCategoryCtxt cat a a => cat a a
+         
+        (.) ::
+              (RCategoryCtxt cat b c, RCategoryCtxt cat a b,
+               RCategoryCtxt cat a c) =>
+              cat b c -> cat a b -> cat a c
+ 
+{-# RULES
+"identity/left" forall p . id . p = p
+"identity/right" forall p . p . id = p
+ #-}
+ 
+instance RCategory (->) where
+        type RCategoryCtxt (->) a a = ()
+        id = Prelude.id
+        (.) = (Prelude..)
+ 
+(<<<) ::
+        (RCategoryCtxt cat a c, RCategoryCtxt cat a b,
+         RCategoryCtxt cat b c, RCategory cat) =>
+        cat b c -> cat a b -> cat a c
+(<<<) = (.)
+ 
+(>>>) ::
+        (RCategoryCtxt cat a c, RCategoryCtxt cat a b,
+         RCategoryCtxt cat b c, RCategory cat) =>
+        cat a b -> cat b c -> cat a c
+f >>> g = g . f

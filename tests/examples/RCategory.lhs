@@ -1,5 +1,5 @@
 \begin{code}
-{-# LANGUAGE TypeFamilies, ConstraintKinds #-}
+{-# LANGUAGE TypeFamilies, ConstraintKinds, MultiParamTypeClasses #-}
 module Control.RCategory where
   
 
