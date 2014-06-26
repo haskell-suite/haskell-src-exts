@@ -1,4 +1,3 @@
-
 {-# LANGUAGE TypeFamilies, ConstraintKinds, MultiParamTypeClasses #-}
 module Control.RCategory where
 
@@ -44,6 +43,3 @@ instance RCategory (->) where
 (>>>) :: (RCategoryCtxt cat a c, RCategoryCtxt cat a b, RCategoryCtxt cat b c, RCategory cat)
       => cat a b -> cat b c -> cat a c
 f >>> g = g . f
-
-
-
