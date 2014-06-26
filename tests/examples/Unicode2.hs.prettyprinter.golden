@@ -1,0 +1,3 @@
+{-# LANGUAGE UnicodeSyntax #-}
+module Main (main) where
+lengthOP n (œ) = 0 œ n
