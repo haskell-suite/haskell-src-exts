@@ -1,4 +1,4 @@
-{-# OPTIONS -fglasgow-exts -cpp  #-}
+{-# OPTIONS -fglasgow-exts -cpp #-}
 {-# LANGUAGE MagicHash #-}
 module Language.C.Parser.Parser
        (parseC, translUnitP, extDeclP, statementP, expressionP) where

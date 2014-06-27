@@ -872,7 +872,7 @@ lexPragmaStart = do
 lexRawPragma :: Lex a String
 lexRawPragma = do
     rpr <- lexRawPragmaAux
-    return $ dropWhile isSpace rpr
+    return rpr
  where lexRawPragmaAux = do
         rpr <- lexWhile (/='#')
         s <- getInput

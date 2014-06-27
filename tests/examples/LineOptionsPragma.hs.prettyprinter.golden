@@ -1,2 +1,2 @@
-{-# OPTIONS  #-}
+{-# OPTIONS #-}
 module Fail where
