@@ -440,6 +440,9 @@ data KnownExtension =
   -- | Enable @deriving@ for the @Data.Functor.Functor@ class.
   | DeriveFunctor
 
+  -- | [GHC &#xa7; 7.5.3] Enable @deriving@ for the @Generic@ and @Generic1@ classes.
+  | DeriveGeneric
+
   -- | Enable @deriving@ for the @Data.Traversable.Traversable@ class.
   | DeriveTraversable
 
