@@ -531,6 +531,12 @@ instance Pretty Decl where
                 markLine pos $
                 mySep $ [text "{-# ANN", pretty ann, text "#-}"]
 
+        pretty (FreeVarsDecl pos nameList) =     
+                blankline $
+                markLine pos $
+                mySep ((punctuate comma . map pretty $ nameList)
+                      ++ [text "free"])
+
 instance Pretty Annotation where
         pretty (Ann n e) = myFsep [pretty n, pretty e]
         pretty (TypeAnn n e) = myFsep [text "type", pretty n, pretty e]
@@ -901,6 +907,11 @@ instance Pretty Exp where
         prettyPrec _ (TypQuote t)  = text "\'\'" <> pretty t
         prettyPrec _ (VarQuote x)  = text "\'" <> pretty x
         prettyPrec _ (QuasiQuote n qt) = text ("[" ++ n ++ "|" ++ qt ++ "|]")
+        --Curry
+        prettyPrec p (Fcase cond altList) = parensIf (p > 1) $
+                myFsep [text "fcase", pretty cond, text "of"]
+                $$$ ppBody caseIndent (map pretty altList)
+        prettyPrec _ AnonymousFreeVar = char '_'
         -- Hsx
         prettyPrec _ (XTag _ n attrs mattr cs) =
                 let ax = maybe [] (return . pretty) mattr
@@ -1608,6 +1619,9 @@ instance SrcInfo loc => Pretty (P.PExp loc) where
                 $$$ ppBody caseIndent (map pretty alts)
         pretty (P.Case _ cond altList) =
                 myFsep [text "case", pretty cond, text "of"]
+                $$$ ppBody caseIndent (map pretty altList)
+        pretty (P.Fcase _ cond altList) =
+                myFsep [text "fcase", pretty cond, text "of"]
                 $$$ ppBody caseIndent (map pretty altList)
         pretty (P.Do _ stmtList) =
                 text "do" $$$ ppBody doIndent (map pretty stmtList)

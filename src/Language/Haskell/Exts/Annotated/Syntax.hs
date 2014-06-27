@@ -306,6 +306,8 @@ data Decl l
      -- ^ A SPECIALISE instance pragma
      | AnnPragma        l (Annotation l)
      -- ^ An ANN pragma
+     | FreeVarsDecl     l [Name l]
+     -- ^ A Curry's free var declaration
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | A type equation as found in closed type families.
@@ -607,6 +609,10 @@ data Exp l
     | RightArrApp     l (Exp l) (Exp l)     -- ^ arrow application (from right): /exp/ @>-@ /exp/
     | LeftArrHighApp  l (Exp l) (Exp l)     -- ^ higher-order arrow application (from left): /exp/ @-<<@ /exp/
     | RightArrHighApp l (Exp l) (Exp l)     -- ^ higher-order arrow application (from right): /exp/ @>>-@ /exp/
+
+-- Curry
+    | Fcase l (Exp l) [Alt l]               -- ^ @fcase@ /exp/ @of@ /alts/
+    | AnonymousFreeVar l                    -- ^ Curry's anonymous free var: @_@
 
 -- LambdaCase
     | LCase l [Alt l]                       -- ^ @\case@ /alts/
@@ -1040,6 +1046,7 @@ instance Annotated Decl where
         SpecInlineSig    l _ _ _ _      -> l
         InstSig          l _ _          -> l
         AnnPragma        l _            -> l
+        FreeVarsDecl     l _            -> l
     amap f decl = case decl of
         TypeDecl     l dh t      -> TypeDecl    (f l) dh t
         TypeFamDecl  l dh mk     -> TypeFamDecl (f l) dh mk
@@ -1072,6 +1079,7 @@ instance Annotated Decl where
         SpecInlineSig    l b act qn ts   -> SpecInlineSig (f l) b act qn ts
         InstSig          l mcx ih        -> InstSig (f l) mcx ih
         AnnPragma        l ann'          -> AnnPragma (f l) ann'
+        FreeVarsDecl     l ns            -> FreeVarsDecl (f l) ns
 
 instance Annotated Annotation where
     ann (Ann     l _ _) = l
@@ -1309,6 +1317,8 @@ instance Annotated Exp where
         SpliceExp l _          -> l
         QuasiQuote l _ _       -> l
 
+        Fcase l _ _            -> l
+        AnonymousFreeVar l     -> l
         XTag  l _ _ _ _        -> l
         XETag l _ _ _          -> l
         XPcdata l _            -> l
@@ -1361,6 +1371,9 @@ instance Annotated Exp where
         BracketExp l br         -> BracketExp (f l) br
         SpliceExp l sp          -> SpliceExp (f l) sp
         QuasiQuote l sn se      -> QuasiQuote (f l) sn se
+
+        Fcase l e alts  -> Fcase (f l) e alts
+        AnonymousFreeVar l -> AnonymousFreeVar (f l)
 
         XTag  l xn xas me es     -> XTag  (f l) xn xas me es
         XETag l xn xas me        -> XETag (f l) xn xas me

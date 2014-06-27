@@ -95,6 +95,9 @@ data PExp l
     | LeftArrHighApp  l (PExp l) (PExp l)   -- ^ e -<< e
     | RightArrHighApp l (PExp l) (PExp l)   -- ^ e >>- e
 
+-- Curry
+    | Fcase l (PExp l) [Alt l]              -- ^ @fcase@ /exp/ @of@ /alts/
+
 -- LambdaCase
     | LCase l [Alt l]                       -- ^ @\case@ /alts/
    deriving (Eq,Show,Functor)
@@ -121,6 +124,7 @@ instance Annotated PExp where
         Let l _ _               -> l
         If l _ _ _              -> l
         Case l _ _              -> l
+        Fcase l _ _             -> l
         Do l _                  -> l
         MDo l _                 -> l
         TupleSection l _ _      -> l
@@ -185,6 +189,7 @@ instance Annotated PExp where
         Let l bs e              -> Let (f l) bs e
         If l ec et ee           -> If (f l) ec et ee
         Case l e alts           -> Case (f l) e alts
+        Fcase l e alts          -> Fcase (f l) e alts
         Do l ss                 -> Do (f l) ss
         MDo l ss                -> MDo (f l) ss
         TupleSection l bx mes   -> TupleSection (f l) bx mes

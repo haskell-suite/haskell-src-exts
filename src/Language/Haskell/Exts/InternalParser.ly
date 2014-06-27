@@ -225,6 +225,8 @@ Reserved Ids
 >       'as'            { Loc $$ KW_As }
 >       'by'            { Loc $$ KW_By }       -- transform list comprehensions
 >       'case'          { Loc $$ KW_Case }
+>       'fcase'         { Loc $$ KW_Fcase }    -- Curry
+>       'free'          { Loc $$ KW_Free }     -- Curry
 >       'class'         { Loc $$ KW_Class }
 >       'data'          { Loc $$ KW_Data }
 >       'default'       { Loc $$ KW_Default }
@@ -647,6 +649,15 @@ Parsing the body of a closed type family, partially stolen from the source of GH
 >       : signdecl                      { $1 }
 >       | fixdecl                       { $1 }
 >       | valdef                        { $1 }
+>       | freevarsdecl  {- Curry -}     { $1 }
+
+MarcoComini: do not have much idea about the role of the second component of thr triple and also on the tratment of srcspans
+> freevarsdecl :: { Decl L }
+>       : exp0b 'free'                  {% do { v <- checkSigVar $1; 
+>                                               return $ FreeVarsDecl (ann $1 <** [$2]) [v] } }
+>       | exp0b ',' vars 'free'         {% do { v <- checkSigVar $1;
+>                                               let { (vs,ss,l) = $3 ; l' = ann $1 <++> l <** ($2 : reverse ss) } ;
+>                                               return $ FreeVarsDecl l' (v:reverse vs) } }
 
 > decllist :: { Binds L }
 >       : '{'  decls '}'                { BDecls ($1 <^^> $3 <** ($1:snd $2++[$3])) (fst $2) }
@@ -1273,6 +1284,8 @@ mdo blocks require the RecursiveDo extension enabled, but the lexer handles that
 >       | '\\' 'case' altslist          {% do { checkEnabled LambdaCase ;
 >                                               let { (als, inf, ss) = $3 } ;
 >                                               return (LCase (nIS $1 <++> inf <** ($1:$2:ss)) als) } }
+>       | 'fcase' exp 'of' altslist     {- Curry -}    
+>                                       { let (als, inf, ss) = $4 in Fcase (nIS $1 <++> inf <** ($1:$3:ss)) $2 als }
 >       | '-' fexp                      { NegApp (nIS $1 <++> ann $2 <** [$1]) $2 }
 >       | 'do'  stmtlist                { let (sts, inf, ss) = $2 in Do   (nIS $1 <++> inf <** $1:ss) sts }
 >       | 'mdo' stmtlist                { let (sts, inf, ss) = $2 in MDo  (nIS $1 <++> inf <** $1:ss) sts }
