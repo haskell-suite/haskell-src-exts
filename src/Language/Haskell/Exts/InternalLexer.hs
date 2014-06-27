@@ -651,10 +651,12 @@ lexStdToken = do
                         discard 3
                         return THTypQuote
         '[':'$':c:_ | isLower c && QuasiQuotes `elem` exts ->
-                        discard 2 >> lexQuasiQuote
+                        discard 2 >> lexQuasiQuote c
 
         '[':c:s' | isLower c && QuasiQuotes `elem` exts && case dropWhile isIdent s' of { '|':_ -> True;_->False} ->
-                        discard 1 >> lexQuasiQuote
+                        discard 1 >> lexQuasiQuote c
+                 | isUpper c && QuasiQuotes `elem` exts ->
+                        discard 1 >> lexQuasiQuote c
 
         '|':']':_ | TemplateHaskell `elem` exts -> do
                         discard 2
@@ -765,13 +767,21 @@ lexStdToken = do
                         return [ident ++ "#"]
                  _ -> return [ident]
 
-            lexQuasiQuote :: Lex a Token
-            lexQuasiQuote = do
+            lexQuasiQuote :: Char -> Lex a Token
+            lexQuasiQuote c = do
                 -- We've seen and dropped [$ already
-                ident <- lexWhile isIdent
+                ident <- lexQuoter
                 matchChar '|' "Malformed quasi-quote quoter"
                 body <- lexQQBody
                 return $ THQuasiQuote (ident, body)
+                  where lexQuoter
+                         | isLower c = lexWhile isIdent
+                         | otherwise = do
+                            qualThing <- lexConIdOrQual ""
+                            case qualThing of
+                                QVarId (s1,s2) -> return $ s1 ++ '.':s2
+                                QVarSym (s1, s2) -> return $ s1 ++ '.':s2
+                                _                -> fail "Malformed quasi-quote quoter"
 
             lexQQBody :: Lex a String
             lexQQBody = do
