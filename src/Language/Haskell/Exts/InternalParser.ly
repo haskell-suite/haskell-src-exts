@@ -1326,8 +1326,8 @@ updates: they could be labeled constructions.
 
 > aexp1 :: { PExp L }
 >       : aexp1 '{' '}'                 {% liftM (amap (const (ann $1 <++> nIS $3 <** [$2,$3]))) $ mkRecConstrOrUpdate $1 [] }
->       | aexp1 '{' fbinds '}'          {% liftM (amap (const (ann $1 <++> nIS $4 <** ($2:reverse (snd $3) ++ [$4]))))
->                                               $ mkRecConstrOrUpdate $1 (reverse (fst $3)) }
+>       | aexp1 '{' fbinds '}'          {% liftM (amap (const (ann $1 <++> nIS $4 <** ($2:snd $3 ++ [$4]))))
+>                                               $ mkRecConstrOrUpdate $1 (fst $3) }
 >       | aexp2                         { $1 }
 
 According to the Report, the left section (e op) is legal iff (e op x)
@@ -1635,16 +1635,16 @@ A let statement may bind implicit parameters.
 Record Field Update/Construction
 
 > fbinds :: { ([PFieldUpdate L],[S]) }
->       : fbinds ',' fbind              { let (fbs, ss) = $1 in ($3 : fbs, $2 : ss) }
+>       : fbind ',' fbinds              { let (fbs, ss) = $3 in ($1 : fbs, $2 : ss) }
 >       | fbind                         { ([$1],[]) }
+>       | '..'                          {% do { checkEnabled RecordWildCards `atSrcLoc` (getPointLoc $1);
+>                                               return ([FieldWildcard (nIS $1)], []) } }
 
 Puns and wild cards need the respective extensions enabled.
 
 > fbind :: { PFieldUpdate L }
 >       : qvar '=' exp                  { FieldUpdate ($1 <>$3 <** [$2]) $1 $3 }
 >       | qvar                          {% checkEnabled NamedFieldPuns >> checkQualOrUnQual $1 >>= return . FieldPun (ann $1) }
->       | '..'                          {% do { checkEnabled RecordWildCards`atSrcLoc` (getPointLoc $1);
->                                               return (FieldWildcard (nIS $1)) } }
 
 -----------------------------------------------------------------------------
 Implicit parameter bindings - need the ImplicitParameter extension enabled, but the lexer handles that.
