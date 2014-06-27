@@ -1,0 +1,1 @@
+{-# RULES "head/build" forall (g::forall b.(a->b->b)->b->b) . head (build g) = g (\x _ -> x) badHead #-}
