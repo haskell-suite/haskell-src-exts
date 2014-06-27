@@ -692,9 +692,9 @@ lexStdToken = do
 
         -- pragmas
 
-        '{':'-':'#':_ -> do discard 3 >> lexPragmaStart
+        '{':'-':'#':_ -> do saveExtensionsL >> discard 3 >> lexPragmaStart
 
-        '#':'-':'}':_ -> do discard 3 >> return PragmaEnd
+        '#':'-':'}':_ -> do restoreExtensionsL >> discard 3 >> return PragmaEnd
 
         c:_ | isDigit c -> lexDecimalOrFloat
 
@@ -852,6 +852,9 @@ lexPragmaStart = do
                 rest <- lexRawPragma
                 return $ OPTIONS (Nothing, rest)
              _ -> fail "Malformed Options pragma"
+     Just RULES -> do -- Rules enable ScopedTypeVariables locally.
+            addExtensionL ScopedTypeVariables
+            return RULES
 {-     Just (CFILES _) -> do
             rest <- lexRawPragma
             return $ CFILES rest
