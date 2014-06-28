@@ -531,10 +531,22 @@ instance Pretty Decl where
                 markLine pos $
                 mySep $ [text "{-# ANN", pretty ann, text "#-}"]
 
+        pretty (MinimalPragma pos b) =
+                blankline $
+                markLine pos $
+                let bs = case b of { Just b' -> pretty b'; _ -> empty }
+                in myFsep $ [text "{-# MINIMAL", bs, text "#-}"]
+
 instance Pretty Annotation where
         pretty (Ann n e) = myFsep [pretty n, pretty e]
         pretty (TypeAnn n e) = myFsep [text "type", pretty n, pretty e]
         pretty (ModuleAnn e) = myFsep [text "module", pretty e]
+
+instance Pretty BooleanFormula where
+        pretty (VarFormula n)   = pretty n
+        pretty (AndFormula bs)  = myFsep $ punctuate (text " ,") $ map pretty bs
+        pretty (OrFormula bs)   = myFsep $ punctuate (text " |") $ map pretty bs
+        pretty (ParenFormula b) = parens $ pretty b
 
 instance Pretty DataOrNew where
         pretty DataType = text "data"

@@ -144,6 +144,7 @@ data Token
 --        | INCLUDE String
         | LANGUAGE
         | ANN
+        | MINIMAL
 
 -- Reserved Ids
 
@@ -315,6 +316,7 @@ pragmas = [
  ( "core",              CORE            ),
  ( "unpack",            UNPACK          ),
  ( "language",          LANGUAGE        ),
+ ( "minimal",           MINIMAL         ),
  ( "options",           OPTIONS undefined ) -- we'll tweak it before use - promise!
 -- ( "cfiles",            CFILES  undefined ), -- same here...
 -- ( "include",           INCLUDE undefined )  -- ...and here!
@@ -1278,6 +1280,7 @@ showToken t = case t of
 --  INCLUDE s         -> "{-# INCLUDE ..."
   LANGUAGE          -> "{-# LANGUAGE"
   ANN               -> "{-# ANN"
+  MINIMAL           -> "{-# MINIMAL"
   KW_As         -> "as"
   KW_By         -> "by"
   KW_Case       -> "case"

@@ -274,6 +274,7 @@ Pragmas
        '{-# INCLUDE'           { Loc _ (INCLUDE _) }
 >       '{-# LANGUAGE'          { Loc $$ LANGUAGE }      -- 137
 >       '{-# ANN'               { Loc $$ ANN }
+>       '{-# MINIMAL'           { Loc $$ MINIMAL }
 >       '#-}'                   { Loc $$ PragmaEnd }      -- 139
 
 
@@ -671,6 +672,7 @@ Parsing the body of a closed type family, partially stolen from the source of GH
 >       | '{-# SPECIALISE' 'instance' ctype '#-}'        {% do { (cs,ih) <- checkInstHeader $3;
 >                                                                let {l = $1 <^^> $4 <** [$1,$2,$4]};
 >                                                                return $ InstSig l cs ih } }
+>       | '{-# MINIMAL' name_boolformula '#-}'           { MinimalPragma ($1 <^^> $3 <** [$1,$3]) $2 }
 
 > sigtypes :: { ([Type L],[S]) }
 >       : sigtype                           { ([$1],[]) }
@@ -678,6 +680,22 @@ Parsing the body of a closed type family, partially stolen from the source of GH
 
 > sigtype :: { Type L }
 >       : ctype                             {% checkType $ mkTyForall (ann $1) Nothing Nothing $1 }
+
+> name_boolformula :: { Maybe (BooleanFormula L) }
+>        : name_boolformula1         { Just $1 }
+>        | {- empty -}               { Nothing }
+
+> name_boolformula1 :: { BooleanFormula L }
+>        : name_boolformula_and                       { $1 }
+>        | name_boolformula_and '|' name_boolformula1 { OrFormula (ann $1 <++>  ann $3 <** [$2]) [$1,$3] }
+
+> name_boolformula_and :: { BooleanFormula L }
+>        : name_boolformula_atom                             { $1 }
+>        | name_boolformula_atom ',' name_boolformula_and    { AndFormula (ann $1 <++> ann $3 <** [$2]) [$1,$3] }
+
+> name_boolformula_atom :: { BooleanFormula L }
+>        : '(' name_boolformula1 ')' { ParenFormula ($1 <^^> $3 <** [$1,$3]) $2 }
+>        | var                       { VarFormula (ann $1) $1 }
 
 Binding can be either of implicit parameters, or it can be a normal sequence
 of declarations. The two kinds cannot be mixed within the same block of

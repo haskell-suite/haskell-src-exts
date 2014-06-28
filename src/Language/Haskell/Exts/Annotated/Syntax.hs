@@ -77,7 +77,7 @@ module Language.Haskell.Exts.Annotated.Syntax (
     -- * Pragmas
     ModulePragma(..), Tool(..),
     Rule(..), RuleVar(..), Activation(..),
-    Annotation(..),
+    Annotation(..), BooleanFormula(..),
 
     -- * Builtin names
 
@@ -306,6 +306,8 @@ data Decl l
      -- ^ A SPECIALISE instance pragma
      | AnnPragma        l (Annotation l)
      -- ^ An ANN pragma
+     | MinimalPragma    l (Maybe (BooleanFormula l))
+     -- ^ A MINIMAL pragma
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | A type equation as found in closed type families.
@@ -321,6 +323,13 @@ data Annotation l
     -- ^ An annotation for the defining module.
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
+-- | A boolean formula for MINIMAL pragmas.
+data BooleanFormula l
+    = VarFormula l (Name l)              -- ^ A variable.
+    | AndFormula l [BooleanFormula l]    -- ^ And boolean formulas.
+    | OrFormula l [BooleanFormula l]     -- ^ Or boolean formulas.
+    | ParenFormula l (BooleanFormula l)  -- ^ Parenthesized boolean formulas.
+  deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | A flag stating whether a declaration is a data or newtype declaration.
 data DataOrNew l = DataType l | NewType l
@@ -1040,6 +1049,7 @@ instance Annotated Decl where
         SpecInlineSig    l _ _ _ _      -> l
         InstSig          l _ _          -> l
         AnnPragma        l _            -> l
+        MinimalPragma    l _            -> l
     amap f decl = case decl of
         TypeDecl     l dh t      -> TypeDecl    (f l) dh t
         TypeFamDecl  l dh mk     -> TypeFamDecl (f l) dh mk
@@ -1072,6 +1082,7 @@ instance Annotated Decl where
         SpecInlineSig    l b act qn ts   -> SpecInlineSig (f l) b act qn ts
         InstSig          l mcx ih        -> InstSig (f l) mcx ih
         AnnPragma        l ann'          -> AnnPragma (f l) ann'
+        MinimalPragma    l b             -> MinimalPragma (f l) b
 
 instance Annotated Annotation where
     ann (Ann     l _ _) = l
@@ -1080,6 +1091,16 @@ instance Annotated Annotation where
     amap f (Ann     l n e) = Ann     (f l) n e
     amap f (TypeAnn l n e) = TypeAnn (f l) n e
     amap f (ModuleAnn l e) = ModuleAnn (f l) e
+
+instance Annotated BooleanFormula where
+    ann (VarFormula l _)   = l
+    ann (AndFormula l _)   = l
+    ann (OrFormula l _)    = l
+    ann (ParenFormula l _) = l
+    amap f (VarFormula l n)   = VarFormula (f l) n
+    amap f (AndFormula l bs)  = AndFormula (f l) bs
+    amap f (OrFormula l bs)   = OrFormula (f l) bs
+    amap f (ParenFormula l b) = ParenFormula (f l) b
 
 instance Annotated DataOrNew where
     ann (DataType l) = l

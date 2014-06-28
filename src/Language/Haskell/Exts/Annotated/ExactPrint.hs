@@ -799,6 +799,13 @@ instance ExactP Decl where
             exactPC ann'
             printStringAt (pos b) "#-}"
          _ -> errorEP "ExactP: Decl: AnnPragma is given wrong number of srcInfoPoints"
+    MinimalPragma       l b      ->
+        case srcInfoPoints l of
+         [_,b'] -> do
+            printString $ "{-# MINIMAL"
+            maybeEP exactPC b
+            printStringAt (pos b') "#-}"
+         _ -> errorEP "ExactP: Decl: MinimalPragma is given wrong number of srcInfoPoints"
 
 
 instance ExactP Annotation where
@@ -813,6 +820,20 @@ instance ExactP Annotation where
         ModuleAnn _ e   -> do
             printString "module"
             exactPC e
+
+instance ExactP BooleanFormula where
+    exactP b' = case b' of
+        VarFormula _ n -> exactPC n
+        AndFormula l bs ->
+         let pts = srcInfoPoints l
+         in printStreams (zip (map pos pts) (repeat $ printString ",")) (map (pos . ann &&& exactPC) bs)
+        OrFormula l bs   ->
+         let pts = srcInfoPoints l
+         in printStreams (zip (map pos pts) (repeat $ printString "|")) (map (pos . ann &&& exactPC) bs)
+        ParenFormula l b   ->
+            case srcInfoPoints l of
+                [a'',b''] -> printStringAt (pos a'') "(" >> exactPC b >> printStringAt (pos b'') ")"
+                _ -> errorEP "ExactP: BooleanFormula: ParenFormula is given wrong number of srcInfoPoints"
 
 printWarndeprs :: [Pos] -> [([Name SrcSpanInfo], String)] -> EP ()
 printWarndeprs _ [] = return ()

@@ -73,7 +73,7 @@ module Language.Haskell.Exts.Syntax (
     -- * Pragmas
     ModulePragma(..), Tool(..),
     Rule(..), RuleVar(..), Activation(..),
-    Annotation(..),
+    Annotation(..), BooleanFormula(..),
 
     -- * Builtin names
 
@@ -281,6 +281,8 @@ data Decl
      -- ^ A SPECIALISE instance pragma
      | AnnPragma        SrcLoc Annotation
      -- ^ An ANN pragma
+     | MinimalPragma    SrcLoc (Maybe BooleanFormula)
+     -- ^ A MINIMAL pragma
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 -- | A type equation of the form @rhs = lhs@ used in closed type families.
@@ -294,6 +296,14 @@ data Annotation
     -- ^ An annotation for a declared type.
     | ModuleAnn      Exp
     -- ^ An annotation for the defining module.
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+
+-- | A boolean formula for MINIMAL pragmas.
+data BooleanFormula
+    = VarFormula Name                -- ^ A variable.
+    | AndFormula [BooleanFormula]    -- ^ And boolean formulas.
+    | OrFormula [BooleanFormula]     -- ^ Or boolean formulas.
+    | ParenFormula BooleanFormula    -- ^ Parenthesized boolean formulas.
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 -- | A flag stating whether a declaration is a data or newtype declaration.

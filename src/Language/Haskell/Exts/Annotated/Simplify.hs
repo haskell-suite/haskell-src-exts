@@ -114,6 +114,8 @@ sDecl decl = case decl of
          in S.InstSig (getPointLoc l) (maybe [] sContext mctxt) qn ts
      AnnPragma        l ann'        ->
         S.AnnPragma (getPointLoc l) (sAnnotation ann')
+     MinimalPragma    l b           ->
+        S.MinimalPragma (getPointLoc l) (fmap sBooleanFormula b)
 
 sTypeEqn :: SrcInfo l => TypeEqn l -> S.TypeEqn
 sTypeEqn (TypeEqn _ a b) = S.TypeEqn (sType a) (sType b)
@@ -123,6 +125,13 @@ sAnnotation ann' = case ann' of
     Ann       _ n e   -> S.Ann     (sName n) (sExp e)
     TypeAnn   _ n e   -> S.TypeAnn (sName n) (sExp e)
     ModuleAnn _   e   -> S.ModuleAnn         (sExp e)
+
+sBooleanFormula :: SrcInfo loc => BooleanFormula loc -> S.BooleanFormula
+sBooleanFormula b' = case b' of
+    VarFormula _ n   -> S.VarFormula (sName n)
+    AndFormula _ ns  -> S.AndFormula $ map sBooleanFormula ns
+    OrFormula _  ns  -> S.OrFormula $ map sBooleanFormula ns
+    ParenFormula _ b -> S.ParenFormula (sBooleanFormula b)
 
 sModuleName :: ModuleName l -> S.ModuleName
 sModuleName (ModuleName _ str)  = S.ModuleName str
