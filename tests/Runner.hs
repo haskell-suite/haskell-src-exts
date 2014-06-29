@@ -9,7 +9,6 @@ import Test.Tasty hiding (defaultMain)
 import Test.Tasty.Golden
 import Test.Tasty.Golden.Manage
 import System.FilePath
-import System.FilePath.Find
 import System.IO
 import Control.Monad.Trans
 import Control.Applicative
@@ -32,7 +31,7 @@ examplesDir :: FilePath
 examplesDir = "tests" </> "examples"
 
 getTestFiles :: MonadIO m => FilePath -> m [FilePath]
-getTestFiles dir = liftIO $ find (return True) (extension ==? ".hs" ||? extension ==? ".lhs") dir
+getTestFiles dir = liftIO $ findByExtension [".hs", ".lhs"] dir
 
 parserTests :: [FilePath] -> TestTree -- {{{
 parserTests sources = testGroup "Parser tests" $ do
