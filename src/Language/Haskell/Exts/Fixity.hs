@@ -330,6 +330,7 @@ leafFix fixs e' = case e' of
     MDo stmts               -> liftM MDo $ mapM fix stmts
     Tuple bx exps           -> liftM (Tuple bx) $ mapM fix exps
     List exps               -> liftM List $ mapM fix  exps
+    ParArray exps           -> liftM ParArray $ mapM fix exps
     Paren e                 -> liftM Paren $ fix e
     LeftSection e op        -> liftM (flip LeftSection op) (fix e)
     RightSection op e       -> liftM (RightSection op) $ fix e
@@ -339,8 +340,11 @@ leafFix fixs e' = case e' of
     EnumFromTo e1 e2        -> liftM2 EnumFromTo (fix e1) (fix e2)
     EnumFromThen e1 e2      -> liftM2 EnumFromThen (fix e1) (fix e2)
     EnumFromThenTo e1 e2 e3 -> liftM3 EnumFromThenTo (fix e1) (fix e2) (fix e3)
+    ParArrayFromTo e1 e2     -> liftM2 ParArrayFromTo (fix e1) (fix e2)
+    ParArrayFromThenTo e1 e2 e3 -> liftM3 ParArrayFromThenTo (fix e1) (fix e2) (fix e3)
     ListComp e quals        -> liftM2 ListComp (fix e) $ mapM fix quals
     ParComp  e qualss       -> liftM2 ParComp (fix e) $ mapM (mapM fix) qualss
+    ParArrayComp  e qualss  -> liftM2 ParArrayComp (fix e) $ mapM (mapM fix) qualss
     ExpTypeSig loc e t      -> liftM (flip (ExpTypeSig loc) t) (fix e)
     BracketExp b            -> liftM BracketExp $ fix b
     SpliceExp s             -> liftM SpliceExp $ fix s

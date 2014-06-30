@@ -312,7 +312,8 @@ data KnownExtension =
   -- or type variable to be an infix operator.
   | TypeOperators
 
---PArr -- not ready yet, and will probably be renamed to ParallelArrays
+  -- | [GHC &#xa7; 7.26.5] Parallel arrays for Data Parallel Haskell.
+  | ParallelArrays
 
   -- | [GHC &#xa7; 7.3.16] Enable syntax for implicitly binding local names
   -- corresponding to the field names of a record.  A wildcard binds

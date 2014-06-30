@@ -180,9 +180,10 @@ pList' [] _ = []
 pList' [p] (_,c) = [(p,c)]
 pList' (p:ps) (b,c) = (p, b) : pList' ps (b,c)
 
-parenList, squareList, curlyList, parenHashList :: (Annotated ast, ExactP ast) => [SrcSpan] -> [ast SrcSpanInfo] -> EP ()
+parenList, squareList, squareColonList, curlyList, parenHashList :: (Annotated ast, ExactP ast) => [SrcSpan] -> [ast SrcSpanInfo] -> EP ()
 parenList = bracketList ("(",",",")")
 squareList = bracketList ("[",",","]")
+squareColonList = bracketList ("[:",",",":]")
 curlyList = bracketList ("{",",","}")
 parenHashList = bracketList ("(#",",","#)")
 
@@ -975,6 +976,13 @@ instance ExactP Type where
             exactPC t
             printStringAt (pos b) "]"
          _ -> errorEP "ExactP: Type: TyList is given wrong number of srcInfoPoints"
+    TyParArray l t     -> do
+        case srcInfoPoints l of
+         [_,b] -> do
+            printString "[:"
+            exactPC t
+            printStringAt (pos b) ":]"
+         _ -> errorEP "ExactP: Type: TyParArray is given wrong number of srcInfoPoints"
     TyApp   _ t1 t2 -> exactP t1 >> exactPC t2
     TyVar   _ n     -> exactP n
     TyCon   _ qn    -> exactP qn
@@ -1311,6 +1319,7 @@ instance ExactP Exp where
         printSeq $ interleave (zip (map pos $ init pts) (map printString (o: repeat ",")) ++ [(pos $ last pts, printString e)])
                               (map (maybe (0,0) (pos . ann) &&& maybeEP exactPC) mexps)
     List l es               -> squareList (srcInfoPoints l) es
+    ParArray l es           -> squareColonList (srcInfoPoints l) es
     Paren l p               -> parenList (srcInfoPoints l) [p]
     LeftSection l e qop     ->
         case srcInfoPoints l of
@@ -1374,6 +1383,26 @@ instance ExactP Exp where
             exactPC e3
             printStringAt (pos d) "]"
          _ -> errorEP "ExactP: Exp: EnumFromToThen is given wrong number of srcInfoPoints"
+    ParArrayFromTo l e1 e2      ->
+        case srcInfoPoints l of
+         [_,b,c] -> do
+            printString "[:"
+            exactPC e1
+            printStringAt (pos b) ".."
+            exactPC e2
+            printStringAt (pos c) ":]"
+         _ -> errorEP "ExactP: Exp: ParArrayFromTo is given wrong number of srcInfoPoints"
+    ParArrayFromThenTo l e1 e2 e3   ->
+        case srcInfoPoints l of
+         [_,b,c,d] -> do
+            printString "[:"
+            exactPC e1
+            printStringAt (pos b) ","
+            exactPC e2
+            printStringAt (pos c) ".."
+            exactPC e3
+            printStringAt (pos d) ":]"
+         _ -> errorEP "ExactP: Exp: ParArrayFromToThen is given wrong number of srcInfoPoints"
     ListComp l e qss            ->
         case srcInfoPoints l of
          _:pts -> do
@@ -1392,6 +1421,17 @@ instance ExactP Exp where
       where pairUp [] = []
             pairUp ((a:as):xs) = ("|", a) : zip (repeat ",") as ++ pairUp xs
             pairUp _ = internalError "Exp -> ParComp -> pairUp"
+    ParArrayComp  l e qsss           ->
+        case srcInfoPoints l of
+         _:pts -> do
+            let (strs, qss) = unzip $ pairUp qsss
+            printString "[:"
+            exactPC e
+            printInterleaved (zip pts (strs ++ [":]"])) qss
+         _ -> errorEP "ExactP: Exp: ParArrayComp is given wrong number of srcInfoPoints"
+      where pairUp [] = []
+            pairUp ((a:as):xs) = ("|", a) : zip (repeat "|") as ++ pairUp xs
+            pairUp _ = internalError "Exp -> ParArrayComp -> pairUp"
 
     ExpTypeSig l e t    ->
         case srcInfoPoints l of

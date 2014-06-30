@@ -143,6 +143,8 @@ Symbols
 >       vccurly { Loc $$ VRightCurly }                 -- a virtual close brace
 >       '['     { Loc $$ LeftSquare }
 >       ']'     { Loc $$ RightSquare }
+>       '[:'    { Loc $$ ParArrayLeftSquare }
+>       ':]'    { Loc $$ ParArrayRightSquare }
 >       ','     { Loc $$ Comma }
 >       '_'     { Loc $$ Underscore }
 >       '`'     { Loc $$ BackQuote }
@@ -852,6 +854,7 @@ the (# and #) lexemes. Kinds will be handled at the kind rule.
 >       | '(' types ')'                 { TyTuple ($1 <^^> $3 <** ($1:reverse ($3:snd $2))) Boxed   (reverse (fst $2)) }
 >       | '(#' types1 '#)'              { TyTuple ($1 <^^> $3 <** ($1:reverse ($3:snd $2))) Unboxed (reverse (fst $2)) }
 >       | '[' type ']'                  { TyList  ($1 <^^> $3 <** [$1,$3]) $2 }
+>       | '[:' type ':]'                { TyParArray  ($1 <^^> $3 <** [$1,$3]) $2 }
 >       | '(' ctype ')'                 { TyParen ($1 <^^> $3 <** [$1,$3]) $2 }
 >       | '(' ctype '::' kind ')'       { TyKind  ($1 <^^> $5 <** [$1,$3,$5]) $2 $4 }
 >       | '$(' trueexp ')'              { let l = ($1 <^^> $3 <** [$1,$3]) in TySplice l $ ParenSplice l $2 }
@@ -1378,6 +1381,7 @@ thing we need to look at here is the erpats that use no non-standard lexemes.
 >       | '(#' commas texp thashsectend { TupleSection ($1 <^^> head (snd $4) <** $1:reverse (snd $4 ++ $2)) Unboxed
 >                                                       (replicate (length $2) Nothing ++ Just $3 : fst $4) }
 >       | '[' list ']'                  { amap (\l -> l <** [$3]) $ $2 ($1 <^^> $3 <** [$1]) }
+>       | '[:' parr ':]'                { amap (\l -> l <** [$3]) $ $2 ($1 <^^> $3 <** [$1]) }
 >       | '_'                           { WildCard (nIS $1) }
 >       | '(' erpats ')'                {% checkEnabled RegularPatterns >> return (Paren ($1 <^^> $3 <** [$1,$3]) $2) }
 >       | '(|' sexps '|)'               { SeqRP ($1 <^^> $3 <** ($1:reverse (snd $2) ++ [$3])) $ reverse (fst $2) }
@@ -1579,6 +1583,19 @@ List comprehensions
 >       | trueexp                       { Qualifier (ann $1) $1 }
 >       | 'let' binds                   { LetStmt   (nIS $1 <++> ann $2 <** [$1]) $2 }
 
+-----------------------------------------------------------------------------
+Parallel array expressions
+
+See comments on list expressions. Parallel arrays are finite sequences.
+This definition also allows empty arrays.
+
+> parr :: { L -> PExp L }
+>        :                               { \l -> ParArray l [] }
+>        | texp                          { \l -> ParArray l [$1] }
+>        | lexps                         { \l -> let (ps,ss) = $1 in ParArray (l <** reverse ss) (reverse ps) }
+>        | texp '..' exp                 { \l -> ParArrayFromTo     (l <** [$2]) $1 $3  }
+>        | texp ',' exp '..' exp         { \l -> ParArrayFromThenTo (l <** [$2,$4]) $1 $3 $5 }
+>        | texp '|' pqualstmts           { \l -> let (stss, ss) = $3 in ParArrayComp (l <** ($2:ss)) $1 (reverse stss) }
 
 -----------------------------------------------------------------------------
 Case alternatives

@@ -468,6 +468,7 @@ data Type l
      | TyFun   l (Type l) (Type l)              -- ^ function type
      | TyTuple l Boxed [Type l]                 -- ^ tuple type, possibly boxed
      | TyList  l (Type l)                       -- ^ list syntax, e.g. [a], as opposed to [] a
+     | TyParArray  l (Type l)                   -- ^ parallel array syntax, e.g. [:a:]
      | TyApp   l (Type l) (Type l)              -- ^ application of a type constructor
      | TyVar   l (Name l)                       -- ^ type variable
      | TyCon   l (QName l)                      -- ^ named type or type constructor
@@ -575,6 +576,7 @@ data Exp l
     | Tuple l Boxed [Exp l]                 -- ^ tuple expression
     | TupleSection l Boxed [Maybe (Exp l)]  -- ^ tuple section expression, e.g. @(,,3)@
     | List l [Exp l]                        -- ^ list expression
+    | ParArray l [Exp l]                    -- ^ parallel array expression
     | Paren l (Exp l)                       -- ^ parenthesised expression
     | LeftSection l (Exp l) (QOp l)         -- ^ left section @(@/exp/ /qop/@)@
     | RightSection l (QOp l) (Exp l)        -- ^ right section @(@/qop/ /exp/@)@
@@ -589,8 +591,14 @@ data Exp l
     | EnumFromThenTo l (Exp l) (Exp l) (Exp l)
                                             -- ^ bounded arithmetic sequence,
                                             --   with first two elements given @[from, then .. to]@
+    | ParArrayFromTo l (Exp l) (Exp l)      -- ^ Parallel array bounded arithmetic sequence,
+                                            --   incrementing by 1 @[:from .. to:]@
+    | ParArrayFromThenTo l (Exp l) (Exp l) (Exp l)
+                                            -- ^ bounded arithmetic sequence,
+                                            --   with first two elements given @[:from, then .. to:]@
     | ListComp l (Exp l) [QualStmt l]       -- ^ ordinary list comprehension
     | ParComp  l (Exp l) [[QualStmt l]]     -- ^ parallel list comprehension
+    | ParArrayComp  l (Exp l) [[QualStmt l]] -- ^ parallel array comprehension
     | ExpTypeSig l (Exp l) (Type l)         -- ^ expression with explicit type signature
 
     | VarQuote l (QName l)                  -- ^ @'x@ for template haskell reifying of expressions
@@ -1218,6 +1226,7 @@ instance Annotated Type where
       TyFun   l _ _                 -> l
       TyTuple l _ _                 -> l
       TyList  l _                   -> l
+      TyParArray  l _               -> l
       TyApp   l _ _                 -> l
       TyVar   l _                   -> l
       TyCon   l _                   -> l
@@ -1231,6 +1240,7 @@ instance Annotated Type where
       TyFun   l t1' t2              -> TyFun (f l) t1' t2
       TyTuple l b ts                -> TyTuple (f l) b ts
       TyList  l t                   -> TyList (f l) t
+      TyParArray  l t               -> TyParArray (f l) t
       TyApp   l t1' t2              -> TyApp (f l) t1' t2
       TyVar   l n                   -> TyVar (f l) n
       TyCon   l qn                  -> TyCon (f l) qn
@@ -1323,6 +1333,7 @@ instance Annotated Exp where
         Tuple l _ _            -> l
         TupleSection l _ _     -> l
         List l _               -> l
+        ParArray l _           -> l
         Paren l _              -> l
         LeftSection l _ _      -> l
         RightSection l _ _     -> l
@@ -1332,8 +1343,11 @@ instance Annotated Exp where
         EnumFromTo l _ _       -> l
         EnumFromThen l _ _     -> l
         EnumFromThenTo l _ _ _ -> l
+        ParArrayFromTo l _ _   -> l
+        ParArrayFromThenTo l _ _ _ -> l
         ListComp l _ _         -> l
         ParComp  l _ _         -> l
+        ParArrayComp  l _ _    -> l
         ExpTypeSig l _ _       -> l
         VarQuote l _           -> l
         TypQuote l _           -> l
@@ -1376,6 +1390,7 @@ instance Annotated Exp where
         Tuple l bx es   -> Tuple (f l) bx es
         TupleSection l bx mes -> TupleSection (f l) bx mes
         List l es       -> List (f l) es
+        ParArray l es   -> ParArray (f l) es
         Paren l e       -> Paren (f l) e
         LeftSection l e qop     -> LeftSection (f l) e qop
         RightSection l qop e    -> RightSection (f l) qop e
@@ -1385,8 +1400,11 @@ instance Annotated Exp where
         EnumFromTo l ef et      -> EnumFromTo (f l) ef et
         EnumFromThen l ef et    -> EnumFromThen (f l) ef et
         EnumFromThenTo l ef eth eto -> EnumFromThenTo (f l) ef eth eto
+        ParArrayFromTo l ef et  -> ParArrayFromTo (f l) ef et
+        ParArrayFromThenTo l ef eth eto -> ParArrayFromThenTo (f l) ef eth eto
         ListComp l e qss        -> ListComp (f l) e qss
         ParComp  l e qsss       -> ParComp  (f l) e qsss
+        ParArrayComp  l e qsss  -> ParArrayComp  (f l) e qsss
         ExpTypeSig l e t        -> ExpTypeSig (f l) e t
         VarQuote l qn           -> VarQuote (f l) qn
         TypQuote l qn           -> TypQuote (f l) qn

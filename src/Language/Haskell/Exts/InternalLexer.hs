@@ -69,6 +69,8 @@ data Token
         | VRightCurly           -- a virtual close brace
         | LeftSquare
         | RightSquare
+        | ParArrayLeftSquare -- [:
+        | ParArrayRightSquare -- :]
         | Comma
         | Underscore
         | BackQuote
@@ -214,6 +216,9 @@ reserved_ops = [
  ( "~",  (Tilde,        Nothing) ),
  ( "=>", (DoubleArrow,  Nothing) ),
  ( "*",  (Star,         Just (Any [KindSignatures])) ),
+ -- Parallel arrays
+ ( "[:", (ParArrayLeftSquare,   Just (Any [ParallelArrays])) ),
+ ( ":]", (ParArrayRightSquare,  Just (Any [ParallelArrays])) ),
  -- Arrows notation
  ( "-<",  (LeftArrowTail,       Just (Any [Arrows])) ),
  ( ">-",  (RightArrowTail,      Just (Any [Arrows])) ),
@@ -702,6 +707,12 @@ lexStdToken = do
         '{':'-':'#':_ -> do saveExtensionsL >> discard 3 >> lexPragmaStart
 
         '#':'-':'}':_ -> do restoreExtensionsL >> discard 3 >> return PragmaEnd
+
+        -- Parallel arrays
+
+        '[':':':_ | ParallelArrays `elem` exts -> discard 2 >> return ParArrayLeftSquare
+
+        ':':']':_ | ParallelArrays `elem` exts -> discard 2 >> return ParArrayRightSquare
 
         c:_ | isDigit c -> lexDecimalOrFloat
 
@@ -1232,6 +1243,8 @@ showToken t = case t of
   VRightCurly       -> "virtual }"
   LeftSquare        -> "["
   RightSquare       -> "]"
+  ParArrayLeftSquare -> "[:"
+  ParArrayRightSquare -> ":]"
   Comma             -> ","
   Underscore        -> "_"
   BackQuote         -> "`"

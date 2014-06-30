@@ -409,6 +409,7 @@ data Type
      | TyFun   Type Type        -- ^ function type
      | TyTuple Boxed [Type]     -- ^ tuple type, possibly boxed
      | TyList  Type             -- ^ list syntax, e.g. [a], as opposed to [] a
+     | TyParArray Type          -- ^ parallel array syntax, e.g. [:a:]
      | TyApp   Type Type        -- ^ application of a type constructor
      | TyVar   Name             -- ^ type variable
      | TyCon   QName            -- ^ named type or type constructor
@@ -505,6 +506,7 @@ data Exp
     | Tuple Boxed [Exp]         -- ^ tuple expression
     | TupleSection Boxed [Maybe Exp]  -- ^ tuple section expression, e.g. @(,,3)@
     | List [Exp]                -- ^ list expression
+    | ParArray [Exp]            -- ^ parallel array expression
     | Paren Exp                 -- ^ parenthesised expression
     | LeftSection Exp QOp       -- ^ left section @(@/exp/ /qop/@)@
     | RightSection QOp Exp      -- ^ right section @(@/qop/ /exp/@)@
@@ -521,8 +523,15 @@ data Exp
     | EnumFromThenTo Exp Exp Exp
                                 -- ^ bounded arithmetic sequence,
                                 --   with first two elements given @[from, then .. to]@
+    | ParArrayFromTo Exp Exp    -- ^ bounded arithmetic sequence,
+                                --   incrementing by 1 @[from .. to]@
+    | ParArrayFromThenTo Exp Exp Exp
+                                -- ^ bounded arithmetic sequence,
+                                --   with first two elements given @[from, then .. to]@
     | ListComp Exp  [QualStmt]    -- ^ ordinary list comprehension
     | ParComp  Exp [[QualStmt]]   -- ^ parallel list comprehension
+    | ParArrayComp  Exp [[QualStmt]]
+                                  -- ^ parallel array comprehension
     | ExpTypeSig SrcLoc Exp Type  -- ^ expression with explicit type signature
 
     | VarQuote QName            -- ^ @'x@ for template haskell reifying of expressions

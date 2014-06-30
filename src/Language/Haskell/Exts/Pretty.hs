@@ -747,6 +747,7 @@ instance Pretty Type where
                         Boxed   -> parenList ds
                         Unboxed -> hashParenList ds
         prettyPrec _ (TyList t)  = brackets $ pretty t
+        prettyPrec _ (TyParArray t) = bracketColonList [pretty t]
         prettyPrec p (TyApp a b) =
                 {-
                 | a == list_tycon = brackets $ pretty b         -- special case
@@ -897,9 +898,11 @@ instance Pretty Exp where
                 pretty c <> (braceList . map pretty $ fieldList)
         prettyPrec _ (RecUpdate e fieldList) =
                 pretty e <> (braceList . map pretty $ fieldList)
-        -- Lists
+        -- Lists and parallel arrays
         prettyPrec _ (List list) =
                 bracketList . punctuate comma . map pretty $ list
+        prettyPrec _ (ParArray arr) =
+                bracketColonList . map pretty $ arr
         prettyPrec _ (EnumFrom e) =
                 bracketList [pretty e, text ".."]
         prettyPrec _ (EnumFromTo from to) =
@@ -909,12 +912,20 @@ instance Pretty Exp where
         prettyPrec _ (EnumFromThenTo from thenE to) =
                 bracketList [pretty from <> comma, pretty thenE,
                              text "..", pretty to]
+        prettyPrec _ (ParArrayFromTo from to) =
+                bracketColonList [pretty from, text "..", pretty to]
+        prettyPrec _ (ParArrayFromThenTo from thenE to) =
+                bracketColonList [pretty from <> comma, pretty thenE,
+                             text "..", pretty to]
         prettyPrec _ (ListComp e qualList) =
                 bracketList ([pretty e, char '|']
                              ++ (punctuate comma . map pretty $ qualList))
         prettyPrec _ (ParComp e qualLists) =
                 bracketList (punctuate (char '|') $
                                 pretty e : (map (hsep . punctuate comma . map pretty) $ qualLists))
+        prettyPrec _ (ParArrayComp e qualArrs) =
+                bracketColonList (punctuate (char '|') $
+                                pretty e : (map (hsep . punctuate comma . map pretty) $ qualArrs))
         prettyPrec p (ExpTypeSig _pos e ty) = parensIf (p > 0) $
                 myFsep [pretty e, text "::", pretty ty]
         -- Template Haskell
@@ -1522,6 +1533,11 @@ braceList = braces . myFsepSimple . punctuate comma
 bracketList :: [Doc] -> Doc
 bracketList = brackets . myFsepSimple
 
+bracketColonList :: [Doc] -> Doc
+bracketColonList = bracketColons . myFsepSimple
+    where bracketColons = brackets . colons
+          colons = \doc -> char ':' <> doc <> char ':'
+
 -- Wrap in braces and semicolons, with an extra space at the start in
 -- case the first doc begins with "-", which would be scanned as {-
 flatBlock :: [Doc] -> Doc
@@ -1652,6 +1668,8 @@ instance SrcInfo loc => Pretty (P.PExp loc) where
                 pretty e <> (braceList . map pretty $ fieldList)
         pretty (P.List _ list) =
                 bracketList . punctuate comma . map pretty $ list
+        pretty (P.ParArray _ arr) =
+                bracketColonList . punctuate comma . map pretty $ arr
         pretty (P.EnumFrom _ e) =
                 bracketList [pretty e, text ".."]
         pretty (P.EnumFromTo _ from to) =
@@ -1661,9 +1679,17 @@ instance SrcInfo loc => Pretty (P.PExp loc) where
         pretty (P.EnumFromThenTo _ from thenE to) =
                 bracketList [pretty from <> comma, pretty thenE,
                              text "..", pretty to]
+        pretty (P.ParArrayFromTo _ from to) =
+                bracketColonList [pretty from, text "..", pretty to]
+        pretty (P.ParArrayFromThenTo _ from thenE to) =
+                bracketColonList [pretty from <> comma, pretty thenE,
+                             text "..", pretty to]
         pretty (P.ParComp _ e qualLists) =
                 bracketList (intersperse (char '|') $
                                 pretty e : (punctuate comma . concatMap (map pretty) $ qualLists))
+        pretty (P.ParArrayComp _ e qualArrs) =
+                bracketColonList (intersperse (char '|') $
+                                pretty e : (punctuate comma . concatMap (map pretty) $ qualArrs))
         pretty (P.ExpTypeSig _pos e ty) =
                 myFsep [pretty e, text "::", pretty ty]
         pretty (P.BracketExp _ b) = pretty b
@@ -1750,6 +1776,7 @@ instance SrcInfo loc => Pretty (P.PType loc) where
                         Boxed   -> parenList ds
                         Unboxed -> hashParenList ds
         prettyPrec _ (P.TyList _ t)  = brackets $ pretty t
+        prettyPrec _ (P.TyParArray _ t) = bracketColonList [pretty t]
         prettyPrec p (P.TyApp _ a b) =
                 {-
                 | a == list_tycon = brackets $ pretty b         -- special case

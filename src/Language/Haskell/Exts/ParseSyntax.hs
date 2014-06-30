@@ -28,6 +28,7 @@ data PExp l
 --    | Tuple [PExp]                        -- ^ tuple expression
     | TupleSection l Boxed [Maybe (PExp l)] -- ^ tuple section expression, e.g. @(,,3)@
     | List l [PExp l]                       -- ^ list expression
+    | ParArray l [PExp l]                   -- ^ parallel array expression
     | Paren l (PExp l)                      -- ^ parenthesized expression
 --     RightSection QOp PExp                -- ^ right section @(@/qop/ /exp/@)@
     | RecConstr l (QName l) [PFieldUpdate l]
@@ -43,7 +44,13 @@ data PExp l
     | EnumFromThenTo l (PExp l) (PExp l) (PExp l)
                                             -- ^ bounded arithmetic sequence,
                                             --   with first two elements given
+    | ParArrayFromTo l (PExp l) (PExp l)    -- ^ bounded arithmetic sequence,
+                                            --   incrementing by 1
+    | ParArrayFromThenTo l (PExp l) (PExp l) (PExp l)
+                                            -- ^ bounded arithmetic sequence,
+                                            --   with first two elements given
     | ParComp l (PExp l) [[QualStmt l]]     -- ^ parallel list comprehension
+    | ParArrayComp l (PExp l) [[QualStmt l]] -- ^ parallel array comprehension
     | ExpTypeSig l (PExp l) (S.Type l)      -- ^ expression type signature
     | AsPat l (Name l) (PExp l)             -- ^ patterns only
     | WildCard l                            -- ^ patterns only
@@ -125,6 +132,7 @@ instance Annotated PExp where
         MDo l _                 -> l
         TupleSection l _ _      -> l
         List l _                -> l
+        ParArray l _            -> l
         Paren l _               -> l
         RecConstr l _ _         -> l
         RecUpdate l _  _        -> l
@@ -132,7 +140,10 @@ instance Annotated PExp where
         EnumFromTo l _ _        -> l
         EnumFromThen l _ _      -> l
         EnumFromThenTo l _ _ _  -> l
+        ParArrayFromTo l _ _    -> l
+        ParArrayFromThenTo l _ _ _ -> l
         ParComp  l _ _          -> l
+        ParArrayComp  l _ _     -> l
         ExpTypeSig l _ _        -> l
         AsPat l _ _             -> l
         WildCard l              -> l
@@ -189,6 +200,7 @@ instance Annotated PExp where
         MDo l ss                -> MDo (f l) ss
         TupleSection l bx mes   -> TupleSection (f l) bx mes
         List l es               -> List (f l) es
+        ParArray l es           -> ParArray (f l) es
         Paren l e               -> Paren (f l) e
         RecConstr l qn fups     -> RecConstr (f l) qn fups
         RecUpdate l e  fups     -> RecUpdate (f l) e  fups
@@ -196,7 +208,10 @@ instance Annotated PExp where
         EnumFromTo l ef et      -> EnumFromTo (f l) ef et
         EnumFromThen l ef et    -> EnumFromThen (f l) ef et
         EnumFromThenTo l ef eth eto -> EnumFromThenTo (f l) ef eth eto
+        ParArrayFromTo l ef et  -> ParArrayFromTo (f l) ef et
+        ParArrayFromThenTo l ef eth eto -> ParArrayFromThenTo (f l) ef eth eto
         ParComp  l e qsss       -> ParComp  (f l) e qsss
+        ParArrayComp  l e qsss  -> ParArrayComp  (f l) e qsss
         ExpTypeSig l e t        -> ExpTypeSig (f l) e t
 
         AsPat l n e             -> AsPat (f l) n e
@@ -280,6 +295,7 @@ data PType l
      | TyFun   l (PType l) (PType l)            -- ^ function type
      | TyTuple l Boxed     [PType l]            -- ^ tuple type, possibly boxed
      | TyList  l (PType l)                      -- ^ list syntax, e.g. [a], as opposed to [] a
+     | TyParArray l (PType l)                   -- ^ parallel array syntax, e.g. [:a:]
      | TyApp   l (PType l) (PType l)            -- ^ application of a type constructor
      | TyVar   l (Name l)                       -- ^ type variable
      | TyCon   l (QName l)                      -- ^ named type or type constructor
@@ -297,6 +313,7 @@ instance Annotated PType where
       TyFun   l _ _                 -> l
       TyTuple l _ _                 -> l
       TyList  l _                   -> l
+      TyParArray  l _               -> l
       TyApp   l _ _                 -> l
       TyVar   l _                   -> l
       TyCon   l _                   -> l
@@ -311,6 +328,7 @@ instance Annotated PType where
       TyFun   l t1 t2               -> TyFun (f l) t1 t2
       TyTuple l b ts                -> TyTuple (f l) b ts
       TyList  l t                   -> TyList (f l) t
+      TyParArray  l t               -> TyParArray (f l) t
       TyApp   l t1 t2               -> TyApp (f l) t1 t2
       TyVar   l n                   -> TyVar (f l) n
       TyCon   l qn                  -> TyCon (f l) qn

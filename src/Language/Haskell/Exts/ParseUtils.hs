@@ -606,6 +606,7 @@ checkExpr e' = case e' of
 
 
     List l es         -> checkManyExprs es (S.List l)
+    ParArray l es     -> checkManyExprs es (S.ParArray l)
     -- Since we don't parse things as left or right sections, we need to mangle them into that.
     Paren l e         -> case e of
                           PostOp _ e1 op -> check1Expr e1 (flip (S.LeftSection l) op)
@@ -622,12 +623,17 @@ checkExpr e' = case e' of
     EnumFromTo l e1 e2    -> check2Exprs e1 e2 (S.EnumFromTo l)
     EnumFromThen l e1 e2      -> check2Exprs e1 e2 (S.EnumFromThen l)
     EnumFromThenTo l e1 e2 e3 -> check3Exprs e1 e2 e3 (S.EnumFromThenTo l)
+    ParArrayFromTo l e1 e2    -> check2Exprs e1 e2 (S.ParArrayFromTo l)
+    ParArrayFromThenTo l e1 e2 e3 -> check3Exprs e1 e2 e3 (S.ParArrayFromThenTo l)
     -- a parallel list comprehension, which could be just a simple one
     ParComp l e qualss        -> do
                      e1 <- checkExpr e
                      case qualss of
                       [quals] -> return (S.ListComp l e1 quals)
                       _       -> return (S.ParComp l e1 qualss)
+    ParArrayComp l e qualss        -> do
+                     e1 <- checkExpr e
+                     return (S.ParArrayComp l e1 qualss)
     ExpTypeSig loc e ty     -> do
                      e1 <- checkExpr e
                      return (S.ExpTypeSig loc e1 ty)
@@ -981,6 +987,7 @@ checkT t simple = case t of
     TyFun   l at rt   -> check2Types at rt (S.TyFun l)
     TyTuple l b pts   -> checkTypes pts >>= return . S.TyTuple l b
     TyList  l pt      -> check1Type pt (S.TyList l)
+    TyParArray l pt   -> check1Type pt (S.TyParArray l)
     TyApp   l ft at   -> check2Types ft at (S.TyApp l)
     TyVar   l n       -> return $ S.TyVar l n
     TyCon   l n       -> do
