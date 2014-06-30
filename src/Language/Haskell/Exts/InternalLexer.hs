@@ -604,6 +604,11 @@ lexStdToken = do
                         (n, str) <- lexOctal
                         con <- intHash
                         return (con (n, '0':c:str))
+                  | toLower c == 'b' && isBinDigit d && BinaryLiterals `elem` exts -> do
+                        discard 2
+                        (n, str) <- lexBinary
+                        con <- intHash
+                        return (con (n, '0':c:str))
                   | toLower c == 'x' && isHexDigit d -> do
                         discard 2
                         (n, str) <- lexHexadecimal
@@ -1158,6 +1163,12 @@ lexOctal = do
     ds <- lexWhile isOctDigit
     return (parseInteger 8 ds, ds)
 
+-- assumes at least one binary digit
+lexBinary :: Lex a (Integer, String)
+lexBinary = do
+    ds <- lexWhile isBinDigit
+    return (parseInteger 2 ds, ds)
+
 -- assumes at least one hexadecimal digit
 lexHexadecimal :: Lex a (Integer, String)
 lexHexadecimal = do
@@ -1182,6 +1193,9 @@ flagKW t = do
        when (NondecreasingIndentation `elem` exts) $
             flagDo
 
+-- | Selects ASCII binary digits, i.e. @\'0\'@..@\'1\'@.
+isBinDigit :: Char -> Bool
+isBinDigit c =  c >= '0' && c <= '1'
 ------------------------------------------------------------------
 -- "Pretty" printing for tokens
 

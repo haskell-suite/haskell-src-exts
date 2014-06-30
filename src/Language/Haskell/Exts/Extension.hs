@@ -284,6 +284,9 @@ data KnownExtension =
   -- identifiers.  Also enables literal syntax for unboxed values.
   | MagicHash
 
+  -- | Binary integer literals
+  | BinaryLiterals
+
   -- | [GHC &#xa7; 7.7] Allow data types and type synonyms which are
   -- indexed by types, i.e. ad-hoc polymorphism for types.
   | TypeFamilies
