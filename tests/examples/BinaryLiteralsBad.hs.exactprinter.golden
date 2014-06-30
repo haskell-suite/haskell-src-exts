@@ -1,0 +1,1 @@
+ParseFailed (SrcLoc "tests/examples/BinaryLiteralsBad.hs" 3 1) "arity mismatch for 'f'"

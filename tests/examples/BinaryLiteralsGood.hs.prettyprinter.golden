@@ -1,0 +1,14 @@
+{-# LANGUAGE BinaryLiterals #-}
+{-# LANGUAGE MagicHash #-}
+module Main (main) where
+import GHC.Types
+main
+  = do print
+         [I# 0#, I# - 0#, I# 1#, I# - 1#, I# 1#, I# - 1#, I# - 201#,
+          I# - 201#, I# - 255#, I# - 255#]
+       print [W# 0##, W# 1##, W# 201##, W# 3##, W# 255##, W# 1##]
+       print
+         [0, 1, 2, 3, 4, 5, 6, 7 :: Integer, -0, -1, -2, -3, -4, -5, -6, -7,
+          340282366920938463463374607431768211455,
+          -340282366920938463463374607431768211455]
+       print [I8# - 128#, I8# 127#]
