@@ -1313,14 +1313,16 @@ instance SrcInfo pos => Pretty (A.Decl pos) where
         pretty = pretty . sDecl
 
 instance Pretty (A.DeclHead l) where
-    pretty (A.DHead _ n tvs)       = mySep (pretty n : map pretty tvs)
-    pretty (A.DHInfix _ tva n tvb) = mySep [pretty tva, pretty n, pretty tvb]
+    pretty (A.DHead _ n)           = pretty n
+    pretty (A.DHInfix _ tva n)     = mySep [pretty tva, pretty n]
     pretty (A.DHParen _ dh)        = parens (pretty dh)
+    pretty (A.DHApp _ dh t)        = myFsep [pretty dh, pretty t]
 
 instance SrcInfo l => Pretty (A.InstHead l) where
-    pretty (A.IHead _ qn ts)       = mySep (pretty qn : map pretty ts)
-    pretty (A.IHInfix _ ta qn tb)  = mySep [pretty ta, pretty qn, pretty tb]
+    pretty (A.IHead _ qn)          = pretty qn
+    pretty (A.IHInfix _ ta qn)     = mySep [pretty ta, pretty qn]
     pretty (A.IHParen _ ih)        = parens (pretty ih)
+    pretty (A.IHApp _ ih t)        = myFsep [pretty ih, pretty t]
 
 instance Pretty (A.DataOrNew l) where
         pretty = pretty . sDataOrNew
@@ -1390,7 +1392,7 @@ instance SrcInfo l => Pretty (A.BangType l) where
 
 instance SrcInfo l => Pretty (A.Deriving l) where
         pretty (A.Deriving _ []) = text "deriving" <+> parenList []
-        pretty (A.Deriving _ [A.IHead _ d []]) = text "deriving" <+> pretty d
+        pretty (A.Deriving _ [A.IHead _ d]) = text "deriving" <+> pretty d
         pretty (A.Deriving _ ihs) = text "deriving" <+> parenList (map pretty ihs)
 
 ------------------------- Types -------------------------

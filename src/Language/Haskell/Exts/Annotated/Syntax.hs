@@ -338,16 +338,18 @@ data DataOrNew l = DataType l | NewType l
 
 -- | The head of a type or class declaration.
 data DeclHead l
-    = DHead l (Name l) [TyVarBind l]
-    | DHInfix l (TyVarBind l) (Name l) (TyVarBind l)
+    = DHead l (Name l)
+    | DHInfix l (TyVarBind l) (Name l)
     | DHParen l (DeclHead l)
+    | DHApp   l (DeclHead l) (TyVarBind l)
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | The head of an instance declaration.
 data InstHead l
-    = IHead l (QName l) [Type l]
-    | IHInfix l (Type l) (QName l) (Type l)
+    = IHead l (QName l)
+    | IHInfix l (Type l) (QName l)
     | IHParen l (InstHead l)
+    | IHApp   l (InstHead l) (Type l)
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | A deriving clause following a data type declaration.
@@ -1111,20 +1113,24 @@ instance Annotated DataOrNew where
     amap = fmap
 
 instance Annotated DeclHead where
-    ann (DHead l _ _)     = l
-    ann (DHInfix l _ _ _) = l
-    ann (DHParen l _)     = l
-    amap f (DHead l n tvs)       = DHead (f l) n tvs
-    amap f (DHInfix l tva n tvb) = DHInfix (f l) tva n tvb
+    ann (DHead l _)              = l
+    ann (DHInfix l _ _)          = l
+    ann (DHParen l _)            = l
+    ann (DHApp l _ _)            = l
+    amap f (DHead l n)           = DHead (f l) n
+    amap f (DHInfix l tva n)     = DHInfix (f l) tva n
     amap f (DHParen l dh)        = DHParen (f l) dh
+    amap f (DHApp l dh t)        = DHApp (f l) dh t
 
 instance Annotated InstHead where
-    ann (IHead l _ _)     = l
-    ann (IHInfix l _ _ _) = l
-    ann (IHParen l _)     = l
-    amap f (IHead l qn ts)       = IHead (f l) qn ts
-    amap f (IHInfix l ta qn tb)  = IHInfix (f l) ta qn tb
+    ann (IHead l _)              = l
+    ann (IHInfix l _ _)          = l
+    ann (IHParen l _)            = l
+    ann (IHApp l _ _)            = l
+    amap f (IHead l qn)          = IHead (f l) qn
+    amap f (IHInfix l ta qn)     = IHInfix (f l) ta qn
     amap f (IHParen l ih)        = IHParen (f l) ih
+    amap f (IHApp l ih t)        = IHApp (f l) ih t
 
 instance Annotated Binds where
     ann (BDecls  l _) = l

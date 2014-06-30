@@ -208,16 +208,22 @@ sAssoc a = case a of
     AssocRight _ -> S.AssocRight
 
 sDeclHead :: DeclHead l -> (S.Name, [S.TyVarBind])
-sDeclHead dh' = case dh' of
-    DHead _ n tvs       -> (sName n, map sTyVarBind tvs)
-    DHInfix _ tva n tvb -> (sName n, map sTyVarBind [tva,tvb])
-    DHParen _ dh        -> sDeclHead dh
+sDeclHead = go []
+  where go ts dh' = case dh' of
+                        DHead _ n           -> (sName n, ts)
+                        DHInfix _ tva n     -> (sName n, sTyVarBind tva:ts)
+                        DHParen _ dh        -> (n, ts1 ++ ts)
+                          where (n, ts1) = sDeclHead dh
+                        DHApp _ dh t        -> go (sTyVarBind t:ts) dh
 
 sInstHead :: SrcInfo l => InstHead l -> (S.QName, [S.Type])
-sInstHead ih' = case ih' of
-    IHead _ qn ts      -> (sQName qn, map sType ts)
-    IHInfix _ ta qn tb -> (sQName qn, map sType [ta,tb])
-    IHParen _ ih       -> sInstHead ih
+sInstHead = go []
+  where go ts' ih' = case ih' of
+                        IHead _ qn         -> (sQName qn, ts')
+                        IHInfix _ ta qn    -> (sQName qn, sType ta:ts')
+                        IHParen _ ih       -> (n, ts1 ++ ts')
+                          where (n, ts1) = sInstHead ih
+                        IHApp _ ih t       -> go (sType t:ts') ih
 
 sDataOrNew :: DataOrNew l -> S.DataOrNew
 sDataOrNew (DataType _) = S.DataType

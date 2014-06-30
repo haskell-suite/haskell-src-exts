@@ -869,21 +869,23 @@ sepInstFunBinds (d:ds) = d : sepInstFunBinds ds
 
 instance ExactP DeclHead where
   exactP dh' = case dh' of
-    DHead _ n tvs       -> exactP n >> mapM_ exactPC tvs
-    DHInfix _ tva n tvb -> exactP tva >> epInfixName n >> exactPC tvb
+    DHead _ n           -> exactP n
+    DHInfix _ tva n     -> exactP tva >> epInfixName n
     DHParen l dh        ->
         case srcInfoPoints l of
          [_,b] -> printString "(" >> exactPC dh >> printStringAt (pos b) ")"
          _ -> errorEP "ExactP: DeclHead: DeclParen is given wrong number of srcInfoPoints"
+    DHApp   _ dh t      -> exactP dh >> exactPC t
 
 instance ExactP InstHead where
   exactP ih' = case ih' of
-    IHead _ qn ts       -> exactP qn >> mapM_ exactPC ts
-    IHInfix _ ta qn tb  -> exactP ta >> epInfixQName qn >> exactPC tb
+    IHead _ qn          -> exactP qn
+    IHInfix _ ta qn     -> exactP ta >> epInfixQName qn
     IHParen l ih        ->
         case srcInfoPoints l of
          [_,b] -> printString "(" >> exactPC ih >> printStringAt (pos b) ")"
          _ -> errorEP "ExactP: InstHead: IHParen is given wrong number of srcInfoPoints"
+    IHApp   _ ih t      -> exactP ih >> exactPC t
 
 instance ExactP TyVarBind where
   exactP (KindedVar   l n k) =

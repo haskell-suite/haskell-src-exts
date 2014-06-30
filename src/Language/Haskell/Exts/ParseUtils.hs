@@ -264,42 +264,43 @@ checkAsstParam isSimple t = do
 
 checkDataHeader :: PType L -> P (Maybe (S.Context L), DeclHead L)
 checkDataHeader (TyForall _ Nothing cs t) = do
-    dh <- checkSimple "data/newtype" t []
+    dh <- checkSimple "data/newtype" t
     cs' <- checkContext cs
     return (cs',dh)
 checkDataHeader t = do
-    dh <- checkSimple "data/newtype" t []
+    dh <- checkSimple "data/newtype" t
     return (Nothing,dh)
 
 checkClassHeader :: PType L -> P (Maybe (S.Context L), DeclHead L)
 checkClassHeader (TyForall _ Nothing cs t) = do
-    dh <- checkSimple "class" t []
+    dh <- checkSimple "class" t
     cs' <- checkSContext cs
     return (cs',dh)
 checkClassHeader t = do
-    dh <- checkSimple "class" t []
+    dh <- checkSimple "class" t
     return (Nothing,dh)
 
-checkSimple :: String -> PType L -> [TyVarBind L] -> P (DeclHead L)
+checkSimple :: String -> PType L -> P (DeclHead L)
 --checkSimple kw (TyApp _ l t) xs | isTyVarBind t = checkSimple kw l (toTyVarBind t : xs)
 
-checkSimple kw (TyApp _ l t) xs = do
+checkSimple kw (TyApp l h t) = do
   tvb <- mkTyVarBind kw t
-  checkSimple kw l (tvb : xs)
-checkSimple kw  (TyInfix l t1 (UnQual _ t) t2) [] = do
+  h' <- checkSimple kw h
+  return $ DHApp l h' tvb
+checkSimple kw (TyInfix l t1 (UnQual _ t) t2) = do
        checkEnabled TypeOperators
        tv1 <- mkTyVarBind kw t1
        tv2 <- mkTyVarBind kw t2
-       return (DHInfix l tv1 t tv2)
-checkSimple _kw (TyCon _ (UnQual l t))   xs = do
+       return $ DHApp l (DHInfix l tv1 t) tv2
+checkSimple _kw (TyCon _ (UnQual l t)) = do
     case t of
       Symbol _ _ -> checkEnabled TypeOperators
       _ -> return ()
-    return (DHead l t xs)
-checkSimple kw (TyParen l t) xs = do
-    dh <- checkSimple kw t xs
+    return (DHead l t)
+checkSimple kw (TyParen l t) = do
+    dh <- checkSimple kw t
     return (DHParen l dh)
-checkSimple kw _l _ = fail ("Illegal " ++ kw ++ " declaration")
+checkSimple kw _ = fail ("Illegal " ++ kw ++ " declaration")
 
 mkTyVarBind :: String -> PType L -> P (TyVarBind L)
 mkTyVarBind _ (TyVar l n) = return $ UnkindedVar l n
@@ -323,29 +324,31 @@ toTyVarBind (TyKind l (TyVar _ n) k) = KindedVar l n k
 checkInstHeader :: PType L -> P (Maybe (S.Context L), InstHead L)
 checkInstHeader (TyParen _ t) = checkInstHeader t -- See bug #7.
 checkInstHeader (TyForall _ Nothing cs t) = do
-    ih <- checkInsts t []
+    ih <- checkInsts t
     cs' <- checkSContext cs
     return (cs', ih)
 checkInstHeader t = do
-    ih <- checkInsts t []
+    ih <- checkInsts t
     return (Nothing, ih)
 
 
-checkInsts :: PType L -> [PType L] -> P (InstHead L)
-checkInsts (TyApp _ l t) ts = checkInsts l (t:ts)
-checkInsts (TyCon l c)   ts = do
+checkInsts :: PType L -> P (InstHead L)
+checkInsts (TyApp l h t) = do
+    t' <- checkType t
+    h' <- checkInsts h
+    return $ IHApp l h' t'
+checkInsts (TyCon l c) = do
     when (isSymbol c) $ checkEnabled TypeOperators
-    ts' <- checkTypes ts
-    return $ IHead l c ts'
-checkInsts (TyInfix l a op b) [] = do
+    return $ IHead l c
+checkInsts (TyInfix l a op b) = do
     checkEnabled TypeOperators
     [ta,tb] <- checkTypes [a,b]
-    return $ IHInfix l ta op tb
-checkInsts (TyParen l t) [] = checkInsts t [] >>= return . IHParen l
-checkInsts _ _ = fail "Illegal instance declaration"
+    return $ IHApp l (IHInfix l ta op) tb
+checkInsts (TyParen l t) = checkInsts t >>= return . IHParen l
+checkInsts _ = fail "Illegal instance declaration"
 
 checkDeriving :: [PType L] -> P [InstHead L]
-checkDeriving = mapM (flip checkInsts [])
+checkDeriving = mapM checkInsts
 
 -----------------------------------------------------------------------------
 -- Checking Patterns.
@@ -957,7 +960,7 @@ checkDataOrNewG (NewType _) [_] = return ()
 checkDataOrNewG _        _  = fail "newtype declaration must have exactly one constructor."
 
 checkSimpleType :: PType L -> P (DeclHead L)
-checkSimpleType t = checkSimple "test" t []
+checkSimpleType t = checkSimple "test" t
 
 ---------------------------------------
 -- Check actual types
