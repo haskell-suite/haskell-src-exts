@@ -75,7 +75,7 @@ module Language.Haskell.Exts.Annotated.Syntax (
     Safety(..), CallConv(..),
 
     -- * Pragmas
-    ModulePragma(..), Tool(..),
+    ModulePragma(..), Tool(..), Overlap(..),
     Rule(..), RuleVar(..), Activation(..),
     Annotation(..), BooleanFormula(..),
 
@@ -269,9 +269,9 @@ data Decl l
      -- ^ A data family instance declaration, GADT style
      | ClassDecl    l (Maybe (Context l)) (DeclHead l) [FunDep l] (Maybe [ClassDecl l])
      -- ^ A declaration of a type class
-     | InstDecl     l (Maybe (Context l)) (InstHead l) (Maybe [InstDecl l])
+     | InstDecl     l (Maybe (Overlap l)) (Maybe (Context l)) (InstHead l) (Maybe [InstDecl l])
      -- ^ An declaration of a type class instance
-     | DerivDecl    l (Maybe (Context l)) (InstHead l)
+     | DerivDecl    l (Maybe (Overlap l)) (Maybe (Context l)) (InstHead l)
      -- ^ A standalone deriving declaration
      | InfixDecl    l (Assoc l) (Maybe Int) [Op l]
      -- ^ A declaration of operator fixity
@@ -690,6 +690,13 @@ data ModulePragma l
 data Tool = GHC | HUGS | NHC98 | YHC | HADDOCK | UnknownTool String
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
+-- | Recognised overlaps for overlap pragmas.
+data Overlap l
+    = NoOverlap l   -- ^ NO_OVERLAP pragma
+    | Overlap l     -- ^ OVERLAP pragma
+    | Incoherent l  -- ^ INCOHERENT pragma
+  deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
+
 -- | Activation clause of a RULES pragma.
 data Activation l
     = ActiveFrom   l Int
@@ -1043,8 +1050,8 @@ instance Annotated Decl where
         DataInsDecl  l _ _ _ _          -> l
         GDataInsDecl l _ _ _ _ _        -> l
         ClassDecl    l _ _ _ _          -> l
-        InstDecl     l _ _ _            -> l
-        DerivDecl    l _ _              -> l
+        InstDecl     l _ _ _ _          -> l
+        DerivDecl    l _ _ _            -> l
         InfixDecl    l _ _ _            -> l
         DefaultDecl  l _                -> l
         SpliceDecl   l _                -> l
@@ -1076,8 +1083,8 @@ instance Annotated Decl where
         DataInsDecl  l dn t cds ders     -> DataInsDecl (f l) dn t cds ders
         GDataInsDecl l dn t mk gds ders  -> GDataInsDecl (f l) dn t mk gds ders
         ClassDecl    l mcx dh fds cds    -> ClassDecl (f l) mcx dh fds cds
-        InstDecl     l mcx ih ids        -> InstDecl (f l) mcx ih ids
-        DerivDecl    l mcx ih            -> DerivDecl (f l) mcx ih
+        InstDecl     l mo mcx ih ids     -> InstDecl (f l) mo mcx ih ids
+        DerivDecl    l mo mcx ih         -> DerivDecl (f l) mo mcx ih
         InfixDecl    l a k ops           -> InfixDecl (f l) a k ops
         DefaultDecl  l ts                -> DefaultDecl (f l) ts
         SpliceDecl   l sp                -> SpliceDecl (f l) sp
@@ -1480,6 +1487,12 @@ instance Annotated ModulePragma where
     amap f (LanguagePragma   l ns) = LanguagePragma (f l) ns
     amap f (AnnModulePragma  l a) = AnnModulePragma (f l) a
     amap f p = fmap f p
+
+instance Annotated Overlap where
+    ann (NoOverlap l)  = l
+    ann (Overlap l)    = l
+    ann (Incoherent l) = l
+    amap = fmap
 
 instance Annotated Activation where
     ann (ActiveFrom   l _) = l

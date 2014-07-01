@@ -277,6 +277,9 @@ Pragmas
 >       '{-# LANGUAGE'          { Loc $$ LANGUAGE }      -- 137
 >       '{-# ANN'               { Loc $$ ANN }
 >       '{-# MINIMAL'           { Loc $$ MINIMAL }
+>       '{-# NO_OVERLAP'        { Loc $$ NO_OVERLAP }
+>       '{-# OVERLAP'           { Loc $$ OVERLAP }
+>       '{-# INCOHERENT'        { Loc $$ INCOHERENT }
 >       '#-}'                   { Loc $$ PragmaEnd }      -- 139
 
 
@@ -577,17 +580,17 @@ This style requires both TypeFamilies and GADTs, the latter is handled in gadtli
 >                        let {(fds,ss1,minf1) = $3;(mcs,ss2,minf2) = $4} ;
 >                        let { l = nIS $1 <++> ann $2 <+?> minf1 <+?> minf2 <** ($1:ss1 ++ ss2)} ;
 >                        return (ClassDecl l cs dh fds mcs) } }
->       | 'instance' ctype optvaldefs
->                {% do { (cs,ih) <- checkInstHeader $2;
->                        let {(mis,ss,minf) = $3};
->                        return (InstDecl (nIS $1 <++> ann $2 <+?> minf <** ($1:ss)) cs ih mis) } }
+>       | 'instance' optoverlap ctype optvaldefs
+>                {% do { (cs,ih) <- checkInstHeader $3;
+>                        let {(mis,ss,minf) = $4};
+>                        return (InstDecl (nIS $1 <++> ann $3 <+?> minf <** ($1:ss)) $2 cs ih mis) } }
 
 Requires the StandaloneDeriving extension enabled.
->       | 'deriving' 'instance' ctype
+>       | 'deriving' 'instance' optoverlap ctype
 >                {% do { checkEnabled StandaloneDeriving ;
->                        (cs, ih) <- checkInstHeader $3;
->                        let {l = nIS $1 <++> ann $3 <** [$1,$2]};
->                        return (DerivDecl l cs ih) } }
+>                        (cs, ih) <- checkInstHeader $4;
+>                        let {l = nIS $1 <++> ann $4 <** [$1,$2]};
+>                        return (DerivDecl l $3 cs ih) } }
 >       | 'default' '(' typelist ')'
 >                { DefaultDecl ($1 <^^> $4 <** ($1:$2 : snd $3 ++ [$4])) (fst $3) }
 
@@ -613,6 +616,12 @@ lexer through the 'foreign' (and 'export') keyword.
 >       | '{-# WARNING'    warndeprs  '#-}'     { WarnPragmaDecl ($1 <^^> $3 <** ($1:snd $2++[$3])) $ reverse (fst $2) }
 >       | '{-# ANN'        annotation '#-}'     { AnnPragma      ($1 <^^> $3 <** [$1,$3]) $2 }
 >       | decl          { $1 }
+
+> optoverlap :: { Maybe (Overlap L) }
+>  : '{-# OVERLAP'    '#-}'    { Just (Overlap (nIS $1)) }
+>  | '{-# INCOHERENT' '#-}'    { Just (Incoherent (nIS $1)) }
+>  | '{-# NO_OVERLAP' '#-}'    { Just (NoOverlap (nIS $1))  }
+>  | {- empty -}               { Nothing }
 
 Parsing the body of a closed type family, partially stolen from the source of GHC.
 > where_type_family :: { Maybe ([TypeEqn L], S) }

@@ -84,12 +84,12 @@ sDecl decl = case decl of
      ClassDecl    l mctxt dh fds mcds           ->
         let (n, tvs) = sDeclHead dh
          in S.ClassDecl (getPointLoc l) (maybe [] sContext mctxt) n tvs (map sFunDep fds) (maybe [] (map sClassDecl) mcds)
-     InstDecl     l mctxt ih mids               ->
+     InstDecl     l olp mctxt ih mids               ->
         let (qn, ts) = sInstHead ih
-         in S.InstDecl (getPointLoc l) (maybe [] sContext mctxt) qn ts (maybe [] (map sInstDecl) mids)
-     DerivDecl    l mctxt ih    ->
+         in S.InstDecl (getPointLoc l) (fmap sOverlap olp) (maybe [] sContext mctxt) qn ts (maybe [] (map sInstDecl) mids)
+     DerivDecl    l olp mctxt ih    ->
         let (qn, ts) = sInstHead ih
-         in S.DerivDecl (getPointLoc l) (maybe [] sContext mctxt) qn ts
+         in S.DerivDecl (getPointLoc l) (fmap sOverlap olp) (maybe [] sContext mctxt) qn ts
      InfixDecl    l ass prec ops    -> S.InfixDecl (getPointLoc l) (sAssoc ass) (maybe 9 id prec) (map sOp ops)
      DefaultDecl  l ts          -> S.DefaultDecl (getPointLoc l) (map sType ts)
      SpliceDecl   l sp          -> S.SpliceDecl (getPointLoc l) (sExp sp)
@@ -463,6 +463,12 @@ sModulePragma pr = case pr of
     LanguagePragma   l ns   -> S.LanguagePragma (getPointLoc l) (map sName ns)
     OptionsPragma    l mt str -> S.OptionsPragma (getPointLoc l) mt str
     AnnModulePragma  l ann' -> S.AnnModulePragma (getPointLoc l) (sAnnotation ann')
+
+sOverlap :: SrcInfo loc => Overlap loc -> S.Overlap
+sOverlap o' = case o' of
+    NoOverlap _   -> S.NoOverlap
+    Overlap _     -> S.Overlap
+    Incoherent _  -> S.Incoherent
 
 sActivation :: Activation l -> S.Activation
 sActivation act = case act of

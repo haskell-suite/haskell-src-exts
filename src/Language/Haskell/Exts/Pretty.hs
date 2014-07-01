@@ -423,23 +423,26 @@ instance Pretty Decl where
 
         -- m{spacing=False}
         -- special case for empty instance declaration
-        pretty (InstDecl pos context name args []) =
+        pretty (InstDecl pos overlap context name args []) =
                 blankline $
                 markLine pos $
-                mySep ( [text "instance", ppContext context, pretty name]
-                        ++ map ppAType args)
-        pretty (InstDecl pos context name args declList) =
+                let olp = case overlap of { Nothing -> empty; Just o -> space <> pretty o }
+                in mySep ( [text "instance" <> olp, ppContext context, pretty name]
+                           ++ map ppAType args)
+        pretty (InstDecl pos overlap context name args declList) =
                 blankline $
                 markLine pos $
-                mySep ( [text "instance", ppContext context, pretty name]
-                        ++ map ppAType args ++ [text "where"])
+                let olp = case overlap of { Nothing -> empty; Just o -> space <> pretty o }
+                in mySep ( [text "instance" <> olp, ppContext context, pretty name]
+                           ++ map ppAType args ++ [text "where"])
                 $$$ ppBody classIndent (map pretty declList)
 
-        pretty (DerivDecl pos context name args) =
+        pretty (DerivDecl pos overlap context name args) =
                 blankline $
                 markLine pos $
-                mySep ( [text "deriving", text "instance", ppContext context, pretty name]
-                        ++ map ppAType args)
+                let olp = case overlap of { Nothing -> empty; Just o -> space <> pretty o }
+                in mySep ( [text "deriving", text "instance" <> olp, ppContext context, pretty name]
+                           ++ map ppAType args)
         pretty (DefaultDecl pos htypes) =
                 blankline $
                 markLine pos $
@@ -664,6 +667,11 @@ instance Pretty Activation where
     pretty AlwaysActive    = empty
     pretty (ActiveFrom i)  = char '['  <> int i <> char ']'
     pretty (ActiveUntil i) = text "[~" <> int i <> char ']'
+
+instance Pretty Overlap where
+    pretty Overlap    = text "{-# OVERLAP #-}"
+    pretty NoOverlap  = text "{-# NO_OVERLAP #-}"
+    pretty Incoherent = text "{-# INCOHERENT #-}"
 
 instance Pretty RuleVar where
     pretty (RuleVar n) = pretty n

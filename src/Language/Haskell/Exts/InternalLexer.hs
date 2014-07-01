@@ -147,6 +147,9 @@ data Token
         | LANGUAGE
         | ANN
         | MINIMAL
+        | NO_OVERLAP
+        | OVERLAP
+        | INCOHERENT
 
 -- Reserved Ids
 
@@ -322,6 +325,9 @@ pragmas = [
  ( "unpack",            UNPACK          ),
  ( "language",          LANGUAGE        ),
  ( "minimal",           MINIMAL         ),
+ ( "no_overlap",        NO_OVERLAP      ),
+ ( "overlap",           OVERLAP         ),
+ ( "incoherent",        INCOHERENT      ),
  ( "options",           OPTIONS undefined ) -- we'll tweak it before use - promise!
 -- ( "cfiles",            CFILES  undefined ), -- same here...
 -- ( "include",           INCLUDE undefined )  -- ...and here!
@@ -1308,6 +1314,9 @@ showToken t = case t of
   LANGUAGE          -> "{-# LANGUAGE"
   ANN               -> "{-# ANN"
   MINIMAL           -> "{-# MINIMAL"
+  NO_OVERLAP        -> "{-# NO_OVERLAP"
+  OVERLAP           -> "{-# OVERLAP"
+  INCOHERENT        -> "{-# INCOHERENT"
   KW_As         -> "as"
   KW_By         -> "by"
   KW_Case       -> "case"

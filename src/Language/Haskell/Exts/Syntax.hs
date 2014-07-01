@@ -71,7 +71,7 @@ module Language.Haskell.Exts.Syntax (
     Safety(..), CallConv(..),
 
     -- * Pragmas
-    ModulePragma(..), Tool(..),
+    ModulePragma(..), Tool(..), Overlap(..),
     Rule(..), RuleVar(..), Activation(..),
     Annotation(..), BooleanFormula(..),
 
@@ -243,9 +243,9 @@ data Decl
      -- ^ A data family instance declaration, GADT style
      | ClassDecl    SrcLoc Context Name [TyVarBind] [FunDep] [ClassDecl]
      -- ^ A declaration of a type class
-     | InstDecl     SrcLoc Context QName [Type] [InstDecl]
+     | InstDecl     SrcLoc (Maybe Overlap) Context QName [Type] [InstDecl]
      -- ^ An declaration of a type class instance
-     | DerivDecl    SrcLoc Context QName [Type]
+     | DerivDecl    SrcLoc (Maybe Overlap) Context QName [Type]
      -- ^ A standalone deriving declaration
      | InfixDecl    SrcLoc Assoc Int [Op]
      -- ^ A declaration of operator fixity
@@ -616,6 +616,13 @@ data ModulePragma
                         -- ^ OPTIONS pragma, possibly qualified with a tool, e.g. OPTIONS_GHC
     | AnnModulePragma  SrcLoc Annotation
                         -- ^ ANN pragma with module scope
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+
+-- | Recognised overlaps for overlap pragmas.
+data Overlap
+    = NoOverlap   -- ^ NO_OVERLAP pragma
+    | Overlap     -- ^ OVERLAP pragma
+    | Incoherent  -- ^ INCOHERENT pragma
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 -- | Activation clause of a RULES pragma.

@@ -647,10 +647,11 @@ instance ExactP Decl where
                  _ -> errorEP "ExactP: Decl: ClassDecl is given too few srcInfoPoints"
                 ) mcds
          _ -> errorEP "ExactP: Decl: ClassDecl is given too few srcInfoPoints"
-    InstDecl     l mctxt ih mids        ->
+    InstDecl     l movlp mctxt ih mids        ->
         case srcInfoPoints l of
          _:pts -> do
             printString "instance"
+            maybeEP exactPC movlp
             maybeEP exactPC mctxt
             exactPC ih
             maybeEP (\ids -> do
@@ -659,11 +660,12 @@ instance ExactP Decl where
                 layoutList pts' $ sepInstFunBinds ids
                 ) mids
          _ -> errorEP "ExactP: Decl: InstDecl is given too few srcInfoPoints"
-    DerivDecl    l mctxt ih             ->
+    DerivDecl    l movlp mctxt ih             ->
         case srcInfoPoints l of
          [_,b] -> do
             printString "deriving"
             printStringAt (pos b) "instance"
+            maybeEP exactPC movlp
             maybeEP exactPC mctxt
             exactPC ih
          _ -> errorEP "ExactP: Decl: DerivDecl is given wrong number of srcInfoPoints"
@@ -1966,6 +1968,14 @@ instance ExactP RuleVar where
             printStringAt (pos c) ")"
          _ -> errorEP "ExactP: RuleVar: TypedRuleVar is given wrong number of srcInfoPoints"
   exactP (RuleVar _ n) = exactP n
+
+instance ExactP Overlap where
+  exactP (NoOverlap  l) =
+    printPoints l ["{-# NO_OVERLAP #-}"]
+  exactP (Overlap  l) =
+    printPoints l ["{-# OVERLAP #-}"]
+  exactP (Incoherent  l) =
+    printPoints l ["{-# INCOHERENT #-}"]
 
 instance ExactP Activation where
   exactP (ActiveFrom   l i) =
