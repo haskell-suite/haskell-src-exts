@@ -724,11 +724,11 @@ instance PrintDot ArrowType where
  
 instance ParseDot ArrowType where
         parseUnqt
-          = (do mas <- many1 $
-                         do m <- parseUnqt
-                            a <- parseUnqt
-                            return (m, a)
-                return $ AType mas)
+          = do mas <- many1 $
+                        do m <- parseUnqt
+                           a <- parseUnqt
+                           return (m, a)
+               return $ AType mas
               `onFail` specialArrowParse
  
 specialArrowParse :: Parse ArrowType
@@ -1027,10 +1027,10 @@ instance PrintDot LayerRange where
  
 instance ParseDot LayerRange where
         parseUnqt
-          = (do id1 <- parseUnqt
-                s <- parseLayerSep
-                id2 <- parseUnqt
-                return $ LRS id1 s id2)
+          = do id1 <- parseUnqt
+               s <- parseLayerSep
+               id2 <- parseUnqt
+               return $ LRS id1 s id2
               `onFail` liftM LRID parseUnqt
         parse
           = quotedParse
