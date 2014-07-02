@@ -46,7 +46,7 @@ module Language.Haskell.Exts.Annotated.Syntax (
     Module(..), ModuleHead(..), WarningText(..), ExportSpecList(..), ExportSpec(..),
     ImportDecl(..), ImportSpecList(..), ImportSpec(..), Assoc(..),
     -- * Declarations
-    Decl(..), DeclHead(..), InstHead(..), Binds(..), IPBind(..),
+    Decl(..), DeclHead(..), InstHead(..), DeclOrInstHead(..), Binds(..), IPBind(..),
     -- ** Type classes and instances
     ClassDecl(..), InstDecl(..), Deriving(..),
     -- ** Data type declarations
@@ -269,9 +269,9 @@ data Decl l
      -- ^ A data family instance declaration, GADT style
      | ClassDecl    l (Maybe (Context l)) (DeclHead l) [FunDep l] (Maybe [ClassDecl l])
      -- ^ A declaration of a type class
-     | InstDecl     l (Maybe (Overlap l)) (Maybe (Context l)) (InstHead l) (Maybe [InstDecl l])
+     | InstDecl     l (Maybe (Overlap l)) (InstHead l) (Maybe [InstDecl l])
      -- ^ An declaration of a type class instance
-     | DerivDecl    l (Maybe (Overlap l)) (Maybe (Context l)) (InstHead l)
+     | DerivDecl    l (Maybe (Overlap l)) (InstHead l)
      -- ^ A standalone deriving declaration
      | InfixDecl    l (Assoc l) (Maybe Int) [Op l]
      -- ^ A declaration of operator fixity
@@ -303,7 +303,7 @@ data Decl l
      -- ^ A SPECIALISE pragma
      | SpecInlineSig    l Bool (Maybe (Activation l)) (QName l) [Type l]
      -- ^ A SPECIALISE INLINE pragma
-     | InstSig          l      (Maybe (Context l))    (InstHead l)
+     | InstSig          l      (InstHead l)
      -- ^ A SPECIALISE instance pragma
      | AnnPragma        l (Annotation l)
      -- ^ An ANN pragma
@@ -346,10 +346,20 @@ data DeclHead l
 
 -- | The head of an instance declaration.
 data InstHead l
-    = IHead l (QName l)
-    | IHInfix l (Type l) (QName l)
+    = IHead l (Maybe (Context l)) (DeclOrInstHead l)
     | IHParen l (InstHead l)
-    | IHApp   l (InstHead l) (Type l)
+  deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
+
+-- See bugs #7 and #31 for more details and use cases for the rationale
+-- of the split. DeclOrInstHead should be used by DeclHead as the name implies.
+
+-- | The guts of a instance head. The split between types allow us to represent
+-- /instance (Bounded a => Bounded [a]) where/ faithfully.
+data DeclOrInstHead l
+    = DoIHCon l (QName l)
+    | DoIHInfix l (Type l) (QName l)
+    | DoIHParen l (DeclOrInstHead l)
+    | DoIHApp   l (DeclOrInstHead l) (Type l)
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | A deriving clause following a data type declaration.
@@ -1050,8 +1060,8 @@ instance Annotated Decl where
         DataInsDecl  l _ _ _ _          -> l
         GDataInsDecl l _ _ _ _ _        -> l
         ClassDecl    l _ _ _ _          -> l
-        InstDecl     l _ _ _ _          -> l
-        DerivDecl    l _ _ _            -> l
+        InstDecl     l _ _ _            -> l
+        DerivDecl    l _ _              -> l
         InfixDecl    l _ _ _            -> l
         DefaultDecl  l _                -> l
         SpliceDecl   l _                -> l
@@ -1067,7 +1077,7 @@ instance Annotated Decl where
         InlineConlikeSig l   _ _        -> l
         SpecSig          l   _ _ _      -> l
         SpecInlineSig    l _ _ _ _      -> l
-        InstSig          l _ _          -> l
+        InstSig          l _            -> l
         AnnPragma        l _            -> l
         MinimalPragma    l _            -> l
     amap f decl = case decl of
@@ -1083,8 +1093,8 @@ instance Annotated Decl where
         DataInsDecl  l dn t cds ders     -> DataInsDecl (f l) dn t cds ders
         GDataInsDecl l dn t mk gds ders  -> GDataInsDecl (f l) dn t mk gds ders
         ClassDecl    l mcx dh fds cds    -> ClassDecl (f l) mcx dh fds cds
-        InstDecl     l mo mcx ih ids     -> InstDecl (f l) mo mcx ih ids
-        DerivDecl    l mo mcx ih         -> DerivDecl (f l) mo mcx ih
+        InstDecl     l mo ih ids         -> InstDecl (f l) mo ih ids
+        DerivDecl    l mo ih             -> DerivDecl (f l) mo ih
         InfixDecl    l a k ops           -> InfixDecl (f l) a k ops
         DefaultDecl  l ts                -> DefaultDecl (f l) ts
         SpliceDecl   l sp                -> SpliceDecl (f l) sp
@@ -1100,7 +1110,7 @@ instance Annotated Decl where
         InlineConlikeSig l   act qn      -> InlineConlikeSig (f l) act qn
         SpecSig          l   act qn ts   -> SpecSig       (f l)   act qn ts
         SpecInlineSig    l b act qn ts   -> SpecInlineSig (f l) b act qn ts
-        InstSig          l mcx ih        -> InstSig (f l) mcx ih
+        InstSig          l ih            -> InstSig (f l) ih
         AnnPragma        l ann'          -> AnnPragma (f l) ann'
         MinimalPragma    l b             -> MinimalPragma (f l) b
 
@@ -1138,14 +1148,20 @@ instance Annotated DeclHead where
     amap f (DHApp l dh t)        = DHApp (f l) dh t
 
 instance Annotated InstHead where
-    ann (IHead l _)              = l
-    ann (IHInfix l _ _)          = l
+    ann (IHead l _ _)            = l
     ann (IHParen l _)            = l
-    ann (IHApp l _ _)            = l
-    amap f (IHead l qn)          = IHead (f l) qn
-    amap f (IHInfix l ta qn)     = IHInfix (f l) ta qn
+    amap f (IHead l cxt qn)      = IHead (f l) cxt qn
     amap f (IHParen l ih)        = IHParen (f l) ih
-    amap f (IHApp l ih t)        = IHApp (f l) ih t
+
+instance Annotated DeclOrInstHead where
+    ann (DoIHCon l _)              = l
+    ann (DoIHInfix l _ _)          = l
+    ann (DoIHParen l _)            = l
+    ann (DoIHApp l _ _)            = l
+    amap f (DoIHCon l n)           = DoIHCon (f l) n
+    amap f (DoIHInfix l tva n)     = DoIHInfix (f l) tva n
+    amap f (DoIHParen l dh)        = DoIHParen (f l) dh
+    amap f (DoIHApp l dh t)        = DoIHApp (f l) dh t
 
 instance Annotated Binds where
     ann (BDecls  l _) = l

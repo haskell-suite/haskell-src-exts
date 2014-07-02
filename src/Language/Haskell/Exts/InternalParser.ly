@@ -581,16 +581,16 @@ This style requires both TypeFamilies and GADTs, the latter is handled in gadtli
 >                        let { l = nIS $1 <++> ann $2 <+?> minf1 <+?> minf2 <** ($1:ss1 ++ ss2)} ;
 >                        return (ClassDecl l cs dh fds mcs) } }
 >       | 'instance' optoverlap ctype optvaldefs
->                {% do { (cs,ih) <- checkInstHeader $3;
+>                {% do { ih <- checkInstHeader $3;
 >                        let {(mis,ss,minf) = $4};
->                        return (InstDecl (nIS $1 <++> ann $3 <+?> minf <** ($1:ss)) $2 cs ih mis) } }
+>                        return (InstDecl (nIS $1 <++> ann $3 <+?> minf <** ($1:ss)) $2 ih mis) } }
 
 Requires the StandaloneDeriving extension enabled.
 >       | 'deriving' 'instance' optoverlap ctype
 >                {% do { checkEnabled StandaloneDeriving ;
->                        (cs, ih) <- checkInstHeader $4;
+>                        ih <- checkInstHeader $4;
 >                        let {l = nIS $1 <++> ann $4 <** [$1,$2]};
->                        return (DerivDecl l $3 cs ih) } }
+>                        return (DerivDecl l $3 ih) } }
 >       | 'default' '(' typelist ')'
 >                { DefaultDecl ($1 <^^> $4 <** ($1:$2 : snd $3 ++ [$4])) (fst $3) }
 
@@ -685,9 +685,9 @@ Parsing the body of a closed type family, partially stolen from the source of GH
 >       | '{-# SPECIALISE INLINE' activation qvar '::' sigtypes '#-}'
 >             { let Loc l (SPECIALISE_INLINE s) = $1
 >                in SpecInlineSig (l <^^> $6 <** (l:$4:snd $5++[$6])) s $2 $3 (fst $5) }
->       | '{-# SPECIALISE' 'instance' ctype '#-}'        {% do { (cs,ih) <- checkInstHeader $3;
+>       | '{-# SPECIALISE' 'instance' ctype '#-}'        {% do { ih <- checkInstHeader $3;
 >                                                                let {l = $1 <^^> $4 <** [$1,$2,$4]};
->                                                                return $ InstSig l cs ih } }
+>                                                                return $ InstSig l ih } }
 >       | '{-# MINIMAL' name_boolformula '#-}'           { MinimalPragma ($1 <^^> $3 <** [$1,$3]) $2 }
 
 > sigtypes :: { ([Type L],[S]) }
@@ -1077,15 +1077,15 @@ as qcon and then check separately that they are truly unqualified.
 
 > deriving :: { Maybe (Deriving L) }
 >       : {- empty -}                   { Nothing }
->       | 'deriving' qtycls1            { let l = nIS $1 <++> ann $2 <** [$1] in Just $ Deriving l [IHead (ann $2) $2] }
+>       | 'deriving' qtycls1            { let l = nIS $1 <++> ann $2 <** [$1] in Just $ Deriving l [IHead (ann $2) Nothing $2] }
 >       | 'deriving' '('          ')'   { Just $ Deriving ($1 <^^> $3 <** [$1,$2,$3]) [] }
 >       | 'deriving' '(' dclasses ')'   { Just $ Deriving ($1 <^^> $4 <** $1:$2: reverse (snd $3) ++ [$4]) (reverse (fst $3)) }
 
 > dclasses :: { ([InstHead L],[S]) }
 >       : types1                        {% checkDeriving (fst $1) >>= \ds -> return (ds, snd $1) }
 
-> qtycls1 :: { QName L }
->       : qconid                        { $1 }
+> qtycls1 :: { DeclOrInstHead L }
+>       : qconid                        { DoIHCon (ann $1) $1 }
 
 
 -----------------------------------------------------------------------------

@@ -1338,10 +1338,15 @@ instance Pretty (A.DeclHead l) where
     pretty (A.DHApp _ dh t)        = myFsep [pretty dh, pretty t]
 
 instance SrcInfo l => Pretty (A.InstHead l) where
-    pretty (A.IHead _ qn)          = pretty qn
-    pretty (A.IHInfix _ ta qn)     = mySep [pretty ta, pretty qn]
+    pretty (A.IHead _ mctxt qn)    =
+            mySep [ppContext $ maybe [] sContext mctxt, pretty qn]
     pretty (A.IHParen _ ih)        = parens (pretty ih)
-    pretty (A.IHApp _ ih t)        = myFsep [pretty ih, pretty t]
+
+instance SrcInfo l => Pretty (A.DeclOrInstHead l) where
+    pretty (A.DoIHCon _ qn)          = pretty qn
+    pretty (A.DoIHInfix _ ta qn)     = mySep [pretty ta, pretty qn]
+    pretty (A.DoIHParen _ ih)        = parens (pretty ih)
+    pretty (A.DoIHApp _ ih t)        = myFsep [pretty ih, pretty t]
 
 instance Pretty (A.DataOrNew l) where
         pretty = pretty . sDataOrNew
@@ -1411,7 +1416,7 @@ instance SrcInfo l => Pretty (A.BangType l) where
 
 instance SrcInfo l => Pretty (A.Deriving l) where
         pretty (A.Deriving _ []) = text "deriving" <+> parenList []
-        pretty (A.Deriving _ [A.IHead _ d]) = text "deriving" <+> pretty d
+        pretty (A.Deriving _ [A.IHead _ _ d]) = text "deriving" <+> pretty d
         pretty (A.Deriving _ ihs) = text "deriving" <+> parenList (map pretty ihs)
 
 ------------------------- Types -------------------------

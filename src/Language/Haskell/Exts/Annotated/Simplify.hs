@@ -84,12 +84,12 @@ sDecl decl = case decl of
      ClassDecl    l mctxt dh fds mcds           ->
         let (n, tvs) = sDeclHead dh
          in S.ClassDecl (getPointLoc l) (maybe [] sContext mctxt) n tvs (map sFunDep fds) (maybe [] (map sClassDecl) mcds)
-     InstDecl     l olp mctxt ih mids               ->
-        let (qn, ts) = sInstHead ih
-         in S.InstDecl (getPointLoc l) (fmap sOverlap olp) (maybe [] sContext mctxt) qn ts (maybe [] (map sInstDecl) mids)
-     DerivDecl    l olp mctxt ih    ->
-        let (qn, ts) = sInstHead ih
-         in S.DerivDecl (getPointLoc l) (fmap sOverlap olp) (maybe [] sContext mctxt) qn ts
+     InstDecl     l olp ih mids               ->
+        let (cxt, (qn, ts)) = sInstHead ih
+         in S.InstDecl (getPointLoc l) (fmap sOverlap olp) cxt qn ts (maybe [] (map sInstDecl) mids)
+     DerivDecl    l olp ih    ->
+        let (cxt, (qn, ts)) = sInstHead ih
+         in S.DerivDecl (getPointLoc l) (fmap sOverlap olp) cxt qn ts
      InfixDecl    l ass prec ops    -> S.InfixDecl (getPointLoc l) (sAssoc ass) (maybe 9 id prec) (map sOp ops)
      DefaultDecl  l ts          -> S.DefaultDecl (getPointLoc l) (map sType ts)
      SpliceDecl   l sp          -> S.SpliceDecl (getPointLoc l) (sExp sp)
@@ -109,9 +109,9 @@ sDecl decl = case decl of
      SpecSig          l   mact qn ts   -> S.SpecSig (getPointLoc l) (maybe S.AlwaysActive sActivation mact) (sQName qn) (map sType ts)
      SpecInlineSig    l b mact qn ts    ->
         S.SpecInlineSig (getPointLoc l) b (maybe S.AlwaysActive sActivation mact) (sQName qn) (map sType ts)
-     InstSig          l mctxt ih    ->
-        let (qn, ts) = sInstHead ih
-         in S.InstSig (getPointLoc l) (maybe [] sContext mctxt) qn ts
+     InstSig          l ih    ->
+        let (cxt, (qn, ts)) = sInstHead ih
+         in S.InstSig (getPointLoc l) cxt qn ts
      AnnPragma        l ann'        ->
         S.AnnPragma (getPointLoc l) (sAnnotation ann')
      MinimalPragma    l b           ->
@@ -216,21 +216,27 @@ sDeclHead = go []
                           where (n, ts1) = sDeclHead dh
                         DHApp _ dh t        -> go (sTyVarBind t:ts) dh
 
-sInstHead :: SrcInfo l => InstHead l -> (S.QName, [S.Type])
-sInstHead = go []
-  where go ts' ih' = case ih' of
-                        IHead _ qn         -> (sQName qn, ts')
-                        IHInfix _ ta qn    -> (sQName qn, sType ta:ts')
-                        IHParen _ ih       -> (n, ts1 ++ ts')
-                          where (n, ts1) = sInstHead ih
-                        IHApp _ ih t       -> go (sType t:ts') ih
+sInstHead :: SrcInfo l => InstHead l -> ([S.Asst], (S.QName, [S.Type]))
+sInstHead ih' = case ih' of
+                    IHead _ mctxt qn   -> (cxt, sDeclOrInstHead qn)
+                        where cxt = maybe [] sContext mctxt
+                    IHParen _ ih       -> sInstHead ih
+
+sDeclOrInstHead :: SrcInfo l => DeclOrInstHead l -> (S.QName, [S.Type])
+sDeclOrInstHead = go []
+    where go ts' d' = case d' of
+                        DoIHCon _ qn         -> (sQName qn, ts')
+                        DoIHInfix _ ta qn    -> (sQName qn, sType ta:ts')
+                        DoIHParen _ ih       -> (n, ts1 ++ ts')
+                          where (n, ts1) = sDeclOrInstHead ih
+                        DoIHApp _ ih t       -> go (sType t:ts') ih
 
 sDataOrNew :: DataOrNew l -> S.DataOrNew
 sDataOrNew (DataType _) = S.DataType
 sDataOrNew (NewType _) = S.NewType
 
 sDeriving :: SrcInfo l => (Deriving l) -> [(S.QName, [S.Type])]
-sDeriving (Deriving _ ihs) = map sInstHead ihs
+sDeriving (Deriving _ ihs) = map (snd . sInstHead) ihs
 
 sBinds :: SrcInfo loc => Binds loc -> S.Binds
 sBinds bs = case bs of

@@ -321,34 +321,38 @@ toTyVarBind (TyVar l n) = UnkindedVar l n
 toTyVarBind (TyKind l (TyVar _ n) k) = KindedVar l n k
 -}
 
-checkInstHeader :: PType L -> P (Maybe (S.Context L), InstHead L)
-checkInstHeader (TyParen _ t) = checkInstHeader t -- See bug #7.
+checkInstHeader :: PType L -> P (InstHead L)
+checkInstHeader (TyParen l t) = checkInstHeader t >>= return . IHParen l
 checkInstHeader (TyForall _ Nothing cs t) = do
-    ih <- checkInsts t
     cs' <- checkSContext cs
-    return (cs', ih)
-checkInstHeader t = do
-    ih <- checkInsts t
-    return (Nothing, ih)
+    ih <- checkInsts cs' t
+    return ih
+checkInstHeader t = checkInsts Nothing t
 
 
-checkInsts :: PType L -> P (InstHead L)
-checkInsts (TyApp l h t) = do
+checkInsts :: Maybe (S.Context L) -> PType L -> P (InstHead L)
+checkInsts mctxt (TyParen l t) = checkInsts mctxt t >>= return . IHParen l
+checkInsts mctxt t = do
+    t' <- checkInstsGuts t
+    return $ IHead (fmap ann mctxt <?+> ann t') mctxt t'
+
+checkInstsGuts :: PType L -> P (DeclOrInstHead L)
+checkInstsGuts (TyApp l h t) = do
     t' <- checkType t
-    h' <- checkInsts h
-    return $ IHApp l h' t'
-checkInsts (TyCon l c) = do
+    h' <- checkInstsGuts h
+    return $ DoIHApp l h' t'
+checkInstsGuts (TyCon l c) = do
     when (isSymbol c) $ checkEnabled TypeOperators
-    return $ IHead l c
-checkInsts (TyInfix l a op b) = do
+    return $ DoIHCon l c
+checkInstsGuts (TyInfix l a op b) = do
     checkEnabled TypeOperators
     [ta,tb] <- checkTypes [a,b]
-    return $ IHApp l (IHInfix l ta op) tb
-checkInsts (TyParen l t) = checkInsts t >>= return . IHParen l
-checkInsts _ = fail "Illegal instance declaration"
+    return $ DoIHApp l (DoIHInfix l ta op) tb
+checkInstsGuts (TyParen l t) = checkInstsGuts t >>= return . DoIHParen l
+checkInstsGuts _ = fail "Illegal instance declaration"
 
 checkDeriving :: [PType L] -> P [InstHead L]
-checkDeriving = mapM checkInsts
+checkDeriving = mapM (checkInsts Nothing)
 
 -----------------------------------------------------------------------------
 -- Checking Patterns.

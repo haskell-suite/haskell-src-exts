@@ -647,12 +647,11 @@ instance ExactP Decl where
                  _ -> errorEP "ExactP: Decl: ClassDecl is given too few srcInfoPoints"
                 ) mcds
          _ -> errorEP "ExactP: Decl: ClassDecl is given too few srcInfoPoints"
-    InstDecl     l movlp mctxt ih mids        ->
+    InstDecl     l movlp ih mids        ->
         case srcInfoPoints l of
          _:pts -> do
             printString "instance"
             maybeEP exactPC movlp
-            maybeEP exactPC mctxt
             exactPC ih
             maybeEP (\ids -> do
                 let (p:pts') = pts
@@ -660,13 +659,12 @@ instance ExactP Decl where
                 layoutList pts' $ sepInstFunBinds ids
                 ) mids
          _ -> errorEP "ExactP: Decl: InstDecl is given too few srcInfoPoints"
-    DerivDecl    l movlp mctxt ih             ->
+    DerivDecl    l movlp ih             ->
         case srcInfoPoints l of
          [_,b] -> do
             printString "deriving"
             printStringAt (pos b) "instance"
             maybeEP exactPC movlp
-            maybeEP exactPC mctxt
             exactPC ih
          _ -> errorEP "ExactP: Decl: DerivDecl is given wrong number of srcInfoPoints"
     InfixDecl    l assoc mprec ops      -> do
@@ -793,12 +791,11 @@ instance ExactP Decl where
             exactPC qn
             printInterleaved (zip pts ("::" : replicate (length pts - 2) "," ++ ["#-}"])) ts
          _ -> errorEP "ExactP: Decl: SpecInlineSig is given too few srcInfoPoints"
-    InstSig          l mctxt ih     ->
+    InstSig          l ih     ->
         case srcInfoPoints l of
          [_,b,c] -> do
             printString $ "{-# SPECIALISE"
             printStringAt (pos b) "instance"
-            maybeEP exactPC mctxt
             exactPC ih
             printStringAt (pos c) "#-}"
          _ -> errorEP "ExactP: Decl: InstSig is given wrong number of srcInfoPoints"
@@ -882,13 +879,21 @@ instance ExactP DeclHead where
 
 instance ExactP InstHead where
   exactP ih' = case ih' of
-    IHead _ qn          -> exactP qn
-    IHInfix _ ta qn     -> exactP ta >> epInfixQName qn
+    IHead _ mctxt qn    -> maybeEP exactPC mctxt >> exactPC qn
     IHParen l ih        ->
         case srcInfoPoints l of
-         [_,b] -> printString "(" >> exactPC ih >> printStringAt (pos b) ")"
+         [a,b] -> printStringAt (pos a) "(" >> exactPC ih >> printStringAt (pos b) ")"
          _ -> errorEP "ExactP: InstHead: IHParen is given wrong number of srcInfoPoints"
-    IHApp   _ ih t      -> exactP ih >> exactPC t
+
+instance ExactP DeclOrInstHead where
+   exactP doih' = case doih' of
+    DoIHCon _ qn      -> exactPC qn
+    DoIHInfix _ ta qn -> exactPC ta >> epInfixQName qn
+    DoIHParen l doih  ->
+        case srcInfoPoints l of
+         [a,b] -> printStringAt (pos a) "(" >> exactPC doih >> printStringAt (pos b) ")"
+         _ -> errorEP "ExactP: DeclOrInstHead: DoIHParen is given wrong number of srcInfoPoints"
+    DoIHApp _ doih t  -> exactPC doih >> exactPC t
 
 instance ExactP TyVarBind where
   exactP (KindedVar   l n k) =

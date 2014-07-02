@@ -140,7 +140,7 @@ instance AppFixity Module where
 instance AppFixity Decl where
     applyFixities fixs decl = case decl of
         ClassDecl l ctxt dh deps cdecls   -> liftM (ClassDecl l ctxt dh deps) $ mapM (mapM fix) cdecls
-        InstDecl  l olp ctxt ih idecls    -> liftM (InstDecl  l olp ctxt ih)  $ mapM (mapM fix) idecls
+        InstDecl  l olp ih idecls         -> liftM (InstDecl  l olp ih)  $ mapM (mapM fix) idecls
         SpliceDecl l spl        -> liftM (SpliceDecl l) $ fix spl
         FunBind l matches       -> liftM (FunBind l) $ mapM fix matches
         PatBind l p rhs bs      -> liftM3 (PatBind l) (fix p) (fix rhs) (mapM fix bs)
