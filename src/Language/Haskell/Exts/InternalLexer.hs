@@ -29,7 +29,7 @@ import Language.Haskell.Exts.ExtScheme
 import Prelude hiding (id, exponent)
 import Data.Char
 import Data.Ratio
-import Data.List (intersperse)
+import Data.List (intersperse, isPrefixOf)
 import Control.Monad (when)
 
 -- import Debug.Trace (trace)
@@ -333,10 +333,12 @@ pragmas = [
 -- ( "include",           INCLUDE undefined )  -- ...and here!
  ]
 
-isIdent, isHSymbol :: Char -> Bool
+isIdent, isHSymbol, isPragmaChar :: Char -> Bool
 isIdent   c = isAlpha c || isDigit c || c == '\'' || c == '_'
 
 isHSymbol c = c `elem` ":!#%&*./?@\\-" || ((isSymbol c || isPunctuation c) && not (c `elem` "(),;[]`{}_\"'"))
+
+isPragmaChar c = isAlphaNum c || c == '_'
 
 matchChar :: Char -> String -> Lex a ()
 matchChar c msg = do
@@ -429,8 +431,8 @@ lexWhiteSpace_ bol =  do _ <- lexWhiteSpace bol
                          return ()
 
 isRecognisedPragma, isLinePragma :: String -> Bool
-isRecognisedPragma str = let pragma = map toLower . takeWhile isAlphaNum . dropWhile isSpace $ str
-                          in case lookup pragma pragmas of
+isRecognisedPragma str = let pragma = takeWhile isPragmaChar . dropWhile isSpace $ str
+                          in case lookupKnownPragma pragma of
                               Nothing -> False
                               _       -> True
 
@@ -835,11 +837,22 @@ lexStdToken = do
                           rest <- lexQQBody
                           return (str++rest)
 
+-- Underscores are used in some pragmas. Options pragmas are a special case
+-- with our representation: the thing after the underscore is a parameter.
+-- Strip off the parameters to option pragmas by hand here, everything else
+-- sits in the pragmas map.
+lookupKnownPragma :: String -> Maybe Token
+lookupKnownPragma s =
+    case map toLower s of
+      x | "options_" `isPrefixOf` x -> Just $ OPTIONS (Just $ drop 8 s, undefined)
+        | "options" == x            -> Just $ OPTIONS (Nothing, undefined)
+        | otherwise                 -> lookup x pragmas
+
 lexPragmaStart :: Lex a Token
 lexPragmaStart = do
     lexWhile_ isSpace
-    pr <- lexWhile isAlphaNum
-    case lookup (map toLower pr) pragmas of
+    pr <- lexWhile isPragmaChar
+    case lookupKnownPragma pr of
      Just (INLINE True) -> do
             s <- getInput
             case map toLower s of
@@ -864,18 +877,18 @@ lexPragmaStart = do
                         return $ SPECIALISE_INLINE False
              _ -> return SPECIALISE
 
-     Just (OPTIONS _) -> do     -- see, I promised we'd mask out the 'undefined'
-            s <- getInput
-            case s of
-             '_':_  -> do
-                discard 1
-                com <- lexWhile isIdent
+     Just (OPTIONS opt) -> do     -- see, I promised we'd mask out the 'undefined'
+            case fst opt of
+             Just opt' -> do
                 rest <- lexRawPragma
-                return $ OPTIONS (Just com, rest)
-             x:_ | isSpace x -> do
-                rest <- lexRawPragma
-                return $ OPTIONS (Nothing, rest)
-             _ -> fail "Malformed Options pragma"
+                return $ OPTIONS (Just opt', rest)
+             Nothing -> do
+                            s <- getInput
+                            case s of
+                                x:_ | isSpace x -> do
+                                    rest <- lexRawPragma
+                                    return $ OPTIONS (Nothing, rest)
+                                _  -> fail "Malformed Options pragma"
      Just RULES -> do -- Rules enable ScopedTypeVariables locally.
             addExtensionL ScopedTypeVariables
             return RULES

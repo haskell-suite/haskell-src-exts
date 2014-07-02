@@ -1970,12 +1970,12 @@ instance ExactP RuleVar where
   exactP (RuleVar _ n) = exactP n
 
 instance ExactP Overlap where
-  exactP (NoOverlap  l) =
-    printPoints l ["{-# NO_OVERLAP #-}"]
-  exactP (Overlap  l) =
-    printPoints l ["{-# OVERLAP #-}"]
-  exactP (Incoherent  l) =
-    printPoints l ["{-# INCOHERENT #-}"]
+  exactP (NoOverlap _) =
+    printString "{-# NO_OVERLAP #-}"
+  exactP (Overlap _) =
+    printString "{-# OVERLAP #-}"
+  exactP (Incoherent _) =
+    printString "{-# INCOHERENT #-}"
 
 instance ExactP Activation where
   exactP (ActiveFrom   l i) =
