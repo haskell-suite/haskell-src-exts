@@ -183,24 +183,32 @@ checkAssertion t' = checkAssertion' id [] t'
     where   -- class assertions must have at least one argument
             checkAssertion' fl ts (TyCon l c) = do
                 when (length ts /= 1) $ checkEnabled MultiParamTypeClasses
-                when (isSymbol c)     $ checkEnabled TypeOperators
+                checkAndWarnTypeOperators c
                 return $ ClassA (fl l) c ts
             checkAssertion' fl ts (TyApp l a t) = do
                 -- no check on t at this stage
                 checkAssertion' (const (fl l)) (t:ts) a
             checkAssertion' fl _ (TyInfix l a op b) = do
                 -- infix operators require TypeOperators
-                checkEnabled TypeOperators
+                checkAndWarnTypeOperators op
                 return $ InfixA (fl l) a op b
             checkAssertion' fl ts (TyParen l t) =
                 checkAssertion' (const (fl l)) ts t
             checkAssertion' _ _ _ = fail "Illegal class assertion"
 
-isSymbol :: QName L -> Bool
-isSymbol (UnQual _ (Symbol _ _)) = True
-isSymbol (Qual _ _ (Symbol _ _)) = True
-isSymbol _                       = False
+getSymbol :: QName L -> Maybe String
+getSymbol (UnQual _ (Symbol _ s)) = Just s
+getSymbol (Qual _ _ (Symbol _ s)) = Just s
+getSymbol _                       = Nothing
 
+-- | Checks whether the parameter is a symbol, and gives a nice warning for
+-- "." if ExplicitForAll/TypeOperators are not enabled.
+checkAndWarnTypeOperators :: QName L -> P ()
+checkAndWarnTypeOperators c =
+    case getSymbol c of
+        Just s | s == "."  -> checkEnabledOneOf [ExplicitForAll, TypeOperators]
+               | otherwise -> checkEnabled TypeOperators
+        Nothing -> return ()
 
 -- Checks simple contexts for class and instance
 -- headers. If FlexibleContexts is enabled then
@@ -287,15 +295,13 @@ checkSimple kw (TyApp l h t) = do
   tvb <- mkTyVarBind kw t
   h' <- checkSimple kw h
   return $ DHApp l h' tvb
-checkSimple kw (TyInfix l t1 (UnQual _ t) t2) = do
-       checkEnabled TypeOperators
+checkSimple kw (TyInfix l t1 c@(UnQual _ t) t2) = do
+       checkAndWarnTypeOperators c
        tv1 <- mkTyVarBind kw t1
        tv2 <- mkTyVarBind kw t2
        return $ DHApp l (DHInfix l tv1 t) tv2
-checkSimple _kw (TyCon _ (UnQual l t)) = do
-    case t of
-      Symbol _ _ -> checkEnabled TypeOperators
-      _ -> return ()
+checkSimple _kw (TyCon _ c@(UnQual l t)) = do
+    checkAndWarnTypeOperators c
     return (DHead l t)
 checkSimple kw (TyParen l t) = do
     dh <- checkSimple kw t
@@ -305,8 +311,8 @@ checkSimple kw _ = fail ("Illegal " ++ kw ++ " declaration")
 mkTyVarBind :: String -> PType L -> P (TyVarBind L)
 mkTyVarBind _ (TyVar l n) = return $ UnkindedVar l n
 mkTyVarBind _ (TyKind l (TyVar _ n) k) = return $ KindedVar l n k
-mkTyVarBind _ (TyCon l (UnQual _ n@(Symbol _ _))) = checkEnabled TypeOperators >> return (UnkindedVar l n)
-mkTyVarBind _ (TyKind l (TyCon _ (UnQual _ n@(Symbol _ _))) k) = checkEnabled TypeOperators >> return (KindedVar l n k)
+mkTyVarBind _ (TyCon l c@(UnQual _ n@(Symbol _ _))) = checkAndWarnTypeOperators c >> return (UnkindedVar l n)
+mkTyVarBind _ (TyKind l (TyCon _ c@(UnQual _ n@(Symbol _ _))) k) = checkAndWarnTypeOperators c >> return (KindedVar l n k)
 mkTyVarBind kw _ = fail ("Illegal " ++ kw ++ " declaration")
 
 {-
@@ -342,10 +348,10 @@ checkInstsGuts (TyApp l h t) = do
     h' <- checkInstsGuts h
     return $ DoIHApp l h' t'
 checkInstsGuts (TyCon l c) = do
-    when (isSymbol c) $ checkEnabled TypeOperators
+    checkAndWarnTypeOperators c
     return $ DoIHCon l c
 checkInstsGuts (TyInfix l a op b) = do
-    checkEnabled TypeOperators
+    checkAndWarnTypeOperators op
     [ta,tb] <- checkTypes [a,b]
     return $ DoIHApp l (DoIHInfix l ta op) tb
 checkInstsGuts (TyParen l t) = checkInstsGuts t >>= return . DoIHParen l
@@ -995,12 +1001,12 @@ checkT t simple = case t of
     TyApp   l ft at   -> check2Types ft at (S.TyApp l)
     TyVar   l n       -> return $ S.TyVar l n
     TyCon   l n       -> do
-            when (isSymbol n) $ checkEnabled TypeOperators
+            checkAndWarnTypeOperators n
             return $ S.TyCon l n
     TyParen l pt      -> check1Type pt (S.TyParen l)
     -- Here we know that t will be used as an actual type (and not a data constructor)
     -- so we can check that TypeOperators are enabled.
-    TyInfix l at op bt -> checkEnabled TypeOperators >> check2Types at bt (flip (S.TyInfix l) op)
+    TyInfix l at op bt -> checkAndWarnTypeOperators op >> check2Types at bt (flip (S.TyInfix l) op)
     TyKind  l pt k    -> check1Type pt (flip (S.TyKind l) k)
 
     -- TyPred  cannot be a valid type
