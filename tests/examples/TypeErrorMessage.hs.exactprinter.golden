@@ -1,0 +1,1 @@
+ParseFailed (SrcLoc "tests/examples/TypeErrorMessage.hs" 2 1) "ExplicitForAll or TypeOperators is not enabled"
