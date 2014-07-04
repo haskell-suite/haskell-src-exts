@@ -1006,8 +1006,9 @@ GADTs - require the GADTs extension enabled, but we handle that at the calling s
 >       | gadtconstr                            { ([$1],[]) }
 
 > gadtconstr :: { GadtDecl L }
->       : qcon '::' truectype            {% do { c <- checkUnQual $1;
->                                                return $ GadtDecl ($1 <> $3 <** [$2]) c $3 } }
+>       : qcon '::' stype                {% do { c <- checkUnQual $1;
+>                                                let {t = bangTypeToGadtType $3};
+>                                                return $ GadtDecl ($1 <> t <** [$2]) c t } }
 
 To allow the empty case we need the EmptyDataDecls extension.
 > constrs0 :: { ([QualConDecl L],[S],Maybe L) }

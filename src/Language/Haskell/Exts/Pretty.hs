@@ -735,8 +735,14 @@ ppDeriving ds  = text "deriving" <+> parenList (map ppDer ds)
 ppBType :: Type -> Doc
 ppBType = prettyPrec prec_btype
 
+ppBGadtType :: GadtType -> Doc
+ppBGadtType = prettyPrec prec_btype
+
 ppAType :: Type -> Doc
 ppAType = prettyPrec prec_atype
+
+ppAGadtType :: GadtType -> Doc
+ppAGadtType = prettyPrec prec_atype
 
 -- precedences for types
 prec_btype, prec_atype :: Int
@@ -769,6 +775,30 @@ instance Pretty Type where
         prettyPrec _ (TyKind t k) = parens (myFsep [pretty t, text "::", pretty k])
         prettyPrec _ (TyPromoted p) = pretty p
         prettyPrec _ (TySplice s) = pretty s
+
+instance Pretty GadtType where
+        prettyPrec p (GadtTyForall mtvs ctxt htype) = parensIf (p > 0) $
+                myFsep [ppForall mtvs, ppContext ctxt, pretty htype]
+        prettyPrec p (GadtTyFun a b)      = parensIf (p > 0) $
+                myFsep [ppBGadtType a, text "->", pretty b]
+        prettyPrec _ (GadtTyTuple bxd l)  =
+                let ds = map pretty l
+                 in case bxd of
+                        Boxed   -> parenList ds
+                        Unboxed -> hashParenList ds
+        prettyPrec _ (GadtTyList t)       = brackets $ pretty t
+        prettyPrec _ (GadtTyParArray t)   = bracketColonList [pretty t]
+        prettyPrec p (GadtTyApp a b)      = parensIf (p > prec_btype) $
+                myFsep [pretty a, ppAGadtType b]
+        prettyPrec _ (GadtTyVar name)     = pretty name
+        prettyPrec _ (GadtTyCon name)     = pretty name
+        prettyPrec _ (GadtTyParen t)      = parens (pretty t)
+        prettyPrec _ (GadtTyInfix a op b) = myFsep [pretty a, ppQNameInfix op, pretty b]
+        prettyPrec _ (GadtTyKind t k)     = parens (myFsep [pretty t, text "::", pretty k])
+        prettyPrec _ (GadtTyPromoted p)   = pretty p
+        prettyPrec _ (GadtTySplice s)     = pretty s
+        prettyPrec _ (GadtTyBanged gt)    = myFsep [text "!", pretty gt]
+        prettyPrec _ (GadtTyUnpacked gt)  = myFsep [text "{-# UNPACK #-}", char '!' <> pretty gt]
 
 instance Pretty Promoted where
   pretty p =
@@ -1422,6 +1452,9 @@ instance SrcInfo l => Pretty (A.Deriving l) where
 ------------------------- Types -------------------------
 instance SrcInfo l => Pretty (A.Type l) where
         pretty = pretty . sType
+
+instance SrcInfo l => Pretty (A.GadtType l) where
+        pretty = pretty . sGadtType
 
 instance Pretty (A.TyVarBind l) where
         pretty = pretty . sTyVarBind

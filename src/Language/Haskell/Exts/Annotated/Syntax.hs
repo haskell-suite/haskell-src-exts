@@ -56,7 +56,8 @@ module Language.Haskell.Exts.Annotated.Syntax (
     -- * Class Assertions and Contexts
     Context(..), FunDep(..), Asst(..),
     -- * Types
-    Type(..), Boxed(..), Kind(..), TyVarBind(..), Promoted(..), TypeEqn (..),
+    Type(..), GadtType(..), Boxed(..), Kind(..), TyVarBind(..), Promoted(..),
+    TypeEqn (..),
     -- * Expressions
     Exp(..), Stmt(..), QualStmt(..), FieldUpdate(..),
     Alt(..), XAttr(..),
@@ -415,7 +416,7 @@ data FieldDecl l = FieldDecl l [Name l] (BangType l)
 
 -- | A single constructor declaration in a GADT data type declaration.
 data GadtDecl l
-    = GadtDecl l (Name l) (Type l)
+    = GadtDecl l (Name l) (GadtType l)
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | Declarations inside a class declaration.
@@ -487,6 +488,30 @@ data Type l
      | TyKind  l (Type l) (Kind l)              -- ^ type with explicit kind signature
      | TyPromoted l (Promoted l)                -- ^ @'K@, a promoted data type (-XDataKinds).
      | TySplice l (Splice l)                    -- ^ template haskell splice type
+  deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
+
+-- | Replicated type structure for constructor signatures. Two extra elements
+-- that are necessary for representing bangs and unpacks in GADT-declarations,
+-- for example X :: !Int -> X.
+data GadtType l
+     = GadtTyForall l
+        (Maybe [TyVarBind l])
+        (Maybe (Context l))
+        (GadtType l)                                     -- ^ qualified type
+     | GadtTyFun   l (GadtType l) (GadtType l)           -- ^ function type
+     | GadtTyTuple l Boxed [GadtType l]                  -- ^ tuple type, possibly boxed
+     | GadtTyList  l (GadtType l)                        -- ^ list syntax, e.g. [a], as opposed to [] a
+     | GadtTyParArray l (GadtType l)                     -- ^ parallel array syntax, e.g. [:a:]
+     | GadtTyApp   l (GadtType l) (GadtType l)           -- ^ application of a type constructor
+     | GadtTyVar   l (Name l)                            -- ^ type variable
+     | GadtTyCon   l (QName l)                           -- ^ named type or type constructor
+     | GadtTyParen l (GadtType l)                        -- ^ type surrounded by parentheses
+     | GadtTyInfix l (GadtType l) (QName l) (GadtType l) -- ^ infix type constructor
+     | GadtTyKind  l (GadtType l) (Kind l)               -- ^ type with explicit kind signature
+     | GadtTyPromoted l (Promoted l)                     -- ^ @'K@, a promoted data type (-XDataKinds).
+     | GadtTySplice l (Splice l)                         -- ^ template haskell splice type
+     | GadtTyBanged l (GadtType l)                       -- ^ strict component, marked with \"@!@\"
+     | GadtTyUnpacked l (GadtType l)                     -- ^ unboxed component, marked with an UNPACK pragma
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | Bools here are True if there was a leading quote which may be
@@ -1272,6 +1297,40 @@ instance Annotated Type where
       TyKind  l t k                 -> TyKind (f l) t k
       TyPromoted l   p              -> TyPromoted (f l)   p
       TySplice l s                  -> TySplice (f l) s
+
+instance Annotated GadtType where
+    ann t = case t of
+      GadtTyForall l _ _ _              -> l
+      GadtTyFun   l _ _                 -> l
+      GadtTyTuple l _ _                 -> l
+      GadtTyList  l _                   -> l
+      GadtTyParArray  l _               -> l
+      GadtTyApp   l _ _                 -> l
+      GadtTyVar   l _                   -> l
+      GadtTyCon   l _                   -> l
+      GadtTyParen l _                   -> l
+      GadtTyInfix l _ _ _               -> l
+      GadtTyKind  l _ _                 -> l
+      GadtTyPromoted l   _              -> l
+      GadtTySplice l _                  -> l
+      GadtTyBanged l _                  -> l
+      GadtTyUnpacked l _                -> l
+    amap f t1 = case t1 of
+      GadtTyForall l mtvs mcx t         -> GadtTyForall (f l) mtvs mcx t
+      GadtTyFun   l t1' t2              -> GadtTyFun (f l) t1' t2
+      GadtTyTuple l b ts                -> GadtTyTuple (f l) b ts
+      GadtTyList  l t                   -> GadtTyList (f l) t
+      GadtTyParArray  l t               -> GadtTyParArray (f l) t
+      GadtTyApp   l t1' t2              -> GadtTyApp (f l) t1' t2
+      GadtTyVar   l n                   -> GadtTyVar (f l) n
+      GadtTyCon   l qn                  -> GadtTyCon (f l) qn
+      GadtTyParen l t                   -> GadtTyParen (f l) t
+      GadtTyInfix l ta qn tb            -> GadtTyInfix (f l) ta qn tb
+      GadtTyKind  l t k                 -> GadtTyKind (f l) t k
+      GadtTyPromoted l   p              -> GadtTyPromoted (f l)   p
+      GadtTySplice l s                  -> GadtTySplice (f l) s
+      GadtTyBanged l gt                 -> GadtTyBanged (f l) gt
+      GadtTyUnpacked l gt               -> GadtTyUnpacked (f l) gt
 
 instance Annotated TyVarBind where
     ann (KindedVar   l _ _) = l
