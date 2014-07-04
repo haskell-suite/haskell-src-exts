@@ -275,7 +275,7 @@ reserved_ids = [
  ( "newtype",   (KW_NewType,    Nothing) ),
  ( "of",        (KW_Of,         Nothing) ),
  ( "proc",      (KW_Proc,       Just (Any [Arrows])) ),
- ( "rec",       (KW_Rec,        Just (Any [Arrows, RecursiveDo])) ),
+ ( "rec",       (KW_Rec,        Just (Any [Arrows, RecursiveDo, DoRec])) ),
  ( "then",      (KW_Then,       Nothing) ),
  ( "type",      (KW_Type,       Nothing) ),
  ( "using",     (KW_Using,      Just (Any [TransformListComp])) ),
