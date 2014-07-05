@@ -308,7 +308,8 @@ instance Pretty ModuleName where
 
 instance Pretty ExportSpec where
         pretty (EVar t name)              =
-                (if t then text "type" else empty) <+> pretty name
+                (case t of { NoNamespace -> empty; TypeNamespace -> text "type" })
+                  <+> pretty name
         pretty (EAbs name)                = pretty name
         pretty (EThingAll name)           = pretty name <> text "(..)"
         pretty (EThingWith name nameList) =
@@ -332,7 +333,8 @@ instance Pretty ImportDecl where
 
 instance Pretty ImportSpec where
         pretty (IVar t name)              =
-                (if t then text "type" else empty) <+> pretty name
+                (case t of { NoNamespace -> empty; TypeNamespace -> text "type" })
+                  <+> pretty name
         pretty (IAbs name)                = pretty name
         pretty (IThingAll name)           = pretty name <> text "(..)"
         pretty (IThingWith name nameList) =

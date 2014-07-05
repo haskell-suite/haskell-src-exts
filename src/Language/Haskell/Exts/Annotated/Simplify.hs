@@ -38,7 +38,7 @@ sModule md = case md of
         let loc = getPointLoc l
          in S.Module loc (sModuleName mn) (map sModulePragma oss)
                       Nothing
-                      (Just [S.EVar False $ S.UnQual $ S.Ident "page"])
+                      (Just [S.EVar S.NoNamespace $ S.UnQual $ S.Ident "page"])
                         []
                         [pageFun loc $ S.XTag loc (sXName xn) (map sXAttr attrs) (fmap sExp mat) (map sExp es)]
     XmlHybrid l mmh oss ids ds xn attrs mat es  ->
@@ -164,7 +164,7 @@ sCName (ConName _ n) = S.ConName (sName n)
 
 sModuleHead :: Maybe (ModuleHead l) -> (S.ModuleName, Maybe (S.WarningText), Maybe [S.ExportSpec])
 sModuleHead mmh = case mmh of
-    Nothing -> (S.main_mod, Nothing, Just [S.EVar False (S.UnQual S.main_name)])
+    Nothing -> (S.main_mod, Nothing, Just [S.EVar S.NoNamespace (S.UnQual S.main_name)])
     Just (ModuleHead _ mn mwt mel) -> (sModuleName mn, fmap sWarningText mwt, fmap sExportSpecList mel)
 
 sExportSpecList :: ExportSpecList l -> [S.ExportSpec]
@@ -172,7 +172,7 @@ sExportSpecList (ExportSpecList _ ess) = map sExportSpec ess
 
 sExportSpec :: ExportSpec l -> S.ExportSpec
 sExportSpec es = case es of
-    EVar _ t qn         -> S.EVar t (sQName qn)
+    EVar _ n qn         -> S.EVar (sNamespace n) (sQName qn)
     EAbs _ qn           -> S.EAbs (sQName qn)
     EThingAll _ qn      -> S.EThingAll (sQName qn)
     EThingWith _ qn cns -> S.EThingWith (sQName qn) (map sCName cns)
@@ -185,9 +185,14 @@ sImportDecl (ImportDecl l mn qu src mpkg as misl) =
 sImportSpecList :: ImportSpecList l -> (Bool, [S.ImportSpec])
 sImportSpecList (ImportSpecList _ b iss) = (b, map sImportSpec iss)
 
+sNamespace :: Namespace l -> S.Namespace
+sNamespace n = case n of
+                NoNamespace _   -> S.NoNamespace
+                TypeNamespace _ -> S.TypeNamespace
+
 sImportSpec :: ImportSpec l -> S.ImportSpec
 sImportSpec is = case is of
-    IVar _ t n          -> S.IVar t (sName n)
+    IVar _ ns n          -> S.IVar (sNamespace ns) (sName n)
     IAbs _ n            -> S.IAbs (sName n)
     IThingAll _ n       -> S.IThingAll (sName n)
     IThingWith _ n cns  -> S.IThingWith (sName n) (map sCName cns)

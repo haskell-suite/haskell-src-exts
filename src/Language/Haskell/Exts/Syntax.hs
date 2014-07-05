@@ -40,7 +40,7 @@
 module Language.Haskell.Exts.Syntax (
     -- * Modules
     Module(..), WarningText(..), ExportSpec(..),
-    ImportDecl(..), ImportSpec(..), Assoc(..),
+    ImportDecl(..), ImportSpec(..), Assoc(..), Namespace(..),
     -- * Declarations
     Decl(..), Binds(..), IPBind(..),
     -- ** Type classes and instances
@@ -167,7 +167,7 @@ data Module = Module SrcLoc ModuleName [ModulePragma] (Maybe WarningText)
 
 -- | An item in a module's export specification.
 data ExportSpec
-     = EVar Bool QName              -- ^ variable. Bool indicates type keyword.
+     = EVar Namespace QName         -- ^ variable.
      | EAbs QName                   -- ^ @T@:
                                     --   a class or datatype exported abstractly,
                                     --   or a type synonym.
@@ -179,6 +179,10 @@ data ExportSpec
                                     --   a datatype exported with some of its constructors.
      | EModuleContents ModuleName   -- ^ @module M@:
                                     --   re-export a module.
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+
+-- | Namespaces for imports/exports.
+data Namespace = NoNamespace | TypeNamespace
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 -- | An import declaration.
@@ -199,7 +203,7 @@ data ImportDecl = ImportDecl
 -- | An import specification, representing a single explicit item imported
 --   (or hidden) from a module.
 data ImportSpec
-     = IVar Bool Name           -- ^ variable. Bool indicates type keyword.
+     = IVar Namespace Name      -- ^ variable.
      | IAbs Name                -- ^ @T@:
                                 --   the name of a class, datatype or type synonym.
      | IThingAll Name           -- ^ @T(..)@:

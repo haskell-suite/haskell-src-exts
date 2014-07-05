@@ -44,7 +44,7 @@
 module Language.Haskell.Exts.Annotated.Syntax (
     -- * Modules
     Module(..), ModuleHead(..), WarningText(..), ExportSpecList(..), ExportSpec(..),
-    ImportDecl(..), ImportSpecList(..), ImportSpec(..), Assoc(..),
+    ImportDecl(..), ImportSpecList(..), ImportSpec(..), Assoc(..), Namespace(..),
     -- * Declarations
     Decl(..), DeclHead(..), InstHead(..), Binds(..), IPBind(..),
     -- ** Type classes and instances
@@ -190,7 +190,7 @@ data ExportSpecList l
 
 -- | An item in a module's export specification.
 data ExportSpec l
-     = EVar l Bool (QName l)            -- ^ variable. Bool indicates type keyword.
+     = EVar l (Namespace l) (QName l)   -- ^ variable.
      | EAbs l (QName l)                 -- ^ @T@:
                                         --   a class or datatype exported abstractly,
                                         --   or a type synonym.
@@ -202,6 +202,10 @@ data ExportSpec l
                                         --   a datatype exported with some of its constructors.
      | EModuleContents l (ModuleName l) -- ^ @module M@:
                                         --   re-export a module.
+  deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
+
+-- | Namespaces for imports/exports.
+data Namespace l = NoNamespace l | TypeNamespace l
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | An import declaration.
@@ -228,7 +232,7 @@ data ImportSpecList l
 -- | An import specification, representing a single explicit item imported
 --   (or hidden) from a module.
 data ImportSpec l
-     = IVar l Bool (Name l)             -- ^ variable. Bool indicates type keyword.
+     = IVar l (Namespace l) (Name l)    -- ^ variable
      | IAbs l (Name l)                  -- ^ @T@:
                                         --   the name of a class, datatype or type synonym.
      | IThingAll l (Name l)             -- ^ @T(..)@:
@@ -972,6 +976,14 @@ instance Annotated ExportSpec where
         EThingAll l qn  -> EThingAll (f l) qn
         EThingWith l qn cns -> EThingWith (f l) qn cns
         EModuleContents l mn    -> EModuleContents (f l) mn
+
+instance Annotated Namespace where
+    ann es = case es of
+        NoNamespace l   -> l
+        TypeNamespace l -> l
+    amap f es = case es of
+        NoNamespace l   -> NoNamespace (f l)
+        TypeNamespace l -> TypeNamespace (f l)
 
 instance Annotated ImportDecl where
     ann (ImportDecl l _ _ _ _ _ _) = l
