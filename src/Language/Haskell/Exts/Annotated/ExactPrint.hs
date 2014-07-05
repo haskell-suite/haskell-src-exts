@@ -345,17 +345,17 @@ instance ExactP CName where
     VarName _ n -> exactP n
     ConName _ n -> exactP n
 
+instance ExactP Namespace where
+  exactP ns = case ns of
+     NoNamespace _   -> return ()
+     TypeNamespace l ->
+        case srcInfoPoints l of
+            [a] -> printStringAt (pos a) "type"
+            _   -> errorEP "ExactP: Namespace is given too few srcInfoPoints"
+
 instance ExactP ExportSpec where
   exactP espec = case espec of
-     EVar l t qn
-        | t -> do
-             case srcInfoPoints l of
-              [a,b] -> do
-                 printStringAt (pos a) "type"
-                 printWhitespace (pos b)
-                 exactP qn
-              _ -> errorEP "ExactP: EVar is given wrong number of srcInfoPoints"
-        | otherwise -> exactP qn
+     EVar _ t qn    -> exactPC t >> exactPC qn
      EAbs _ qn      -> exactP qn
      EThingAll l qn -> exactP qn >> printPoints l ["(","..",")"]
      EThingWith l qn cns    ->
@@ -381,15 +381,7 @@ instance ExactP ImportSpecList where
 
 instance ExactP ImportSpec where
   exactP ispec = case ispec of
-    IVar l t qn
-       | t -> do
-             case srcInfoPoints l of
-               [a,b] -> do
-                  printStringAt (pos a) "type"
-                  printWhitespace (pos b)
-                  exactP qn
-               _ -> errorEP "ExactP: IVar is given wrong number of srcInfoPoints"
-          | otherwise -> exactP qn
+    IVar _ t qn -> exactPC t >> exactPC qn
     IAbs _ n    -> exactP n
     IThingAll l n   -> exactP n >> printPoints l ["(","..",")"]
     IThingWith l n cns    ->
