@@ -266,7 +266,7 @@ sFieldDecl :: SrcInfo l => FieldDecl l -> ([S.Name], S.BangType)
 sFieldDecl (FieldDecl _ ns bt) = (map sName ns, sBangType bt)
 
 sGadtDecl :: SrcInfo loc => GadtDecl loc -> S.GadtDecl
-sGadtDecl (GadtDecl l n t) = S.GadtDecl (getPointLoc l) (sName n) (sGadtType t)
+sGadtDecl (GadtDecl l n mn t) = S.GadtDecl (getPointLoc l) (sName n) (maybe [] sRecFields mn) (sGadtType t)
 
 sClassDecl :: SrcInfo loc => ClassDecl loc -> S.ClassDecl
 sClassDecl cd = case cd of
@@ -281,6 +281,9 @@ sClassDecl cd = case cd of
         S.ClsTyDef (getPointLoc l) (sType t1) (sType t2)
     ClsDefSig l n t ->
         S.ClsDefSig (getPointLoc l) (sName n) (sType t)
+
+sRecFields :: SrcInfo l => ([Name l], GadtType l) -> [([S.Name], S.GadtType)]
+sRecFields (ns, t) = [(map sName ns, sGadtType t)]
 
 sInstDecl :: SrcInfo loc => InstDecl loc -> S.InstDecl
 sInstDecl id' = case id' of

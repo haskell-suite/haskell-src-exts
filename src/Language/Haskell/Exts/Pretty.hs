@@ -698,8 +698,15 @@ instance Pretty QualConDecl where
                 myFsep [ppForall (Just tvs), ppContext ctxt, pretty con]
 
 instance Pretty GadtDecl where
-        pretty (GadtDecl _pos name ty) =
-                myFsep [pretty name, text "::", pretty ty]
+        pretty (GadtDecl _pos name names ty) =
+            case names of
+                [] ->
+                    myFsep [pretty name, text "::", pretty ty]
+                [(names', ty1)] ->
+                                myFsep $ [pretty name, text "::", char '{'] ++
+                                           map pretty names' ++ [text "::",
+                                            pretty ty1, char '}', text "->", pretty ty]
+                _ -> error "Internal error: Pretty GadtDecl"
 
 instance Pretty ConDecl where
         pretty (RecDecl name fieldList) =
@@ -1429,8 +1436,14 @@ instance SrcInfo l => Pretty (A.QualConDecl l) where
                 myFsep [ppForall (fmap (map sTyVarBind) mtvs), ppContext $ maybe [] sContext ctxt, pretty con]
 
 instance SrcInfo l => Pretty (A.GadtDecl l) where
-        pretty (A.GadtDecl _pos name ty) =
-                myFsep [pretty name, text "::", pretty ty]
+        pretty (A.GadtDecl _pos name names ty) =
+            case names of
+                Nothing ->
+                    myFsep [pretty name, text "::", pretty ty]
+                Just (names', ty1) ->
+                                myFsep $ [pretty name, text "::", char '{'] ++
+                                           map pretty names' ++ [text "::",
+                                            pretty ty1, char '}', text "->", pretty ty]
 
 instance SrcInfo l => Pretty (A.ConDecl l) where
         pretty = pretty . sConDecl

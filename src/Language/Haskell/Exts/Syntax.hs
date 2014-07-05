@@ -347,7 +347,7 @@ data ConDecl
 
 -- | A single constructor declaration in a GADT data type declaration.
 data GadtDecl
-    = GadtDecl SrcLoc Name GadtType
+    = GadtDecl SrcLoc Name [([Name], GadtType)] GadtType
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 -- | Declarations inside a class declaration.

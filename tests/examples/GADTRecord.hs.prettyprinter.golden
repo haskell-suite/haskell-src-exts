@@ -1,1 +1,5 @@
-ParseFailed (SrcLoc "tests/examples/GADTRecord.hs" 4 8) "Parse error: {"
+{-# LANGUAGE GADTs #-}
+module Main (main) where
+ 
+data T where
+        T :: { field :: Int } -> T

@@ -1277,13 +1277,29 @@ instance ExactP ConDecl where
     RecDecl l n fds -> exactP n >> curlyList (srcInfoPoints l) fds
 
 instance ExactP GadtDecl where
-  exactP (GadtDecl l n t) =
-    case srcInfoPoints l of
-     [a] -> do
-        exactP n
-        printStringAt (pos a) "::"
-        exactPC t
-     _ -> errorEP "ExactP: GadtDecl is given wrong number of srcInfoPoints"
+  exactP (GadtDecl l n ns' t) =
+    case ns' of
+        Nothing ->
+            case srcInfoPoints l of
+                [a] -> do
+                    exactP n
+                    printStringAt (pos a) "::"
+                    exactPC t
+                _ -> errorEP "ExactP: GadtDecl is given wrong number of srcInfoPoints"
+        Just (names, ty1) ->
+            case srcInfoPoints l of
+                [a,b,c,d,e] -> do
+                    exactPC n
+                    printStringAt (pos a) "::"
+                    printStringAt (pos b) "{"
+                    let pts = map ann names
+                    printInterleaved' (zip (init pts) (repeat ",")) names
+                    printStringAt (pos e) "::"
+                    exactPC ty1
+                    printStringAt (pos c) "}"
+                    printStringAt (pos d) "->"
+                    exactPC t
+                _ -> errorEP "ExactP: GadtDecl is given wrong number of srcInfoPoints"
 
 instance ExactP BangType where
   exactP bt = case bt of

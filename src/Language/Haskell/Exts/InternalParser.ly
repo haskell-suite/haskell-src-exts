@@ -1002,13 +1002,21 @@ GADTs - require the GADTs extension enabled, but we handle that at the calling s
 >       : optsemis gadtconstrs optsemis         { (fst $2, reverse $1 ++ snd $2 ++ reverse $3)  }
 
 > gadtconstrs :: { ([GadtDecl L],[S]) }
->       : gadtconstrs semis gadtconstr          { ($3 : fst $1, snd $1 ++ reverse $2) }
->       | gadtconstr                            { ([$1],[]) }
+>       : gadtconstrs semis gadtconstr          { ($3 ++ fst $1, snd $1 ++ reverse $2) }
+>       | gadtconstr                            { ($1,[]) }
 
-> gadtconstr :: { GadtDecl L }
+> gadtconstr :: { [GadtDecl L] }
 >       : qcon '::' stype                {% do { c <- checkUnQual $1;
 >                                                let {t = bangTypeToGadtType $3};
->                                                return $ GadtDecl ($1 <> t <** [$2]) c t } }
+>                                                return [GadtDecl ($1 <> t <** [$2]) c Nothing t] } }
+>       | qcon '::' '{' fielddecls '}' '->' stype
+>                                       {% do { c <- checkUnQual $1;
+>                                               let {t = bangTypeToGadtType $7};
+>                                               let {fieldToGadt (FieldDecl l' ns bt) =
+>                                                       let colPos = last $ srcInfoPoints l'
+>                                                        in GadtDecl ($1 <> t <** [$2,$3,$5,$6,colPos]) c (Just (ns, bangTypeToGadtType bt)) t};
+>                                               let {out = map fieldToGadt (reverse $ fst $4) };
+>                                               return out } }
 
 To allow the empty case we need the EmptyDataDecls extension.
 > constrs0 :: { ([QualConDecl L],[S],Maybe L) }
