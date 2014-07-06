@@ -1,4 +1,4 @@
-{-# LANGUAGE DeriveDataTypeable, DeriveFoldable, DeriveTraversable, DeriveFunctor, DeriveGeneric #-}
+{-# LANGUAGE DeriveDataTypeable, DeriveFoldable, DeriveTraversable, DeriveFunctor, DeriveGeneric, StandaloneDeriving, GeneralizedNewtypeDeriving, CPP, ScopedTypeVariables #-}
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Language.Haskell.Exts.Annotated.Syntax
@@ -56,7 +56,7 @@ module Language.Haskell.Exts.Annotated.Syntax (
     -- * Class Assertions and Contexts
     Context(..), FunDep(..), Asst(..),
     -- * Types
-    Type(..), GadtType(..), Boxed(..), Kind(..), TyVarBind(..), Promoted(..),
+    Type(..), TypeF(..), mapTypeF, GadtType(..), Boxed(..), Kind(..), TyVarBind(..), Promoted(..),
     TypeEqn (..),
     -- * Expressions
     Exp(..), Stmt(..), QualStmt(..), FieldUpdate(..),
@@ -106,6 +106,10 @@ module Language.Haskell.Exts.Annotated.Syntax (
   ) where
 
 import Prelude hiding (id)
+
+#if !MIN_VERSION_base(4,7,0)
+import Data.Typeable
+#endif
 
 import Data.Data
 import GHC.Generics (Generic)
@@ -473,49 +477,72 @@ data GuardedRhs l
      = GuardedRhs l [Stmt l] (Exp l)
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
--- | A type qualified with a context.
---   An unqualified type has an empty context.
-data Type l
+-- | A type qualified with a context.  An unqualified type has an empty context.
+--
+-- The type parameter @t@ will be instantiated with either 'Type' or
+-- 'GadtType'. The purpose of this parameterised type is to share the
+-- data constructors between ordinary type and GADT representations.
+data TypeF t l
      = TyForall l
         (Maybe [TyVarBind l])
         (Maybe (Context l))
-        (Type l)                                -- ^ qualified type
-     | TyFun   l (Type l) (Type l)              -- ^ function type
-     | TyTuple l Boxed [Type l]                 -- ^ tuple type, possibly boxed
-     | TyList  l (Type l)                       -- ^ list syntax, e.g. [a], as opposed to [] a
-     | TyParArray  l (Type l)                   -- ^ parallel array syntax, e.g. [:a:]
-     | TyApp   l (Type l) (Type l)              -- ^ application of a type constructor
-     | TyVar   l (Name l)                       -- ^ type variable
-     | TyCon   l (QName l)                      -- ^ named type or type constructor
-     | TyParen l (Type l)                       -- ^ type surrounded by parentheses
-     | TyInfix l (Type l) (QName l) (Type l)    -- ^ infix type constructor
-     | TyKind  l (Type l) (Kind l)              -- ^ type with explicit kind signature
-     | TyPromoted l (Promoted l)                -- ^ @'K@, a promoted data type (-XDataKinds).
-     | TySplice l (Splice l)                    -- ^ template haskell splice type
-  deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
+        (t l)                           -- ^ qualified type
+     | TyFun   l (t l) (t l)            -- ^ function type
+     | TyTuple l Boxed [t l]            -- ^ tuple type, possibly boxed
+     | TyList  l (t l)                  -- ^ list syntax, e.g. [a], as opposed to [] a
+     | TyParArray  l (t l)              -- ^ parallel array syntax, e.g. [:a:]
+     | TyApp   l (t l) (t l)            -- ^ application of a type constructor
+     | TyVar   l (Name l)               -- ^ type variable
+     | TyCon   l (QName l)              -- ^ named type or type constructor
+     | TyParen l (t l)                  -- ^ type surrounded by parentheses
+     | TyInfix l (t l) (QName l) (t l)  -- ^ infix type constructor
+     | TyKind  l (t l) (Kind l)         -- ^ type with explicit kind signature
+     | TyPromoted l (Promoted l)        -- ^ @'K@, a promoted data type (-XDataKinds).
+     | TySplice l (Splice l)            -- ^ template haskell splice type
+  deriving (Eq,Ord,Show,Data,Foldable,Traversable,Functor,Generic)
 
--- | Replicated type structure for constructor signatures. Two extra elements
--- that are necessary for representing bangs and unpacks in GADT-declarations,
--- for example X :: !Int -> X.
+#if MIN_VERSION_base(4,7,0)
+deriving instance Typeable TypeF
+#else
+instance Typeable1 t => Typeable1 (TypeF t) where
+  typeOf1 _ =
+    mkTyConApp
+      (mkTyCon3 "haskell-src-exts" "Language.Haskell.Exts.Annotated.Syntax" "TypeF")
+      [typeOf1 (undefined :: t ())]
+#endif
+
+-- | An ordinary (non-GADT) type
+newtype Type l = Type (TypeF Type l)
+  deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic,Annotated)
+
+-- | 'TypeF' is also a functor in its first argument. This is its
+-- functorial action.
+mapTypeF :: (t l -> t' l) -> TypeF t l -> TypeF t' l
+mapTypeF g t' =
+  case t' of
+     TyForall l tvb cxt t -> TyForall l tvb cxt (g t)
+     TyFun   l t1 t2      -> TyFun l (g t1) (g t2)
+     TyTuple l b ts       -> TyTuple l b (map g ts)
+     TyList  l t          -> TyList l (g t)
+     TyParArray  l t      -> TyParArray l (g t)
+     TyApp   l t1 t2      -> TyApp l (g t1) (g t2)
+     TyVar   l m          -> TyVar l m
+     TyCon   l qn         -> TyCon l qn
+     TyParen l t          -> TyParen l (g t)
+     TyInfix l t1 qn t2   -> TyInfix l (g t1) qn (g t2)
+     TyKind  l t k        -> TyKind  l (g t) k
+     TyPromoted l p       -> TyPromoted l p
+     TySplice l s         -> TySplice l s
+
+
+-- | A generalized algebraic data type.
+--
+-- Two extra constructors are necessary for representing bangs and
+-- unpacks in GADT-declarations, for example @X :: !Int -> X@.
 data GadtType l
-     = GadtTyForall l
-        (Maybe [TyVarBind l])
-        (Maybe (Context l))
-        (GadtType l)                                     -- ^ qualified type
-     | GadtTyFun   l (GadtType l) (GadtType l)           -- ^ function type
-     | GadtTyTuple l Boxed [GadtType l]                  -- ^ tuple type, possibly boxed
-     | GadtTyList  l (GadtType l)                        -- ^ list syntax, e.g. [a], as opposed to [] a
-     | GadtTyParArray l (GadtType l)                     -- ^ parallel array syntax, e.g. [:a:]
-     | GadtTyApp   l (GadtType l) (GadtType l)           -- ^ application of a type constructor
-     | GadtTyVar   l (Name l)                            -- ^ type variable
-     | GadtTyCon   l (QName l)                           -- ^ named type or type constructor
-     | GadtTyParen l (GadtType l)                        -- ^ type surrounded by parentheses
-     | GadtTyInfix l (GadtType l) (QName l) (GadtType l) -- ^ infix type constructor
-     | GadtTyKind  l (GadtType l) (Kind l)               -- ^ type with explicit kind signature
-     | GadtTyPromoted l (Promoted l)                     -- ^ @'K@, a promoted data type (-XDataKinds).
-     | GadtTySplice l (Splice l)                         -- ^ template haskell splice type
-     | GadtTyBanged l (GadtType l)                       -- ^ strict component, marked with \"@!@\"
+     = GadtTyBanged l (GadtType l)                       -- ^ strict component, marked with \"@!@\"
      | GadtTyUnpacked l (GadtType l)                     -- ^ unboxed component, marked with an UNPACK pragma
+     | GadtType (TypeF GadtType l)
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | Bools here are True if there was a leading quote which may be
@@ -929,13 +956,13 @@ tuple_tycon_name :: l -> Boxed -> Int -> QName l
 tuple_tycon_name l b i = tuple_con_name l b i
 
 unit_tycon, fun_tycon, list_tycon, unboxed_singleton_tycon :: l -> Type l
-unit_tycon l = TyCon l $ unit_tycon_name l
-fun_tycon  l = TyCon l $ fun_tycon_name  l
-list_tycon l = TyCon l $ list_tycon_name l
-unboxed_singleton_tycon l = TyCon l $ unboxed_singleton_tycon_name l
+unit_tycon l = Type $ TyCon l $ unit_tycon_name l
+fun_tycon  l = Type $ TyCon l $ fun_tycon_name  l
+list_tycon l = Type $ TyCon l $ list_tycon_name l
+unboxed_singleton_tycon l = Type $ TyCon l $ unboxed_singleton_tycon_name l
 
 tuple_tycon :: l -> Boxed -> Int -> Type l
-tuple_tycon l b i = TyCon l (tuple_tycon_name l b i)
+tuple_tycon l b i = Type $ TyCon l (tuple_tycon_name l b i)
 
 -----------------------------------------------------------------------------
 -- AST traversal, boiler-plate style
@@ -1280,7 +1307,7 @@ instance Annotated GuardedRhs where
      ann (GuardedRhs l _ _) = l
      amap f (GuardedRhs l ss e) = GuardedRhs (f l) ss e
 
-instance Annotated Type where
+instance Functor t => Annotated (TypeF t) where
     ann t = case t of
       TyForall l _ _ _              -> l
       TyFun   l _ _                 -> l
@@ -1311,38 +1338,14 @@ instance Annotated Type where
       TySplice l s                  -> TySplice (f l) s
 
 instance Annotated GadtType where
-    ann t = case t of
-      GadtTyForall l _ _ _              -> l
-      GadtTyFun   l _ _                 -> l
-      GadtTyTuple l _ _                 -> l
-      GadtTyList  l _                   -> l
-      GadtTyParArray  l _               -> l
-      GadtTyApp   l _ _                 -> l
-      GadtTyVar   l _                   -> l
-      GadtTyCon   l _                   -> l
-      GadtTyParen l _                   -> l
-      GadtTyInfix l _ _ _               -> l
-      GadtTyKind  l _ _                 -> l
-      GadtTyPromoted l   _              -> l
-      GadtTySplice l _                  -> l
+    ann t1 = case t1 of
       GadtTyBanged l _                  -> l
       GadtTyUnpacked l _                -> l
+      GadtType t                        -> ann t
     amap f t1 = case t1 of
-      GadtTyForall l mtvs mcx t         -> GadtTyForall (f l) mtvs mcx t
-      GadtTyFun   l t1' t2              -> GadtTyFun (f l) t1' t2
-      GadtTyTuple l b ts                -> GadtTyTuple (f l) b ts
-      GadtTyList  l t                   -> GadtTyList (f l) t
-      GadtTyParArray  l t               -> GadtTyParArray (f l) t
-      GadtTyApp   l t1' t2              -> GadtTyApp (f l) t1' t2
-      GadtTyVar   l n                   -> GadtTyVar (f l) n
-      GadtTyCon   l qn                  -> GadtTyCon (f l) qn
-      GadtTyParen l t                   -> GadtTyParen (f l) t
-      GadtTyInfix l ta qn tb            -> GadtTyInfix (f l) ta qn tb
-      GadtTyKind  l t k                 -> GadtTyKind (f l) t k
-      GadtTyPromoted l   p              -> GadtTyPromoted (f l)   p
-      GadtTySplice l s                  -> GadtTySplice (f l) s
       GadtTyBanged l gt                 -> GadtTyBanged (f l) gt
       GadtTyUnpacked l gt               -> GadtTyUnpacked (f l) gt
+      GadtType t                        -> GadtType $ amap f t
 
 instance Annotated TyVarBind where
     ann (KindedVar   l _ _) = l

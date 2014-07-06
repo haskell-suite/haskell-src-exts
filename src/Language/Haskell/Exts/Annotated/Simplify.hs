@@ -313,39 +313,30 @@ sRhs (GuardedRhss _ grhss) = S.GuardedRhss (map sGuardedRhs grhss)
 sGuardedRhs :: SrcInfo loc => GuardedRhs loc -> S.GuardedRhs
 sGuardedRhs (GuardedRhs l ss e) = S.GuardedRhs (getPointLoc l) (map sStmt ss) (sExp e)
 
-sType :: SrcInfo l => Type l -> S.Type
-sType t' = case t' of
-    TyForall _ mtvs mctxt t     -> S.TyForall (fmap (map sTyVarBind) mtvs) (maybe [] sContext mctxt) (sType t)
-    TyFun _ t1 t2               -> S.TyFun (sType t1) (sType t2)
-    TyTuple _ bx ts             -> S.TyTuple bx (map sType ts)
-    TyList _ t                  -> S.TyList (sType t)
-    TyParArray _ t              -> S.TyParArray (sType t)
-    TyApp _ t1 t2               -> S.TyApp (sType t1) (sType t2)
+sTypeF :: SrcInfo l => (t l -> t') -> TypeF t l -> S.TypeF t'
+sTypeF rec t' = case t' of
+    TyForall _ mtvs mctxt t     -> S.TyForall (fmap (map sTyVarBind) mtvs) (maybe [] sContext mctxt) (rec t)
+    TyFun _ t1 t2               -> S.TyFun (rec t1) (rec t2)
+    TyTuple _ bx ts             -> S.TyTuple bx (map rec ts)
+    TyList _ t                  -> S.TyList (rec t)
+    TyParArray _ t              -> S.TyParArray (rec t)
+    TyApp _ t1 t2               -> S.TyApp (rec t1) (rec t2)
     TyVar _ n                   -> S.TyVar (sName n)
     TyCon _ qn                  -> S.TyCon (sQName qn)
-    TyParen _ t                 -> S.TyParen (sType t)
-    TyInfix _ ta qn tb          -> S.TyInfix (sType ta) (sQName qn) (sType tb)
-    TyKind _ t k                -> S.TyKind (sType t) (sKind k)
+    TyParen _ t                 -> S.TyParen (rec t)
+    TyInfix _ ta qn tb          -> S.TyInfix (rec ta) (sQName qn) (rec tb)
+    TyKind _ t k                -> S.TyKind (rec t) (sKind k)
     TyPromoted _ t              -> S.TyPromoted (sPromoted t)
     TySplice _ s                -> S.TySplice (sSplice s)
 
+sType :: SrcInfo l => Type l -> S.Type
+sType (Type t) = S.Type (sTypeF sType t)
+
 sGadtType :: SrcInfo l => GadtType l -> S.GadtType
 sGadtType t' = case t' of
-    GadtTyForall _ mtvs mctxt t     -> S.GadtTyForall (fmap (map sTyVarBind) mtvs) (maybe [] sContext mctxt) (sGadtType t)
-    GadtTyFun _ t1 t2               -> S.GadtTyFun (sGadtType t1) (sGadtType t2)
-    GadtTyTuple _ bx ts             -> S.GadtTyTuple bx (map sGadtType ts)
-    GadtTyList _ t                  -> S.GadtTyList (sGadtType t)
-    GadtTyParArray _ t              -> S.GadtTyParArray (sGadtType t)
-    GadtTyApp _ t1 t2               -> S.GadtTyApp (sGadtType t1) (sGadtType t2)
-    GadtTyVar _ n                   -> S.GadtTyVar (sName n)
-    GadtTyCon _ qn                  -> S.GadtTyCon (sQName qn)
-    GadtTyParen _ t                 -> S.GadtTyParen (sGadtType t)
-    GadtTyInfix _ ta qn tb          -> S.GadtTyInfix (sGadtType ta) (sQName qn) (sGadtType tb)
-    GadtTyKind _ t k                -> S.GadtTyKind (sGadtType t) (sKind k)
-    GadtTyPromoted _ t              -> S.GadtTyPromoted (sPromoted t)
-    GadtTySplice _ s                -> S.GadtTySplice (sSplice s)
     GadtTyBanged _ gt               -> S.GadtTyBanged (sGadtType gt)
     GadtTyUnpacked _ gt             -> S.GadtTyUnpacked (sGadtType gt)
+    GadtType t                      -> S.GadtType (sTypeF sGadtType t)
 
 sPromoted :: Promoted l -> S.Promoted
 sPromoted p = case p of

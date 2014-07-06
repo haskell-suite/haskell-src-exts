@@ -36,7 +36,7 @@
 >               getTopPragmas
 >               ) where
 >
-> import Language.Haskell.Exts.Annotated.Syntax hiding ( Type(..), Exp(..), Asst(..), XAttr(..), FieldUpdate(..) )
+> import Language.Haskell.Exts.Annotated.Syntax hiding ( Type(..), TypeF(..), Exp(..), Asst(..), XAttr(..), FieldUpdate(..) )
 > import Language.Haskell.Exts.Annotated.Syntax ( Type, Exp, Asst )
 > import Language.Haskell.Exts.ParseMonad
 > import Language.Haskell.Exts.InternalLexer

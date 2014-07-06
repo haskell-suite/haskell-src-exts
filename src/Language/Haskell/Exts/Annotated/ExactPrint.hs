@@ -1,4 +1,4 @@
-{-# LANGUAGE DeriveFunctor #-}
+{-# LANGUAGE DeriveFunctor, StandaloneDeriving, GeneralizedNewtypeDeriving #-}
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Language.Haskell.Exts.Annotated.ExactPrint
@@ -955,9 +955,9 @@ instance ExactP Kind where
             pts = srcInfoPoints l
         in printInterleaved (zip pts (o: replicate (length pts - 2) "," ++ [e])) ks
 
+deriving instance ExactP Type
 
-
-instance ExactP Type where
+instance ExactP t => ExactP (TypeF t) where
   exactP t' = case t' of
     TyForall l mtvs mctxt t -> do
         let pts = srcInfoPoints l
@@ -1023,67 +1023,6 @@ instance ExactP Type where
 
 instance ExactP GadtType where
   exactP t' = case t' of
-    GadtTyForall l mtvs mctxt t -> do
-        let pts = srcInfoPoints l
-        _ <- case mtvs of
-                Nothing -> return pts
-                Just tvs ->
-                    case pts of
-                     _:b:pts' -> do
-                        printString "forall"
-                        mapM_ exactPC tvs
-                        printStringAt (pos b) "."
-                        return pts'
-                     _ -> errorEP "ExactP: GadtType: GadtTyForall is given too few srcInfoPoints"
-        maybeEP exactPC mctxt
-        exactPC t
-    GadtTyFun   l t1 t2 -> do
-        case srcInfoPoints l of
-         [a] -> do
-            exactP t1
-            printStringAt (pos a) "->"
-            exactPC t2
-         _ -> errorEP "ExactP: GadtType: GadtTyFun is given wrong number of srcInfoPoints"
-    GadtTyTuple l bx ts -> do
-        case bx of
-          Boxed   -> parenList (srcInfoPoints l) ts
-          Unboxed -> parenHashList (srcInfoPoints l) ts
-    GadtTyList  l t     -> do
-        case srcInfoPoints l of
-         [_,b] -> do
-            printString "["
-            exactPC t
-            printStringAt (pos b) "]"
-         _ -> errorEP "ExactP: GadtType: GadtTyList is given wrong number of srcInfoPoints"
-    GadtTyParArray l t     -> do
-        case srcInfoPoints l of
-         [_,b] -> do
-            printString "[:"
-            exactPC t
-            printStringAt (pos b) ":]"
-         _ -> errorEP "ExactP: GadtType: GadtTyParArray is given wrong number of srcInfoPoints"
-    GadtTyApp   _ t1 t2 -> exactP t1 >> exactPC t2
-    GadtTyVar   _ n     -> exactP n
-    GadtTyCon   _ qn    -> exactP qn
-    GadtTyParen l t     -> do
-        case srcInfoPoints l of
-         [_,b] -> do
-            printString "("
-            exactPC t
-            printStringAt (pos b) ")"
-         _ -> errorEP "ExactP: GadtType: GadtTyParen is given wrong number of srcInfoPoints"
-    GadtTyInfix _ t1 qn t2 -> exactP t1 >> epInfixQName qn >> exactPC t2
-    GadtTyKind  l t kd -> do
-        case srcInfoPoints l of
-         [_,b,c] -> do
-            printString "("
-            exactPC t
-            printStringAt (pos b) "::"
-            exactPC kd
-            printStringAt (pos c) ")"
-         _ -> errorEP "ExactP: GadtType: GadtTyKind is given wrong number of srcInfoPoints"
-    GadtTyPromoted _ p -> exactPC p
-    GadtTySplice _ sp  -> exactP sp
     GadtTyBanged   _ t  -> printString "!" >> exactPC t
     GadtTyUnpacked l t  ->
       case srcInfoPoints l of
@@ -1093,6 +1032,7 @@ instance ExactP GadtType where
           printStringAt (pos c) "!"
           exactPC t
        _ -> errorEP "ExactP: GadtType: GadtTyUnpacked is given wrong number of srcInfoPoints"
+    GadtType t -> exactP t
 
 instance ExactP Promoted where
   exactP (PromotedInteger _ _ rw) = printString rw

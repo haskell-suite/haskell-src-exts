@@ -1,3 +1,4 @@
+{-# LANGUAGE MultiParamTypeClasses, StandaloneDeriving, GeneralizedNewtypeDeriving, FlexibleInstances #-}
 {-# OPTIONS_HADDOCK hide #-}
 -----------------------------------------------------------------------------
 -- |
@@ -69,8 +70,8 @@ module Language.Haskell.Exts.ParseUtils (
     , p_unboxed_singleton_con   -- PExp
     ) where
 
-import Language.Haskell.Exts.Annotated.Syntax hiding ( Type(..), Asst(..), Exp(..), FieldUpdate(..), XAttr(..), Context(..) )
-import qualified Language.Haskell.Exts.Annotated.Syntax as S ( Type(..), Asst(..), Exp(..), FieldUpdate(..), XAttr(..), Context(..) )
+import Language.Haskell.Exts.Annotated.Syntax hiding ( Type(..), TypeF(..), Asst(..), Exp(..), FieldUpdate(..), XAttr(..), Context(..) )
+import qualified Language.Haskell.Exts.Annotated.Syntax as S ( Type(..), TypeF(..), Asst(..), Exp(..), FieldUpdate(..), XAttr(..), Context(..) )
 
 import Language.Haskell.Exts.ParseSyntax
 import Language.Haskell.Exts.ParseMonad
@@ -253,10 +254,13 @@ checkAsst isSimple asst =
                 return $ S.ParenA l a'
 
 checkAsstParam :: Bool -> PType L -> P (S.Type L)
-checkAsstParam isSimple t = do
+checkAsstParam isSimple t = fmap S.Type $ checkAsstParamF isSimple t
+
+checkAsstParamF :: Bool -> PType L -> P (S.TypeF S.Type L)
+checkAsstParamF isSimple t = do
         exts <- getExtensions
         if FlexibleContexts `elem` exts
-         then checkType t
+         then checkTypeF t
          else case t of
                 TyVar l n     -> return $ S.TyVar l n
                 TyParen l t1  -> do t1' <- checkAsstParam isSimple t1
@@ -857,20 +861,8 @@ bangTypeToGadtType (UnBangedTy _ t) = typeToGadtType t
 bangTypeToGadtType (UnpackedTy l t) = GadtTyUnpacked l $ typeToGadtType t
 
 typeToGadtType :: S.Type L -> GadtType L
-typeToGadtType t = case t of
-    S.TyForall l tvs cs pt -> GadtTyForall l tvs cs $ typeToGadtType pt
-    S.TyFun   l at rt      -> GadtTyFun l (typeToGadtType at) (typeToGadtType rt)
-    S.TyTuple l b pts      -> GadtTyTuple l b $ map typeToGadtType pts
-    S.TyList  l pt         -> GadtTyList l $ typeToGadtType pt
-    S.TyParArray l pt      -> GadtTyParArray l $ typeToGadtType pt
-    S.TyApp   l ft at      -> GadtTyApp l (typeToGadtType ft) (typeToGadtType at)
-    S.TyVar   l n          -> GadtTyVar l n
-    S.TyCon   l n          -> GadtTyCon l n
-    S.TyParen l pt         -> GadtTyParen l $ typeToGadtType pt
-    S.TyInfix l at op bt   -> GadtTyInfix l (typeToGadtType at) op (typeToGadtType bt)
-    S.TyKind  l pt k       -> GadtTyKind l (typeToGadtType pt) k
-    S.TyPromoted l p       -> GadtTyPromoted l p
-    S.TySplice l s         -> GadtTySplice l s
+typeToGadtType (S.Type t) = GadtType $ mapTypeF typeToGadtType t
+
 -----------------------------------------------------------------------------
 -- Check that two xml tag names are equal
 checkEqNames :: XName L -> XName L -> P (XName L)
@@ -1003,9 +995,12 @@ checkSimpleType t = checkSimple "test" t
 -- Check actual types
 
 checkType :: PType L -> P (S.Type L)
-checkType t = checkT t False
+checkType t = fmap S.Type $ checkTypeF t
 
-checkT :: PType L -> Bool -> P (S.Type L)
+checkTypeF :: PType L -> P (S.TypeF S.Type L)
+checkTypeF t = checkT t False
+
+checkT :: PType L -> Bool -> P (S.TypeF S.Type L)
 checkT t simple = case t of
     TyForall l Nothing cs pt    -> do
             when (simple) $ checkEnabled ExplicitForAll
@@ -1037,14 +1032,14 @@ checkT t simple = case t of
                               return $ S.TySplice l s
     _   -> fail $ "Parse error in type: " ++ prettyPrint t
 
-check1Type :: PType L -> (S.Type L -> S.Type L) -> P (S.Type L)
-check1Type pt f = checkT pt True >>= return . f
+check1Type :: PType L -> (S.Type L -> r) -> P r
+check1Type pt f = checkT pt True >>= return . (f . S.Type)
 
-check2Types :: PType L -> PType L -> (S.Type L -> S.Type L -> S.Type L) -> P (S.Type L)
-check2Types at bt f = checkT at True >>= \a -> checkT bt True >>= \b -> return (f a b)
+check2Types :: PType L -> PType L -> (S.Type L -> S.Type L -> r) -> P r
+check2Types at bt f = checkT at True >>= \a -> checkT bt True >>= \b -> return (f (S.Type a) (S.Type b))
 
 checkTypes :: [PType L] -> P [S.Type L]
-checkTypes = mapM (flip checkT True)
+checkTypes = mapM (fmap S.Type . flip checkT True)
 
 ---------------------------------------
 -- Check kinds

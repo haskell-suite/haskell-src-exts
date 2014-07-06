@@ -1,3 +1,4 @@
+{-# LANGUAGE StandaloneDeriving, GeneralizedNewtypeDeriving #-}
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Language.Haskell.Exts.Pretty
@@ -743,17 +744,11 @@ ppDeriving ds  = text "deriving" <+> parenList (map ppDer ds)
           ppDer (n, ts) = mySep (pretty n : map pretty ts)
 
 ------------------------- Types -------------------------
-ppBType :: Type -> Doc
+ppBType :: Pretty t => t -> Doc
 ppBType = prettyPrec prec_btype
 
-ppBGadtType :: GadtType -> Doc
-ppBGadtType = prettyPrec prec_btype
-
-ppAType :: Type -> Doc
+ppAType :: Pretty t => t -> Doc
 ppAType = prettyPrec prec_atype
-
-ppAGadtType :: GadtType -> Doc
-ppAGadtType = prettyPrec prec_atype
 
 -- precedences for types
 prec_btype, prec_atype :: Int
@@ -761,7 +756,9 @@ prec_btype = 1  -- left argument of ->,
                 -- or either argument of an infix data constructor
 prec_atype = 2  -- argument of type or data constructor, or of a class
 
-instance Pretty Type where
+deriving instance Pretty Type
+
+instance Pretty t => Pretty (TypeF t) where
         prettyPrec p (TyForall mtvs ctxt htype) = parensIf (p > 0) $
                 myFsep [ppForall mtvs, ppContext ctxt, pretty htype]
         prettyPrec p (TyFun a b) = parensIf (p > 0) $
@@ -788,28 +785,9 @@ instance Pretty Type where
         prettyPrec _ (TySplice s) = pretty s
 
 instance Pretty GadtType where
-        prettyPrec p (GadtTyForall mtvs ctxt htype) = parensIf (p > 0) $
-                myFsep [ppForall mtvs, ppContext ctxt, pretty htype]
-        prettyPrec p (GadtTyFun a b)      = parensIf (p > 0) $
-                myFsep [ppBGadtType a, text "->", pretty b]
-        prettyPrec _ (GadtTyTuple bxd l)  =
-                let ds = map pretty l
-                 in case bxd of
-                        Boxed   -> parenList ds
-                        Unboxed -> hashParenList ds
-        prettyPrec _ (GadtTyList t)       = brackets $ pretty t
-        prettyPrec _ (GadtTyParArray t)   = bracketColonList [pretty t]
-        prettyPrec p (GadtTyApp a b)      = parensIf (p > prec_btype) $
-                myFsep [pretty a, ppAGadtType b]
-        prettyPrec _ (GadtTyVar name)     = pretty name
-        prettyPrec _ (GadtTyCon name)     = pretty name
-        prettyPrec _ (GadtTyParen t)      = parens (pretty t)
-        prettyPrec _ (GadtTyInfix a op b) = myFsep [pretty a, ppQNameInfix op, pretty b]
-        prettyPrec _ (GadtTyKind t k)     = parens (myFsep [pretty t, text "::", pretty k])
-        prettyPrec _ (GadtTyPromoted p)   = pretty p
-        prettyPrec _ (GadtTySplice s)     = pretty s
         prettyPrec _ (GadtTyBanged gt)    = myFsep [text "!", pretty gt]
         prettyPrec _ (GadtTyUnpacked gt)  = myFsep [text "{-# UNPACK #-}", char '!' <> pretty gt]
+        prettyPrec p (GadtType t) = prettyPrec p t
 
 instance Pretty Promoted where
   pretty p =

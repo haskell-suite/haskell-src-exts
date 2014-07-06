@@ -52,7 +52,7 @@ module Language.Haskell.Exts.Syntax (
     -- * Class Assertions and Contexts
     Context, FunDep(..), Asst(..),
     -- * Types
-    Type(..), GadtType(..), Boxed(..), Kind(..), TyVarBind(..), Promoted(..),
+    Type(..), TypeF(..), GadtType(..), Boxed(..), Kind(..), TyVarBind(..), Promoted(..),
     TypeEqn (..),
     -- * Expressions
     Exp(..), Stmt(..), QualStmt(..), FieldUpdate(..),
@@ -404,49 +404,42 @@ data GuardedRhs
      = GuardedRhs SrcLoc [Stmt] Exp
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
--- | A type qualified with a context.
---   An unqualified type has an empty context.
-data Type
+-- | A type qualified with a context.  An unqualified type has an empty context.
+--
+-- The type parameter @t@ will be instantiated with either 'Type' or
+-- 'GadtType'. The purpose of this parameterised type is to share the
+-- data constructors between ordinary type and GADT representations.
+data TypeF t
      = TyForall
         (Maybe [TyVarBind])
         Context
-        Type                    -- ^ qualified type
-     | TyFun   Type Type        -- ^ function type
-     | TyTuple Boxed [Type]     -- ^ tuple type, possibly boxed
-     | TyList  Type             -- ^ list syntax, e.g. [a], as opposed to [] a
-     | TyParArray Type          -- ^ parallel array syntax, e.g. [:a:]
-     | TyApp   Type Type        -- ^ application of a type constructor
-     | TyVar   Name             -- ^ type variable
-     | TyCon   QName            -- ^ named type or type constructor
-     | TyParen Type             -- ^ type surrounded by parentheses
-     | TyInfix Type QName Type  -- ^ infix type constructor
-     | TyKind  Type Kind        -- ^ type with explicit kind signature
+        t                       -- ^ qualified type
+     | TyFun t t                -- ^ function type
+     | TyTuple Boxed [t]        -- ^ tuple type, possibly boxed
+     | TyList  t                -- ^ list syntax, e.g. [a], as opposed to [] a
+     | TyParArray t             -- ^ parallel array syntax, e.g. [:a:]
+     | TyApp t t                -- ^ application of a type constructor
+     | TyVar Name               -- ^ type variable
+     | TyCon QName              -- ^ named type or type constructor
+     | TyParen t                -- ^ type surrounded by parentheses
+     | TyInfix t QName t        -- ^ infix type constructor
+     | TyKind  t Kind           -- ^ type with explicit kind signature
      | TyPromoted Promoted      -- ^ promoted data type (-XDataKinds)
      | TySplice Splice          -- ^ template haskell splice type
   deriving (Eq,Ord,Show,Typeable,Data)
 
--- | Replicated type structure for constructor signatures. Two extra elements
--- that are necessary for representing bangs and unpacks in GADT-declarations,
--- for example X :: !Int -> X.
+-- | An ordinary (non-GADT) type
+newtype Type = Type (TypeF Type)
+  deriving (Eq,Ord,Show,Typeable,Data)
+
+-- | A generalized algebraic data type.
+--
+-- Two extra constructors are necessary for representing bangs and
+-- unpacks in GADT-declarations, for example @X :: !Int -> X@.
 data GadtType
-     = GadtTyForall
-        (Maybe [TyVarBind])
-        Context
-        GadtType                            -- ^ qualified type
-     | GadtTyFun   GadtType GadtType        -- ^ function type
-     | GadtTyTuple Boxed [GadtType]         -- ^ tuple type, possibly boxed
-     | GadtTyList  GadtType                 -- ^ list syntax, e.g. [a], as opposed to [] a
-     | GadtTyParArray GadtType              -- ^ parallel array syntax, e.g. [:a:]
-     | GadtTyApp   GadtType GadtType        -- ^ application of a type constructor
-     | GadtTyVar   Name                     -- ^ type variable
-     | GadtTyCon   QName                    -- ^ named type or type constructor
-     | GadtTyParen GadtType                 -- ^ type surrounded by parentheses
-     | GadtTyInfix GadtType QName GadtType  -- ^ infix type constructor
-     | GadtTyKind  GadtType Kind            -- ^ type with explicit kind signature
-     | GadtTyPromoted Promoted              -- ^ promoted data type (-XDataKinds)
-     | GadtTySplice Splice                  -- ^ template haskell splice type
-     | GadtTyBanged GadtType                -- ^ strict component, marked with \"@!@\"
+     = GadtTyBanged GadtType                -- ^ strict component, marked with \"@!@\"
      | GadtTyUnpacked GadtType              -- ^ unboxed component, marked with an UNPACK pragma
+     | GadtType (TypeF GadtType)
   deriving (Eq,Ord,Show,Typeable,Data)
 
 data Promoted
@@ -848,10 +841,10 @@ tuple_tycon_name :: Boxed -> Int -> QName
 tuple_tycon_name b i = tuple_con_name b i
 
 unit_tycon, fun_tycon, list_tycon, unboxed_singleton_tycon :: Type
-unit_tycon = TyCon unit_tycon_name
-fun_tycon  = TyCon fun_tycon_name
-list_tycon = TyCon list_tycon_name
-unboxed_singleton_tycon = TyCon unboxed_singleton_tycon_name
+unit_tycon = Type $ TyCon unit_tycon_name
+fun_tycon  = Type $ TyCon fun_tycon_name
+list_tycon = Type $ TyCon list_tycon_name
+unboxed_singleton_tycon = Type $ TyCon unboxed_singleton_tycon_name
 
 tuple_tycon :: Boxed -> Int -> Type
-tuple_tycon b i = TyCon (tuple_tycon_name b i)
+tuple_tycon b i = Type $ TyCon (tuple_tycon_name b i)
