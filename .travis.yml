@@ -10,6 +10,7 @@ install:
  - travis_retry sudo apt-get install cabal-install-1.18 ghc-$GHCVER happy-1.19.3
  - export PATH=/opt/happy/1.19.3/bin:/opt/ghc/$GHCVER/bin:$PATH
  - travis_retry cabal-1.18 update
+ - travis_retry cabal-1.18 install --only-dependencies --enable-tests -v2
 
 script:
  - cabal-1.18 sdist
