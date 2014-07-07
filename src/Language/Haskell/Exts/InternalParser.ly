@@ -1011,14 +1011,12 @@ GADTs - require the GADTs extension enabled, but we handle that at the calling s
 
 > gadtconstr :: { [GadtDecl L] }
 >       : qcon '::' stype                {% do { c <- checkUnQual $1;
->                                                let {t = bangTypeToGadtType $3};
->                                                return [GadtDecl ($1 <> t <** [$2]) c Nothing t] } }
+>                                                return [GadtDecl ($1 <> $3 <** [$2]) c Nothing $3] } }
 >       | qcon '::' '{' fielddecls '}' '->' stype
 >                                       {% do { c <- checkUnQual $1;
->                                               let {t = bangTypeToGadtType $7};
 >                                               let {fieldToGadt (FieldDecl l' ns bt) =
 >                                                       let colPos = last $ srcInfoPoints l'
->                                                        in GadtDecl ($1 <> t <** [$2,$3,$5,$6,colPos]) c (Just (ns, bangTypeToGadtType bt)) t};
+>                                                        in GadtDecl ($1 <> $7 <** [$2,$3,$5,$6,colPos]) c (Just (ns, bt)) $7};
 >                                               let {out = map fieldToGadt (reverse $ fst $4) };
 >                                               return out } }
 

@@ -271,7 +271,7 @@ sFieldDecl :: SrcInfo l => FieldDecl l -> ([S.Name], S.BangType)
 sFieldDecl (FieldDecl _ ns bt) = (map sName ns, sBangType bt)
 
 sGadtDecl :: SrcInfo loc => GadtDecl loc -> S.GadtDecl
-sGadtDecl (GadtDecl l n mn t) = S.GadtDecl (getPointLoc l) (sName n) (maybe [] sRecFields mn) (sGadtType t)
+sGadtDecl (GadtDecl l n mn t) = S.GadtDecl (getPointLoc l) (sName n) (maybe [] sRecFields mn) (sBangType t)
 
 sClassDecl :: SrcInfo loc => ClassDecl loc -> S.ClassDecl
 sClassDecl cd = case cd of
@@ -287,8 +287,8 @@ sClassDecl cd = case cd of
     ClsDefSig l n t ->
         S.ClsDefSig (getPointLoc l) (sName n) (sType t)
 
-sRecFields :: SrcInfo l => ([Name l], GadtType l) -> [([S.Name], S.GadtType)]
-sRecFields (ns, t) = [(map sName ns, sGadtType t)]
+sRecFields :: SrcInfo l => ([Name l], BangType l) -> [([S.Name], S.BangType)]
+sRecFields (ns, t) = [(map sName ns, sBangType t)]
 
 sInstDecl :: SrcInfo loc => InstDecl loc -> S.InstDecl
 sInstDecl id' = case id' of
@@ -328,24 +328,6 @@ sType t' = case t' of
     TyKind _ t k                -> S.TyKind (sType t) (sKind k)
     TyPromoted _ t              -> S.TyPromoted (sPromoted t)
     TySplice _ s                -> S.TySplice (sSplice s)
-
-sGadtType :: SrcInfo l => GadtType l -> S.GadtType
-sGadtType t' = case t' of
-    GadtTyForall _ mtvs mctxt t     -> S.GadtTyForall (fmap (map sTyVarBind) mtvs) (maybe [] sContext mctxt) (sGadtType t)
-    GadtTyFun _ t1 t2               -> S.GadtTyFun (sGadtType t1) (sGadtType t2)
-    GadtTyTuple _ bx ts             -> S.GadtTyTuple bx (map sGadtType ts)
-    GadtTyList _ t                  -> S.GadtTyList (sGadtType t)
-    GadtTyParArray _ t              -> S.GadtTyParArray (sGadtType t)
-    GadtTyApp _ t1 t2               -> S.GadtTyApp (sGadtType t1) (sGadtType t2)
-    GadtTyVar _ n                   -> S.GadtTyVar (sName n)
-    GadtTyCon _ qn                  -> S.GadtTyCon (sQName qn)
-    GadtTyParen _ t                 -> S.GadtTyParen (sGadtType t)
-    GadtTyInfix _ ta qn tb          -> S.GadtTyInfix (sGadtType ta) (sQName qn) (sGadtType tb)
-    GadtTyKind _ t k                -> S.GadtTyKind (sGadtType t) (sKind k)
-    GadtTyPromoted _ t              -> S.GadtTyPromoted (sPromoted t)
-    GadtTySplice _ s                -> S.GadtTySplice (sSplice s)
-    GadtTyBanged _ gt               -> S.GadtTyBanged (sGadtType gt)
-    GadtTyUnpacked _ gt             -> S.GadtTyUnpacked (sGadtType gt)
 
 sPromoted :: Promoted l -> S.Promoted
 sPromoted p = case p of

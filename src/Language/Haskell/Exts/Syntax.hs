@@ -52,7 +52,7 @@ module Language.Haskell.Exts.Syntax (
     -- * Class Assertions and Contexts
     Context, FunDep(..), Asst(..),
     -- * Types
-    Type(..), GadtType(..), Boxed(..), Kind(..), TyVarBind(..), Promoted(..),
+    Type(..), Boxed(..), Kind(..), TyVarBind(..), Promoted(..),
     TypeEqn (..),
     -- * Expressions
     Exp(..), Stmt(..), QualStmt(..), FieldUpdate(..),
@@ -351,7 +351,7 @@ data ConDecl
 
 -- | A single constructor declaration in a GADT data type declaration.
 data GadtDecl
-    = GadtDecl SrcLoc Name [([Name], GadtType)] GadtType
+    = GadtDecl SrcLoc Name [([Name], BangType)] BangType
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 -- | Declarations inside a class declaration.
@@ -423,30 +423,6 @@ data Type
      | TyKind  Type Kind        -- ^ type with explicit kind signature
      | TyPromoted Promoted      -- ^ promoted data type (-XDataKinds)
      | TySplice Splice          -- ^ template haskell splice type
-  deriving (Eq,Ord,Show,Typeable,Data)
-
--- | Replicated type structure for constructor signatures. Two extra elements
--- that are necessary for representing bangs and unpacks in GADT-declarations,
--- for example X :: !Int -> X.
-data GadtType
-     = GadtTyForall
-        (Maybe [TyVarBind])
-        Context
-        GadtType                            -- ^ qualified type
-     | GadtTyFun   GadtType GadtType        -- ^ function type
-     | GadtTyTuple Boxed [GadtType]         -- ^ tuple type, possibly boxed
-     | GadtTyList  GadtType                 -- ^ list syntax, e.g. [a], as opposed to [] a
-     | GadtTyParArray GadtType              -- ^ parallel array syntax, e.g. [:a:]
-     | GadtTyApp   GadtType GadtType        -- ^ application of a type constructor
-     | GadtTyVar   Name                     -- ^ type variable
-     | GadtTyCon   QName                    -- ^ named type or type constructor
-     | GadtTyParen GadtType                 -- ^ type surrounded by parentheses
-     | GadtTyInfix GadtType QName GadtType  -- ^ infix type constructor
-     | GadtTyKind  GadtType Kind            -- ^ type with explicit kind signature
-     | GadtTyPromoted Promoted              -- ^ promoted data type (-XDataKinds)
-     | GadtTySplice Splice                  -- ^ template haskell splice type
-     | GadtTyBanged GadtType                -- ^ strict component, marked with \"@!@\"
-     | GadtTyUnpacked GadtType              -- ^ unboxed component, marked with an UNPACK pragma
   deriving (Eq,Ord,Show,Typeable,Data)
 
 data Promoted
