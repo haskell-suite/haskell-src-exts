@@ -80,7 +80,7 @@ import Language.Haskell.Exts.ExtScheme
 
 import Prelude hiding (mod)
 import Data.List (intersperse)
-import Data.Maybe (fromJust)
+import Data.Maybe (fromJust, fromMaybe)
 import Control.Monad (when,unless)
 
 --- import Debug.Trace (trace)
@@ -329,18 +329,18 @@ toTyVarBind (TyKind l (TyVar _ n) k) = KindedVar l n k
 
 checkInstHeader :: PType L -> P (InstHead L)
 checkInstHeader (TyParen l t) = checkInstHeader t >>= return . IHParen l
-checkInstHeader (TyForall _ Nothing cs t) = do
+checkInstHeader (TyForall l mtvs cs t) = do
     cs' <- checkSContext cs
-    ih <- checkInsts cs' t
+    ih <- checkInsts (Just l) mtvs cs' t
     return ih
-checkInstHeader t = checkInsts Nothing t
+checkInstHeader t = checkInsts Nothing Nothing Nothing t
 
 
-checkInsts :: Maybe (S.Context L) -> PType L -> P (InstHead L)
-checkInsts mctxt (TyParen l t) = checkInsts mctxt t >>= return . IHParen l
-checkInsts mctxt t = do
+checkInsts :: (Maybe L) -> Maybe [TyVarBind L] -> Maybe (S.Context L) -> PType L -> P (InstHead L)
+checkInsts _ mtvs mctxt (TyParen l t) = checkInsts Nothing mtvs mctxt t >>= return . IHParen l
+checkInsts l1 mtvs mctxt t = do
     t' <- checkInstsGuts t
-    return $ IHead (fmap ann mctxt <?+> ann t') mctxt t'
+    return $ IHead (fromMaybe (fmap ann mctxt <?+> ann t') l1) mtvs mctxt t'
 
 checkInstsGuts :: PType L -> P (DeclOrInstHead L)
 checkInstsGuts (TyApp l h t) = do
@@ -358,7 +358,7 @@ checkInstsGuts (TyParen l t) = checkInstsGuts t >>= return . DoIHParen l
 checkInstsGuts _ = fail "Illegal instance declaration"
 
 checkDeriving :: [PType L] -> P [InstHead L]
-checkDeriving = mapM (checkInsts Nothing)
+checkDeriving = mapM (checkInsts Nothing Nothing Nothing)
 
 -----------------------------------------------------------------------------
 -- Checking Patterns.
@@ -1069,9 +1069,12 @@ mkDVar :: [String] -> String
 mkDVar = concat . intersperse "-"
 
 ---------------------------------------
--- Combine adjacent for-alls. NO!
+-- Combine adjacent for-alls.
 --
 -- A valid type must have one for-all at the top of the type, or of the fn arg types
 
 mkTyForall :: L -> Maybe [TyVarBind L] -> Maybe (PContext L) -> PType L -> PType L
-mkTyForall l mtvs ctxt ty = TyForall l mtvs ctxt ty
+mkTyForall l mtvs ctxt ty =
+    case (ctxt, ty) of
+        (Nothing, TyForall _ Nothing ctxt2 ty2) -> TyForall l mtvs ctxt2 ty2
+        _                                       -> TyForall l mtvs ctxt ty

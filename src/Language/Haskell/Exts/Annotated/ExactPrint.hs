@@ -887,7 +887,20 @@ instance ExactP DeclHead where
 
 instance ExactP InstHead where
   exactP ih' = case ih' of
-    IHead _ mctxt qn    -> maybeEP exactPC mctxt >> exactPC qn
+    IHead l mtvs mctxt qn    -> do
+        let pts = srcInfoPoints l
+        _ <- case mtvs of
+                Nothing -> return pts
+                Just tvs ->
+                    case pts of
+                     [a,b] -> do
+                        printStringAt (pos a) "forall"
+                        mapM_ exactPC tvs
+                        printStringAt (pos b) "."
+                        return pts
+                     _ -> errorEP "ExactP: InstHead: IHead is given too few srcInfoPoints"
+        maybeEP exactPC mctxt
+        exactPC qn
     IHParen l ih        ->
         case srcInfoPoints l of
          [a,b] -> printStringAt (pos a) "(" >> exactPC ih >> printStringAt (pos b) ")"

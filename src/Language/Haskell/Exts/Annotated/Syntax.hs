@@ -351,7 +351,7 @@ data DeclHead l
 
 -- | The head of an instance declaration.
 data InstHead l
-    = IHead l (Maybe (Context l)) (DeclOrInstHead l)
+    = IHead l (Maybe [TyVarBind l]) (Maybe (Context l)) (DeclOrInstHead l)
     | IHParen l (InstHead l)
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
@@ -1161,9 +1161,9 @@ instance Annotated DeclHead where
     amap f (DHApp l dh t)        = DHApp (f l) dh t
 
 instance Annotated InstHead where
-    ann (IHead l _ _)            = l
+    ann (IHead l _ _ _)          = l
     ann (IHParen l _)            = l
-    amap f (IHead l cxt qn)      = IHead (f l) cxt qn
+    amap f (IHead l mtv cxt qn)  = IHead (f l) mtv cxt qn
     amap f (IHParen l ih)        = IHParen (f l) ih
 
 instance Annotated DeclOrInstHead where

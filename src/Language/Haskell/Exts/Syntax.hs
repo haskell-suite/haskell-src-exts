@@ -248,9 +248,9 @@ data Decl
      -- ^ A data family instance declaration, GADT style
      | ClassDecl    SrcLoc Context Name [TyVarBind] [FunDep] [ClassDecl]
      -- ^ A declaration of a type class
-     | InstDecl     SrcLoc (Maybe Overlap) Context QName [Type] [InstDecl]
+     | InstDecl     SrcLoc (Maybe Overlap) [TyVarBind] Context QName [Type] [InstDecl]
      -- ^ An declaration of a type class instance
-     | DerivDecl    SrcLoc (Maybe Overlap) Context QName [Type]
+     | DerivDecl    SrcLoc (Maybe Overlap) [TyVarBind] Context QName [Type]
      -- ^ A standalone deriving declaration
      | InfixDecl    SrcLoc Assoc Int [Op]
      -- ^ A declaration of operator fixity
@@ -283,7 +283,7 @@ data Decl
      -- ^ A SPECIALISE pragma
      | SpecInlineSig    SrcLoc Bool Activation QName [Type]
      -- ^ A SPECIALISE INLINE pragma
-     | InstSig          SrcLoc Context         QName [Type]
+     | InstSig          SrcLoc [TyVarBind] Context QName [Type]
      -- ^ A SPECIALISE instance pragma
      | AnnPragma        SrcLoc Annotation
      -- ^ An ANN pragma

@@ -1,1 +1,4 @@
-ParseFailed (SrcLoc "tests/examples/ForallInInstance.hs" 5 1) "Illegal instance declaration"
+{-# LANGUAGE ScopedTypeVariables #-}
+module ForallInInstance where
+ 
+instance forall a . MyClass a => MyClass [a]

@@ -427,26 +427,27 @@ instance Pretty Decl where
 
         -- m{spacing=False}
         -- special case for empty instance declaration
-        pretty (InstDecl pos overlap context name args []) =
+        pretty (InstDecl pos overlap tvs context name args []) =
                 blankline $
                 markLine pos $
                 let olp = case overlap of { Nothing -> empty; Just o -> space <> pretty o }
-                in mySep ( [text "instance" <> olp, ppContext context, pretty name]
-                           ++ map ppAType args)
-        pretty (InstDecl pos overlap context name args declList) =
+                in mySep ( [text "instance" <> olp, ppForall (Just tvs)
+                           , ppContext context, pretty name] ++ map ppAType args)
+        pretty (InstDecl pos overlap tvs context name args declList) =
                 blankline $
                 markLine pos $
                 let olp = case overlap of { Nothing -> empty; Just o -> space <> pretty o }
-                in mySep ( [text "instance" <> olp, ppContext context, pretty name]
-                           ++ map ppAType args ++ [text "where"])
+                in mySep ( [text "instance" <> olp,  ppForall (Just tvs)
+                           , ppContext context, pretty name]
+                          ++ map ppAType args ++ [text "where"])
                 $$$ ppBody classIndent (map pretty declList)
 
-        pretty (DerivDecl pos overlap context name args) =
+        pretty (DerivDecl pos overlap tvs context name args) =
                 blankline $
                 markLine pos $
                 let olp = case overlap of { Nothing -> empty; Just o -> space <> pretty o }
-                in mySep ( [text "deriving", text "instance" <> olp, ppContext context, pretty name]
-                           ++ map ppAType args)
+                in mySep ( [text "deriving", text "instance" <> olp, ppForall (Just tvs)
+                           , ppContext context, pretty name] ++ map ppAType args)
         pretty (DefaultDecl pos htypes) =
                 blankline $
                 markLine pos $
@@ -528,11 +529,12 @@ instance Pretty Decl where
                         pretty activ, pretty name, text "::"]
                         ++ (punctuate comma $ map pretty types) ++ [text "#-}"]
 
-        pretty (InstSig pos context name args) =
+        pretty (InstSig pos tvs context name args) =
                 blankline $
                 markLine pos $
-                mySep $ [text "{-# SPECIALISE", text "instance", ppContext context, pretty name]
-                            ++ map ppAType args ++ [text "#-}"]
+                mySep $ [text "{-# SPECIALISE", text "instance"
+                         , ppForall (Just tvs), ppContext context, pretty name]
+                         ++ map ppAType args ++ [text "#-}"]
 
         pretty (AnnPragma pos ann) =
                 blankline $
@@ -1349,8 +1351,9 @@ instance Pretty (A.DeclHead l) where
     pretty (A.DHApp _ dh t)        = myFsep [pretty dh, pretty t]
 
 instance SrcInfo l => Pretty (A.InstHead l) where
-    pretty (A.IHead _ mctxt qn)    =
-            mySep [ppContext $ maybe [] sContext mctxt, pretty qn]
+    pretty (A.IHead _ tvs mctxt qn)    =
+            mySep [ppForall (fmap (map sTyVarBind) tvs)
+                  , ppContext $ maybe [] sContext mctxt, pretty qn]
     pretty (A.IHParen _ ih)        = parens (pretty ih)
 
 instance SrcInfo l => Pretty (A.DeclOrInstHead l) where
@@ -1433,7 +1436,7 @@ instance SrcInfo l => Pretty (A.BangType l) where
 
 instance SrcInfo l => Pretty (A.Deriving l) where
         pretty (A.Deriving _ []) = text "deriving" <+> parenList []
-        pretty (A.Deriving _ [A.IHead _ _ d]) = text "deriving" <+> pretty d
+        pretty (A.Deriving _ [A.IHead _ _ _ d]) = text "deriving" <+> pretty d
         pretty (A.Deriving _ ihs) = text "deriving" <+> parenList (map pretty ihs)
 
 ------------------------- Types -------------------------

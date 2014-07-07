@@ -936,8 +936,8 @@ is any of the keyword-enabling ones, except ExistentialQuantification.
 >       : ctype                         {% checkType $1 }
 
 > ctype :: { PType L }
->       : 'forall' ktyvars '.' ctype    { TyForall (nIS $1 <++> ann $4 <** [$1,$3]) (Just (reverse (fst $2))) Nothing $4 }
->       | context ctype                 { TyForall ($1 <> $2) Nothing (Just $1) $2 }
+>       : 'forall' ktyvars '.' ctype    { mkTyForall (nIS $1 <++> ann $4 <** [$1,$3]) (Just (reverse (fst $2))) Nothing $4 }
+>       | context ctype                 { mkTyForall ($1 <> $2) Nothing (Just $1) $2 }
 >       | type                          { $1 }
 
 Equality constraints require the TypeFamilies extension.
@@ -1088,7 +1088,7 @@ as qcon and then check separately that they are truly unqualified.
 
 > deriving :: { Maybe (Deriving L) }
 >       : {- empty -}                   { Nothing }
->       | 'deriving' qtycls1            { let l = nIS $1 <++> ann $2 <** [$1] in Just $ Deriving l [IHead (ann $2) Nothing $2] }
+>       | 'deriving' qtycls1            { let l = nIS $1 <++> ann $2 <** [$1] in Just $ Deriving l [IHead (ann $2) Nothing Nothing $2] }
 >       | 'deriving' '('          ')'   { Just $ Deriving ($1 <^^> $3 <** [$1,$2,$3]) [] }
 >       | 'deriving' '(' dclasses ')'   { Just $ Deriving ($1 <^^> $4 <** $1:$2: reverse (snd $3) ++ [$4]) (reverse (fst $3)) }
 
