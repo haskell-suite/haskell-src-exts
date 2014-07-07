@@ -13,13 +13,13 @@ install:
  - travis_retry cabal-1.18 install --only-dependencies --enable-tests -v2
 
 script:
- - cabal-1.18 build -v2 --enable-tests
+ - cabal-1.18 build -v2
  - cabal-1.18 test --show-details=always
  - cabal-1.18 sdist
  - export SRC_TGZ=$(cabal-1.18 info . | awk '{print $2 ".tar.gz";exit}') ;
    cd dist/;
    if [ -f "$SRC_TGZ" ]; then
-       cabal-1.18 install "$SRC_TGZ";
+       cabal-1.18 install -v2 "$SRC_TGZ";
    else
        echo "expected '$SRC_TGZ' not found";
        exit 1;
