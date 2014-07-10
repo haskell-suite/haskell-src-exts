@@ -266,15 +266,15 @@ sQualConDecl (QualConDecl l mtvs mctxt cd) =
 
 sConDecl :: SrcInfo l => ConDecl l -> S.ConDecl
 sConDecl cd = case cd of
-    ConDecl _ n bts     -> S.ConDecl (sName n) (map sBangType bts)
-    InfixConDecl _ bta n btb -> S.InfixConDecl (sBangType bta) (sName n) (sBangType btb)
+    ConDecl _ n bts     -> S.ConDecl (sName n) (map sType bts)
+    InfixConDecl _ bta n btb -> S.InfixConDecl (sType bta) (sName n) (sType btb)
     RecDecl _ n fds -> S.RecDecl (sName n) (map sFieldDecl fds)
 
-sFieldDecl :: SrcInfo l => FieldDecl l -> ([S.Name], S.BangType)
-sFieldDecl (FieldDecl _ ns bt) = (map sName ns, sBangType bt)
+sFieldDecl :: SrcInfo l => FieldDecl l -> ([S.Name], S.Type)
+sFieldDecl (FieldDecl _ ns bt) = (map sName ns, sType bt)
 
 sGadtDecl :: SrcInfo loc => GadtDecl loc -> S.GadtDecl
-sGadtDecl (GadtDecl l n mn t) = S.GadtDecl (getPointLoc l) (sName n) (maybe [] sRecFields mn) (sBangType t)
+sGadtDecl (GadtDecl l n mn t) = S.GadtDecl (getPointLoc l) (sName n) (maybe [] sRecFields mn) (sType t)
 
 sClassDecl :: SrcInfo loc => ClassDecl loc -> S.ClassDecl
 sClassDecl cd = case cd of
@@ -290,8 +290,8 @@ sClassDecl cd = case cd of
     ClsDefSig l n t ->
         S.ClsDefSig (getPointLoc l) (sName n) (sType t)
 
-sRecFields :: SrcInfo l => ([Name l], BangType l) -> [([S.Name], S.BangType)]
-sRecFields (ns, t) = [(map sName ns, sBangType t)]
+sRecFields :: SrcInfo l => ([Name l], Type l) -> [([S.Name], S.Type)]
+sRecFields (ns, t) = [(map sName ns, sType t)]
 
 sInstDecl :: SrcInfo loc => InstDecl loc -> S.InstDecl
 sInstDecl id' = case id' of
@@ -305,9 +305,8 @@ sInstDecl id' = case id' of
 
 sBangType :: SrcInfo l => BangType l -> S.BangType
 sBangType bt = case bt of
-    BangedTy   _ t  -> S.BangedTy (sType t)
-    UnBangedTy _ t  -> S.UnBangedTy (sType t)
-    UnpackedTy _ t  -> S.UnpackedTy (sType t)
+    BangedTy   _  -> S.BangedTy
+    UnpackedTy _  -> S.UnpackedTy
 
 sRhs :: SrcInfo loc => Rhs loc -> S.Rhs
 sRhs (UnGuardedRhs _ e) = S.UnGuardedRhs (sExp e)
@@ -331,6 +330,7 @@ sType t' = case t' of
     TyKind _ t k                -> S.TyKind (sType t) (sKind k)
     TyPromoted _ t              -> S.TyPromoted (sPromoted t)
     TySplice _ s                -> S.TySplice (sSplice s)
+    TyBang _ b t                -> S.TyBang (sBangType b) (sType t)
 
 sPromoted :: Promoted l -> S.Promoted
 sPromoted p = case p of

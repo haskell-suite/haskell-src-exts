@@ -341,17 +341,17 @@ data QualConDecl
 
 -- | Declaration of an ordinary data constructor.
 data ConDecl
-     = ConDecl Name [BangType]
+     = ConDecl Name [Type]
                 -- ^ ordinary data constructor
-     | InfixConDecl BangType Name BangType
+     | InfixConDecl Type Name Type
                 -- ^ infix data constructor
-     | RecDecl Name [([Name],BangType)]
+     | RecDecl Name [([Name],Type)]
                 -- ^ record constructor
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 -- | A single constructor declaration in a GADT data type declaration.
 data GadtDecl
-    = GadtDecl SrcLoc Name [([Name], BangType)] BangType
+    = GadtDecl SrcLoc Name [([Name], Type)] Type
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 -- | Declarations inside a class declaration.
@@ -383,9 +383,8 @@ data InstDecl
 -- | The type of a constructor argument or field, optionally including
 --   a strictness annotation.
 data BangType
-     = BangedTy   Type  -- ^ strict component, marked with \"@!@\"
-     | UnBangedTy Type  -- ^ non-strict component
-     | UnpackedTy Type  -- ^ unboxed component, marked with an UNPACK pragma
+     = BangedTy    -- ^ strict component, marked with \"@!@\"
+     | UnpackedTy  -- ^ unboxed component, marked with an UNPACK pragma
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 -- | The right hand side of a function binding, pattern binding, or a case
@@ -423,6 +422,7 @@ data Type
      | TyKind  Type Kind        -- ^ type with explicit kind signature
      | TyPromoted Promoted      -- ^ promoted data type (-XDataKinds)
      | TySplice Splice          -- ^ template haskell splice type
+     | TyBang BangType Type     -- ^ Strict type marked with \"@!@\" or type marked with UNPACK pragma.
   deriving (Eq,Ord,Show,Typeable,Data)
 
 data Promoted

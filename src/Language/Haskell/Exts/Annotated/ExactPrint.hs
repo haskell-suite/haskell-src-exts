@@ -1033,6 +1033,7 @@ instance ExactP Type where
          _ -> errorEP "ExactP: Type: TyKind is given wrong number of srcInfoPoints"
     TyPromoted _ p -> exactPC p
     TySplice _ sp  -> exactP sp
+    TyBang _ b t -> exactPC b >> exactPC t
 
 instance ExactP Promoted where
   exactP (PromotedInteger _ _ rw) = printString rw
@@ -1251,15 +1252,16 @@ instance ExactP GadtDecl where
 
 instance ExactP BangType where
   exactP bt = case bt of
-    UnBangedTy _ t  -> exactP t
-    BangedTy   _ t  -> printString "!" >> exactPC t
-    UnpackedTy l t  ->
+    BangedTy   l  ->
+        case srcInfoPoints l of
+            [a] -> printStringAt (pos a) "!"
+            _   -> errorEP "ExactP: BangType: BangedTy is given wrong number of srcInfoPoints"
+    UnpackedTy l  ->
       case srcInfoPoints l of
-       [_,b,c] -> do
-          printString "{-# UNPACK"
+       [a,b,c] -> do
+          printStringAt (pos a) "{-# UNPACK"
           printStringAt (pos b) "#-}"
           printStringAt (pos c) "!"
-          exactPC t
        _ -> errorEP "ExactP: BangType: UnpackedTy is given wrong number of srcInfoPoints"
 
 instance ExactP Splice where

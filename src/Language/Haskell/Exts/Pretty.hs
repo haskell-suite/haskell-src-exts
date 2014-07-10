@@ -727,15 +727,14 @@ instance Pretty ConDecl where
                 myFsep [prettyPrec prec_btype l, ppNameInfix name,
                          prettyPrec prec_btype r]
 
-ppField :: ([Name],BangType) -> Doc
+ppField :: ([Name], Type) -> Doc
 ppField (names, ty) =
         myFsepSimple $ (punctuate comma . map pretty $ names) ++
                        [text "::", pretty ty]
 
 instance Pretty BangType where
-        prettyPrec _ (BangedTy ty) = char '!' <> ppAType ty
-        prettyPrec p (UnBangedTy ty) = prettyPrec p ty
-        prettyPrec p (UnpackedTy ty) = text "{-# UNPACK #-}" <+> char '!' <> prettyPrec p ty
+        pretty BangedTy   = char '!'
+        pretty UnpackedTy = text "{-# UNPACK #-}" <+> char '!'
 
 ppDeriving :: [Deriving] -> Doc
 ppDeriving []  = empty
@@ -782,6 +781,7 @@ instance Pretty Type where
         prettyPrec _ (TyKind t k) = parens (myFsep [pretty t, text "::", pretty k])
         prettyPrec _ (TyPromoted p) = pretty p
         prettyPrec _ (TySplice s) = pretty s
+        prettyPrec _ (TyBang b t) = pretty b <> pretty t
 
 instance Pretty Promoted where
   pretty p =

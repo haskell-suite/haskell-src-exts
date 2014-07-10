@@ -32,6 +32,7 @@ module Language.Haskell.Exts.ParseUtils (
     , checkPattern          -- PExp -> P Pat
     , checkExpr             -- PExp -> P Exp
     , checkType             -- PType -> P Type
+    , bangType              -- L -> BangType -> Type -> Type
     , checkKind             -- Kind -> P ()
     , checkValDef           -- SrcLoc -> PExp -> Maybe Type -> Rhs -> Binds -> P Decl
     , checkClassBody        -- [ClassDecl] -> P [ClassDecl]
@@ -977,6 +978,10 @@ checkSimpleType = checkSimple "test"
 
 ---------------------------------------
 -- Check actual types
+
+-- | Add a strictness/unpack annotation on a type.
+bangType :: L -> BangType L -> S.Type L -> S.Type L
+bangType = S.TyBang
 
 checkType :: PType L -> P (S.Type L)
 checkType t = checkT t False

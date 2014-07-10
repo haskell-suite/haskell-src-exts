@@ -405,22 +405,22 @@ data QualConDecl l
 
 -- | Declaration of an ordinary data constructor.
 data ConDecl l
-     = ConDecl l (Name l) [BangType l]
+     = ConDecl l (Name l) [Type l]
                 -- ^ ordinary data constructor
-     | InfixConDecl l (BangType l) (Name l) (BangType l)
+     | InfixConDecl l (Type l) (Name l) (Type l)
                 -- ^ infix data constructor
      | RecDecl l (Name l) [FieldDecl l]
                 -- ^ record constructor
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | Declaration of a (list of) named field(s).
-data FieldDecl l = FieldDecl l [Name l] (BangType l)
+data FieldDecl l = FieldDecl l [Name l] (Type l)
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 
 -- | A single constructor declaration in a GADT data type declaration.
 data GadtDecl l
-    = GadtDecl l (Name l) (Maybe ([Name l], BangType l)) (BangType l)
+    = GadtDecl l (Name l) (Maybe ([Name l], Type l)) (Type l)
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | Declarations inside a class declaration.
@@ -452,9 +452,8 @@ data InstDecl l
 -- | The type of a constructor argument or field, optionally including
 --   a strictness annotation.
 data BangType l
-     = BangedTy   l (Type l) -- ^ strict component, marked with \"@!@\"
-     | UnBangedTy l (Type l) -- ^ non-strict component
-     | UnpackedTy l (Type l) -- ^ unboxed component, marked with an UNPACK pragma
+     = BangedTy   l -- ^ strict component, marked with \"@!@\"
+     | UnpackedTy l -- ^ unboxed component, marked with an UNPACK pragma
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | The right hand side of a function binding, pattern binding, or a case
@@ -492,6 +491,7 @@ data Type l
      | TyKind  l (Type l) (Kind l)              -- ^ type with explicit kind signature
      | TyPromoted l (Promoted l)                -- ^ @'K@, a promoted data type (-XDataKinds).
      | TySplice l (Splice l)                    -- ^ template haskell splice type
+     | TyBang l (BangType l) (Type l)           -- ^ Strict type marked with \"@!@\" or type marked with UNPACK pragma.
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | Bools here are True if there was a leading quote which may be
@@ -1239,12 +1239,10 @@ instance Annotated InstDecl where
 --        InsInline l b act qn    -> InsInline (f l) b act qn
 
 instance Annotated BangType where
-     ann (BangedTy   l _) = l
-     ann (UnBangedTy l _) = l
-     ann (UnpackedTy l _) = l
-     amap f (BangedTy   l t) = BangedTy (f l)   t
-     amap f (UnBangedTy l t) = UnBangedTy (f l) t
-     amap f (UnpackedTy l t) = UnpackedTy (f l) t
+     ann (BangedTy   l)    = l
+     ann (UnpackedTy l)    = l
+     amap f (BangedTy   l) = BangedTy (f l)
+     amap f (UnpackedTy l) = UnpackedTy (f l)
 
 instance Annotated Rhs where
      ann (UnGuardedRhs l _) = l
@@ -1271,6 +1269,7 @@ instance Annotated Type where
       TyKind  l _ _                 -> l
       TyPromoted l   _              -> l
       TySplice l _                  -> l
+      TyBang l _ _                  -> l
     amap f t1 = case t1 of
       TyForall l mtvs mcx t         -> TyForall (f l) mtvs mcx t
       TyFun   l t1' t2              -> TyFun (f l) t1' t2
@@ -1285,6 +1284,7 @@ instance Annotated Type where
       TyKind  l t k                 -> TyKind (f l) t k
       TyPromoted l   p              -> TyPromoted (f l)   p
       TySplice l s                  -> TySplice (f l) s
+      TyBang l b t                  -> TyBang (f l) b t
 
 instance Annotated TyVarBind where
     ann (KindedVar   l _ _) = l

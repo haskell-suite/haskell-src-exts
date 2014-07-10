@@ -1050,29 +1050,29 @@ as qcon and then check separately that they are truly unqualified.
 >       | qcon '{' fielddecls '}'       {% do { c <- checkUnQual $1;
 >                                               return $ RecDecl (ann $1 <++> nIS $4 <** ($2:reverse (snd $3) ++ [$4])) c (reverse (fst $3)) } }
 
-> scontype :: { (Name L, [BangType L], L) }
+> scontype :: { (Name L, [Type L], L) }
 >       : btype                         {% do { (c,ts) <- splitTyConApp $1;
->                                               return (c,map (\t -> UnBangedTy (ann t) t) ts,ann $1) } }
+>                                               return (c, ts, ann $1) } }
 >       | scontype1                     { $1 }
 
-> scontype1 :: { (Name L, [BangType L],L) }
+> scontype1 :: { (Name L, [Type L],L) }
 >       : btype '!' trueatype                       {% do { (c,ts) <- splitTyConApp $1;
->                                                           return (c,map (\t -> UnBangedTy (ann t) t) ts++
->                                                                   [BangedTy (nIS $2 <++> ann $3 <** [$2]) $3], $1 <> $3) } }
+>                                                           return (c,ts++
+>                                                                   [bangType (ann $1 <++> ann $3) (BangedTy (nIS $2 <++> ann $3 <** [$2])) $3], $1 <> $3) } }
 >       | btype '{-# UNPACK' '#-}' '!' trueatype    {% do { (c,ts) <- splitTyConApp $1;
->                                                           return (c,map (\t -> UnBangedTy (ann t) t) ts++
->                                                                   [UnpackedTy (nIS $2 <++> ann $5 <** [$2,$3,$4]) $5], $1 <> $5) } }
+>                                                           return (c, ts++
+>                                                                   [bangType (nIS $2 <++> ann $5) (UnpackedTy (nIS $2 <++> nIS $4 <** [$2,$3,$4])) $5], $1 <> $5) } }
 >       | scontype1 satype              { let (n,ts,l) = $1 in (n, ts ++ [$2],l <++> ann $2) }
 
-> satype :: { BangType L }
->       : trueatype                         { UnBangedTy (ann $1) $1 }
->       | '!' trueatype                     { BangedTy   (nIS $1 <++> ann $2 <** [$1]) $2 }
->       | '{-# UNPACK' '#-}' '!' trueatype  { UnpackedTy (nIS $1 <++> ann $4 <** [$1,$2,$3]) $4 }
+> satype :: { Type L }
+>       : trueatype                         { $1 }
+>       | '!' trueatype                     { bangType (nIS $1 <++> ann $2) (BangedTy (nIS $1 <** [$1])) $2 }
+>       | '{-# UNPACK' '#-}' '!' trueatype  { bangType (nIS $1 <++> ann $4) (UnpackedTy (nIS $1 <++> nIS $3 <** [$1,$2,$3])) $4 }
 
-> sbtype :: { BangType L }
->       : truebtype                         { UnBangedTy (ann $1) $1 }
->       | '!' trueatype                     { BangedTy   (nIS $1 <++> ann $2 <** [$1]) $2 }
->       | '{-# UNPACK' '#-}' '!' trueatype  { UnpackedTy (nIS $1 <++> ann $4 <** [$1,$2,$3]) $4 }
+> sbtype :: { Type L }
+>       : truebtype                         { $1 }
+>       | '!' trueatype                     { bangType (nIS $1 <++> ann $2) (BangedTy (nIS $1 <** [$1])) $2 }
+>       | '{-# UNPACK' '#-}' '!' trueatype  { bangType (nIS $1 <++> ann $4) (UnpackedTy (nIS $1 <++> nIS $3 <** [$1,$2,$3])) $4 }
 
 > fielddecls :: { ([FieldDecl L],[S]) }
 >       : fielddecls ',' fielddecl      { ($3 : fst $1, $2 : snd $1) }
@@ -1081,10 +1081,10 @@ as qcon and then check separately that they are truly unqualified.
 > fielddecl :: { FieldDecl L }
 >       : vars '::' stype               { let (ns,ss,l) = $1 in FieldDecl (l <++> ann $3 <** (reverse ss ++ [$2])) (reverse ns) $3 }
 
-> stype :: { BangType L }
->       : truectype                         { UnBangedTy (ann $1) $1 }
->       | '!' trueatype                     { BangedTy   (nIS $1 <++> ann $2 <** [$1]) $2 }
->       | '{-# UNPACK' '#-}' '!' trueatype  { UnpackedTy (nIS $1 <++> ann $4 <** [$1,$2,$3]) $4 }
+> stype :: { Type L }
+>       : truectype                         { $1 }
+>       | '!' trueatype                     { bangType (nIS $1 <++> ann $2) (BangedTy (nIS $1 <** [$1])) $2 }
+>       | '{-# UNPACK' '#-}' '!' trueatype  { bangType (nIS $1 <++> ann $4) (UnpackedTy (nIS $1 <++> nIS $3 <** [$1,$2,$3])) $4 }
 
 > deriving :: { Maybe (Deriving L) }
 >       : {- empty -}                   { Nothing }
