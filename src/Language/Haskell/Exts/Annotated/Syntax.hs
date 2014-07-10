@@ -46,7 +46,7 @@ module Language.Haskell.Exts.Annotated.Syntax (
     Module(..), ModuleHead(..), WarningText(..), ExportSpecList(..), ExportSpec(..),
     ImportDecl(..), ImportSpecList(..), ImportSpec(..), Assoc(..), Namespace(..),
     -- * Declarations
-    Decl(..), DeclHead(..), InstHead(..), DeclOrInstHead(..), Binds(..), IPBind(..),
+    Decl(..), DeclHead(..), InstRule(..), InstHead(..), Binds(..), IPBind(..),
     -- ** Type classes and instances
     ClassDecl(..), InstDecl(..), Deriving(..),
     -- ** Data type declarations
@@ -274,9 +274,9 @@ data Decl l
      -- ^ A data family instance declaration, GADT style
      | ClassDecl    l (Maybe (Context l)) (DeclHead l) [FunDep l] (Maybe [ClassDecl l])
      -- ^ A declaration of a type class
-     | InstDecl     l (Maybe (Overlap l)) (InstHead l) (Maybe [InstDecl l])
+     | InstDecl     l (Maybe (Overlap l)) (InstRule l) (Maybe [InstDecl l])
      -- ^ An declaration of a type class instance
-     | DerivDecl    l (Maybe (Overlap l)) (InstHead l)
+     | DerivDecl    l (Maybe (Overlap l)) (InstRule l)
      -- ^ A standalone deriving declaration
      | InfixDecl    l (Assoc l) (Maybe Int) [Op l]
      -- ^ A declaration of operator fixity
@@ -308,7 +308,7 @@ data Decl l
      -- ^ A SPECIALISE pragma
      | SpecInlineSig    l Bool (Maybe (Activation l)) (QName l) [Type l]
      -- ^ A SPECIALISE INLINE pragma
-     | InstSig          l      (InstHead l)
+     | InstSig          l      (InstRule l)
      -- ^ A SPECIALISE instance pragma
      | AnnPragma        l (Annotation l)
      -- ^ An ANN pragma
@@ -349,26 +349,26 @@ data DeclHead l
     | DHApp   l (DeclHead l) (TyVarBind l)
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
--- | The head of an instance declaration.
-data InstHead l
-    = IHead l (Maybe [TyVarBind l]) (Maybe (Context l)) (DeclOrInstHead l)
-    | IHParen l (InstHead l)
+-- | The instance declaration.
+data InstRule l
+    = IRule l (Maybe [TyVarBind l]) (Maybe (Context l)) (InstHead l)
+    | IParen l (InstRule l)
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- See bugs #7 and #31 for more details and use cases for the rationale
 -- of the split. DeclOrInstHead should be used by DeclHead as the name implies.
 
--- | The guts of a instance head. The split between types allow us to represent
+-- | The instance head. The split between rule/head allow us to represent
 -- /instance (Bounded a => Bounded [a]) where/ faithfully.
-data DeclOrInstHead l
-    = DoIHCon l (QName l)
-    | DoIHInfix l (Type l) (QName l)
-    | DoIHParen l (DeclOrInstHead l)
-    | DoIHApp   l (DeclOrInstHead l) (Type l)
+data InstHead l
+    = IHCon l (QName l)
+    | IHInfix l (Type l) (QName l)
+    | IHParen l (InstHead l)
+    | IHApp   l (InstHead l) (Type l)
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | A deriving clause following a data type declaration.
-data Deriving l = Deriving l [InstHead l]
+data Deriving l = Deriving l [InstRule l]
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | A binding group inside a @let@ or @where@ clause.
@@ -1160,21 +1160,21 @@ instance Annotated DeclHead where
     amap f (DHParen l dh)        = DHParen (f l) dh
     amap f (DHApp l dh t)        = DHApp (f l) dh t
 
-instance Annotated InstHead where
-    ann (IHead l _ _ _)          = l
-    ann (IHParen l _)            = l
-    amap f (IHead l mtv cxt qn)  = IHead (f l) mtv cxt qn
-    amap f (IHParen l ih)        = IHParen (f l) ih
+instance Annotated InstRule where
+    ann (IRule l _ _ _)         = l
+    ann (IParen l _)            = l
+    amap f (IRule l mtv cxt qn) = IRule (f l) mtv cxt qn
+    amap f (IParen l ih)        = IParen (f l) ih
 
-instance Annotated DeclOrInstHead where
-    ann (DoIHCon l _)              = l
-    ann (DoIHInfix l _ _)          = l
-    ann (DoIHParen l _)            = l
-    ann (DoIHApp l _ _)            = l
-    amap f (DoIHCon l n)           = DoIHCon (f l) n
-    amap f (DoIHInfix l tva n)     = DoIHInfix (f l) tva n
-    amap f (DoIHParen l dh)        = DoIHParen (f l) dh
-    amap f (DoIHApp l dh t)        = DoIHApp (f l) dh t
+instance Annotated InstHead where
+    ann (IHCon l _)              = l
+    ann (IHInfix l _ _)          = l
+    ann (IHParen l _)            = l
+    ann (IHApp l _ _)            = l
+    amap f (IHCon l n)           = IHCon (f l) n
+    amap f (IHInfix l tva n)     = IHInfix (f l) tva n
+    amap f (IHParen l dh)        = IHParen (f l) dh
+    amap f (IHApp l dh t)        = IHApp (f l) dh t
 
 instance Annotated Binds where
     ann (BDecls  l _) = l

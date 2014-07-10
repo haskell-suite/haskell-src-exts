@@ -1088,15 +1088,15 @@ as qcon and then check separately that they are truly unqualified.
 
 > deriving :: { Maybe (Deriving L) }
 >       : {- empty -}                   { Nothing }
->       | 'deriving' qtycls1            { let l = nIS $1 <++> ann $2 <** [$1] in Just $ Deriving l [IHead (ann $2) Nothing Nothing $2] }
+>       | 'deriving' qtycls1            { let l = nIS $1 <++> ann $2 <** [$1] in Just $ Deriving l [IRule (ann $2) Nothing Nothing $2] }
 >       | 'deriving' '('          ')'   { Just $ Deriving ($1 <^^> $3 <** [$1,$2,$3]) [] }
 >       | 'deriving' '(' dclasses ')'   { Just $ Deriving ($1 <^^> $4 <** $1:$2: reverse (snd $3) ++ [$4]) (reverse (fst $3)) }
 
-> dclasses :: { ([InstHead L],[S]) }
+> dclasses :: { ([InstRule L],[S]) }
 >       : types1                        {% checkDeriving (fst $1) >>= \ds -> return (ds, snd $1) }
 
-> qtycls1 :: { DeclOrInstHead L }
->       : qconid                        { DoIHCon (ann $1) $1 }
+> qtycls1 :: { InstHead L }
+>       : qconid                        { IHCon (ann $1) $1 }
 
 
 -----------------------------------------------------------------------------

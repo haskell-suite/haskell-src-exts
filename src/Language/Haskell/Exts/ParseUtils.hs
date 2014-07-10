@@ -327,37 +327,36 @@ toTyVarBind (TyVar l n) = UnkindedVar l n
 toTyVarBind (TyKind l (TyVar _ n) k) = KindedVar l n k
 -}
 
-checkInstHeader :: PType L -> P (InstHead L)
-checkInstHeader (TyParen l t) = checkInstHeader t >>= return . IHParen l
+checkInstHeader :: PType L -> P (InstRule L)
+checkInstHeader (TyParen l t) = checkInstHeader t >>= return . IParen l
 checkInstHeader (TyForall l mtvs cs t) = do
     cs' <- checkSContext cs
-    ih <- checkInsts (Just l) mtvs cs' t
-    return ih
+    checkInsts (Just l) mtvs cs' t
 checkInstHeader t = checkInsts Nothing Nothing Nothing t
 
 
-checkInsts :: (Maybe L) -> Maybe [TyVarBind L] -> Maybe (S.Context L) -> PType L -> P (InstHead L)
-checkInsts _ mtvs mctxt (TyParen l t) = checkInsts Nothing mtvs mctxt t >>= return . IHParen l
+checkInsts :: Maybe L -> Maybe [TyVarBind L] -> Maybe (S.Context L) -> PType L -> P (InstRule L)
+checkInsts _ mtvs mctxt (TyParen l t) = checkInsts Nothing mtvs mctxt t >>= return . IParen l
 checkInsts l1 mtvs mctxt t = do
     t' <- checkInstsGuts t
-    return $ IHead (fromMaybe (fmap ann mctxt <?+> ann t') l1) mtvs mctxt t'
+    return $ IRule (fromMaybe (fmap ann mctxt <?+> ann t') l1) mtvs mctxt t'
 
-checkInstsGuts :: PType L -> P (DeclOrInstHead L)
+checkInstsGuts :: PType L -> P (InstHead L)
 checkInstsGuts (TyApp l h t) = do
     t' <- checkType t
     h' <- checkInstsGuts h
-    return $ DoIHApp l h' t'
+    return $ IHApp l h' t'
 checkInstsGuts (TyCon l c) = do
     checkAndWarnTypeOperators c
-    return $ DoIHCon l c
+    return $ IHCon l c
 checkInstsGuts (TyInfix l a op b) = do
     checkAndWarnTypeOperators op
     [ta,tb] <- checkTypes [a,b]
-    return $ DoIHApp l (DoIHInfix l ta op) tb
-checkInstsGuts (TyParen l t) = checkInstsGuts t >>= return . DoIHParen l
+    return $ IHApp l (IHInfix l ta op) tb
+checkInstsGuts (TyParen l t) = checkInstsGuts t >>= return . IHParen l
 checkInstsGuts _ = fail "Illegal instance declaration"
 
-checkDeriving :: [PType L] -> P [InstHead L]
+checkDeriving :: [PType L] -> P [InstRule L]
 checkDeriving = mapM (checkInsts Nothing Nothing Nothing)
 
 -----------------------------------------------------------------------------

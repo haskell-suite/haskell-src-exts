@@ -885,9 +885,9 @@ instance ExactP DeclHead where
          _ -> errorEP "ExactP: DeclHead: DeclParen is given wrong number of srcInfoPoints"
     DHApp   _ dh t      -> exactP dh >> exactPC t
 
-instance ExactP InstHead where
+instance ExactP InstRule where
   exactP ih' = case ih' of
-    IHead l mtvs mctxt qn    -> do
+    IRule l mtvs mctxt qn    -> do
         let pts = srcInfoPoints l
         _ <- case mtvs of
                 Nothing -> return pts
@@ -898,23 +898,23 @@ instance ExactP InstHead where
                         mapM_ exactPC tvs
                         printStringAt (pos b) "."
                         return pts
-                     _ -> errorEP "ExactP: InstHead: IHead is given too few srcInfoPoints"
+                     _ -> errorEP "ExactP: InstRule: IRule is given too few srcInfoPoints"
         maybeEP exactPC mctxt
         exactPC qn
-    IHParen l ih        ->
+    IParen l ih        ->
         case srcInfoPoints l of
          [a,b] -> printStringAt (pos a) "(" >> exactPC ih >> printStringAt (pos b) ")"
-         _ -> errorEP "ExactP: InstHead: IHParen is given wrong number of srcInfoPoints"
+         _ -> errorEP "ExactP: InstRule: IParen is given wrong number of srcInfoPoints"
 
-instance ExactP DeclOrInstHead where
+instance ExactP InstHead where
    exactP doih' = case doih' of
-    DoIHCon _ qn      -> exactPC qn
-    DoIHInfix _ ta qn -> exactPC ta >> epInfixQName qn
-    DoIHParen l doih  ->
+    IHCon _ qn      -> exactPC qn
+    IHInfix _ ta qn -> exactPC ta >> epInfixQName qn
+    IHParen l doih  ->
         case srcInfoPoints l of
          [a,b] -> printStringAt (pos a) "(" >> exactPC doih >> printStringAt (pos b) ")"
-         _ -> errorEP "ExactP: DeclOrInstHead: DoIHParen is given wrong number of srcInfoPoints"
-    DoIHApp _ doih t  -> exactPC doih >> exactPC t
+         _ -> errorEP "ExactP: OrInstHead: IHParen is given wrong number of srcInfoPoints"
+    IHApp _ doih t  -> exactPC doih >> exactPC t
 
 instance ExactP TyVarBind where
   exactP (KindedVar   l n k) =
