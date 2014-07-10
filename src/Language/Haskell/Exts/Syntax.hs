@@ -785,7 +785,7 @@ tuple_con :: Boxed -> Int -> Exp
 tuple_con b i = Con (tuple_con_name b i)
 
 unboxed_singleton_con :: Exp
-unboxed_singleton_con = Con (unboxed_singleton_con_name)
+unboxed_singleton_con = Con unboxed_singleton_con_name
 
 as_name, qualified_name, hiding_name, minus_name, bang_name, dot_name, star_name :: Name
 as_name        = Ident "as"

@@ -79,7 +79,7 @@ import Language.Haskell.Exts.Extension
 import Language.Haskell.Exts.ExtScheme
 
 import Prelude hiding (mod)
-import Data.List (intersperse)
+import Data.List (intercalate)
 import Data.Maybe (fromJust, fromMaybe)
 import Control.Monad (when,unless)
 
@@ -106,9 +106,7 @@ splitTyConApp t0 = do
 checkEnabled :: (Show e, Enabled e) => e  -> P ()
 checkEnabled e = do
     exts <- getExtensions
-    if isEnabled e exts
-     then return ()
-     else fail $ show e ++ " is not enabled"
+    unless (isEnabled e exts) $ fail $ show e ++ " is not enabled"
 
 checkEnabledOneOf :: (Show e, Enabled e) => [e] -> P ()
 checkEnabledOneOf es = do
@@ -185,7 +183,7 @@ checkAssertion t' = checkAssertion' id [] t'
                 when (length ts /= 1) $ checkEnabled MultiParamTypeClasses
                 checkAndWarnTypeOperators c
                 return $ ClassA (fl l) c ts
-            checkAssertion' fl ts (TyApp l a t) = do
+            checkAssertion' fl ts (TyApp l a t) =
                 -- no check on t at this stage
                 checkAssertion' (const (fl l)) (t:ts) a
             checkAssertion' fl _ (TyInfix l a op b) = do
@@ -374,7 +372,7 @@ checkPat (App _ f x) args = do
     x' <- checkPat x []
     checkPat f (x':args)
 checkPat (InfixApp _ l op r) args
-    | op =~= (QVarOp () (UnQual () (Symbol () "!"))) = do
+    | op =~= QVarOp () (UnQual () (Symbol () "!")) = do
         -- We must have BangPatterns on
         checkEnabled BangPatterns
         let (e,es) = splitBang r []
@@ -399,7 +397,7 @@ checkPat e' [] = case e' of
                         _ -> patFail ""
             _ -> patFail ""
     TupleSection l bx mes    ->
-            if not (any ((==) Nothing) mes)
+            if Nothing `notElem` mes
              then do ps <- mapM (\e -> checkPat e []) (map fromJust mes)
                      return (PTuple l bx ps)
              else fail "Illegal tuple section in pattern"
@@ -607,7 +605,7 @@ checkExpr e' = case e' of
                      return (S.Case l e1 alts)
     Do l stmts            -> checkDo stmts >> return (S.Do l stmts)
     MDo l stmts           -> checkDo stmts >> return (S.MDo l stmts)
-    TupleSection l bx mes -> if not (any ((==) Nothing) mes)
+    TupleSection l bx mes -> if Nothing `notElem` mes
                              then checkManyExprs (map fromJust mes) (S.Tuple l bx)
                              else do checkEnabled TupleSections
                                      mes' <- mapM mCheckExpr mes
@@ -779,7 +777,7 @@ checkValDef l lhs optsig rhs whereBinds = do
 
 isFunLhs :: PExp L -> [PExp L] -> P (Maybe (Name L, [PExp L], Bool, [S]))
 isFunLhs (InfixApp _ l (QVarOp loc (UnQual _ op)) r) es
-    | op =~= (Symbol () "!") = do
+    | op =~= Symbol () "!" = do
         exts <- getExtensions
         if BangPatterns `elem` exts
          then let (b,bs) = splitBang r []
@@ -868,7 +866,7 @@ checkEqNames n m = fail $ "opening tag '" ++ showTag n ++
 
 checkPrec :: Integer -> P Int
 checkPrec i | 0 <= i && i <= 9 = return (fromInteger i)
-checkPrec i | otherwise        = fail ("Illegal precedence " ++ show i)
+            | otherwise        = fail ("Illegal precedence " ++ show i)
 
 mkRecConstrOrUpdate :: PExp L -> [PFieldUpdate L] -> P (PExp L)
 mkRecConstrOrUpdate (Con l c) fs       = return (RecConstr l c fs)
@@ -975,7 +973,7 @@ checkDataOrNewG (NewType _) [_] = return ()
 checkDataOrNewG _        _  = fail "newtype declaration must have exactly one constructor."
 
 checkSimpleType :: PType L -> P (DeclHead L)
-checkSimpleType t = checkSimple "test" t
+checkSimpleType = checkSimple "test"
 
 ---------------------------------------
 -- Check actual types
@@ -986,7 +984,7 @@ checkType t = checkT t False
 checkT :: PType L -> Bool -> P (S.Type L)
 checkT t simple = case t of
     TyForall l Nothing cs pt    -> do
-            when (simple) $ checkEnabled ExplicitForAll
+            when simple $ checkEnabled ExplicitForAll
             ctxt <- checkContext cs
             check1Type pt (S.TyForall l Nothing ctxt)
     TyForall l tvs cs pt -> do
@@ -1065,7 +1063,7 @@ checkHybridModule _ _ _ _ = fail "Hybrid module expected"
 -- Handle dash-identifiers
 
 mkDVar :: [String] -> String
-mkDVar = concat . intersperse "-"
+mkDVar = intercalate "-"
 
 ---------------------------------------
 -- Combine adjacent for-alls.

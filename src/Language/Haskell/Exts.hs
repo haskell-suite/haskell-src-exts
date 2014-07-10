@@ -46,6 +46,7 @@ import Language.Haskell.Exts.Fixity
 import Language.Haskell.Exts.Comments
 
 import Data.List
+import Data.Maybe (fromMaybe)
 import Language.Preprocessor.Unlit
 
 -- | Parse a source file on disk, using the default parse mode.
@@ -59,11 +60,11 @@ parseFileWithExts exts fp = parseFileWithMode (defaultParseMode { extensions = e
 
 -- | Parse a source file on disk, supplying a custom parse mode.
 parseFileWithMode :: ParseMode -> FilePath -> IO (ParseResult Module)
-parseFileWithMode p fp = readFile fp >>= (return . parseFileContentsWithMode p)
+parseFileWithMode p fp = readFile fp >>= return . parseFileContentsWithMode p
 
 -- | Parse a source file on disk, supplying a custom parse mode, and retaining comments.
 parseFileWithComments :: ParseMode -> FilePath -> IO (ParseResult (Module, [Comment]))
-parseFileWithComments p fp = readFile fp >>= (return . parseFileContentsWithComments p)
+parseFileWithComments p fp = readFile fp >>= return . parseFileContentsWithComments p
 
 -- | Parse a source file from a string using the default parse mode.
 parseFileContents :: String -> ParseResult Module
@@ -81,7 +82,7 @@ parseFileContentsWithMode p@(ParseMode fn oldLang exts ign _ _) rawStr =
             (bLang, extraExts) = 
                 case (ign, readExtensions md) of
                   (False, Just (mLang, es)) -> 
-                       (case mLang of {Nothing -> oldLang;Just newLang -> newLang}, es)
+                       (fromMaybe oldLang mLang, es)
                   _ -> (oldLang, [])
          in parseWithMode (p { baseLanguage = bLang, extensions = exts ++ extraExts }) md
 
@@ -92,7 +93,7 @@ parseFileContentsWithComments p@(ParseMode fn oldLang exts ign _ _) rawStr =
             (bLang, extraExts) = 
                 case (ign, readExtensions md) of
                   (False, Just (mLang, es)) -> 
-                       (case mLang of {Nothing -> oldLang;Just newLang -> newLang}, es)
+                       (fromMaybe oldLang mLang, es)
                   _ -> (oldLang, [])
          in parseWithComments (p { baseLanguage = bLang, extensions = exts ++ extraExts }) md
 
