@@ -25,6 +25,8 @@ import qualified Language.Haskell.Exts.Syntax as S
 
 import Language.Haskell.Exts.SrcLoc hiding (loc)
 
+import Data.Maybe (fromMaybe)
+
 -- | Translate an annotated AST node representing a Haskell module, into
 --   a simpler version that retains (almost) only abstract information.
 --   In particular, XML and hybrid XML pages enabled by the XmlSyntax extension
@@ -90,7 +92,7 @@ sDecl decl = case decl of
      DerivDecl    l olp ih    ->
         let (tvs, cxt, (qn, ts)) = sInstRule ih
          in S.DerivDecl (getPointLoc l) (fmap sOverlap olp) tvs cxt qn ts
-     InfixDecl    l ass prec ops    -> S.InfixDecl (getPointLoc l) (sAssoc ass) (maybe 9 id prec) (map sOp ops)
+     InfixDecl    l ass prec ops    -> S.InfixDecl (getPointLoc l) (sAssoc ass) (fromMaybe 9 prec) (map sOp ops)
      DefaultDecl  l ts          -> S.DefaultDecl (getPointLoc l) (map sType ts)
      SpliceDecl   l sp          -> S.SpliceDecl (getPointLoc l) (sExp sp)
      TypeSig      l ns t        -> S.TypeSig (getPointLoc l) (map sName ns) (sType t)
@@ -98,9 +100,9 @@ sDecl decl = case decl of
      PatBind      l p rhs mbs    ->
         S.PatBind (getPointLoc l) (sPat p) (sRhs rhs) (maybe (S.BDecls []) sBinds mbs)
      ForImp       l cc msaf mstr n t    ->
-        S.ForImp (getPointLoc l) (sCallConv cc) (maybe (S.PlaySafe False) sSafety msaf) (maybe "" id mstr) (sName n) (sType t)
+        S.ForImp (getPointLoc l) (sCallConv cc) (maybe (S.PlaySafe False) sSafety msaf) (fromMaybe "" mstr) (sName n) (sType t)
      ForExp       l cc      mstr n t    ->
-        S.ForExp (getPointLoc l) (sCallConv cc) (maybe "" id mstr) (sName n) (sType t)
+        S.ForExp (getPointLoc l) (sCallConv cc) (fromMaybe "" mstr) (sName n) (sType t)
      RulePragmaDecl   l rs      -> S.RulePragmaDecl (getPointLoc l) (map sRule rs)
      DeprPragmaDecl   l nsstrs  -> S.DeprPragmaDecl (getPointLoc l) (map (\(ns, str) -> (map sName ns, str)) nsstrs)
      WarnPragmaDecl   l nsstrs  -> S.WarnPragmaDecl (getPointLoc l) (map (\(ns, str) -> (map sName ns, str)) nsstrs)
@@ -171,7 +173,7 @@ sCName :: CName l -> S.CName
 sCName (VarName _ n) = S.VarName (sName n)
 sCName (ConName _ n) = S.ConName (sName n)
 
-sModuleHead :: Maybe (ModuleHead l) -> (S.ModuleName, Maybe (S.WarningText), Maybe [S.ExportSpec])
+sModuleHead :: Maybe (ModuleHead l) -> (S.ModuleName, Maybe S.WarningText, Maybe [S.ExportSpec])
 sModuleHead mmh = case mmh of
     Nothing -> (S.main_mod, Nothing, Just [S.EVar S.NoNamespace (S.UnQual S.main_name)])
     Just (ModuleHead _ mn mwt mel) -> (sModuleName mn, fmap sWarningText mwt, fmap sExportSpecList mel)

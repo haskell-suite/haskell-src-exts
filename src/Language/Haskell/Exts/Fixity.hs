@@ -40,6 +40,7 @@ import Control.Monad (when, (<=<), liftM, liftM2, liftM3)
 import Data.Traversable (mapM)
 import Prelude hiding (mapM)
 import Data.Data hiding (Fixity)
+import Data.Maybe (fromMaybe)
 
 -- | Operator fixities are represented by their associativity
 --   (left, right or none) and their precedence (0-9).
@@ -65,7 +66,7 @@ instance AppFixity Exp where
               let fixup (a1,p1) (a2,p2) y pre = do
                       when (p1 == p2 && (a1 /= a2 || a1 == AssocNone)) -- Ambiguous infix expression!
                            $ fail "Ambiguous infix expression"
-                      if (p1 > p2 || p1 == p2 && (a1 == AssocLeft || a2 == AssocNone)) -- Already right order
+                      if p1 > p2 || p1 == p2 && (a1 == AssocLeft || a2 == AssocNone) -- Already right order
                        then return $ InfixApp e op2 z
                        else liftM pre (infFix fixs $ InfixApp y op2 z)
               case e of
@@ -83,7 +84,7 @@ instance AppFixity Pat where
               let fixup (a1,p1) (a2,p2) y pre = do
                       when (p1 == p2 && (a1 /= a2 || a1 == AssocNone )) -- Ambiguous infix expression!
                            $ fail "Ambiguous infix expression"
-                      if (p1 > p2 || p1 == p2 && (a1 == AssocLeft || a2 == AssocNone)) -- Already right order
+                      if p1 > p2 || p1 == p2 && (a1 == AssocLeft || a2 == AssocNone) -- Already right order
                        then return $ PInfixApp p op2 z
                        else liftM pre (infFix fixs $ PInfixApp y op2 z)
               case p of
@@ -114,9 +115,7 @@ askFixityP xs qn = askFix xs (g qn)
 askFix :: [Fixity] -> QName -> (Assoc, Int)
 askFix xs = \k -> lookupWithDefault (AssocLeft, 9) k mp
     where
-        lookupWithDefault def k mp1 = case lookup k mp1 of
-            Nothing -> def
-            Just x  -> x
+        lookupWithDefault def k mp1 = fromMaybe def $ lookup k mp1
 
         mp = [(x,(a,p)) | Fixity a p x <- xs]
 

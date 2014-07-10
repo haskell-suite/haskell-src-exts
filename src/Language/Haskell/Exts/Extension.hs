@@ -101,9 +101,7 @@ knownLanguages :: [Language]
 knownLanguages = [Haskell98, Haskell2010]
 
 classifyLanguage :: String -> Language
-classifyLanguage = \str -> case lookup str langTable of
-    Just lang -> lang
-    Nothing   -> UnknownLanguage str
+classifyLanguage str = fromMaybe (UnknownLanguage str) $ lookup str langTable
   where
     langTable = [ (show lang, lang)
                 | lang <- knownLanguages ]

@@ -59,6 +59,7 @@ import Language.Haskell.Exts.Comments
 import Language.Haskell.Exts.InternalParser
 
 import Data.List
+import Data.Maybe (fromMaybe)
 import Language.Preprocessor.Unlit
 
 -- | Parse a source file on disk, using the default parse mode.
@@ -75,10 +76,10 @@ parseFileWithExts exts fp =
 
 -- | Parse a source file on disk, supplying a custom parse mode.
 parseFileWithMode :: ParseMode -> FilePath -> IO (ParseResult (Module SrcSpanInfo))
-parseFileWithMode p fp = readFile fp >>= (return . parseFileContentsWithMode p)
+parseFileWithMode p fp = readFile fp >>= return . parseFileContentsWithMode p
 
 parseFileWithComments :: ParseMode -> FilePath -> IO (ParseResult (Module SrcSpanInfo, [Comment]))
-parseFileWithComments p fp = readFile fp >>= (return . parseFileContentsWithComments p)
+parseFileWithComments p fp = readFile fp >>= return . parseFileContentsWithComments p
 
 -- | Parse a source file from a string using the default parse mode.
 parseFileContents :: String -> ParseResult (Module SrcSpanInfo)
@@ -97,7 +98,7 @@ parseFileContentsWithMode p@(ParseMode fn oldLang exts ign _ _) rawStr =
             (bLang, extraExts) = 
                 case (ign, readExtensions md) of
                   (False, Just (mLang, es)) -> 
-                       (case mLang of {Nothing -> oldLang;Just newLang -> newLang}, es)
+                       (fromMaybe oldLang mLang, es)
                   _ -> (oldLang, [])
          in -- trace (fn ++ ": " ++ show extraExts) $
               parseModuleWithMode (p { baseLanguage = bLang, extensions = exts ++ extraExts }) md
@@ -108,7 +109,7 @@ parseFileContentsWithComments p@(ParseMode fn oldLang exts ign _ _) rawStr =
             (bLang, extraExts) = 
                 case (ign, readExtensions md) of
                   (False, Just (mLang, es)) -> 
-                       (case mLang of {Nothing -> oldLang;Just newLang -> newLang}, es)
+                       (fromMaybe oldLang mLang, es)
                   _ -> (oldLang, [])
          in parseModuleWithComments (p { baseLanguage = bLang, extensions = exts ++ extraExts }) md
 

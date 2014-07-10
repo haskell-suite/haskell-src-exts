@@ -39,7 +39,7 @@ import Language.Haskell.Exts.Fixity (Fixity, preludeFixities)
 import Language.Haskell.Exts.Comments
 import Language.Haskell.Exts.Extension -- (Extension, impliesExts, haskell2010)
 
-import Data.List ( intersperse )
+import Data.List (intercalate)
 import Control.Applicative
 import Control.Monad (when, liftM, ap)
 import Data.Monoid
@@ -222,7 +222,7 @@ getSrcLoc = P $ \_i _x _y l s _m -> Ok s l
 getModuleName :: P String
 getModuleName = P $ \_i _x _y _l s m ->
     let fn = iParseFilename m
-        mn = concat $ intersperse "." $ splitPath fn
+        mn = intercalate "." $ splitPath fn
 
         splitPath :: String -> [String]
         splitPath ""   = []
@@ -247,7 +247,7 @@ pushCurrentContext = do
     dob <- pullDoStatus
     let loc = srcColumn lc
     when (dob && loc < indent
-           || not dob && loc <= indent) $ pushCtxtFlag
+           || not dob && loc <= indent) pushCtxtFlag
     pushContext (Layout loc)
 
 currentIndent :: P Int
@@ -339,7 +339,7 @@ nextTab :: Int -> Int
 nextTab x = x + (tAB_LENGTH - (x-1) `mod` tAB_LENGTH)
 
 tAB_LENGTH :: Int
-tAB_LENGTH = 8 :: Int
+tAB_LENGTH = 8
 
 -- Consume and return the largest string of characters satisfying p
 

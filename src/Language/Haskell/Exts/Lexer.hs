@@ -33,7 +33,7 @@ lexTokenStream = lexTokenStreamWithMode defaultParseMode
 
 -- | Lex a string into a list of Haskell source tokens, using an explicit mode.
 lexTokenStreamWithMode :: ParseMode -> String -> ParseResult [Loc Token]
-lexTokenStreamWithMode mode str = runParserWithMode mode lexIt str
+lexTokenStreamWithMode mode = runParserWithMode mode lexIt
   where lexIt :: P [Loc Token]
         lexIt = runL go return
         go :: Lex [Loc Token] [Loc Token]

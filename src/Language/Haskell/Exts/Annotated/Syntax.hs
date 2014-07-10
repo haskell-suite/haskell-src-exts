@@ -212,7 +212,7 @@ data Namespace l = NoNamespace l | TypeNamespace l
 -- | An import declaration.
 data ImportDecl l = ImportDecl
     { importAnn :: l                   -- ^ annotation, used by parser for position of the @import@ keyword.
-    , importModule :: (ModuleName l)   -- ^ name of the module imported.
+    , importModule :: ModuleName l     -- ^ name of the module imported.
     , importQualified :: Bool          -- ^ imported @qualified@?
     , importSrc :: Bool                -- ^ imported with @{-\# SOURCE \#-}@?
     , importSafe :: Bool               -- ^ Import @safe@?

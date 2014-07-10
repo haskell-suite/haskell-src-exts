@@ -23,7 +23,7 @@ import Language.Haskell.Exts.Annotated.Syntax
 import Language.Haskell.Exts.SrcLoc
 import Language.Haskell.Exts.Comments
 
-import Control.Monad (when, liftM, ap)
+import Control.Monad (when, liftM, ap, unless)
 import Control.Applicative (Applicative(..))
 import Control.Arrow ((***), (&&&))
 import Prelude hiding (exp)
@@ -130,7 +130,7 @@ errorEP = fail
 
 -- | Print an AST exactly as specified by the annotations on the nodes in the tree.
 exactPrint :: (ExactP ast) => ast SrcSpanInfo -> [Comment] -> String
-exactPrint ast cs = runEP (exactPC ast) cs
+exactPrint ast = runEP (exactPC ast)
 
 exactPC :: (ExactP ast) => ast SrcSpanInfo -> EP ()
 exactPC ast = let p = pos (ann ast) in mPrintComments p >> padUntil p >> exactP ast
@@ -203,7 +203,7 @@ lList' (p:ps) = (if isNullSpan p then (p,"") else (p,";")) : lList' ps
 printSemi :: SrcSpan -> EP ()
 printSemi p = do
   printWhitespace (pos p)
-  when (not $ isNullSpan p) $ printString ";"
+  unless (isNullSpan p) $ printString ";"
 
 
 --------------------------------------------------
@@ -216,8 +216,8 @@ instance ExactP Literal where
   exactP lit = case lit of
     Char       _ _ rw -> printString ('\'':rw ++ "\'")
     String     _ _ rw -> printString ('\"':rw ++ "\"")
-    Int        _ _ rw -> printString (rw)
-    Frac       _ _ rw -> printString (rw)
+    Int        _ _ rw -> printString rw
+    Frac       _ _ rw -> printString rw
     PrimInt    _ _ rw -> printString (rw ++ "#" )
     PrimWord   _ _ rw -> printString (rw ++ "##")
     PrimFloat  _ _ rw -> printString (rw ++ "#" )
@@ -266,7 +266,7 @@ specialName (UnboxedSingleCon _) = "(# #)"
 
 instance ExactP QName where
   exactP qn
-    | isSymbol (getName qn) = do
+    | isSymbol (getName qn) =
         case srcInfoPoints (ann qn) of
          [_,b,c] -> do
             printString "("
@@ -285,7 +285,7 @@ epQName qn = case qn of
 epInfixQName :: QName SrcSpanInfo -> EP ()
 epInfixQName qn
     | isSymbol (getName qn) = printWhitespace (pos (ann qn)) >> epQName qn
-    | otherwise = do
+    | otherwise =
         case srcInfoPoints (ann qn) of
          [a,b,c] -> do
             printStringAt (pos a) "`"
@@ -297,7 +297,7 @@ epInfixQName qn
 instance ExactP Name where
   exactP n = case n of
     Ident  _ str    -> printString str
-    Symbol l str    -> do
+    Symbol l str    ->
         case srcInfoPoints l of
          [_,b,c] -> do
             printString "("
@@ -314,7 +314,7 @@ epName (Symbol _ str) = printString str
 epInfixName :: Name SrcSpanInfo -> EP ()
 epInfixName n
     | isSymbol n = printWhitespace (pos (ann n)) >> epName n
-    | otherwise = do
+    | otherwise =
         case srcInfoPoints (ann n) of
          [a,b,c] -> do
             printStringAt (pos a) "`"
@@ -485,7 +485,7 @@ instance ExactP Module where
          _ -> errorEP "ExactP: Module: XmlHybrid is given wrong number of srcInfoPoints"
 
 instance ExactP ModuleHead where
-  exactP (ModuleHead l mn mwt mess) = do
+  exactP (ModuleHead l mn mwt mess) =
     case srcInfoPoints l of
      [a,b] -> do
         printStringAt (pos a) "module"
@@ -509,7 +509,7 @@ instance ExactP ModulePragma where
     AnnModulePragma  l ann'      ->
         case srcInfoPoints l of
          [_,b] -> do
-            printString $ "{-# ANN"
+            printString "{-# ANN"
             exactPC ann'
             printStringAt (pos b) "#-}"
          _ -> errorEP "ExactP: ModulePragma: AnnPragma is given wrong number of srcInfoPoints"
@@ -802,7 +802,7 @@ instance ExactP Decl where
     InstSig          l ih     ->
         case srcInfoPoints l of
          [_,b,c] -> do
-            printString $ "{-# SPECIALISE"
+            printString "{-# SPECIALISE"
             printStringAt (pos b) "instance"
             exactPC ih
             printStringAt (pos c) "#-}"
@@ -810,14 +810,14 @@ instance ExactP Decl where
     AnnPragma       l ann'       ->
         case srcInfoPoints l of
          [_,b] -> do
-            printString $ "{-# ANN"
+            printString "{-# ANN"
             exactPC ann'
             printStringAt (pos b) "#-}"
          _ -> errorEP "ExactP: Decl: AnnPragma is given wrong number of srcInfoPoints"
     MinimalPragma       l b      ->
         case srcInfoPoints l of
          [_,b'] -> do
-            printString $ "{-# MINIMAL"
+            printString "{-# MINIMAL"
             maybeEP exactPC b
             printStringAt (pos b') "#-}"
          _ -> errorEP "ExactP: Decl: MinimalPragma is given wrong number of srcInfoPoints"
@@ -946,7 +946,7 @@ instance ExactP Kind where
             printStringAt (pos a) "->"
             exactPC k2
          _ -> errorEP "ExactP: Kind: KindFn is given wrong number of srcInfoPoints"
-    KindParen l kd  -> do
+    KindParen l kd  ->
         case srcInfoPoints l of
          [_,b] -> do
             printString "("
@@ -986,25 +986,25 @@ instance ExactP Type where
                      _ -> errorEP "ExactP: Type: TyForall is given too few srcInfoPoints"
         maybeEP exactPC mctxt
         exactPC t
-    TyFun   l t1 t2 -> do
+    TyFun   l t1 t2 ->
         case srcInfoPoints l of
          [a] -> do
             exactP t1
             printStringAt (pos a) "->"
             exactPC t2
          _ -> errorEP "ExactP: Type: TyFun is given wrong number of srcInfoPoints"
-    TyTuple l bx ts -> do
+    TyTuple l bx ts ->
         case bx of
           Boxed   -> parenList (srcInfoPoints l) ts
           Unboxed -> parenHashList (srcInfoPoints l) ts
-    TyList  l t     -> do
+    TyList  l t     ->
         case srcInfoPoints l of
          [_,b] -> do
             printString "["
             exactPC t
             printStringAt (pos b) "]"
          _ -> errorEP "ExactP: Type: TyList is given wrong number of srcInfoPoints"
-    TyParArray l t     -> do
+    TyParArray l t     ->
         case srcInfoPoints l of
          [_,b] -> do
             printString "[:"
@@ -1014,7 +1014,7 @@ instance ExactP Type where
     TyApp   _ t1 t2 -> exactP t1 >> exactPC t2
     TyVar   _ n     -> exactP n
     TyCon   _ qn    -> exactP qn
-    TyParen l t     -> do
+    TyParen l t     ->
         case srcInfoPoints l of
          [_,b] -> do
             printString "("
@@ -1022,7 +1022,7 @@ instance ExactP Type where
             printStringAt (pos b) ")"
          _ -> errorEP "ExactP: Type: TyParen is given wrong number of srcInfoPoints"
     TyInfix _ t1 qn t2 -> exactP t1 >> epInfixQName qn >> exactPC t2
-    TyKind  l t kd -> do
+    TyKind  l t kd ->
         case srcInfoPoints l of
          [_,b,c] -> do
             printString "("
@@ -1038,7 +1038,7 @@ instance ExactP Promoted where
   exactP (PromotedInteger _ _ rw) = printString rw
   exactP (PromotedString _ _ rw)  = printString ('\"':rw ++ "\"")
   exactP (PromotedCon l True qn)  = case srcInfoPoints l of
-    [a] -> (printStringAt (pos a) "'") >> epQName qn
+    [a] -> printStringAt (pos a) "'" >> epQName qn
     _ -> errorEP "ExactP: Promoted: PromotedCon is given wrong number of srcInfoPoints"
   exactP (PromotedCon _ False qn) = epQName qn
   exactP (PromotedList l b pl) =
@@ -1497,7 +1497,7 @@ instance ExactP Exp where
         printString $ "[" ++ name ++ "|"
         sequence_ (intersperse newLine $ map printString qtLines)
         printString "|]"
-    XTag l xn attrs mat es  -> do
+    XTag l xn attrs mat es  ->
         case srcInfoPoints l of
          [_,b,c,d,e] -> do
             printString "<"
@@ -1591,21 +1591,21 @@ instance ExactP Exp where
             printStringAt (pos a) "-<"
             exactPC e2
          _ -> errorEP "ExactP: Exp: LeftArrApp is given wrong number of srcInfoPoints"
-    RightArrApp     l e1 e2 -> do
+    RightArrApp     l e1 e2 ->
         case srcInfoPoints l of
          [a] -> do
             exactP e1
             printStringAt (pos a) ">-"
             exactPC e2
          _ -> errorEP "ExactP: Exp: RightArrApp is given wrong number of srcInfoPoints"
-    LeftArrHighApp  l e1 e2 -> do
+    LeftArrHighApp  l e1 e2 ->
         case srcInfoPoints l of
          [a] -> do
             exactP e1
             printStringAt (pos a) "-<<"
             exactPC e2
          _ -> errorEP "ExactP: Exp: LeftArrHighApp is given wrong number of srcInfoPoints"
-    RightArrHighApp l e1 e2 -> do
+    RightArrHighApp l e1 e2 ->
         case srcInfoPoints l of
          [a] -> do
             exactP e1
@@ -1623,7 +1623,7 @@ instance ExactP Exp where
 
 instance ExactP FieldUpdate where
   exactP fup = case fup of
-    FieldUpdate l qn e  -> do
+    FieldUpdate l qn e  ->
       case srcInfoPoints l of
        [a] -> do
           exactP qn
@@ -1657,7 +1657,7 @@ instance ExactP QualStmt where
   exactP qstmt = case qstmt of
     QualStmt     _ stmt -> exactP stmt
     ThenTrans    _ e    -> printString "then" >> exactPC e
-    ThenBy       l e1 e2    -> do
+    ThenBy      l e1 e2 ->
         case srcInfoPoints l of
          [_,b] -> do
             printString "then"
@@ -1694,7 +1694,7 @@ instance ExactP Bracket where
             exactPC p
             printStringAt (pos b) "|]"
          _ -> errorEP "ExactP: Bracket: PatBracket is given wrong number of srcInfoPoints"
-    TypeBracket l t  -> do
+    TypeBracket l t  ->
         case srcInfoPoints l of
          [_,b] -> do
             printString "[t|"
@@ -1924,8 +1924,7 @@ instance ExactP RPat where
           printStringAt (pos a) "@"
           exactPC rp
        _ -> errorEP "ExactP: RPat: RPAs is given wrong number of srcInfoPoints"
-    RPParen l rp    -> do
-      parenList (srcInfoPoints l) [rp]
+    RPParen l rp    -> parenList (srcInfoPoints l) [rp]
     RPPat _ p   -> exactP p
 
 instance ExactP RPatOp where
@@ -2000,7 +1999,7 @@ instance ExactP Rule where
      _ -> errorEP "ExactP: Rule is given too few srcInfoPoints"
 
 instance ExactP RuleVar where
-  exactP (TypedRuleVar l n t) = do
+  exactP (TypedRuleVar l n t) =
         case srcInfoPoints l of
          [_,b,c] -> do
             printString "("
@@ -2032,7 +2031,7 @@ instance ExactP FieldDecl where
     exactPC bt
 
 instance ExactP IPBind where
-  exactP (IPBind l ipn e) = do
+  exactP (IPBind l ipn e) =
     case srcInfoPoints l of
      [a] -> do
         exactP ipn

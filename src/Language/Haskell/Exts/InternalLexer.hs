@@ -29,7 +29,7 @@ import Language.Haskell.Exts.ExtScheme
 import Prelude hiding (id, exponent)
 import Data.Char
 import Data.Ratio
-import Data.List (intersperse, isPrefixOf)
+import Data.List (intercalate, isPrefixOf)
 import Control.Monad (when)
 
 -- import Debug.Trace (trace)
@@ -547,7 +547,7 @@ lexPCDATA = do
                  EOF -> return EOF
                  _ -> fail $ "lexPCDATA: unexpected token: " ++ show x
             '<':_ -> return $ XPCDATA ""
-            _ -> do let pcd = takeWhile (\c -> not $ elem c "<\n") s
+            _ -> do let pcd = takeWhile (\c -> c `notElem` "<\n") s
                         l = length pcd
                     discard l
                     x <- lexPCDATA
@@ -656,11 +656,11 @@ lexStdToken = do
         -- template haskell
         '[':'|':_ | TemplateHaskell `elem` exts -> do
                 discard 2
-                return $ THExpQuote
+                return THExpQuote
 
         '[':c:'|':_ | c == 'e' && TemplateHaskell `elem` exts -> do
                         discard 3
-                        return $ THExpQuote
+                        return THExpQuote
                     | c == 'p' && TemplateHaskell `elem` exts -> do
                         discard 3
                         return THPatQuote
@@ -692,7 +692,7 @@ lexStdToken = do
         -- end template haskell
 
         -- hsx
-        '<':'%':c:_ | XmlSyntax `elem` exts -> do
+        '<':'%':c:_ | XmlSyntax `elem` exts ->
                         case c of
                          '>' -> do discard 3
                                    pushExtContextL ChildCtxt
@@ -706,15 +706,15 @@ lexStdToken = do
                         return XStdTagOpen
         -- end hsx
 
-        '(':'#':c:_ | UnboxedTuples `elem` exts && not (isHSymbol c) -> do discard 2 >> return LeftHashParen
+        '(':'#':c:_ | UnboxedTuples `elem` exts && not (isHSymbol c) -> discard 2 >> return LeftHashParen
 
-        '#':')':_ | UnboxedTuples `elem` exts -> do discard 2 >> return RightHashParen
+        '#':')':_ | UnboxedTuples `elem` exts -> discard 2 >> return RightHashParen
 
         -- pragmas
 
-        '{':'-':'#':_ -> do saveExtensionsL >> discard 3 >> lexPragmaStart
+        '{':'-':'#':_ -> saveExtensionsL >> discard 3 >> lexPragmaStart
 
-        '#':'-':'}':_ -> do restoreExtensionsL >> discard 3 >> return PragmaEnd
+        '#':'-':'}':_ -> restoreExtensionsL >> discard 3 >> return PragmaEnd
 
         -- Parallel arrays
 
@@ -730,7 +730,7 @@ lexStdToken = do
                     idents <- lexIdents
                     case idents of
                      [ident] -> case lookup ident (reserved_ids ++ special_varids) of
-                                 Just (keyword, scheme) -> do
+                                 Just (keyword, scheme) ->
                                     -- check if an extension keyword is enabled
                                     if isEnabled scheme exts
                                      then flagKW keyword >> return keyword
@@ -858,7 +858,7 @@ lexPragmaStart = do
             case map toLower s of
              ' ':'c':'o':'n':'l':'i':'k':'e':_  -> do
                       discard 8
-                      return $ INLINE_CONLIKE
+                      return INLINE_CONLIKE
              _ -> return $ INLINE True
      Just SPECIALISE -> do
             s <- getInput
@@ -877,7 +877,7 @@ lexPragmaStart = do
                         return $ SPECIALISE_INLINE False
              _ -> return SPECIALISE
 
-     Just (OPTIONS opt) -> do     -- see, I promised we'd mask out the 'undefined'
+     Just (OPTIONS opt) ->     -- see, I promised we'd mask out the 'undefined'
             case fst opt of
              Just opt' -> do
                 rest <- lexRawPragma
@@ -907,9 +907,7 @@ lexPragmaStart = do
                   -- topLexer -- we just discard it as a comment for now and restart -}
 
 lexRawPragma :: Lex a String
-lexRawPragma = do
-    rpr <- lexRawPragmaAux
-    return rpr
+lexRawPragma = lexRawPragmaAux
  where lexRawPragmaAux = do
         rpr <- lexWhile (/='#')
         s <- getInput
@@ -1217,11 +1215,10 @@ parseInteger radix ds =
     foldl1 (\n d -> n * radix + d) (map (toInteger . digitToInt) ds)
 
 flagKW :: Token -> Lex a ()
-flagKW t = do
+flagKW t =
   when (t `elem` [KW_Do, KW_MDo]) $ do
        exts <- getExtensionsL
-       when (NondecreasingIndentation `elem` exts) $
-            flagDo
+       when (NondecreasingIndentation `elem` exts) flagDo
 
 -- | Selects ASCII binary digits, i.e. @\'0\'@..@\'1\'@.
 isBinDigit :: Char -> Bool
@@ -1237,7 +1234,7 @@ showToken t = case t of
   ILinVarId s       -> '%':s
   ConId s           -> s
   QConId (q,s)      -> q ++ '.':s
-  DVarId ss         -> concat $ intersperse "-" ss
+  DVarId ss         -> intercalate "-" ss
   VarSym s          -> s
   ConSym s          -> s
   QVarSym (q,s)     -> q ++ '.':s
