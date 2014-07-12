@@ -1,6 +1,7 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE ConstraintKinds #-}
-class Foo a where 
+{-# LANGUAGE MultiParamTypeClasses #-}
+class Foo a where
 
 data Bar a
 type Bazable a b = (Bar a ~ Maybe b)
