@@ -28,7 +28,7 @@ main = do
 
 -- | Where all the tests are to be found
 examplesDir :: FilePath
-examplesDir = "tests" </> "examples"
+examplesDir = "tests/examples"
 
 getTestFiles :: MonadIO m => FilePath -> m [FilePath]
 getTestFiles dir = liftIO $ findByExtension [".hs", ".lhs"] dir
