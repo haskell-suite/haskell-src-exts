@@ -438,12 +438,12 @@ checkPat e' [] = case e' of
     RecConstr l c fs   -> do
                   fs' <- mapM checkPatField fs
                   return (PRec l c fs')
-    NegApp l1 (Lit l2 lit) ->
-                  let siSign = last . srcInfoPoints $ l1
+    NegApp l (Lit _ lit) ->
+                  let siSign = last . srcInfoPoints $ l
                       lSign = infoSpan siSign [siSign]
                   in do
                     when (not . isNegatableLiteral $ lit) (patFail $ prettyPrint e')
-                    return (PLit l1 (Negative lSign) (fmap (const l2) lit))
+                    return (PLit l (Negative lSign) lit)
     ExpTypeSig l e t -> do
                   -- patterns cannot have signatures unless ScopedTypeVariables is enabled.
                   checkEnabled ScopedTypeVariables

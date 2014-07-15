@@ -228,7 +228,7 @@ instance ExactP Literal where
 instance ExactP Sign where
   exactP sg = case sg of
     Signless _ -> return ()
-    Negative l -> printString "-"
+    Negative l -> printStringAt (pos l) "-"
 
 instance ExactP ModuleName where
   exactP (ModuleName _ str) = printString str
