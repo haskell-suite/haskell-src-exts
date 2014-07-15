@@ -493,7 +493,7 @@ data Literal
 
 -- | An indication whether a literal pattern has been negated or not.
 data Sign
-    = Positive
+    = Signless
     | Negative
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 

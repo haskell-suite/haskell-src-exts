@@ -1028,7 +1028,7 @@ instance Pretty Splice where
 
 instance Pretty Pat where
         prettyPrec _ (PVar name) = pretty name
-        prettyPrec _ (PLit Positive lit) = pretty lit
+        prettyPrec _ (PLit Signless lit) = pretty lit
         prettyPrec p (PLit Negative lit) = parensIf (p > 0) $ char '-' <> pretty lit
         prettyPrec p (PInfixApp a op b) = parensIf (p > 0) $
                 myFsep [prettyPrec 1 a, pretty (QConOp op), prettyPrec 1 b]

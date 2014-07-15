@@ -390,7 +390,7 @@ sLiteral lit = case lit of
 
 sSign :: Sign l -> S.Sign
 sSign sg = case sg of
-    Positive _ -> S.Positive
+    Signless _ -> S.Signless
     Negative _ -> S.Negative
 
 sExp :: SrcInfo loc => Exp loc -> S.Exp

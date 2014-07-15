@@ -153,15 +153,15 @@ intE l i = Lit l $ Int l i (show i)
 
 -- | A literal string pattern.
 strP :: l -> String -> Pat l
-strP l s = PLit l (Positive l) $ String l s s
+strP l s = PLit l (Signless l) $ String l s s
 
 -- | A literal character pattern.
 charP :: l -> Char -> Pat l
-charP l c = PLit l (Positive l) $ Char l c [c]
+charP l c = PLit l (Signless l) $ Char l c [c]
 
 -- | A literal integer pattern.
 intP :: l -> Integer -> Pat l
-intP l i = PLit l (if i >= 0 then Positive l else Negative l) . Int l i . show . abs $ i
+intP l i = PLit l (if i >= 0 then Signless l else Negative l) . Int l i . show . abs $ i
 
 -- | A do block formed by the given statements.
 --   The last statement in the list should be

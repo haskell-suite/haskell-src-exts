@@ -227,7 +227,7 @@ instance ExactP Literal where
 
 instance ExactP Sign where
   exactP sg = case sg of
-    Positive _ -> return ()
+    Signless _ -> return ()
     Negative l -> printString "-"
 
 instance ExactP ModuleName where

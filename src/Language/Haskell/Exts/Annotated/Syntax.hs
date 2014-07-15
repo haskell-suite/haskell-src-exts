@@ -573,7 +573,7 @@ data Literal l
 
 -- | An indication whether a literal pattern has been negated or not.
 data Sign l
-    = Positive l
+    = Signless l
     | Negative l
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
@@ -1361,7 +1361,7 @@ instance Annotated Literal where
 
 instance Annotated Sign where
     ann sg = case sg of
-        Positive l -> l
+        Signless l -> l
         Negative l -> l
     amap = fmap
 
