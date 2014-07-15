@@ -382,7 +382,8 @@ checkPat (InfixApp _ l op r) args
         checkPat l (ps++args)
 checkPat e' [] = case e' of
     Var _ (UnQual l x)   -> return (PVar l x)
-    Lit l lit            -> return (PLit l (Signless l) lit) -- FIXME: which l?
+    Lit l lit            -> return (PLit l (Signless l2) lit)
+            where l2 = noInfoSpan . srcInfoSpan $ l
     InfixApp loc l op r  ->
         case op of
             QConOp _ c -> do
