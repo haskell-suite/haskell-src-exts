@@ -1801,7 +1801,7 @@ instance ExactP GuardedAlt where
 instance ExactP Pat where
   exactP pat = case pat of
     PVar l n    -> exactPC (fmap (const l) n)
-    PLit _ sg lit -> exactP sg >> exactP lit
+    PLit _ sg lit -> exactPC sg >> exactPC lit
     PNPlusK l n k   ->
         case srcInfoPoints l of
          [a,b] -> do
