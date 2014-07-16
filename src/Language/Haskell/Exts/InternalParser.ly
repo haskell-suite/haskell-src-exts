@@ -672,7 +672,8 @@ Parsing the body of a closed type family, partially stolen from the source of GH
 
 > decllist :: { Binds L }
 >       : '{'  decls '}'                { BDecls ($1 <^^> $3 <** ($1:snd $2++[$3])) (fst $2) }
->       | open decls close              { BDecls ($1 <^^> $3 <** ($1:snd $2++[$3])) (fst $2) }
+>       | open decls close              { let l' = if null (fst $2) then nIS $3 else (ann . last $ fst $2)
+>                                          in BDecls (nIS $1 <++> l' <** ($1:snd $2++[$3])) (fst $2) }
 
 > signdecl :: { Decl L }
 >       : exp0b '::' truectype                           {% do { v <- checkSigVar $1;
