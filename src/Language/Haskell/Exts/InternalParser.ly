@@ -835,7 +835,6 @@ Type equality contraints need the TypeFamilies extension.
 > dtype :: { PType L }
 >       : btype                         { $1 }
 >       | btype qtyconop dtype          { TyInfix ($1 <> $3) $1 $2 $3 }
->       | btype quotecolon dtype        { TyInfix ($1 <> $3) $1 (quotecolon_tycon_name (noInfoSpan $2)) $3 }
 >       | btype qtyvarop dtype          { TyInfix ($1 <> $3) $1 $2 $3 } -- FIXME
 >       | btype '->' ctype              { TyFun ($1 <> $3 <** [$2]) $1 $3 }
 >       | btype '~' btype               {% do { checkEnabledOneOf [TypeFamilies, GADTs] ;
@@ -883,6 +882,7 @@ the (# and #) lexemes. Kinds will be handled at the kind rule.
 >       |          '[' ptypes  ']'      { PromotedList  ($1 <^^> $3 <** ($1: reverse($3:snd $2))) False (reverse (fst $2)) }
 >       | VARQUOTE '(' ptypes1 ')'      { PromotedTuple ($1 <^^> $4 <** ($1: reverse($4:snd $3)))       (reverse (fst $3)) }
 >       | VARQUOTE '('         ')'      { PromotedUnit  ($1 <^^> $3 ) }
+>       | VARQUOTE gconsym              { PromotedCon ((noInfoSpan $1 <++> ann $2) <** [$1]) True  $2 }
 >       | VARQUOTE qtyconorcls          { PromotedCon ((noInfoSpan $1 <++> ann $2) <** [$1]) True  $2 }
 >       | INT                           { let Loc l (IntTok  (i,raw)) = $1 in PromotedInteger (nIS l) i raw }
 >       | STRING                        { let Loc l (StringTok (s,raw)) = $1 in PromotedString (nIS l) s raw }

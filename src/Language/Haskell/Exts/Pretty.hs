@@ -790,7 +790,7 @@ instance Pretty Promoted where
       PromotedInteger n -> integer n
       PromotedString s -> doubleQuotes $ text s
       PromotedCon hasQuote qn ->
-        addQuote hasQuote $ pretty qn
+        addQuote hasQuote $ maybe (pretty qn) pretty (getSpecialName qn)
       PromotedList hasQuote list ->
         addQuote hasQuote $ bracketList . punctuate comma . map pretty $ list
       PromotedTuple list ->
@@ -1212,6 +1212,10 @@ instance Pretty SpecialCon where
 isSymbolName :: Name -> Bool
 isSymbolName (Symbol _) = True
 isSymbolName _ = False
+
+getSpecialName :: QName -> Maybe SpecialCon
+getSpecialName (Special n) = Just n
+getSpecialName _           = Nothing
 
 getName :: QName -> Name
 getName (UnQual s) = s
