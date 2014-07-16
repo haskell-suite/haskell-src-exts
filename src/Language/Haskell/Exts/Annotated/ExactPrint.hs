@@ -1086,6 +1086,7 @@ printContext ctxt = do
 instance ExactP Asst where
   exactP asst = case asst of
     ClassA _ qn ts -> exactP qn >> mapM_ exactPC ts
+    VarA _ n          -> exactPC n
     InfixA _ ta qn tb -> exactP ta >> epInfixQName qn >> exactPC tb
     IParam l ipn t    ->
         case srcInfoPoints l of

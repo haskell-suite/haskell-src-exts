@@ -1241,6 +1241,7 @@ ppContext context = mySep [parenList (map pretty context), text "=>"]
 -- hacked for multi-parameter type classes
 instance Pretty Asst where
         pretty (ClassA a ts)   = myFsep $ ppQName a : map ppAType ts
+        pretty (VarA n)        = pretty n
         pretty (InfixA a op b) = myFsep [pretty a, ppQNameInfix op, pretty b]
         pretty (IParam i t)    = myFsep [pretty i, text "::", pretty t]
         pretty (EqualP t1 t2)  = myFsep [pretty t1, text "~", pretty t2]
@@ -1794,6 +1795,7 @@ instance SrcInfo loc => Pretty (P.PContext loc) where
 
 instance SrcInfo loc => Pretty (P.PAsst loc) where
         pretty (P.ClassA _ a ts)   = myFsep $ ppQName (sQName a) : map (prettyPrec prec_atype) ts
+        pretty (P.VarA _ n)        = pretty n
         pretty (P.InfixA _ a op b) = myFsep [pretty a, ppQNameInfix (sQName op), pretty b]
         pretty (P.IParam _ i t)    = myFsep [pretty i, text "::", pretty t]
         pretty (P.EqualP _ t1 t2)  = myFsep [pretty t1, text "~", pretty t2]
