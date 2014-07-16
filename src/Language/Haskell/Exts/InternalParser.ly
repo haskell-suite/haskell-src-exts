@@ -1151,7 +1151,9 @@ TODO: Lots of stuff to pass around here.
 No implicit parameters in the where clause of a class declaration.
 > optcbody :: { (Maybe [ClassDecl L],[S],Maybe L) }
 >       : 'where' '{'  cldecls '}'      {% checkClassBody (fst $3) >>= \vs -> return (Just vs, $1:$2: snd $3 ++ [$4], Just ($1 <^^> $4)) }
->       | 'where' open cldecls close    {% checkClassBody (fst $3) >>= \vs -> return (Just vs, $1:$2: snd $3 ++ [$4], Just ($1 <^^> $4)) }
+>       | 'where' open cldecls close    {% do { vs <- checkClassBody (fst $3);
+>                                               let { l' = if null (fst $3) then nIS $4 else (ann . last $ fst $3) };
+>                                               return (Just vs, $1:$2: snd $3 ++ [$4], Just (nIS $1 <++> l')) } }
 >       | {- empty -}                   { (Nothing,[],Nothing) }
 
 > cldecls :: { ([ClassDecl L],[S]) }
