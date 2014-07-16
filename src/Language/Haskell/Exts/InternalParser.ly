@@ -859,12 +859,12 @@ Implicit parameters can occur in normal types, as well as in contexts.
 UnboxedTuples requires the extension, but that will be handled through
 the (# and #) lexemes. Kinds will be handled at the kind rule.
 
-> trueatype :: { Type L }
->       : atype                         {% checkType $1 }
-
 > atype :: { PType L }
 >       : gtycon                        { TyCon   (ann $1) $1 }
 >       | tyvar                         { TyVar   (ann $1) $1 }
+>       | strict_mark atype             { let (bangOrPack, locs) = $1
+>                                           in let annot = if bangOrPack then (BangedTy (nIS (last locs) <** locs)) else UnpackedTy (nIS (head locs) <++> nIS (last locs) <** locs)
+>                                            in bangType (nIS (head locs) <++> ann $2) annot $2 }
 >       | '(' types ')'                 { TyTuple ($1 <^^> $3 <** ($1:reverse ($3:snd $2))) Boxed   (reverse (fst $2)) }
 >       | '(#' types1 '#)'              { TyTuple ($1 <^^> $3 <** ($1:reverse ($3:snd $2))) Unboxed (reverse (fst $2)) }
 >       | '[' type ']'                  { TyList  ($1 <^^> $3 <** [$1,$3]) $2 }
@@ -885,6 +885,10 @@ the (# and #) lexemes. Kinds will be handled at the kind rule.
 >       | VARQUOTE qtyconorcls          { PromotedCon ((noInfoSpan $1 <++> ann $2) <** [$1]) True  $2 }
 >       | INT                           { let Loc l (IntTok  (i,raw)) = $1 in PromotedInteger (nIS l) i raw }
 >       | STRING                        { let Loc l (StringTok (s,raw)) = $1 in PromotedString (nIS l) s raw }
+
+> strict_mark :: { (Bool, [S]) }
+>        : '!'                           { (True, [$1]) }
+>        | '{-# UNPACK' '#-}' '!'        { (False, [$1,$2,$3]) }
 
 Leading quotes can be left off of promoted types when they make up another promoted
 type...
@@ -1013,9 +1017,9 @@ GADTs - require the GADTs extension enabled, but we handle that at the calling s
 >       | gadtconstr                            { ($1,[]) }
 
 > gadtconstr :: { [GadtDecl L] }
->       : qcon '::' stype                {% do { c <- checkUnQual $1;
+>       : qcon '::' truectype            {% do { c <- checkUnQual $1;
 >                                                return [GadtDecl ($1 <> $3 <** [$2]) c Nothing $3] } }
->       | qcon '::' '{' fielddecls '}' '->' stype
+>       | qcon '::' '{' fielddecls '}' '->' truectype
 >                                       {% do { c <- checkUnQual $1;
 >                                               let {fieldToGadt (FieldDecl l' ns bt) =
 >                                                       let colPos = last $ srcInfoPoints l'
@@ -1048,7 +1052,7 @@ as qcon and then check separately that they are truly unqualified.
 
 > constr1 :: { ConDecl L }
 >       : scontype                      { let (n,ts,l) = $1 in ConDecl l n ts }
->       | sbtype conop sbtype           { InfixConDecl ($1 <> $3) $1 $2 $3 }
+>       | truebtype conop truebtype     { InfixConDecl ($1 <> $3) $1 $2 $3 }
 >       | qcon '{' '}'                  {% do { c <- checkUnQual $1; return $ RecDecl (ann $1 <++> nIS $3 <** [$2,$3]) c [] } }
 >       | qcon '{' fielddecls '}'       {% do { c <- checkUnQual $1;
 >                                               return $ RecDecl (ann $1 <++> nIS $4 <** ($2:reverse (snd $3) ++ [$4])) c (reverse (fst $3)) } }
@@ -1056,38 +1060,13 @@ as qcon and then check separately that they are truly unqualified.
 > scontype :: { (Name L, [Type L], L) }
 >       : btype                         {% do { (c,ts) <- splitTyConApp $1;
 >                                               return (c, ts, ann $1) } }
->       | scontype1                     { $1 }
-
-> scontype1 :: { (Name L, [Type L],L) }
->       : btype '!' trueatype                       {% do { (c,ts) <- splitTyConApp $1;
->                                                           return (c,ts++
->                                                                   [bangType (ann $1 <++> ann $3) (BangedTy (nIS $2 <++> ann $3 <** [$2])) $3], $1 <> $3) } }
->       | btype '{-# UNPACK' '#-}' '!' trueatype    {% do { (c,ts) <- splitTyConApp $1;
->                                                           return (c, ts++
->                                                                   [bangType (nIS $2 <++> ann $5) (UnpackedTy (nIS $2 <++> nIS $4 <** [$2,$3,$4])) $5], $1 <> $5) } }
->       | scontype1 satype              { let (n,ts,l) = $1 in (n, ts ++ [$2],l <++> ann $2) }
-
-> satype :: { Type L }
->       : trueatype                         { $1 }
->       | '!' trueatype                     { bangType (nIS $1 <++> ann $2) (BangedTy (nIS $1 <** [$1])) $2 }
->       | '{-# UNPACK' '#-}' '!' trueatype  { bangType (nIS $1 <++> ann $4) (UnpackedTy (nIS $1 <++> nIS $3 <** [$1,$2,$3])) $4 }
-
-> sbtype :: { Type L }
->       : truebtype                         { $1 }
->       | '!' trueatype                     { bangType (nIS $1 <++> ann $2) (BangedTy (nIS $1 <** [$1])) $2 }
->       | '{-# UNPACK' '#-}' '!' trueatype  { bangType (nIS $1 <++> ann $4) (UnpackedTy (nIS $1 <++> nIS $3 <** [$1,$2,$3])) $4 }
 
 > fielddecls :: { ([FieldDecl L],[S]) }
 >       : fielddecls ',' fielddecl      { ($3 : fst $1, $2 : snd $1) }
 >       | fielddecl                     { ([$1],[]) }
 
 > fielddecl :: { FieldDecl L }
->       : vars '::' stype               { let (ns,ss,l) = $1 in FieldDecl (l <++> ann $3 <** (reverse ss ++ [$2])) (reverse ns) $3 }
-
-> stype :: { Type L }
->       : truectype                         { $1 }
->       | '!' trueatype                     { bangType (nIS $1 <++> ann $2) (BangedTy (nIS $1 <** [$1])) $2 }
->       | '{-# UNPACK' '#-}' '!' trueatype  { bangType (nIS $1 <++> ann $4) (UnpackedTy (nIS $1 <++> nIS $3 <** [$1,$2,$3])) $4 }
+>       : vars '::' truectype               { let (ns,ss,l) = $1 in FieldDecl (l <++> ann $3 <** (reverse ss ++ [$2])) (reverse ns) $3 }
 
 > deriving :: { Maybe (Deriving L) }
 >       : {- empty -}                   { Nothing }

@@ -985,8 +985,8 @@ checkSimpleType = checkSimple "test"
 -- Check actual types
 
 -- | Add a strictness/unpack annotation on a type.
-bangType :: L -> BangType L -> S.Type L -> S.Type L
-bangType = S.TyBang
+bangType :: L -> BangType L -> PType L -> PType L
+bangType = TyBang
 
 checkType :: PType L -> P (S.Type L)
 checkType t = checkT t False
@@ -1025,6 +1025,7 @@ checkT t simple = case t of
     TySplice l s        -> do
                               checkEnabled TemplateHaskell
                               return $ S.TySplice l s
+    TyBang l b t' -> check1Type t' (S.TyBang l b)
     _   -> fail $ "Parse error in type: " ++ prettyPrint t
 
 check1Type :: PType L -> (S.Type L -> S.Type L) -> P (S.Type L)

@@ -1830,3 +1830,4 @@ instance SrcInfo loc => Pretty (P.PType loc) where
         prettyPrec _ (P.TyKind _ t k) = parens (myFsep [pretty t, text "::", pretty k])
         prettyPrec _ (P.TyPromoted _ p) = pretty $ sPromoted p
         prettyPrec _ (P.TySplice _ s) = pretty s
+        prettyPrec _ (P.TyBang _ b t) = pretty b <> pretty t

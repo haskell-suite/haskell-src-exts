@@ -1,1 +1,7 @@
-ParseFailed (SrcLoc "tests/examples/Unpack.hs" 4 41) "Parse error: ->"
+{-# LANGUAGE GADTs #-}
+module Main (main) where
+ 
+data CmmNode e x where
+        CmmEntry :: {-# UNPACK #-} !Int -> CmmNode e x
+ 
+data UI = UI {-# UNPACK #-} !Int
