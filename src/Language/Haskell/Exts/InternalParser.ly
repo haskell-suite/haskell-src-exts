@@ -154,7 +154,6 @@ Reserved operators
 >       '.'     { Loc $$ Dot }
 >       '..'    { Loc $$ DotDot }
 >       ':'     { Loc $$ Colon }
->  quotecolon   { Loc $$ QuoteColon }
 >       '::'    { Loc $$ DoubleColon }      -- 40
 >       '='     { Loc $$ Equals }           
 >       '\\'    { Loc $$ Backslash }
