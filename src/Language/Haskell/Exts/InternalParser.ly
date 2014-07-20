@@ -725,7 +725,8 @@ binding.
 > binds :: { Binds L }
 >       : decllist                      { $1 }
 >       | '{' ipbinds '}'               { IPBinds ($1 <^^> $3 <** snd $2) (fst $2) }
->       | open ipbinds close            { IPBinds ($1 <^^> $3 <** snd $2) (fst $2) }
+>       | open ipbinds close            { let l' =  ann . last $ fst $2
+>                                          in IPBinds (nIS $1 <++> l' <** snd $2) (fst $2) }
 
 ATTENTION: Dirty Hackery Ahead! If the second alternative of vars is var
 instead of qvar, we get another shift/reduce-conflict. Consider the
@@ -1639,7 +1640,8 @@ A guard can be a pattern guard if PatternGuards is enabled, hence quals instead 
 
 > ifaltslist :: { ([GuardedRhs L], L, [S]) }
 >       : '{'  ifalts '}'                 { (fst $2, $1 <^^> $3, $1:snd $2 ++ [$3])  }
->       | open ifalts close               { (fst $2, $1 <^^> $3, $1:snd $2 ++ [$3]) }
+>       | open ifalts close               { let l' =  ann . last $ fst $2
+>                                            in (fst $2, nIS $1 <++> l', $1:snd $2 ++ [$3]) }
 
 > ifalts :: { ([GuardedRhs L], [S]) }
 >       : optsemis ifalts1 optsemis       { (reverse $ fst $2, $1 ++ snd $2 ++ $3) }
@@ -1659,7 +1661,8 @@ TODO: The points can't be added here, must be propagated!
 
 > stmtlist :: { ([Stmt L],L,[S]) }
 >       : '{'  stmts '}'                { (fst $2, $1 <^^> $3, $1:snd $2 ++ [$3])  }
->       | open stmts close              { (fst $2, $1 <^^> $3, $1:snd $2 ++ [$3]) }
+>       | open stmts close              { let l' =  ann . last $ fst $2
+>                                          in (fst $2, nIS $1 <++> l', $1:snd $2 ++ [$3]) }
 
 > stmts :: { ([Stmt L],[S]) }
 >       : stmt stmts1                       { ($1 : fst $2, snd $2) }
