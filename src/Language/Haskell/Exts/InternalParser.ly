@@ -1025,7 +1025,7 @@ GADTs - require the GADTs extension enabled, but we handle that at the calling s
 >                                               let {fieldToGadt (FieldDecl l' ns bt) =
 >                                                       let colPos = last $ srcInfoPoints l'
 >                                                        in GadtDecl ($1 <> $7 <** [$2,$3,$5,$6,colPos]) c (Just (ns, bt)) $7};
->                                               let {out = map fieldToGadt (reverse $ fst $4) };
+>                                               let {out = map fieldToGadt (fst $4) };
 >                                               return out } }
 
 To allow the empty case we need the EmptyDataDecls extension.
