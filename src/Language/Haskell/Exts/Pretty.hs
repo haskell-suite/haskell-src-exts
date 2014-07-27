@@ -790,7 +790,7 @@ instance Pretty Promoted where
       PromotedInteger n -> integer n
       PromotedString s -> doubleQuotes $ text s
       PromotedCon hasQuote qn ->
-        addQuote hasQuote $ pretty qn
+        addQuote hasQuote $ maybe (pretty qn) pretty (getSpecialName qn)
       PromotedList hasQuote list ->
         addQuote hasQuote $ bracketList . punctuate comma . map pretty $ list
       PromotedTuple list ->
@@ -1213,6 +1213,10 @@ isSymbolName :: Name -> Bool
 isSymbolName (Symbol _) = True
 isSymbolName _ = False
 
+getSpecialName :: QName -> Maybe SpecialCon
+getSpecialName (Special n) = Just n
+getSpecialName _           = Nothing
+
 getName :: QName -> Name
 getName (UnQual s) = s
 getName (Qual _ s) = s
@@ -1241,6 +1245,7 @@ ppContext context = mySep [parenList (map pretty context), text "=>"]
 -- hacked for multi-parameter type classes
 instance Pretty Asst where
         pretty (ClassA a ts)   = myFsep $ ppQName a : map ppAType ts
+        pretty (VarA n)        = pretty n
         pretty (InfixA a op b) = myFsep [pretty a, ppQNameInfix op, pretty b]
         pretty (IParam i t)    = myFsep [pretty i, text "::", pretty t]
         pretty (EqualP t1 t2)  = myFsep [pretty t1, text "~", pretty t2]
@@ -1794,6 +1799,7 @@ instance SrcInfo loc => Pretty (P.PContext loc) where
 
 instance SrcInfo loc => Pretty (P.PAsst loc) where
         pretty (P.ClassA _ a ts)   = myFsep $ ppQName (sQName a) : map (prettyPrec prec_atype) ts
+        pretty (P.VarA _ n)        = pretty n
         pretty (P.InfixA _ a op b) = myFsep [pretty a, ppQNameInfix (sQName op), pretty b]
         pretty (P.IParam _ i t)    = myFsep [pretty i, text "::", pretty t]
         pretty (P.EqualP _ t1 t2)  = myFsep [pretty t1, text "~", pretty t2]
@@ -1824,3 +1830,4 @@ instance SrcInfo loc => Pretty (P.PType loc) where
         prettyPrec _ (P.TyKind _ t k) = parens (myFsep [pretty t, text "::", pretty k])
         prettyPrec _ (P.TyPromoted _ p) = pretty $ sPromoted p
         prettyPrec _ (P.TySplice _ s) = pretty s
+        prettyPrec _ (P.TyBang _ b t) = pretty b <> pretty t

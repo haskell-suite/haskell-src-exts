@@ -7,3 +7,7 @@ import Data.Data
 -- | A Haskell comment. The 'Bool' is 'True' if the comment is multi-line, i.e. @{- -}@.
 data Comment = Comment Bool SrcSpan String
   deriving (Eq,Show,Typeable,Data)
+
+-- | An unknown pragma.
+data UnknownPragma = UnknownPragma SrcSpan String
+  deriving (Eq,Show,Typeable,Data)

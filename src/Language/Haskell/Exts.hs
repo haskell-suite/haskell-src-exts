@@ -28,10 +28,12 @@ module Language.Haskell.Exts (
     , parseFileWithMode
     , parseFileWithExts
     , parseFileWithComments
+    , parseFileWithCommentsAndPragmas
     , parseFileContents
     , parseFileContentsWithMode
     , parseFileContentsWithExts
     , parseFileContentsWithComments
+    , parseFileContentsWithCommentsAndPragmas
     -- * Read extensions declared in LANGUAGE pragmas
     , readExtensions
     ) where
@@ -66,6 +68,12 @@ parseFileWithMode p fp = readFile fp >>= return . parseFileContentsWithMode p
 parseFileWithComments :: ParseMode -> FilePath -> IO (ParseResult (Module, [Comment]))
 parseFileWithComments p fp = readFile fp >>= return . parseFileContentsWithComments p
 
+-- | Parse a source file on disk, supplying a custom parse mode, and retaining comments
+--  as well as unknown pragmas.
+parseFileWithCommentsAndPragmas :: ParseMode -> FilePath -> IO (ParseResult (Module, [Comment], [UnknownPragma]))
+parseFileWithCommentsAndPragmas p fp =
+    readFile fp >>= return . parseFileContentsWithCommentsAndPragmas p
+
 -- | Parse a source file from a string using the default parse mode.
 parseFileContents :: String -> ParseResult Module
 parseFileContents = parseFileContentsWithMode defaultParseMode
@@ -97,6 +105,11 @@ parseFileContentsWithComments p@(ParseMode fn oldLang exts ign _ _) rawStr =
                   _ -> (oldLang, [])
          in parseWithComments (p { baseLanguage = bLang, extensions = exts ++ extraExts }) md
 
+-- | Parse a source file from a string using a custom parse mode retaining comments
+--   as well as unknown pragmas.
+parseFileContentsWithCommentsAndPragmas :: ParseMode -> String -> ParseResult (Module, [Comment], [UnknownPragma])
+parseFileContentsWithCommentsAndPragmas pmode str = separatePragmas parseResult
+    where parseResult = parseFileContentsWithComments pmode str
 
 {-- | Gather the extensions declared in LANGUAGE pragmas
 --   at the top of the file. Returns 'Nothing' if the
@@ -144,3 +157,17 @@ ppContents = unlines . f . lines
 
 delit :: String -> String -> String
 delit fn = if ".lhs" `isSuffixOf` fn then unlit fn else id
+
+-- | Converts a parse result with comments to a parse result with comments and
+--   unknown pragmas.
+separatePragmas :: ParseResult (Module, [Comment]) -> ParseResult (Module, [Comment], [UnknownPragma])
+separatePragmas r =
+    case r of
+        ParseOk (m, comments) ->
+            let (pragmas, comments') = partition pragLike comments
+              in  ParseOk (m, comments', map commentToPragma pragmas)
+                where commentToPragma (Comment _ l s) =
+                            UnknownPragma l $ init $ drop 1 s
+                      pragLike (Comment b _ s) = b && pcond s
+                      pcond s = length s > 1 && take 1 s == "#" && last s == '#'
+        ParseFailed l s ->  ParseFailed l s

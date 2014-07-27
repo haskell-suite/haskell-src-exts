@@ -96,7 +96,7 @@ module Language.Haskell.Exts.Annotated.Syntax (
     capi_name, forall_name, family_name,
     -- ** Type constructors
     unit_tycon_name, fun_tycon_name, list_tycon_name, tuple_tycon_name, unboxed_singleton_tycon_name,
-    unit_tycon, fun_tycon, list_tycon, tuple_tycon, unboxed_singleton_tycon, quotecolon_tycon_name,
+    unit_tycon, fun_tycon, list_tycon, tuple_tycon, unboxed_singleton_tycon,
 
     -- * Source coordinates
     -- SrcLoc(..),
@@ -548,6 +548,7 @@ data Context l
 --   Also extended with support for implicit parameters and equality constraints.
 data Asst l
         = ClassA l (QName l) [Type l]           -- ^ ordinary class assertion
+        | VarA l (Name l)                       -- ^ constraint kind assertion, @Dict :: cxt => Dict cxt@
         | InfixA l (Type l) (QName l) (Type l)  -- ^ class assertion where the class name is given infix
         | IParam l (IPName l) (Type l)          -- ^ implicit parameter assertion
         | EqualP l (Type l) (Type l)            -- ^ type equality constraint
@@ -901,12 +902,11 @@ capi_name       l = Ident l "capi"
 forall_name     l = Ident l "forall"
 family_name     l = Ident l "family"
 
-unit_tycon_name, fun_tycon_name, list_tycon_name, unboxed_singleton_tycon_name, quotecolon_tycon_name :: l -> QName l
+unit_tycon_name, fun_tycon_name, list_tycon_name, unboxed_singleton_tycon_name :: l -> QName l
 unit_tycon_name l = unit_con_name l
 fun_tycon_name  l = Special l (FunCon l)
 list_tycon_name l = Special l (ListCon l)
 unboxed_singleton_tycon_name l = Special l (UnboxedSingleCon l)
-quotecolon_tycon_name l = UnQual l (Symbol l "':")
 
 tuple_tycon_name :: l -> Boxed -> Int -> QName l
 tuple_tycon_name l b i = tuple_con_name l b i
@@ -1334,12 +1334,14 @@ instance Annotated Context where
 instance Annotated Asst where
     ann asst = case asst of
         ClassA l _ _     -> l
+        VarA l _         -> l
         InfixA l _ _ _   -> l
         IParam l _ _     -> l
         EqualP l _ _     -> l
         ParenA l _       -> l
     amap f asst = case asst of
         ClassA l qn ts      -> ClassA (f l) qn ts
+        VarA   l n          -> VarA   (f l) n
         InfixA l ta qn tb   -> InfixA (f l) ta qn tb
         IParam l ipn t      -> IParam (f l) ipn t
         EqualP l t1 t2      -> EqualP (f l) t1 t2

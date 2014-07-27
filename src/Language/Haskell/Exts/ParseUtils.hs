@@ -194,6 +194,9 @@ checkAssertion t' = checkAssertion' id [] t'
                 return $ InfixA (fl l) a op b
             checkAssertion' fl ts (TyParen l t) =
                 checkAssertion' (const (fl l)) ts t
+            checkAssertion' fl [] (TyVar l t) = do -- Dict :: cxt => Dict cxt
+                checkEnabled ConstraintKinds
+                return $ VarA (fl l) t
             checkAssertion' _ _ _ = fail "Illegal class assertion"
 
 getSymbol :: QName L -> Maybe String
@@ -237,6 +240,7 @@ checkAsst isSimple asst =
       ClassA l qn pts -> do
                 ts <- mapM (checkAsstParam isSimple) pts
                 return $ S.ClassA l qn ts
+      VarA l n        -> return $ S.VarA l n
       InfixA l a op b -> do
                 [a',b'] <- mapM (checkAsstParam isSimple) [a,b]
                 return $ S.InfixA l a' op b'
@@ -995,8 +999,8 @@ checkSimpleType = checkSimple "test"
 -- Check actual types
 
 -- | Add a strictness/unpack annotation on a type.
-bangType :: L -> BangType L -> S.Type L -> S.Type L
-bangType = S.TyBang
+bangType :: L -> BangType L -> PType L -> PType L
+bangType = TyBang
 
 checkType :: PType L -> P (S.Type L)
 checkType t = checkT t False
@@ -1035,6 +1039,7 @@ checkT t simple = case t of
     TySplice l s        -> do
                               checkEnabled TemplateHaskell
                               return $ S.TySplice l s
+    TyBang l b t' -> check1Type t' (S.TyBang l b)
     _   -> fail $ "Parse error in type: " ++ prettyPrint t
 
 check1Type :: PType L -> (S.Type L -> S.Type L) -> P (S.Type L)

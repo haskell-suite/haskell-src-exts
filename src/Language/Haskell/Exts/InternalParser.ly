@@ -154,7 +154,6 @@ Reserved operators
 >       '.'     { Loc $$ Dot }
 >       '..'    { Loc $$ DotDot }
 >       ':'     { Loc $$ Colon }
->  quotecolon   { Loc $$ QuoteColon }
 >       '::'    { Loc $$ DoubleColon }      -- 40
 >       '='     { Loc $$ Equals }           
 >       '\\'    { Loc $$ Backslash }
@@ -672,7 +671,8 @@ Parsing the body of a closed type family, partially stolen from the source of GH
 
 > decllist :: { Binds L }
 >       : '{'  decls '}'                { BDecls ($1 <^^> $3 <** ($1:snd $2++[$3])) (fst $2) }
->       | open decls close              { BDecls ($1 <^^> $3 <** ($1:snd $2++[$3])) (fst $2) }
+>       | open decls close              { let l' = if null (fst $2) then nIS $3 else (ann . last $ fst $2)
+>                                          in BDecls (nIS $1 <++> l' <** ($1:snd $2++[$3])) (fst $2) }
 
 > signdecl :: { Decl L }
 >       : exp0b '::' truectype                           {% do { v <- checkSigVar $1;
@@ -725,7 +725,8 @@ binding.
 > binds :: { Binds L }
 >       : decllist                      { $1 }
 >       | '{' ipbinds '}'               { IPBinds ($1 <^^> $3 <** snd $2) (fst $2) }
->       | open ipbinds close            { IPBinds ($1 <^^> $3 <** snd $2) (fst $2) }
+>       | open ipbinds close            { let l' =  ann . last $ fst $2
+>                                          in IPBinds (nIS $1 <++> l' <** snd $2) (fst $2) }
 
 ATTENTION: Dirty Hackery Ahead! If the second alternative of vars is var
 instead of qvar, we get another shift/reduce-conflict. Consider the
@@ -834,7 +835,6 @@ Type equality contraints need the TypeFamilies extension.
 > dtype :: { PType L }
 >       : btype                         { $1 }
 >       | btype qtyconop dtype          { TyInfix ($1 <> $3) $1 $2 $3 }
->       | btype quotecolon dtype        { TyInfix ($1 <> $3) $1 (quotecolon_tycon_name (noInfoSpan $2)) $3 }
 >       | btype qtyvarop dtype          { TyInfix ($1 <> $3) $1 $2 $3 } -- FIXME
 >       | btype '->' ctype              { TyFun ($1 <> $3 <** [$2]) $1 $3 }
 >       | btype '~' btype               {% do { checkEnabledOneOf [TypeFamilies, GADTs] ;
@@ -860,12 +860,12 @@ Implicit parameters can occur in normal types, as well as in contexts.
 UnboxedTuples requires the extension, but that will be handled through
 the (# and #) lexemes. Kinds will be handled at the kind rule.
 
-> trueatype :: { Type L }
->       : atype                         {% checkType $1 }
-
 > atype :: { PType L }
 >       : gtycon                        { TyCon   (ann $1) $1 }
 >       | tyvar                         { TyVar   (ann $1) $1 }
+>       | strict_mark atype             { let (bangOrPack, locs) = $1
+>                                           in let annot = if bangOrPack then (BangedTy (nIS (last locs) <** locs)) else UnpackedTy (nIS (head locs) <++> nIS (last locs) <** locs)
+>                                            in bangType (nIS (head locs) <++> ann $2) annot $2 }
 >       | '(' types ')'                 { TyTuple ($1 <^^> $3 <** ($1:reverse ($3:snd $2))) Boxed   (reverse (fst $2)) }
 >       | '(#' types1 '#)'              { TyTuple ($1 <^^> $3 <** ($1:reverse ($3:snd $2))) Unboxed (reverse (fst $2)) }
 >       | '[' type ']'                  { TyList  ($1 <^^> $3 <** [$1,$3]) $2 }
@@ -882,9 +882,14 @@ the (# and #) lexemes. Kinds will be handled at the kind rule.
 >       |          '[' ptypes  ']'      { PromotedList  ($1 <^^> $3 <** ($1: reverse($3:snd $2))) False (reverse (fst $2)) }
 >       | VARQUOTE '(' ptypes1 ')'      { PromotedTuple ($1 <^^> $4 <** ($1: reverse($4:snd $3)))       (reverse (fst $3)) }
 >       | VARQUOTE '('         ')'      { PromotedUnit  ($1 <^^> $3 ) }
+>       | VARQUOTE gconsym              { PromotedCon ((noInfoSpan $1 <++> ann $2) <** [$1]) True  $2 }
 >       | VARQUOTE qtyconorcls          { PromotedCon ((noInfoSpan $1 <++> ann $2) <** [$1]) True  $2 }
 >       | INT                           { let Loc l (IntTok  (i,raw)) = $1 in PromotedInteger (nIS l) i raw }
 >       | STRING                        { let Loc l (StringTok (s,raw)) = $1 in PromotedString (nIS l) s raw }
+
+> strict_mark :: { (Bool, [S]) }
+>        : '!'                           { (True, [$1]) }
+>        | '{-# UNPACK' '#-}' '!'        { (False, [$1,$2,$3]) }
 
 Leading quotes can be left off of promoted types when they make up another promoted
 type...
@@ -1013,14 +1018,14 @@ GADTs - require the GADTs extension enabled, but we handle that at the calling s
 >       | gadtconstr                            { ($1,[]) }
 
 > gadtconstr :: { [GadtDecl L] }
->       : qcon '::' stype                {% do { c <- checkUnQual $1;
+>       : qcon '::' truectype            {% do { c <- checkUnQual $1;
 >                                                return [GadtDecl ($1 <> $3 <** [$2]) c Nothing $3] } }
->       | qcon '::' '{' fielddecls '}' '->' stype
+>       | qcon '::' '{' fielddecls '}' '->' truectype
 >                                       {% do { c <- checkUnQual $1;
 >                                               let {fieldToGadt (FieldDecl l' ns bt) =
 >                                                       let colPos = last $ srcInfoPoints l'
 >                                                        in GadtDecl ($1 <> $7 <** [$2,$3,$5,$6,colPos]) c (Just (ns, bt)) $7};
->                                               let {out = map fieldToGadt (reverse $ fst $4) };
+>                                               let {out = map fieldToGadt (fst $4) };
 >                                               return out } }
 
 To allow the empty case we need the EmptyDataDecls extension.
@@ -1048,7 +1053,7 @@ as qcon and then check separately that they are truly unqualified.
 
 > constr1 :: { ConDecl L }
 >       : scontype                      { let (n,ts,l) = $1 in ConDecl l n ts }
->       | sbtype conop sbtype           { InfixConDecl ($1 <> $3) $1 $2 $3 }
+>       | truebtype conop truebtype     { InfixConDecl ($1 <> $3) $1 $2 $3 }
 >       | qcon '{' '}'                  {% do { c <- checkUnQual $1; return $ RecDecl (ann $1 <++> nIS $3 <** [$2,$3]) c [] } }
 >       | qcon '{' fielddecls '}'       {% do { c <- checkUnQual $1;
 >                                               return $ RecDecl (ann $1 <++> nIS $4 <** ($2:reverse (snd $3) ++ [$4])) c (reverse (fst $3)) } }
@@ -1056,38 +1061,13 @@ as qcon and then check separately that they are truly unqualified.
 > scontype :: { (Name L, [Type L], L) }
 >       : btype                         {% do { (c,ts) <- splitTyConApp $1;
 >                                               return (c, ts, ann $1) } }
->       | scontype1                     { $1 }
-
-> scontype1 :: { (Name L, [Type L],L) }
->       : btype '!' trueatype                       {% do { (c,ts) <- splitTyConApp $1;
->                                                           return (c,ts++
->                                                                   [bangType (ann $1 <++> ann $3) (BangedTy (nIS $2 <++> ann $3 <** [$2])) $3], $1 <> $3) } }
->       | btype '{-# UNPACK' '#-}' '!' trueatype    {% do { (c,ts) <- splitTyConApp $1;
->                                                           return (c, ts++
->                                                                   [bangType (nIS $2 <++> ann $5) (UnpackedTy (nIS $2 <++> nIS $4 <** [$2,$3,$4])) $5], $1 <> $5) } }
->       | scontype1 satype              { let (n,ts,l) = $1 in (n, ts ++ [$2],l <++> ann $2) }
-
-> satype :: { Type L }
->       : trueatype                         { $1 }
->       | '!' trueatype                     { bangType (nIS $1 <++> ann $2) (BangedTy (nIS $1 <** [$1])) $2 }
->       | '{-# UNPACK' '#-}' '!' trueatype  { bangType (nIS $1 <++> ann $4) (UnpackedTy (nIS $1 <++> nIS $3 <** [$1,$2,$3])) $4 }
-
-> sbtype :: { Type L }
->       : truebtype                         { $1 }
->       | '!' trueatype                     { bangType (nIS $1 <++> ann $2) (BangedTy (nIS $1 <** [$1])) $2 }
->       | '{-# UNPACK' '#-}' '!' trueatype  { bangType (nIS $1 <++> ann $4) (UnpackedTy (nIS $1 <++> nIS $3 <** [$1,$2,$3])) $4 }
 
 > fielddecls :: { ([FieldDecl L],[S]) }
 >       : fielddecls ',' fielddecl      { ($3 : fst $1, $2 : snd $1) }
 >       | fielddecl                     { ([$1],[]) }
 
 > fielddecl :: { FieldDecl L }
->       : vars '::' stype               { let (ns,ss,l) = $1 in FieldDecl (l <++> ann $3 <** (reverse ss ++ [$2])) (reverse ns) $3 }
-
-> stype :: { Type L }
->       : truectype                         { $1 }
->       | '!' trueatype                     { bangType (nIS $1 <++> ann $2) (BangedTy (nIS $1 <** [$1])) $2 }
->       | '{-# UNPACK' '#-}' '!' trueatype  { bangType (nIS $1 <++> ann $4) (UnpackedTy (nIS $1 <++> nIS $3 <** [$1,$2,$3])) $4 }
+>       : vars '::' truectype               { let (ns,ss,l) = $1 in FieldDecl (l <++> ann $3 <** (reverse ss ++ [$2])) (reverse ns) $3 }
 
 > deriving :: { Maybe (Deriving L) }
 >       : {- empty -}                   { Nothing }
@@ -1150,7 +1130,9 @@ TODO: Lots of stuff to pass around here.
 No implicit parameters in the where clause of a class declaration.
 > optcbody :: { (Maybe [ClassDecl L],[S],Maybe L) }
 >       : 'where' '{'  cldecls '}'      {% checkClassBody (fst $3) >>= \vs -> return (Just vs, $1:$2: snd $3 ++ [$4], Just ($1 <^^> $4)) }
->       | 'where' open cldecls close    {% checkClassBody (fst $3) >>= \vs -> return (Just vs, $1:$2: snd $3 ++ [$4], Just ($1 <^^> $4)) }
+>       | 'where' open cldecls close    {% do { vs <- checkClassBody (fst $3);
+>                                               let { l' = if null (fst $3) then nIS $4 else (ann . last $ fst $3) };
+>                                               return (Just vs, $1:$2: snd $3 ++ [$4], Just (nIS $1 <++> l')) } }
 >       | {- empty -}                   { (Nothing,[],Nothing) }
 
 > cldecls :: { ([ClassDecl L],[S]) }
@@ -1625,7 +1607,8 @@ Case alternatives
 
 > altslist :: { ([Alt L],L,[S]) }
 >       : '{'  alts '}'                 { (fst $2, $1 <^^> $3, $1:snd $2 ++ [$3])  }
->       | open alts close               { (fst $2, $1 <^^> $3, $1:snd $2 ++ [$3]) }
+>       | open alts close               { let l' =  ann . last $ fst $2
+>                                          in (fst $2, nIS $1 <++> l', $1:snd $2 ++ [$3]) }
 
 > alts :: { ([Alt L],[S]) }
 >       : optsemis alts1 optsemis       { (reverse $ fst $2, $1 ++ snd $2 ++ $3) }
@@ -1657,7 +1640,8 @@ A guard can be a pattern guard if PatternGuards is enabled, hence quals instead 
 
 > ifaltslist :: { ([GuardedRhs L], L, [S]) }
 >       : '{'  ifalts '}'                 { (fst $2, $1 <^^> $3, $1:snd $2 ++ [$3])  }
->       | open ifalts close               { (fst $2, $1 <^^> $3, $1:snd $2 ++ [$3]) }
+>       | open ifalts close               { let l' =  ann . last $ fst $2
+>                                            in (fst $2, nIS $1 <++> l', $1:snd $2 ++ [$3]) }
 
 > ifalts :: { ([GuardedRhs L], [S]) }
 >       : optsemis ifalts1 optsemis       { (reverse $ fst $2, $1 ++ snd $2 ++ $3) }
@@ -1677,7 +1661,8 @@ TODO: The points can't be added here, must be propagated!
 
 > stmtlist :: { ([Stmt L],L,[S]) }
 >       : '{'  stmts '}'                { (fst $2, $1 <^^> $3, $1:snd $2 ++ [$3])  }
->       | open stmts close              { (fst $2, $1 <^^> $3, $1:snd $2 ++ [$3]) }
+>       | open stmts close              { let l' =  ann . last $ fst $2
+>                                          in (fst $2, nIS $1 <++> l', $1:snd $2 ++ [$3]) }
 
 > stmts :: { ([Stmt L],[S]) }
 >       : stmt stmts1                       { ($1 : fst $2, snd $2) }
