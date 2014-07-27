@@ -2,4 +2,4 @@
 module Main (main) where
  
 data T where
-        T :: { field :: Int } -> T
+        T :: {field :: Int} -> T

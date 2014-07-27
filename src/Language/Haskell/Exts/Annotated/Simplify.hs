@@ -290,8 +290,8 @@ sClassDecl cd = case cd of
     ClsDefSig l n t ->
         S.ClsDefSig (getPointLoc l) (sName n) (sType t)
 
-sRecFields :: SrcInfo l => ([Name l], Type l) -> [([S.Name], S.Type)]
-sRecFields (ns, t) = [(map sName ns, sType t)]
+sRecFields :: SrcInfo l => [FieldDecl l] -> [([S.Name], S.Type)]
+sRecFields = map sFieldDecl
 
 sInstDecl :: SrcInfo loc => InstDecl loc -> S.InstDecl
 sInstDecl id' = case id' of

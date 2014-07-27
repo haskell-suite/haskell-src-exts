@@ -420,7 +420,7 @@ data FieldDecl l = FieldDecl l [Name l] (Type l)
 
 -- | A single constructor declaration in a GADT data type declaration.
 data GadtDecl l
-    = GadtDecl l (Name l) (Maybe ([Name l], Type l)) (Type l)
+    = GadtDecl l (Name l) (Maybe [FieldDecl l]) (Type l)
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | Declarations inside a class declaration.

@@ -708,11 +708,9 @@ instance Pretty GadtDecl where
             case names of
                 [] ->
                     myFsep [pretty name, text "::", pretty ty]
-                [(names', ty1)] ->
-                                myFsep $ [pretty name, text "::", char '{'] ++
-                                           map pretty names' ++ [text "::",
-                                            pretty ty1, char '}', text "->", pretty ty]
-                _ -> error "Internal error: Pretty GadtDecl"
+                ts' ->
+                    myFsep [pretty name, text "::" ,
+                         braceList . map ppField $ ts', text "->", pretty ty]
 
 instance Pretty ConDecl where
         pretty (RecDecl name fieldList) =
@@ -1423,10 +1421,9 @@ instance SrcInfo l => Pretty (A.GadtDecl l) where
             case names of
                 Nothing ->
                     myFsep [pretty name, text "::", pretty ty]
-                Just (names', ty1) ->
-                                myFsep $ [pretty name, text "::", char '{'] ++
-                                           map pretty names' ++ [text "::",
-                                            pretty ty1, char '}', text "->", pretty ty]
+                Just ts ->
+                    mySep $ [pretty name, text "::", char '{'] ++
+                              map pretty ts ++ [char '}', text "->", pretty ty]
 
 instance SrcInfo l => Pretty (A.ConDecl l) where
         pretty = pretty . sConDecl
