@@ -419,6 +419,22 @@ data FieldDecl l = FieldDecl l [Name l] (Type l)
 
 
 -- | A single constructor declaration in a GADT data type declaration.
+--
+-- If the GADT is declared using the record syntax, e.g.
+--
+-- >data Ty where
+-- >  TCon :: { field1 :: Int, field2 :: Bool } -> Ty
+--
+-- then the fields are stored as a list of 'FieldDecl's, and the final type
+-- (@Ty@ in the above example) is stored in the last 'Type' field.
+--
+-- If the GADT is declared using the ordinary syntax, e.g.
+--
+-- >data Ty where
+-- >  TCon :: Int -> Bool -> Ty
+--
+-- then @'Maybe' ['FieldDecl' l]@ is 'Nothing', and the whole constructor's
+-- type (such as @Int -> Bool -> Ty@) is stored in the last 'Type' field.
 data GadtDecl l
     = GadtDecl l (Name l) (Maybe [FieldDecl l]) (Type l)
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
