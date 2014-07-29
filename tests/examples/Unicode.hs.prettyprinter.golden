@@ -85,14 +85,14 @@ lengthOP v (œ) xxs n = co xxs 0
 (e|) = flip (|<)
  
 {-# RULES
-"xs |\8803 n" forall xs n . (length xs) == n = xs |c n
-"xs |< n" forall xs n . (length xs) < n = xs |< n
-"xs |\8804 n" forall xs n . (length xs) <= n = xs |d n
-"xs |> n" forall xs n . (length xs) > n = xs |> n
-"xs |\8805 n" forall xs n . (length xs) >= n = xs |e n
-"n \8803| xs" forall xs n . n == (length xs) = xs |c n
-"n <| xs" forall xs n . n < (length xs) = xs |e n
-"n \8804| xs" forall xs n . n <= (length xs) = xs |> n
-"n >| xs" forall xs n . n > (length xs) = xs |d n
-"n \8805| xs" forall xs n . n >= (length xs) = xs |< n
+"xs |\8803 n" forall xs n . length xs == n = xs |c n
+"xs |< n" forall xs n . length xs < n = xs |< n
+"xs |\8804 n" forall xs n . length xs <= n = xs |d n
+"xs |> n" forall xs n . length xs > n = xs |> n
+"xs |\8805 n" forall xs n . length xs >= n = xs |e n
+"n \8803| xs" forall xs n . n == length xs = xs |c n
+"n <| xs" forall xs n . n < length xs = xs |e n
+"n \8804| xs" forall xs n . n <= length xs = xs |> n
+"n >| xs" forall xs n . n > length xs = xs |d n
+"n \8805| xs" forall xs n . n >= length xs = xs |< n
  #-}
