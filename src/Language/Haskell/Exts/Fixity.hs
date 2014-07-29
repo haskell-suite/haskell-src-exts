@@ -89,7 +89,6 @@ instance AppFixity Pat where
                        else liftM pre (infFix fixs $ PInfixApp y op2 z)
               case p of
                PInfixApp x op1 y -> fixup (askFixityP fixs op1) (askFixityP fixs op2) y (PInfixApp x op1)
-               -- FIXME: PLit Negative y -> ???
                _  -> return $ PInfixApp p op2 z
 
           infFix _ p = return p
@@ -368,7 +367,6 @@ leafFix fixs e' = case e' of
 leafFixP :: Monad m => [Fixity] -> Pat -> m Pat
 leafFixP fixs p' = case p' of
         PInfixApp p1 op p2    -> liftM2 (flip PInfixApp op) (leafFixP fixs p1) (fix p2)
-        -- FIXME: PLit Negative p -> ???
         PApp n ps             -> liftM (PApp n) $ mapM fix ps
         PTuple bx ps          -> liftM (PTuple bx) $ mapM fix ps
         PList ps              -> liftM PList $ mapM fix ps
