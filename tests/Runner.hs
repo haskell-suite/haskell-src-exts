@@ -98,9 +98,21 @@ prettyPrinterTests sources = testGroup "Pretty printer tests" $ do
         result =
           case mbAst of
             f@ParseFailed{} -> show f
-            ParseOk ast -> prettyPrint ast
+            ParseOk ast -> prettyPrint (removeAllParentheses ast)
       writeBinaryFile out $ result ++ "\n"
   return $ goldenVsFile (takeBaseName file) golden out run
+-- }}}
+
+removeAllParentheses :: S.Module -> S.Module -- {{{
+removeAllParentheses = everywhere
+    $ flip extT (\e -> case e :: S.BooleanFormula of { S.ParenFormula x -> x; _ -> e })
+    . flip extT (\e -> case e :: S.Type of { S.TyParen x -> x; _ -> e })
+    . flip extT (\e -> case e :: S.Kind of { S.KindParen x -> x; _ -> e })
+    . flip extT (\e -> case e :: S.Asst of { S.ParenA x -> x; _ -> e })
+    . flip extT (\e -> case e :: S.Exp of { S.Paren x -> x; _ -> e })
+    . flip extT (\e -> case e :: S.Pat of { S.PParen x -> x; _ -> e })
+    . flip extT (\e -> case e :: S.RPat of { S.RPParen x -> x; _ -> e })
+    $ mkT (\e -> e :: S.Module)
 -- }}}
 
 prettyParserTests :: [FilePath] -> TestTree -- {{{

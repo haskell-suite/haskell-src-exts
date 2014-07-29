@@ -29,5 +29,5 @@ x6
          if | True -> "yes"
             | False -> "no"
        | otherwise -> "maybe"
-x7 = (if | True -> 0)
+x7 = if | True -> 0
 spam = if | () <- () -> ()

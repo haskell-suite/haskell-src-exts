@@ -10,7 +10,7 @@ class C2 (a :: [*])
  
 class C3 (a :: [(Int, Double)])
  
-class C4 (a :: (*))
+class C4 (a :: *)
  
 data X (a :: [*])
 x1 = undefined :: X '[Int]
