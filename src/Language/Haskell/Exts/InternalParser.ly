@@ -1152,6 +1152,8 @@ Associated types require the TypeFamilies extension.
 >                     return (ClsTyFam  (nIS $1 <++> ann $2 <+?> (fmap ann) (fst $3) <** $1:snd $3) dh (fst $3)) } }
 >       | 'type' truedtype '=' truectype
 >                     { ClsTyDef (nIS $1 <++> ann $4 <** [$1,$3]) $2 $4 }
+>       | 'type' 'instance' truedtype '=' truectype
+>                     { ClsTyDef (nIS $1 <++> ann $5 <** [$1,$2,$4]) $3 $5 }
 >       | 'data' ctype optkind
 >             {% do { (cs,dh) <- checkDataHeader $2;
 >                     return (ClsDataFam (nIS $1 <++> ann $2 <+?> (fmap ann) (fst $3) <** $1:snd $3) cs dh (fst $3)) } }

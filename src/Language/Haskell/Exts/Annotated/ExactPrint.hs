@@ -1140,6 +1140,12 @@ instance ExactP ClassDecl where
          _ -> errorEP "ExactP: ClassDecl: ClsTyFam is given too few srcInfoPoints"
     ClsTyDef   l t1 t2  ->
         case srcInfoPoints l of
+         _:b:c:_ -> do -- 3 sourceInfoPoints implies parsed as "type instance"
+            printString "type"
+            printStringAt (pos b) "instance"
+            exactPC t1
+            printStringAt (pos c) "="
+            exactPC t2
          _:b:_ -> do
             printString "type"
             exactPC t1
