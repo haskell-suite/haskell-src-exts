@@ -870,7 +870,9 @@ instance Pretty Literal where
 instance Pretty Exp where
         prettyPrec _ (Lit l) = pretty l
         -- lambda stuff
-        prettyPrec p (InfixApp a op b) = parensIf (p > 2) $ myFsep [prettyPrec 1 a, pretty op, pretty b]
+        -- WARNING: This stuff is fragile. See #152 for one example of how
+        -- things can break.
+        prettyPrec p (InfixApp a op b) = parensIf (p > 2) $ myFsep [prettyPrec 1 a, pretty op, prettyPrec 1 b]
         prettyPrec p (NegApp e) = parensIf (p > 0) $ char '-' <> prettyPrec 2 e
         prettyPrec p (App a b) = parensIf (p > 3) $ myFsep [prettyPrec 3 a, prettyPrec 4 b]
         prettyPrec p (Lambda _loc patList ppBody') = parensIf (p > 1) $ myFsep $
