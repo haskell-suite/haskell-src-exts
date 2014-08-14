@@ -675,12 +675,15 @@ Parsing the body of a closed type family, partially stolen from the source of GH
 >                                          in BDecls (nIS $1 <++> l' <** ($1:snd $2++[$3])) (fst $2) }
 
 > signdecl :: { Decl L }
+>       : signdecl0                     { $1 }
+>       | specinldecl                   { $1 }
+
+> signdecl0 :: { Decl L }
 >       : exp0b '::' truectype                           {% do { v <- checkSigVar $1;
 >                                                                return $ TypeSig ($1 <> $3 <** [$2]) [v] $3 } }
 >       | exp0b ',' vars '::' truectype                  {% do { v <- checkSigVar $1;
 >                                                                let {(vs,ss,_) = $3 ; l = $1 <> $5 <** ($2 : reverse ss ++ [$4]) } ;
 >                                                                return $ TypeSig l (v : reverse vs) $5 } }
->       | specinldecl                   { $1 }
 
 > specinldecl :: { Decl L }
 >       : '{-# INLINE' activation qvar '#-}'             { let Loc l (INLINE s) = $1 in InlineSig (l <^^> $4 <** [l,$4]) s $2 $3 }
@@ -1180,6 +1183,7 @@ Associated types require the TypeFamilies extension enabled.
 >       : valdef                        { InsDecl (ann $1) $1 }
 >       | atinst                        {% checkEnabled TypeFamilies >> return $1 }
 >       | specinldecl                   { InsDecl (ann $1) $1 }
+>       | signdecl0                     {% checkEnabled InstanceSigs >> return (InsDecl (ann $1) $1) }
 
  inlinst :: { InstDecl L }
        : '{-# INLINE' activation qvar '#-}'     { let Loc l (INLINE s) = $1 in InsInline (l <^^> $4 <** [l,$4]) s $2 $3 }

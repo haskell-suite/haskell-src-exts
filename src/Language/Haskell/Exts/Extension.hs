@@ -145,6 +145,9 @@ data KnownExtension =
   -- instance being applicable.
   | IncoherentInstances
 
+  -- | [GHC &#xa7; 7.6.3.5] Allow type signatures in instances.
+  | InstanceSigs
+
   -- | [GHC &#xa7; 7.3.8] Allows recursive bindings in @do@ blocks,
   -- using the @rec@ keyword.
   | DoRec
