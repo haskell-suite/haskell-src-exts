@@ -1,0 +1,9 @@
+{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE InstanceSigs #-}
+{-# LANGUAGE TypeFamilies #-}
+
+instance SupportsDelta (Map k v) where
+  type Delta (Map k v) = Map k v
+
+  mkDelta :: Map k v -> Map k v -> Delta (Map k v)
+  mkDelta = undefined
