@@ -341,15 +341,66 @@ data BooleanFormula l
 data DataOrNew l = DataType l | NewType l
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
--- | The head of a type or class declaration.
+-- | The head of a type or class declaration, which consists of the type
+-- or class name applied to some type variables
+--
+-- @class C a b@ is represented as
+--
+-- >DHApp
+-- >   ()
+-- >   (DHApp
+-- >      () (DHead () (Ident () "C")) (UnkindedVar () (Ident () "a")))
+-- >   (UnkindedVar () (Ident () "b"))
+--
+-- (where the annotation type @l@ is instantiated with @()@)
+--
+-- @class (a :< b) c@ is represented as
+--
+-- >DHApp
+-- >   ()
+-- >   (DHParen
+-- >      ()
+-- >      (DHApp
+-- >         ()
+-- >         (DHInfix () (UnkindedVar () (Ident () "a")) (Symbol () ":<"))
+-- >         (UnkindedVar () (Ident () "b"))))
+-- >   (UnkindedVar () (Ident () "c"))
 data DeclHead l
-    = DHead l (Name l)
-    | DHInfix l (TyVarBind l) (Name l)
-    | DHParen l (DeclHead l)
-    | DHApp   l (DeclHead l) (TyVarBind l)
+    = DHead l (Name l) -- ^ type or class name
+    | DHInfix l (TyVarBind l) (Name l) -- ^ infix application of the type/class name to the left operand
+    | DHParen l (DeclHead l) -- ^ parenthesized declaration head
+    | DHApp   l (DeclHead l) (TyVarBind l) -- ^ application to one more type variable
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
--- | The instance declaration.
+-- | The instance declaration rule, which is, roughly, the part of the instance declaration before the @where@ keyword.
+--
+-- Example: @instance Ord a => Ord (Maybe a)@ is represented as
+--
+-- >IRule
+-- >   ()
+-- >   Nothing
+-- >   (Just
+-- >      (CxSingle
+-- >         ()
+-- >         (ClassA
+-- >            () (UnQual () (Ident () "Ord")) [ TyVar () (Ident () "a") ])))
+-- >   (IHApp
+-- >      ()
+-- >      (IHCon () (UnQual () (Ident () "Ord")))
+-- >      (TyParen
+-- >         ()
+-- >         (TyApp
+-- >            ()
+-- >            (TyCon () (UnQual () (Ident () "Maybe")))
+-- >            (TyVar () (Ident () "a")))))
+--
+-- An optional explicit forall after @instance@ is supported:
+-- @instance forall a . Ord a => Ord (Maybe a) where@ becomes
+--
+-- >IRule
+-- >   ()
+-- >   (Just [ UnkindedVar () (Ident () "a") ])
+-- >   ...
 data InstRule l
     = IRule l (Maybe [TyVarBind l]) (Maybe (Context l)) (InstHead l)
     | IParen l (InstRule l)
@@ -359,12 +410,29 @@ data InstRule l
 -- of the split. DeclOrInstHead should be used by DeclHead as the name implies.
 
 -- | The instance head. The split between rule/head allow us to represent
--- /instance (Bounded a => Bounded [a]) where/ faithfully.
+-- @instance (Bounded a => Bounded [a]) where@ faithfully.
+--
+-- The structure of 'InstHead' follows one of 'DeclHead'.
+--
+-- For example, @instance C (Maybe a) Int where@ is represented as
+--
+-- >IHApp
+-- >   ()
+-- >   (IHApp
+-- >      ()
+-- >      (IHCon () (UnQual () (Ident () "C")))
+-- >      (TyParen
+-- >         ()
+-- >         (TyApp
+-- >            ()
+-- >            (TyCon () (UnQual () (Ident () "Maybe")))
+-- >            (TyVar () (Ident () "a")))))
+-- >   (TyCon () (UnQual () (Ident () "Int")))))
 data InstHead l
-    = IHCon l (QName l)
-    | IHInfix l (Type l) (QName l)
-    | IHParen l (InstHead l)
-    | IHApp   l (InstHead l) (Type l)
+    = IHCon l (QName l) -- ^ type or class name
+    | IHInfix l (Type l) (QName l) -- ^ infix application of the type/class name to the left operand
+    | IHParen l (InstHead l) -- ^ parenthesized instance head
+    | IHApp   l (InstHead l) (Type l) -- ^ application to one more type
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | A deriving clause following a data type declaration.
