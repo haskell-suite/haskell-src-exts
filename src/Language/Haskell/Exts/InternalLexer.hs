@@ -341,6 +341,11 @@ isHSymbol c = c `elem` ":!#%&*./?@\\-" || ((isSymbol c || isPunctuation c) && no
 
 isPragmaChar c = isAlphaNum c || c == '_'
 
+-- | Checks whether the character would be legal in some position of a qvar.
+--   Means that '..' and "AAA" will pass the test.
+isPossiblyQvar :: Char -> Bool
+isPossiblyQvar c = isIdent (toLower c) || c == '.'
+
 matchChar :: Char -> String -> Lex a ()
 matchChar c msg = do
     s <- getInput
@@ -676,7 +681,7 @@ lexStdToken = do
 
         '[':c:s' | isLower c && QuasiQuotes `elem` exts && case dropWhile isIdent s' of { '|':_ -> True;_->False} ->
                         discard 1 >> lexQuasiQuote c
-                 | isUpper c && QuasiQuotes `elem` exts ->
+                 | isUpper c && QuasiQuotes `elem` exts && case dropWhile isPossiblyQvar s' of { '|':_ -> True;_->False} ->
                         discard 1 >> lexQuasiQuote c
 
         '|':']':_ | TemplateHaskell `elem` exts -> do
