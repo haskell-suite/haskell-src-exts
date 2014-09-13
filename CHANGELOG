@@ -1,3 +1,64 @@
+** 1.16.x
+
+1.15.0.1 --> 1.16.0
+===================
+
+New language features:
+
+* DoRec
+* Closed type families
+* GADT records
+* ExplicitNamespaces
+* Type equality constraints
+* PolyKinds
+* DataKinds
+* Default associated types
+* Instance signatures
+* OVERLAP pragma
+* Parallel arrays
+* MINIMAL pragma
+* Default signatures
+* Safe Haskell
+* Binary literals
+* Qualified record puns
+* Type splices
+
+AST changes:
+
+* PatBind no longer contains the optional Maybe Type field. The type
+  signature is now represented as part of the pattern (PatTypeSig)
+* GuardedAlt and GuardedAlts types are replaced with the isomorphic
+  GuardedRhs and Rhs types
+* Move parentheses from the Context to Asst type
+* Change DeclHead and InstHead to make it possible to represent
+  various ways to put parentheses around parts of declarations. Introduce a new
+  type InstRule for the same purpose.
+* Change representation of negated patterns
+
+Notable bug fixes:
+
+* Allow statements, and not just expression, in MultiWayIf conditions
+* Allow equality constraints when GADTs are enabled
+* Fix parsing and printing of pragma modifiers, such as CONLIKE
+* Don't treat 'capi' or 'interruptible' as a keyword except after 'foreign'
+* Let ImpredicativeTypes imply ExplicitForAll
+* Let RecursiveDo enable 'rec' keyword
+* Fix pretty-printing of the unary minus sign
+* Do not require FlexibleContexts for things like Ord (i Int) => ...
+* Fix pretty-printing of deriving clauses
+* Parse "Constraint" as a kind with ConstraintKinds enabled
+* Support qualified quasi-quoters
+* Enable ScopedTypeVariables when parsing rules
+* Only permit record wildcards in last position
+* Allow n-parameter infix data declaration heads
+
+Other changes:
+
+* Expose showToken from Language.Haskell.Exts.Lexer
+* Show instance for SrcLoc and SrcSpan are changed (now they do not contain
+* field names)
+* Add DeriveGeneric to known extensions
+
 ** 1.15.x
 
 1.15.0 --> 1.15.0.1
