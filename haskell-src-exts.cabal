@@ -4,7 +4,7 @@ License:                BSD3
 License-File:           LICENSE
 Build-Type:             Simple
 Author:                 Niklas Broberg
-Maintainer:             Niklas Broberg <niklas.broberg@chalmers.se>
+Maintainer:             Niklas Broberg <niklas.broberg@chalmers.se>, Roman Cheplyaka <roma@ro-che.info>
 Category:               Language
 Synopsis:               Manipulating Haskell source: abstract syntax, lexer, parser, and pretty-printer
 Description:            Haskell-Source with Extensions (HSE, haskell-src-exts)
