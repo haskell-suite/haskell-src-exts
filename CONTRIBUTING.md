@@ -69,7 +69,9 @@ For best results, please follow these guidelines:
     `tests/examples`, then run `dist/build/test/test --accept`. Use the
     `--pattern NAME` option to run only these new tests.
 
-    Tests should be added in a commit separate from the code changes.
+    New tests should be added in a commit separate from the code changes. On the
+    other hand, if your change breaks some tests, the tests should be preferably
+    updated in the same commit.
 1.  Build with `cabal build` and check that your changes
     don't generate new warnings.
 1.  Run `git diff --check` on your changes to check that you aren't committing any
