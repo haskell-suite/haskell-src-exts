@@ -34,6 +34,7 @@ AST changes:
   various ways to put parentheses around parts of declarations. Introduce a new
   type InstRule for the same purpose.
 * Change representation of negated patterns
+* Make strictness annotations on data type fields part of those fields' Type
 
 Notable bug fixes:
 
