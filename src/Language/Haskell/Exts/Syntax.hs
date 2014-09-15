@@ -430,8 +430,8 @@ data Promoted
         = PromotedInteger Integer
         | PromotedString String
         | PromotedCon Bool QName
-        | PromotedList Bool [Promoted]
-        | PromotedTuple [Promoted]
+        | PromotedList Bool [Type]
+        | PromotedTuple [Type]
         | PromotedUnit
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 

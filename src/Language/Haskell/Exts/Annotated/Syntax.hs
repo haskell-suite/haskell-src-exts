@@ -585,8 +585,8 @@ data Promoted l
         = PromotedInteger l Integer String -- ^ parsed value and raw string
         | PromotedString l String String -- ^ parsed value and raw string
         | PromotedCon l Bool (QName l)
-        | PromotedList l Bool [Promoted l]
-        | PromotedTuple l [Promoted l]
+        | PromotedList l Bool [Type l]
+        | PromotedTuple l [Type l]
         | PromotedUnit l
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
