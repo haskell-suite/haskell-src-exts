@@ -15,6 +15,8 @@
 -----------------------------------------------------------------------------
 
 module Language.Haskell.Exts.ParseMonad(
+        -- * Generic Parsing
+        Parseable(..),
         -- * Parsing
         P, ParseResult(..), atSrcLoc, LexContext(..),
         ParseMode(..), defaultParseMode, fromParseResult,
@@ -43,6 +45,25 @@ import Data.List (intercalate)
 import Control.Applicative
 import Control.Monad (when, liftM, ap)
 import Data.Monoid
+
+-- | Class providing function for parsing at many different types.
+--
+--   Note that for convenience of implementation, the default methods have
+--   definitions equivalent to 'undefined'.  The minimal definition is all of
+--   the visible methods.
+class Parseable ast where
+  -- | Parse a string with default mode.
+  parse :: String -> ParseResult ast
+  parse = parseWithMode defaultParseMode
+  -- | Parse a string with an explicit 'ParseMode'.
+  parseWithMode :: ParseMode -> String -> ParseResult ast
+  parseWithMode mode = runParserWithMode mode . parser $ fixities mode
+  -- | Parse a string with an explicit 'ParseMode', returning all comments along
+  --   with the AST.
+  parseWithComments :: ParseMode -> String -> ParseResult (ast, [Comment])
+  parseWithComments mode = runParserWithModeComments mode . parser $ fixities mode
+  -- | Internal parser, used to provide default definitions for the others.
+  parser :: Maybe [Fixity] -> P ast
 
 -- | The result of a parse.
 data ParseResult a

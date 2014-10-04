@@ -65,16 +65,17 @@ Library
                         Language.Haskell.Exts.Fixity,
                         Language.Haskell.Exts.Comments,
                         Language.Haskell.Exts.SrcLoc,
-                        
+
                         Language.Haskell.Exts.Annotated,
                         Language.Haskell.Exts.Annotated.Syntax,
                         Language.Haskell.Exts.Annotated.Fixity,
                         Language.Haskell.Exts.Annotated.Build,
                         Language.Haskell.Exts.Annotated.ExactPrint,
-                        Language.Haskell.Exts.Annotated.Simplify
+                        Language.Haskell.Exts.Annotated.Simplify,
+                        Language.Haskell.Exts.Annotated.Parser
 
   Other-modules:        Language.Haskell.Exts.ExtScheme,
-                        
+
                         Language.Haskell.Exts.ParseMonad,
                         Language.Haskell.Exts.ParseSyntax,
                         Language.Haskell.Exts.InternalLexer,
