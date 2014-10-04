@@ -1,3 +1,5 @@
+{-# LANGUAGE FlexibleInstances #-}
+{-# OPTIONS_GHC -fno-warn-orphans #-}
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Language.Haskell.Exts.Parser
@@ -16,7 +18,7 @@
 module Language.Haskell.Exts.Parser
             (
                 -- * General parsing
-                Parseable(..),
+                Parseable(parse, parseWithMode, parseWithComments),
                 ParseMode(..), defaultParseMode, ParseResult(..), fromParseResult,
                 -- * Parsing of specific AST elements
                 -- ** Modules
@@ -31,161 +33,112 @@ module Language.Haskell.Exts.Parser
                 parseDecl, parseDeclWithMode, parseDeclWithComments,
                 -- ** Types
                 parseType, parseTypeWithMode, parseTypeWithComments,
+                -- * Non-greedy parsers
+                NonGreedy(..),
                 -- ** Option pragmas
                 getTopPragmas
             ) where
 
-
-import Language.Haskell.Exts.InternalParser ( ParseMode(..), defaultParseMode, ParseResult(..), fromParseResult )
-import qualified Language.Haskell.Exts.InternalParser as P
-
-import Language.Haskell.Exts.Annotated.Syntax
+import           Language.Haskell.Exts.Annotated.Fixity
+import           Language.Haskell.Exts.Annotated.Parser (unListOf, ListOf, NonGreedy(..))
+import           Language.Haskell.Exts.Annotated.Simplify
+import           Language.Haskell.Exts.Annotated.Syntax
+import           Language.Haskell.Exts.Comments
+import           Language.Haskell.Exts.ParseMonad hiding (getModuleName)
+import           Language.Haskell.Exts.SrcLoc
 import qualified Language.Haskell.Exts.Syntax as S
-import Language.Haskell.Exts.Annotated.Simplify
 
-import Language.Haskell.Exts.SrcLoc
-import Language.Haskell.Exts.Comments
+parseWithSimplify :: Parseable a => a -> (a -> a') -> Maybe [Fixity] -> P a'
+parseWithSimplify _witness simpl mfixs = parser mfixs >>= return . simpl
 
-import Prelude hiding (mod)
+instance Parseable S.Decl   where parser = parseWithSimplify (undefined :: Decl   SrcSpanInfo) sDecl
+instance Parseable S.Exp    where parser = parseWithSimplify (undefined :: Exp    SrcSpanInfo) sExp
+instance Parseable S.Module where parser = parseWithSimplify (undefined :: Module SrcSpanInfo) sModule
+instance Parseable S.Pat    where parser = parseWithSimplify (undefined :: Pat    SrcSpanInfo) sPat
+instance Parseable S.Stmt   where parser = parseWithSimplify (undefined :: Stmt   SrcSpanInfo) sStmt
+instance Parseable S.Type   where parser = parseWithSimplify (undefined :: Type   SrcSpanInfo) sType
 
-getTopPragmas :: String -> ParseResult [S.ModulePragma]
-getTopPragmas = fmap (map sModulePragma) . P.getTopPragmas
+instance Parseable (NonGreedy [S.ModulePragma]) where
+  parser = parseWithSimplify
+    (undefined :: NonGreedy (ListOf (ModulePragma SrcSpanInfo)))
+    (fmap (map sModulePragma . unListOf))
 
--- | Class to reuse the parse function at many different types.
-class Parseable ast where
-  -- | Parse a string with default mode.
-  parse :: String -> ParseResult ast
-  -- | Parse a string with an explicit mode.
-  parseWithMode :: ParseMode -> String -> ParseResult ast
-  -- | Parse a string with an explicit mode, returning all comments along the AST
-  parseWithComments :: ParseMode -> String -> ParseResult (ast, [Comment])
+-- Type-specific functions
 
-
-instance SrcInfo loc => Parseable (Module loc) where
-  parse = fmap (fmap fromSrcInfo) . P.parseModule
-  parseWithMode = (fmap (fmap fromSrcInfo) .) . P.parseModuleWithMode
-  parseWithComments md s = P.parseModuleWithComments md s >>= \(r, cs) -> return (fmap fromSrcInfo r, cs)
-
-instance SrcInfo loc => Parseable (Exp loc) where
-  parse = fmap (fmap fromSrcInfo) . P.parseExp
-  parseWithMode = (fmap (fmap fromSrcInfo) .) . P.parseExpWithMode
-  parseWithComments md s = P.parseExpWithComments md s >>= \(r, cs) -> return (fmap fromSrcInfo r, cs)
-
-instance SrcInfo loc => Parseable (Pat loc) where
-  parse = fmap (fmap fromSrcInfo) . P.parsePat
-  parseWithMode = (fmap (fmap fromSrcInfo) .) . P.parsePatWithMode
-  parseWithComments md s = P.parsePatWithComments md s >>= \(r, cs) -> return (fmap fromSrcInfo r, cs)
-
-instance SrcInfo loc => Parseable (Decl loc) where
-  parse = fmap (fmap fromSrcInfo) . P.parseDecl
-  parseWithMode = (fmap (fmap fromSrcInfo) .) . P.parseDeclWithMode
-  parseWithComments md s = P.parseDeclWithComments md s >>= \(r, cs) -> return (fmap fromSrcInfo r, cs)
-
-instance SrcInfo loc => Parseable (Type loc) where
-  parse = fmap (fmap fromSrcInfo) . P.parseType
-  parseWithMode = (fmap (fmap fromSrcInfo) .) . P.parseTypeWithMode
-  parseWithComments md s = P.parseTypeWithComments md s >>= \(r, cs) -> return (fmap fromSrcInfo r, cs)
-
-instance SrcInfo loc => Parseable (Stmt loc) where
-  parse = fmap (fmap fromSrcInfo) . P.parseStmt
-  parseWithMode = (fmap (fmap fromSrcInfo) .) . P.parseStmtWithMode
-  parseWithComments md s = P.parseStmtWithComments md s >>= \(r, cs) -> return (fmap fromSrcInfo r, cs)
-
-
--- | Parse of a string, which should contain a complete Haskell module.
+-- | Parse of a string, which should contain a complete Haskell module, using 'defaultParseMode'.
 parseModule :: String -> ParseResult S.Module
-parseModule = fmap sModule . P.parseModule
+parseModule = parse
 
--- | Parse of a string containing a complete Haskell module, using an explicit mode.
+-- | Parse of a string containing a complete Haskell module, using an explicit 'ParseMode'.
 parseModuleWithMode :: ParseMode -> String -> ParseResult S.Module
-parseModuleWithMode = (fmap sModule .) . P.parseModuleWithMode
+parseModuleWithMode = parseWithMode
 
--- | Parse of a string containing a complete Haskell module, using an explicit mode, retaining comments.
+-- | Parse of a string containing a complete Haskell module, using an explicit 'ParseMode', retaining comments.
 parseModuleWithComments :: ParseMode -> String -> ParseResult (S.Module, [Comment])
-parseModuleWithComments = (fmap (\(mod, cs) -> (sModule mod, cs)) .) . P.parseModuleWithComments
+parseModuleWithComments = parseWithComments
 
--- | Parse of a string containing a Haskell expression.
+-- | Parse of a string containing a Haskell expression, using 'defaultParseMode'.
 parseExp :: String -> ParseResult S.Exp
-parseExp = fmap sExp . P.parseExp
+parseExp = parse
 
--- | Parse of a string containing a Haskell expression, using an explicit mode.
+-- | Parse of a string containing a Haskell expression, using an explicit 'ParseMode'.
 parseExpWithMode :: ParseMode -> String -> ParseResult S.Exp
-parseExpWithMode = (fmap sExp .) . P.parseExpWithMode
+parseExpWithMode = parseWithMode
 
--- | Parse of a string containing a complete Haskell module, using an explicit mode, retaining comments.
+-- | Parse of a string containing a complete Haskell module, using an explicit 'ParseMode', retaining comments.
 parseExpWithComments :: ParseMode -> String -> ParseResult (S.Exp, [Comment])
-parseExpWithComments = (fmap (\(e, cs) -> (sExp e, cs)) .) . P.parseExpWithComments
+parseExpWithComments = parseWithComments
 
--- | Parse of a string containing a Haskell pattern.
+-- | Parse of a string containing a Haskell pattern, using 'defaultParseMode'.
 parsePat :: String -> ParseResult S.Pat
-parsePat = fmap sPat . P.parsePat
+parsePat = parse
 
--- | Parse of a string containing a Haskell pattern, using an explicit mode.
+-- | Parse of a string containing a Haskell pattern, using an explicit 'ParseMode'.
 parsePatWithMode :: ParseMode -> String -> ParseResult S.Pat
-parsePatWithMode = (fmap sPat .) . P.parsePatWithMode
+parsePatWithMode = parseWithMode
 
--- | Parse of a string containing a complete Haskell module, using an explicit mode, retaining comments.
+-- | Parse of a string containing a complete Haskell module, using an explicit 'ParseMode', retaining comments.
 parsePatWithComments :: ParseMode -> String -> ParseResult (S.Pat, [Comment])
-parsePatWithComments = (fmap (\(p, cs) -> (sPat p, cs)) .) . P.parsePatWithComments
+parsePatWithComments = parseWithComments
 
--- | Parse of a string containing a Haskell top-level declaration.
+-- | Parse of a string containing a Haskell top-level declaration, using 'defaultParseMode'
 parseDecl :: String -> ParseResult S.Decl
-parseDecl = fmap sDecl . P.parseDecl
+parseDecl = parse
 
--- | Parse of a string containing a Haskell top-level declaration, using an explicit mode.
+-- | Parse of a string containing a Haskell top-level declaration, using an explicit 'ParseMode'.
 parseDeclWithMode :: ParseMode -> String -> ParseResult S.Decl
-parseDeclWithMode = (fmap sDecl .) . P.parseDeclWithMode
+parseDeclWithMode = parseWithMode
 
--- | Parse of a string containing a complete Haskell module, using an explicit mode, retaining comments.
+-- | Parse of a string containing a complete Haskell module, using an explicit 'ParseMode', retaining comments.
 parseDeclWithComments :: ParseMode -> String -> ParseResult (S.Decl, [Comment])
-parseDeclWithComments = (fmap (\(decl, cs) -> (sDecl decl, cs)) .) . P.parseDeclWithComments
+parseDeclWithComments = parseWithComments
 
--- | Parse of a string containing a Haskell type.
+-- | Parse of a string containing a Haskell type, using 'defaultParseMode'.
 parseType :: String -> ParseResult S.Type
-parseType = fmap sType . P.parseType
+parseType = parse
 
--- | Parse of a string containing a Haskell type, using an explicit mode.
-parseTypeWithMode :: ParseMode -> String -> ParseResult S.Type
-parseTypeWithMode = (fmap sType .) . P.parseTypeWithMode
+-- | Parse of a string containing a Haskell type, using an explicit 'ParseMode'.
+parseTypeWithMode :: ParseMode -> String -> ParseResult  S.Type
+parseTypeWithMode = parseWithMode
 
--- | Parse of a string containing a complete Haskell module, using an explicit mode, retaining comments.
+-- | Parse of a string containing a complete Haskell module, using an explicit 'ParseMode', retaining comments.
 parseTypeWithComments :: ParseMode -> String -> ParseResult (S.Type, [Comment])
-parseTypeWithComments = (fmap (\(t, cs) -> (sType t, cs)) .) . P.parseTypeWithComments
+parseTypeWithComments = parseWithComments
 
--- | Parse of a string containing a Haskell type.
+-- | Parse of a string containing a Haskell type, using 'defaultParseMode'.
 parseStmt :: String -> ParseResult S.Stmt
-parseStmt = fmap sStmt . P.parseStmt
+parseStmt = parse
 
--- | Parse of a string containing a Haskell type, using an explicit mode.
+-- | Parse of a string containing a Haskell type, using an explicit 'ParseMode'.
 parseStmtWithMode :: ParseMode -> String -> ParseResult S.Stmt
-parseStmtWithMode = (fmap sStmt .) . P.parseStmtWithMode
+parseStmtWithMode = parseWithMode
 
--- | Parse of a string containing a complete Haskell module, using an explicit mode, retaining comments.
+-- | Parse of a string containing a complete Haskell module, using an explicit 'ParseMode', retaining comments.
 parseStmtWithComments :: ParseMode -> String -> ParseResult (S.Stmt, [Comment])
-parseStmtWithComments = (fmap (\(s, cs) -> (sStmt s, cs)) .) . P.parseStmtWithComments
+parseStmtWithComments = parseWithComments
 
+-- Module head parsers
 
-instance Parseable S.Module where
-  parse = parseModule
-  parseWithMode = parseModuleWithMode
-  parseWithComments = parseModuleWithComments
-
-instance Parseable S.Exp where
-  parse = parseExp
-  parseWithMode = parseExpWithMode
-  parseWithComments = parseExpWithComments
-
-instance Parseable S.Pat where
-  parse = parsePat
-  parseWithMode = parsePatWithMode
-  parseWithComments = parsePatWithComments
-
-instance Parseable S.Decl where
-  parse = parseDecl
-  parseWithMode = parseDeclWithMode
-  parseWithComments = parseDeclWithComments
-
-instance Parseable S.Type where
-  parse = parseType
-  parseWithMode = parseTypeWithMode
-  parseWithComments = parseTypeWithComments
+-- | Partial parse of a string starting with a series of top-level option pragmas.
+getTopPragmas :: String -> ParseResult [S.ModulePragma]
+getTopPragmas = fmap (fmap unNonGreedy) parse

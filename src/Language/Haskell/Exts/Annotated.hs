@@ -25,6 +25,7 @@ module Language.Haskell.Exts.Annotated (
     , module Language.Haskell.Exts.SrcLoc
     , module Language.Haskell.Exts.Comments
     , module Language.Haskell.Exts.Extension
+    , module Language.Haskell.Exts.Annotated.Parser
     -- * Parsing of Haskell source files
     , parseFile
     , parseFileWithMode
@@ -34,18 +35,12 @@ module Language.Haskell.Exts.Annotated (
     , parseFileContentsWithMode
     , parseFileContentsWithExts
     , parseFileContentsWithComments
-    -- * Parsing of Haskell source elements,
-    , parseModule, parseModuleWithMode, parseModuleWithComments
-    , parseExp, parseExpWithMode, parseExpWithComments
-    , parseStmt, parseStmtWithMode, parseStmtWithComments
-    , parsePat, parsePatWithMode, parsePatWithComments
-    , parseDecl, parseDeclWithMode, parseDeclWithComments
-    , parseType, parseTypeWithMode, parseTypeWithComments
     -- * Read extensions declared in LANGUAGE pragmas
     , readExtensions
     ) where
 
 import Language.Haskell.Exts.Annotated.Build
+import Language.Haskell.Exts.Annotated.Parser
 import Language.Haskell.Exts.Annotated.Syntax
 import Language.Haskell.Exts.Parser ( Parseable(..), ParseResult(..), fromParseResult, ParseMode(..), defaultParseMode )
 import Language.Haskell.Exts.Lexer ( lexTokenStream, lexTokenStreamWithMode, Token(..) )
@@ -55,8 +50,6 @@ import Language.Haskell.Exts.Annotated.ExactPrint
 import Language.Haskell.Exts.SrcLoc
 import Language.Haskell.Exts.Extension
 import Language.Haskell.Exts.Comments
-
-import Language.Haskell.Exts.InternalParser
 
 import Data.List
 import Data.Maybe (fromMaybe)
