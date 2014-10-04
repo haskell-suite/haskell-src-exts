@@ -67,7 +67,7 @@ mkSrcSpan (SrcLoc fn sl sc) (SrcLoc _ el ec) = SrcSpan fn sl sc el ec
 --   to the end of the second. Assumes that the two spans relate to the
 --   same source file.
 mergeSrcSpan :: SrcSpan -> SrcSpan -> SrcSpan
-mergeSrcSpan (SrcSpan fn sl1 sc1 el1 ec1) (SrcSpan _ sl2 sc2 el2 ec2) = 
+mergeSrcSpan (SrcSpan fn sl1 sc1 el1 ec1) (SrcSpan _ sl2 sc2 el2 ec2) =
     let (sl,sc) = min (sl1,sc1) (sl2,sc2)
         (el,ec) = max (el1,ec1) (el2,ec2)
      in SrcSpan fn sl sc el ec

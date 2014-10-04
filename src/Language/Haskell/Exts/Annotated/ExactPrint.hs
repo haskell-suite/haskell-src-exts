@@ -43,7 +43,7 @@ newtype EP x = EP (Pos -> [Comment] -> (x, Pos, [Comment], ShowS))
 
 instance Functor EP where
   fmap = liftM
-  
+
 instance Applicative EP where
   pure = return
   (<*>) = ap

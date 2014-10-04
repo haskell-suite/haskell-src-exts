@@ -106,7 +106,7 @@ Conflicts: 7 shift/reduce
 >       VARSYM   { Loc _ (VarSym _) }
 >       CONSYM   { Loc _ (ConSym _) }
 >       QVARSYM  { Loc _ (QVarSym _) } -- 10
->       QCONSYM  { Loc _ (QConSym _) }      
+>       QCONSYM  { Loc _ (QConSym _) }
 >       INT      { Loc _ (IntTok _) }
 >       RATIONAL { Loc _ (FloatTok _) }
 >       CHAR     { Loc _ (Character _) }
@@ -117,7 +117,7 @@ Conflicts: 7 shift/reduce
 >       PRIMFLOAT   { Loc _ (FloatTokHash _) }
 >       PRIMDOUBLE  { Loc _ (DoubleTokHash _) }
 >       PRIMCHAR    { Loc _ (CharacterHash _) } -- 20
->       PRIMSTRING  { Loc _ (StringHash _) }  
+>       PRIMSTRING  { Loc _ (StringHash _) }
 
 Symbols
 
@@ -143,7 +143,7 @@ Reserved operators
 >       '..'    { Loc $$ DotDot }
 >       ':'     { Loc $$ Colon }
 >       '::'    { Loc $$ DoubleColon }      -- 40
->       '='     { Loc $$ Equals }           
+>       '='     { Loc $$ Equals }
 >       '\\'    { Loc $$ Backslash }
 >       '|'     { Loc $$ Bar }
 >       '<-'    { Loc $$ LeftArrow }
@@ -153,7 +153,7 @@ Reserved operators
 >       '=>'    { Loc $$ DoubleArrow }
 >       '-'     { Loc $$ Minus }
 >       '!'     { Loc $$ Exclamation }  -- 50
->       '*'     { Loc $$ Star }           
+>       '*'     { Loc $$ Star }
 
 Arrows
 
@@ -172,7 +172,7 @@ Template Haskell
 
 >       IDSPLICE        { Loc _ (THIdEscape _) }   -- $x
 >       '$('            { Loc $$ THParenEscape } -- 60
->       '[|'            { Loc $$ THExpQuote }     
+>       '[|'            { Loc $$ THExpQuote }
 >       '[p|'           { Loc $$ THPatQuote }
 >       '[t|'           { Loc $$ THTypQuote }
 >       '[d|'           { Loc $$ THDecQuote }
@@ -185,7 +185,7 @@ Hsx
 
 >       PCDATA          { Loc _ (XPCDATA _) }
 >       '<'             { Loc $$ XStdTagOpen }   -- 70
->       '</'            { Loc $$ XCloseTagOpen }  
+>       '</'            { Loc $$ XCloseTagOpen }
 >       '<%'            { Loc $$ XCodeTagOpen }
 >       '<%>'           { Loc $$ XChildTagOpen }
 >       '>'             { Loc $$ XStdTagClose }
@@ -198,7 +198,7 @@ FFI
 
 >       'foreign'       { Loc $$ KW_Foreign }
 >       'export'        { Loc $$ KW_Export }    -- 80
->       'safe'          { Loc $$ KW_Safe }      
+>       'safe'          { Loc $$ KW_Safe }
 >       'unsafe'        { Loc $$ KW_Unsafe }
 >       'threadsafe'    { Loc $$ KW_Threadsafe }
 >       'interruptible' { Loc $$ KW_Interruptible }
@@ -208,7 +208,7 @@ FFI
 >       'dotnet'        { Loc $$ KW_DotNet }
 >       'jvm'           { Loc $$ KW_Jvm }
 >       'js'            { Loc $$ KW_Js }          -- 90
->       'capi'          { Loc $$ KW_CApi }      
+>       'capi'          { Loc $$ KW_CApi }
 
 Reserved Ids
 
@@ -254,7 +254,7 @@ Pragmas
 >       '{-# SOURCE'            { Loc $$ SOURCE }
 >       '{-# RULES'             { Loc $$ RULES }
 >       '{-# CORE'              { Loc $$ CORE }         -- 130
->       '{-# SCC'               { Loc $$ SCC }       
+>       '{-# SCC'               { Loc $$ SCC }
 >       '{-# GENERATED'         { Loc $$ GENERATED }
 >       '{-# DEPRECATED'        { Loc $$ DEPRECATED }
 >       '{-# WARNING'           { Loc $$ WARNING }
@@ -590,7 +590,7 @@ through the '$(' lexeme.
 CHANGE: Arbitrary top-level expressions are considered implicit splices
 >       | exp0             {% do
 >               checkToplevel $1
->               checkExpr $1 >>= \e -> return (SpliceDecl (ann e) e) 
+>               checkExpr $1 >>= \e -> return (SpliceDecl (ann e) e)
 >                  }
 
        | '$(' trueexp ')'  { let l = $1 <^^> $3 <** [$1,$3] in SpliceDecl l $ ParenSplice l $2 }
@@ -675,7 +675,7 @@ Parsing the body of a closed type family, partially stolen from the source of GH
 > specinldecl :: { Decl L }
 >       : '{-# INLINE' activation qvar '#-}'             { let Loc l (INLINE s) = $1 in InlineSig (l <^^> $4 <** [l,$4]) s $2 $3 }
 >       | '{-# INLINE CONLIKE' activation qvar '#-}'     { InlineConlikeSig ($1 <^^> $4 <** [$1,$4]) $2 $3 }
->       | '{-# SPECIALISE' activation qvar '::' sigtypes '#-}'      
+>       | '{-# SPECIALISE' activation qvar '::' sigtypes '#-}'
 >             { SpecSig ($1 <^^> $6 <** ($1: $4 : snd $5 ++ [$6])) $2 $3 (fst $5) }
 >       | '{-# SPECIALISE INLINE' activation qvar '::' sigtypes '#-}'
 >             { let Loc l (SPECIALISE_INLINE s) = $1
@@ -1435,7 +1435,7 @@ Either patterns are left associative
 Hsx Extensions - requires XmlSyntax, but the lexer handles all that.
 
 > xml :: { PExp L }
->       : '<' name attrs mattr '>' children opthsxsemi '</' name '>'        
+>       : '<' name attrs mattr '>' children opthsxsemi '</' name '>'
 >								 {% do { n <- checkEqNames $2 $9;
 >                                                                        let { cn = reverse $6;
 >                                                                              as = reverse $3;
@@ -1616,7 +1616,7 @@ Case alternatives
 > gdpats :: { ([GuardedRhs L],L) }
 >       : gdpats gdpat                  { ($2 : fst $1, snd $1 <++> ann $2) }
 >       | gdpat                         { ([$1], ann $1) }
- 
+
 A guard can be a pattern guard if PatternGuards is enabled, hence quals instead of exp0.
 > gdpat :: { GuardedRhs L }
 >       : '|' quals '->' trueexp {% do { checkPatternGuards (fst $2);

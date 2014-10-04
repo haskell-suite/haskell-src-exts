@@ -108,7 +108,7 @@ askFixityP xs qn = askFix xs (g $ sQName qn)
     where
         g (S.Special S.Cons) = S.UnQual (S.Symbol ":")
         g x                  = x
-        
+
 askFix :: [Fixity] -> S.QName -> (S.Assoc, Int)
 askFix xs = \k -> lookupWithDefault (S.AssocLeft, 9) k mp
     where
