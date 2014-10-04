@@ -87,9 +87,9 @@ parseFileContentsWithExts exts = parseFileContentsWithMode (defaultParseMode { e
 parseFileContentsWithMode :: ParseMode -> String -> ParseResult Module
 parseFileContentsWithMode p@(ParseMode fn oldLang exts ign _ _) rawStr =
         let md = delit fn $ ppContents rawStr
-            (bLang, extraExts) = 
+            (bLang, extraExts) =
                 case (ign, readExtensions md) of
-                  (False, Just (mLang, es)) -> 
+                  (False, Just (mLang, es)) ->
                        (fromMaybe oldLang mLang, es)
                   _ -> (oldLang, [])
          in parseWithMode (p { baseLanguage = bLang, extensions = exts ++ extraExts }) md
@@ -98,9 +98,9 @@ parseFileContentsWithMode p@(ParseMode fn oldLang exts ign _ _) rawStr =
 parseFileContentsWithComments :: ParseMode -> String -> ParseResult (Module, [Comment])
 parseFileContentsWithComments p@(ParseMode fn oldLang exts ign _ _) rawStr =
         let md = delit fn $ ppContents rawStr
-            (bLang, extraExts) = 
+            (bLang, extraExts) =
                 case (ign, readExtensions md) of
-                  (False, Just (mLang, es)) -> 
+                  (False, Just (mLang, es)) ->
                        (fromMaybe oldLang mLang, es)
                   _ -> (oldLang, [])
          in parseWithComments (p { baseLanguage = bLang, extensions = exts ++ extraExts }) md
@@ -135,7 +135,7 @@ readExtensions str = case getTopPragmas str of
         getExts (LanguagePragma _ ns) = map readExt ns
         getExts _ = []
 
-        readExt (Ident e) = 
+        readExt (Ident e) =
             case classifyLanguage e of
               UnknownLanguage _ -> Right $ classifyExtension e
               lang -> Left lang

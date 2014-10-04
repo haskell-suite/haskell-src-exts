@@ -206,7 +206,7 @@ runParser :: P a -> String -> ParseResult a
 runParser = runParserWithMode defaultParseMode
 
 runParserWithModeComments :: ParseMode -> P a -> String -> ParseResult (a, [Comment])
-runParserWithModeComments mode (P m) s = 
+runParserWithModeComments mode (P m) s =
   case m s 0 1 start ([],[],[],(False,False),[]) (toInternalParseMode mode) of
     Ok (_,_,_,_,cs) a -> ParseOk (a, reverse cs)
     Failed loc msg    -> ParseFailed loc msg
@@ -504,7 +504,7 @@ ignoreLinePragmasL = Lex $ \cont -> P $ \r x y loc s m ->
 setLineFilenameL :: String -> Lex a ()
 setLineFilenameL name = Lex $ \cont -> P $ \r x y loc s m ->
         runP (cont ()) r x y loc s (m {iParseFilename = name})
-        
+
 -- Comments
 
 pushComment :: Comment -> Lex a ()

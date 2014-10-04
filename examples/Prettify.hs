@@ -1,6 +1,6 @@
 {-
 -}
-module Main 
+module Main
   ( main )
 where
 
@@ -91,14 +91,14 @@ options =
     (ReqArg (CliDoIndent . read)   "Int")
     "The indentation of do-expressions"
 
-  , Option   ""      [ "case-indent" ] 
+  , Option   ""      [ "case-indent" ]
     (ReqArg (CliCaseIndent . read) "Int")
     "The indentation of the body of a case expression"
-  
+
   , Option   ""      [ "let-indent" ]
-    (ReqArg (CliWhereIndent . read) "Int") 
+    (ReqArg (CliWhereIndent . read) "Int")
     "The indentation of the declarations in a let expression"
-  
+
   , Option   ""      [ "where-indent" ]
     (ReqArg (CliWhereIndent . read) "Int")
     "The indentation of the declarations in a where clause"
@@ -113,7 +113,7 @@ helpMessage progName =
   usageInfo progName options
 
 versionMessage :: String -> String
-versionMessage progName = 
+versionMessage progName =
   progName ++ ": This is version 0.001"
 
 -- | The main exported function
@@ -126,9 +126,9 @@ main = getArgs >>= processOptions
 processOptions :: [ String ] -> IO ()
 processOptions cliArgs =
   case getOpt Permute  options cliArgs of
-    (flags, args, [])       -> 
+    (flags, args, [])       ->
       processArgs flags args
-    (_flags, _args, errors) -> 
+    (_flags, _args, errors) ->
       do progName <- getProgName
          ioError $ userError (concat errors ++ helpMessage progName)
 
@@ -164,12 +164,12 @@ processArgs flags files
 processFile :: Maybe FilePath -> PPHsMode -> FilePath -> IO ()
 processFile mDir printMode file =
   do contents <- readFile file
-     let pResult   = Parser.parseModuleWithMode parseMode contents 
+     let pResult   = Parser.parseModuleWithMode parseMode contents
          parseMode = defaultParseMode { parseFilename = file }
      case pResult of
-       ParseOk hModule            -> 
+       ParseOk hModule            ->
          outputSource $ prettyPrint hModule
-       ParseFailed srcLoc message -> 
+       ParseFailed srcLoc message ->
          putStrLn $ unlines [ prettyPrint srcLoc
                             , message
                             ]

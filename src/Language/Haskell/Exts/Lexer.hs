@@ -13,7 +13,7 @@
 --
 -----------------------------------------------------------------------------
 
-module Language.Haskell.Exts.Lexer 
+module Language.Haskell.Exts.Lexer
     (
       lexTokenStream, lexTokenStreamWithMode,
 

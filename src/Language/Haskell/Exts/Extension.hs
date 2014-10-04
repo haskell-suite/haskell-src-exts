@@ -31,7 +31,7 @@ module Language.Haskell.Exts.Extension (
     parseExtension, prettyExtension,
 
     -- * Extension groups
-    ghcDefault, glasgowExts, 
+    ghcDefault, glasgowExts,
     knownExtensions, deprecatedExtensions,
 
     -- * Semantics of extensions applied to languages
@@ -269,7 +269,7 @@ data KnownExtension =
   | ExtensibleRecords
 
   -- | [Hugs &#xa7; 7.2] Enable type synonyms which are transparent in
-  -- some definitions and opaque elsewhere, as a way of implementing 
+  -- some definitions and opaque elsewhere, as a way of implementing
   -- abstract datatypes.
   | RestrictedTypeSynonyms
 
@@ -513,12 +513,12 @@ data KnownExtension =
 --   The returned value is the transitive closure of implied
 --   extensions.
 {-impliesExts :: [Extension] -> [Extension]
-impliesExts exts = 
+impliesExts exts =
     let posExts = [ ke | EnableExtension  ke <- exts ]
         negExts = [ ke | DisableExtension ke <- exts ]
 
         implExts = impliesKnownExts posExts
-     in 
+     in
 -}
 impliesExts :: [KnownExtension] -> [KnownExtension]
 impliesExts = go
@@ -654,8 +654,8 @@ readMay s = case [x | (x,t) <- reads s, ("","") <- lex t] of
                 _ -> Nothing
 
 {-------------------------------------------
- -- Transform a 'Language', and possibly a modifying set of'Extension's, into a list 
- -- of 'KnownExtension's, to be interpreted as modifying the language you get 
+ -- Transform a 'Language', and possibly a modifying set of'Extension's, into a list
+ -- of 'KnownExtension's, to be interpreted as modifying the language you get
  -- when all known extensions are disabled.
  -- Extensions are interpreted in a right-biased fashion, so the last instance
  -- of an occurence of 'EnableExtension' or 'DisableExtension' for a given
@@ -669,10 +669,10 @@ toExtensionList lang exts' =
                     Haskell2010 -> [DoAndIfThenElse
                                    , PatternGuards
                                    , ForeignFunctionInterface
-                                   , EmptyDataDecls 
+                                   , EmptyDataDecls
                                    ] ++ allLangDefault
                     HaskellAllDisabled -> []
-                    UnknownLanguage s -> 
+                    UnknownLanguage s ->
                         error $ "toExtensionList: Unknown language " ++ s
 {-
         addExts = [ ke | EnableExtension  ke <- exts ]
