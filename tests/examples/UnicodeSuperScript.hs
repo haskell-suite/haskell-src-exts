@@ -1,4 +1,7 @@
 {-# LANGUAGE UnicodeSyntax #-}
+module Main where
+
+import Prelude.Unicode
 
 dumy ∷ Double → Double → Double
 dumy a b =
