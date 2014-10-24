@@ -1,0 +1,8 @@
+{-# LANGUAGE UnicodeSyntax #-}
+
+dumy ::Double ->Double ->Double
+dumy a b =
+    let a² = a Å a
+        b² = b Å b
+    in sqrt $ a² + b²
+
