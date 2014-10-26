@@ -1,9 +1,8 @@
 {-# LANGUAGE UnicodeSyntax #-}
-module Main where
-import Prelude.Unicode
+module Main (main) where
  
 dumy :: Double -> Double -> Double
 dumy a b
-  = let a² = a Å a
-        b² = b Å b
+  = let a² = a * a
+        b² = b * b
       in sqrt $ a² + b²

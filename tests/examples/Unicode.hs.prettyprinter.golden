@@ -42,8 +42,8 @@ testRewriteReverse x = pi
         i = repeat x
         lf = length f
         li = length i
-        pf = 300 d lf
-        pi = 300 d li
+        pf = 300 <= lf
+        pi = 300 <= li
  
 testRewrite2 :: a -> (Bool, Bool)
 testRewrite2 x = (length i > 300, 300 > length i)
@@ -56,7 +56,7 @@ testRewriteReverse2 x = (2000 < length i, length i > 20)
         lf = length f
         li = length i
         pf = 2000 == lf
-        pi = lf e li
+        pi = lf >= li
  
 lengthOP ::
            (Num a, Ord a) => Bool -> (a -> a -> Bool) -> [b] -> a -> Bool
@@ -66,33 +66,43 @@ lengthOP v (œ) xxs n = co xxs 0
           | n > c = co xs (c + 1)
           | otherwise = v
         co [] c = c œ n
-(c) = (==)
-(d) = (<=)
-(e) = (>=)
-(|c) = lengthOP False (c)
+ 
+(==) :: Eq a => a -> a -> Bool
+(==) = (==)
+(<=) = (<=)
+(>=) = (>=)
+ 
+(/=) :: Eq a => a -> a -> Bool
+(/=) = (/=)
+ 
+(/=) :: Eq a => a -> a -> Bool
+(/=) = (/=)
+(&&) = (&&)
+(||) = (||)
+(|==) = lengthOP False (==)
 (|<) = lengthOP False (<)
-(|d) = lengthOP False (d)
+(|<=) = lengthOP False (<=)
 (|>) = lengthOP True (>)
-(|e) = lengthOP True (e)
+(|>=) = lengthOP True (>=)
 (|=) = lengthOP False (==)
 (|==) = lengthOP False (==)
 (|<=) = lengthOP False (<=)
 (|>=) = lengthOP False (>=)
-(c|) = flip (|c)
-(<|) = flip (|e)
-(d|) = flip (|>)
-(>|) = flip (|d)
-(e|) = flip (|<)
+(==|) = flip (|==)
+(<|) = flip (|>=)
+(<=|) = flip (|>)
+(>|) = flip (|<=)
+(>=|) = flip (|<)
  
 {-# RULES
-"xs |\8803 n" forall xs n . (length xs) == n = xs |c n
+"xs |== n" forall xs n . (length xs) == n = xs |== n
 "xs |< n" forall xs n . (length xs) < n = xs |< n
-"xs |\8804 n" forall xs n . (length xs) <= n = xs |d n
+"xs |<= n" forall xs n . (length xs) <= n = xs |<= n
 "xs |> n" forall xs n . (length xs) > n = xs |> n
-"xs |\8805 n" forall xs n . (length xs) >= n = xs |e n
-"n \8803| xs" forall xs n . n == (length xs) = xs |c n
-"n <| xs" forall xs n . n < (length xs) = xs |e n
-"n \8804| xs" forall xs n . n <= (length xs) = xs |> n
-"n >| xs" forall xs n . n > (length xs) = xs |d n
-"n \8805| xs" forall xs n . n >= (length xs) = xs |< n
+"xs |>= n" forall xs n . (length xs) >= n = xs |>= n
+"n ==| xs" forall xs n . n == (length xs) = xs |== n
+"n <| xs" forall xs n . n < (length xs) = xs |>= n
+"n <=| xs" forall xs n . n <= (length xs) = xs |> n
+"n >| xs" forall xs n . n > (length xs) = xs |<= n
+"n >=| xs" forall xs n . n >= (length xs) = xs |< n
  #-}

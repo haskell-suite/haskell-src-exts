@@ -79,11 +79,18 @@ lengthOP v (⊜) xxs n = co xxs 0
                 | otherwise = v
     co []     c = c ⊜ n
 
-(≣) = (==)
+(≡) :: Eq a => a -> a -> Bool
+(≡) = (==)
 (≤) = (<=)
 (≥) = (>=)
+(≠) :: Eq a => a -> a -> Bool
+(≠) = (/=)
+(≢) :: Eq a => a -> a -> Bool
+(≢) = (/=)
+(∧) = (&&)
+(∨) = (||)
 
-(|≣)  = lengthOP False (≣)
+(|≡)  = lengthOP False (≡)
 (|<)  = lengthOP False (<)
 (|≤)  = lengthOP False (≤)
 (|>)  = lengthOP True  (>)
@@ -96,7 +103,7 @@ lengthOP v (⊜) xxs n = co xxs 0
 
 
 -- ≣≤≥
-(≣|) = flip (|≣)
+(≡|) = flip (|≡)
 (<|) = flip (|≥)
 (≤|) = flip (|>)
 (>|) = flip (|≤)
@@ -104,13 +111,13 @@ lengthOP v (⊜) xxs n = co xxs 0
 
 {-# RULES
 -- length
-"xs |≣ n" forall xs n.  (length xs) == n = xs |≣ n
+"xs |≡ n" forall xs n.  (length xs) == n = xs |≡ n
 "xs |< n" forall xs n.  (length xs) <  n = xs |< n
 "xs |≤ n" forall xs n.  (length xs) <= n = xs |≤ n
 "xs |> n" forall xs n.  (length xs) >  n = xs |> n
 "xs |≥ n" forall xs n.  (length xs) >= n = xs |≥ n
 
-"n ≣| xs" forall xs n.  n == (length xs) = xs |≣ n
+"n ≡| xs" forall xs n.  n == (length xs) = xs |≡ n
 "n <| xs" forall xs n.  n <  (length xs) = xs |≥ n
 "n ≤| xs" forall xs n.  n <= (length xs) = xs |> n
 "n >| xs" forall xs n.  n >  (length xs) = xs |≤ n

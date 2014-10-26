@@ -1,11 +1,1 @@
-{-# LANGUAGE UnicodeSyntax #-}
-module Main where
-
-import Prelude.Unicode
-
-dumy ::Double ->Double ->Double
-dumy a b =
-    let a² = a Å a
-        b² = b Å b
-    in sqrt $ a² + b²
-
+Match
