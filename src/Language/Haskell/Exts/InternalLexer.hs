@@ -93,10 +93,10 @@ data Token
         | Minus
         | Exclamation
         | Star
-        | LeftArrowTail         -- >-
-        | RightArrowTail        -- -<
-        | LeftDblArrowTail      -- >>-
-        | RightDblArrowTail     -- -<<
+        | LeftArrowTail         -- -<
+        | RightArrowTail        -- >-
+        | LeftDblArrowTail      -- -<<
+        | RightDblArrowTail     -- >>-
 
 -- Template Haskell
         | THExpQuote            -- [| or [e|
