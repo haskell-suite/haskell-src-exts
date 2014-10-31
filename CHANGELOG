@@ -1,5 +1,11 @@
 ** 1.16.x
 
+1.16.0 --> 1.16.0.1
+===================
+
+Include generated InternalParser.hs in the release tarball
+(See http://ro-che.info/articles/2014-03-08-happy-alex-ghc-7.8 for details)
+
 1.15.0.1 --> 1.16.0
 ===================
 
