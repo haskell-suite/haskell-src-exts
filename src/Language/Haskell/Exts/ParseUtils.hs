@@ -80,7 +80,7 @@ import Language.Haskell.Exts.Extension
 import Language.Haskell.Exts.ExtScheme
 
 import Prelude hiding (mod)
-import Data.List (intercalate)
+import Data.List (intercalate, intersperse)
 import Data.Maybe (fromJust, fromMaybe)
 import Control.Monad (when,unless)
 import Control.Applicative (Applicative (..), (<$>))
@@ -108,13 +108,28 @@ splitTyConApp t0 = do
 checkEnabled :: (Show e, Enabled e) => e  -> P ()
 checkEnabled e = do
     exts <- getExtensions
-    unless (isEnabled e exts) $ fail $ show e ++ " is not enabled"
+    unless (isEnabled e exts) $ fail errorMsg
+ where errorMsg = unwords
+          [ show e
+          , "language extension is not enabled."
+          , "Please add {-# LANGUAGE " ++ show e ++  " #-}"
+          , "pragma at the top of your module."
+          ]
 
 checkEnabledOneOf :: (Show e, Enabled e) => [e] -> P ()
 checkEnabledOneOf es = do
     exts <- getExtensions
     unless (any (`isEnabled` exts) es) $
-        fail $ (foldr1 (\x s -> x ++ " or " ++ s) . map show $ es) ++ " is not enabled"
+        fail errorMsg
+  where errorMsg = unwords
+          [ "At least one of"
+          , joinOr id
+          , "language extensions needs to be enabled."
+          , "Please add:"
+          , joinOr (\s -> "{-# LANGUAGE " ++ s ++ " #-}")
+          , "language pragma at the top of your module."
+          ]
+        joinOr f = concat . intersperse " or "  . map (f . show) $ es
 
 checkPatternGuards :: [Stmt L] -> P ()
 checkPatternGuards [Qualifier _ _] = return ()
