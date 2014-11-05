@@ -221,8 +221,8 @@ rbrace = return  P.rbrace
 aM <> bM = do{a<-aM;b<-bM;return (a P.<> b)}
 aM <+> bM = do{a<-aM;b<-bM;return (a P.<+> b)}
 aM $$ bM = do{a<-aM;b<-bM;return (a P.$$ b)}
--- ($+$) :: Doc -> Doc -> Doc
--- aM $+$ bM = do{a<-aM;b<-bM;return (a P.$+$ b)}
+($+$) :: Doc -> Doc -> Doc
+aM $+$ bM = do{a<-aM;b<-bM;return (a P.$+$ b)}
 
 hcat,hsep,vcat,fsep :: [Doc] -> Doc
 hcat dl = sequence dl >>= return . P.hcat
@@ -1589,7 +1589,7 @@ prettyBlock = braces . (space <>) . vcat . punctuate semi
 
 blankline :: Doc -> Doc
 blankline dl = do{e<-getPPEnv;if spacing e && layout e /= PPNoLayout
-                              then space $$ dl else dl}
+                              then text "" $+$ dl else dl}
 topLevel :: Doc -> [Doc] -> Doc
 topLevel header dl = do
          e <- fmap layout getPPEnv
