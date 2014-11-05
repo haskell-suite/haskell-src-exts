@@ -55,6 +55,7 @@ import Language.Haskell.Exts.Annotated.ExactPrint
 import Language.Haskell.Exts.SrcLoc
 import Language.Haskell.Exts.Extension
 import Language.Haskell.Exts.Comments
+import Language.Haskell.Exts.ParseUtils (replaceUTF8Ops)
 
 import Language.Haskell.Exts.InternalParser
 
@@ -69,9 +70,9 @@ parseFile fp = parseFileWithMode (defaultParseMode { parseFilename = fp }) fp
 -- | Parse a source file on disk, with an extra set of extensions to know about
 --   on top of what the file itself declares.
 parseFileWithExts :: [Extension] -> FilePath -> IO (ParseResult (Module SrcSpanInfo))
-parseFileWithExts exts fp = 
-    parseFileWithMode (defaultParseMode { 
-                         extensions = exts, 
+parseFileWithExts exts fp =
+    parseFileWithMode (defaultParseMode {
+                         extensions = exts,
                          parseFilename = fp }) fp
 
 -- | Parse a source file on disk, supplying a custom parse mode.
@@ -83,21 +84,23 @@ parseFileWithComments p fp = readFile fp >>= return . parseFileContentsWithComme
 
 -- | Parse a source file from a string using the default parse mode.
 parseFileContents :: String -> ParseResult (Module SrcSpanInfo)
-parseFileContents = parseFileContentsWithMode defaultParseMode
+parseFileContents rawStr =
+    parseFileContentsWithMode defaultParseMode (replaceUTF8Ops rawStr)
 
 -- | Parse a source file from a string, with an extra set of extensions to know about
 --   on top of what the file itself declares.
 parseFileContentsWithExts :: [Extension] -> String -> ParseResult (Module SrcSpanInfo)
-parseFileContentsWithExts exts = 
+parseFileContentsWithExts exts rawStr=
     parseFileContentsWithMode (defaultParseMode { extensions = exts })
+                              (replaceUTF8Ops rawStr)
 
 -- | Parse a source file from a string using a custom parse mode.
 parseFileContentsWithMode :: ParseMode -> String -> ParseResult (Module SrcSpanInfo)
 parseFileContentsWithMode p@(ParseMode fn oldLang exts ign _ _) rawStr =
-        let md = delit fn $ ppContents rawStr
-            (bLang, extraExts) = 
+        let md = delit fn $ ppContents (replaceUTF8Ops rawStr)
+            (bLang, extraExts) =
                 case (ign, readExtensions md) of
-                  (False, Just (mLang, es)) -> 
+                  (False, Just (mLang, es)) ->
                        (fromMaybe oldLang mLang, es)
                   _ -> (oldLang, [])
          in -- trace (fn ++ ": " ++ show extraExts) $
@@ -105,10 +108,10 @@ parseFileContentsWithMode p@(ParseMode fn oldLang exts ign _ _) rawStr =
 
 parseFileContentsWithComments :: ParseMode -> String -> ParseResult (Module SrcSpanInfo, [Comment])
 parseFileContentsWithComments p@(ParseMode fn oldLang exts ign _ _) rawStr =
-        let md = delit fn $ ppContents rawStr
-            (bLang, extraExts) = 
+        let md = delit fn $ ppContents (replaceUTF8Ops rawStr)
+            (bLang, extraExts) =
                 case (ign, readExtensions md) of
-                  (False, Just (mLang, es)) -> 
+                  (False, Just (mLang, es)) ->
                        (fromMaybe oldLang mLang, es)
                   _ -> (oldLang, [])
          in parseModuleWithComments (p { baseLanguage = bLang, extensions = exts ++ extraExts }) md
@@ -124,7 +127,7 @@ readExtensions str = case getTopPragmas str of
         getExts (LanguagePragma _ ns) = map readExt ns
         getExts _ = []
 
-        readExt (Ident _ e) = 
+        readExt (Ident _ e) =
             case classifyLanguage e of
               UnknownLanguage _ -> Right $ classifyExtension e
               lang -> Left lang

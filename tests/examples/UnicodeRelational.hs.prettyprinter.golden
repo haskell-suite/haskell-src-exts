@@ -1,0 +1,19 @@
+{-# LANGUAGE UnicodeSyntax #-}
+module Main (main) where
+import Prelude.Unicode
+ 
+testAnd :: Int -> Int -> Bool
+testAnd a b
+  = let b = a <= 3
+        b‚ = b >= 5
+      in b && b‚
+ 
+testOr :: Int -> Int -> Int -> Int -> Int -> Bool
+testOr a b c d e
+  = let b = a <= 3
+        b‚ = b /= 5
+        bƒ = c >= 5
+        b„ = d <= 6
+        b… = e `elem` [1, 2, 3, 4]
+        b† = e `notElem` [5, 6, 7, 8]
+      in b || b‚ || bƒ || b„ || b… || b†

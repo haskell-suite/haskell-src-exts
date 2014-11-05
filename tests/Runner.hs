@@ -14,6 +14,7 @@ import Control.Monad.Trans
 import Control.Applicative
 import Data.Generics
 import Extensions
+import Data.Text hiding (foldl)
 
 main :: IO ()
 main = do
@@ -57,8 +58,9 @@ exactPrinterTests sources = testGroup "Exact printer tests" $ do
     out = file <.> "exactprinter" <.> "out"
     golden = file <.> "exactprinter" <.> "golden"
     run = do
-      contents <- readUTF8File file
+      tmp <- readUTF8File file
       let
+        contents = replaceUTF8Ops tmp
         -- parse
         mbAst =
           parseFileContentsWithComments
@@ -87,8 +89,9 @@ prettyPrinterTests sources = testGroup "Pretty printer tests" $ do
     out = file <.> "prettyprinter" <.> "out"
     golden = file <.> "prettyprinter" <.> "golden"
     run = do
-      contents <- readUTF8File file
+      tmp <- readUTF8File file
       let
+        contents = replaceUTF8Ops tmp
         -- parse
         mbAst =
           S.parseFileContentsWithMode
@@ -119,6 +122,8 @@ prettyParserTests sources = testGroup "Pretty-parser tests" $ do
           S.parseFileContentsWithMode
             (defaultParseMode { parseFilename = file })
             contents
+
+
 
         prettyResult :: ParseResult String
         prettyResult = prettyPrint <$> parse1Result
@@ -163,4 +168,27 @@ readUTF8File fp = openFile fp ReadMode >>= \h -> do
 
 parseUTF8FileWithComments :: ParseMode -> FilePath -> IO (ParseResult (Module SrcSpanInfo, [Comment]))
 parseUTF8FileWithComments p fp = readUTF8File fp >>= (return . parseFileContentsWithComments p)
+
+utf8Ops :: [(String, String)]
+utf8Ops = [("∧", "&&"),("∨", "||"),("≡", "=="),("≠", "/="), ("≤", "<=")] ++
+          [("≥", ">="),("≮", ">="),("≯", "<="),("π", "pi"), ("÷", "/")] ++
+          [("⋅", "*"), ("∈", "`elem`"), ("∉", "`notElem`")] ++
+          [("∷", "::"), ("⇒", "=>"), ("∀", "forall"), ("→", "->")] ++
+          [("←", "<-"), ("⤙", "-<"), ("⤚", ">-"), ("⤛", "-<<")] ++
+          [("⤜", ">>-"), ("★", "*"), ("≢", "/=")]
+
+---------------------------------------
+-- Replace one unicode operator to its plain text counter-part
+
+replaceUTF8Op :: String -> String -> String -> String
+replaceUTF8Op search replacement content =
+    unpack $ replace (pack search) (pack replacement) (pack content)
+
+---------------------------------------
+-- Replace all unicode operator in the input string to their plain counter-part
+
+replaceUTF8Ops :: String -> String
+replaceUTF8Ops content =
+    foldl (\ x (y, z) -> replaceUTF8Op y z x) content utf8Ops
+
 -- }}}
