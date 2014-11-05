@@ -2,7 +2,7 @@
 {-# OPTIONS_GHC -F -pgmFtrhsx #-}
 module Main (main) where
 import Language.Haskell.TH
- 
+
 data PageFunction m a = PF
 main
   = let a = mkName "a" in

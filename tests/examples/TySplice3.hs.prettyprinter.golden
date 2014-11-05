@@ -1,4 +1,4 @@
 {-# LANGUAGE QuasiQuotes #-}
 module Main (main) where
- 
+
 [qq| abc |]

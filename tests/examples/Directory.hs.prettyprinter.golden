@@ -29,11 +29,11 @@ import GHC.IO.Exception
 import System.Posix.Types
 import System.Posix.Internals
 import qualified System.Win32 as Win32
- 
+
 data Permissions = Permissions{readable, writable, executable,
                                searchable :: Bool}
                  deriving (Eq, Ord, Read, Show)
- 
+
 getPermissions :: FilePath -> IO Permissions
 getPermissions name
   = do withFilePath name $
@@ -50,7 +50,7 @@ getPermissions name
                        (Permissions{readable = usr_read /= 0, writable = usr_write /= 0,
                                     executable = is_dir == 0 && usr_exec /= 0,
                                     searchable = is_dir /= 0 && usr_exec /= 0})
- 
+
 setPermissions :: FilePath -> Permissions -> IO ()
 setPermissions name (Permissions r w e s)
   = do allocaBytes sizeof_stat $
@@ -64,14 +64,14 @@ setPermissions name (Permissions r w e s)
                           let mode2 = modifyBit w mode1 s_IWUSR
                           let mode3 = modifyBit (e || s) mode2 s_IXUSR
                           c_wchmod p_name mode3
-  where  
+  where 
         modifyBit :: Bool -> CMode -> CMode -> CMode
         modifyBit False m b = m .&. (complement b)
         modifyBit True m b = m .|. b
- 
+
 foreign import ccall unsafe "_wchmod" c_wchmod ::
                CWString -> CMode -> IO CInt
- 
+
 copyPermissions :: FilePath -> FilePath -> IO ()
 copyPermissions source dest
   = do allocaBytes sizeof_stat $
@@ -83,10 +83,10 @@ copyPermissions source dest
                          do throwErrnoIfMinus1_ "copyPermissions" $ c_stat p_source p_stat
                             mode <- st_mode p_stat
                             throwErrnoIfMinus1_ "copyPermissions" $ c_wchmod p_dest mode
- 
+
 createDirectory :: FilePath -> IO ()
 createDirectory path = do Win32.createDirectory path Nothing
- 
+
 createDirectoryIfMissing :: Bool -> FilePath -> IO ()
 createDirectoryIfMissing create_parents path0
   | create_parents = createDirs (parents path0)
@@ -100,7 +100,7 @@ createDirectoryIfMissing create_parents path0
               \ _ ->
                 do createDirs dirs
                    createDir dir throw
-         
+        
         createDir :: FilePath -> (IOException -> IO ()) -> IO ()
         createDir dir notExistHandler
           = do r <- try $ createDirectory dir
@@ -114,16 +114,16 @@ createDirectoryIfMissing create_parents path0
                                        if isDir then return () else throw e)
                               `catch` ((\ _ -> return ()) :: IOException -> IO ())
                           | otherwise -> throw e
- 
+
 removeDirectory :: FilePath -> IO ()
 removeDirectory path = Win32.removeDirectory path
- 
+
 removeDirectoryRecursive :: FilePath -> IO ()
 removeDirectoryRecursive startLoc
   = do cont <- getDirectoryContents startLoc
        sequence_ [rm (startLoc </> x) | x <- cont, x /= "." && x /= ".."]
        removeDirectory startLoc
-  where  
+  where 
         rm :: FilePath -> IO ()
         rm f
           = do temp <- try (removeFile f)
@@ -132,10 +132,10 @@ removeDirectoryRecursive startLoc
                                 unless isDir $ throw (e :: SomeException)
                                 removeDirectoryRecursive f
                    Right _ -> return ()
- 
+
 removeFile :: FilePath -> IO ()
 removeFile path = Win32.deleteFile path
- 
+
 renameDirectory :: FilePath -> FilePath -> IO ()
 renameDirectory opath npath
   = do withFileStatus "renameDirectory" opath $
@@ -149,7 +149,7 @@ renameDirectory opath npath
                      "not a directory")
                 else
                 do Win32.moveFileEx opath npath Win32.mOVEFILE_REPLACE_EXISTING
- 
+
 renameFile :: FilePath -> FilePath -> IO ()
 renameFile opath npath
   = do withFileOrSymlinkStatus "renameFile" opath $
@@ -162,7 +162,7 @@ renameFile opath npath
                      "is a directory")
                 else
                 do Win32.moveFileEx opath npath Win32.mOVEFILE_REPLACE_EXISTING
- 
+
 copyFile :: FilePath -> FilePath -> IO ()
 copyFile fromFPath toFPath
   = copy `Prelude.catch`
@@ -188,24 +188,24 @@ copyFile fromFPath toFPath
                  do hPutBuf hTo buffer count
                     copyContents hFrom hTo buffer
         ignoreIOExceptions io = io `catch` ioExceptionIgnorer
-         
+        
         ioExceptionIgnorer :: IOException -> IO ()
         ioExceptionIgnorer _ = return ()
- 
+
 canonicalizePath :: FilePath -> IO FilePath
 canonicalizePath fpath
   = do path <- Win32.getFullPathName fpath
        return (normalise path)
- 
+
 makeRelativeToCurrentDirectory :: FilePath -> IO FilePath
 makeRelativeToCurrentDirectory x
   = do cur <- getCurrentDirectory
        return $ makeRelative cur x
- 
+
 findExecutable :: String -> IO (Maybe FilePath)
 findExecutable binary
   = Win32.searchPath Nothing binary ('.' : exeExtension)
- 
+
 getDirectoryContents :: FilePath -> IO [FilePath]
 getDirectoryContents path
   = modifyIOError
@@ -215,7 +215,7 @@ getDirectoryContents path
       do bracket (Win32.findFirstFile (path </> "*"))
            (\ (h, _) -> Win32.findClose h)
            (\ (h, fdat) -> loop h fdat [])
-  where  
+  where 
         loop ::
              Win32.HANDLE -> Win32.FindData -> [FilePath] -> IO [FilePath]
         loop h fdat acc
@@ -223,19 +223,19 @@ getDirectoryContents path
                more <- Win32.findNextFile h fdat
                if more then loop h fdat (filename : acc) else
                  return (filename : acc)
- 
+
 getCurrentDirectory :: IO FilePath
 getCurrentDirectory = do Win32.getCurrentDirectory
- 
+
 setCurrentDirectory :: FilePath -> IO ()
 setCurrentDirectory path = Win32.setCurrentDirectory path
- 
+
 doesDirectoryExist :: FilePath -> IO Bool
 doesDirectoryExist name
   = (withFileStatus "doesDirectoryExist" name $
        \ st -> isDirectory st)
       `catch` ((\ _ -> return False) :: IOException -> IO Bool)
- 
+
 doesFileExist :: FilePath -> IO Bool
 doesFileExist name
   = (withFileStatus "doesFileExist" name $
@@ -243,12 +243,12 @@ doesFileExist name
          do b <- isDirectory st
             return (not b))
       `catch` ((\ _ -> return False) :: IOException -> IO Bool)
- 
+
 getModificationTime :: FilePath -> IO ClockTime
 getModificationTime name
   = do withFileStatus "getModificationTime" name $
          \ st -> do modificationTime st
- 
+
 withFileStatus :: String -> FilePath -> (Ptr CStat -> IO a) -> IO a
 withFileStatus loc name f
   = do modifyIOError (`ioeSetFileName` name) $
@@ -256,7 +256,7 @@ withFileStatus loc name f
            \ p ->
              withFilePath (fileNameEndClean name) $
                \ s -> do throwErrnoIfMinus1Retry_ loc (c_stat s p)
- 
+
 withFileOrSymlinkStatus ::
                         String -> FilePath -> (Ptr CStat -> IO a) -> IO a
 withFileOrSymlinkStatus loc name f
@@ -265,37 +265,37 @@ withFileOrSymlinkStatus loc name f
            \ p ->
              withFilePath name $
                \ s -> do throwErrnoIfMinus1Retry_ loc (lstat s p)
- 
+
 modificationTime :: Ptr CStat -> IO ClockTime
 modificationTime stat
   = do mtime <- st_mtime stat
        let realToInteger = round . realToFrac :: Real a => a -> Integer
        return (TOD (realToInteger (mtime :: CTime)) 0)
- 
+
 isDirectory :: Ptr CStat -> IO Bool
 isDirectory stat
   = do mode <- st_mode stat
        return (s_isdir mode)
- 
+
 fileNameEndClean :: String -> String
 fileNameEndClean name
   = if isDrive name then addTrailingPathSeparator name else
       dropTrailingPathSeparator name
- 
+
 foreign import ccall unsafe "HsDirectory.h __hscore_S_IRUSR"
                s_IRUSR :: CMode
- 
+
 foreign import ccall unsafe "HsDirectory.h __hscore_S_IWUSR"
                s_IWUSR :: CMode
- 
+
 foreign import ccall unsafe "HsDirectory.h __hscore_S_IXUSR"
                s_IXUSR :: CMode
- 
+
 foreign import ccall unsafe "__hscore_S_IFDIR" s_IFDIR :: CMode
- 
+
 foreign import ccall unsafe "__hscore_long_path_size"
                long_path_size :: Int
- 
+
 getHomeDirectory :: IO FilePath
 getHomeDirectory
   = modifyIOError ((`ioeSetLocation` "getHomeDirectory")) $
@@ -308,20 +308,20 @@ getHomeDirectory
                           case r1 of
                               Right s -> return s
                               Left e -> ioError (e :: IOException)
- 
+
 getAppUserDataDirectory :: String -> IO FilePath
 getAppUserDataDirectory appName
   = do modifyIOError ((`ioeSetLocation` "getAppUserDataDirectory")) $
          do s <- Win32.sHGetFolderPath nullPtr Win32.cSIDL_APPDATA nullPtr 0
             return (s ++ '\\' : appName)
- 
+
 getUserDocumentsDirectory :: IO FilePath
 getUserDocumentsDirectory
   = do modifyIOError ((`ioeSetLocation` "getUserDocumentsDirectory"))
          $ do Win32.sHGetFolderPath nullPtr Win32.cSIDL_PERSONAL nullPtr 0
- 
+
 getTemporaryDirectory :: IO FilePath
 getTemporaryDirectory = do Win32.getTemporaryDirectory
- 
+
 exeExtension :: String
 exeExtension = "exe"

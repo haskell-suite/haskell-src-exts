@@ -33,7 +33,7 @@ import OrdList
 import Bag
 import Util
 import Data.List
- 
+
 mkLocalRule ::
             RuleName ->
               Activation ->
@@ -42,10 +42,10 @@ mkLocalRule name act fn bndrs args rhs
   = Rule{ru_name = name, ru_fn = fn, ru_act = act, ru_bndrs = bndrs,
          ru_args = args, ru_rhs = rhs, ru_rough = roughTopNames args,
          ru_local = True}
- 
+
 roughTopNames :: [CoreExpr] -> [Maybe Name]
 roughTopNames args = map roughTopName args
- 
+
 roughTopName :: CoreExpr -> Maybe Name
 roughTopName (Type ty)
   = case tcSplitTyConApp_maybe ty of
@@ -56,40 +56,40 @@ roughTopName (Var f)
   | isGlobalId f = Just (idName f)
   | otherwise = Nothing
 roughTopName other = Nothing
- 
+
 ruleCantMatch :: [Maybe Name] -> [Maybe Name] -> Bool
 ruleCantMatch (Just n1 : ts) (Just n2 : as)
   = n1 /= n2 || ruleCantMatch ts as
 ruleCantMatch (t : ts) (a : as) = ruleCantMatch ts as
 ruleCantMatch ts as = False
- 
+
 pprRulesForUser :: [CoreRule] -> SDoc
 pprRulesForUser rules
   = withPprStyle defaultUserStyle $
       pprRules $ sortLe le_rule $ tidyRules emptyTidyEnv rules
   where le_rule r1 r2 = ru_name r1 <= ru_name r2
- 
+
 mkSpecInfo :: [CoreRule] -> SpecInfo
 mkSpecInfo rules = SpecInfo rules (rulesFreeVars rules)
- 
+
 extendSpecInfo :: SpecInfo -> [CoreRule] -> SpecInfo
 extendSpecInfo (SpecInfo rs1 fvs1) rs2
   = SpecInfo (rs2 ++ rs1) (rulesFreeVars rs2 `unionVarSet` fvs1)
- 
+
 addSpecInfo :: SpecInfo -> SpecInfo -> SpecInfo
 addSpecInfo (SpecInfo rs1 fvs1) (SpecInfo rs2 fvs2)
   = SpecInfo (rs1 ++ rs2) (fvs1 `unionVarSet` fvs2)
- 
+
 addIdSpecialisations :: Id -> [CoreRule] -> Id
 addIdSpecialisations id [] = id
 addIdSpecialisations id rules
   = setIdSpecialisation id $
       extendSpecInfo (idSpecialisation id) rules
- 
+
 rulesOfBinds :: [CoreBind] -> [CoreRule]
 rulesOfBinds binds
   = concatMap (concatMap idCoreRules . bindersOf) binds
- 
+
 getRules :: RuleBase -> Id -> [CoreRule]
 getRules rule_base fn
   | isLocalId fn = idCoreRules fn
@@ -100,29 +100,29 @@ getRules rule_base fn
       idCoreRules
       fn
       ++ (lookupNameEnv rule_base (idName fn) `orElse` [])
- 
+
 type RuleBase = NameEnv [CoreRule]
 emptyRuleBase = emptyNameEnv
- 
+
 mkRuleBase :: [CoreRule] -> RuleBase
 mkRuleBase rules = extendRuleBaseList emptyRuleBase rules
- 
+
 extendRuleBaseList :: RuleBase -> [CoreRule] -> RuleBase
 extendRuleBaseList rule_base new_guys
   = foldl extendRuleBase rule_base new_guys
- 
+
 unionRuleBase :: RuleBase -> RuleBase -> RuleBase
 unionRuleBase rb1 rb2 = plusNameEnv_C (++) rb1 rb2
- 
+
 extendRuleBase :: RuleBase -> CoreRule -> RuleBase
 extendRuleBase rule_base rule
   = extendNameEnv_Acc (:) singleton rule_base (ruleIdName rule) rule
- 
+
 pprRuleBase :: RuleBase -> SDoc
 pprRuleBase rules
   = vcat
       [pprRules (tidyRules emptyTidyEnv rs) | rs <- nameEnvElts rules]
- 
+
 lookupRule ::
            (Activation -> Bool) ->
              InScopeSet ->
@@ -132,7 +132,7 @@ lookupRule is_active in_scope fn args rules
         [] -> Nothing
         (m : ms) -> Just (findBest (fn, args) m ms)
   where rough_args = map roughTopName args
-         
+        
         go ::
            [(CoreRule, CoreExpr)] -> [CoreRule] -> [(CoreRule, CoreExpr)]
         go ms [] = ms
@@ -140,7 +140,7 @@ lookupRule is_active in_scope fn args rules
           = case (matchRule is_active in_scope args rough_args r) of
                 Just e -> go ((r, e) : ms) rs
                 Nothing -> go ms rs
- 
+
 findBest ::
          (Id, [CoreExpr]) ->
            (CoreRule, CoreExpr) ->
@@ -165,7 +165,7 @@ findBest target (rule1, ans1) ((rule2, ans2) : prs)
         $ findBest target (rule1, ans1) prs
   | otherwise = findBest target (rule1, ans1) prs
   where (fn, args) = target
- 
+
 isMoreSpecific :: CoreRule -> CoreRule -> Bool
 isMoreSpecific (BuiltinRule{}) r2 = True
 isMoreSpecific r1 (BuiltinRule{}) = False
@@ -173,10 +173,10 @@ isMoreSpecific (Rule{ru_bndrs = bndrs1, ru_args = args1})
   (Rule{ru_bndrs = bndrs2, ru_args = args2})
   = isJust (matchN in_scope bndrs2 args2 args1)
   where in_scope = mkInScopeSet (mkVarSet bndrs1)
- 
+
 noBlackList :: Activation -> Bool
 noBlackList act = False
- 
+
 matchRule ::
           (Activation -> Bool) ->
             InScopeSet ->
@@ -197,7 +197,7 @@ matchRule is_active in_scope args rough_args
         Just (binds, tpl_vals) -> Just
                                     (mkLets binds $ rule_fn `mkApps` tpl_vals)
   where rule_fn = occurAnalyseExpr (mkLams tpl_vars rhs)
- 
+
 matchN ::
        InScopeSet ->
          [Var] -> [CoreExpr] -> [CoreExpr] -> Maybe ([CoreBind], [CoreExpr])
@@ -216,7 +216,7 @@ matchN in_scope tmpl_vars tmpl_es target_es
         go menv subst (t : ts) (e : es)
           = do subst1 <- match menv subst t e
                go menv subst1 ts es
-         
+        
         lookup_tmpl :: TvSubstEnv -> IdSubstEnv -> Var -> CoreExpr
         lookup_tmpl tv_subst id_subst tmpl_var'
           | isTyVar tmpl_var' =
@@ -231,14 +231,14 @@ matchN in_scope tmpl_vars tmpl_es target_es
           = pprPanic "Template variable unbound in rewrite rule"
               (ppr var $$ ppr tmpl_vars $$ ppr tmpl_vars' $$ ppr tmpl_es $$
                  ppr target_es)
- 
+
 type SubstEnv = (TvSubstEnv, IdSubstEnv, OrdList CoreBind)
- 
+
 type IdSubstEnv = IdEnv CoreExpr
- 
+
 emptySubstEnv :: SubstEnv
 emptySubstEnv = (emptyVarEnv, emptyVarEnv, nilOL)
- 
+
 match ::
       MatchEnv -> SubstEnv -> CoreExpr -> CoreExpr -> Maybe SubstEnv
 match menv subst (Var v1) e2
@@ -288,7 +288,7 @@ match menv subst (Cast e1 co1) (Cast e2 co2)
   = do subst1 <- match_ty menv subst co1 co2
        match menv subst1 e1 e2
 match menv subst e1 e2 = Nothing
- 
+
 match_var ::
           MatchEnv -> SubstEnv -> Var -> CoreExpr -> Maybe SubstEnv
 match_var menv subst@(tv_subst, id_subst, binds) v1 e2
@@ -308,7 +308,7 @@ match_var menv subst@(tv_subst, id_subst, binds) v1 e2
         other -> Nothing
   where rn_env = me_env menv
         v1' = rnOccL rn_env v1
- 
+
 match_alts ::
            MatchEnv -> SubstEnv -> [CoreAlt] -> [CoreAlt] -> Maybe SubstEnv
 match_alts menv subst [] [] = return subst
@@ -317,16 +317,16 @@ match_alts menv subst ((c1, vs1, r1) : alts1)
   | c1 == c2 =
     do subst1 <- match menv' subst r1 r2
        match_alts menv subst1 alts1 alts2
-  where  
+  where 
         menv' :: MatchEnv
         menv' = menv{me_env = rnBndrs2 (me_env menv) vs1 vs2}
 match_alts menv subst alts1 alts2 = Nothing
- 
+
 match_ty :: MatchEnv -> SubstEnv -> Type -> Type -> Maybe SubstEnv
 match_ty menv (tv_subst, id_subst, binds) ty1 ty2
   = do tv_subst' <- Unify.ruleMatchTyX menv tv_subst ty1 ty2
        return (tv_subst', id_subst, binds)
- 
+
 ruleCheckProgram ::
                  (Activation -> Bool) -> String -> RuleBase -> [CoreBind] -> SDoc
 ruleCheckProgram is_active rule_pat rule_base binds
@@ -341,16 +341,16 @@ ruleCheckProgram is_active rule_pat rule_base binds
               (map (ruleCheckBind (RuleCheckEnv is_active rule_pat rule_base))
                  binds)
         line = text (replicate 20 '-')
- 
+
 data RuleCheckEnv = RuleCheckEnv{rc_is_active ::
                                  Activation -> Bool,
                                  rc_pattern :: String, rc_rule_base :: RuleBase}
- 
+
 ruleCheckBind :: RuleCheckEnv -> CoreBind -> Bag SDoc
 ruleCheckBind env (NonRec b r) = ruleCheck env r
 ruleCheckBind env (Rec prs)
   = unionManyBags [ruleCheck env r | (b, r) <- prs]
- 
+
 ruleCheck :: RuleCheckEnv -> CoreExpr -> Bag SDoc
 ruleCheck env (Var v) = emptyBag
 ruleCheck env (Lit l) = emptyBag
@@ -368,7 +368,7 @@ ruleCheckApp env (App f a) as
   = ruleCheck env a `unionBags` ruleCheckApp env f (a : as)
 ruleCheckApp env (Var f) as = ruleCheckFun env f as
 ruleCheckApp env other as = ruleCheck env other
- 
+
 ruleCheckFun :: RuleCheckEnv -> Id -> [CoreExpr] -> Bag SDoc
 ruleCheckFun env fn args
   | null name_match_rules = emptyBag
@@ -378,7 +378,7 @@ ruleCheckFun env fn args
   where name_match_rules
           = filter match (getRules (rc_rule_base env) fn)
         match rule = (rc_pattern env) `isPrefixOf` unpackFS (ruleName rule)
- 
+
 ruleAppCheck_help ::
                   (Activation -> Bool) -> Id -> [CoreExpr] -> [CoreRule] -> SDoc
 ruleAppCheck_help is_active fn args rules

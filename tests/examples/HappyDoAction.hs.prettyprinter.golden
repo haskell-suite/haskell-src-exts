@@ -1,6 +1,6 @@
 {-# LANGUAGE MagicHash #-}
 module HappyDoAction where
- 
+
 foo :: Int#
 happyDoAction i tk st
   = case action of

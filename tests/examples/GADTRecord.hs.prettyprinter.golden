@@ -1,5 +1,5 @@
 {-# LANGUAGE GADTs #-}
 module Main (main) where
- 
+
 data T where
         T :: {field :: Int} -> T

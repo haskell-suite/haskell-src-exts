@@ -1,5 +1,5 @@
 {-# LANGUAGE TypeFamilies #-}
 module Main (main) where
- 
+
 f :: (Eq a, (a ~ Int)) => a -> Int
 f _ = 3

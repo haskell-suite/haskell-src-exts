@@ -1,5 +1,5 @@
 module Main (main) where
 f x = g
-  where  
+  where 
         g :: Int
         g = 0

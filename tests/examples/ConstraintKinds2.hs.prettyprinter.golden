@@ -2,6 +2,6 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE RankNTypes #-}
 module Main (main) where
- 
+
 data Dict p where
         Dict :: p => Dict p
