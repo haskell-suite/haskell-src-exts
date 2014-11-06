@@ -780,7 +780,7 @@ instance Pretty Type where
         prettyPrec _ (TyPromoted p) = pretty p
         prettyPrec p (TyEquals a b) = parensIf (p > 0) (myFsep [pretty a, text "~", pretty b])
         prettyPrec _ (TySplice s) = pretty s
-        prettyPrec _ (TyBang b t) = pretty b <> pretty t
+        prettyPrec _ (TyBang b t) = pretty b <> ppAType t
 
 instance Pretty Promoted where
   pretty p =
@@ -1829,4 +1829,4 @@ instance SrcInfo loc => Pretty (P.PType loc) where
         prettyPrec _ (P.TyKind _ t k) = parens (myFsep [pretty t, text "::", pretty k])
         prettyPrec _ (P.TyPromoted _ p) = pretty $ sPromoted p
         prettyPrec _ (P.TySplice _ s) = pretty s
-        prettyPrec _ (P.TyBang _ b t) = pretty b <> pretty t
+        prettyPrec _ (P.TyBang _ b t) = pretty b <> ppAType t
