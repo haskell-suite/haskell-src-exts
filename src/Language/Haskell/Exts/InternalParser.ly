@@ -21,6 +21,7 @@
 >               mparseDecl,
 >               mparseType,
 >               mparseStmt,
+>               mparseImportDecl,
 >               ngparseModulePragmas,
 >               ) where
 >
@@ -280,6 +281,7 @@ Pragmas
 > %name mparseDecl topdecl
 > %name mparseType truectype
 > %name mparseStmt stmt
+> %name mparseImportDecl impdecl
 > %partial ngparseModulePragmas toppragmas
 > %tokentype { Loc Token }
 > %expect 7

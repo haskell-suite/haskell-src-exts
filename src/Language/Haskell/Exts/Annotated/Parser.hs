@@ -31,6 +31,8 @@ module Language.Haskell.Exts.Annotated.Parser
     , parseDecl, parseDeclWithMode, parseDeclWithComments
     -- ** Types
     , parseType, parseTypeWithMode, parseTypeWithComments
+    -- ** Types
+    , parseImportDecl, parseImportDeclWithMode, parseImportDeclWithComments
     -- * Non-greedy parsers
     , NonGreedy(..)
     , ListOf(..), unListOf
@@ -52,6 +54,7 @@ instance Parseable (Module SrcSpanInfo) where parser = normalParser mparseModule
 instance Parseable (Pat    SrcSpanInfo) where parser = normalParser mparsePat
 instance Parseable (Stmt   SrcSpanInfo) where parser = normalParser mparseStmt
 instance Parseable (Type   SrcSpanInfo) where parser = normalParserNoFixity mparseType
+instance Parseable (ImportDecl SrcSpanInfo) where parser = normalParserNoFixity mparseImportDecl
 
 normalParser :: AppFixity a => P (a SrcSpanInfo) -> Maybe [Fixity] -> P (a SrcSpanInfo)
 normalParser p Nothing = p
@@ -133,6 +136,18 @@ parseStmtWithMode = parseWithMode
 -- | Parse of a string containing a complete Haskell module, using an explicit 'ParseMode', retaining comments.
 parseStmtWithComments :: ParseMode -> String -> ParseResult (Stmt SrcSpanInfo, [Comment])
 parseStmtWithComments = parseWithComments
+
+-- | Parse of a string containing a Haskell statement, using 'defaultParseMode'.
+parseImportDecl :: String -> ParseResult (ImportDecl SrcSpanInfo)
+parseImportDecl = parse
+
+-- | Parse of a string containing a Haskell type, using an explicit 'ParseMode'.
+parseImportDeclWithMode :: ParseMode -> String -> ParseResult (ImportDecl SrcSpanInfo)
+parseImportDeclWithMode = parseWithMode
+
+-- | Parse of a string containing a complete Haskell module, using an explicit 'ParseMode', retaining comments.
+parseImportDeclWithComments :: ParseMode -> String -> ParseResult (ImportDecl SrcSpanInfo, [Comment])
+parseImportDeclWithComments = parseWithComments
 
 -- Non-greedy parsers (should use ng- prefixed parses exported by InternalParser)
 
