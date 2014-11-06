@@ -33,6 +33,9 @@ module Language.Haskell.Exts.Parser
                 parseDecl, parseDeclWithMode, parseDeclWithComments,
                 -- ** Types
                 parseType, parseTypeWithMode, parseTypeWithComments,
+                -- ** Import declarations
+                parseImportDecl, parseImportDeclWithMode, 
+                parseImportDeclWithComments,
                 -- * Non-greedy parsers
                 NonGreedy(..),
                 -- ** Option pragmas
@@ -57,6 +60,7 @@ instance Parseable S.Module where parser = parseWithSimplify (undefined :: Modul
 instance Parseable S.Pat    where parser = parseWithSimplify (undefined :: Pat    SrcSpanInfo) sPat
 instance Parseable S.Stmt   where parser = parseWithSimplify (undefined :: Stmt   SrcSpanInfo) sStmt
 instance Parseable S.Type   where parser = parseWithSimplify (undefined :: Type   SrcSpanInfo) sType
+instance Parseable S.ImportDecl where parser = parseWithSimplify (undefined :: ImportDecl SrcSpanInfo) sImportDecl
 
 instance Parseable (NonGreedy [S.ModulePragma]) where
   parser = parseWithSimplify
@@ -136,6 +140,20 @@ parseStmtWithMode = parseWithMode
 -- | Parse of a string containing a complete Haskell module, using an explicit 'ParseMode', retaining comments.
 parseStmtWithComments :: ParseMode -> String -> ParseResult (S.Stmt, [Comment])
 parseStmtWithComments = parseWithComments
+
+-- | Parse of a string containing a Haskell import declaration, using 'defaultParseMode'.
+parseImportDecl :: String -> ParseResult S.ImportDecl
+parseImportDecl = parse
+
+-- | Parse of a string containing a Haskell type, using an explicit 'ParseMode'.
+parseImportDeclWithMode :: ParseMode -> String -> ParseResult S.ImportDecl
+parseImportDeclWithMode = parseWithMode
+
+-- | Parse of a string containing a complete Haskell module, using an explicit 'ParseMode', retaining comments.
+parseImportDeclWithComments :: ParseMode -> String -> ParseResult (S.ImportDecl, [Comment])
+parseImportDeclWithComments = parseWithComments
+
+
 
 -- Module head parsers
 
