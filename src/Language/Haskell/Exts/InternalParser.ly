@@ -35,7 +35,7 @@
 > import Language.Haskell.Exts.Comments ( Comment )
 > import Language.Haskell.Exts.Extension
 
-> import Control.Monad ( liftM, (<=<) )
+> import Control.Monad ( liftM, (<=<), when )
 import Debug.Trace (trace)
 
 > }
@@ -278,7 +278,7 @@ Pragmas
 > %name mparseModule page
 > %name mparseExp trueexp
 > %name mparsePat pat
-> %name mparseDecl topdecl
+> %name mparseDeclAux body
 > %name mparseType truectype
 > %name mparseStmt stmt
 > %name mparseImportDecl impdecl
@@ -1914,5 +1914,12 @@ Miscellaneous (mostly renamings)
 
 > nIS = noInfoSpan
 > iS = infoSpan
+
+> mparseDecl :: P (Decl SrcSpanInfo)
+> mparseDecl = do
+>     (is, ds, _, _) <- mparseDeclAux
+>     when (not $ null is) $ 
+>        fail $ "Expected single declaration, found import declaration"
+>     checkSingleDecl ds
 
 > }

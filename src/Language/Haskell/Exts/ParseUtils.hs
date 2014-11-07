@@ -39,6 +39,7 @@ module Language.Haskell.Exts.ParseUtils (
     , checkInstBody         -- [InstDecl] -> P [InstDecl]
     , checkUnQual           -- QName -> P Name
     , checkQualOrUnQual     -- QName -> P QName
+    , checkSingleDecl       -- [Decl] -> P Decl
     , checkRevDecls         -- [Decl] -> P [Decl]
     , checkRevClsDecls      -- [ClassDecl] -> P [ClassDecl]
     , checkRevInstDecls     -- [InstDecl] -> P [InstDecl]
@@ -899,6 +900,17 @@ updateQNameLoc l (UnQual _ n)  = UnQual l n
 updateQNameLoc l (Special _ s) = Special l s
 
 -----------------------------------------------------------------------------
+-- For standalone top level Decl parser, check that we actually only
+-- parsed one Decl. This is needed since we parse matches of the same
+-- FunBind as multiple separate declarations, and merge them after.
+-- This should be called *after* checkRevDecls.
+
+checkSingleDecl :: [Decl L] -> P (Decl L)
+checkSingleDecl [d] = return d
+checkSingleDecl ds = 
+    fail $ "Expected a single declaration, found " ++ show (length ds)
+
+
 -- Reverse a list of declarations, merging adjacent FunBinds of the
 -- same name and checking that their arities match.
 
