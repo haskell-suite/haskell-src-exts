@@ -1095,9 +1095,11 @@ instance Pretty RPat where
         pretty (RPEither r1 r2) = parens . myFsep $
                 [pretty r1, char '|', pretty r2]
         pretty (RPSeq rs) =
-                myFsep $ text "(/" : map pretty rs ++ [text "/)"]
+                myFsep $ text "(|" : (punctuate comma . map pretty $ rs) 
+                           ++ [text "|)"]
         pretty (RPGuard r gs) =
-                myFsep $ text "(|" : pretty r : char '|' : map pretty gs ++ [text "|)"]
+                myFsep $ text "(|" : pretty r : char '|' : 
+                           (punctuate comma . map pretty $ gs) ++ [text "|)"]
         -- special case that would otherwise be buggy
         pretty (RPCAs n (RPPat (PIrrPat p))) =
                 myFsep [pretty n <> text "@:", char '~' <> pretty p]
@@ -1769,9 +1771,11 @@ instance SrcInfo loc => Pretty (P.PExp loc) where
         pretty (P.PreOp _ op e)  = pretty op <+> pretty e
         pretty (P.ViewPat _ e p) =
                 myFsep [pretty e, text "->", pretty p]
-        pretty (P.SeqRP _ rs) = myFsep $ text "(/" : map pretty rs ++ [text "/)"]
+        pretty (P.SeqRP _ rs) = 
+            myFsep $ text "(|" : (punctuate comma . map pretty $ rs) ++ [text "|)"]
         pretty (P.GuardRP _ r gs) =
-                myFsep $ text "(|" : pretty r : char '|' : map pretty gs ++ [text "|)"]
+                myFsep $ text "(|" : pretty r : char '|' : 
+                           (punctuate comma . map pretty $ gs) ++ [text "|)"]
         pretty (P.EitherRP _ r1 r2) = parens . myFsep $ [pretty r1, char '|', pretty r2]
         pretty (P.CAsRP _ n (P.IrrPat _ e)) =
                 myFsep [pretty n <> text "@:", char '~' <> pretty e]
