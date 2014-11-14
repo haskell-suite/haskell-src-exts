@@ -1,0 +1,7 @@
+{-# LANGUAGE ConstraintKinds #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+module Main (main) where
+
+class Foo c a where
+        
+        bar :: (c a) => a -> a
