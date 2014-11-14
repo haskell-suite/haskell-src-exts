@@ -1,3 +1,16 @@
+** 1.17.x
+
+1.16.0.1 --> 1.17.0
+===================
+
+AST changes:
+
+* Replaced VarA with AppA in Asst. (#168).
+
+Other changes:
+
+* Add standalone parsers for ImportDecl.
+
 ** 1.16.x
 
 1.16.0 --> 1.16.0.1
@@ -297,7 +310,7 @@ with GHC 7.8.
 ===============
 
 * Enable the unicode version of DoubleColon (x2237). Thanks
-  to Andrés Sicard-Ramírez for the patch!
+  to Andrï¿½s Sicard-Ramï¿½rez for the patch!
 
 1.9.6 --> 1.10.0
 ===============
