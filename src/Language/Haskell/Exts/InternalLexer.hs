@@ -93,10 +93,10 @@ data Token
         | Minus
         | Exclamation
         | Star
-        | LeftArrowTail         -- >-
-        | RightArrowTail        -- -<
-        | LeftDblArrowTail      -- >>-
-        | RightDblArrowTail     -- -<<
+        | LeftArrowTail         -- -<
+        | RightArrowTail        -- >-
+        | LeftDblArrowTail      -- -<<
+        | RightDblArrowTail     -- >>-
 
 -- Template Haskell
         | THExpQuote            -- [| or [e|
@@ -1286,10 +1286,10 @@ showToken t = case t of
   Minus             -> "-"
   Exclamation       -> "!"
   Star              -> "*"
-  LeftArrowTail     -> ">-"
-  RightArrowTail    -> "-<"
-  LeftDblArrowTail  -> ">>-"
-  RightDblArrowTail -> "-<<"
+  LeftArrowTail     -> "-<"
+  RightArrowTail    -> ">-"
+  LeftDblArrowTail  -> "-<<"
+  RightDblArrowTail -> ">>-"
   THExpQuote        -> "[|"
   THPatQuote        -> "[p|"
   THDecQuote        -> "[d|"
