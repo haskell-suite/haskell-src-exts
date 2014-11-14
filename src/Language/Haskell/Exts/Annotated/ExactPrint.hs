@@ -509,7 +509,7 @@ instance ExactP ModulePragma where
          in printInterleaved (zip pts ("{-# LANGUAGE":replicate k "," ++ replicate m "" ++ ["#-}"])) ns
     OptionsPragma    l mt str   ->
         let k = length (srcInfoPoints l)
-            opstr = "{-# OPTIONS" ++ case mt of { Just t -> "_" ++ show t ; _ -> "" } ++ str
+            opstr = "{-# OPTIONS" ++ case mt of { Just t -> "_" ++ show t ; _ -> "" } ++ ' ':str
          in printPoints l $ opstr : replicate (k-2) "" ++ ["#-}"]
     AnnModulePragma  l ann'      ->
         case srcInfoPoints l of

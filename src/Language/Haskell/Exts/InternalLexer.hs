@@ -887,13 +887,13 @@ lexPragmaStart = do
             case fst opt of
              Just opt' -> do
                 rest <- lexRawPragma
-                return $ OPTIONS (Just opt', rest)
+                return $ OPTIONS (Just opt', drop 1 rest)
              Nothing -> do
                             s <- getInput
                             case s of
                                 x:_ | isSpace x -> do
                                     rest <- lexRawPragma
-                                    return $ OPTIONS (Nothing, rest)
+                                    return $ OPTIONS (Nothing, drop 1 rest)
                                 _  -> fail "Malformed Options pragma"
      Just RULES -> do -- Rules enable ScopedTypeVariables locally.
             addExtensionL ScopedTypeVariables
