@@ -468,7 +468,7 @@ type Context = [Asst]
 --   allows multiple parameters, and allows them to be /type/s.
 --   Also extended with support for implicit parameters and equality constraints.
 data Asst = ClassA QName [Type]     -- ^ ordinary class assertion
-          | VarA Name               -- ^ constraint kind assertion, @Dict :: cxt => Dict cxt@
+          | AppA Name [Type]        -- ^ constraint kind assertion, @Dict :: cxt a => Dict cxt@
           | InfixA Type QName Type  -- ^ class assertion where the class name is given infix
           | IParam IPName Type      -- ^ implicit parameter assertion
           | EqualP Type   Type      -- ^ type equality constraint

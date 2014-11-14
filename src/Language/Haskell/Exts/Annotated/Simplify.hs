@@ -370,7 +370,7 @@ sContext ctxt = case ctxt of
 sAsst :: SrcInfo l => Asst l -> S.Asst
 sAsst asst = case asst of
     ClassA _ qn ts      -> S.ClassA (sQName qn) (map sType ts)
-    VarA _ n            -> S.VarA (sName n)
+    AppA _ n ns         -> S.AppA (sName n) (map sType ns)
     InfixA _ ta qn tb   -> S.InfixA (sType ta) (sQName qn) (sType tb)
     IParam _ ipn t      -> S.IParam (sIPName ipn) (sType t)
     EqualP _ t1 t2      -> S.EqualP (sType t1) (sType t2)

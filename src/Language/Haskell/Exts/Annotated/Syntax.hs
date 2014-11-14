@@ -632,7 +632,7 @@ data Context l
 --   Also extended with support for implicit parameters and equality constraints.
 data Asst l
         = ClassA l (QName l) [Type l]           -- ^ ordinary class assertion
-        | VarA l (Name l)                       -- ^ constraint kind assertion, @Dict :: cxt => Dict cxt@
+        | AppA l (Name l) [Type l]              -- ^ constraint kind assertion, @Dict :: cxt a => Dict cxt@
         | InfixA l (Type l) (QName l) (Type l)  -- ^ class assertion where the class name is given infix
         | IParam l (IPName l) (Type l)          -- ^ implicit parameter assertion
         | EqualP l (Type l) (Type l)            -- ^ type equality constraint
@@ -1418,14 +1418,14 @@ instance Annotated Context where
 instance Annotated Asst where
     ann asst = case asst of
         ClassA l _ _     -> l
-        VarA l _         -> l
+        AppA l _ _       -> l
         InfixA l _ _ _   -> l
         IParam l _ _     -> l
         EqualP l _ _     -> l
         ParenA l _       -> l
     amap f asst = case asst of
         ClassA l qn ts      -> ClassA (f l) qn ts
-        VarA   l n          -> VarA   (f l) n
+        AppA   l n ns       -> AppA   (f l) n ns
         InfixA l ta qn tb   -> InfixA (f l) ta qn tb
         IParam l ipn t      -> IParam (f l) ipn t
         EqualP l t1 t2      -> EqualP (f l) t1 t2

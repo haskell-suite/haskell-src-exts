@@ -195,9 +195,9 @@ checkAssertion t' = checkAssertion' id [] t'
                 return $ InfixA (fl l) a op b
             checkAssertion' fl ts (TyParen l t) =
                 checkAssertion' (const (fl l)) ts t
-            checkAssertion' fl [] (TyVar l t) = do -- Dict :: cxt => Dict cxt
+            checkAssertion' fl ts (TyVar l t) = do -- Dict :: cxt => Dict cxt
                 checkEnabled ConstraintKinds
-                return $ VarA (fl l) t
+                return $ AppA (fl l) t (reverse ts)
             checkAssertion' _ _ _ = fail "Illegal class assertion"
 
 getSymbol :: QName L -> Maybe String
@@ -241,7 +241,9 @@ checkAsst isSimple asst =
       ClassA l qn pts -> do
                 ts <- mapM (checkAsstParam isSimple) pts
                 return $ S.ClassA l qn ts
-      VarA l n        -> return $ S.VarA l n
+      AppA l n pts    -> do
+                ts <- mapM (checkAsstParam isSimple) pts
+                return $ S.AppA l n ts
       InfixA l a op b -> do
                 [a',b'] <- mapM (checkAsstParam isSimple) [a,b]
                 return $ S.InfixA l a' op b'

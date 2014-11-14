@@ -344,7 +344,7 @@ instance Annotated PType where
 
 data PAsst l
     = ClassA l (QName l) [PType l]
-    | VarA l (Name l)
+    | AppA l (Name l) [PType l]
     | InfixA l (PType l) (QName l) (PType l)
     | IParam l (IPName l) (PType l)
     | EqualP l (PType l)  (PType l)
@@ -354,14 +354,14 @@ data PAsst l
 instance Annotated PAsst where
     ann asst = case asst of
         ClassA l _ _        -> l
-        VarA l _            -> l
+        AppA l _ _          -> l
         InfixA l _ _ _      -> l
         IParam l _ _        -> l
         EqualP l _ _        -> l
         ParenA l _          -> l
     amap f asst = case asst of
         ClassA l qn ts      -> ClassA (f l) qn ts
-        VarA l n            -> VarA (f l) n
+        AppA l t ts         -> AppA (f l) t ts
         InfixA l ta qn tb   -> InfixA (f l) ta qn tb
         IParam l ipn t      -> IParam (f l) ipn t
         EqualP l t1 t2      -> EqualP (f l) t1 t2
