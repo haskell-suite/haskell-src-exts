@@ -31,7 +31,7 @@ module Language.Haskell.Exts.Annotated.Parser
     , parseDecl, parseDeclWithMode, parseDeclWithComments
     -- ** Types
     , parseType, parseTypeWithMode, parseTypeWithComments
-    -- ** Types
+    -- ** Imports
     , parseImportDecl, parseImportDeclWithMode, parseImportDeclWithComments
     -- * Non-greedy parsers
     , NonGreedy(..)
