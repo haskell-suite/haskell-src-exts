@@ -1830,11 +1830,8 @@ Implicit parameter
 >       | qvarsym1              { $1 }
 
 > varsym :: { Name L }
->       : VARSYM                { let Loc l (VarSym v) = $1 in Symbol (nIS l) v }
+>       : varsymm               { $1 }
 >       | '-'                   { minus_name (nIS $1) }
->       | '!'                   { bang_name  (nIS $1) }
->       | '.'                   { dot_name   (nIS $1) }
->       | '*'                   { star_name  (nIS $1) }
 
 > varsymm :: { Name L } -- varsym not including '-'
 >       : VARSYM                { let Loc l (VarSym v) = $1 in Symbol (nIS l) v }
