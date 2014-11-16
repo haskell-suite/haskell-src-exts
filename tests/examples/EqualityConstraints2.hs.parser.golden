@@ -1,1 +1,1 @@
-ParseFailed (SrcLoc "tests/examples/EqualityConstraints2.hs" 1 19) "TypeFamilies or GADTs is not enabled"
+ParseFailed (SrcLoc "tests/examples/EqualityConstraints2.hs" 1 19) "At least one of TypeFamilies or GADTs language extensions needs to be enabled. Please add: {-# LANGUAGE TypeFamilies #-} or {-# LANGUAGE GADTs #-} language pragma at the top of your module."

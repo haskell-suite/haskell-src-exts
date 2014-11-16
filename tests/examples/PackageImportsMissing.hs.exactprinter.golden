@@ -1,1 +1,1 @@
-ParseFailed (SrcLoc "tests/examples/PackageImportsMissing.hs" 3 17) "PackageImports is not enabled"
+ParseFailed (SrcLoc "tests/examples/PackageImportsMissing.hs" 3 17) "PackageImports language extension is not enabled. Please add {-# LANGUAGE PackageImports #-} pragma at the top of your module."
