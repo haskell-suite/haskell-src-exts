@@ -317,8 +317,7 @@ match_alts menv subst ((c1, vs1, r1) : alts1)
   | c1 == c2 =
     do subst1 <- match menv' subst r1 r2
        match_alts menv subst1 alts1 alts2
-  where 
-        menv' :: MatchEnv
+  where menv' :: MatchEnv
         menv' = menv{me_env = rnBndrs2 (me_env menv) vs1 vs2}
 match_alts menv subst alts1 alts2 = Nothing
 

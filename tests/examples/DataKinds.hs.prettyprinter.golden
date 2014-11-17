@@ -3,7 +3,6 @@
 module Main (main) where
 
 class C1 (a :: Bool) where
-        
         c :: proxy a -> Int
 
 class C2 (a :: [*])

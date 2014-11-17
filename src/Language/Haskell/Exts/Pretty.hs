@@ -1046,7 +1046,7 @@ instance Pretty Bracket where
         pretty (PatBracket p) = ppBracket "[p|" p
         pretty (TypeBracket t) = ppBracket "[t|" t
         pretty (DeclBracket d) =
-                myFsep $ text "[d|" : ppDecls False d ++ [text "|]"]
+                myFsep $ text "[d|" : ppDecls True d ++ [text "|]"]
 
 ppBracket :: Pretty a => String -> a -> Doc
 ppBracket o x = myFsep [text o, pretty x, text "|]"]

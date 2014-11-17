@@ -1,7 +1,6 @@
 module ClassInstType where
 
 class Dir d where
-        
         localDir :: d -> IO FilePath
 
 instance Dir Directory where

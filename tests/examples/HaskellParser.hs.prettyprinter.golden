@@ -4,8 +4,7 @@ import qualified Language.Haskell.Exts.Annotated.Syntax as Syn
 import qualified Language.Haskell.Exts.Extension as Ext
 parse originalFileName input
   = Parser.parseModuleWithMode parseMode input
-  where 
-        parseMode :: Parser.ParseMode
+  where parseMode :: Parser.ParseMode
         parseMode
           = Parser.defaultParseMode{Parser.parseFilename = originalFileName,
                                     Parser.extensions = Ext.glasgowExts ++ [Ext.ExplicitForall]}

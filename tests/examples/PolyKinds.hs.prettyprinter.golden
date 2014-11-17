@@ -4,7 +4,6 @@ module Main (main) where
 data Proxy t = Proxy
 
 class Typeable t where
-        
         typeOf :: Proxy t -> TypeRep
 
 instance Typeable Int where

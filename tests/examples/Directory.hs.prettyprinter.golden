@@ -64,8 +64,7 @@ setPermissions name (Permissions r w e s)
                           let mode2 = modifyBit w mode1 s_IWUSR
                           let mode3 = modifyBit (e || s) mode2 s_IXUSR
                           c_wchmod p_name mode3
-  where 
-        modifyBit :: Bool -> CMode -> CMode -> CMode
+  where modifyBit :: Bool -> CMode -> CMode -> CMode
         modifyBit False m b = m .&. (complement b)
         modifyBit True m b = m .|. b
 
@@ -123,8 +122,7 @@ removeDirectoryRecursive startLoc
   = do cont <- getDirectoryContents startLoc
        sequence_ [rm (startLoc </> x) | x <- cont, x /= "." && x /= ".."]
        removeDirectory startLoc
-  where 
-        rm :: FilePath -> IO ()
+  where rm :: FilePath -> IO ()
         rm f
           = do temp <- try (removeFile f)
                case temp of
@@ -215,8 +213,7 @@ getDirectoryContents path
       do bracket (Win32.findFirstFile (path </> "*"))
            (\ (h, _) -> Win32.findClose h)
            (\ (h, fdat) -> loop h fdat [])
-  where 
-        loop ::
+  where loop ::
              Win32.HANDLE -> Win32.FindData -> [FilePath] -> IO [FilePath]
         loop h fdat acc
           = do filename <- Win32.getFindDataFileName fdat
