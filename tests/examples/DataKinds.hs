@@ -19,3 +19,7 @@ data Y (a :: (*, Bool))
 
 y1 = undefined :: Y '(Double, True)
 y2 = undefined :: Y '(Double, 'False {-comment-})
+
+
+z1 = undefined :: X [ a -> b, X '[] ]
+z2 = undefined :: Y (a -> b, True)

@@ -333,13 +333,13 @@ sType t' = case t' of
     TySplice _ s                -> S.TySplice (sSplice s)
     TyBang _ b t                -> S.TyBang (sBangType b) (sType t)
 
-sPromoted :: Promoted l -> S.Promoted
+sPromoted :: SrcInfo l => Promoted l -> S.Promoted
 sPromoted p = case p of
     PromotedInteger _ n _ -> S.PromotedInteger n
     PromotedString _ s _ -> S.PromotedString s
     PromotedCon _ b qn -> S.PromotedCon b (sQName qn)
-    PromotedList _ b ps -> S.PromotedList b (map sPromoted ps)
-    PromotedTuple _ ps -> S.PromotedTuple (map sPromoted ps)
+    PromotedList _ b ps -> S.PromotedList b (map sType ps)
+    PromotedTuple _ ps -> S.PromotedTuple (map sType ps)
     PromotedUnit _ -> S.PromotedUnit
 
 

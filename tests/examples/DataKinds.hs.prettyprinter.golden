@@ -19,3 +19,5 @@ x2 = undefined :: X '[Int, Double]
 data Y (a :: (*, Bool))
 y1 = undefined :: Y '(Double, True)
 y2 = undefined :: Y '(Double, 'False)
+z1 = undefined :: X [a -> b, X '[]]
+z2 = undefined :: Y (a -> b, True)

@@ -36,6 +36,7 @@
 > import Language.Haskell.Exts.Extension
 
 > import Control.Monad ( liftM, (<=<), when )
+> import Control.Applicative ( (<$>) )
 import Debug.Trace (trace)
 
 > }
@@ -869,11 +870,11 @@ the (# and #) lexemes. Kinds will be handled at the kind rule.
 >       | ptype                         { % checkEnabled DataKinds >> return (TyPromoted (ann $1) $1) }
 
 > ptype :: { Promoted L }
->       : VARQUOTE '[' ptypes1 ']'      { PromotedList  ($1 <^^> $4 <** ($1: reverse($4:snd $3))) True  (reverse (fst $3)) }
->       | VARQUOTE '['         ']'      { PromotedList  ($1 <^^> $3 <** [$1, $3])                 True  []                 }
->       |          '[' ptypes  ']'      { PromotedList  ($1 <^^> $3 <** ($1: reverse($3:snd $2))) False (reverse (fst $2)) }
->       | VARQUOTE '(' ptypes1 ')'      { PromotedTuple ($1 <^^> $4 <** ($1: reverse($4:snd $3)))       (reverse (fst $3)) }
->       | VARQUOTE '('         ')'      { PromotedUnit  ($1 <^^> $3 ) }
+>       : VARQUOTE '[' types1 ']'       {% PromotedList  ($1 <^^> $4 <** ($1:reverse($4:snd $3))) True . reverse <\$> mapM checkType (fst $3) }
+>       | VARQUOTE '['        ']'       { PromotedList   ($1 <^^> $3 <** [$1, $3]) True  [] }
+>       |          '[' types  ']'       {% PromotedList  ($1 <^^> $3 <** ($1:reverse($3:snd $2))) False . reverse <\$> mapM checkType (fst $2) }
+>       | VARQUOTE '(' types1 ')'       {% PromotedTuple ($1 <^^> $4 <** ($1:reverse($4:snd $3))) . reverse <\$> mapM checkType (fst $3) }
+>       | VARQUOTE '('        ')'       { PromotedUnit  ($1 <^^> $3 ) }
 >       | VARQUOTE gconsym              { PromotedCon ((noInfoSpan $1 <++> ann $2) <** [$1]) True  $2 }
 >       | VARQUOTE qtyconorcls          { PromotedCon ((noInfoSpan $1 <++> ann $2) <** [$1]) True  $2 }
 >       | INT                           { let Loc l (IntTok  (i,raw)) = $1 in PromotedInteger (nIS l) i raw }
@@ -882,21 +883,6 @@ the (# and #) lexemes. Kinds will be handled at the kind rule.
 > strict_mark :: { (Bool, [S]) }
 >        : '!'                           { (True, [$1]) }
 >        | '{-# UNPACK' '#-}' '!'        { (False, [$1,$2,$3]) }
-
-Leading quotes can be left off of promoted types when they make up another promoted
-type...
-
-> ptype1 :: { Promoted L }
->       : ptype                         { $1 }
->       | qtyconorcls                   { PromotedCon (ann $1) False $1 }
-
-
-> ptypes :: { ([Promoted L],[S]) }
->        : ptypes1 ',' ptype1           { ($3 : fst $1, $2 : snd $1)  }
-
-> ptypes1 :: { ([Promoted L],[S]) }
->       : ptype1                        { ([$1],[]) }
->       | ptypes1 ',' ptype1            { ($3 : fst $1, $2 : snd $1) }
 
 
 > gtycon :: { QName L }
