@@ -1,0 +1,7 @@
+module Main (main) where
+
+data X = X
+       deriving Show
+
+data X = X
+       deriving Show
