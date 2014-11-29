@@ -335,7 +335,7 @@ pragmas = [
  ]
 
 isIdent, isHSymbol, isPragmaChar :: Char -> Bool
-isIdent   c = isAlpha c || isDigit c || c == '\'' || c == '_'
+isIdent   c = isAlphaNum c || c == '\'' || c == '_'
 
 isHSymbol c = c `elem` ":!#%&*./?@\\-" || ((isSymbol c || isPunctuation c) && not (c `elem` "(),;[]`{}_\"'"))
 
