@@ -1,0 +1,9 @@
+{-# LANGUAGE UnicodeSyntax #-}
+module Main (main) where
+
+arrowTest :: String -> String
+arrowTest input
+  = case input of
+        "hello" -> "world"
+        "world" -> "hello"
+        otherwise -> "unknow"
