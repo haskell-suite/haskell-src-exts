@@ -1,4 +1,4 @@
-{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE DeriveDataTypeable, FlexibleInstances #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 -----------------------------------------------------------------------------
 -- |
@@ -38,12 +38,17 @@ module Language.Haskell.Exts.Parser
                 parseImportDeclWithComments,
                 -- * Non-greedy parsers
                 NonGreedy(..),
-                -- ** Option pragmas
-                getTopPragmas
+                -- ** Module head parsers
+                getTopPragmas,
+                PragmasAndModuleName(..),
+                PragmasAndModuleHead(..),
+                ModuleHeadAndImports(..)
             ) where
 
+import           Data.Data (Data, Typeable)
 import           Language.Haskell.Exts.Annotated.Fixity
 import           Language.Haskell.Exts.Annotated.Parser (unListOf, ListOf, NonGreedy(..))
+import qualified Language.Haskell.Exts.Annotated.Parser as A
 import           Language.Haskell.Exts.Annotated.Simplify
 import           Language.Haskell.Exts.Annotated.Syntax
 import           Language.Haskell.Exts.Comments
@@ -160,3 +165,68 @@ parseImportDeclWithComments = parseWithComments
 -- | Partial parse of a string starting with a series of top-level option pragmas.
 getTopPragmas :: String -> ParseResult [S.ModulePragma]
 getTopPragmas = fmap (fmap unNonGreedy) parse
+
+-- | Type intended to be used with 'Parseable', with instances that
+--   implement a non-greedy parse of the module name, including
+--   top-level pragmas.  This means that a parse error that comes
+--   after the module header won't be returned. If no module name is
+--   found (and no parse error occurs), then \"Main\" is returned.
+--   This is the same behavior that 'parseModule' has.
+data PragmasAndModuleName = PragmasAndModuleName
+    [S.ModulePragma]
+    S.ModuleName
+  deriving (Eq,Ord,Show,Typeable,Data)
+
+instance Parseable (NonGreedy PragmasAndModuleName) where
+    parser fixs = do
+        NonGreedy (A.PragmasAndModuleName _ ps mmn) <- parser fixs
+        return $ NonGreedy $ PragmasAndModuleName
+            (map sModulePragma (ps :: [ModulePragma SrcSpanInfo]))
+            (maybe S.main_mod sModuleName mmn)
+
+-- | Type intended to be used with 'Parseable', with instances that
+--   implement a non-greedy parse of the module name, including
+--   top-level pragmas.  This means that a parse error that comes
+--   after the module header won't be returned. If no module head is
+--   found, then a default simple head like \"module Main where\" is
+--   assumed. This is the same behavior that 'parseModule' has.
+--
+--   Note that the 'ParseMode' particularly matters for this due to
+--   the 'MagicHash' changing the lexing of identifiers to include
+--   \"#\".
+data PragmasAndModuleHead = PragmasAndModuleHead
+    [S.ModulePragma]
+    (S.ModuleName, Maybe S.WarningText, Maybe [S.ExportSpec])
+  deriving (Eq,Ord,Show,Typeable,Data)
+
+instance Parseable (NonGreedy PragmasAndModuleHead) where
+    parser fixs = do
+        NonGreedy (A.PragmasAndModuleHead _ ps mmh) <- parser fixs
+        return $ NonGreedy $ PragmasAndModuleHead
+            (map sModulePragma (ps :: [ModulePragma SrcSpanInfo]))
+            (sModuleHead mmh)
+
+-- | Type intended to be used with 'Parseable', with instances that
+--   implement a non-greedy parse of the module head, including
+--   top-level pragmas, module name, export list, and import
+--   list. This means that if a parse error that comes after the
+--   imports won't be returned.  If no module head is found, then a
+--   default simple head like \"module Main where\" is assumed. This
+--   is the same behavior that 'parseModule' has.
+--
+--   Note that the 'ParseMode' particularly matters for this due to
+--   the 'MagicHash' changing the lexing of identifiers to include
+--   \"#\".
+data ModuleHeadAndImports = ModuleHeadAndImports
+    [S.ModulePragma]
+    (S.ModuleName, Maybe S.WarningText, Maybe [S.ExportSpec])
+    [S.ImportDecl]
+  deriving (Eq,Ord,Show,Typeable,Data)
+
+instance Parseable (NonGreedy ModuleHeadAndImports) where
+    parser fixs = do
+        NonGreedy (A.ModuleHeadAndImports _ ps mmh imps) <- parser fixs
+        return $ NonGreedy $ ModuleHeadAndImports
+            (map sModulePragma (ps :: [ModulePragma SrcSpanInfo]))
+            (sModuleHead mmh)
+            (map sImportDecl imps)

@@ -23,6 +23,9 @@
 >               mparseStmt,
 >               mparseImportDecl,
 >               ngparseModulePragmas,
+>               ngparseModuleHeadAndImports,
+>               ngparsePragmasAndModuleHead,
+>               ngparsePragmasAndModuleName
 >               ) where
 >
 > import Language.Haskell.Exts.Annotated.Syntax hiding ( Type(..), Exp(..), Asst(..), XAttr(..), FieldUpdate(..) )
@@ -284,6 +287,9 @@ Pragmas
 > %name mparseStmt stmt
 > %name mparseImportDecl impdecl
 > %partial ngparseModulePragmas toppragmas
+> %partial ngparseModuleHeadAndImports moduletopimps
+> %partial ngparsePragmasAndModuleHead moduletophead
+> %partial ngparsePragmasAndModuleName moduletopname
 > %tokentype { Loc Token }
 > %expect 7
 > %%
@@ -1882,6 +1888,23 @@ Miscellaneous (mostly renamings)
 
 > tyvarsym :: { Name L }
 > tyvarsym : VARSYM              { let Loc l (VarSym x) = $1 in Symbol (nIS l) x }
+
+> impdeclsblock :: { ([ImportDecl L],[S],L) }
+>               : '{'  optsemis impdecls optsemis '}'         { let (ids, ss) = $3 in (ids, $1 : reverse $2 ++ ss ++ reverse $4 ++ [$5], $1 <^^> $5) }
+>               | open optsemis impdecls optsemis close       { let (ids, ss) = $3 in (ids, $1 : reverse $2 ++ ss ++ reverse $4 ++ [$5], $1 <^^> $5) }
+
+Exported as partial parsers:
+
+> moduletopname :: { (([ModulePragma L], [S], L), Maybe (ModuleName L)) }
+>               : toppragmas 'module' modid     { ($1, Just $3) }
+>               | toppragmas {- empty -}        { ($1, Nothing) }
+
+> moduletophead :: { (([ModulePragma L], [S], L), Maybe (ModuleHead L)) }
+>               : toppragmas optmodulehead      { ($1, $2) }
+
+> moduletopimps :: { (([ModulePragma L], [S], L), Maybe (ModuleHead L), Maybe ([ImportDecl L],[S],L)) }
+>               : toppragmas optmodulehead impdeclsblock      { ($1, $2, Just $3) }
+>               | toppragmas optmodulehead {- empty -}        { ($1, $2, Nothing) }
 
 -----------------------------------------------------------------------------
 

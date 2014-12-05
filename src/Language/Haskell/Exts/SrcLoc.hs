@@ -113,6 +113,13 @@ combSpanInfo s1 s2 = SrcSpanInfo
     (mergeSrcSpan (srcInfoSpan s1) (srcInfoSpan s2))
     []
 
+-- | Like '(<+?>)', but it also concatenates the 'srcInfoPoints'.
+combSpanMaybe :: SrcSpanInfo -> Maybe SrcSpanInfo -> SrcSpanInfo
+combSpanMaybe s1 Nothing = s1
+combSpanMaybe s1 (Just s2) = SrcSpanInfo
+    (mergeSrcSpan (srcInfoSpan s1) (srcInfoSpan s2))
+    (srcInfoPoints s1 ++ srcInfoPoints s2)
+
 -- | Short name for 'combSpanInfo'
 (<++>) :: SrcSpanInfo -> SrcSpanInfo -> SrcSpanInfo
 (<++>) = combSpanInfo

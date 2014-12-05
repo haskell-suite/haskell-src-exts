@@ -36,8 +36,11 @@ module Language.Haskell.Exts.Annotated.Parser
     -- * Non-greedy parsers
     , NonGreedy(..)
     , ListOf(..), unListOf
-    -- ** Option pragmas
+    -- ** Module head parsers
     , getTopPragmas
+    , PragmasAndModuleName(..)
+    , PragmasAndModuleHead(..)
+    , ModuleHeadAndImports(..)
     ) where
 
 import Data.Data hiding (Fixity)
@@ -160,6 +163,65 @@ instance Parseable (NonGreedy (ListOf (ModulePragma SrcSpanInfo))) where
 
 nglistParserNoFixity :: P ([a SrcSpanInfo], [SrcSpan], SrcSpanInfo) -> Maybe [Fixity] -> P (NonGreedy (ListOf (a SrcSpanInfo)))
 nglistParserNoFixity f = fmap (NonGreedy . toListOf) . normalParserNoFixity f
+
+-- | Type intended to be used with 'Parseable', with instances that implement a
+--   non-greedy parse of the module name, including top-level pragmas.  This
+--   means that a parse error that comes after the module header won't be
+--   returned. If the 'Maybe' value is 'Nothing', then this means that there was
+--   no module header.
+data PragmasAndModuleName l = PragmasAndModuleName l
+    [ModulePragma l]
+    (Maybe (ModuleName l))
+  deriving (Eq,Ord,Show,Typeable,Data)
+
+instance Parseable (NonGreedy (PragmasAndModuleName SrcSpanInfo)) where
+    parser _ = do
+        ((pragmas, pss, pl), mn) <- ngparsePragmasAndModuleName
+        let l = combSpanMaybe (pl <** pss) (fmap ann mn)
+        return $ NonGreedy $ PragmasAndModuleName l pragmas mn
+
+--   Type intended to be used with 'Parseable', with instances that
+--   implement a non-greedy parse of the module name, including
+--   top-level pragmas.  This means that a parse error that comes
+--   after the module header won't be returned. If the 'Maybe' value
+--   is 'Nothing', this means that there was no module head.
+--
+--   Note that the 'ParseMode' matters for this due to the 'MagicHash'
+--   changing the lexing of identifiers to include \"#\".
+data PragmasAndModuleHead l = PragmasAndModuleHead l
+    [ModulePragma l]
+    (Maybe (ModuleHead l))
+  deriving (Eq,Ord,Show,Typeable,Data)
+
+instance Parseable (NonGreedy (PragmasAndModuleHead SrcSpanInfo)) where
+    parser _ = do
+        ((pragmas, pss, pl), mh) <- ngparsePragmasAndModuleHead
+        let l = combSpanMaybe (pl <** pss) (fmap ann mh)
+        return $ NonGreedy $ PragmasAndModuleHead l pragmas mh
+
+--   Type intended to be used with 'Parseable', with instances that
+--   implement a non-greedy parse of the module head, including
+--   top-level pragmas, module name, export list, and import
+--   list. This means that if a parse error that comes after the
+--   imports won't be returned.  If the 'Maybe' value is 'Nothing',
+--   this means that there was no module head.
+--
+--   Note that the 'ParseMode' matters for this due to the 'MagicHash'
+--   changing the lexing of identifiers to include \"#\".
+data ModuleHeadAndImports l = ModuleHeadAndImports l
+    [ModulePragma l]
+    (Maybe (ModuleHead l))
+    [ImportDecl l]
+  deriving (Eq,Ord,Show,Typeable,Data)
+
+instance Parseable (NonGreedy (ModuleHeadAndImports SrcSpanInfo)) where
+    parser _ = do
+        ((pragmas, pss, pl), mh, mimps) <- ngparseModuleHeadAndImports
+        let l = (pl <** pss) `combSpanMaybe`
+                (fmap ann mh) `combSpanMaybe`
+                (fmap (\(_, iss, il) -> il <** iss) mimps)
+            imps = maybe [] (\(x, _, _) -> x) mimps
+        return $ NonGreedy $ ModuleHeadAndImports l pragmas mh imps
 
 -- | Instances of 'Parseable' for @NonGreedy a@ will only consume the input
 --   until @a@ is fully parsed.  This means that parse errors that come later
