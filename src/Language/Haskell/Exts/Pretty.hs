@@ -1611,7 +1611,7 @@ parenList = parens . myFsepSimple . punctuate comma
 hashParenList :: [Doc] -> Doc
 hashParenList = hashParens . myFsepSimple . punctuate comma
   where hashParens = parens . hashes
-        hashes doc = char '#' <> doc <> char '#'
+        hashes doc = char '#' <+> doc <+> char '#'
 
 braceList :: [Doc] -> Doc
 braceList = braces . myFsepSimple . punctuate comma
