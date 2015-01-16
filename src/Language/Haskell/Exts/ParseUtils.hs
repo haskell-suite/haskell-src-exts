@@ -930,7 +930,7 @@ updateQNameLoc l (Special _ s) = Special l s
 
 checkSingleDecl :: [Decl L] -> P (Decl L)
 checkSingleDecl [d] = return d
-checkSingleDecl ds = 
+checkSingleDecl ds =
     fail $ "Expected a single declaration, found " ++ show (length ds)
 
 
