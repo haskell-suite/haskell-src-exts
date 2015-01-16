@@ -251,6 +251,7 @@ Reserved Ids
 >       'where'         { Loc $$ KW_Where }
 >       'qualified'     { Loc $$ KW_Qualified }
 >       'role'          { Loc $$ KW_Role }
+>       'pattern'       { Loc $$ KW_Pattern }
 
 Pragmas
 
@@ -623,6 +624,7 @@ lexer through the 'foreign' (and 'export') keyword.
 >       | '{-# DEPRECATED' warndeprs  '#-}'     { DeprPragmaDecl ($1 <^^> $3 <** ($1:snd $2++[$3])) $ reverse (fst $2) }
 >       | '{-# WARNING'    warndeprs  '#-}'     { WarnPragmaDecl ($1 <^^> $3 <** ($1:snd $2++[$3])) $ reverse (fst $2) }
 >       | '{-# ANN'        annotation '#-}'     { AnnPragma      ($1 <^^> $3 <** [$1,$3]) $2 }
+>       | pattern_synonym_decl          { $1 }
 >       | decl          { $1 }
 
 Role annotations
@@ -1887,6 +1889,26 @@ Layout
 > close :: { S }
 >       : vccurly               { $1 {- >>= \x -> trace (show x ++ show x ++ show x) (return x) -} } -- context popped in lexer.
 >       | error                 {% popContext >> getSrcLoc >>= \s -> return $ mkSrcSpan s s {- >>= \x -> trace (show x ++ show x) (return x) -} }
+
+-----------------------------------------------------------------------------
+Pattern Synonyms
+-- Pattern synonyms
+
+-- Glasgow extension: pattern synonyms
+>  pattern_synonym_decl :: { Decl L }
+>        : 'pattern' exp '=' pat
+>            {% do {
+>                   checkEnabled PatternSynonyms
+>                 ; p <- checkPatternSynonym $2
+>                 ; let {l = nIS $1 <++> ann $4 <** [$1,$3]}
+>                 ; return $ PatSyn l p $4 Bidirectional
+>                  }}
+>        | 'pattern' pat '<-' pat
+>            {% do {
+>                   checkEnabled PatternSynonyms
+>                 ; let {l = nIS $1 <++> ann $4 <** [$1,$3]}
+>                 ; return $ PatSyn l $2 $4 Unidirectional
+>                  }}
 
 -----------------------------------------------------------------------------
 Miscellaneous (mostly renamings)

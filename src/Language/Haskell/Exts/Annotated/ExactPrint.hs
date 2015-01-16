@@ -719,6 +719,18 @@ instance ExactP Decl where
         exactP p
         exactPC rhs
         maybeEP (\bs -> printStringAt (pos (head pts)) "where" >> exactPC bs) mbs
+    PatSyn l p rhs dir ->
+      let sep = case dir of
+                  Bidirectional -> "="
+                  Unidirectional -> "<-"
+      in
+      case srcInfoPoints l of
+        [_,sepPos] -> do
+          printString "pattern"
+          exactPC p
+          printStringAt (pos sepPos) sep
+          exactPC rhs
+        _ -> errorEP "ExactP: Decl: PatSyn is given too few srcInfoPoints"
     ForImp       l cc msf mstr n t   ->
         case srcInfoPoints l of
          _:b:pts -> do

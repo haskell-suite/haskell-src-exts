@@ -120,6 +120,7 @@ sDecl decl = case decl of
         S.MinimalPragma (getPointLoc l) (fmap sBooleanFormula b)
      RoleAnnotDecl    l qn rs        ->
       S.RoleAnnotDecl (getPointLoc l) (sQName qn) (map sRole rs)
+     PatSyn l p r t -> S.PatSyn (getPointLoc l) (sPat p) (sPat r) t
 
 sTypeEqn :: SrcInfo l => TypeEqn l -> S.TypeEqn
 sTypeEqn (TypeEqn _ a b) = S.TypeEqn (sType a) (sType b)

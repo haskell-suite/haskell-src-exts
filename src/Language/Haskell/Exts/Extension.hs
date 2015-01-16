@@ -506,6 +506,10 @@ data KnownExtension =
 
   -- | [GHC &#xa7; 7.25.3] Allow role annotations.
   | RoleAnnotations
+  -- | [GHC &#xa7; 7.3.8] Enable giving names to parametrized pattern
+  -- schemes
+  | PatternSynonyms
+
 
   -- | [GHC &#xa7; 7.15] Allow partial specified type signatures.
   -- Note that this extension does not affect parsing. It only affects whether the

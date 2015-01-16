@@ -46,7 +46,7 @@ module Language.Haskell.Exts.Annotated.Syntax (
     Module(..), ModuleHead(..), WarningText(..), ExportSpecList(..), ExportSpec(..),
     ImportDecl(..), ImportSpecList(..), ImportSpec(..), Assoc(..), Namespace(..),
     -- * Declarations
-    Decl(..), DeclHead(..), InstRule(..), InstHead(..), Binds(..), IPBind(..),
+    Decl(..), DeclHead(..), InstRule(..), InstHead(..), Binds(..), IPBind(..), PatternSynDirection(..),
     -- ** Type classes and instances
     ClassDecl(..), InstDecl(..), Deriving(..),
     -- ** Data type declarations
@@ -290,6 +290,8 @@ data Decl l
      -- ^ A set of function binding clauses
      | PatBind      l (Pat l) (Rhs l) {-where-} (Maybe (Binds l))
      -- ^ A pattern binding
+     | PatSyn l (Pat l) (Pat l) PatternSynDirection
+     -- ^ A pattern synonym binding
      | ForImp       l (CallConv l) (Maybe (Safety l)) (Maybe String) (Name l) (Type l)
      -- ^ A foreign import declaration
      | ForExp       l (CallConv l)                    (Maybe String) (Name l) (Type l)
@@ -317,6 +319,11 @@ data Decl l
      | RoleAnnotDecl    l (QName l) [Role l]
      -- ^ A role annotation
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
+
+data  PatternSynDirection =
+      Unidirectional -- ^ A unidirectional pattern synonym with "<-"
+    | Bidirectional  -- ^ A bidirectional pattern synonym with "="
+    deriving (Eq, Ord, Show, Data, Typeable)
 
 -- | A type equation as found in closed type families.
 data TypeEqn l = TypeEqn l (Type l) (Type l) deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
@@ -1202,6 +1209,7 @@ instance Annotated Decl where
         AnnPragma        l _            -> l
         MinimalPragma    l _            -> l
         RoleAnnotDecl    l _ _          -> l
+        PatSyn           l _ _ _        -> l
     amap f decl = case decl of
         TypeDecl     l dh t      -> TypeDecl    (f l) dh t
         TypeFamDecl  l dh mk     -> TypeFamDecl (f l) dh mk
@@ -1236,6 +1244,7 @@ instance Annotated Decl where
         AnnPragma        l ann'          -> AnnPragma (f l) ann'
         MinimalPragma    l b             -> MinimalPragma (f l) b
         RoleAnnotDecl    l t rs          -> RoleAnnotDecl (f l) t rs
+        PatSyn           l p r d         -> PatSyn (f l) p r d
 
 instance Annotated Role where
     ann r = case r of

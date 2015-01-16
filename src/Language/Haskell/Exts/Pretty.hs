@@ -513,6 +513,13 @@ instance Pretty Decl where
                 mySep ([pretty assoc, int prec]
                        ++ (punctuate comma . map pretty $ opList))
 
+        pretty (PatSyn pos pat rhs dir) =
+                let sep = case dir of
+                            A.Bidirectional -> "="
+                            A.Unidirectional -> "<-" in
+                markLine pos $
+                mySep ([text "pattern", pretty pat, text sep, pretty rhs])
+
         pretty (ForImp pos cconv saf str name typ) =
                 -- blankline $
                 markLine pos $

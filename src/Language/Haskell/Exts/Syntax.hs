@@ -102,7 +102,7 @@ module Language.Haskell.Exts.Syntax (
 import Data.Data
 import GHC.Generics (Generic)
 import Language.Haskell.Exts.SrcLoc (SrcLoc(..))
-import Language.Haskell.Exts.Annotated.Syntax (Boxed(..), Tool(..))
+import Language.Haskell.Exts.Annotated.Syntax (Boxed(..), Tool(..), PatternSynDirection(..))
 
 
 -- | The name of a Haskell module.
@@ -268,6 +268,7 @@ data Decl
      -- ^ A foreign import declaration
      | ForExp   SrcLoc CallConv          String Name Type
      -- ^ A foreign export declaration
+     | PatSyn   SrcLoc Pat Pat PatternSynDirection
 
      | RulePragmaDecl   SrcLoc [Rule]
      -- ^ A RULES pragma
