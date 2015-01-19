@@ -200,14 +200,14 @@ runParserWithMode :: ParseMode -> P a -> String -> ParseResult a
         srcColumn = 1
     }
 -}
-runParserWithMode mode pm s = fmap fst $ runParserWithModeComments mode pm s
+runParserWithMode mode pm = fmap fst . runParserWithModeComments mode pm
 
 runParser :: P a -> String -> ParseResult a
 runParser = runParserWithMode defaultParseMode
 
 runParserWithModeComments :: ParseMode -> P a -> String -> ParseResult (a, [Comment])
-runParserWithModeComments mode (P m) s =
-  case m s 0 1 start ([],[],[],(False,False),[]) (toInternalParseMode mode) of
+runParserWithModeComments mode = let mode2 = toInternalParseMode mode in \(P m) s ->
+  case m s 0 1 start ([],[],[],(False,False),[]) mode2 of
     Ok (_,_,_,_,cs) a -> ParseOk (a, reverse cs)
     Failed loc msg    -> ParseFailed loc msg
     where start = SrcLoc {
