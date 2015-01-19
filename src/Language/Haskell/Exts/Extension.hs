@@ -679,11 +679,11 @@ toExtensionList lang exts' =
         remExts = [ ke | DisableExtension ke <- exts ]
      in impliesExts $ nub $ (langKes ++ addExts) \\ remExts
 -}
-  in go langKes exts'
+  in nub $ go langKes exts'
     where go :: [KnownExtension] -> [Extension] -> [KnownExtension]
           go acc [] = acc
-          go acc (DisableExtension x : exts) = go (nub (delete x acc)) exts
-          go acc (EnableExtension  x : exts) = go (nub (x : acc))      exts
+          go acc (DisableExtension x : exts) = go (filter (/= x) acc) exts
+          go acc (EnableExtension  x : exts) = go (x : acc)           exts
           -- We just throw away UnknownExtensions
           go acc (_ : exts) = go acc exts
 
