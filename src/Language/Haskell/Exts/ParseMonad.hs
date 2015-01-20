@@ -175,7 +175,7 @@ data InternalParseMode = IParseMode {
 
 toInternalParseMode :: ParseMode -> InternalParseMode
 toInternalParseMode (ParseMode pf bLang exts _ilang iline _fx) =
-    IParseMode pf (impliesExts $ toExtensionList bLang exts) {-_ilang -} iline {- _fx -}
+    IParseMode pf (toExtensionList bLang exts) {-_ilang -} iline {- _fx -}
 
 
 -- | Monad for parsing
