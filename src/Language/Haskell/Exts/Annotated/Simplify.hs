@@ -353,6 +353,7 @@ sType t' = case t' of
     TySplice _ s                -> S.TySplice (sSplice s)
     TyBang _ b t                -> S.TyBang (sBangType b) (sType t)
     TyWildCard _ mn             -> S.TyWildCard (sName `fmap` mn)
+    TyQuasiQuote _ n s          -> S.TyQuasiQuote n s
 
 sPromoted :: SrcInfo l => Promoted l -> S.Promoted
 sPromoted p = case p of
