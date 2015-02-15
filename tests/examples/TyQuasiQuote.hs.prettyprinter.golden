@@ -1,0 +1,5 @@
+{-# LANGUAGE QuasiQuotes, TemplateHaskell #-}
+module Main (main) where
+
+f :: [qq| something in here |]
+f = ()
