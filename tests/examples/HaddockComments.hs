@@ -12,20 +12,6 @@ Here is a longer description of this module, containing some
 commentary with @some markup@.
 -}
 module HaddockComments where
-
--- | Data type comment
--- With a second line
-data MyData = 
-  -- | Constructor1 comment
-  Cons1
-    { cons1Field1 :: Int -- ^ Constructor 1 field 2 comment
-                         -- spanning two lines
-      -- | Constructor 1 field 2 comment
-    , cons1Field2 :: Int
-    , cons1Field3 :: String -- Not a haddock comment
-    }
-  | Cons2 -- ^ Constructor 2 comment
-      Int
       
 -- | Function1 comment
 fun1 
@@ -54,3 +40,17 @@ class C a where
    f :: a -> Int
    -- | This is the documentation for the 'g' method
    g :: Int -> a
+
+-- | Data type comment
+-- With a second line
+data MyData = 
+  -- | Constructor1 comment
+  Cons1
+    { cons1Field1 :: Int -- ^ Constructor 1 field 1 comment
+                         -- spanning two lines
+      -- | Constructor 1 field 2 comment
+    , cons1Field2 :: Int
+    , cons1Field3 :: String -- Not a haddock comment
+    }
+  | Cons2 -- ^ Constructor 2 comment
+      Int -- ^ Last
