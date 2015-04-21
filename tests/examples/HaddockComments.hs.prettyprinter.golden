@@ -1,9 +1,5 @@
 module HaddockComments where
 
-data MyData = Cons1{cons1Field1 :: Int, cons1Field2 :: Int,
-                    cons1Field3 :: String}
-            | Cons2 Int
-
 fun1 :: Int -> Float -> IO ()
 fun1 = undefined
 fun2 = undefined
@@ -18,3 +14,7 @@ class C a where
         f :: a -> Int
         
         g :: Int -> a
+
+data MyData = Cons1{cons1Field1 :: Int, cons1Field2 :: Int,
+                    cons1Field3 :: String}
+            | Cons2 Int
