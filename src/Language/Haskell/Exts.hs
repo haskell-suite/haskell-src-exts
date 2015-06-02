@@ -50,6 +50,7 @@ import Language.Haskell.Exts.Comments
 import Data.List
 import Data.Maybe (fromMaybe)
 import Language.Preprocessor.Unlit
+import System.IO
 
 -- | Parse a source file on disk, using the default parse mode.
 parseFile :: FilePath -> IO (ParseResult Module)
@@ -62,17 +63,17 @@ parseFileWithExts exts fp = parseFileWithMode (defaultParseMode { extensions = e
 
 -- | Parse a source file on disk, supplying a custom parse mode.
 parseFileWithMode :: ParseMode -> FilePath -> IO (ParseResult Module)
-parseFileWithMode p fp = readFile fp >>= return . parseFileContentsWithMode p
+parseFileWithMode p fp = readUTF8File fp >>= return . parseFileContentsWithMode p
 
 -- | Parse a source file on disk, supplying a custom parse mode, and retaining comments.
 parseFileWithComments :: ParseMode -> FilePath -> IO (ParseResult (Module, [Comment]))
-parseFileWithComments p fp = readFile fp >>= return . parseFileContentsWithComments p
+parseFileWithComments p fp = readUTF8File fp >>= return . parseFileContentsWithComments p
 
 -- | Parse a source file on disk, supplying a custom parse mode, and retaining comments
 --  as well as unknown pragmas.
 parseFileWithCommentsAndPragmas :: ParseMode -> FilePath -> IO (ParseResult (Module, [Comment], [UnknownPragma]))
 parseFileWithCommentsAndPragmas p fp =
-    readFile fp >>= return . parseFileContentsWithCommentsAndPragmas p
+    readUTF8File fp >>= return . parseFileContentsWithCommentsAndPragmas p
 
 -- | Parse a source file from a string using the default parse mode.
 parseFileContents :: String -> ParseResult Module
@@ -171,3 +172,9 @@ separatePragmas r =
                       pragLike (Comment b _ s) = b && pcond s
                       pcond s = length s > 1 && take 1 s == "#" && last s == '#'
         ParseFailed l s ->  ParseFailed l s
+
+readUTF8File :: FilePath -> IO String
+readUTF8File fp = do
+  h <- openFile fp ReadMode
+  hSetEncoding h utf8
+  hGetContents h
