@@ -821,7 +821,8 @@ isFunLhs (InfixApp _ l (QVarOp loc (UnQual _ op)) r) es
         exts <- getExtensions
         if BangPatterns `elem` exts
          then let (b,bs) = splitBang r []
-               in isFunLhs l (BangPat loc b : bs ++ es)
+                  loc' = combSpanInfo loc (ann b)
+               in isFunLhs l (BangPat loc' b : bs ++ es)
          else return $ Just (op, l:r:es, False, []) -- It's actually a definition of the operator !
     | otherwise = return $ Just (op, l:r:es, False, [])
 isFunLhs (App _ (Var _ (UnQual _ f)) e) es = return $ Just (f, e:es, True, [])
