@@ -391,7 +391,9 @@ checkPattern :: PExp L -> P (Pat L)
 checkPattern e = checkPat e []
 
 checkPat :: PExp L -> [Pat L] -> P (Pat L)
-checkPat (Con l c) args = return (PApp l c args)
+checkPat (Con l c) args = do
+  let l' = foldl combSpanInfo l (map ann args)
+  return (PApp l' c args)
 checkPat (App _ f x) args = do
     x' <- checkPat x []
     checkPat f (x':args)
