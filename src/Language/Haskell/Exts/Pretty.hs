@@ -289,10 +289,10 @@ instance Pretty Module where
                 myVcat $ map pretty os ++
                     (if m == ModuleName "" then id
                      else \x -> [topLevel (ppModuleHeader m mbWarn mbExports) x])
-                    (map pretty imp ++ 
+                    (map pretty imp ++
                       ppDecls (m /= ModuleName "" ||
-                               not (null imp) || 
-                               not (null os)) 
+                               not (null imp) ||
+                               not (null os))
                               decls)
 
 --------------------------  Module Header ------------------------------
@@ -363,7 +363,7 @@ condBlankline d = (if wantsBlankline d then blankline else id) $ pretty d
 
 ppDecls :: PrettyDeclLike a => Bool -> [a] -> [Doc]
 ppDecls True  ds     = map condBlankline ds
-ppDecls False (d:ds) = pretty d : map condBlankline ds 
+ppDecls False (d:ds) = pretty d : map condBlankline ds
 ppDecls _ _ = []
 --ppDecls = map condBlankline
 
@@ -1128,10 +1128,10 @@ instance Pretty RPat where
         pretty (RPEither r1 r2) = parens . myFsep $
                 [pretty r1, char '|', pretty r2]
         pretty (RPSeq rs) =
-                myFsep $ text "(|" : (punctuate comma . map pretty $ rs) 
+                myFsep $ text "(|" : (punctuate comma . map pretty $ rs)
                            ++ [text "|)"]
         pretty (RPGuard r gs) =
-                myFsep $ text "(|" : pretty r : char '|' : 
+                myFsep $ text "(|" : pretty r : char '|' :
                            (punctuate comma . map pretty $ gs) ++ [text "|)"]
         -- special case that would otherwise be buggy
         pretty (RPCAs n (RPPat (PIrrPat p))) =
@@ -1330,10 +1330,10 @@ instance SrcInfo pos => Pretty (A.Module pos) where
                     (case mbHead of
                         Nothing -> id
                         Just h  -> \x -> [topLevel (pretty h) x])
-                    (map pretty imp ++ 
-                         ppDecls (isJust mbHead || 
-                                  not (null imp) || 
-                                  not (null os)) 
+                    (map pretty imp ++
+                         ppDecls (isJust mbHead ||
+                                  not (null imp) ||
+                                  not (null os))
                            decls)
         pretty (A.XmlPage pos _mn os n attrs mattr cs) =
                 markLine pos $
@@ -1348,7 +1348,7 @@ instance SrcInfo pos => Pretty (A.Module pos) where
                     (case mbHead of
                         Nothing -> id
                         Just h  -> \x -> [topLevel (pretty h) x])
-                    (map pretty imp ++ 
+                    (map pretty imp ++
                       ppDecls (isJust mbHead || not (null imp) || not (null os)) decls ++
                         [let ax = maybe [] (return . pretty) mattr
                           in hcat $
@@ -1818,10 +1818,10 @@ instance SrcInfo loc => Pretty (P.PExp loc) where
         pretty (P.PreOp _ op e)  = pretty op <+> pretty e
         pretty (P.ViewPat _ e p) =
                 myFsep [pretty e, text "->", pretty p]
-        pretty (P.SeqRP _ rs) = 
+        pretty (P.SeqRP _ rs) =
             myFsep $ text "(|" : (punctuate comma . map pretty $ rs) ++ [text "|)"]
         pretty (P.GuardRP _ r gs) =
-                myFsep $ text "(|" : pretty r : char '|' : 
+                myFsep $ text "(|" : pretty r : char '|' :
                            (punctuate comma . map pretty $ gs) ++ [text "|)"]
         pretty (P.EitherRP _ r1 r2) = parens . myFsep $ [pretty r1, char '|', pretty r2]
         pretty (P.CAsRP _ n (P.IrrPat _ e)) =

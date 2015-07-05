@@ -1908,7 +1908,7 @@ Miscellaneous (mostly renamings)
 > mparseDecl :: P (Decl SrcSpanInfo)
 > mparseDecl = do
 >     (is, ds, _, _) <- mparseDeclAux
->     when (not $ null is) $ 
+>     when (not $ null is) $
 >        fail $ "Expected single declaration, found import declaration"
 >     checkSingleDecl ds
 
