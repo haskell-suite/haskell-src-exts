@@ -93,7 +93,7 @@ module Language.Haskell.Exts.Annotated.Syntax (
     as_name, qualified_name, hiding_name, minus_name, bang_name, dot_name, star_name,
     export_name, safe_name, unsafe_name, interruptible_name, threadsafe_name,
     stdcall_name, ccall_name, cplusplus_name, dotnet_name, jvm_name, js_name,
-    capi_name, forall_name, family_name,
+    javascript_name, capi_name, forall_name, family_name,
     -- ** Type constructors
     unit_tycon_name, fun_tycon_name, list_tycon_name, tuple_tycon_name, unboxed_singleton_tycon_name,
     unit_tycon, fun_tycon, list_tycon, tuple_tycon, unboxed_singleton_tycon,
@@ -781,6 +781,7 @@ data CallConv l
     | DotNet l
     | Jvm l
     | Js l
+    | JavaScript l
     | CApi l
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
@@ -970,7 +971,8 @@ star_name      l = Symbol l "*"
 
 export_name, safe_name, unsafe_name, interruptible_name, threadsafe_name,
   stdcall_name, ccall_name, cplusplus_name, dotnet_name,
-  jvm_name, js_name, capi_name, forall_name, family_name :: l -> Name l
+  jvm_name, js_name, javascript_name, capi_name, forall_name,
+  family_name :: l -> Name l
 export_name     l = Ident l "export"
 safe_name       l = Ident l "safe"
 unsafe_name     l = Ident l "unsafe"
@@ -982,6 +984,7 @@ cplusplus_name  l = Ident l "cplusplus"
 dotnet_name     l = Ident l "dotnet"
 jvm_name        l = Ident l "jvm"
 js_name         l = Ident l "js"
+javascript_name l = Ident l "javascript"
 capi_name       l = Ident l "capi"
 forall_name     l = Ident l "forall"
 family_name     l = Ident l "family"
@@ -1607,6 +1610,7 @@ instance Annotated CallConv where
     ann (DotNet l) = l
     ann (Jvm l) = l
     ann (Js l) = l
+    ann (JavaScript l) = l
     ann (CApi l) = l
     amap = fmap
 

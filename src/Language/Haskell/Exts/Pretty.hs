@@ -679,13 +679,14 @@ instance Pretty Safety where
         pretty PlayInterruptible = text "interruptible"
 
 instance Pretty CallConv where
-        pretty StdCall   = text "stdcall"
-        pretty CCall     = text "ccall"
-        pretty CPlusPlus = text "cplusplus"
-        pretty DotNet    = text "dotnet"
-        pretty Jvm       = text "jvm"
-        pretty Js        = text "js"
-        pretty CApi      = text "capi"
+        pretty StdCall    = text "stdcall"
+        pretty CCall      = text "ccall"
+        pretty CPlusPlus  = text "cplusplus"
+        pretty DotNet     = text "dotnet"
+        pretty Jvm        = text "jvm"
+        pretty Js         = text "js"
+        pretty JavaScript = text "javascript"
+        pretty CApi       = text "capi"
 
 ------------------------- Pragmas ---------------------------------------
 ppWarnDepr :: ([Name], String) -> Doc

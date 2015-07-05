@@ -210,6 +210,7 @@ FFI
 >       'dotnet'        { Loc $$ KW_DotNet }
 >       'jvm'           { Loc $$ KW_Jvm }
 >       'js'            { Loc $$ KW_Js }          -- 90
+>       'javascript'    { Loc $$ KW_JavaScript }
 >       'capi'          { Loc $$ KW_CApi }
 
 Reserved Ids
@@ -744,13 +745,14 @@ These will only be called on in the presence of a 'foreign' keyword,
 so no need to check for extensions.
 
 > callconv :: { CallConv L }
->          : 'stdcall'                  { StdCall   (nIS $1) }
->          | 'ccall'                    { CCall     (nIS $1) }
->          | 'cplusplus'                { CPlusPlus (nIS $1) }
->          | 'dotnet'                   { DotNet    (nIS $1) }
->          | 'jvm'                      { Jvm       (nIS $1) }
->          | 'js'                       { Js        (nIS $1) }
->          | 'capi'                     { CApi      (nIS $1) }
+>          : 'stdcall'                  { StdCall    (nIS $1) }
+>          | 'ccall'                    { CCall      (nIS $1) }
+>          | 'cplusplus'                { CPlusPlus  (nIS $1) }
+>          | 'dotnet'                   { DotNet     (nIS $1) }
+>          | 'jvm'                      { Jvm        (nIS $1) }
+>          | 'js'                       { Js         (nIS $1) }
+>          | 'javascript'               { JavaScript (nIS $1) }
+>          | 'capi'                     { CApi       (nIS $1) }
 
 
 > safety :: { Maybe (Safety L) }
@@ -1472,6 +1474,7 @@ Hsx Extensions - requires XmlSyntax, but the lexer handles all that.
 >       | 'dotnet'                      { Loc $1 "dotnet" }
 >       | 'jvm'                         { Loc $1 "jvm" }
 >       | 'js'                          { Loc $1 "js" }
+>       | 'javascript'                  { Loc $1 "javascript" }
 >       | 'capi'                        { Loc $1 "capi" }
 >       | 'as'                          { Loc $1 "as" }
 >       | 'by'                          { Loc $1 "by" }
@@ -1769,17 +1772,18 @@ Identifiers and Symbols
 
 > varid_no_safety :: { Name L }
 >       : VARID                 { let Loc l (VarId v) = $1 in Ident (nIS l) v }
->       | 'as'                  { as_name        (nIS $1) }
->       | 'qualified'           { qualified_name (nIS $1) }
->       | 'hiding'              { hiding_name    (nIS $1) }
->       | 'export'              { export_name    (nIS $1) }
->       | 'stdcall'             { stdcall_name   (nIS $1) }
->       | 'ccall'               { ccall_name     (nIS $1) }
->       | 'cplusplus'           { cplusplus_name (nIS $1) }
->       | 'dotnet'              { dotnet_name    (nIS $1) }
->       | 'jvm'                 { jvm_name       (nIS $1) }
->       | 'js'                  { js_name        (nIS $1) }
->       | 'capi'                { capi_name      (nIS $1) }
+>       | 'as'                  { as_name         (nIS $1) }
+>       | 'qualified'           { qualified_name  (nIS $1) }
+>       | 'hiding'              { hiding_name     (nIS $1) }
+>       | 'export'              { export_name     (nIS $1) }
+>       | 'stdcall'             { stdcall_name    (nIS $1) }
+>       | 'ccall'               { ccall_name      (nIS $1) }
+>       | 'cplusplus'           { cplusplus_name  (nIS $1) }
+>       | 'dotnet'              { dotnet_name     (nIS $1) }
+>       | 'jvm'                 { jvm_name        (nIS $1) }
+>       | 'js'                  { js_name         (nIS $1) }
+>       | 'javascript'          { javascript_name (nIS $1) }
+>       | 'capi'                { capi_name       (nIS $1) }
 
 > varid :: { Name L }
 >       : varid_no_safety       { $1 }
