@@ -201,6 +201,7 @@ data Token
         | KW_DotNet
         | KW_Jvm
         | KW_Js
+        | KW_JavaScript
         | KW_CApi
 
         | EOF
@@ -307,6 +308,7 @@ special_varids = [
  ( "dotnet",        (KW_DotNet,        Just (Any [ForeignFunctionInterface])) ),
  ( "jvm",           (KW_Jvm,           Just (Any [ForeignFunctionInterface])) ),
  ( "js",            (KW_Js,            Just (Any [ForeignFunctionInterface])) ),
+ ( "javascript",    (KW_JavaScript,    Just (Any [ForeignFunctionInterface])) ),
  ( "capi",          (KW_CApi,          Just (Any [CApiFFI])) )
  ]
 
@@ -1387,6 +1389,7 @@ showToken t = case t of
   KW_DotNet     -> "dotnet"
   KW_Jvm        -> "jvm"
   KW_Js         -> "js"
+  KW_JavaScript -> "javascript"
   KW_CApi       -> "capi"
   KW_Role       -> "role"
 
