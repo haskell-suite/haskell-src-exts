@@ -101,7 +101,7 @@ Test-Suite test
                        smallcheck >= 1.0,
                        tasty >= 0.3,
                        tasty-smallcheck,
-                       tasty-golden >= 2.2.2,
+                       tasty-golden >= 2.2.2 && < 2.3 ,
                        filepath,
                        directory,
                        syb
