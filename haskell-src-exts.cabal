@@ -1,5 +1,5 @@
 Name:                   haskell-src-exts
-Version:                1.16.0.1
+Version:                1.16.0.2
 License:                BSD3
 License-File:           LICENSE
 Build-Type:             Simple
@@ -101,7 +101,7 @@ Test-Suite test
                        smallcheck >= 1.0,
                        tasty >= 0.3,
                        tasty-smallcheck,
-                       tasty-golden >= 2.2.2,
+                       tasty-golden >= 2.3.0.1,
                        filepath,
                        directory,
                        syb
