@@ -824,7 +824,7 @@ isFunLhs (InfixApp _ l (QVarOp loc (UnQual _ op)) r) es
     | otherwise = return $ Just (op, l:r:es, False, [])
 isFunLhs (App _ (Var _ (UnQual _ f)) e) es = return $ Just (f, e:es, True, [])
 isFunLhs (App _ f e) es = isFunLhs f (e:es)
-isFunLhs (Var _ (UnQual _ f)) es@(_:_) = return $ Just (f, es, True, [])
+isFunLhs (Var _ (UnQual _ f)) es = return $ Just (f, es, True, [])
 isFunLhs (Paren l f) es@(_:_) = do mlhs <- isFunLhs f es
                                    case mlhs of
                                     Just (f',es',b,pts) ->
