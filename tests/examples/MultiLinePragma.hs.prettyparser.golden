@@ -1,0 +1,10 @@
+Roundtrip test failed
+
+AST 1:
+
+Module (SrcLoc "" -1 -1) (ModuleName "Main") [OptionsPragma (SrcLoc "" -1 -1) (Just GHC) "    -a\n    -a\n    -a\n    -a\n    -a\n    -a\n    -a\n    -a\n    -a\n    -a\n    -a "] Nothing (Just [EVar NoNamespace (UnQual (Ident "main"))]) [] [TypeSig (SrcLoc "" -1 -1) [Ident "main"] (TyApp (TyCon (UnQual (Ident "IO"))) (TyCon (Special UnitCon))),PatBind (SrcLoc "" -1 -1) (PVar (Ident "main")) (UnGuardedRhs (Var (UnQual (Ident "dat")))) (BDecls [])]
+
+AST 2:
+
+Module (SrcLoc "" -1 -1) (ModuleName "Main") [OptionsPragma (SrcLoc "" -1 -1) (Just GHC) "      -a\n    -a\n    -a\n    -a\n    -a\n    -a\n    -a\n    -a\n    -a\n    -a\n    -a "] Nothing (Just [EVar NoNamespace (UnQual (Ident "main"))]) [] [TypeSig (SrcLoc "" -1 -1) [Ident "main"] (TyApp (TyCon (UnQual (Ident "IO"))) (TyCon (Special UnitCon))),PatBind (SrcLoc "" -1 -1) (PVar (Ident "main")) (UnGuardedRhs (Var (UnQual (Ident "dat")))) (BDecls [])]
+
