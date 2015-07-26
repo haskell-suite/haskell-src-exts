@@ -393,13 +393,18 @@ The Export List
 
 > export :: { ExportSpec L }
 >       :  qvar                                 { EVar (ann $1) (NoNamespace (ann $1)) $1 }
->       |  'type' qvar                          {% do { checkEnabled ExplicitNamespaces;
+>       |  'type' qcname                          {% do { checkEnabled ExplicitNamespaces;
 >                                                       return (EVar (nIS $1 <++> ann $2 <** [$1, srcInfoSpan (ann $2)]) (TypeNamespace (nIS $1 <** [$1])) $2) } }
 >       |  qtyconorcls                          { EAbs (ann $1) $1 }
 >       |  qtyconorcls '(' '..' ')'             { EThingAll  (ann $1 <++> nIS $4 <** [$2,$3,$4]) $1 }
 >       |  qtyconorcls '(' ')'                  { EThingWith (ann $1 <++> nIS $3 <** [$2,$3])    $1 [] }
 >       |  qtyconorcls '(' cnames ')'           { EThingWith (ann $1 <++> nIS $4 <** ($2:reverse (snd $3) ++ [$4])) $1 (reverse (fst $3)) }
 >       |  'module' modid                       { EModuleContents (nIS $1 <++> ann $2 <** [$1]) $2 }
+
+>
+> qcname :: { QName L }
+>        : qvar                                 { $1 }
+>        | qconid                               { $1 }
 
 -----------------------------------------------------------------------------
 Import Declarations
