@@ -884,17 +884,23 @@ lexPragmaStart = do
              _ -> return SPECIALISE
 
      Just (OPTIONS opt) ->     -- see, I promised we'd mask out the 'undefined'
-            case fst opt of
-             Just opt' -> do
-                rest <- lexRawPragma
-                return $ OPTIONS (Just opt', drop 1 rest)
-             Nothing -> do
-                            s <- getInput
-                            case s of
-                                x:_ | isSpace x -> do
-                                    rest <- lexRawPragma
-                                    return $ OPTIONS (Nothing, drop 1 rest)
-                                _  -> fail "Malformed Options pragma"
+            -- We do not want to store necessary whitespace in the datatype
+            -- but if the pragma starts with a newline then we must keep
+            -- it to differentiate the two cases.
+            let dropIfSpace (' ':xs) = xs
+                dropIfSpace xs       = xs
+             in
+              case fst opt of
+                Just opt' -> do
+                  rest <- lexRawPragma
+                  return $ OPTIONS (Just opt', dropIfSpace rest)
+                Nothing -> do
+                  s <- getInput
+                  case s of
+                    x:_ | isSpace x -> do
+                      rest <- lexRawPragma
+                      return $ OPTIONS (Nothing, dropIfSpace rest)
+                    _  -> fail "Malformed Options pragma"
      Just RULES -> do -- Rules enable ScopedTypeVariables locally.
             addExtensionL ScopedTypeVariables
             return RULES
