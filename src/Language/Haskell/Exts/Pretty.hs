@@ -1041,6 +1041,7 @@ instance Pretty Exp where
         -- LamdaCase
         prettyPrec p (LCase altList) = parensIf (p > 1) $
                 text "\\case" $$$ ppBody caseIndent (map pretty altList)
+        prettyPrec _ ExprHole       = char '_'
 
 
 instance Pretty XAttr where

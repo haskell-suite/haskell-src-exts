@@ -727,6 +727,9 @@ checkExpr e' = case e' of
     -- LamdaCase
     LCase l alts -> return $ S.LCase l alts
 
+    -- Hole
+    WildCard l     -> return $ S.ExprHole l
+
     _             -> fail $ "Parse error in expression: " ++ prettyPrint e'
 
 checkAttr :: ParseXAttr L -> P (S.XAttr L)

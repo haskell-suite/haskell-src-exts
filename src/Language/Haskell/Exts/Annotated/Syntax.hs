@@ -748,6 +748,9 @@ data Exp l
 
 -- LambdaCase
     | LCase l [Alt l]                       -- ^ @\case@ /alts/
+
+-- Holes
+    | ExprHole l                            -- ^ Expression hole
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | The name of an xml element or attribute,
@@ -1532,6 +1535,7 @@ instance Annotated Exp where
         RightArrHighApp l _ _  -> l
 
         LCase l _              -> l
+        ExprHole l             -> l
 
     amap f e1 = case e1 of
         Var l qn        -> Var (f l) qn
@@ -1590,6 +1594,7 @@ instance Annotated Exp where
 
         LCase l alts -> LCase (f l) alts
         MultiIf l alts -> MultiIf (f l) alts
+        ExprHole l      -> ExprHole (f l)
 
 
 instance Annotated XName where

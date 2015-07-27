@@ -458,6 +458,7 @@ sExp e' = case e' of
     LeftArrHighApp  _ e1 e2 -> S.LeftArrHighApp (sExp e1) (sExp e2)
     RightArrHighApp _ e1 e2 -> S.RightArrHighApp (sExp e1) (sExp e2)
     LCase _ alts -> S.LCase (map sAlt alts)
+    ExprHole _              -> S.ExprHole
 
 
 sXName :: XName l -> S.XName

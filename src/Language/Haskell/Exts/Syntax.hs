@@ -587,6 +587,9 @@ data Exp
 
 -- LambdaCase
     | LCase [Alt] -- ^ @\case@ /alts/
+
+-- Holes
+    | ExprHole                  -- ^ Expression hole
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 -- | The name of an xml element or attribute,
