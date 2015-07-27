@@ -821,7 +821,10 @@ isFunLhs (InfixApp _ l (QVarOp loc (UnQual _ op)) r) es
          then let (b,bs) = splitBang r []
                in isFunLhs l (BangPat loc b : bs ++ es)
          else return $ Just (op, l:r:es, False, []) -- It's actually a definition of the operator !
-    | otherwise = return $ Just (op, l:r:es, False, [])
+    | otherwise =
+        let infos = srcInfoPoints loc
+            op'   = amap (\s -> s { srcInfoPoints = infos }) op
+        in (return $ Just (op', l:r:es, False, []))
 isFunLhs (App _ (Var _ (UnQual _ f)) e) es = return $ Just (f, e:es, True, [])
 isFunLhs (App _ f e) es = isFunLhs f (e:es)
 isFunLhs (Var _ (UnQual _ f)) es@(_:_) = return $ Just (f, es, True, [])
