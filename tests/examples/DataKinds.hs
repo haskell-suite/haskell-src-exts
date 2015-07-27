@@ -1,14 +1,23 @@
 {-# LANGUAGE KindSignatures #-}
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE PolyKinds #-}
 
 class C1 (a :: Bool {- 1 -}) where
     c :: proxy a -> Int
 
 class C2 (a :: [ * ])
 
-class C3 (a :: [(Int, Double)])
+data Baz = Baz
+data Foo = Foo
+
+class C3 (a :: [(Baz, Foo)])
 
 class C4 (a :: ( * ))
+
+
+class C5 (a :: App foo baz)
+
+class C6 (a :: (parens))
 
 data X (a :: [*])
 
