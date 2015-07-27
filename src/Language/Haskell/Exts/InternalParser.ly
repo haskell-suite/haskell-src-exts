@@ -1907,6 +1907,7 @@ Miscellaneous (mostly renamings)
 
 > tyvarsym :: { Name L }
 > tyvarsym : VARSYM              { let Loc l (VarSym x) = $1 in Symbol (nIS l) x }
+>          | '-'                 { Symbol (nIS $1) "-" }
 
 -----------------------------------------------------------------------------
 
