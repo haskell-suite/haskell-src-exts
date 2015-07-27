@@ -1,0 +1,2 @@
+module Main (main) where
+first left _ = left
