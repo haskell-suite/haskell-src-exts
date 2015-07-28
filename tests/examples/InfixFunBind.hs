@@ -1,0 +1,1 @@
+left `first` _ = left
