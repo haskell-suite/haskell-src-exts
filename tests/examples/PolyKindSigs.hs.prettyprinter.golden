@@ -1,0 +1,6 @@
+{-# LANGUAGE GADTs #-}
+{-# LANGUAGE PolyKinds #-}
+module Test where
+
+data Foo :: * -> * where
+        Foo :: Foo a

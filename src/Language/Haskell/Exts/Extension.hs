@@ -538,6 +538,7 @@ impliesExts = go
                     LiberalTypeSynonyms -> [ExplicitForAll]
                     ExistentialQuantification -> [ExplicitForAll]
                     ImpredicativeTypes   -> [ExplicitForAll]
+                    PolyKinds           -> [KindSignatures]
                     -- Deprecations
                     RecordPuns          -> [NamedFieldPuns]
                     PatternSignatures   -> [ScopedTypeVariables]
