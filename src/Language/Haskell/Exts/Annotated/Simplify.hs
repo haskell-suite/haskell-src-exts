@@ -211,6 +211,7 @@ sNamespace :: Namespace l -> S.Namespace
 sNamespace n = case n of
                 NoNamespace _   -> S.NoNamespace
                 TypeNamespace _ -> S.TypeNamespace
+                PatternNamespace _ -> S.PatternNamespace
 
 sImportSpec :: ImportSpec l -> S.ImportSpec
 sImportSpec is = case is of

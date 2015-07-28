@@ -206,7 +206,7 @@ data ExportSpec l
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | Namespaces for imports/exports.
-data Namespace l = NoNamespace l | TypeNamespace l
+data Namespace l = NoNamespace l | TypeNamespace l | PatternNamespace l
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | An import declaration.
@@ -1137,9 +1137,11 @@ instance Annotated Namespace where
     ann es = case es of
         NoNamespace l   -> l
         TypeNamespace l -> l
+        PatternNamespace l -> l
     amap f es = case es of
         NoNamespace l   -> NoNamespace (f l)
         TypeNamespace l -> TypeNamespace (f l)
+        PatternNamespace l -> PatternNamespace (f l)
 
 instance Annotated ImportDecl where
     ann (ImportDecl l _ _ _ _ _ _ _) = l

@@ -183,7 +183,7 @@ data ExportSpec
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 -- | Namespaces for imports/exports.
-data Namespace = NoNamespace | TypeNamespace
+data Namespace = NoNamespace | TypeNamespace | PatternNamespace
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 -- | An import declaration.

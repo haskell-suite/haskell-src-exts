@@ -409,6 +409,9 @@ The Export List
 >       |  qtyconorcls '(' ')'                  { EThingWith (ann $1 <++> nIS $3 <** [$2,$3])    $1 [] }
 >       |  qtyconorcls '(' cnames ')'           { EThingWith (ann $1 <++> nIS $4 <** ($2:reverse (snd $3) ++ [$4])) $1 (reverse (fst $3)) }
 >       |  'module' modid                       { EModuleContents (nIS $1 <++> ann $2 <** [$1]) $2 }
+>       |  'pattern' qcon                       {%  do { checkEnabled PatternSynonyms;
+>                                                       return $ EVar (nIS $1 <++> (ann $2) <** [$1])
+>                                                                  (PatternNamespace (nIS $1)) $2 }}
 
 >
 > qcname :: { QName L }

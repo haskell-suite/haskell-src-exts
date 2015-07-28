@@ -358,10 +358,8 @@ instance ExactP CName where
 instance ExactP Namespace where
   exactP ns = case ns of
      NoNamespace _   -> return ()
-     TypeNamespace l ->
-        case srcInfoPoints l of
-            [a] -> printStringAt (pos a) "type"
-            _   -> errorEP "ExactP: Namespace is given too few srcInfoPoints"
+     TypeNamespace l -> printStringAt (pos l) "type"
+     PatternNamespace l -> printStringAt (pos l) "pattern"
 
 instance ExactP ExportSpec where
   exactP espec = case espec of
