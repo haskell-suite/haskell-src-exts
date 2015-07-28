@@ -290,7 +290,7 @@ data Decl l
      -- ^ A set of function binding clauses
      | PatBind      l (Pat l) (Rhs l) {-where-} (Maybe (Binds l))
      -- ^ A pattern binding
-     | PatSyn l (Pat l) (Pat l) PatternSynDirection
+     | PatSyn l (Pat l) (Pat l) (PatternSynDirection l)
      -- ^ A pattern synonym binding
      | ForImp       l (CallConv l) (Maybe (Safety l)) (Maybe String) (Name l) (Type l)
      -- ^ A foreign import declaration
@@ -320,10 +320,11 @@ data Decl l
      -- ^ A role annotation
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
-data  PatternSynDirection =
+data  PatternSynDirection l =
       Unidirectional -- ^ A unidirectional pattern synonym with "<-"
-    | Bidirectional  -- ^ A bidirectional pattern synonym with "="
-    deriving (Eq, Ord, Show, Data, Typeable)
+    | ImplicitBidirectional  -- ^ A bidirectional pattern synonym with "="
+    | ExplicitBidirectional l [Decl l]  -- ^ A birectional pattern synonym with the construction specified.
+    deriving (Eq, Ord, Show, Data, Typeable, Foldable, Traversable, Functor, Generic)
 
 -- | A type equation as found in closed type families.
 data TypeEqn l = TypeEqn l (Type l) (Type l) deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)

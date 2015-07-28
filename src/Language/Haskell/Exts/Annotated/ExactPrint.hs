@@ -717,17 +717,28 @@ instance ExactP Decl where
         exactP p
         exactPC rhs
         maybeEP (\bs -> printStringAt (pos (head pts)) "where" >> exactPC bs) mbs
-    PatSyn l p rhs dir ->
+    PatSyn l lhs rhs dir ->
       let sep = case dir of
-                  Bidirectional -> "="
+                  ImplicitBidirectional -> "="
+                  ExplicitBidirectional _ _ -> "<-"
                   Unidirectional -> "<-"
       in
       case srcInfoPoints l of
         [_,sepPos] -> do
           printString "pattern"
-          exactPC p
+          exactPC lhs
           printStringAt (pos sepPos) sep
           exactPC rhs
+          case dir of
+            ExplicitBidirectional bl ds -> do
+              let locs = srcInfoPoints bl
+              case locs of
+                (w:pts) -> do
+                  printStringAt (pos w) "where"
+                  layoutList pts ds
+                _ -> errorEP "ExactP: Decl: PaySyn: ExplicitBidirectional is given too few srcInfoPoints"
+            _ -> return ()
+
         _ -> errorEP "ExactP: Decl: PatSyn is given too few srcInfoPoints"
     ForImp       l cc msf mstr n t   ->
         case srcInfoPoints l of

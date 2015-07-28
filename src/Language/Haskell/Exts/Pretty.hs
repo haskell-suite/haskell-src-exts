@@ -515,10 +515,16 @@ instance Pretty Decl where
 
         pretty (PatSyn pos pat rhs dir) =
                 let sep = case dir of
-                            A.Bidirectional -> "="
-                            A.Unidirectional -> "<-" in
+                            ImplicitBidirectional -> "="
+                            ExplicitBidirectional _ -> "="
+                            Unidirectional -> "<-"
+                in
                 markLine pos $
-                mySep ([text "pattern", pretty pat, text sep, pretty rhs])
+                 (mySep ([text "pattern", pretty pat, text sep, pretty rhs])) $$$
+                    (case dir of
+                      ExplicitBidirectional ds ->
+                        nest 2 (text "where" $$$ ppBody whereIndent (ppDecls False ds))
+                      _ -> empty)
 
         pretty (ForImp pos cconv saf str name typ) =
                 -- blankline $

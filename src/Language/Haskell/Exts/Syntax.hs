@@ -42,7 +42,7 @@ module Language.Haskell.Exts.Syntax (
     Module(..), WarningText(..), ExportSpec(..),
     ImportDecl(..), ImportSpec(..), Assoc(..), Namespace(..),
     -- * Declarations
-    Decl(..), Binds(..), IPBind(..),
+    Decl(..), Binds(..), IPBind(..), PatternSynDirection(..),
     -- ** Type classes and instances
     ClassDecl(..), InstDecl(..), Deriving,
     -- ** Data type declarations
@@ -102,7 +102,7 @@ module Language.Haskell.Exts.Syntax (
 import Data.Data
 import GHC.Generics (Generic)
 import Language.Haskell.Exts.SrcLoc (SrcLoc(..))
-import Language.Haskell.Exts.Annotated.Syntax (Boxed(..), Tool(..), PatternSynDirection(..))
+import Language.Haskell.Exts.Annotated.Syntax (Boxed(..), Tool(..))
 
 
 -- | The name of a Haskell module.
@@ -293,6 +293,12 @@ data Decl
      | RoleAnnotDecl    SrcLoc QName [Role]
      -- ^ A role annotation
 
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+
+data  PatternSynDirection =
+      Unidirectional -- ^ A unidirectional pattern synonym with "<-"
+    | ImplicitBidirectional  -- ^ A bidirectional pattern synonym with "="
+    | ExplicitBidirectional [Decl]  -- ^ A birectional pattern synonym with the construction specified.
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 -- | A type equation of the form @rhs = lhs@ used in closed type families.

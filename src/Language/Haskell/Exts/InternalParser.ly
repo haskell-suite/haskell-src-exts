@@ -627,7 +627,7 @@ lexer through the 'foreign' (and 'export') keyword.
 >       | '{-# DEPRECATED' warndeprs  '#-}'     { DeprPragmaDecl ($1 <^^> $3 <** ($1:snd $2++[$3])) $ reverse (fst $2) }
 >       | '{-# WARNING'    warndeprs  '#-}'     { WarnPragmaDecl ($1 <^^> $3 <** ($1:snd $2++[$3])) $ reverse (fst $2) }
 >       | '{-# ANN'        annotation '#-}'     { AnnPragma      ($1 <^^> $3 <** [$1,$3]) $2 }
->       | pattern_synonym_decl          { $1 }
+>       | pat_syn          { $1 }
 >       | decl          { $1 }
 
 Role annotations
@@ -1897,21 +1897,41 @@ Layout
 Pattern Synonyms
 -- Pattern synonyms
 
+> pat_syn :: { Decl L }
+>         : pattern_synonym_decl          {% checkEnabled PatternSynonyms >> return $1 }
+
 -- Glasgow extension: pattern synonyms
 >  pattern_synonym_decl :: { Decl L }
->        : 'pattern' exp '=' pat
->            {% do {
->                   checkEnabled PatternSynonyms
->                 ; p <- checkPatternSynonym $2
->                 ; let {l = nIS $1 <++> ann $4 <** [$1,$3]}
->                 ; return $ PatSyn l p $4 Bidirectional
->                  }}
->        | 'pattern' pat '<-' pat
->            {% do {
->                   checkEnabled PatternSynonyms
->                 ; let {l = nIS $1 <++> ann $4 <** [$1,$3]}
->                 ; return $ PatSyn l $2 $4 Unidirectional
->                  }}
+>        : 'pattern' pattern_synonym_lhs '=' pat
+>            { let l = nIS $1 <++> ann $4 <** [$1,$3]
+>              in PatSyn l $2 $4 ImplicitBidirectional
+>                  }
+>        | 'pattern' pattern_synonym_lhs '<-' pat
+>            {   let l = nIS $1 <++> ann $4 <** [$1,$3]
+>                in PatSyn l $2 $4 Unidirectional
+>            }
+>       | 'pattern' pattern_synonym_lhs '<-' pat where_decls
+>           {  let l = nIS $1 <++> ann $4 <** [$1, $3]
+>              in PatSyn l $2 $4 $5}
+
+>
+> pattern_synonym_lhs :: { Pat L }
+>        : con vars0  { let l = case $2 of
+>                                  [] -> ann $1
+>                                  (_:_) -> ann $1 <++> (ann $ last $2)
+>                         in PApp l (UnQual (ann $1) $1) $2 }
+>        | varid qconsym varid  { PInfixApp (ann $1 <++> ann $3) (PVar (ann $1) $1) $2 (PVar (ann $3) $3) }
+>
+> vars0 :: { [Pat L] }
+>       :  {- empty -}        { [] }
+>       |  varid vars0        { PVar (ann $1) $1 : $2 }
+
+> where_decls :: { PatternSynDirection L }
+>        : 'where' '{' decls '}'       {%  checkExplicitPatSyn $1 $2 $3 $4 }
+>        | 'where' open decls close    {%  checkExplicitPatSyn $1 $2 $3 $4 }
+
+
+
 
 -----------------------------------------------------------------------------
 Miscellaneous (mostly renamings)
