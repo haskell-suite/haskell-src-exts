@@ -434,6 +434,7 @@ data Type
      | TyEquals Type Type       -- ^ type equality predicate enabled by ConstraintKinds
      | TySplice Splice          -- ^ template haskell splice type
      | TyBang BangType Type     -- ^ Strict type marked with \"@!@\" or type marked with UNPACK pragma.
+     | TyWildCard (Maybe Name)  -- ^ Type wildcard
   deriving (Eq,Ord,Show,Typeable,Data)
 
 data Promoted
@@ -483,6 +484,7 @@ data Asst = ClassA QName [Type]     -- ^ ordinary class assertion
           | IParam IPName Type      -- ^ implicit parameter assertion
           | EqualP Type   Type      -- ^ type equality constraint
           | ParenA Asst             -- ^ parenthesised class assertion
+          | WildCardA (Maybe Name) -- ^ A wildcard
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 -- | /literal/

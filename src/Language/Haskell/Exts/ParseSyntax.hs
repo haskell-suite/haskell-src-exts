@@ -306,6 +306,7 @@ data PType l
      | TyPromoted l (S.Promoted l)              -- ^ promoted data type
      | TySplice l (Splice l)                    -- ^ template haskell splice type
      | TyBang l (BangType l) (PType l)          -- ^ Strict type marked with \"@!@\" or type marked with UNPACK pragma.
+     | TyWildCard l (Maybe (Name l))            -- ^ Type wildcard
   deriving (Eq, Show, Functor)
 
 instance Annotated PType where
@@ -325,6 +326,7 @@ instance Annotated PType where
       TyPred l _                    -> l
       TySplice l _                  -> l
       TyBang  l _ _                 -> l
+      TyWildCard  l _               -> l
     amap f t' = case t' of
       TyForall l mtvs mcx t         -> TyForall (f l) mtvs mcx t
       TyFun   l t1 t2               -> TyFun (f l) t1 t2
@@ -341,6 +343,7 @@ instance Annotated PType where
       TyPred l asst                 -> TyPred (f l) asst
       TySplice l s                  -> TySplice (f l) s
       TyBang  l b t                 -> TyBang (f l) b t
+      TyWildCard l mn               -> TyWildCard (f l) mn
 
 data PAsst l
     = ClassA l (QName l) [PType l]
@@ -349,6 +352,7 @@ data PAsst l
     | IParam l (IPName l) (PType l)
     | EqualP l (PType l)  (PType l)
     | ParenA l (PAsst l)
+    | WildCardA l (Maybe (Name l))
   deriving (Eq, Show, Functor)
 
 instance Annotated PAsst where
@@ -359,6 +363,7 @@ instance Annotated PAsst where
         IParam l _ _        -> l
         EqualP l _ _        -> l
         ParenA l _          -> l
+        WildCardA l _       -> l
     amap f asst = case asst of
         ClassA l qn ts      -> ClassA (f l) qn ts
         AppA l t ts         -> AppA (f l) t ts
@@ -366,6 +371,7 @@ instance Annotated PAsst where
         IParam l ipn t      -> IParam (f l) ipn t
         EqualP l t1 t2      -> EqualP (f l) t1 t2
         ParenA l a          -> ParenA (f l) a
+        WildCardA l mn      -> WildCardA (f l) mn
 
 
 unit_tycon, fun_tycon, list_tycon, unboxed_singleton_tycon :: l -> PType l

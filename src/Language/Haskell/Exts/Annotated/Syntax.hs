@@ -586,6 +586,7 @@ data Type l
      | TyEquals l (Type l) (Type l)             -- ^ type equality predicate enabled by ConstraintKinds
      | TySplice l (Splice l)                    -- ^ template haskell splice type
      | TyBang l (BangType l) (Type l)           -- ^ Strict type marked with \"@!@\" or type marked with UNPACK pragma.
+     | TyWildCard l (Maybe (Name l))            -- ^ Either an anonymous of named type wildcard
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | Bools here are True if there was a leading quote which may be
@@ -646,6 +647,7 @@ data Asst l
         | IParam l (IPName l) (Type l)          -- ^ implicit parameter assertion
         | EqualP l (Type l) (Type l)            -- ^ type equality constraint
         | ParenA l (Asst l)                     -- ^ parenthesised class assertion
+        | WildCardA l (Maybe (Name l))          -- ^ Context Wildcard
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | /literal/
@@ -1388,6 +1390,7 @@ instance Annotated Type where
       TyEquals l _ _                -> l
       TySplice l _                  -> l
       TyBang l _ _                  -> l
+      TyWildCard l _                -> l
     amap f t1 = case t1 of
       TyForall l mtvs mcx t         -> TyForall (f l) mtvs mcx t
       TyFun   l t1' t2              -> TyFun (f l) t1' t2
@@ -1404,6 +1407,7 @@ instance Annotated Type where
       TyEquals l a b                -> TyEquals (f l) a b
       TySplice l s                  -> TySplice (f l) s
       TyBang l b t                  -> TyBang (f l) b t
+      TyWildCard l n                -> TyWildCard (f l) n
 
 instance Annotated TyVarBind where
     ann (KindedVar   l _ _) = l
@@ -1449,6 +1453,7 @@ instance Annotated Asst where
         IParam l _ _     -> l
         EqualP l _ _     -> l
         ParenA l _       -> l
+        WildCardA l _    -> l
     amap f asst = case asst of
         ClassA l qn ts      -> ClassA (f l) qn ts
         AppA   l n ns       -> AppA   (f l) n ns
@@ -1456,6 +1461,7 @@ instance Annotated Asst where
         IParam l ipn t      -> IParam (f l) ipn t
         EqualP l t1 t2      -> EqualP (f l) t1 t2
         ParenA l a          -> ParenA (f l) a
+        WildCardA l mn      -> WildCardA (f l) mn
 
 instance Annotated Literal where
     ann lit = case lit of
