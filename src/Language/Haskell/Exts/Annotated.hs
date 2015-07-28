@@ -54,6 +54,7 @@ import Language.Haskell.Exts.Comments
 import Data.List
 import Data.Maybe (fromMaybe)
 import Language.Preprocessor.Unlit
+import System.IO
 
 -- | Parse a source file on disk, using the default parse mode.
 parseFile :: FilePath -> IO (ParseResult (Module SrcSpanInfo))
@@ -69,10 +70,10 @@ parseFileWithExts exts fp =
 
 -- | Parse a source file on disk, supplying a custom parse mode.
 parseFileWithMode :: ParseMode -> FilePath -> IO (ParseResult (Module SrcSpanInfo))
-parseFileWithMode p fp = readFile fp >>= return . parseFileContentsWithMode p
+parseFileWithMode p fp = readUTF8File fp >>= return . parseFileContentsWithMode p
 
 parseFileWithComments :: ParseMode -> FilePath -> IO (ParseResult (Module SrcSpanInfo, [Comment]))
-parseFileWithComments p fp = readFile fp >>= return . parseFileContentsWithComments p
+parseFileWithComments p fp = readUTF8File fp >>= return . parseFileContentsWithComments p
 
 -- | Parse a source file from a string using the default parse mode.
 parseFileContents :: String -> ParseResult (Module SrcSpanInfo)
@@ -139,3 +140,9 @@ ppContents = unlines . f . lines
 
 delit :: String -> String -> String
 delit fn = if ".lhs" `isSuffixOf` fn then unlit fn else id
+
+readUTF8File :: FilePath -> IO String
+readUTF8File fp = do
+  h <- openFile fp ReadMode
+  hSetEncoding h utf8
+  hGetContents h
