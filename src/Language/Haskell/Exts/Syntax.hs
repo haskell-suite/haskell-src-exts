@@ -260,6 +260,8 @@ data Decl
      -- ^ A Template Haskell splicing declaration
      | TypeSig      SrcLoc [Name] Type
      -- ^ A type signature declaration
+     | PatSynSig    SrcLoc Name (Maybe [TyVarBind]) Context Context Type
+     -- ^ Pattern Synonym Signature
      | FunBind      [Match]
      -- ^ A set of function binding clauses
      | PatBind      SrcLoc Pat Rhs {-where-} (Maybe Binds)

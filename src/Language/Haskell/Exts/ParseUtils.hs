@@ -30,7 +30,6 @@ module Language.Haskell.Exts.ParseUtils (
     , checkInstHeader       -- PType -> P (Context,QName,[Type])
     , checkDeriving         -- [PType] -> P [Deriving]
     , checkPattern          -- PExp -> P Pat
-    , checkPatternSynonym   -- PExp -> P Pat
     , checkExpr             -- PExp -> P Exp
     , checkType             -- PType -> P Type
     , checkTyVar            -- Name  -> P PType
@@ -75,7 +74,7 @@ module Language.Haskell.Exts.ParseUtils (
     ) where
 
 import Language.Haskell.Exts.Annotated.Syntax hiding ( Type(..), Asst(..), Exp(..), FieldUpdate(..), XAttr(..), Context(..) )
-import qualified Language.Haskell.Exts.Annotated.Syntax as S ( Type(..), Asst(..), Exp(..), FieldUpdate(..), XAttr(..), Context(..), Role(..))
+import qualified Language.Haskell.Exts.Annotated.Syntax as S ( Type(..), Asst(..), Exp(..), FieldUpdate(..), XAttr(..), Context(..), Role(..), PatternSynDirection(..))
 
 import Language.Haskell.Exts.ParseSyntax
 import Language.Haskell.Exts.ParseMonad
@@ -529,26 +528,6 @@ checkPat e' [] = case e' of
     e -> patFail $ prettyPrint e
 
 checkPat e _ = patFail $ prettyPrint e
-
-checkPatternSynonym :: PExp L -> P (Pat L)
-checkPatternSynonym (Con l c) = return (PApp l c [])
-checkPatternSynonym e@(App _ _ _) = do
-    unwrap e []
-  where
-    unwrap :: PExp L -> [Pat L] -> P (Pat L)
-    unwrap (Con l c) args = return $ PApp l c args
-    unwrap (App _ f x) args =
-      case x of
-        Var _ (UnQual l v) -> unwrap f ((PVar l v) :args)
-        _ -> fail ""
-    unwrap _ _ = patSynFail e
-checkPatternSynonym (InfixApp loc (Var _ (UnQual ll l)) (QConOp _ c) (Var _ (UnQual lr r))) =
-  return (PInfixApp loc (PVar ll l) c (PVar lr r))
-checkPatternSynonym e = patSynFail e
-
-patSynFail :: PExp L -> P (Pat L)
-patSynFail e = fail $ "Parse failure in LHS of pattern synonym: "
-                        ++ prettyPrint e
 
 isNegatableLiteral :: Literal a -> Bool
 isNegatableLiteral (Int _ _ _) = True

@@ -40,6 +40,7 @@
 
 > import Control.Monad ( liftM, (<=<), when )
 > import Control.Applicative ( (<$>) )
+> import Data.Maybe
 import Debug.Trace (trace)
 
 > }
@@ -627,7 +628,6 @@ lexer through the 'foreign' (and 'export') keyword.
 >       | '{-# DEPRECATED' warndeprs  '#-}'     { DeprPragmaDecl ($1 <^^> $3 <** ($1:snd $2++[$3])) $ reverse (fst $2) }
 >       | '{-# WARNING'    warndeprs  '#-}'     { WarnPragmaDecl ($1 <^^> $3 <** ($1:snd $2++[$3])) $ reverse (fst $2) }
 >       | '{-# ANN'        annotation '#-}'     { AnnPragma      ($1 <^^> $3 <** [$1,$3]) $2 }
->       | pat_syn          { $1 }
 >       | decl          { $1 }
 
 Role annotations
@@ -695,6 +695,8 @@ Parsing the body of a closed type family, partially stolen from the source of GH
 >       : signdecl                      { $1 }
 >       | fixdecl                       { $1 }
 >       | valdef                        { $1 }
+>       | pat_syn                       { $1 }
+>       | pattern_synonym_sig           { $1 }
 
 > decllist :: { Binds L }
 >       : '{'  decls '}'                { BDecls ($1 <^^> $3 <** ($1:snd $2++[$3])) (fst $2) }
@@ -1929,6 +1931,30 @@ Pattern Synonyms
 > where_decls :: { PatternSynDirection L }
 >        : 'where' '{' decls '}'       {%  checkExplicitPatSyn $1 $2 $3 $4 }
 >        | 'where' open decls close    {%  checkExplicitPatSyn $1 $2 $3 $4 }
+
+> pattern_synonym_sig :: { Decl L }
+>         : 'pattern' con '::' pstype
+>             {% do { checkEnabled PatternSynonyms
+>                   ; let (qtvs, ps, prov, req, ty) = $4
+>                   ; let sig = PatSynSig (nIS $1 <++> ann ty <** [$1, $3] ++ ps)  $2 qtvs prov req ty
+>                   ; return sig } }
+
+> pstype :: { (Maybe [TyVarBind L], [S], Maybe (Context L), Maybe (Context L), Type L )}
+>         :  'forall' ktyvars '.' pstype
+>             { let (qtvs, ps, prov, req, ty) = $4
+>                in (Just (reverse (fst $2) ++ fromMaybe [] qtvs), ($1 : $3 : ps), prov, req, ty) }
+>         | context context type
+>             {% do { c1 <- checkContext (Just $1)
+>                   ; c2 <- checkContext (Just $2)
+>                   ; t  <- checkType $3
+>                    ; return $ (Nothing, [], c1, c2, t) }}
+>         | context type
+>              {% do { c1 <- checkContext (Just $1)
+>                    ; t <- checkType $2
+>                    ; return (Nothing, [], Nothing, c1, t) } }
+>         | type
+>            {% checkType $1 >>= \t -> return (Nothing, [], Nothing, Nothing, t) }
+
 
 
 

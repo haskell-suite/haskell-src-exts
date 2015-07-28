@@ -711,6 +711,31 @@ instance ExactP Decl where
         let pts = srcInfoPoints l
         printInterleaved' (zip pts (replicate (length pts - 1) "," ++ ["::"])) ns
         exactPC t
+    PatSynSig l n dh c1 c2 t -> do
+      let pts = srcInfoPoints l
+      case pts of
+        (_:dc:pts1) -> do
+          printString "pattern"
+          exactPC n
+          printStringAt (pos dc) "::"
+          case dh of
+            Nothing -> return ()
+            Just tvs ->
+              case pts1 of
+                (a:b:_) -> do
+                      printStringAt (pos a) "forall"
+                      mapM_ exactPC tvs
+                      printStringAt (pos b) "."
+                _ -> errorEP "ExactP: Decl: PatSynSig: Forall: is given too few srcInfoPoints"
+
+
+          maybeEP exactPC c1
+          maybeEP exactPC c2
+          exactPC t
+        _ -> errorEP "ExactP: Decl: PatSynSig: Outsides is given too few srcInfoPoints"
+
+
+
     FunBind      _ ms   -> mapM_ exactPC ms
     PatBind      l p rhs mbs -> do
         let pts = srcInfoPoints l
