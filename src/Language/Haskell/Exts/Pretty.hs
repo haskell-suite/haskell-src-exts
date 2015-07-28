@@ -752,7 +752,7 @@ instance Pretty ConDecl where
                 myFsep [prettyPrec prec_btype l, ppName name,
                         prettyPrec prec_btype r] -}
         pretty (ConDecl name typeList) =
-                mySep $ ppName name : map (prettyPrec prec_atype) typeList
+                mySep $ pretty name : map (prettyPrec prec_atype) typeList
         pretty (InfixConDecl l name r) =
                 myFsep [prettyPrec prec_btype l, ppNameInfix name,
                          prettyPrec prec_btype r]
@@ -1281,7 +1281,7 @@ ppContext context = mySep [parenList (map pretty context), text "=>"]
 
 -- hacked for multi-parameter type classes
 instance Pretty Asst where
-        pretty (ClassA a ts)   = myFsep $ ppQName a : map ppAType ts
+        pretty (ClassA a ts)   = myFsep $ pretty a : map ppAType ts
         pretty (AppA n ns)     = myFsep $ pretty n : map pretty ns
         pretty (InfixA a op b) = myFsep [pretty a, ppQNameInfix op, pretty b]
         pretty (IParam i t)    = myFsep [pretty i, text "::", pretty t]
@@ -1847,7 +1847,7 @@ instance SrcInfo loc => Pretty (P.PContext loc) where
         pretty (P.CxTuple _ assts) = myFsep [parenList (map pretty assts), text "=>"]
 
 instance SrcInfo loc => Pretty (P.PAsst loc) where
-        pretty (P.ClassA _ a ts)   = myFsep $ ppQName (sQName a) : map (prettyPrec prec_atype) ts
+        pretty (P.ClassA _ a ts)   = myFsep $ pretty (sQName a) : map (prettyPrec prec_atype) ts
         pretty (P.AppA _ n ns)     = myFsep $ pretty n : map (prettyPrec prec_atype) ns
         pretty (P.InfixA _ a op b) = myFsep [pretty a, ppQNameInfix (sQName op), pretty b]
         pretty (P.IParam _ i t)    = myFsep [pretty i, text "::", pretty t]
