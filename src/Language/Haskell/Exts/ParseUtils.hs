@@ -391,7 +391,9 @@ checkPattern :: PExp L -> P (Pat L)
 checkPattern e = checkPat e []
 
 checkPat :: PExp L -> [Pat L] -> P (Pat L)
-checkPat (Con l c) args = return (PApp l c args)
+checkPat (Con l c) args = do
+  let l' = foldl combSpanInfo l (map ann args)
+  return (PApp l' c args)
 checkPat (App _ f x) args = do
     x' <- checkPat x []
     checkPat f (x':args)
@@ -819,7 +821,8 @@ isFunLhs (InfixApp _ l (QVarOp loc (UnQual _ op)) r) es
         exts <- getExtensions
         if BangPatterns `elem` exts
          then let (b,bs) = splitBang r []
-               in isFunLhs l (BangPat loc b : bs ++ es)
+                  loc' = combSpanInfo loc (ann b)
+               in isFunLhs l (BangPat loc' b : bs ++ es)
          else return $ Just (op, l:r:es, False, []) -- It's actually a definition of the operator !
     | otherwise =
         let infos = srcInfoPoints loc
