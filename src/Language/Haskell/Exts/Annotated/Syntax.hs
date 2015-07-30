@@ -608,7 +608,7 @@ data Kind l
     | KindVar   l (QName l)          -- ^ @k@, a kind variable (-XPolyKinds)
     | KindApp   l (Kind l) (Kind l)  -- ^ @k1 k2@
     | KindTuple l [Kind l]           -- ^ @'(k1,k2,k3)@, a promoted tuple
-    | KindList  l [Kind l]           -- ^ @'[k1,k2,k3]@, a promoted list literal
+    | KindList  l (Kind l)           -- ^ @'[k1]@, a promoted list literal
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 

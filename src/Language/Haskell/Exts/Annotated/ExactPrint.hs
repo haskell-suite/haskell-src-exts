@@ -966,11 +966,13 @@ instance ExactP Kind where
             e = ")"
             pts = srcInfoPoints l
         in printInterleaved (zip pts (o: replicate (length pts - 2) "," ++ [e])) ks
-    KindList  l ks ->
-        let o = "["
-            e = "]"
-            pts = srcInfoPoints l
-        in printInterleaved (zip pts (o: replicate (length pts - 2) "," ++ [e])) ks
+    KindList  l k ->
+      case srcInfoPoints l of
+        [_, close] -> do
+          printString "["
+          exactPC k
+          printStringAt (pos close) "]"
+        _ -> errorEP "ExactP: Kind: KindList is given wrong number of srcInfoPoints"
 
 
 

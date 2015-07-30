@@ -449,7 +449,7 @@ data Kind
     | KindVar QName     -- ^ a kind variable (as of yet unsupported by compilers)
     | KindApp Kind Kind -- ^ @k1 k2@
     | KindTuple [Kind]  -- ^ @'(k1,k2,k3)@, a promoted tuple
-    | KindList  [Kind]  -- ^ @'[k1,k2,k3]@, a promoted list literal
+    | KindList Kind     -- ^ @[k1]@, kind of a promoted list
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 

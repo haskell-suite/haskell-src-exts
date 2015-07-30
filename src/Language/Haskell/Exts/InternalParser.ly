@@ -1087,13 +1087,13 @@ KindParen covers 1-tuples, KindVar l  while KindTuple is for pairs
 >         : qtyconorcls         { KindVar (ann $1) $1 }
 >         | '(' ')'             { let l = $1 <^^> $2 in KindVar l (unit_tycon_name l) }
 >         | '(' kinds  ')'      { KindTuple ($1 <^^> $3 <** ($1:reverse ($3:snd $2))) (reverse (fst $2)) }
->         | '[' kinds1 ']'      { KindList  ($1 <^^> $3 <** ($1:reverse ($3:snd $2))) (reverse (fst $2)) }
 
 
 repeat of what is done for types
 
 > kinds :: { ([Kind L],[S]) }
 >       : kinds1 ',' akind              { ($3 : fst $1, $2 : snd $1)  }
+>         | '[' kind ']'      { KindList  (($1 <^^> $3) <** [$1, $3]) $2 }
 
 > kinds1 :: { ([Kind L],[S]) }
 >       : akind                         { ([$1],[]) }

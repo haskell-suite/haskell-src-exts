@@ -847,7 +847,7 @@ instance Pretty Kind where
         prettyPrec _ (KindParen k) = parens $ pretty k
         prettyPrec _ (KindVar n)   = pretty n
         prettyPrec _ (KindTuple t) = parenList . map pretty $ t
-        prettyPrec _ (KindList l)  = bracketList . punctuate comma . map pretty $ l
+        prettyPrec _ (KindList l)  = brackets .  pretty $ l
         prettyPrec n (KindApp a b) =
           parensIf (n > 3) $ myFsep [prettyPrec 3 a, prettyPrec 4 b]
 

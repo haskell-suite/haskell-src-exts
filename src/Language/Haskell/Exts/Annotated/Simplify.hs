@@ -355,7 +355,7 @@ sKind k' = case k' of
     KindVar _ n     -> S.KindVar (sQName n)
     KindApp _ k1 k2 -> S.KindApp (sKind k1) (sKind k2)
     KindTuple _ ks  -> S.KindTuple (map sKind ks)
-    KindList  _ ks  -> S.KindList  (map sKind ks)
+    KindList  _ ks  -> S.KindList  (sKind ks)
 
 sFunDep :: FunDep l -> S.FunDep
 sFunDep (FunDep _ as bs) = S.FunDep (map sName as) (map sName bs)
