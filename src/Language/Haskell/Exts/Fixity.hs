@@ -195,7 +195,7 @@ instance AppFixity Decl where
         InstDecl loc olp tvs ctxt n ts idecls   -> liftM (InstDecl loc olp tvs ctxt n ts) $ mapM fix idecls
         SpliceDecl loc spl      -> liftM (SpliceDecl loc) $ fix spl
         FunBind matches         -> liftM FunBind $ mapM fix matches
-        PatBind loc p rhs bs    -> liftM3 (PatBind loc) (fix p) (fix rhs) (fix bs)
+        PatBind loc p rhs bs    -> liftM3 (PatBind loc) (fix p) (fix rhs) (return $ maybe Nothing fix bs)
         AnnPragma loc ann       -> liftM (AnnPragma loc) $ fix ann
         _                       -> return decl
       where fix x = applyFixities fixs x
@@ -226,7 +226,9 @@ instance AppFixity InstDecl where
     applyFixities _ idecl = return idecl
 
 instance AppFixity Match where
-    applyFixities fixs (Match loc n ps mt rhs bs) = liftM3 (flip (Match loc n) mt) (mapM fix ps) (fix rhs) (fix bs)
+    applyFixities fixs (Match loc n ps mt rhs bs) =
+      liftM3 (flip (Match loc n) mt) (mapM fix ps) (fix rhs)
+                                     (return $ maybe Nothing fix bs)
       where fix x = applyFixities fixs x
 
 instance AppFixity Rhs where
@@ -281,7 +283,8 @@ instance AppFixity FieldUpdate where
     applyFixities _ fup = return fup
 
 instance AppFixity Alt where
-    applyFixities fixs (Alt loc p galts bs) = liftM3 (Alt loc) (fix p) (fix galts) (fix bs)
+    applyFixities fixs (Alt loc p galts bs) =
+      liftM3 (Alt loc) (fix p) (fix galts) (return $ maybe Nothing fix bs)
       where fix x = applyFixities fixs x
 
 instance AppFixity QualStmt where

@@ -187,7 +187,7 @@ alt s p e = Alt s p (unGAlt e) noBinds
 
 -- | An alternative with a single guard in a @case@ expression.
 altGW :: SrcLoc -> Pat -> [Stmt] -> Exp -> Binds -> Alt
-altGW s p gs e w = Alt s p (gAlt s gs e) w
+altGW s p gs e w = Alt s p (gAlt s gs e) (Just w)
 
 -- | An unguarded righthand side of a @case@ alternative.
 unGAlt :: Exp -> Rhs
@@ -238,8 +238,8 @@ binds :: [Decl] -> Binds
 binds = BDecls
 
 -- | An empty binding group.
-noBinds :: Binds
-noBinds = binds []
+noBinds :: Maybe Binds
+noBinds = Nothing
 
 -- | The wildcard pattern: @_@
 wildcard :: Pat
@@ -253,7 +253,7 @@ genNames s k = [ Ident $ s ++ show i | i <- [1..k] ]
 -- Some more specialised help functions
 
 -- | A function with a single clause
-sfun :: SrcLoc -> Name -> [Name] -> Rhs -> Binds -> Decl
+sfun :: SrcLoc -> Name -> [Name] -> Rhs -> Maybe Binds -> Decl
 sfun s f pvs rhs bs = FunBind [Match s f (map pvar pvs) Nothing rhs bs]
 
 -- | A function with a single clause, a single argument, no guards
@@ -272,7 +272,7 @@ patBind s p e = let rhs = UnGuardedRhs e
 -- there are no guards, but with a 'where' clause.
 patBindWhere :: SrcLoc -> Pat -> Exp -> [Decl] -> Decl
 patBindWhere s p e ds = let rhs = UnGuardedRhs e
-             in PatBind s p rhs (binds ds)
+             in PatBind s p rhs (if null ds then Nothing else Just (binds ds))
 
 -- | Bind an identifier to an expression.
 nameBind :: SrcLoc -> Name -> Exp -> Decl
