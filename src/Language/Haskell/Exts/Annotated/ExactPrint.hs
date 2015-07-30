@@ -943,7 +943,6 @@ instance ExactP TyVarBind where
 instance ExactP Kind where
   exactP kd' = case kd' of
     KindStar  _     -> printString "*"
-    KindBang  _     -> printString "!"
     KindFn    l k1 k2 ->
         case srcInfoPoints l of
          [a] -> do

@@ -1077,7 +1077,6 @@ Kinds
 
 > akind :: { Kind L }
 >       : '*'                   { KindStar  (nIS $1) }
->       | '!'                   { KindBang  (nIS $1) }
 >       | '(' kind1 ')'         { KindParen ($1 <^^> $3 <** [$1,$3]) $2 }
 >       | pkind                 {% checkKind $1 >> return $1 }
 >       | qvarid                {% checkEnabled PolyKinds >> return (KindVar (ann $1) $1) }

@@ -350,7 +350,6 @@ sTyVarBind (UnkindedVar _ n) = S.UnkindedVar (sName n)
 sKind :: Kind l -> S.Kind
 sKind k' = case k' of
     KindStar  _     -> S.KindStar
-    KindBang  _     -> S.KindBang
     KindFn _ k1 k2  -> S.KindFn (sKind k1) (sKind k2)
     KindParen _ k   -> S.KindParen (sKind k)
     KindVar _ n     -> S.KindVar (sQName n)
