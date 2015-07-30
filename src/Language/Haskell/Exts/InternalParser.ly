@@ -246,6 +246,7 @@ Reserved Ids
 >       'using'         { Loc $$ KW_Using }    -- transform list comprehensions
 >       'where'         { Loc $$ KW_Where }
 >       'qualified'     { Loc $$ KW_Qualified }
+>       'role'          { Loc $$ KW_Role }
 
 Pragmas
 
@@ -514,7 +515,8 @@ shift/reduce-conflict, so we don't handle this case here, but in bodyaux.
 >       | topdecl                       { ([$1],[]) }
 
 > topdecl :: { Decl L }
->       : 'type' dtype '=' truectype
+>       : role_annot                    {% checkEnabled RoleAnnotations >> return $1 }
+>       | 'type' dtype '=' truectype
 >                {% do { dh <- checkSimpleType $2;
 >                        let {l = nIS $1 <++> ann $4 <** [$1,$3]};
 >                        return (TypeDecl l dh $4) } }
@@ -615,6 +617,24 @@ lexer through the 'foreign' (and 'export') keyword.
 >       | '{-# WARNING'    warndeprs  '#-}'     { WarnPragmaDecl ($1 <^^> $3 <** ($1:snd $2++[$3])) $ reverse (fst $2) }
 >       | '{-# ANN'        annotation '#-}'     { AnnPragma      ($1 <^^> $3 <** [$1,$3]) $2 }
 >       | decl          { $1 }
+
+Role annotations
+
+> role_annot :: { Decl L }
+> role_annot : 'type' 'role' otycon roles
+>                {% mkRoleAnnotDecl $1 $2 $3 (reverse $4)  }
+
+-- Reversed!
+> roles :: { [(Maybe String, L)] }
+> roles : {- empty -}      { [] }
+>       | roles role       { $2 : $1 }
+
+> -- read it in as a varid for better error messages
+> role :: { (Maybe String, L) }
+> role : VARID             { let (VarId v) = unLoc $1 in (Just v, nIS $ loc $1) }
+>      | '_'               { (Nothing, nIS $1) }
+
+
 
 > optoverlap :: { Maybe (Overlap L) }
 >  : '{-# OVERLAP'    '#-}'    { Just (Overlap (nIS $1)) }

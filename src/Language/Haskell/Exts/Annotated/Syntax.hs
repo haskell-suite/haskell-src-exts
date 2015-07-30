@@ -67,7 +67,7 @@ module Language.Haskell.Exts.Annotated.Syntax (
     Literal(..), Sign(..),
     -- * Variables, Constructors and Operators
     ModuleName(..), QName(..), Name(..), QOp(..), Op(..),
-    SpecialCon(..), CName(..), IPName(..), XName(..),
+    SpecialCon(..), CName(..), IPName(..), XName(..), Role(..),
 
     -- * Template Haskell
     Bracket(..), Splice(..),
@@ -314,6 +314,8 @@ data Decl l
      -- ^ An ANN pragma
      | MinimalPragma    l (Maybe (BooleanFormula l))
      -- ^ A MINIMAL pragma
+     | RoleAnnotDecl    l (QName l) [Role l]
+     -- ^ A role annotation
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | A type equation as found in closed type families.
@@ -335,6 +337,13 @@ data BooleanFormula l
     | AndFormula l [BooleanFormula l]    -- ^ And boolean formulas.
     | OrFormula l [BooleanFormula l]     -- ^ Or boolean formulas.
     | ParenFormula l (BooleanFormula l)  -- ^ Parenthesized boolean formulas.
+  deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
+
+data Role l
+  = Nominal l
+  | Representational l
+  | Phantom l
+  | RoleWildcard l
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | A flag stating whether a declaration is a data or newtype declaration.
@@ -1184,6 +1193,7 @@ instance Annotated Decl where
         InstSig          l _            -> l
         AnnPragma        l _            -> l
         MinimalPragma    l _            -> l
+        RoleAnnotDecl    l _ _          -> l
     amap f decl = case decl of
         TypeDecl     l dh t      -> TypeDecl    (f l) dh t
         TypeFamDecl  l dh mk     -> TypeFamDecl (f l) dh mk
@@ -1217,6 +1227,19 @@ instance Annotated Decl where
         InstSig          l ih            -> InstSig (f l) ih
         AnnPragma        l ann'          -> AnnPragma (f l) ann'
         MinimalPragma    l b             -> MinimalPragma (f l) b
+        RoleAnnotDecl    l t rs          -> RoleAnnotDecl (f l) t rs
+
+instance Annotated Role where
+    ann r = case r of
+      RoleWildcard l -> l
+      Representational l -> l
+      Phantom l -> l
+      Nominal l -> l
+    amap f r = case r of
+      RoleWildcard l -> RoleWildcard (f l)
+      Representational l -> Representational (f l)
+      Phantom l -> Phantom (f l)
+      Nominal l -> Nominal (f l)
 
 instance Annotated Annotation where
     ann (Ann     l _ _) = l

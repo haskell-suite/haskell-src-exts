@@ -826,6 +826,22 @@ instance ExactP Decl where
             maybeEP exactPC b
             printStringAt (pos b') "#-}"
          _ -> errorEP "ExactP: Decl: MinimalPragma is given wrong number of srcInfoPoints"
+    RoleAnnotDecl l ty roles ->
+      case srcInfoPoints l of
+         (t:r:_) -> do
+            printStringAt (pos t)  "type"
+            printStringAt (pos r)  "role"
+            exactPC ty
+            mapM_ exactPC roles
+         _ -> errorEP "ExactP: Decl: RoleAnnotDecl is given wrong number of srcInfoPoints"
+
+instance ExactP Role where
+  exactP r =
+    case r of
+      RoleWildcard l     -> printStringAt (pos l) "_"
+      Representational l -> printStringAt (pos l) "representational"
+      Phantom l          -> printStringAt (pos l) "phantom"
+      Nominal l          -> printStringAt (pos l) "nominal"
 
 
 instance ExactP Annotation where

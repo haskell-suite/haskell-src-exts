@@ -118,6 +118,8 @@ sDecl decl = case decl of
         S.AnnPragma (getPointLoc l) (sAnnotation ann')
      MinimalPragma    l b           ->
         S.MinimalPragma (getPointLoc l) (fmap sBooleanFormula b)
+     RoleAnnotDecl    l qn rs        ->
+      S.RoleAnnotDecl (getPointLoc l) (sQName qn) (map sRole rs)
 
 sTypeEqn :: SrcInfo l => TypeEqn l -> S.TypeEqn
 sTypeEqn (TypeEqn _ a b) = S.TypeEqn (sType a) (sType b)
@@ -134,6 +136,14 @@ sBooleanFormula b' = case b' of
     AndFormula _ ns  -> S.AndFormula $ map sBooleanFormula ns
     OrFormula _  ns  -> S.OrFormula $ map sBooleanFormula ns
     ParenFormula _ b -> S.ParenFormula (sBooleanFormula b)
+
+sRole :: Role l -> S.Role
+sRole r =
+  case r of
+    Nominal _          -> S.Nominal
+    Representational _ -> S.Representational
+    Phantom _          -> S.Phantom
+    RoleWildcard _     -> S.RoleWildcard
 
 sModuleName :: ModuleName l -> S.ModuleName
 sModuleName (ModuleName _ str)  = S.ModuleName str

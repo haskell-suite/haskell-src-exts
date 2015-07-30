@@ -181,6 +181,7 @@ data Token
         | KW_Of
         | KW_Proc       -- arrows
         | KW_Rec        -- arrows
+        | KW_Role
         | KW_Then
         | KW_Type
         | KW_Using      -- transform list comprehensions
@@ -281,6 +282,7 @@ reserved_ids = [
  ( "type",      (KW_Type,       Nothing) ),
  ( "using",     (KW_Using,      Just (Any [TransformListComp])) ),
  ( "where",     (KW_Where,      Nothing) ),
+ ( "role",      (KW_Role,       Just (Any [RoleAnnotations]))),
 
 -- FFI
  ( "foreign",   (KW_Foreign,    Just (Any [ForeignFunctionInterface])) )
@@ -1380,5 +1382,6 @@ showToken t = case t of
   KW_Jvm        -> "jvm"
   KW_Js         -> "js"
   KW_CApi       -> "capi"
+  KW_Role       -> "role"
 
   EOF           -> "EOF"

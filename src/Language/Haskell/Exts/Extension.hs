@@ -504,6 +504,8 @@ data KnownExtension =
   -- Constraint can occur before the arrow.
   | ConstraintKinds
 
+  -- | [GHC &#xa7; 7.25.3] Allow role annotations.
+  | RoleAnnotations
 
   deriving (Show, Read, Eq, Ord, Enum, Bounded, Data, Typeable)
 
