@@ -1071,9 +1071,12 @@ Kinds
 >       : kind1                 {% checkEnabled KindSignatures >> return $1 }
 
 > kind1 :: { Kind L }
+>       : bkind                 { $1 }
+>       | bkind '->' kind1      { KindFn ($1 <> $3 <** [$2]) $1 $3 }
+
+> bkind :: { Kind L }
 >       : akind                 { $1 }
->       | akind kind1           { KindApp ($1 <> $2) $1 $2 }
->       | akind '->' kind1      { KindFn ($1 <> $3 <** [$2]) $1 $3 }
+>       | bkind akind           { KindApp ($1 <> $2) $1 $2 }
 
 > akind :: { Kind L }
 >       : '*'                   { KindStar  (nIS $1) }
@@ -1086,18 +1089,13 @@ KindParen covers 1-tuples, KindVar l  while KindTuple is for pairs
 > pkind :: { Kind L }
 >         : qtyconorcls         { KindVar (ann $1) $1 }
 >         | '(' ')'             { let l = $1 <^^> $2 in KindVar l (unit_tycon_name l) }
->         | '(' kinds  ')'      { KindTuple ($1 <^^> $3 <** ($1:reverse ($3:snd $2))) (reverse (fst $2)) }
-
-
-repeat of what is done for types
-
-> kinds :: { ([Kind L],[S]) }
->       : kinds1 ',' akind              { ($3 : fst $1, $2 : snd $1)  }
+>         | '(' kind ',' comma_kinds1  ')'
+>             { KindTuple ($1 <^^> $5 <** ($1:$3:reverse ($5:snd $4))) ($2:reverse (fst $4)) }
 >         | '[' kind ']'      { KindList  (($1 <^^> $3) <** [$1, $3]) $2 }
 
-> kinds1 :: { ([Kind L],[S]) }
->       : akind                         { ([$1],[]) }
->       | kinds1 ',' akind              { ($3 : fst $1, $2 : snd $1) }
+> comma_kinds1 :: { ([Kind L], [S]) }
+>      : kind1                   { ([$1], []) }
+>      | kind1 ',' comma_kinds1  { ($1 : (fst $3), $2 : (snd $3)) }
 
 
 > optkind :: { (Maybe (Kind L), [S]) }
