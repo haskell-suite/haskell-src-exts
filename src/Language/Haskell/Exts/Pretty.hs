@@ -522,7 +522,7 @@ instance Pretty Decl where
         pretty (PatSyn pos pat rhs dir) =
                 let sep = case dir of
                             ImplicitBidirectional -> "="
-                            ExplicitBidirectional _ -> "="
+                            ExplicitBidirectional _ -> "<-"
                             Unidirectional -> "<-"
                 in
                 markLine pos $
