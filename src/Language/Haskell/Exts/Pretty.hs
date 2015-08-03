@@ -501,7 +501,7 @@ instance Pretty Decl where
         pretty (PatSynSig pos n mtvs c1 c2 t) =
                 markLine pos $
                 mySep ( [text "pattern", pretty n, text "::", ppForall mtvs
-                        , ppContext c1, text "=>", ppContext c2, text "=>", ppAType t ] )
+                        ,ppContext c1, ppContext c2, ppAType t ] )
 
 
         pretty (FunBind matches) = do
