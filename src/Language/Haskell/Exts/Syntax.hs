@@ -63,7 +63,7 @@ module Language.Haskell.Exts.Syntax (
     Literal(..), Sign(..),
     -- * Variables, Constructors and Operators
     ModuleName(..), QName(..), Name(..), QOp(..), Op(..),
-    SpecialCon(..), CName(..), IPName(..), XName(..),
+    SpecialCon(..), CName(..), IPName(..), XName(..), Role(..),
 
     -- * Template Haskell
     Bracket(..), Splice(..),
@@ -289,6 +289,9 @@ data Decl
      -- ^ An ANN pragma
      | MinimalPragma    SrcLoc (Maybe BooleanFormula)
      -- ^ A MINIMAL pragma
+     | RoleAnnotDecl    SrcLoc QName [Role]
+     -- ^ A role annotation
+
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 -- | A type equation of the form @rhs = lhs@ used in closed type families.
@@ -310,6 +313,13 @@ data BooleanFormula
     | AndFormula [BooleanFormula]    -- ^ And boolean formulas.
     | OrFormula [BooleanFormula]     -- ^ Or boolean formulas.
     | ParenFormula BooleanFormula    -- ^ Parenthesized boolean formulas.
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+
+data Role
+  = Nominal
+  | Representational
+  | Phantom
+  | RoleWildcard
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 -- | A flag stating whether a declaration is a data or newtype declaration.

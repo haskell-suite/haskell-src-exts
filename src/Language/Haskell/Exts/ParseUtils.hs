@@ -50,6 +50,7 @@ module Language.Haskell.Exts.ParseUtils (
     , checkDefSigDef        -- Decl -> P Decl
     , getGConName           -- S.Exp -> P QName
     , mkTyForall            -- Maybe [TyVarBind] -> PContext -> PType -> PType
+    , mkRoleAnnotDecl       --
     -- HaRP
     , checkRPattern         -- PExp -> P RPat
     -- Hsx
@@ -71,7 +72,7 @@ module Language.Haskell.Exts.ParseUtils (
     ) where
 
 import Language.Haskell.Exts.Annotated.Syntax hiding ( Type(..), Asst(..), Exp(..), FieldUpdate(..), XAttr(..), Context(..) )
-import qualified Language.Haskell.Exts.Annotated.Syntax as S ( Type(..), Asst(..), Exp(..), FieldUpdate(..), XAttr(..), Context(..) )
+import qualified Language.Haskell.Exts.Annotated.Syntax as S ( Type(..), Asst(..), Exp(..), FieldUpdate(..), XAttr(..), Context(..), Role(..))
 
 import Language.Haskell.Exts.ParseSyntax
 import Language.Haskell.Exts.ParseMonad
@@ -1139,3 +1140,26 @@ mkTyForall l mtvs ctxt ty =
     case (ctxt, ty) of
         (Nothing, TyForall _ Nothing ctxt2 ty2) -> TyForall l mtvs ctxt2 ty2
         _                                       -> TyForall l mtvs ctxt ty
+
+-- Make a role annotation
+
+mkRoleAnnotDecl ::  S -> S -> QName L -> [(Maybe String, L)] -> P (Decl L)
+mkRoleAnnotDecl l1 l2 tycon roles
+  = do roles' <- mapM parse_role roles
+       return (RoleAnnotDecl loc' tycon roles')
+  where
+    loc' =
+      case roles of
+        [] -> (l1 <^^> l2 <++> ann tycon) <** [l1, l2]
+        _  -> (l1 <^^> l2 <++> ann tycon <++> foldl1 (<++>) (map snd roles)) <** [l1, l2]
+    possible_roles = [ ("phantom", S.Phantom)
+                     , ("representational", S.Representational)
+                     , ("nominal", S.Nominal)]
+
+    parse_role (Nothing, loc_role) = return $ S.RoleWildcard loc_role
+    parse_role (Just role, loc_role)
+      = case lookup role possible_roles of
+          Just found_role -> return $ found_role loc_role
+          Nothing         ->
+            fail ("Illegal role name " ++ role)
+
