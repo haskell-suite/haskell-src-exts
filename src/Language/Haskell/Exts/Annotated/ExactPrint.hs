@@ -67,7 +67,12 @@ setPos :: Pos -> EP ()
 setPos l = EP (\_ cs -> ((),l,cs,id))
 
 printString :: String -> EP ()
-printString str = EP (\(l,c) cs -> ((), (l,c+length str), cs, showString str))
+printString str =
+  EP (\(l,c) cs -> let (l', c') = foldl go (l, c) str
+                       go (cl, _) '\n' = (cl + 1, 1)
+                       go (cl, cc) _    = (cl, cc + 1)
+                   in ((), (l', c'), cs, showString str))
+
 
 getComment :: EP (Maybe Comment)
 getComment = EP $ \l cs ->
@@ -509,7 +514,11 @@ instance ExactP ModulePragma where
          in printInterleaved (zip pts ("{-# LANGUAGE":replicate k "," ++ replicate m "" ++ ["#-}"])) ns
     OptionsPragma    l mt str   ->
         let k = length (srcInfoPoints l)
-            opstr = "{-# OPTIONS" ++ case mt of { Just t -> "_" ++ show t ; _ -> "" } ++ ' ':str
+            -- We strip out a leading space in the lexer unless the pragma
+            -- starts with a newline.
+            addSpace xs@('\n':_) = xs
+            addSpace xs = ' ':xs
+            opstr = "{-# OPTIONS" ++ case mt of { Just t -> "_" ++ show t ; _ -> "" } ++ addSpace str
          in printPoints l $ opstr : replicate (k-2) "" ++ ["#-}"]
     AnnModulePragma  l ann'      ->
         case srcInfoPoints l of

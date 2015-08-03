@@ -715,13 +715,21 @@ instance Pretty RuleVar where
     pretty (RuleVar n) = pretty n
     pretty (TypedRuleVar n t) = parens $ mySep [pretty n, text "::", pretty t]
 
+-- Spaces are stripped from the pragma text but other whitespace
+-- is not.
+ppOptionsPragma :: Doc -> String -> Doc
+ppOptionsPragma opt s =
+  case s of
+    ('\n':_) -> opt <> text s <> text "#-}"
+    _ ->  myFsep [opt, text s <> text "#-}"]
+
 instance Pretty ModulePragma where
     pretty (LanguagePragma _ ns) =
         myFsep $ text "{-# LANGUAGE" : punctuate (char ',') (map pretty ns) ++ [text "#-}"]
     pretty (OptionsPragma _ (Just tool) s) =
-        myFsep [text "{-# OPTIONS_" <> pretty tool, text s <> text "#-}"]
+        ppOptionsPragma (text "{-# OPTIONS_" <> pretty tool) s
     pretty (OptionsPragma _ _ s) =
-        myFsep [text "{-# OPTIONS", text s <> text "#-}"]
+        ppOptionsPragma (text "{-# OPTIONS") s
     pretty (AnnModulePragma _ ann) =
         myFsep [text "{-# ANN", pretty ann, text "#-}"]
 
