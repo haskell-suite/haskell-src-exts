@@ -5,11 +5,32 @@
 
 AST changes:
 
-* Replaced VarA with AppA in Asst. (#168).
+* Replaced VarA with AppA in Asst (#168).
+* Promoted list/tuple members changed from Promoted to Type (#162).
+* Update PatBind, Match, and Alt from containing Binds to Maybe Binds to
+  distinguish between empty where clauses and where clauses with no
+  binds (#244).
+* Add RoleAnnotDecl and Role to support Role annotations (#215).
 
 Other changes:
 
 * Add standalone parsers for ImportDecl.
+* Fix pretty-printer bugs for HaRP (#160).
+* Insert parentheses when pretty-printing non-atomic bang types (#169).
+* Un-reverse confusion of left and right arrow (#175).
+* Prettyprint option pragmas like 1.15 (#172).
+* Conditionally insert lines when pretty-printing declarations (#171).
+* Distinguish deriving (Show) from deriving Show (#189).
+* Allow parsing of unicode subscript and superscript functions (#173).
+* Pretty print unboxed tuples with spaces (#193).
+* Improve performance when parsing long extension lists (#200).
+* Properly pretty print constructor and class operators (#204).
+* Read Haskell source files as UTF-8 (#223).
+* Fix ExplicitNamespaces parsing (#216).
+* PolyKinds implies KindSignatures (#220).
+* Preserve location information for infix binds (#205).
+* Preserve positional information in checkPattern (#231).
+* Maintain correct line numbers when parsing multiline GHC_OPTIONS (#218).
 
 ** 1.16.x
 
