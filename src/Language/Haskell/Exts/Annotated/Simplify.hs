@@ -50,7 +50,7 @@ sModule md = case md of
          in S.Module loc1 mn (map sModulePragma oss) mwt mes (map sImportDecl ids)
                 (map sDecl ds ++ [pageFun loc2 $ S.XTag loc2 (sXName xn) (map sXAttr attrs) (fmap sExp mat) (map sExp es)])
   where pageFun :: SrcLoc -> S.Exp -> S.Decl
-        pageFun loc e = S.PatBind loc namePat rhs (S.BDecls [])
+        pageFun loc e = S.PatBind loc namePat rhs Nothing
             where namePat = S.PVar $ S.Ident "page"
                   rhs = S.UnGuardedRhs e
 
@@ -98,7 +98,7 @@ sDecl decl = case decl of
      TypeSig      l ns t        -> S.TypeSig (getPointLoc l) (map sName ns) (sType t)
      FunBind      _ ms          -> S.FunBind (map sMatch ms)
      PatBind      l p rhs mbs    ->
-        S.PatBind (getPointLoc l) (sPat p) (sRhs rhs) (maybe (S.BDecls []) sBinds mbs)
+        S.PatBind (getPointLoc l) (sPat p) (sRhs rhs) (sBinds `fmap` mbs)
      ForImp       l cc msaf mstr n t    ->
         S.ForImp (getPointLoc l) (sCallConv cc) (maybe (S.PlaySafe False) sSafety msaf) (fromMaybe "" mstr) (sName n) (sType t)
      ForExp       l cc      mstr n t    ->
@@ -266,9 +266,9 @@ sIPBind (IPBind l ipn e) = S.IPBind (getPointLoc l) (sIPName ipn) (sExp e)
 
 sMatch :: SrcInfo loc => Match loc -> S.Match
 sMatch (Match l n ps rhs mwhere) =
-    S.Match (getPointLoc l) (sName n) (map sPat ps) Nothing (sRhs rhs) (maybe (S.BDecls []) sBinds mwhere)
+    S.Match (getPointLoc l) (sName n) (map sPat ps) Nothing (sRhs rhs) (sBinds `fmap` mwhere)
 sMatch (InfixMatch l pa n pbs rhs mwhere) =
-    S.Match (getPointLoc l) (sName n) (map sPat (pa:pbs)) Nothing (sRhs rhs) (maybe (S.BDecls []) sBinds mwhere)
+    S.Match (getPointLoc l) (sName n) (map sPat (pa:pbs)) Nothing (sRhs rhs) (sBinds `fmap` mwhere)
 
 sQualConDecl :: SrcInfo loc => QualConDecl loc -> S.QualConDecl
 sQualConDecl (QualConDecl l mtvs mctxt cd) =
@@ -598,4 +598,4 @@ sFieldUpdate fu = case fu of
     FieldWildcard _         -> S.FieldWildcard
 
 sAlt :: SrcInfo loc => Alt loc -> S.Alt
-sAlt (Alt l p galts mbs) = S.Alt (getPointLoc l) (sPat p) (sRhs galts) (maybe (S.BDecls []) sBinds mbs)
+sAlt (Alt l p galts mbs) = S.Alt (getPointLoc l) (sPat p) (sRhs galts) (sBinds `fmap` mbs)

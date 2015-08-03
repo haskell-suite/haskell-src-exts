@@ -262,7 +262,7 @@ data Decl
      -- ^ A type signature declaration
      | FunBind      [Match]
      -- ^ A set of function binding clauses
-     | PatBind      SrcLoc Pat Rhs {-where-} Binds
+     | PatBind      SrcLoc Pat Rhs {-where-} (Maybe Binds)
      -- ^ A pattern binding
      | ForImp   SrcLoc CallConv Safety String Name Type
      -- ^ A foreign import declaration
@@ -338,7 +338,7 @@ data IPBind = IPBind SrcLoc IPName Exp
 
 -- | Clauses of a function binding.
 data Match
-     = Match SrcLoc Name [Pat] (Maybe Type) Rhs {-where-} Binds
+     = Match SrcLoc Name [Pat] (Maybe Type) Rhs {-where-} (Maybe Binds)
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 -- | A single constructor declaration within a data type declaration,
@@ -770,7 +770,7 @@ data FieldUpdate
 
 -- | An /alt/ alternative in a @case@ expression.
 data Alt
-    = Alt SrcLoc Pat Rhs Binds
+    = Alt SrcLoc Pat Rhs (Maybe Binds)
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 -----------------------------------------------------------------------------

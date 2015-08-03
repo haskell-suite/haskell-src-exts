@@ -615,10 +615,10 @@ instance Pretty Match where
                                 else parens (myFsep hd) : map (prettyPrec 3) ps'
                         _ -> pretty f : map (prettyPrec 3) ps
 
-ppWhere :: Binds -> Doc
-ppWhere (BDecls []) = empty
-ppWhere (BDecls l)  = nest 2 (text "where" $$$ ppBody whereIndent (ppDecls False l))
-ppWhere (IPBinds b) = nest 2 (text "where" $$$ ppBody whereIndent (ppDecls False b))
+ppWhere :: Maybe Binds -> Doc
+ppWhere Nothing            = empty
+ppWhere (Just (BDecls l))  = nest 2 (text "where" $$$ ppBody whereIndent (ppDecls False l))
+ppWhere (Just (IPBinds b)) = nest 2 (text "where" $$$ ppBody whereIndent (ppDecls False b))
 
 ppSig :: Type -> Doc
 ppSig t = text "::" <+> pretty t
