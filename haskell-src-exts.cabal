@@ -74,13 +74,14 @@ Library
                         Language.Haskell.Exts.Annotated.Simplify,
                         Language.Haskell.Exts.Annotated.Parser
 
-  Other-modules:        Language.Haskell.Exts.ExtScheme,
-
+  Other-modules:        
+                        Language.Haskell.Exts.ExtScheme,
                         Language.Haskell.Exts.ParseMonad,
                         Language.Haskell.Exts.ParseSyntax,
                         Language.Haskell.Exts.InternalLexer,
                         Language.Haskell.Exts.ParseUtils,
-                        Language.Haskell.Exts.InternalParser
+                        Language.Haskell.Exts.InternalParser,
+                        Language.Haskell.Exts.Annotated.Comments
   Hs-source-dirs:       src
   Ghc-options:          -Wall
 

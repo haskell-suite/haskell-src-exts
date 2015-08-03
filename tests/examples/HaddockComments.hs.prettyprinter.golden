@@ -1,0 +1,20 @@
+module HaddockComments where
+
+fun1 :: Int -> Float -> IO ()
+fun1 = undefined
+fun2 = undefined
+
+fun3 :: Int -> Int
+fun3 = undefined
+
+square :: Int -> Int
+square x = x * x
+
+class C a where
+        f :: a -> Int
+        
+        g :: Int -> a
+
+data MyData = Cons1{cons1Field1 :: Int, cons1Field2 :: Int,
+                    cons1Field3 :: String}
+            | Cons2 Int

@@ -26,6 +26,7 @@ module Language.Haskell.Exts.Annotated (
     , module Language.Haskell.Exts.Comments
     , module Language.Haskell.Exts.Extension
     , module Language.Haskell.Exts.Annotated.Parser
+    , module Language.Haskell.Exts.Annotated.Comments
     -- * Parsing of Haskell source files
     , parseFile
     , parseFileWithMode
@@ -40,6 +41,7 @@ module Language.Haskell.Exts.Annotated (
     ) where
 
 import Language.Haskell.Exts.Annotated.Build
+import Language.Haskell.Exts.Annotated.Comments
 import Language.Haskell.Exts.Annotated.Parser
 import Language.Haskell.Exts.Annotated.Syntax
 import Language.Haskell.Exts.Parser ( Parseable(..), ParseResult(..), fromParseResult, ParseMode(..), defaultParseMode )
