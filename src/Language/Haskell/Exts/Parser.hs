@@ -34,7 +34,7 @@ module Language.Haskell.Exts.Parser
                 -- ** Types
                 parseType, parseTypeWithMode, parseTypeWithComments,
                 -- ** Import declarations
-                parseImportDecl, parseImportDeclWithMode, 
+                parseImportDecl, parseImportDeclWithMode,
                 parseImportDeclWithComments,
                 -- * Non-greedy parsers
                 NonGreedy(..),
