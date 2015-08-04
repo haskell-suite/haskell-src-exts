@@ -96,7 +96,12 @@ data SrcSpanInfo = SrcSpanInfo
 --    , explLayout     :: Bool
     , srcInfoPoints  :: [SrcSpan]    -- Marks the location of specific entities inside the span
     }
-  deriving (Eq,Ord,Show,Typeable,Data)
+  deriving (Eq,Ord,Typeable,Data)
+
+-- Identical output to the derived show instance for GHC 7.10 and earlier.
+instance Show SrcSpanInfo where
+  showsPrec n (SrcSpanInfo s pts) = showParen (n >= 11) . showString $
+    "SrcSpanInfo {srcInfoSpan = " ++ show s ++ ", srcInfoPoints = " ++ show pts ++ "}"
 
 -- | Generate a 'SrcSpanInfo' with no positional information for entities.
 noInfoSpan :: SrcSpan -> SrcSpanInfo
