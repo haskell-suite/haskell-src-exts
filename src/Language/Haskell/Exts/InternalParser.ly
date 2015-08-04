@@ -35,7 +35,6 @@
 > import Language.Haskell.Exts.ParseUtils
 > import Language.Haskell.Exts.Annotated.Fixity
 > import Language.Haskell.Exts.SrcLoc
-> import Language.Haskell.Exts.Comments ( Comment )
 > import Language.Haskell.Exts.Extension
 
 > import Control.Monad ( liftM, (<=<), when )
