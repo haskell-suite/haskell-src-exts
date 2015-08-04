@@ -1068,6 +1068,7 @@ instance ExactP Type where
 
     TySplice _ sp  -> exactP sp
     TyBang _ b t -> exactPC b >> exactPC t
+    TyWildCard _ mn      -> printString "_" >> maybeEP exactPC mn
 
 instance ExactP Promoted where
   exactP (PromotedInteger _ _ rw) = printString rw
@@ -1139,6 +1140,7 @@ instance ExactP Asst where
             exactPC asst'
             printStringAt (pos b) ")"
          _ -> errorEP "ExactP: Asst: ParenA is given wrong number of srcInfoPoints"
+    WildCardA _ mn -> printString "_" >> maybeEP exactPC mn
 
 instance ExactP Deriving where
   exactP (Deriving l ihs) =
@@ -1660,6 +1662,7 @@ instance ExactP Exp where
             printStringAt (pos b) "case"
             layoutList pts alts
          _ -> errorEP "ExactP: Exp: LCase is given wrong number of srcInfoPoints"
+    ExprHole _ -> printString "_"
 
 instance ExactP FieldUpdate where
   exactP fup = case fup of

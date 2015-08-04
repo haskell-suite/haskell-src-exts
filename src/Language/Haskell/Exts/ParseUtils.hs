@@ -32,6 +32,7 @@ module Language.Haskell.Exts.ParseUtils (
     , checkPattern          -- PExp -> P Pat
     , checkExpr             -- PExp -> P Exp
     , checkType             -- PType -> P Type
+    , checkTyVar            -- Name  -> P PType
     , bangType              -- L -> BangType -> Type -> Type
     , checkKind             -- Kind -> P ()
     , checkValDef           -- SrcLoc -> PExp -> Maybe Type -> Rhs -> Binds -> P Decl
@@ -214,6 +215,8 @@ checkAssertion t' = checkAssertion' id [] t'
             checkAssertion' fl ts (TyVar l t) = do -- Dict :: cxt => Dict cxt
                 checkEnabled ConstraintKinds
                 return $ AppA (fl l) t (reverse ts)
+            checkAssertion' _ _ (TyWildCard l wc) =
+                return $ WildCardA l wc
             checkAssertion' _ _ _ = fail "Illegal class assertion"
 
 getSymbol :: QName L -> Maybe String
@@ -273,6 +276,9 @@ checkAsst isSimple asst =
       ParenA l a      -> do
                 a' <- checkAsst isSimple a
                 return $ S.ParenA l a'
+      WildCardA l a ->
+        if isSimple then fail "Malformed Context: WildCards not allowed in simple contexts"
+                    else return $ S.WildCardA l a
 
 checkAsstParam :: Bool -> PType L -> P (S.Type L)
 checkAsstParam isSimple t = do
@@ -281,6 +287,7 @@ checkAsstParam isSimple t = do
          then checkType t
          else case t of
                 TyVar l n     -> return $ S.TyVar l n
+                TyWildCard l mn ->  return $ S.TyWildCard l mn
                 TyParen l t1  -> do t1' <- checkAsstParam isSimple t1
                                     return $ S.TyParen l t1'
                 TyApp l pf pt | not isSimple    -> do
@@ -727,6 +734,9 @@ checkExpr e' = case e' of
     -- LamdaCase
     LCase l alts -> return $ S.LCase l alts
 
+    -- Hole
+    WildCard l     -> return $ S.ExprHole l
+
     _             -> fail $ "Parse error in expression: " ++ prettyPrint e'
 
 checkAttr :: ParseXAttr L -> P (S.XAttr L)
@@ -1079,6 +1089,7 @@ checkT t simple = case t of
                               checkEnabled TemplateHaskell
                               return $ S.TySplice l s
     TyBang l b t' -> check1Type t' (S.TyBang l b)
+    TyWildCard l mn -> return $ S.TyWildCard l mn
     _   -> fail $ "Parse error in type: " ++ prettyPrint t
 
 check1Type :: PType L -> (S.Type L -> S.Type L) -> P (S.Type L)
@@ -1090,6 +1101,21 @@ check2Types at bt f = checkT at True >>= \a -> checkT bt True >>= \b -> return (
 checkTypes :: [PType L] -> P [S.Type L]
 checkTypes = mapM (flip checkT True)
 
+checkTyVar ::  Name L -> P (PType L)
+checkTyVar n = do
+  e <- getExtensions
+  return $
+    case n of
+      Ident il ('_':ident) | NamedWildCards `elem` e ->
+        TyWildCard il (Just (Ident (reduceSrcSpanInfo il) ident))
+      _ ->
+        TyVar (ann n) n
+  where
+    -- Reduces the length of the SrcSpanInfo by 1 so that it just covers the identifier.
+    reduceSrcSpanInfo spaninfo =
+      let ss = srcInfoSpan spaninfo
+          ss' = ss { srcSpanStartColumn = srcSpanStartColumn ss + 1 }
+      in  spaninfo { srcInfoSpan = ss' }
 ---------------------------------------
 -- Check kinds
 

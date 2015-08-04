@@ -342,6 +342,7 @@ sType t' = case t' of
     TyEquals _ t1 t2            -> S.TyEquals (sType t1) (sType t2)
     TySplice _ s                -> S.TySplice (sSplice s)
     TyBang _ b t                -> S.TyBang (sBangType b) (sType t)
+    TyWildCard _ mn             -> S.TyWildCard (sName `fmap` mn)
 
 sPromoted :: SrcInfo l => Promoted l -> S.Promoted
 sPromoted p = case p of
@@ -385,6 +386,7 @@ sAsst asst = case asst of
     IParam _ ipn t      -> S.IParam (sIPName ipn) (sType t)
     EqualP _ t1 t2      -> S.EqualP (sType t1) (sType t2)
     ParenA _ a          -> S.ParenA (sAsst a)
+    WildCardA _ mn      -> S.WildCardA (sName `fmap` mn)
 
 sLiteral :: Literal l -> S.Literal
 sLiteral lit = case lit of
@@ -458,6 +460,7 @@ sExp e' = case e' of
     LeftArrHighApp  _ e1 e2 -> S.LeftArrHighApp (sExp e1) (sExp e2)
     RightArrHighApp _ e1 e2 -> S.RightArrHighApp (sExp e1) (sExp e2)
     LCase _ alts -> S.LCase (map sAlt alts)
+    ExprHole _              -> S.ExprHole
 
 
 sXName :: XName l -> S.XName

@@ -888,7 +888,7 @@ the (# and #) lexemes. Kinds will be handled at the kind rule.
 
 > atype :: { PType L }
 >       : gtycon                        { TyCon   (ann $1) $1 }
->       | tyvar                         { TyVar   (ann $1) $1 }
+>       | tyvar                         {% checkTyVar $1 }
 >       | strict_mark atype             { let (bangOrPack, locs) = $1
 >                                           in let annot = if bangOrPack then (BangedTy (nIS (last locs) <** locs)) else UnpackedTy (nIS (head locs) <++> nIS (last locs) <** locs)
 >                                            in bangType (nIS (head locs) <++> ann $2) annot $2 }
@@ -900,6 +900,7 @@ the (# and #) lexemes. Kinds will be handled at the kind rule.
 >       | '(' ctype '::' kind ')'       { TyKind  ($1 <^^> $5 <** [$1,$3,$5]) $2 $4 }
 >       | '$(' trueexp ')'              { let l = ($1 <^^> $3 <** [$1,$3]) in TySplice l $ ParenSplice l $2 }
 >       | IDSPLICE                      { let Loc l (THIdEscape s) = $1 in TySplice (nIS l) $ IdSplice (nIS l) s }
+>       | '_'                           { TyWildCard (nIS $1) Nothing }
 >       | ptype                         { % checkEnabled DataKinds >> return (TyPromoted (ann $1) $1) }
 
 > ptype :: { Promoted L }

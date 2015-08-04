@@ -847,6 +847,8 @@ instance Pretty Type where
         prettyPrec p (TyEquals a b) = parensIf (p > 0) (myFsep [pretty a, text "~", pretty b])
         prettyPrec _ (TySplice s) = pretty s
         prettyPrec _ (TyBang b t) = pretty b <> prettyPrec prec_atype t
+        prettyPrec _ (TyWildCard mn) = char '_' <> maybePP pretty mn
+
 
 instance Pretty Promoted where
   pretty p =
@@ -1054,6 +1056,7 @@ instance Pretty Exp where
         -- LamdaCase
         prettyPrec p (LCase altList) = parensIf (p > 1) $
                 text "\\case" $$$ ppBody caseIndent (map pretty altList)
+        prettyPrec _ ExprHole       = char '_'
 
 
 instance Pretty XAttr where
@@ -1321,6 +1324,7 @@ instance Pretty Asst where
         pretty (IParam i t)    = myFsep [pretty i, text "::", pretty t]
         pretty (EqualP t1 t2)  = myFsep [pretty t1, text "~", pretty t2]
         pretty (ParenA a)      = parens (pretty a)
+        pretty (WildCardA mn)  = char  '_' <> maybePP pretty mn
 
 -- Pretty print a source location, useful for printing out error messages
 instance Pretty SrcLoc where
@@ -1887,6 +1891,7 @@ instance SrcInfo loc => Pretty (P.PAsst loc) where
         pretty (P.IParam _ i t)    = myFsep [pretty i, text "::", pretty t]
         pretty (P.EqualP _ t1 t2)  = myFsep [pretty t1, text "~", pretty t2]
         pretty (P.ParenA _ a)      = parens (pretty a)
+        pretty (P.WildCardA _ mn)  = char '_' <> maybePP pretty mn
 
 instance SrcInfo loc => Pretty (P.PType loc) where
         prettyPrec p (P.TyForall _ mtvs ctxt htype) = parensIf (p > 0) $
@@ -1914,3 +1919,4 @@ instance SrcInfo loc => Pretty (P.PType loc) where
         prettyPrec _ (P.TyPromoted _ p) = pretty $ sPromoted p
         prettyPrec _ (P.TySplice _ s) = pretty s
         prettyPrec _ (P.TyBang _ b t) = pretty b <> prettyPrec prec_atype t
+        prettyPrec _ (P.TyWildCard _ mn) = char '_' <> maybePP pretty mn

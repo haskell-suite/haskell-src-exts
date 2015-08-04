@@ -507,6 +507,16 @@ data KnownExtension =
   -- | [GHC &#xa7; 7.25.3] Allow role annotations.
   | RoleAnnotations
 
+  -- | [GHC &#xa7; 7.15] Allow partial specified type signatures.
+  -- Note that this extension does not affect parsing. It only affects whether the
+  -- program is able to be run with partial signatures.
+  | PartialTypeSignatures
+
+  -- | [GHC &#xa7; 7.15.1.2] This extension treats type variables which
+  -- start with an underscore as wildcards. For example, `foo :: _x` is
+  -- equivalent to `foo :: _`.
+  | NamedWildCards
+
   deriving (Show, Read, Eq, Ord, Enum, Bounded, Data, Typeable)
 
 -- | Certain extensions imply other extensions, and this function
