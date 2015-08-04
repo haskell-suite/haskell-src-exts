@@ -484,13 +484,14 @@ sSafety (PlaySafe _ b) = S.PlaySafe b
 sSafety (PlayInterruptible _) = S.PlayInterruptible
 
 sCallConv :: CallConv l -> S.CallConv
-sCallConv (StdCall   _) = S.StdCall
-sCallConv (CCall     _) = S.CCall
-sCallConv (CPlusPlus _) = S.CPlusPlus
-sCallConv (DotNet    _) = S.DotNet
-sCallConv (Jvm       _) = S.Jvm
-sCallConv (Js        _) = S.Js
-sCallConv (CApi      _) = S.CApi
+sCallConv (StdCall    _) = S.StdCall
+sCallConv (CCall      _) = S.CCall
+sCallConv (CPlusPlus  _) = S.CPlusPlus
+sCallConv (DotNet     _) = S.DotNet
+sCallConv (Jvm        _) = S.Jvm
+sCallConv (Js         _) = S.Js
+sCallConv (JavaScript _) = S.JavaScript
+sCallConv (CApi       _) = S.CApi
 
 sModulePragma :: SrcInfo loc => ModulePragma loc -> S.ModulePragma
 sModulePragma pr = case pr of

@@ -1,0 +1,5 @@
+{-# LANGUAGE JavascriptFFI #-}
+module Main (main) where
+
+foreign import javascript unsafe "somethingUseful_ = $1"
+               js_set_somethingUseful :: JSFun a -> IO ()
