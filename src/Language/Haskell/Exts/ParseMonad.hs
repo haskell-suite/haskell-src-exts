@@ -22,7 +22,7 @@ module Language.Haskell.Exts.ParseMonad(
         ParseMode(..), defaultParseMode, fromParseResult,
         runParserWithMode, runParserWithModeComments, runParser,
         getSrcLoc, pushCurrentContext, popContext,
-        getExtensions,
+        getExtensions, getIgnoreFunctionArity,
         -- * Lexing
         Lex(runL), getInput, discard, lexNewline, lexTab, lexWhile, lexWhile_,
         alternative, checkBOL, setBOL, startToken, getOffside,
@@ -144,7 +144,9 @@ data ParseMode = ParseMode {
         --   from LINE pragmas in source files
         ignoreLinePragmas :: Bool,
         -- | list of fixities to be aware of
-        fixities :: Maybe [Fixity]
+        fixities :: Maybe [Fixity],
+        -- | Checks whether functions have a consistent arity
+        ignoreFunctionArity :: Bool
         }
 
 -- | Default parameters for a parse.
@@ -159,7 +161,8 @@ defaultParseMode = ParseMode {
         extensions = [],
         ignoreLanguagePragmas = False,
         ignoreLinePragmas = True,
-        fixities = Just preludeFixities
+        fixities = Just preludeFixities,
+        ignoreFunctionArity = False
         }
 
 -- Version of ParseMode used internally,
@@ -169,13 +172,14 @@ data InternalParseMode = IParseMode {
         iParseFilename :: String,
         iExtensions :: [KnownExtension],
         -- iIgnoreLanguagePragmas :: Bool,
-        iIgnoreLinePragmas :: Bool
+        iIgnoreLinePragmas :: Bool,
+        iIgnoreFunctionArity :: Bool
         -- iFixities :: Maybe [Fixity]
     }
 
 toInternalParseMode :: ParseMode -> InternalParseMode
-toInternalParseMode (ParseMode pf bLang exts _ilang iline _fx) =
-    IParseMode pf (toExtensionList bLang exts) {-_ilang -} iline {- _fx -}
+toInternalParseMode (ParseMode pf bLang exts _ilang iline _fx farity) =
+    IParseMode pf (toExtensionList bLang exts) {-_ilang -} iline {- _fx -} farity
 
 
 -- | Monad for parsing
@@ -312,6 +316,12 @@ pushCtxtFlag =
 
 pullDoStatus :: P Bool
 pullDoStatus = P $ \_i _x _y _l (s, exts, e, (d,c), cs) _m -> Ok (s,exts,e,(False,c),cs) d
+
+getIgnoreFunctionArity :: P Bool
+getIgnoreFunctionArity = P $ \_i _x _y _l s m ->
+  Ok s $ iIgnoreFunctionArity m
+
+
 
 
 ----------------------------------------------------------------------------
