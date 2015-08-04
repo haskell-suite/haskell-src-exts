@@ -86,7 +86,7 @@ parseFileContentsWithExts exts = parseFileContentsWithMode (defaultParseMode { e
 
 -- | Parse a source file from a string using a custom parse mode.
 parseFileContentsWithMode :: ParseMode -> String -> ParseResult Module
-parseFileContentsWithMode p@(ParseMode fn oldLang exts ign _ _) rawStr =
+parseFileContentsWithMode p@(ParseMode fn oldLang exts ign _ _ _) rawStr =
         let md = delit fn $ ppContents rawStr
             (bLang, extraExts) =
                 case (ign, readExtensions md) of
@@ -97,7 +97,7 @@ parseFileContentsWithMode p@(ParseMode fn oldLang exts ign _ _) rawStr =
 
 -- | Parse a source file from a string using a custom parse mode and retaining comments.
 parseFileContentsWithComments :: ParseMode -> String -> ParseResult (Module, [Comment])
-parseFileContentsWithComments p@(ParseMode fn oldLang exts ign _ _) rawStr =
+parseFileContentsWithComments p@(ParseMode fn oldLang exts ign _ _ _) rawStr =
         let md = delit fn $ ppContents rawStr
             (bLang, extraExts) =
                 case (ign, readExtensions md) of
