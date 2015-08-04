@@ -831,7 +831,7 @@ isFunLhs (InfixApp _ l (QVarOp loc (UnQual _ op)) r) es
         in (return $ Just (op', l:r:es, False, []))
 isFunLhs (App _ (Var _ (UnQual _ f)) e) es = return $ Just (f, e:es, True, [])
 isFunLhs (App _ f e) es = isFunLhs f (e:es)
-isFunLhs (Var _ (UnQual _ f)) es@(_:_) = return $ Just (f, es, True, [])
+isFunLhs (Var _ (UnQual _ f)) es = return $ Just (f, es, True, [])
 isFunLhs (Paren l f) es@(_:_) = do mlhs <- isFunLhs f es
                                    case mlhs of
                                     Just (f',es',b,pts) ->
@@ -945,13 +945,8 @@ checkRevDecls = mergeFunBinds []
     mergeFunBinds revDs (FunBind l' ms1@(Match _ name ps _ _:_):ds1) =
         mergeMatches ms1 ds1 l'
         where
-        arity = length ps
         mergeMatches ms' (FunBind _ ms@(Match loc name' ps' _ _:_):ds) l
-            | name' =~= name =
-            if length ps' /= arity
-            then fail ("arity mismatch for '" ++ prettyPrint name ++ "'")
-                    `atSrcLoc` fromSrcInfo loc
-            else mergeMatches (ms++ms') ds (loc <++> l)
+            | name' =~= name = mergeMatches (ms++ms') ds (loc <++> l)
         mergeMatches ms' ds l = mergeFunBinds (FunBind l ms':revDs) ds
     mergeFunBinds revDs (FunBind l' ims1@(InfixMatch _ _ name _ _ _:_):ds1) =
         mergeInfix ims1 ds1 l'
@@ -969,13 +964,9 @@ checkRevClsDecls = mergeClsFunBinds []
     mergeClsFunBinds revDs (ClsDecl l' (FunBind _ ms1@(Match _ name ps _ _:_)):ds1) =
         mergeMatches ms1 ds1 l'
         where
-        arity = length ps
         mergeMatches ms' (ClsDecl _ (FunBind _ ms@(Match loc name' ps' _ _:_)):ds) l
             | name' =~= name =
-            if length ps' /= arity
-            then fail ("arity mismatch for '" ++ prettyPrint name ++ "'")
-                    `atSrcLoc` fromSrcInfo loc
-            else mergeMatches (ms++ms') ds (loc <++> l)
+              mergeMatches (ms++ms') ds (loc <++> l)
         mergeMatches ms' ds l = mergeClsFunBinds (ClsDecl l (FunBind l ms'):revDs) ds
     mergeClsFunBinds revDs (ClsDecl l' (FunBind _ ims1@(InfixMatch _ _ name _ _ _:_)):ds1) =
         mergeInfix ims1 ds1 l'
@@ -994,13 +985,9 @@ checkRevInstDecls = mergeInstFunBinds []
     mergeInstFunBinds revDs (InsDecl l' (FunBind _ ms1@(Match _ name ps _ _:_)):ds1) =
         mergeMatches ms1 ds1 l'
         where
-        arity = length ps
         mergeMatches ms' (InsDecl _ (FunBind _ ms@(Match loc name' ps' _ _:_)):ds) l
             | name' =~= name =
-            if length ps' /= arity
-            then fail ("arity mismatch for '" ++ prettyPrint name ++ "'")
-                    `atSrcLoc` fromSrcInfo loc
-            else mergeMatches (ms++ms') ds (loc <++> l)
+              mergeMatches (ms++ms') ds (loc <++> l)
         mergeMatches ms' ds l = mergeInstFunBinds (InsDecl l (FunBind l ms'):revDs) ds
     mergeInstFunBinds revDs (InsDecl l' (FunBind _ ims1@(InfixMatch _ _ name _ _ _:_)):ds1) =
         mergeInfix ims1 ds1 l'
