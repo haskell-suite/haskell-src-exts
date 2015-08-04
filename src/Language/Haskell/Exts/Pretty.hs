@@ -20,7 +20,10 @@ module Language.Haskell.Exts.Pretty (
                 -- * Pretty-printing styles (from "Text.PrettyPrint.HughesPJ")
                 P.Style(..), P.style, P.Mode(..),
                 -- * Haskell formatting modes
-                PPHsMode(..), Indent, PPLayout(..), defaultMode) where
+                PPHsMode(..), Indent, PPLayout(..), defaultMode
+                -- * Primitive Printers
+                , prettyPrim, prettyPrimWithMode
+                ) where
 
 import Language.Haskell.Exts.Syntax
 import qualified Language.Haskell.Exts.Annotated.Syntax as A
@@ -281,6 +284,15 @@ prettyPrint = prettyPrintWithMode defaultMode
 -- fullRender :: P.Mode -> Int -> Float -> (P.TextDetails -> a -> a)
 --               -> a -> Doc -> a
 -- fullRender = fullRenderWithMode defaultMode
+
+-- | pretty-print with the default style and 'defaultMode'.
+prettyPrim :: Pretty a => a -> P.Doc
+prettyPrim = prettyPrimWithMode defaultMode
+
+-- | pretty-print with the default style and a given mode.
+prettyPrimWithMode :: Pretty a => PPHsMode -> a -> P.Doc
+prettyPrimWithMode pphs doc = unDocM (pretty doc) pphs
+
 
 -------------------------  Pretty-Print a Module --------------------
 instance Pretty Module where
