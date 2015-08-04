@@ -24,6 +24,7 @@ main = do
     , prettyPrinterTests sources
     , prettyParserTests sources
     , extensionProperties
+    , commentsTests examplesDir
     ]
 
 -- | Where all the tests are to be found
@@ -155,6 +156,26 @@ prettyParserTests sources = testGroup "Pretty-parser tests" $ do
   return $ goldenVsFile (takeBaseName file) golden out run
 -- }}}
 
+commentsTests :: FilePath -> TestTree  -- {{{
+commentsTests dir = testGroup "Comments tests" $ do
+    let file = dir </> "HaddockComments.hs"
+        out = file <.> "comments" <.> "out"
+        golden = file <.> "comments" <.> "golden"
+        run = do
+            contents <- readUTF8File file
+            let
+              -- parse
+              parse1Result :: ParseResult (Module SrcSpanInfo,[Comment])
+              parse1Result =
+                parseFileContentsWithComments
+                 (defaultParseMode { parseFilename = file })
+                  contents
+              withC = case parse1Result of
+                        ParseOk res         -> ParseOk $ associateHaddock res
+                        ParseFailed sloc msg -> ParseFailed sloc msg
+            writeBinaryFile out $ show withC ++ "\n"   
+    return $ goldenVsFile (takeBaseName file) golden out run
+    
 -- UTF8 utils {{{
 readUTF8File :: FilePath -> IO String
 readUTF8File fp = openFile fp ReadMode >>= \h -> do

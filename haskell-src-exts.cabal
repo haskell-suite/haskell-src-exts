@@ -72,10 +72,10 @@ Library
                         Language.Haskell.Exts.Annotated.Build,
                         Language.Haskell.Exts.Annotated.ExactPrint,
                         Language.Haskell.Exts.Annotated.Simplify,
-                        Language.Haskell.Exts.Annotated.Parser
+                        Language.Haskell.Exts.Annotated.Parser,
+                        Language.Haskell.Exts.Annotated.Comments
 
   Other-modules:        Language.Haskell.Exts.ExtScheme,
-
                         Language.Haskell.Exts.ParseMonad,
                         Language.Haskell.Exts.ParseSyntax,
                         Language.Haskell.Exts.InternalLexer,
