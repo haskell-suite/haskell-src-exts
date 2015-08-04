@@ -713,8 +713,8 @@ instance ExactP Decl where
         exactPC t
     PatSynSig l n dh c1 c2 t -> do
       case srcInfoPoints l of
-        (_:dc:pts1) -> do
-          printString "pattern"
+        (pat:dc:pts1) -> do
+          printStringAt (pos pat) "pattern"
           exactPC n
           printStringAt (pos dc) "::"
           case dh of
@@ -738,12 +738,12 @@ instance ExactP Decl where
         maybeEP (\bs -> printStringAt (pos (head pts)) "where" >> exactPC bs) mbs
     PatSyn l lhs rhs dir ->
       case srcInfoPoints l of
-        [_,sepPos] -> do
+        [pat,sepPos] -> do
           let sep = case dir of
                       ImplicitBidirectional     -> "="
                       ExplicitBidirectional _ _ -> "<-"
                       Unidirectional            -> "<-"
-          printString "pattern"
+          printStringAt (pos pat) "pattern"
           exactPC lhs
           printStringAt (pos sepPos) sep
           exactPC rhs
