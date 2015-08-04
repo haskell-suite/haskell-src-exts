@@ -399,9 +399,6 @@ checkDeriving = mapM (checkInsts Nothing Nothing Nothing)
 checkPattern :: PExp L -> P (Pat L)
 checkPattern e = checkPat e []
 
-
-
-
 checkPat :: PExp L -> [Pat L] -> P (Pat L)
 checkPat (Con l c) args = do
   let l' = foldl combSpanInfo l (map ann args)
@@ -869,7 +866,7 @@ checkExplicitPatSyn whereLoc openLoc (decls, semis) closeLoc =
     checkDecls :: Decl L -> P (Decl L)
     checkDecls p@(PatBind _ pat _ _) =
       case pat of
-        PApp _ _ _ -> return p
+        PApp _ _ _        -> return p
         PInfixApp _ _ _ _ ->  return p
         _ -> fail "Illegal pattern binding in PatternSynonym"
     checkDecls _                 = fail "pattern synonym 'where' clause must contain a PatBind"

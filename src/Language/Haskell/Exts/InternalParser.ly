@@ -1900,15 +1900,15 @@ Pattern Synonyms
 -- Pattern synonyms
 
 > pat_syn :: { Decl L }
->         : pattern_synonym_decl          {% checkEnabled PatternSynonyms >> return $1 }
+>       : pattern_synonym_decl          {% checkEnabled PatternSynonyms >> return $1 }
 
 -- Glasgow extension: pattern synonyms
 >  pattern_synonym_decl :: { Decl L }
->        : 'pattern' pattern_synonym_lhs '=' pat
+>       : 'pattern' pattern_synonym_lhs '=' pat
 >            { let l = nIS $1 <++> ann $4 <** [$1,$3]
 >              in PatSyn l $2 $4 ImplicitBidirectional
 >                  }
->        | 'pattern' pattern_synonym_lhs '<-' pat
+>       | 'pattern' pattern_synonym_lhs '<-' pat
 >            {   let l = nIS $1 <++> ann $4 <** [$1,$3]
 >                in PatSyn l $2 $4 Unidirectional
 >            }
@@ -1918,46 +1918,42 @@ Pattern Synonyms
 
 >
 > pattern_synonym_lhs :: { Pat L }
->        : con vars0  { let l = case $2 of
+>       : con vars0  { let l = case $2 of
 >                                  [] -> ann $1
 >                                  (_:_) -> ann $1 <++> (ann $ last $2)
 >                         in PApp l (UnQual (ann $1) $1) $2 }
->        | varid qconsym varid  { PInfixApp (ann $1 <++> ann $3) (PVar (ann $1) $1) $2 (PVar (ann $3) $3) }
+>       | varid qconsym varid  { PInfixApp (ann $1 <++> ann $3) (PVar (ann $1) $1) $2 (PVar (ann $3) $3) }
 >
 > vars0 :: { [Pat L] }
 >       :  {- empty -}        { [] }
 >       |  varid vars0        { PVar (ann $1) $1 : $2 }
 
 > where_decls :: { PatternSynDirection L }
->        : 'where' '{' decls '}'       {%  checkExplicitPatSyn $1 $2 $3 $4 }
->        | 'where' open decls close    {%  checkExplicitPatSyn $1 $2 $3 $4 }
+>       : 'where' '{' decls '}'       {%  checkExplicitPatSyn $1 $2 $3 $4 }
+>       | 'where' open decls close    {%  checkExplicitPatSyn $1 $2 $3 $4 }
 
 > pattern_synonym_sig :: { Decl L }
->         : 'pattern' con '::' pstype
->             {% do { checkEnabled PatternSynonyms
->                   ; let (qtvs, ps, prov, req, ty) = $4
->                   ; let sig = PatSynSig (nIS $1 <++> ann ty <** [$1, $3] ++ ps)  $2 qtvs prov req ty
->                   ; return sig } }
+>       : 'pattern' con '::' pstype
+>             {% do { checkEnabled PatternSynonyms ;
+>                     let {(qtvs, ps, prov, req, ty) = $4} ;
+>                     let {sig = PatSynSig (nIS $1 <++> ann ty <** [$1, $3] ++ ps)  $2 qtvs prov req ty} ;
+>                     return sig } }
 
 > pstype :: { (Maybe [TyVarBind L], [S], Maybe (Context L), Maybe (Context L), Type L )}
->         :  'forall' ktyvars '.' pstype
+>       :  'forall' ktyvars '.' pstype
 >             { let (qtvs, ps, prov, req, ty) = $4
 >                in (Just (reverse (fst $2) ++ fromMaybe [] qtvs), ($1 : $3 : ps), prov, req, ty) }
->         | context context type
->             {% do { c1 <- checkContext (Just $1)
->                   ; c2 <- checkContext (Just $2)
->                   ; t  <- checkType $3
->                    ; return $ (Nothing, [], c1, c2, t) }}
->         | context type
->              {% do { c1 <- checkContext (Just $1)
->                    ; t <- checkType $2
->                    ; return (Nothing, [], Nothing, c1, t) } }
->         | type
->            {% checkType $1 >>= \t -> return (Nothing, [], Nothing, Nothing, t) }
-
-
-
-
+>       | context context type
+>             {% do { c1 <- checkContext (Just $1) ;
+>                     c2 <- checkContext (Just $2) ;
+>                     t  <- checkType $3 ;
+>                     return $ (Nothing, [], c1, c2, t) }}
+>       | context type
+>              {% do { c1 <- checkContext (Just $1);
+>                      t <- checkType $2;
+>                      return (Nothing, [], Nothing, c1, t) } }
+>       | type
+>              {% checkType $1 >>= \t -> return (Nothing, [], Nothing, Nothing, t) }
 
 -----------------------------------------------------------------------------
 Miscellaneous (mostly renamings)

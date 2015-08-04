@@ -510,7 +510,6 @@ data KnownExtension =
   -- schemes
   | PatternSynonyms
 
-
   -- | [GHC &#xa7; 7.15] Allow partial specified type signatures.
   -- Note that this extension does not affect parsing. It only affects whether the
   -- program is able to be run with partial signatures.
@@ -520,7 +519,6 @@ data KnownExtension =
   -- start with an underscore as wildcards. For example, `foo :: _x` is
   -- equivalent to `foo :: _`.
   | NamedWildCards
-
   deriving (Show, Read, Eq, Ord, Enum, Bounded, Data, Typeable)
 
 -- | Certain extensions imply other extensions, and this function

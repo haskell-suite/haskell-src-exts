@@ -96,7 +96,8 @@ sDecl decl = case decl of
      DefaultDecl  l ts          -> S.DefaultDecl (getPointLoc l) (map sType ts)
      SpliceDecl   l sp          -> S.SpliceDecl (getPointLoc l) (sExp sp)
      TypeSig      l ns t        -> S.TypeSig (getPointLoc l) (map sName ns) (sType t)
-     PatSynSig    l n mtvs c1 c2 t -> S.PatSynSig (getPointLoc l) (sName n) (fmap (map sTyVarBind) mtvs) (maybe [] sContext c1) (maybe [] sContext c2) (sType t)
+     PatSynSig    l n mtvs c1 c2 t ->
+        S.PatSynSig (getPointLoc l) (sName n) (fmap (map sTyVarBind) mtvs) (maybe [] sContext c1) (maybe [] sContext c2) (sType t)
      FunBind      _ ms          -> S.FunBind (map sMatch ms)
      PatBind      l p rhs mbs    ->
         S.PatBind (getPointLoc l) (sPat p) (sRhs rhs) (sBinds `fmap` mbs)
@@ -125,8 +126,8 @@ sDecl decl = case decl of
 
 sPatSyn :: SrcInfo l => PatternSynDirection l -> S.PatternSynDirection
 sPatSyn p = case p of
-      Unidirectional -> S.Unidirectional
-      ImplicitBidirectional  -> S.ImplicitBidirectional
+      Unidirectional             -> S.Unidirectional
+      ImplicitBidirectional      -> S.ImplicitBidirectional
       ExplicitBidirectional _ ms -> S.ExplicitBidirectional (map sDecl ms)
 
 sTypeEqn :: SrcInfo l => TypeEqn l -> S.TypeEqn

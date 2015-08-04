@@ -1199,7 +1199,7 @@ instance Annotated Decl where
         DefaultDecl  l _                -> l
         SpliceDecl   l _                -> l
         TypeSig      l _ _              -> l
-        PatSynSig    l _ _ _ _ _          -> l
+        PatSynSig    l _ _ _ _ _        -> l
         FunBind      l _                -> l
         PatBind      l _ _ _            -> l
         ForImp       l _ _ _ _ _        -> l
