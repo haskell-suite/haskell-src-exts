@@ -325,7 +325,10 @@ instance Pretty ModuleName where
 
 instance Pretty ExportSpec where
         pretty (EVar t name)              =
-                (case t of { NoNamespace -> empty; TypeNamespace -> text "type" })
+                (case t of
+                  NoNamespace -> empty
+                  TypeNamespace -> text "type"
+                  PatternNamespace -> text "pattern")
                   <+> pretty name
         pretty (EAbs name)                = pretty name
         pretty (EThingAll name)           = pretty name <> text "(..)"
@@ -351,7 +354,10 @@ instance Pretty ImportDecl where
 
 instance Pretty ImportSpec where
         pretty (IVar t name)              =
-                (case t of { NoNamespace -> empty; TypeNamespace -> text "type" })
+                (case t of
+                    NoNamespace -> empty
+                    TypeNamespace -> text "type"
+                    PatternNamespace -> text "pattern")
                   <+> pretty name
         pretty (IAbs name)                = pretty name
         pretty (IThingAll name)           = pretty name <> text "(..)"
@@ -498,6 +504,12 @@ instance Pretty Decl where
                 mySep ((punctuate comma . map pretty $ nameList)
                       ++ [text "::", pretty qualType])
 
+        pretty (PatSynSig pos n mtvs c1 c2 t) =
+                markLine pos $
+                mySep ( [text "pattern", pretty n, text "::", ppForall mtvs
+                        ,ppContext c1, ppContext c2, ppAType t ] )
+
+
         pretty (FunBind matches) = do
                 e <- fmap layout getPPEnv
                 case e of PPOffsideRule -> foldr ($$$) empty (map pretty matches)
@@ -512,6 +524,19 @@ instance Pretty Decl where
                 markLine pos $
                 mySep ([pretty assoc, int prec]
                        ++ (punctuate comma . map pretty $ opList))
+
+        pretty (PatSyn pos pat rhs dir) =
+                let sep = case dir of
+                            ImplicitBidirectional   -> "="
+                            ExplicitBidirectional _ -> "<-"
+                            Unidirectional          -> "<-"
+                in
+                markLine pos $
+                 (mySep ([text "pattern", pretty pat, text sep, pretty rhs])) $$$
+                    (case dir of
+                      ExplicitBidirectional ds ->
+                        nest 2 (text "where" $$$ ppBody whereIndent (ppDecls False ds))
+                      _ -> empty)
 
         pretty (ForImp pos cconv saf str name typ) =
                 -- blankline $

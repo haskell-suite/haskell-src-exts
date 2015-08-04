@@ -36,6 +36,7 @@ module Language.Haskell.Exts.ParseUtils (
     , bangType              -- L -> BangType -> Type -> Type
     , checkKind             -- Kind -> P ()
     , checkValDef           -- SrcLoc -> PExp -> Maybe Type -> Rhs -> Binds -> P Decl
+    , checkExplicitPatSyn   --
     , checkClassBody        -- [ClassDecl] -> P [ClassDecl]
     , checkInstBody         -- [InstDecl] -> P [InstDecl]
     , checkUnQual           -- QName -> P Name
@@ -73,7 +74,7 @@ module Language.Haskell.Exts.ParseUtils (
     ) where
 
 import Language.Haskell.Exts.Annotated.Syntax hiding ( Type(..), Asst(..), Exp(..), FieldUpdate(..), XAttr(..), Context(..) )
-import qualified Language.Haskell.Exts.Annotated.Syntax as S ( Type(..), Asst(..), Exp(..), FieldUpdate(..), XAttr(..), Context(..), Role(..))
+import qualified Language.Haskell.Exts.Annotated.Syntax as S ( Type(..), Asst(..), Exp(..), FieldUpdate(..), XAttr(..), Context(..), Role(..), PatternSynDirection(..))
 
 import Language.Haskell.Exts.ParseSyntax
 import Language.Haskell.Exts.ParseMonad
@@ -856,6 +857,19 @@ isFunLhs _ _ = return Nothing
 checkSigVar :: PExp L -> P (Name L)
 checkSigVar (Var _ (UnQual l n)) = return $ fmap (const l) n
 checkSigVar e = fail $ "Left-hand side of type signature is not a variable: " ++ prettyPrint e
+
+checkExplicitPatSyn :: S -> S -> ([Decl L], [S]) -> S -> P (PatternSynDirection L)
+checkExplicitPatSyn whereLoc openLoc (decls, semis) closeLoc =
+  let l = whereLoc <^^> closeLoc  <** ([whereLoc, openLoc] ++ semis ++ [closeLoc])
+  in  S.ExplicitBidirectional l  <$> mapM checkDecls decls
+  where
+    checkDecls :: Decl L -> P (Decl L)
+    checkDecls p@(PatBind _ pat _ _) =
+      case pat of
+        PApp _ _ _        -> return p
+        PInfixApp _ _ _ _ ->  return p
+        _ -> fail "Illegal pattern binding in PatternSynonym"
+    checkDecls _                 = fail "pattern synonym 'where' clause must contain a PatBind"
 
 -----------------------------------------------------------------------------
 -- In a class or instance body, a pattern binding must be of a variable.

@@ -187,6 +187,7 @@ data Token
         | KW_Using      -- transform list comprehensions
         | KW_Where
         | KW_Qualified
+        | KW_Pattern
 
                 -- FFI
         | KW_Foreign
@@ -284,6 +285,7 @@ reserved_ids = [
  ( "using",     (KW_Using,      Just (Any [TransformListComp])) ),
  ( "where",     (KW_Where,      Nothing) ),
  ( "role",      (KW_Role,       Just (Any [RoleAnnotations]))),
+ ( "pattern",   (KW_Pattern,    Just (Any [PatternSynonyms]))),
 
 -- FFI
  ( "foreign",   (KW_Foreign,    Just (Any [ForeignFunctionInterface])) )
@@ -1392,5 +1394,6 @@ showToken t = case t of
   KW_JavaScript -> "javascript"
   KW_CApi       -> "capi"
   KW_Role       -> "role"
+  KW_Pattern    -> "pattern"
 
   EOF           -> "EOF"

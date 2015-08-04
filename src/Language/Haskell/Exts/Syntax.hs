@@ -42,7 +42,7 @@ module Language.Haskell.Exts.Syntax (
     Module(..), WarningText(..), ExportSpec(..),
     ImportDecl(..), ImportSpec(..), Assoc(..), Namespace(..),
     -- * Declarations
-    Decl(..), Binds(..), IPBind(..),
+    Decl(..), Binds(..), IPBind(..), PatternSynDirection(..),
     -- ** Type classes and instances
     ClassDecl(..), InstDecl(..), Deriving,
     -- ** Data type declarations
@@ -183,7 +183,7 @@ data ExportSpec
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 -- | Namespaces for imports/exports.
-data Namespace = NoNamespace | TypeNamespace
+data Namespace = NoNamespace | TypeNamespace | PatternNamespace
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 -- | An import declaration.
@@ -260,6 +260,8 @@ data Decl
      -- ^ A Template Haskell splicing declaration
      | TypeSig      SrcLoc [Name] Type
      -- ^ A type signature declaration
+     | PatSynSig    SrcLoc Name (Maybe [TyVarBind]) Context Context Type
+     -- ^ Pattern Synonym Signature
      | FunBind      [Match]
      -- ^ A set of function binding clauses
      | PatBind      SrcLoc Pat Rhs {-where-} (Maybe Binds)
@@ -268,6 +270,7 @@ data Decl
      -- ^ A foreign import declaration
      | ForExp   SrcLoc CallConv          String Name Type
      -- ^ A foreign export declaration
+     | PatSyn   SrcLoc Pat Pat PatternSynDirection
 
      | RulePragmaDecl   SrcLoc [Rule]
      -- ^ A RULES pragma
@@ -292,6 +295,12 @@ data Decl
      | RoleAnnotDecl    SrcLoc QName [Role]
      -- ^ A role annotation
 
+  deriving (Eq,Ord,Show,Typeable,Data,Generic)
+
+data  PatternSynDirection =
+      Unidirectional -- ^ A unidirectional pattern synonym with "<-"
+    | ImplicitBidirectional  -- ^ A bidirectional pattern synonym with "="
+    | ExplicitBidirectional [Decl]  -- ^ A birectional pattern synonym with the construction specified.
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 -- | A type equation of the form @rhs = lhs@ used in closed type families.

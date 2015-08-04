@@ -96,6 +96,8 @@ sDecl decl = case decl of
      DefaultDecl  l ts          -> S.DefaultDecl (getPointLoc l) (map sType ts)
      SpliceDecl   l sp          -> S.SpliceDecl (getPointLoc l) (sExp sp)
      TypeSig      l ns t        -> S.TypeSig (getPointLoc l) (map sName ns) (sType t)
+     PatSynSig    l n mtvs c1 c2 t ->
+        S.PatSynSig (getPointLoc l) (sName n) (fmap (map sTyVarBind) mtvs) (maybe [] sContext c1) (maybe [] sContext c2) (sType t)
      FunBind      _ ms          -> S.FunBind (map sMatch ms)
      PatBind      l p rhs mbs    ->
         S.PatBind (getPointLoc l) (sPat p) (sRhs rhs) (sBinds `fmap` mbs)
@@ -120,6 +122,13 @@ sDecl decl = case decl of
         S.MinimalPragma (getPointLoc l) (fmap sBooleanFormula b)
      RoleAnnotDecl    l qn rs        ->
       S.RoleAnnotDecl (getPointLoc l) (sQName qn) (map sRole rs)
+     PatSyn l p r t -> S.PatSyn (getPointLoc l) (sPat p) (sPat r) (sPatSyn t)
+
+sPatSyn :: SrcInfo l => PatternSynDirection l -> S.PatternSynDirection
+sPatSyn p = case p of
+      Unidirectional             -> S.Unidirectional
+      ImplicitBidirectional      -> S.ImplicitBidirectional
+      ExplicitBidirectional _ ms -> S.ExplicitBidirectional (map sDecl ms)
 
 sTypeEqn :: SrcInfo l => TypeEqn l -> S.TypeEqn
 sTypeEqn (TypeEqn _ a b) = S.TypeEqn (sType a) (sType b)
@@ -210,6 +219,7 @@ sNamespace :: Namespace l -> S.Namespace
 sNamespace n = case n of
                 NoNamespace _   -> S.NoNamespace
                 TypeNamespace _ -> S.TypeNamespace
+                PatternNamespace _ -> S.PatternNamespace
 
 sImportSpec :: ImportSpec l -> S.ImportSpec
 sImportSpec is = case is of

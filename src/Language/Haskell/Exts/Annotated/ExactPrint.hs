@@ -358,10 +358,8 @@ instance ExactP CName where
 instance ExactP Namespace where
   exactP ns = case ns of
      NoNamespace _   -> return ()
-     TypeNamespace l ->
-        case srcInfoPoints l of
-            [a] -> printStringAt (pos a) "type"
-            _   -> errorEP "ExactP: Namespace is given too few srcInfoPoints"
+     TypeNamespace l -> printStringAt (pos l) "type"
+     PatternNamespace l -> printStringAt (pos l) "pattern"
 
 instance ExactP ExportSpec where
   exactP espec = case espec of
@@ -713,12 +711,51 @@ instance ExactP Decl where
         let pts = srcInfoPoints l
         printInterleaved' (zip pts (replicate (length pts - 1) "," ++ ["::"])) ns
         exactPC t
+    PatSynSig l n dh c1 c2 t -> do
+      case srcInfoPoints l of
+        (pat:dc:pts1) -> do
+          printStringAt (pos pat) "pattern"
+          exactPC n
+          printStringAt (pos dc) "::"
+          case dh of
+            Nothing -> return ()
+            Just tvs ->
+              case pts1 of
+                (a:b:_) -> do
+                      printStringAt (pos a) "forall"
+                      mapM_ exactPC tvs
+                      printStringAt (pos b) "."
+                _ -> errorEP "ExactP: Decl: PatSynSig: Forall: is given too few srcInfoPoints"
+          maybeEP exactPC c1
+          maybeEP exactPC c2
+          exactPC t
+        _ -> errorEP "ExactP: Decl: PatSynSig: is given too few srcInfoPoints"
     FunBind      _ ms   -> mapM_ exactPC ms
     PatBind      l p rhs mbs -> do
         let pts = srcInfoPoints l
         exactP p
         exactPC rhs
         maybeEP (\bs -> printStringAt (pos (head pts)) "where" >> exactPC bs) mbs
+    PatSyn l lhs rhs dir ->
+      case srcInfoPoints l of
+        [pat,sepPos] -> do
+          let sep = case dir of
+                      ImplicitBidirectional     -> "="
+                      ExplicitBidirectional _ _ -> "<-"
+                      Unidirectional            -> "<-"
+          printStringAt (pos pat) "pattern"
+          exactPC lhs
+          printStringAt (pos sepPos) sep
+          exactPC rhs
+          case dir of
+            ExplicitBidirectional bl ds -> do
+              case srcInfoPoints bl of
+                (w:pts) -> do
+                  printStringAt (pos w) "where"
+                  layoutList pts ds
+                _ -> errorEP "ExactP: Decl: PaySyn: ExplicitBidirectional is given too few srcInfoPoints"
+            _ -> return ()
+        _ -> errorEP "ExactP: Decl: PatSyn is given too few srcInfoPoints"
     ForImp       l cc msf mstr n t   ->
         case srcInfoPoints l of
          _:b:pts -> do

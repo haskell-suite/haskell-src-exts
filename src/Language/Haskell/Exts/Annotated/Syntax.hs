@@ -46,7 +46,7 @@ module Language.Haskell.Exts.Annotated.Syntax (
     Module(..), ModuleHead(..), WarningText(..), ExportSpecList(..), ExportSpec(..),
     ImportDecl(..), ImportSpecList(..), ImportSpec(..), Assoc(..), Namespace(..),
     -- * Declarations
-    Decl(..), DeclHead(..), InstRule(..), InstHead(..), Binds(..), IPBind(..),
+    Decl(..), DeclHead(..), InstRule(..), InstHead(..), Binds(..), IPBind(..), PatternSynDirection(..),
     -- ** Type classes and instances
     ClassDecl(..), InstDecl(..), Deriving(..),
     -- ** Data type declarations
@@ -206,7 +206,7 @@ data ExportSpec l
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | Namespaces for imports/exports.
-data Namespace l = NoNamespace l | TypeNamespace l
+data Namespace l = NoNamespace l | TypeNamespace l | PatternNamespace l
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | An import declaration.
@@ -286,10 +286,14 @@ data Decl l
      -- ^ A Template Haskell splicing declaration
      | TypeSig      l [Name l] (Type l)
      -- ^ A type signature declaration
+     | PatSynSig    l (Name l) (Maybe [TyVarBind l]) (Maybe (Context l)) (Maybe (Context l)) (Type l)
+     -- ^ A pattern synonym signature declation
      | FunBind      l [Match l]
      -- ^ A set of function binding clauses
      | PatBind      l (Pat l) (Rhs l) {-where-} (Maybe (Binds l))
      -- ^ A pattern binding
+     | PatSyn l (Pat l) (Pat l) (PatternSynDirection l)
+     -- ^ A pattern synonym binding
      | ForImp       l (CallConv l) (Maybe (Safety l)) (Maybe String) (Name l) (Type l)
      -- ^ A foreign import declaration
      | ForExp       l (CallConv l)                    (Maybe String) (Name l) (Type l)
@@ -317,6 +321,12 @@ data Decl l
      | RoleAnnotDecl    l (QName l) [Role l]
      -- ^ A role annotation
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
+
+data  PatternSynDirection l =
+      Unidirectional -- ^ A unidirectional pattern synonym with "<-"
+    | ImplicitBidirectional  -- ^ A bidirectional pattern synonym with "="
+    | ExplicitBidirectional l [Decl l]  -- ^ A birectional pattern synonym with the construction specified.
+    deriving (Eq, Ord, Show, Data, Typeable, Foldable, Traversable, Functor, Generic)
 
 -- | A type equation as found in closed type families.
 data TypeEqn l = TypeEqn l (Type l) (Type l) deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
@@ -1130,9 +1140,11 @@ instance Annotated Namespace where
     ann es = case es of
         NoNamespace l   -> l
         TypeNamespace l -> l
+        PatternNamespace l -> l
     amap f es = case es of
         NoNamespace l   -> NoNamespace (f l)
         TypeNamespace l -> TypeNamespace (f l)
+        PatternNamespace l -> PatternNamespace (f l)
 
 instance Annotated ImportDecl where
     ann (ImportDecl l _ _ _ _ _ _ _) = l
@@ -1187,6 +1199,7 @@ instance Annotated Decl where
         DefaultDecl  l _                -> l
         SpliceDecl   l _                -> l
         TypeSig      l _ _              -> l
+        PatSynSig    l _ _ _ _ _        -> l
         FunBind      l _                -> l
         PatBind      l _ _ _            -> l
         ForImp       l _ _ _ _ _        -> l
@@ -1202,6 +1215,7 @@ instance Annotated Decl where
         AnnPragma        l _            -> l
         MinimalPragma    l _            -> l
         RoleAnnotDecl    l _ _          -> l
+        PatSyn           l _ _ _        -> l
     amap f decl = case decl of
         TypeDecl     l dh t      -> TypeDecl    (f l) dh t
         TypeFamDecl  l dh mk     -> TypeFamDecl (f l) dh mk
@@ -1221,6 +1235,7 @@ instance Annotated Decl where
         DefaultDecl  l ts                -> DefaultDecl (f l) ts
         SpliceDecl   l sp                -> SpliceDecl (f l) sp
         TypeSig      l ns t              -> TypeSig (f l) ns t
+        PatSynSig    l n dh c1 c2 t      -> PatSynSig (f l) n dh c1 c2 t
         FunBind      l ms                -> FunBind (f l) ms
         PatBind      l p rhs bs          -> PatBind (f l) p rhs bs
         ForImp       l cc msf s n t      -> ForImp (f l) cc msf s n t
@@ -1236,6 +1251,7 @@ instance Annotated Decl where
         AnnPragma        l ann'          -> AnnPragma (f l) ann'
         MinimalPragma    l b             -> MinimalPragma (f l) b
         RoleAnnotDecl    l t rs          -> RoleAnnotDecl (f l) t rs
+        PatSyn           l p r d         -> PatSyn (f l) p r d
 
 instance Annotated Role where
     ann r = case r of
