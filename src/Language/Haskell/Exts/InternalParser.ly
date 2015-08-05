@@ -344,8 +344,8 @@ TODO: Yuck, this is messy, needs fixing in the AST!
 
 
 > conids    :: { ([Name L],[S]) }
->          : conid ',' conids                  { ($1 : fst $3, $2 : snd $3) }
->          | conid                             { ([$1],[]) }
+>          : conids ',' conid                  { (fst $1 ++ [$3], snd $1 ++ [$2]) }
+>          | optsemis conid                    { ([$2],[]) }
 
 -----------------------------------------------------------------------------
 Module Header
