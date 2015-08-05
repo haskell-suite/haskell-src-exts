@@ -333,7 +333,12 @@ TODO: Yuck, this is messy, needs fixing in the AST!
 >           : open toppragmasaux close          { let (os,ss,ml) = $2 in (os,$1:ss++[$3],$1 <^^> $3) }
 
 > toppragmasaux :: { ([ModulePragma L],[S],Maybe L) }
->               : toppragma ';' toppragmasaux         { let (os,ss,ml) = $3 in ($1 : os, $2 : ss, Just $ ann $1 <++> nIS $2 <+?> ml) }
+>               : toppragma optsemis toppragmasaux      { let (os,ss,ml) = $3;
+>                                                              ss' = reverse $2 ++ ss;
+>                                                              l'  = case $2 of
+>                                                                     [] -> ann $1
+>                                                                     _  -> ann $1 <++> nIS (last $2);
+>                                                          in ($1 : os, ss', Just $ l'  <+?> ml) }
 >               | {- nothing -}                         { ([],[],Nothing) }
 
 > toppragma :: { ModulePragma L }
