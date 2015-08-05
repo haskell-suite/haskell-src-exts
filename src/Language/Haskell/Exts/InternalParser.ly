@@ -294,7 +294,7 @@ Pragmas
 > %partial ngparsePragmasAndModuleHead moduletophead
 > %partial ngparsePragmasAndModuleName moduletopname
 > %tokentype { Loc Token }
-> %expect 7
+> %expect 8
 > %%
 
 -----------------------------------------------------------------------------
@@ -366,7 +366,11 @@ Module Header
 
 > body :: { ([ImportDecl L],[Decl L],[S],L) }
 >       : '{'  bodyaux '}'                      { let (is,ds,ss) = $2 in (is,ds,$1:ss ++ [$3], $1 <^^> $3) }
->       | open bodyaux close                    { let (is,ds,ss) = $2 in (is,ds,$1:ss ++ [$3], $1 <^^> $3) }
+
+Trailing optsemis in the next line is a workaround for #25. Having the optsemis
+here causes one more shift/reduce conflict.
+
+>       | open bodyaux close optsemis           { let (is,ds,ss) = $2 in (is,ds,$1:ss ++ [$3], $1 <^^> $3) }
 
 > bodyaux :: { ([ImportDecl L],[Decl L],[S]) }
 >       : optsemis impdecls semis topdecls      { (reverse (fst $2), fst $4, reverse $1 ++ snd $2 ++ reverse $3 ++ snd $4) }
