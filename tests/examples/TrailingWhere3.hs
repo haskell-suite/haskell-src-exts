@@ -1,0 +1,3 @@
+main = f where
+    f = g where
+    g = putStrLn "hello world"
