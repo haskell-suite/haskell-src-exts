@@ -31,6 +31,7 @@ Other changes:
 * Preserve location information for infix binds (#205).
 * Preserve positional information in checkPattern (#231).
 * Maintain correct line numbers when parsing multiline GHC_OPTIONS (#218).
+* Correctly parse "*" with TypeOperators (#81).
 
 ** 1.16.x
 
