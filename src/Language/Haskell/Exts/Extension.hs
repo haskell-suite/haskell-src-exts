@@ -41,7 +41,7 @@ module Language.Haskell.Exts.Extension (
 
 import Control.Applicative ((<$>), (<|>))
 import Data.Array (Array, accumArray, bounds, Ix(inRange), (!))
-import Data.List (nub, delete)
+import Data.List (nub)
 import Data.Maybe (fromMaybe)
 import Data.Data
 
