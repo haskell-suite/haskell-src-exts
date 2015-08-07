@@ -32,6 +32,20 @@ Other changes:
 * Preserve positional information in checkPattern (#231).
 * Maintain correct line numbers when parsing multiline GHC_OPTIONS (#218).
 * Correctly parse "*" with TypeOperators (#81).
+* Export the "pretty" method (#222).
+* Add javascript calling convention for foreign imports (#236).
+* Add non-greedy parsers for module heads (#191).
+* Add a flag to disable arity checking when parsing (#260).
+* Parse "-" in type signatures (#206).
+* Add support for type wildcards and expression holes (#252).
+* Add support for Pattern Synonyms (#197).
+* Bump the happy lower bound (#250).
+* Make test suite pass on GHC 7.12 (#224).
+* Support linking Haddock comments to AST nodes (#213).
+* Parse multiline LANGUAGE pragmas (#217).
+* Parse trailing where (#25).
+* Parse modules starting with pragmas and indented
+  "module" keyword (#122).
 
 ** 1.16.x
 
