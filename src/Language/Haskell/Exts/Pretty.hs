@@ -323,14 +323,14 @@ ppWarnTxt (WarnText s) = mySep [text "{-# WARNING",    text (show s), text "#-}"
 instance Pretty ModuleName where
         pretty (ModuleName modName) = text modName
 
+instance Pretty Namespace where
+        pretty NoNamespace      = empty
+        pretty TypeNamespace    = text "type"
+        pretty PatternNamespace = text "pattern"
+
 instance Pretty ExportSpec where
-        pretty (EVar t name)              =
-                (case t of
-                  NoNamespace -> empty
-                  TypeNamespace -> text "type"
-                  PatternNamespace -> text "pattern")
-                  <+> pretty name
-        pretty (EAbs name)                = pretty name
+        pretty (EVar name)                = pretty name
+        pretty (EAbs ns name)             = pretty ns <+> pretty name
         pretty (EThingAll name)           = pretty name <> text "(..)"
         pretty (EThingWith name nameList) =
                 pretty name <> (parenList . map pretty $ nameList)
