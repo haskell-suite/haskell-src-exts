@@ -389,8 +389,8 @@ instance ExactP ImportSpecList where
 
 instance ExactP ImportSpec where
   exactP ispec = case ispec of
-    IVar _ t qn -> exactPC t >> exactPC qn
-    IAbs _ n    -> exactP n
+    IVar _ qn       -> exactPC qn
+    IAbs _ ns n     -> exactP ns >> exactPC n
     IThingAll l n   -> exactP n >> printPoints l ["(","..",")"]
     IThingWith l n cns    ->
         let k = length (srcInfoPoints l)

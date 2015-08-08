@@ -485,10 +485,10 @@ Requires the PackageImports extension enabled.
 >       |  importspec                           { ([$1],[])  }
 
 > importspec :: { ImportSpec L }
->       :  var                                  { IVar (ann $1) (NoNamespace (ann $1)) $1 }
+>       :  var                                  { IVar (ann $1) $1 }
 >       |  'type' var                           {% do { checkEnabled ExplicitNamespaces;
->                                                       return (IVar (nIS $1 <++> ann $2 <** [$1, srcInfoSpan (ann $2)]) (TypeNamespace (nIS $1 <** [$1])) $2) } }
->       |  tyconorcls                           { IAbs (ann $1) $1 }
+>                                                       return (IAbs (nIS $1 <++> ann $2 <** [$1, srcInfoSpan (ann $2)]) (TypeNamespace (nIS $1 <** [$1])) $2) } }
+>       |  tyconorcls                           { IAbs (ann $1) (NoNamespace (ann $1)) $1 }
 >       |  tyconorcls '(' '..' ')'              { IThingAll  (ann $1 <++> nIS $4 <** [$2,$3,$4]) $1 }
 >       |  tyconorcls '(' ')'                   { IThingWith (ann $1 <++> nIS $3 <** [$2,$3])    $1 [] }
 >       |  tyconorcls '(' cnames ')'            { IThingWith (ann $1 <++> nIS $4 <** ($2:reverse (snd $3) ++ [$4])) $1 (reverse (fst $3)) }

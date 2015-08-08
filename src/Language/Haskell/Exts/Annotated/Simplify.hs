@@ -223,8 +223,8 @@ sNamespace n = case n of
 
 sImportSpec :: ImportSpec l -> S.ImportSpec
 sImportSpec is = case is of
-    IVar _ ns n          -> S.IVar (sNamespace ns) (sName n)
-    IAbs _ n            -> S.IAbs (sName n)
+    IVar _ n            -> S.IVar (sName n)
+    IAbs _ ns n         -> S.IAbs (sNamespace ns) (sName n)
     IThingAll _ n       -> S.IThingAll (sName n)
     IThingWith _ n cns  -> S.IThingWith (sName n) (map sCName cns)
 

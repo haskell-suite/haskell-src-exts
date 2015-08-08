@@ -234,8 +234,8 @@ data ImportSpecList l
 -- | An import specification, representing a single explicit item imported
 --   (or hidden) from a module.
 data ImportSpec l
-     = IVar l (Namespace l) (Name l)    -- ^ variable
-     | IAbs l (Name l)                  -- ^ @T@:
+     = IVar l (Name l)                  -- ^ variable
+     | IAbs l (Namespace l) (Name l)    -- ^ @T@:
                                         --   the name of a class, datatype or type synonym.
      | IThingAll l (Name l)             -- ^ @T(..)@:
                                         --   a class imported with all of its methods, or
@@ -1156,13 +1156,13 @@ instance Annotated ImportSpecList where
 
 instance Annotated ImportSpec where
     ann is = case is of
-        IVar l _ _       -> l
-        IAbs l _         -> l
+        IVar l _         -> l
+        IAbs l _ _       -> l
         IThingAll l _    -> l
         IThingWith l _ _ -> l
     amap f is = case is of
-        IVar l t n      -> IVar (f l) t n
-        IAbs l n        -> IAbs (f l) n
+        IVar l n        -> IVar (f l) n
+        IAbs l ns n     -> IAbs (f l) ns n
         IThingAll l n   -> IThingAll (f l) n
         IThingWith l n cns  -> IThingWith (f l) n cns
 
