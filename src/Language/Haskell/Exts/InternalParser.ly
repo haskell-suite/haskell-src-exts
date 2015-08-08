@@ -488,6 +488,8 @@ Requires the PackageImports extension enabled.
 >       :  var                                  { IVar (ann $1) $1 }
 >       |  'type' var                           {% do { checkEnabled ExplicitNamespaces;
 >                                                       return (IAbs (nIS $1 <++> ann $2 <** [$1, srcInfoSpan (ann $2)]) (TypeNamespace (nIS $1 <** [$1])) $2) } }
+>       |  'pattern' con                        {% do { checkEnabled PatternSynonyms;
+>                                                       return (IAbs (nIS $1 <++> ann $2 <** [$1, srcInfoSpan (ann $2)]) (PatternNamespace (nIS $1 <** [$1])) $2) } }
 >       |  tyconorcls                           { IAbs (ann $1) (NoNamespace (ann $1)) $1 }
 >       |  tyconorcls '(' '..' ')'              { IThingAll  (ann $1 <++> nIS $4 <** [$2,$3,$4]) $1 }
 >       |  tyconorcls '(' ')'                   { IThingWith (ann $1 <++> nIS $3 <** [$2,$3])    $1 [] }
