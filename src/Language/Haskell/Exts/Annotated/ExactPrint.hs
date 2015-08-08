@@ -363,8 +363,8 @@ instance ExactP Namespace where
 
 instance ExactP ExportSpec where
   exactP espec = case espec of
-     EVar _ t qn    -> exactPC t >> exactPC qn
-     EAbs _ qn      -> exactP qn
+     EVar _ qn    -> exactPC qn
+     EAbs _ ns qn -> exactP ns >> exactPC qn
      EThingAll l qn -> exactP qn >> printPoints l ["(","..",")"]
      EThingWith l qn cns    ->
         let k = length (srcInfoPoints l)

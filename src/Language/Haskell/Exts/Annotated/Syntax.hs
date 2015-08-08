@@ -191,8 +191,8 @@ data ExportSpecList l
 
 -- | An item in a module's export specification.
 data ExportSpec l
-     = EVar l (Namespace l) (QName l)   -- ^ variable.
-     | EAbs l (QName l)                 -- ^ @T@:
+     = EVar l (QName l)                 -- ^ variable.
+     | EAbs l (Namespace l) (QName l)   -- ^ @T@:
                                         --   a class or datatype exported abstractly,
                                         --   or a type synonym.
      | EThingAll l (QName l)            -- ^ @T(..)@:
@@ -1124,14 +1124,14 @@ instance Annotated ExportSpecList where
 
 instance Annotated ExportSpec where
     ann es = case es of
-        EVar l _ _          -> l
-        EAbs l _            -> l
+        EVar l _            -> l
+        EAbs l _ _          -> l
         EThingAll l _       -> l
         EThingWith l _ _    -> l
         EModuleContents l _ -> l
     amap f es = case es of
-        EVar l t qn     -> EVar (f l) t qn
-        EAbs l qn       -> EAbs (f l) qn
+        EVar l qn     -> EVar (f l) qn
+        EAbs l n qn       -> EAbs (f l) n qn
         EThingAll l qn  -> EThingAll (f l) qn
         EThingWith l qn cns -> EThingWith (f l) qn cns
         EModuleContents l mn    -> EModuleContents (f l) mn

@@ -168,8 +168,8 @@ data Module = Module SrcLoc ModuleName [ModulePragma] (Maybe WarningText)
 
 -- | An item in a module's export specification.
 data ExportSpec
-     = EVar Namespace QName         -- ^ variable.
-     | EAbs QName                   -- ^ @T@:
+     = EVar QName                   -- ^ variable.
+     | EAbs Namespace QName         -- ^ @T@:
                                     --   a class or datatype exported abstractly,
                                     --   or a type synonym.
      | EThingAll QName              -- ^ @T(..)@:
