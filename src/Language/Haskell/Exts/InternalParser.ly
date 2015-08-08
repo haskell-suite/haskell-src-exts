@@ -1959,7 +1959,7 @@ Pattern Synonyms
 >       | context type
 >              {% do { c1 <- checkContext (Just $1);
 >                      t <- checkType $2;
->                      return (Nothing, [], Nothing, c1, t) } }
+>                      return (Nothing, [], c1, Nothing, t) } }
 >       | type
 >              {% checkType $1 >>= \t -> return (Nothing, [], Nothing, Nothing, t) }
 
