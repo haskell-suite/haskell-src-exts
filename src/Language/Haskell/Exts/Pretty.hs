@@ -353,13 +353,8 @@ instance Pretty ImportDecl where
                     where specs = parenList . map pretty $ specList
 
 instance Pretty ImportSpec where
-        pretty (IVar t name)              =
-                (case t of
-                    NoNamespace -> empty
-                    TypeNamespace -> text "type"
-                    PatternNamespace -> text "pattern")
-                  <+> pretty name
-        pretty (IAbs name)                = pretty name
+        pretty (IVar name  )              = pretty name
+        pretty (IAbs ns name)             = pretty ns <+> pretty name
         pretty (IThingAll name)           = pretty name <> text "(..)"
         pretty (IThingWith name nameList) =
                 pretty name <> (parenList . map pretty $ nameList)

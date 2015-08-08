@@ -205,8 +205,8 @@ data ImportDecl = ImportDecl
 -- | An import specification, representing a single explicit item imported
 --   (or hidden) from a module.
 data ImportSpec
-     = IVar Namespace Name      -- ^ variable.
-     | IAbs Name                -- ^ @T@:
+     = IVar Name                -- ^ variable.
+     | IAbs Namespace Name      -- ^ @T@:
                                 --   the name of a class, datatype or type synonym.
      | IThingAll Name           -- ^ @T(..)@:
                                 --   a class imported with all of its methods, or
