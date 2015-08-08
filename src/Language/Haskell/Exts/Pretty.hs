@@ -504,10 +504,18 @@ instance Pretty Decl where
                 mySep ((punctuate comma . map pretty $ nameList)
                       ++ [text "::", pretty qualType])
 
-        pretty (PatSynSig pos n mtvs c1 c2 t) =
-                markLine pos $
-                mySep ( [text "pattern", pretty n, text "::", ppForall mtvs
-                        ,ppContext c1, ppContext c2, ppAType t ] )
+        --  Req can be ommitted if it is empty
+        --  We must print prov if req is nonempty
+        pretty (PatSynSig pos n mtvs prov req t) =
+                let contexts = case (prov, req) of
+                                    ([], []) -> []
+                                    (ps, []) -> [ppContext ps]
+                                    ([], rs) -> [text "()" <+> text "=>", ppContext rs]
+                                    (ps, rs) -> [ppContext ps, ppContext rs]
+                 in
+                  markLine pos $
+                  mySep ( [text "pattern", pretty n, text "::", ppForall mtvs] ++
+                          contexts ++ [ppAType t] )
 
 
         pretty (FunBind matches) = do
