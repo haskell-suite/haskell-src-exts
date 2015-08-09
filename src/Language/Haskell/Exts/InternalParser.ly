@@ -410,16 +410,16 @@ The Export List
 >       |  export                               { ([$1],[])  }
 
 > export :: { ExportSpec L }
->       :  qvar                                 { EVar (ann $1) (NoNamespace (ann $1)) $1 }
+>       :  qvar                                 { EVar (ann $1) $1 }
 >       |  'type' qcname                          {% do { checkEnabled ExplicitNamespaces;
->                                                       return (EVar (nIS $1 <++> ann $2 <** [$1, srcInfoSpan (ann $2)]) (TypeNamespace (nIS $1 <** [$1])) $2) } }
->       |  qtyconorcls                          { EAbs (ann $1) $1 }
+>                                                       return (EAbs (nIS $1 <++> ann $2 <** [$1, srcInfoSpan (ann $2)]) (TypeNamespace (nIS $1 <** [$1])) $2) } }
+>       |  qtyconorcls                          { EAbs (ann $1) (NoNamespace (ann $1)) $1 }
 >       |  qtyconorcls '(' '..' ')'             { EThingAll  (ann $1 <++> nIS $4 <** [$2,$3,$4]) $1 }
 >       |  qtyconorcls '(' ')'                  { EThingWith (ann $1 <++> nIS $3 <** [$2,$3])    $1 [] }
 >       |  qtyconorcls '(' cnames ')'           { EThingWith (ann $1 <++> nIS $4 <** ($2:reverse (snd $3) ++ [$4])) $1 (reverse (fst $3)) }
 >       |  'module' modid                       { EModuleContents (nIS $1 <++> ann $2 <** [$1]) $2 }
 >       |  'pattern' qcon                       {%  do { checkEnabled PatternSynonyms;
->                                                       return $ EVar (nIS $1 <++> (ann $2) <** [$1])
+>                                                       return $ EAbs (nIS $1 <++> (ann $2) <** [$1])
 >                                                                  (PatternNamespace (nIS $1)) $2 }}
 
 >
@@ -485,10 +485,10 @@ Requires the PackageImports extension enabled.
 >       |  importspec                           { ([$1],[])  }
 
 > importspec :: { ImportSpec L }
->       :  var                                  { IVar (ann $1) (NoNamespace (ann $1)) $1 }
+>       :  var                                  { IVar (ann $1) $1 }
 >       |  'type' var                           {% do { checkEnabled ExplicitNamespaces;
->                                                       return (IVar (nIS $1 <++> ann $2 <** [$1, srcInfoSpan (ann $2)]) (TypeNamespace (nIS $1 <** [$1])) $2) } }
->       |  tyconorcls                           { IAbs (ann $1) $1 }
+>                                                       return (IAbs (nIS $1 <++> ann $2 <** [$1, srcInfoSpan (ann $2)]) (TypeNamespace (nIS $1 <** [$1])) $2) } }
+>       |  tyconorcls                           { IAbs (ann $1) (NoNamespace (ann $1)) $1 }
 >       |  tyconorcls '(' '..' ')'              { IThingAll  (ann $1 <++> nIS $4 <** [$2,$3,$4]) $1 }
 >       |  tyconorcls '(' ')'                   { IThingWith (ann $1 <++> nIS $3 <** [$2,$3])    $1 [] }
 >       |  tyconorcls '(' cnames ')'            { IThingWith (ann $1 <++> nIS $4 <** ($2:reverse (snd $3) ++ [$4])) $1 (reverse (fst $3)) }

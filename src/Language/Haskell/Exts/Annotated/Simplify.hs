@@ -40,7 +40,7 @@ sModule md = case md of
         let loc = getPointLoc l
          in S.Module loc (sModuleName mn) (map sModulePragma oss)
                       Nothing
-                      (Just [S.EVar S.NoNamespace $ S.UnQual $ S.Ident "page"])
+                      (Just [S.EVar $ S.UnQual $ S.Ident "page"])
                         []
                         [pageFun loc $ S.XTag loc (sXName xn) (map sXAttr attrs) (fmap sExp mat) (map sExp es)]
     XmlHybrid l mmh oss ids ds xn attrs mat es  ->
@@ -194,7 +194,7 @@ sCName (ConName _ n) = S.ConName (sName n)
 
 sModuleHead :: Maybe (ModuleHead l) -> (S.ModuleName, Maybe S.WarningText, Maybe [S.ExportSpec])
 sModuleHead mmh = case mmh of
-    Nothing -> (S.main_mod, Nothing, Just [S.EVar S.NoNamespace (S.UnQual S.main_name)])
+    Nothing -> (S.main_mod, Nothing, Just [S.EVar (S.UnQual S.main_name)])
     Just (ModuleHead _ mn mwt mel) -> (sModuleName mn, fmap sWarningText mwt, fmap sExportSpecList mel)
 
 sExportSpecList :: ExportSpecList l -> [S.ExportSpec]
@@ -202,8 +202,8 @@ sExportSpecList (ExportSpecList _ ess) = map sExportSpec ess
 
 sExportSpec :: ExportSpec l -> S.ExportSpec
 sExportSpec es = case es of
-    EVar _ n qn         -> S.EVar (sNamespace n) (sQName qn)
-    EAbs _ qn           -> S.EAbs (sQName qn)
+    EVar _ qn           -> S.EVar (sQName qn)
+    EAbs _ n qn         -> S.EAbs (sNamespace n)(sQName qn)
     EThingAll _ qn      -> S.EThingAll (sQName qn)
     EThingWith _ qn cns -> S.EThingWith (sQName qn) (map sCName cns)
     EModuleContents _ mn    -> S.EModuleContents (sModuleName mn)
@@ -223,8 +223,8 @@ sNamespace n = case n of
 
 sImportSpec :: ImportSpec l -> S.ImportSpec
 sImportSpec is = case is of
-    IVar _ ns n          -> S.IVar (sNamespace ns) (sName n)
-    IAbs _ n            -> S.IAbs (sName n)
+    IVar _ n            -> S.IVar (sName n)
+    IAbs _ ns n         -> S.IAbs (sNamespace ns) (sName n)
     IThingAll _ n       -> S.IThingAll (sName n)
     IThingWith _ n cns  -> S.IThingWith (sName n) (map sCName cns)
 
