@@ -1005,7 +1005,6 @@ instance ExactP TyVarBind where
 instance ExactP Kind where
   exactP kd' = case kd' of
     KindStar  _     -> printString "*"
-    KindBang  _     -> printString "!"
     KindFn    l k1 k2 ->
         case srcInfoPoints l of
          [a] -> do
@@ -1029,11 +1028,13 @@ instance ExactP Kind where
             e = ")"
             pts = srcInfoPoints l
         in printInterleaved (zip pts (o: replicate (length pts - 2) "," ++ [e])) ks
-    KindList  l ks ->
-        let o = "["
-            e = "]"
-            pts = srcInfoPoints l
-        in printInterleaved (zip pts (o: replicate (length pts - 2) "," ++ [e])) ks
+    KindList  l k ->
+      case srcInfoPoints l of
+        [_, close] -> do
+          printString "["
+          exactPC k
+          printStringAt (pos close) "]"
+        _ -> errorEP "ExactP: Kind: KindList is given wrong number of srcInfoPoints"
 
 
 

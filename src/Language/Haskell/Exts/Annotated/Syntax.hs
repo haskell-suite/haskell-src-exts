@@ -623,13 +623,12 @@ data TyVarBind l
 -- | An explicit kind annotation.
 data Kind l
     = KindStar  l                    -- ^ @*@, the kind of types
-    | KindBang  l                    -- ^ @!@, the kind of unboxed types
     | KindFn    l (Kind l) (Kind l)  -- ^ @->@, the kind of a type constructor
     | KindParen l (Kind l)           -- ^ a parenthesised kind
     | KindVar   l (QName l)          -- ^ @k@, a kind variable (-XPolyKinds)
     | KindApp   l (Kind l) (Kind l)  -- ^ @k1 k2@
     | KindTuple l [Kind l]           -- ^ @'(k1,k2,k3)@, a promoted tuple
-    | KindList  l [Kind l]           -- ^ @'[k1,k2,k3]@, a promoted list literal
+    | KindList  l (Kind l)           -- ^ @'[k1]@, a promoted list literal
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 
@@ -1436,7 +1435,6 @@ instance Annotated TyVarBind where
 
 instance Annotated Kind where
     ann (KindStar l) = l
-    ann (KindBang l) = l
     ann (KindFn   l _ _) = l
     ann (KindParen l _)  = l
     ann (KindVar l _)    = l
@@ -1444,7 +1442,6 @@ instance Annotated Kind where
     ann (KindTuple l _)  = l
     ann (KindList  l _)  = l
     amap f (KindStar l) = KindStar (f l)
-    amap f (KindBang l) = KindBang (f l)
     amap f (KindFn   l k1 k2) = KindFn (f l) k1 k2
     amap f (KindParen l k) = KindParen (f l) k
     amap f (KindVar l n) = KindVar (f l) n
