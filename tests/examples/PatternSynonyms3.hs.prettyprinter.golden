@@ -9,18 +9,18 @@ single :: [a] -> Maybe a
 single (Single x) = Just x
 single _ = Nothing
 
-pattern Single :: (a -> [a])
+pattern Single :: a -> [a]
 
 pattern Single x = [x]
 
-pattern Single :: (Show a) => (a -> [a])
+pattern Single :: () => (Show a) => a -> [a]
 
 pattern Single x = [x]
 
 f :: (Show a) => [a] -> a
 f (Single x) = x
 
-pattern SinglePair :: ((a, a) -> [(a, a)])
+pattern SinglePair :: (a, a) -> [(a, a)]
 
 pattern SinglePair x = [x]
 
@@ -29,21 +29,21 @@ f (SinglePair x) = show x
 
 pattern Q = D
 
-pattern C :: (a -> X Maybe (Maybe a))
+pattern C :: a -> X Maybe (Maybe a)
 
 pattern C x = Y (Just x)
 
 pattern Syn :: forall a b c . Int
 
-pattern C :: (Show (a, Bool)) => (a -> X Maybe (Maybe (a, Bool)))
+pattern C :: (Show (a, Bool)) => a -> X Maybe (Maybe (a, Bool))
 
 pattern C x = Y (Just (x, True))
 
-pattern P :: (T Bool b)
+pattern P :: T Bool b
 
 pattern P <- MkT True
 
-pattern D :: (a -> T (Maybe a) Bool)
+pattern D :: a -> T (Maybe a) Bool
 
 pattern D x = MkT (Just x)
 
