@@ -1,1 +1,140 @@
-ParseOk (Module (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteQual2.hs" 1 1 5 1, srcInfoPoints = [SrcSpan "tests/examples/QuasiQuoteQual2.hs" 1 1 1 1,SrcSpan "tests/examples/QuasiQuoteQual2.hs" 2 1 2 1,SrcSpan "tests/examples/QuasiQuoteQual2.hs" 2 1 2 1,SrcSpan "tests/examples/QuasiQuoteQual2.hs" 2 1 2 1,SrcSpan "tests/examples/QuasiQuoteQual2.hs" 3 1 3 1,SrcSpan "tests/examples/QuasiQuoteQual2.hs" 5 1 5 1,SrcSpan "tests/examples/QuasiQuoteQual2.hs" 5 1 5 1]}) Nothing [LanguagePragma (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteQual2.hs" 1 1 1 29, srcInfoPoints = [SrcSpan "tests/examples/QuasiQuoteQual2.hs" 1 1 1 13,SrcSpan "tests/examples/QuasiQuoteQual2.hs" 1 26 1 29]}) [Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteQual2.hs" 1 14 1 25, srcInfoPoints = []}) "QuasiQuotes"]] [] [FunBind (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteQual2.hs" 2 1 3 8, srcInfoPoints = []}) [Match (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteQual2.hs" 2 1 2 13, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteQual2.hs" 2 1 2 2, srcInfoPoints = []}) "f") [PList (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteQual2.hs" 2 3 2 9, srcInfoPoints = [SrcSpan "tests/examples/QuasiQuoteQual2.hs" 2 3 2 4,SrcSpan "tests/examples/QuasiQuoteQual2.hs" 2 8 2 9]}) [PApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteQual2.hs" 2 4 2 8, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteQual2.hs" 2 4 2 8, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteQual2.hs" 2 4 2 8, srcInfoPoints = []}) "True")) []]] (UnGuardedRhs (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteQual2.hs" 2 10 2 13, srcInfoPoints = [SrcSpan "tests/examples/QuasiQuoteQual2.hs" 2 10 2 11]}) (Lit (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteQual2.hs" 2 12 2 13, srcInfoPoints = []}) (Int (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteQual2.hs" 2 12 2 13, srcInfoPoints = []}) 1 "1"))) Nothing,Match (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteQual2.hs" 3 1 3 8, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteQual2.hs" 3 1 3 2, srcInfoPoints = []}) "f") [PWildCard (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteQual2.hs" 3 3 3 4, srcInfoPoints = []})] (UnGuardedRhs (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteQual2.hs" 3 5 3 8, srcInfoPoints = [SrcSpan "tests/examples/QuasiQuoteQual2.hs" 3 5 3 6]}) (Lit (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteQual2.hs" 3 7 3 8, srcInfoPoints = []}) (Int (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteQual2.hs" 3 7 3 8, srcInfoPoints = []}) 0 "0"))) Nothing]],[])
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteQual2.hs" 1 1 5 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/QuasiQuoteQual2.hs" 1 1 1 1
+            , SrcSpan "tests/examples/QuasiQuoteQual2.hs" 2 1 2 1
+            , SrcSpan "tests/examples/QuasiQuoteQual2.hs" 2 1 2 1
+            , SrcSpan "tests/examples/QuasiQuoteQual2.hs" 2 1 2 1
+            , SrcSpan "tests/examples/QuasiQuoteQual2.hs" 3 1 3 1
+            , SrcSpan "tests/examples/QuasiQuoteQual2.hs" 5 1 5 1
+            , SrcSpan "tests/examples/QuasiQuoteQual2.hs" 5 1 5 1
+            ]
+        }
+      Nothing
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/QuasiQuoteQual2.hs" 1 1 1 29
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/QuasiQuoteQual2.hs" 1 1 1 13
+                , SrcSpan "tests/examples/QuasiQuoteQual2.hs" 1 26 1 29
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/QuasiQuoteQual2.hs" 1 14 1 25
+                , srcInfoPoints = []
+                }
+              "QuasiQuotes"
+          ]
+      ]
+      []
+      [ FunBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteQual2.hs" 2 1 3 8
+            , srcInfoPoints = []
+            }
+          [ Match
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/QuasiQuoteQual2.hs" 2 1 2 13
+                , srcInfoPoints = []
+                }
+              (Ident
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteQual2.hs" 2 1 2 2
+                   , srcInfoPoints = []
+                   }
+                 "f")
+              [ PList
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteQual2.hs" 2 3 2 9
+                    , srcInfoPoints =
+                        [ SrcSpan "tests/examples/QuasiQuoteQual2.hs" 2 3 2 4
+                        , SrcSpan "tests/examples/QuasiQuoteQual2.hs" 2 8 2 9
+                        ]
+                    }
+                  [ PApp
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteQual2.hs" 2 4 2 8
+                        , srcInfoPoints = []
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteQual2.hs" 2 4 2 8
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteQual2.hs" 2 4 2 8
+                              , srcInfoPoints = []
+                              }
+                            "True"))
+                      []
+                  ]
+              ]
+              (UnGuardedRhs
+                 SrcSpanInfo
+                   { srcInfoSpan =
+                       SrcSpan "tests/examples/QuasiQuoteQual2.hs" 2 10 2 13
+                   , srcInfoPoints =
+                       [ SrcSpan "tests/examples/QuasiQuoteQual2.hs" 2 10 2 11 ]
+                   }
+                 (Lit
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/QuasiQuoteQual2.hs" 2 12 2 13
+                      , srcInfoPoints = []
+                      }
+                    (Int
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/QuasiQuoteQual2.hs" 2 12 2 13
+                         , srcInfoPoints = []
+                         }
+                       1
+                       "1")))
+              Nothing
+          , Match
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteQual2.hs" 3 1 3 8
+                , srcInfoPoints = []
+                }
+              (Ident
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteQual2.hs" 3 1 3 2
+                   , srcInfoPoints = []
+                   }
+                 "f")
+              [ PWildCard
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteQual2.hs" 3 3 3 4
+                    , srcInfoPoints = []
+                    }
+              ]
+              (UnGuardedRhs
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteQual2.hs" 3 5 3 8
+                   , srcInfoPoints =
+                       [ SrcSpan "tests/examples/QuasiQuoteQual2.hs" 3 5 3 6 ]
+                   }
+                 (Lit
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteQual2.hs" 3 7 3 8
+                      , srcInfoPoints = []
+                      }
+                    (Int
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteQual2.hs" 3 7 3 8
+                         , srcInfoPoints = []
+                         }
+                       0
+                       "0")))
+              Nothing
+          ]
+      ]
+  , []
+  )

@@ -1,1 +1,162 @@
-ParseOk (Module (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IllDataTypeDecl.hs" 1 1 5 1, srcInfoPoints = [SrcSpan "tests/examples/IllDataTypeDecl.hs" 1 1 1 1,SrcSpan "tests/examples/IllDataTypeDecl.hs" 2 1 2 1,SrcSpan "tests/examples/IllDataTypeDecl.hs" 2 1 2 1,SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 1 4 1,SrcSpan "tests/examples/IllDataTypeDecl.hs" 5 1 5 1,SrcSpan "tests/examples/IllDataTypeDecl.hs" 5 1 5 1]}) (Just (ModuleHead (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IllDataTypeDecl.hs" 2 1 2 29, srcInfoPoints = [SrcSpan "tests/examples/IllDataTypeDecl.hs" 2 1 2 7,SrcSpan "tests/examples/IllDataTypeDecl.hs" 2 24 2 29]}) (ModuleName (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IllDataTypeDecl.hs" 2 8 2 23, srcInfoPoints = []}) "IllDataTypeDecl") Nothing Nothing)) [LanguagePragma (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IllDataTypeDecl.hs" 1 1 1 31, srcInfoPoints = [SrcSpan "tests/examples/IllDataTypeDecl.hs" 1 1 1 13,SrcSpan "tests/examples/IllDataTypeDecl.hs" 1 28 1 31]}) [Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IllDataTypeDecl.hs" 1 14 1 27, srcInfoPoints = []}) "TypeOperators"]] [] [DataDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 1 4 21, srcInfoPoints = [SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 18 4 19]}) (DataType (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 1 4 5, srcInfoPoints = []})) Nothing (DHApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 6 4 17, srcInfoPoints = []}) (DHParen (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 6 4 15, srcInfoPoints = [SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 6 4 7,SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 14 4 15]}) (DHApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 7 4 14, srcInfoPoints = []}) (DHInfix (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 7 4 14, srcInfoPoints = []}) (UnkindedVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 7 4 8, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 7 4 8, srcInfoPoints = []}) "f")) (Symbol (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 9 4 12, srcInfoPoints = []}) ":+:")) (UnkindedVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 13 4 14, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 13 4 14, srcInfoPoints = []}) "g")))) (UnkindedVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 16 4 17, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 16 4 17, srcInfoPoints = []}) "p"))) [QualConDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 20 4 21, srcInfoPoints = []}) Nothing Nothing (ConDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 20 4 21, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 20 4 21, srcInfoPoints = []}) "L") [])] Nothing],[])
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/IllDataTypeDecl.hs" 1 1 5 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/IllDataTypeDecl.hs" 1 1 1 1
+            , SrcSpan "tests/examples/IllDataTypeDecl.hs" 2 1 2 1
+            , SrcSpan "tests/examples/IllDataTypeDecl.hs" 2 1 2 1
+            , SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 1 4 1
+            , SrcSpan "tests/examples/IllDataTypeDecl.hs" 5 1 5 1
+            , SrcSpan "tests/examples/IllDataTypeDecl.hs" 5 1 5 1
+            ]
+        }
+      (Just
+         (ModuleHead
+            SrcSpanInfo
+              { srcInfoSpan =
+                  SrcSpan "tests/examples/IllDataTypeDecl.hs" 2 1 2 29
+              , srcInfoPoints =
+                  [ SrcSpan "tests/examples/IllDataTypeDecl.hs" 2 1 2 7
+                  , SrcSpan "tests/examples/IllDataTypeDecl.hs" 2 24 2 29
+                  ]
+              }
+            (ModuleName
+               SrcSpanInfo
+                 { srcInfoSpan =
+                     SrcSpan "tests/examples/IllDataTypeDecl.hs" 2 8 2 23
+                 , srcInfoPoints = []
+                 }
+               "IllDataTypeDecl")
+            Nothing
+            Nothing))
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/IllDataTypeDecl.hs" 1 1 1 31
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/IllDataTypeDecl.hs" 1 1 1 13
+                , SrcSpan "tests/examples/IllDataTypeDecl.hs" 1 28 1 31
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/IllDataTypeDecl.hs" 1 14 1 27
+                , srcInfoPoints = []
+                }
+              "TypeOperators"
+          ]
+      ]
+      []
+      [ DataDecl
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 1 4 21
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 18 4 19 ]
+            }
+          (DataType
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 1 4 5
+               , srcInfoPoints = []
+               })
+          Nothing
+          (DHApp
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 6 4 17
+               , srcInfoPoints = []
+               }
+             (DHParen
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 6 4 15
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 6 4 7
+                      , SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 14 4 15
+                      ]
+                  }
+                (DHApp
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 7 4 14
+                     , srcInfoPoints = []
+                     }
+                   (DHInfix
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 7 4 14
+                        , srcInfoPoints = []
+                        }
+                      (UnkindedVar
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 7 4 8
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 7 4 8
+                              , srcInfoPoints = []
+                              }
+                            "f"))
+                      (Symbol
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 9 4 12
+                           , srcInfoPoints = []
+                           }
+                         ":+:"))
+                   (UnkindedVar
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 13 4 14
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 13 4 14
+                           , srcInfoPoints = []
+                           }
+                         "g"))))
+             (UnkindedVar
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 16 4 17
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 16 4 17
+                     , srcInfoPoints = []
+                     }
+                   "p")))
+          [ QualConDecl
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 20 4 21
+                , srcInfoPoints = []
+                }
+              Nothing
+              Nothing
+              (ConDecl
+                 SrcSpanInfo
+                   { srcInfoSpan =
+                       SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 20 4 21
+                   , srcInfoPoints = []
+                   }
+                 (Ident
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/IllDataTypeDecl.hs" 4 20 4 21
+                      , srcInfoPoints = []
+                      }
+                    "L")
+                 [])
+          ]
+          Nothing
+      ]
+  , []
+  )

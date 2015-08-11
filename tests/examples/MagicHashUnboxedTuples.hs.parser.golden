@@ -1,1 +1,286 @@
-ParseOk (Module (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 1 1 7 1, srcInfoPoints = [SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 1 1 1 1,SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 2 1 2 1,SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 2 1 2 1,SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 1 4 1,SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 7 1 7 1,SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 7 1 7 1]}) (Just (ModuleHead (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 2 1 2 36, srcInfoPoints = [SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 2 1 2 7,SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 2 31 2 36]}) (ModuleName (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 2 8 2 30, srcInfoPoints = []}) "MagicHashUnboxedTuples") Nothing Nothing)) [LanguagePragma (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 1 1 1 42, srcInfoPoints = [SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 1 1 1 13,SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 1 23 1 24,SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 1 39 1 42]}) [Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 1 14 1 23, srcInfoPoints = []}) "MagicHash",Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 1 25 1 38, srcInfoPoints = []}) "UnboxedTuples"]] [] [FunBind (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 1 6 8, srcInfoPoints = [SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 27 4 32]}) [Match (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 1 6 8, srcInfoPoints = [SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 27 4 32]}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 1 4 2, srcInfoPoints = []}) "f") [PTuple (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 3 4 12, srcInfoPoints = [SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 3 4 5,SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 6 4 7,SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 10 4 12]}) Unboxed [PVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 5 4 6, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 5 4 6, srcInfoPoints = []}) "x"),PVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 8 4 9, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 8 4 9, srcInfoPoints = []}) "y")]] (UnGuardedRhs (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 13 4 26, srcInfoPoints = [SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 13 4 14]}) (Tuple (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 15 4 26, srcInfoPoints = [SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 15 4 17,SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 20 4 21,SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 24 4 26]}) Unboxed [Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 18 4 20, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 18 4 20, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 18 4 20, srcInfoPoints = []}) "a#")),Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 22 4 23, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 22 4 23, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 22 4 23, srcInfoPoints = []}) "b"))])) (Just (BDecls (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 5 3 6 8, srcInfoPoints = [SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 5 3 5 3,SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 6 3 6 3,SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 7 1 7 0]}) [PatBind (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 5 3 5 10, srcInfoPoints = []}) (PVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 5 3 5 5, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 5 3 5 5, srcInfoPoints = []}) "a#")) (UnGuardedRhs (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 5 6 5 10, srcInfoPoints = [SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 5 6 5 7]}) (Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 5 8 5 10, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 5 8 5 10, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 5 8 5 10, srcInfoPoints = []}) "a#")))) Nothing,PatBind (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 6 3 6 8, srcInfoPoints = []}) (PVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 6 3 6 4, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 6 3 6 4, srcInfoPoints = []}) "b")) (UnGuardedRhs (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 6 5 6 8, srcInfoPoints = [SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 6 5 6 6]}) (Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 6 7 6 8, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 6 7 6 8, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 6 7 6 8, srcInfoPoints = []}) "b")))) Nothing]))]],[])
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan =
+            SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 1 1 7 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 1 1 1 1
+            , SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 2 1 2 1
+            , SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 2 1 2 1
+            , SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 1 4 1
+            , SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 7 1 7 1
+            , SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 7 1 7 1
+            ]
+        }
+      (Just
+         (ModuleHead
+            SrcSpanInfo
+              { srcInfoSpan =
+                  SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 2 1 2 36
+              , srcInfoPoints =
+                  [ SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 2 1 2 7
+                  , SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 2 31 2 36
+                  ]
+              }
+            (ModuleName
+               SrcSpanInfo
+                 { srcInfoSpan =
+                     SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 2 8 2 30
+                 , srcInfoPoints = []
+                 }
+               "MagicHashUnboxedTuples")
+            Nothing
+            Nothing))
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 1 1 1 42
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 1 1 1 13
+                , SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 1 23 1 24
+                , SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 1 39 1 42
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 1 14 1 23
+                , srcInfoPoints = []
+                }
+              "MagicHash"
+          , Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 1 25 1 38
+                , srcInfoPoints = []
+                }
+              "UnboxedTuples"
+          ]
+      ]
+      []
+      [ FunBind
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 1 6 8
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 27 4 32 ]
+            }
+          [ Match
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 1 6 8
+                , srcInfoPoints =
+                    [ SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 27 4 32 ]
+                }
+              (Ident
+                 SrcSpanInfo
+                   { srcInfoSpan =
+                       SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 1 4 2
+                   , srcInfoPoints = []
+                   }
+                 "f")
+              [ PTuple
+                  SrcSpanInfo
+                    { srcInfoSpan =
+                        SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 3 4 12
+                    , srcInfoPoints =
+                        [ SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 3 4 5
+                        , SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 6 4 7
+                        , SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 10 4 12
+                        ]
+                    }
+                  Unboxed
+                  [ PVar
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 5 4 6
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 5 4 6
+                           , srcInfoPoints = []
+                           }
+                         "x")
+                  , PVar
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 8 4 9
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 8 4 9
+                           , srcInfoPoints = []
+                           }
+                         "y")
+                  ]
+              ]
+              (UnGuardedRhs
+                 SrcSpanInfo
+                   { srcInfoSpan =
+                       SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 13 4 26
+                   , srcInfoPoints =
+                       [ SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 13 4 14 ]
+                   }
+                 (Tuple
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 15 4 26
+                      , srcInfoPoints =
+                          [ SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 15 4 17
+                          , SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 20 4 21
+                          , SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 24 4 26
+                          ]
+                      }
+                    Unboxed
+                    [ Var
+                        SrcSpanInfo
+                          { srcInfoSpan =
+                              SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 18 4 20
+                          , srcInfoPoints = []
+                          }
+                        (UnQual
+                           SrcSpanInfo
+                             { srcInfoSpan =
+                                 SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 18 4 20
+                             , srcInfoPoints = []
+                             }
+                           (Ident
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 18 4 20
+                                , srcInfoPoints = []
+                                }
+                              "a#"))
+                    , Var
+                        SrcSpanInfo
+                          { srcInfoSpan =
+                              SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 22 4 23
+                          , srcInfoPoints = []
+                          }
+                        (UnQual
+                           SrcSpanInfo
+                             { srcInfoSpan =
+                                 SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 22 4 23
+                             , srcInfoPoints = []
+                             }
+                           (Ident
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 4 22 4 23
+                                , srcInfoPoints = []
+                                }
+                              "b"))
+                    ]))
+              (Just
+                 (BDecls
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 5 3 6 8
+                      , srcInfoPoints =
+                          [ SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 5 3 5 3
+                          , SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 6 3 6 3
+                          , SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 7 1 7 0
+                          ]
+                      }
+                    [ PatBind
+                        SrcSpanInfo
+                          { srcInfoSpan =
+                              SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 5 3 5 10
+                          , srcInfoPoints = []
+                          }
+                        (PVar
+                           SrcSpanInfo
+                             { srcInfoSpan =
+                                 SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 5 3 5 5
+                             , srcInfoPoints = []
+                             }
+                           (Ident
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 5 3 5 5
+                                , srcInfoPoints = []
+                                }
+                              "a#"))
+                        (UnGuardedRhs
+                           SrcSpanInfo
+                             { srcInfoSpan =
+                                 SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 5 6 5 10
+                             , srcInfoPoints =
+                                 [ SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 5 6 5 7 ]
+                             }
+                           (Var
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 5 8 5 10
+                                , srcInfoPoints = []
+                                }
+                              (UnQual
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 5 8 5 10
+                                   , srcInfoPoints = []
+                                   }
+                                 (Ident
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/MagicHashUnboxedTuples.hs" 5 8 5 10
+                                      , srcInfoPoints = []
+                                      }
+                                    "a#"))))
+                        Nothing
+                    , PatBind
+                        SrcSpanInfo
+                          { srcInfoSpan =
+                              SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 6 3 6 8
+                          , srcInfoPoints = []
+                          }
+                        (PVar
+                           SrcSpanInfo
+                             { srcInfoSpan =
+                                 SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 6 3 6 4
+                             , srcInfoPoints = []
+                             }
+                           (Ident
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 6 3 6 4
+                                , srcInfoPoints = []
+                                }
+                              "b"))
+                        (UnGuardedRhs
+                           SrcSpanInfo
+                             { srcInfoSpan =
+                                 SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 6 5 6 8
+                             , srcInfoPoints =
+                                 [ SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 6 5 6 6 ]
+                             }
+                           (Var
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 6 7 6 8
+                                , srcInfoPoints = []
+                                }
+                              (UnQual
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 6 7 6 8
+                                   , srcInfoPoints = []
+                                   }
+                                 (Ident
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan "tests/examples/MagicHashUnboxedTuples.hs" 6 7 6 8
+                                      , srcInfoPoints = []
+                                      }
+                                    "b"))))
+                        Nothing
+                    ]))
+          ]
+      ]
+  , []
+  )

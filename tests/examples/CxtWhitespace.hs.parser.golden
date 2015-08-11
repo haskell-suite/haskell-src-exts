@@ -1,1 +1,233 @@
-ParseOk (Module (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 1 7 1, srcInfoPoints = [SrcSpan "tests/examples/CxtWhitespace.hs" 2 1 2 1,SrcSpan "tests/examples/CxtWhitespace.hs" 2 1 2 1,SrcSpan "tests/examples/CxtWhitespace.hs" 2 1 2 1,SrcSpan "tests/examples/CxtWhitespace.hs" 5 1 5 1,SrcSpan "tests/examples/CxtWhitespace.hs" 7 1 7 1,SrcSpan "tests/examples/CxtWhitespace.hs" 7 1 7 1]}) Nothing [] [] [InstDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 1 2 25, srcInfoPoints = [SrcSpan "tests/examples/CxtWhitespace.hs" 2 1 2 9]}) Nothing (IRule (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 10 2 25, srcInfoPoints = []}) Nothing (Just (CxSingle (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 10 2 20, srcInfoPoints = [SrcSpan "tests/examples/CxtWhitespace.hs" 2 10 2 11,SrcSpan "tests/examples/CxtWhitespace.hs" 2 16 2 17,SrcSpan "tests/examples/CxtWhitespace.hs" 2 18 2 20]}) (ParenA (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 10 2 20, srcInfoPoints = [SrcSpan "tests/examples/CxtWhitespace.hs" 2 10 2 11,SrcSpan "tests/examples/CxtWhitespace.hs" 2 16 2 17,SrcSpan "tests/examples/CxtWhitespace.hs" 2 18 2 20]}) (ClassA (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 12 2 16, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 12 2 14, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 12 2 14, srcInfoPoints = []}) "Eq")) [TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 15 2 16, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 15 2 16, srcInfoPoints = []}) "h")])))) (IHApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 21 2 25, srcInfoPoints = []}) (IHCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 21 2 23, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 21 2 23, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 21 2 23, srcInfoPoints = []}) "Eq"))) (TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 24 2 25, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 24 2 25, srcInfoPoints = []}) "h")))) Nothing,InstDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 1 5 31, srcInfoPoints = [SrcSpan "tests/examples/CxtWhitespace.hs" 5 1 5 9]}) Nothing (IRule (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 10 5 31, srcInfoPoints = []}) Nothing (Just (CxTuple (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 10 5 26, srcInfoPoints = [SrcSpan "tests/examples/CxtWhitespace.hs" 5 10 5 11,SrcSpan "tests/examples/CxtWhitespace.hs" 5 16 5 17,SrcSpan "tests/examples/CxtWhitespace.hs" 5 22 5 23,SrcSpan "tests/examples/CxtWhitespace.hs" 5 24 5 26]}) [ClassA (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 12 5 16, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 12 5 14, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 12 5 14, srcInfoPoints = []}) "Eq")) [TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 15 5 16, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 15 5 16, srcInfoPoints = []}) "h")],ClassA (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 18 5 22, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 18 5 20, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 18 5 20, srcInfoPoints = []}) "Eq")) [TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 21 5 22, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 21 5 22, srcInfoPoints = []}) "h")]])) (IHApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 27 5 31, srcInfoPoints = []}) (IHCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 27 5 29, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 27 5 29, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 27 5 29, srcInfoPoints = []}) "Eq"))) (TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 30 5 31, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 30 5 31, srcInfoPoints = []}) "h")))) Nothing],[Comment False (SrcSpan "tests/examples/CxtWhitespace.hs" 1 1 1 13) " is not ok",Comment False (SrcSpan "tests/examples/CxtWhitespace.hs" 4 1 4 9) " is ok"])
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 1 7 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/CxtWhitespace.hs" 2 1 2 1
+            , SrcSpan "tests/examples/CxtWhitespace.hs" 2 1 2 1
+            , SrcSpan "tests/examples/CxtWhitespace.hs" 2 1 2 1
+            , SrcSpan "tests/examples/CxtWhitespace.hs" 5 1 5 1
+            , SrcSpan "tests/examples/CxtWhitespace.hs" 7 1 7 1
+            , SrcSpan "tests/examples/CxtWhitespace.hs" 7 1 7 1
+            ]
+        }
+      Nothing
+      []
+      []
+      [ InstDecl
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 1 2 25
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/CxtWhitespace.hs" 2 1 2 9 ]
+            }
+          Nothing
+          (IRule
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 10 2 25
+               , srcInfoPoints = []
+               }
+             Nothing
+             (Just
+                (CxSingle
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 10 2 20
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/CxtWhitespace.hs" 2 10 2 11
+                         , SrcSpan "tests/examples/CxtWhitespace.hs" 2 16 2 17
+                         , SrcSpan "tests/examples/CxtWhitespace.hs" 2 18 2 20
+                         ]
+                     }
+                   (ParenA
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 10 2 20
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/CxtWhitespace.hs" 2 10 2 11
+                            , SrcSpan "tests/examples/CxtWhitespace.hs" 2 16 2 17
+                            , SrcSpan "tests/examples/CxtWhitespace.hs" 2 18 2 20
+                            ]
+                        }
+                      (ClassA
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 12 2 16
+                           , srcInfoPoints = []
+                           }
+                         (UnQual
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 12 2 14
+                              , srcInfoPoints = []
+                              }
+                            (Ident
+                               SrcSpanInfo
+                                 { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 12 2 14
+                                 , srcInfoPoints = []
+                                 }
+                               "Eq"))
+                         [ TyVar
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 15 2 16
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/CxtWhitespace.hs" 2 15 2 16
+                                  , srcInfoPoints = []
+                                  }
+                                "h")
+                         ]))))
+             (IHApp
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 21 2 25
+                  , srcInfoPoints = []
+                  }
+                (IHCon
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 21 2 23
+                     , srcInfoPoints = []
+                     }
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 21 2 23
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 21 2 23
+                           , srcInfoPoints = []
+                           }
+                         "Eq")))
+                (TyVar
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 24 2 25
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 24 2 25
+                        , srcInfoPoints = []
+                        }
+                      "h"))))
+          Nothing
+      , InstDecl
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 1 5 31
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/CxtWhitespace.hs" 5 1 5 9 ]
+            }
+          Nothing
+          (IRule
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 10 5 31
+               , srcInfoPoints = []
+               }
+             Nothing
+             (Just
+                (CxTuple
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 10 5 26
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/CxtWhitespace.hs" 5 10 5 11
+                         , SrcSpan "tests/examples/CxtWhitespace.hs" 5 16 5 17
+                         , SrcSpan "tests/examples/CxtWhitespace.hs" 5 22 5 23
+                         , SrcSpan "tests/examples/CxtWhitespace.hs" 5 24 5 26
+                         ]
+                     }
+                   [ ClassA
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 12 5 16
+                         , srcInfoPoints = []
+                         }
+                       (UnQual
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 12 5 14
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 12 5 14
+                               , srcInfoPoints = []
+                               }
+                             "Eq"))
+                       [ TyVar
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 15 5 16
+                             , srcInfoPoints = []
+                             }
+                           (Ident
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 15 5 16
+                                , srcInfoPoints = []
+                                }
+                              "h")
+                       ]
+                   , ClassA
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 18 5 22
+                         , srcInfoPoints = []
+                         }
+                       (UnQual
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 18 5 20
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 18 5 20
+                               , srcInfoPoints = []
+                               }
+                             "Eq"))
+                       [ TyVar
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 21 5 22
+                             , srcInfoPoints = []
+                             }
+                           (Ident
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 21 5 22
+                                , srcInfoPoints = []
+                                }
+                              "h")
+                       ]
+                   ]))
+             (IHApp
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 27 5 31
+                  , srcInfoPoints = []
+                  }
+                (IHCon
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 27 5 29
+                     , srcInfoPoints = []
+                     }
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 27 5 29
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 27 5 29
+                           , srcInfoPoints = []
+                           }
+                         "Eq")))
+                (TyVar
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 30 5 31
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 30 5 31
+                        , srcInfoPoints = []
+                        }
+                      "h"))))
+          Nothing
+      ]
+  , [ Comment
+        False
+        (SrcSpan "tests/examples/CxtWhitespace.hs" 1 1 1 13)
+        " is not ok"
+    , Comment
+        False (SrcSpan "tests/examples/CxtWhitespace.hs" 4 1 4 9) " is ok"
+    ]
+  )

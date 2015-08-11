@@ -1,1 +1,64 @@
-ParseOk (Module (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/EmptyWhere.hs" 1 1 2 1, srcInfoPoints = [SrcSpan "tests/examples/EmptyWhere.hs" 1 1 1 1,SrcSpan "tests/examples/EmptyWhere.hs" 1 1 1 1,SrcSpan "tests/examples/EmptyWhere.hs" 1 1 1 1,SrcSpan "tests/examples/EmptyWhere.hs" 2 1 2 1,SrcSpan "tests/examples/EmptyWhere.hs" 2 1 2 1]}) Nothing [] [] [PatBind (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/EmptyWhere.hs" 1 1 2 1, srcInfoPoints = [SrcSpan "tests/examples/EmptyWhere.hs" 1 9 1 14]}) (PVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/EmptyWhere.hs" 1 1 1 4, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/EmptyWhere.hs" 1 1 1 4, srcInfoPoints = []}) "foo")) (UnGuardedRhs (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/EmptyWhere.hs" 1 5 1 8, srcInfoPoints = [SrcSpan "tests/examples/EmptyWhere.hs" 1 5 1 6]}) (Lit (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/EmptyWhere.hs" 1 7 1 8, srcInfoPoints = []}) (Int (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/EmptyWhere.hs" 1 7 1 8, srcInfoPoints = []}) 5 "5"))) (Just (BDecls (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/EmptyWhere.hs" 2 0 2 1, srcInfoPoints = [SrcSpan "tests/examples/EmptyWhere.hs" 2 1 2 1,SrcSpan "tests/examples/EmptyWhere.hs" 2 1 2 1,SrcSpan "tests/examples/EmptyWhere.hs" 2 0 2 0]}) []))],[])
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/EmptyWhere.hs" 1 1 2 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/EmptyWhere.hs" 1 1 1 1
+            , SrcSpan "tests/examples/EmptyWhere.hs" 1 1 1 1
+            , SrcSpan "tests/examples/EmptyWhere.hs" 1 1 1 1
+            , SrcSpan "tests/examples/EmptyWhere.hs" 2 1 2 1
+            , SrcSpan "tests/examples/EmptyWhere.hs" 2 1 2 1
+            ]
+        }
+      Nothing
+      []
+      []
+      [ PatBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/EmptyWhere.hs" 1 1 2 1
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/EmptyWhere.hs" 1 9 1 14 ]
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/EmptyWhere.hs" 1 1 1 4
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/EmptyWhere.hs" 1 1 1 4
+                  , srcInfoPoints = []
+                  }
+                "foo"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/EmptyWhere.hs" 1 5 1 8
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/EmptyWhere.hs" 1 5 1 6 ]
+               }
+             (Lit
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/EmptyWhere.hs" 1 7 1 8
+                  , srcInfoPoints = []
+                  }
+                (Int
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/EmptyWhere.hs" 1 7 1 8
+                     , srcInfoPoints = []
+                     }
+                   5
+                   "5")))
+          (Just
+             (BDecls
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/EmptyWhere.hs" 2 0 2 1
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/EmptyWhere.hs" 2 1 2 1
+                      , SrcSpan "tests/examples/EmptyWhere.hs" 2 1 2 1
+                      , SrcSpan "tests/examples/EmptyWhere.hs" 2 0 2 0
+                      ]
+                  }
+                []))
+      ]
+  , []
+  )

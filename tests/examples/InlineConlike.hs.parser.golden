@@ -1,1 +1,104 @@
-ParseOk (Module (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/InlineConlike.hs" 1 1 4 1, srcInfoPoints = [SrcSpan "tests/examples/InlineConlike.hs" 1 1 1 1,SrcSpan "tests/examples/InlineConlike.hs" 1 1 1 1,SrcSpan "tests/examples/InlineConlike.hs" 1 1 1 1,SrcSpan "tests/examples/InlineConlike.hs" 2 1 2 1,SrcSpan "tests/examples/InlineConlike.hs" 3 1 3 1,SrcSpan "tests/examples/InlineConlike.hs" 4 1 4 1,SrcSpan "tests/examples/InlineConlike.hs" 4 1 4 1]}) Nothing [] [] [InlineConlikeSig (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/InlineConlike.hs" 1 1 1 28, srcInfoPoints = [SrcSpan "tests/examples/InlineConlike.hs" 1 1 1 19,SrcSpan "tests/examples/InlineConlike.hs" 1 25 1 28]}) Nothing (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/InlineConlike.hs" 1 20 1 24, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/InlineConlike.hs" 1 20 1 24, srcInfoPoints = []}) "size")),TypeSig (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/InlineConlike.hs" 2 1 2 12, srcInfoPoints = [SrcSpan "tests/examples/InlineConlike.hs" 2 6 2 8]}) [Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/InlineConlike.hs" 2 1 2 5, srcInfoPoints = []}) "size"] (TyCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/InlineConlike.hs" 2 9 2 12, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/InlineConlike.hs" 2 9 2 12, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/InlineConlike.hs" 2 9 2 12, srcInfoPoints = []}) "Int"))),PatBind (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/InlineConlike.hs" 3 1 3 10, srcInfoPoints = []}) (PVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/InlineConlike.hs" 3 1 3 5, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/InlineConlike.hs" 3 1 3 5, srcInfoPoints = []}) "size")) (UnGuardedRhs (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/InlineConlike.hs" 3 6 3 10, srcInfoPoints = [SrcSpan "tests/examples/InlineConlike.hs" 3 6 3 7]}) (Lit (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/InlineConlike.hs" 3 8 3 10, srcInfoPoints = []}) (Int (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/InlineConlike.hs" 3 8 3 10, srcInfoPoints = []}) 64 "64"))) Nothing],[])
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/InlineConlike.hs" 1 1 4 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/InlineConlike.hs" 1 1 1 1
+            , SrcSpan "tests/examples/InlineConlike.hs" 1 1 1 1
+            , SrcSpan "tests/examples/InlineConlike.hs" 1 1 1 1
+            , SrcSpan "tests/examples/InlineConlike.hs" 2 1 2 1
+            , SrcSpan "tests/examples/InlineConlike.hs" 3 1 3 1
+            , SrcSpan "tests/examples/InlineConlike.hs" 4 1 4 1
+            , SrcSpan "tests/examples/InlineConlike.hs" 4 1 4 1
+            ]
+        }
+      Nothing
+      []
+      []
+      [ InlineConlikeSig
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/InlineConlike.hs" 1 1 1 28
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/InlineConlike.hs" 1 1 1 19
+                , SrcSpan "tests/examples/InlineConlike.hs" 1 25 1 28
+                ]
+            }
+          Nothing
+          (UnQual
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/InlineConlike.hs" 1 20 1 24
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/InlineConlike.hs" 1 20 1 24
+                  , srcInfoPoints = []
+                  }
+                "size"))
+      , TypeSig
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/InlineConlike.hs" 2 1 2 12
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/InlineConlike.hs" 2 6 2 8 ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/InlineConlike.hs" 2 1 2 5
+                , srcInfoPoints = []
+                }
+              "size"
+          ]
+          (TyCon
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/InlineConlike.hs" 2 9 2 12
+               , srcInfoPoints = []
+               }
+             (UnQual
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/InlineConlike.hs" 2 9 2 12
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/InlineConlike.hs" 2 9 2 12
+                     , srcInfoPoints = []
+                     }
+                   "Int")))
+      , PatBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/InlineConlike.hs" 3 1 3 10
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/InlineConlike.hs" 3 1 3 5
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/InlineConlike.hs" 3 1 3 5
+                  , srcInfoPoints = []
+                  }
+                "size"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/InlineConlike.hs" 3 6 3 10
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/InlineConlike.hs" 3 6 3 7 ]
+               }
+             (Lit
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/InlineConlike.hs" 3 8 3 10
+                  , srcInfoPoints = []
+                  }
+                (Int
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/InlineConlike.hs" 3 8 3 10
+                     , srcInfoPoints = []
+                     }
+                   64
+                   "64")))
+          Nothing
+      ]
+  , []
+  )

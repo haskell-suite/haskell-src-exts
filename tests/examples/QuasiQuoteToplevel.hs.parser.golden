@@ -1,1 +1,51 @@
-ParseOk (Module (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteToplevel.hs" 1 1 9 1, srcInfoPoints = [SrcSpan "tests/examples/QuasiQuoteToplevel.hs" 1 1 1 1,SrcSpan "tests/examples/QuasiQuoteToplevel.hs" 3 1 3 1,SrcSpan "tests/examples/QuasiQuoteToplevel.hs" 3 1 3 1,SrcSpan "tests/examples/QuasiQuoteToplevel.hs" 3 1 3 1,SrcSpan "tests/examples/QuasiQuoteToplevel.hs" 9 1 9 1,SrcSpan "tests/examples/QuasiQuoteToplevel.hs" 9 1 9 1]}) Nothing [LanguagePragma (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteToplevel.hs" 1 1 1 29, srcInfoPoints = [SrcSpan "tests/examples/QuasiQuoteToplevel.hs" 1 1 1 13,SrcSpan "tests/examples/QuasiQuoteToplevel.hs" 1 26 1 29]}) [Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteToplevel.hs" 1 14 1 25, srcInfoPoints = []}) "QuasiQuotes"]] [] [SpliceDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteToplevel.hs" 3 1 8 3, srcInfoPoints = []}) (QuasiQuote (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteToplevel.hs" 3 1 8 3, srcInfoPoints = []}) "undefined" "\nthis quasiquote is acceptable to ghc's\nparser. Previously hse would reject this\nbecause -XTemplateHaskell is not enabled\nto allow \"expressions\" at top-level\n")],[])
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan =
+            SrcSpan "tests/examples/QuasiQuoteToplevel.hs" 1 1 9 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/QuasiQuoteToplevel.hs" 1 1 1 1
+            , SrcSpan "tests/examples/QuasiQuoteToplevel.hs" 3 1 3 1
+            , SrcSpan "tests/examples/QuasiQuoteToplevel.hs" 3 1 3 1
+            , SrcSpan "tests/examples/QuasiQuoteToplevel.hs" 3 1 3 1
+            , SrcSpan "tests/examples/QuasiQuoteToplevel.hs" 9 1 9 1
+            , SrcSpan "tests/examples/QuasiQuoteToplevel.hs" 9 1 9 1
+            ]
+        }
+      Nothing
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/QuasiQuoteToplevel.hs" 1 1 1 29
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/QuasiQuoteToplevel.hs" 1 1 1 13
+                , SrcSpan "tests/examples/QuasiQuoteToplevel.hs" 1 26 1 29
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/QuasiQuoteToplevel.hs" 1 14 1 25
+                , srcInfoPoints = []
+                }
+              "QuasiQuotes"
+          ]
+      ]
+      []
+      [ SpliceDecl
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/QuasiQuoteToplevel.hs" 3 1 8 3
+            , srcInfoPoints = []
+            }
+          (QuasiQuote
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/QuasiQuoteToplevel.hs" 3 1 8 3
+               , srcInfoPoints = []
+               }
+             "undefined"
+             "\nthis quasiquote is acceptable to ghc's\nparser. Previously hse would reject this\nbecause -XTemplateHaskell is not enabled\nto allow \"expressions\" at top-level\n")
+      ]
+  , []
+  )

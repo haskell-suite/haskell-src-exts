@@ -1,1 +1,304 @@
-ParseOk (Module (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 1 1 6 1, srcInfoPoints = [SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 1 1 1 1,SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 1 3 1,SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 1 3 1,SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 1 3 1,SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 1 5 1,SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 6 1 6 1,SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 6 1 6 1]}) Nothing [LanguagePragma (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 1 1 1 54, srcInfoPoints = [SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 1 1 1 13,SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 1 27 1 28,SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 1 51 1 54]}) [Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 1 14 1 27, srcInfoPoints = []}) "TypeOperators",Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 1 29 1 50, srcInfoPoints = []}) "MultiParamTypeClasses"]] [] [TypeSig (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 1 3 27, srcInfoPoints = [SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 5 3 7]}) [Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 1 3 4, srcInfoPoints = []}) "ins"] (TyForall (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 8 3 27, srcInfoPoints = []}) Nothing (Just (CxSingle (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 8 3 20, srcInfoPoints = [SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 18 3 20]}) (ClassA (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 8 3 20, srcInfoPoints = [SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 18 3 20]}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 8 3 13, srcInfoPoints = [SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 8 3 9,SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 9 3 12,SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 12 3 13]}) (Symbol (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 9 3 12, srcInfoPoints = []}) ":=>")) [TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 14 3 15, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 14 3 15, srcInfoPoints = []}) "b"),TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 16 3 17, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 16 3 17, srcInfoPoints = []}) "h")]))) (TyInfix (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 21 3 27, srcInfoPoints = []}) (TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 21 3 22, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 21 3 22, srcInfoPoints = []}) "b")) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 23 3 25, srcInfoPoints = []}) (Symbol (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 23 3 25, srcInfoPoints = []}) ":-")) (TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 26 3 27, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 26 3 27, srcInfoPoints = []}) "h")))),DataDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 1 5 29, srcInfoPoints = [SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 17 5 18]}) (DataType (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 1 5 5, srcInfoPoints = []})) Nothing (DHApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 6 5 16, srcInfoPoints = []}) (DHApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 6 5 14, srcInfoPoints = []}) (DHead (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 6 5 12, srcInfoPoints = [SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 6 5 7,SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 7 5 11,SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 11 5 12]}) (Symbol (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 7 5 11, srcInfoPoints = []}) ":><:")) (UnkindedVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 13 5 14, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 13 5 14, srcInfoPoints = []}) "a"))) (UnkindedVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 15 5 16, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 15 5 16, srcInfoPoints = []}) "b"))) [QualConDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 19 5 29, srcInfoPoints = []}) Nothing Nothing (ConDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 19 5 29, srcInfoPoints = []}) (Symbol (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 20 5 24, srcInfoPoints = []}) ":><:") [TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 26 5 27, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 26 5 27, srcInfoPoints = []}) "a"),TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 28 5 29, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 28 5 29, srcInfoPoints = []}) "b")])] Nothing],[])
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan =
+            SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 1 1 6 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 1 1 1 1
+            , SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 1 3 1
+            , SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 1 3 1
+            , SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 1 3 1
+            , SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 1 5 1
+            , SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 6 1 6 1
+            , SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 6 1 6 1
+            ]
+        }
+      Nothing
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 1 1 1 54
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 1 1 1 13
+                , SrcSpan
+                    "tests/examples/ConstructorAndClassOperators.hs" 1 27 1 28
+                , SrcSpan
+                    "tests/examples/ConstructorAndClassOperators.hs" 1 51 1 54
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 1 14 1 27
+                , srcInfoPoints = []
+                }
+              "TypeOperators"
+          , Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 1 29 1 50
+                , srcInfoPoints = []
+                }
+              "MultiParamTypeClasses"
+          ]
+      ]
+      []
+      [ TypeSig
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 1 3 27
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 5 3 7
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 1 3 4
+                , srcInfoPoints = []
+                }
+              "ins"
+          ]
+          (TyForall
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 8 3 27
+               , srcInfoPoints = []
+               }
+             Nothing
+             (Just
+                (CxSingle
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 8 3 20
+                     , srcInfoPoints =
+                         [ SrcSpan
+                             "tests/examples/ConstructorAndClassOperators.hs" 3 18 3 20
+                         ]
+                     }
+                   (ClassA
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 8 3 20
+                        , srcInfoPoints =
+                            [ SrcSpan
+                                "tests/examples/ConstructorAndClassOperators.hs" 3 18 3 20
+                            ]
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 8 3 13
+                           , srcInfoPoints =
+                               [ SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 8 3 9
+                               , SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 9 3 12
+                               , SrcSpan
+                                   "tests/examples/ConstructorAndClassOperators.hs" 3 12 3 13
+                               ]
+                           }
+                         (Symbol
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 9 3 12
+                              , srcInfoPoints = []
+                              }
+                            ":=>"))
+                      [ TyVar
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 14 3 15
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan
+                                     "tests/examples/ConstructorAndClassOperators.hs" 3 14 3 15
+                               , srcInfoPoints = []
+                               }
+                             "b")
+                      , TyVar
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 16 3 17
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan
+                                     "tests/examples/ConstructorAndClassOperators.hs" 3 16 3 17
+                               , srcInfoPoints = []
+                               }
+                             "h")
+                      ])))
+             (TyInfix
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 21 3 27
+                  , srcInfoPoints = []
+                  }
+                (TyVar
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 21 3 22
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 21 3 22
+                        , srcInfoPoints = []
+                        }
+                      "b"))
+                (UnQual
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 23 3 25
+                     , srcInfoPoints = []
+                     }
+                   (Symbol
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 23 3 25
+                        , srcInfoPoints = []
+                        }
+                      ":-"))
+                (TyVar
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 26 3 27
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 3 26 3 27
+                        , srcInfoPoints = []
+                        }
+                      "h"))))
+      , DataDecl
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 1 5 29
+            , srcInfoPoints =
+                [ SrcSpan
+                    "tests/examples/ConstructorAndClassOperators.hs" 5 17 5 18
+                ]
+            }
+          (DataType
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 1 5 5
+               , srcInfoPoints = []
+               })
+          Nothing
+          (DHApp
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 6 5 16
+               , srcInfoPoints = []
+               }
+             (DHApp
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 6 5 14
+                  , srcInfoPoints = []
+                  }
+                (DHead
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 6 5 12
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 6 5 7
+                         , SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 7 5 11
+                         , SrcSpan
+                             "tests/examples/ConstructorAndClassOperators.hs" 5 11 5 12
+                         ]
+                     }
+                   (Symbol
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 7 5 11
+                        , srcInfoPoints = []
+                        }
+                      ":><:"))
+                (UnkindedVar
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 13 5 14
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 13 5 14
+                        , srcInfoPoints = []
+                        }
+                      "a")))
+             (UnkindedVar
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 15 5 16
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 15 5 16
+                     , srcInfoPoints = []
+                     }
+                   "b")))
+          [ QualConDecl
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 19 5 29
+                , srcInfoPoints = []
+                }
+              Nothing
+              Nothing
+              (ConDecl
+                 SrcSpanInfo
+                   { srcInfoSpan =
+                       SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 19 5 29
+                   , srcInfoPoints = []
+                   }
+                 (Symbol
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 20 5 24
+                      , srcInfoPoints = []
+                      }
+                    ":><:")
+                 [ TyVar
+                     SrcSpanInfo
+                       { srcInfoSpan =
+                           SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 26 5 27
+                       , srcInfoPoints = []
+                       }
+                     (Ident
+                        SrcSpanInfo
+                          { srcInfoSpan =
+                              SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 26 5 27
+                          , srcInfoPoints = []
+                          }
+                        "a")
+                 , TyVar
+                     SrcSpanInfo
+                       { srcInfoSpan =
+                           SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 28 5 29
+                       , srcInfoPoints = []
+                       }
+                     (Ident
+                        SrcSpanInfo
+                          { srcInfoSpan =
+                              SrcSpan "tests/examples/ConstructorAndClassOperators.hs" 5 28 5 29
+                          , srcInfoPoints = []
+                          }
+                        "b")
+                 ])
+          ]
+          Nothing
+      ]
+  , []
+  )

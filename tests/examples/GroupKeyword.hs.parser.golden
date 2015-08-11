@@ -1,1 +1,210 @@
-ParseOk (Module (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 2 1 5 1, srcInfoPoints = [SrcSpan "tests/examples/GroupKeyword.hs" 2 1 2 1,SrcSpan "tests/examples/GroupKeyword.hs" 2 1 2 1,SrcSpan "tests/examples/GroupKeyword.hs" 4 1 4 1,SrcSpan "tests/examples/GroupKeyword.hs" 5 1 5 1,SrcSpan "tests/examples/GroupKeyword.hs" 5 1 5 1]}) (Just (ModuleHead (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 2 1 2 26, srcInfoPoints = [SrcSpan "tests/examples/GroupKeyword.hs" 2 1 2 7,SrcSpan "tests/examples/GroupKeyword.hs" 2 21 2 26]}) (ModuleName (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 2 8 2 20, srcInfoPoints = []}) "GroupKeyword") Nothing Nothing)) [] [] [PatBind (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 1 4 37, srcInfoPoints = []}) (PVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 1 4 2, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 1 4 2, srcInfoPoints = []}) "a")) (UnGuardedRhs (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 3 4 37, srcInfoPoints = [SrcSpan "tests/examples/GroupKeyword.hs" 4 3 4 4]}) (InfixApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 5 4 37, srcInfoPoints = []}) (App (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 5 4 13, srcInfoPoints = []}) (Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 5 4 8, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 5 4 8, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 5 4 8, srcInfoPoints = []}) "map"))) (Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 9 4 13, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 9 4 13, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 9 4 13, srcInfoPoints = []}) "head")))) (QVarOp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 14 4 15, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 14 4 15, srcInfoPoints = []}) (Symbol (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 14 4 15, srcInfoPoints = []}) "$"))) (InfixApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 16 4 37, srcInfoPoints = []}) (Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 16 4 21, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 16 4 21, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 16 4 21, srcInfoPoints = []}) "group"))) (QVarOp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 22 4 23, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 22 4 23, srcInfoPoints = []}) (Symbol (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 22 4 23, srcInfoPoints = []}) "$"))) (App (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 24 4 37, srcInfoPoints = []}) (Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 24 4 28, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 24 4 28, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 24 4 28, srcInfoPoints = []}) "sort"))) (EnumFromTo (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 29 4 37, srcInfoPoints = [SrcSpan "tests/examples/GroupKeyword.hs" 4 29 4 30,SrcSpan "tests/examples/GroupKeyword.hs" 4 31 4 33,SrcSpan "tests/examples/GroupKeyword.hs" 4 36 4 37]}) (Lit (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 30 4 31, srcInfoPoints = []}) (Int (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 30 4 31, srcInfoPoints = []}) 1 "1")) (Lit (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 33 4 36, srcInfoPoints = []}) (Int (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 33 4 36, srcInfoPoints = []}) 100 "100"))))))) Nothing],[Comment False (SrcSpan "tests/examples/GroupKeyword.hs" 1 1 1 38) " {-# LANGUAGE TransformListComp #-}"])
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 2 1 5 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/GroupKeyword.hs" 2 1 2 1
+            , SrcSpan "tests/examples/GroupKeyword.hs" 2 1 2 1
+            , SrcSpan "tests/examples/GroupKeyword.hs" 4 1 4 1
+            , SrcSpan "tests/examples/GroupKeyword.hs" 5 1 5 1
+            , SrcSpan "tests/examples/GroupKeyword.hs" 5 1 5 1
+            ]
+        }
+      (Just
+         (ModuleHead
+            SrcSpanInfo
+              { srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 2 1 2 26
+              , srcInfoPoints =
+                  [ SrcSpan "tests/examples/GroupKeyword.hs" 2 1 2 7
+                  , SrcSpan "tests/examples/GroupKeyword.hs" 2 21 2 26
+                  ]
+              }
+            (ModuleName
+               SrcSpanInfo
+                 { srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 2 8 2 20
+                 , srcInfoPoints = []
+                 }
+               "GroupKeyword")
+            Nothing
+            Nothing))
+      []
+      []
+      [ PatBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 1 4 37
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 1 4 2
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 1 4 2
+                  , srcInfoPoints = []
+                  }
+                "a"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 3 4 37
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/GroupKeyword.hs" 4 3 4 4 ]
+               }
+             (InfixApp
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 5 4 37
+                  , srcInfoPoints = []
+                  }
+                (App
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 5 4 13
+                     , srcInfoPoints = []
+                     }
+                   (Var
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 5 4 8
+                        , srcInfoPoints = []
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 5 4 8
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 5 4 8
+                              , srcInfoPoints = []
+                              }
+                            "map")))
+                   (Var
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 9 4 13
+                        , srcInfoPoints = []
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 9 4 13
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 9 4 13
+                              , srcInfoPoints = []
+                              }
+                            "head"))))
+                (QVarOp
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 14 4 15
+                     , srcInfoPoints = []
+                     }
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 14 4 15
+                        , srcInfoPoints = []
+                        }
+                      (Symbol
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 14 4 15
+                           , srcInfoPoints = []
+                           }
+                         "$")))
+                (InfixApp
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 16 4 37
+                     , srcInfoPoints = []
+                     }
+                   (Var
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 16 4 21
+                        , srcInfoPoints = []
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 16 4 21
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 16 4 21
+                              , srcInfoPoints = []
+                              }
+                            "group")))
+                   (QVarOp
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 22 4 23
+                        , srcInfoPoints = []
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 22 4 23
+                           , srcInfoPoints = []
+                           }
+                         (Symbol
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 22 4 23
+                              , srcInfoPoints = []
+                              }
+                            "$")))
+                   (App
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 24 4 37
+                        , srcInfoPoints = []
+                        }
+                      (Var
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 24 4 28
+                           , srcInfoPoints = []
+                           }
+                         (UnQual
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 24 4 28
+                              , srcInfoPoints = []
+                              }
+                            (Ident
+                               SrcSpanInfo
+                                 { srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 24 4 28
+                                 , srcInfoPoints = []
+                                 }
+                               "sort")))
+                      (EnumFromTo
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 29 4 37
+                           , srcInfoPoints =
+                               [ SrcSpan "tests/examples/GroupKeyword.hs" 4 29 4 30
+                               , SrcSpan "tests/examples/GroupKeyword.hs" 4 31 4 33
+                               , SrcSpan "tests/examples/GroupKeyword.hs" 4 36 4 37
+                               ]
+                           }
+                         (Lit
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 30 4 31
+                              , srcInfoPoints = []
+                              }
+                            (Int
+                               SrcSpanInfo
+                                 { srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 30 4 31
+                                 , srcInfoPoints = []
+                                 }
+                               1
+                               "1"))
+                         (Lit
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 33 4 36
+                              , srcInfoPoints = []
+                              }
+                            (Int
+                               SrcSpanInfo
+                                 { srcInfoSpan = SrcSpan "tests/examples/GroupKeyword.hs" 4 33 4 36
+                                 , srcInfoPoints = []
+                                 }
+                               100
+                               "100")))))))
+          Nothing
+      ]
+  , [ Comment
+        False
+        (SrcSpan "tests/examples/GroupKeyword.hs" 1 1 1 38)
+        " {-# LANGUAGE TransformListComp #-}"
+    ]
+  )

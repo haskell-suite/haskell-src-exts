@@ -1,1 +1,1536 @@
-ParseOk (Module (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 1 1 35 1, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 1 1 1 1,SrcSpan "tests/examples/DataKinds.hs" 2 1 2 1,SrcSpan "tests/examples/DataKinds.hs" 3 1 3 1,SrcSpan "tests/examples/DataKinds.hs" 5 1 5 1,SrcSpan "tests/examples/DataKinds.hs" 5 1 5 1,SrcSpan "tests/examples/DataKinds.hs" 5 1 5 1,SrcSpan "tests/examples/DataKinds.hs" 8 1 8 1,SrcSpan "tests/examples/DataKinds.hs" 10 1 10 1,SrcSpan "tests/examples/DataKinds.hs" 11 1 11 1,SrcSpan "tests/examples/DataKinds.hs" 13 1 13 1,SrcSpan "tests/examples/DataKinds.hs" 15 1 15 1,SrcSpan "tests/examples/DataKinds.hs" 18 1 18 1,SrcSpan "tests/examples/DataKinds.hs" 20 1 20 1,SrcSpan "tests/examples/DataKinds.hs" 22 1 22 1,SrcSpan "tests/examples/DataKinds.hs" 24 1 24 1,SrcSpan "tests/examples/DataKinds.hs" 25 1 25 1,SrcSpan "tests/examples/DataKinds.hs" 27 1 27 1,SrcSpan "tests/examples/DataKinds.hs" 29 1 29 1,SrcSpan "tests/examples/DataKinds.hs" 30 1 30 1,SrcSpan "tests/examples/DataKinds.hs" 33 1 33 1,SrcSpan "tests/examples/DataKinds.hs" 34 1 34 1,SrcSpan "tests/examples/DataKinds.hs" 35 1 35 1,SrcSpan "tests/examples/DataKinds.hs" 35 1 35 1]}) Nothing [LanguagePragma (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 1 1 1 32, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 1 1 1 13,SrcSpan "tests/examples/DataKinds.hs" 1 29 1 32]}) [Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 1 14 1 28, srcInfoPoints = []}) "KindSignatures"],LanguagePragma (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 2 1 2 27, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 2 1 2 13,SrcSpan "tests/examples/DataKinds.hs" 2 24 2 27]}) [Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 2 14 2 23, srcInfoPoints = []}) "DataKinds"],LanguagePragma (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 3 1 3 27, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 3 1 3 13,SrcSpan "tests/examples/DataKinds.hs" 3 24 3 27]}) [Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 3 14 3 23, srcInfoPoints = []}) "PolyKinds"]] [] [ClassDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 5 1 6 24, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 5 1 5 6,SrcSpan "tests/examples/DataKinds.hs" 5 30 5 35,SrcSpan "tests/examples/DataKinds.hs" 6 5 6 5,SrcSpan "tests/examples/DataKinds.hs" 8 1 8 0]}) Nothing (DHApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 5 7 5 29, srcInfoPoints = []}) (DHead (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 5 7 5 9, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 5 7 5 9, srcInfoPoints = []}) "C1")) (KindedVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 5 10 5 29, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 5 10 5 11,SrcSpan "tests/examples/DataKinds.hs" 5 13 5 15,SrcSpan "tests/examples/DataKinds.hs" 5 28 5 29]}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 5 11 5 12, srcInfoPoints = []}) "a") (KindVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 5 16 5 20, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 5 16 5 20, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 5 16 5 20, srcInfoPoints = []}) "Bool"))))) [] (Just [ClsDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 6 5 6 24, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 6 7 6 9]}) (TypeSig (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 6 5 6 24, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 6 7 6 9]}) [Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 6 5 6 6, srcInfoPoints = []}) "c"] (TyFun (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 6 10 6 24, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 6 18 6 20]}) (TyApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 6 10 6 17, srcInfoPoints = []}) (TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 6 10 6 15, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 6 10 6 15, srcInfoPoints = []}) "proxy")) (TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 6 16 6 17, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 6 16 6 17, srcInfoPoints = []}) "a"))) (TyCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 6 21 6 24, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 6 21 6 24, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 6 21 6 24, srcInfoPoints = []}) "Int")))))]),ClassDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 8 1 8 22, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 8 1 8 6]}) Nothing (DHApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 8 7 8 22, srcInfoPoints = []}) (DHead (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 8 7 8 9, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 8 7 8 9, srcInfoPoints = []}) "C2")) (KindedVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 8 10 8 22, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 8 10 8 11,SrcSpan "tests/examples/DataKinds.hs" 8 13 8 15,SrcSpan "tests/examples/DataKinds.hs" 8 21 8 22]}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 8 11 8 12, srcInfoPoints = []}) "a") (KindList (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 8 16 8 21, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 8 16 8 17,SrcSpan "tests/examples/DataKinds.hs" 8 20 8 21]}) (KindStar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 8 18 8 19, srcInfoPoints = []}))))) [] Nothing,DataDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 10 1 10 15, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 10 10 10 11]}) (DataType (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 10 1 10 5, srcInfoPoints = []})) Nothing (DHead (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 10 6 10 9, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 10 6 10 9, srcInfoPoints = []}) "Baz")) [QualConDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 10 12 10 15, srcInfoPoints = []}) Nothing Nothing (ConDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 10 12 10 15, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 10 12 10 15, srcInfoPoints = []}) "Baz") [])] Nothing,DataDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 11 1 11 15, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 11 10 11 11]}) (DataType (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 11 1 11 5, srcInfoPoints = []})) Nothing (DHead (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 11 6 11 9, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 11 6 11 9, srcInfoPoints = []}) "Foo")) [QualConDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 11 12 11 15, srcInfoPoints = []}) Nothing Nothing (ConDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 11 12 11 15, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 11 12 11 15, srcInfoPoints = []}) "Foo") [])] Nothing,ClassDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 13 1 13 29, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 13 1 13 6]}) Nothing (DHApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 13 7 13 29, srcInfoPoints = []}) (DHead (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 13 7 13 9, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 13 7 13 9, srcInfoPoints = []}) "C3")) (KindedVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 13 10 13 29, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 13 10 13 11,SrcSpan "tests/examples/DataKinds.hs" 13 13 13 15,SrcSpan "tests/examples/DataKinds.hs" 13 28 13 29]}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 13 11 13 12, srcInfoPoints = []}) "a") (KindList (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 13 16 13 28, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 13 16 13 17,SrcSpan "tests/examples/DataKinds.hs" 13 27 13 28]}) (KindTuple (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 13 17 13 27, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 13 17 13 18,SrcSpan "tests/examples/DataKinds.hs" 13 21 13 22,SrcSpan "tests/examples/DataKinds.hs" 13 26 13 27]}) [KindVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 13 18 13 21, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 13 18 13 21, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 13 18 13 21, srcInfoPoints = []}) "Baz")),KindVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 13 23 13 26, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 13 23 13 26, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 13 23 13 26, srcInfoPoints = []}) "Foo"))])))) [] Nothing,ClassDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 15 1 15 22, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 15 1 15 6]}) Nothing (DHApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 15 7 15 22, srcInfoPoints = []}) (DHead (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 15 7 15 9, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 15 7 15 9, srcInfoPoints = []}) "C4")) (KindedVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 15 10 15 22, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 15 10 15 11,SrcSpan "tests/examples/DataKinds.hs" 15 13 15 15,SrcSpan "tests/examples/DataKinds.hs" 15 21 15 22]}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 15 11 15 12, srcInfoPoints = []}) "a") (KindParen (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 15 16 15 21, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 15 16 15 17,SrcSpan "tests/examples/DataKinds.hs" 15 20 15 21]}) (KindStar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 15 18 15 19, srcInfoPoints = []}))))) [] Nothing,ClassDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 1 18 28, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 18 1 18 6]}) Nothing (DHApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 7 18 28, srcInfoPoints = []}) (DHead (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 7 18 9, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 7 18 9, srcInfoPoints = []}) "C5")) (KindedVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 10 18 28, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 18 10 18 11,SrcSpan "tests/examples/DataKinds.hs" 18 13 18 15,SrcSpan "tests/examples/DataKinds.hs" 18 27 18 28]}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 11 18 12, srcInfoPoints = []}) "a") (KindApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 16 18 27, srcInfoPoints = []}) (KindApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 16 18 23, srcInfoPoints = []}) (KindVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 16 18 19, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 16 18 19, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 16 18 19, srcInfoPoints = []}) "App"))) (KindVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 20 18 23, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 20 18 23, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 20 18 23, srcInfoPoints = []}) "foo")))) (KindVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 24 18 27, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 24 18 27, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 24 18 27, srcInfoPoints = []}) "baz")))))) [] Nothing,ClassDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 20 1 20 25, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 20 1 20 6]}) Nothing (DHApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 20 7 20 25, srcInfoPoints = []}) (DHead (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 20 7 20 9, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 20 7 20 9, srcInfoPoints = []}) "C6")) (KindedVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 20 10 20 25, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 20 10 20 11,SrcSpan "tests/examples/DataKinds.hs" 20 13 20 15,SrcSpan "tests/examples/DataKinds.hs" 20 24 20 25]}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 20 11 20 12, srcInfoPoints = []}) "a") (KindParen (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 20 16 20 24, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 20 16 20 17,SrcSpan "tests/examples/DataKinds.hs" 20 23 20 24]}) (KindVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 20 17 20 23, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 20 17 20 23, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 20 17 20 23, srcInfoPoints = []}) "parens")))))) [] Nothing,DataDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 22 1 22 5, srcInfoPoints = []}) (DataType (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 22 1 22 5, srcInfoPoints = []})) Nothing (DHApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 22 6 22 18, srcInfoPoints = []}) (DHead (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 22 6 22 7, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 22 6 22 7, srcInfoPoints = []}) "X")) (KindedVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 22 8 22 18, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 22 8 22 9,SrcSpan "tests/examples/DataKinds.hs" 22 11 22 13,SrcSpan "tests/examples/DataKinds.hs" 22 17 22 18]}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 22 9 22 10, srcInfoPoints = []}) "a") (KindList (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 22 14 22 17, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 22 14 22 15,SrcSpan "tests/examples/DataKinds.hs" 22 16 22 17]}) (KindStar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 22 15 22 16, srcInfoPoints = []}))))) [] Nothing,PatBind (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 24 1 24 27, srcInfoPoints = []}) (PVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 24 1 24 3, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 24 1 24 3, srcInfoPoints = []}) "x1")) (UnGuardedRhs (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 24 4 24 27, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 24 4 24 5]}) (ExpTypeSig (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 24 6 24 27, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 24 16 24 18]}) (Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 24 6 24 15, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 24 6 24 15, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 24 6 24 15, srcInfoPoints = []}) "undefined"))) (TyApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 24 19 24 27, srcInfoPoints = []}) (TyCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 24 19 24 20, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 24 19 24 20, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 24 19 24 20, srcInfoPoints = []}) "X"))) (TyPromoted (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 24 21 24 27, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 24 21 24 22,SrcSpan "tests/examples/DataKinds.hs" 24 26 24 27]}) (PromotedList (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 24 21 24 27, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 24 21 24 22,SrcSpan "tests/examples/DataKinds.hs" 24 26 24 27]}) True [TyCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 24 23 24 26, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 24 23 24 26, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 24 23 24 26, srcInfoPoints = []}) "Int"))]))))) Nothing,PatBind (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 1 25 35, srcInfoPoints = []}) (PVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 1 25 3, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 1 25 3, srcInfoPoints = []}) "x2")) (UnGuardedRhs (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 4 25 35, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 25 4 25 5]}) (ExpTypeSig (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 6 25 35, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 25 16 25 18]}) (Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 6 25 15, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 6 25 15, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 6 25 15, srcInfoPoints = []}) "undefined"))) (TyApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 19 25 35, srcInfoPoints = []}) (TyCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 19 25 20, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 19 25 20, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 19 25 20, srcInfoPoints = []}) "X"))) (TyPromoted (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 21 25 35, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 25 21 25 22,SrcSpan "tests/examples/DataKinds.hs" 25 26 25 27,SrcSpan "tests/examples/DataKinds.hs" 25 34 25 35]}) (PromotedList (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 21 25 35, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 25 21 25 22,SrcSpan "tests/examples/DataKinds.hs" 25 26 25 27,SrcSpan "tests/examples/DataKinds.hs" 25 34 25 35]}) True [TyCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 23 25 26, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 23 25 26, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 23 25 26, srcInfoPoints = []}) "Int")),TyCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 28 25 34, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 28 25 34, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 28 25 34, srcInfoPoints = []}) "Double"))]))))) Nothing,DataDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 27 1 27 5, srcInfoPoints = []}) (DataType (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 27 1 27 5, srcInfoPoints = []})) Nothing (DHApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 27 6 27 24, srcInfoPoints = []}) (DHead (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 27 6 27 7, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 27 6 27 7, srcInfoPoints = []}) "Y")) (KindedVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 27 8 27 24, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 27 8 27 9,SrcSpan "tests/examples/DataKinds.hs" 27 11 27 13,SrcSpan "tests/examples/DataKinds.hs" 27 23 27 24]}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 27 9 27 10, srcInfoPoints = []}) "a") (KindTuple (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 27 14 27 23, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 27 14 27 15,SrcSpan "tests/examples/DataKinds.hs" 27 16 27 17,SrcSpan "tests/examples/DataKinds.hs" 27 22 27 23]}) [KindStar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 27 15 27 16, srcInfoPoints = []}),KindVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 27 18 27 22, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 27 18 27 22, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 27 18 27 22, srcInfoPoints = []}) "Bool"))]))) [] Nothing,PatBind (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 1 29 36, srcInfoPoints = []}) (PVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 1 29 3, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 1 29 3, srcInfoPoints = []}) "y1")) (UnGuardedRhs (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 4 29 36, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 29 4 29 5]}) (ExpTypeSig (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 6 29 36, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 29 16 29 18]}) (Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 6 29 15, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 6 29 15, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 6 29 15, srcInfoPoints = []}) "undefined"))) (TyApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 19 29 36, srcInfoPoints = []}) (TyCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 19 29 20, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 19 29 20, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 19 29 20, srcInfoPoints = []}) "Y"))) (TyPromoted (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 21 29 36, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 29 21 29 22,SrcSpan "tests/examples/DataKinds.hs" 29 29 29 30,SrcSpan "tests/examples/DataKinds.hs" 29 35 29 36]}) (PromotedTuple (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 21 29 36, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 29 21 29 22,SrcSpan "tests/examples/DataKinds.hs" 29 29 29 30,SrcSpan "tests/examples/DataKinds.hs" 29 35 29 36]}) [TyCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 23 29 29, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 23 29 29, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 23 29 29, srcInfoPoints = []}) "Double")),TyCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 31 29 35, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 31 29 35, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 31 29 35, srcInfoPoints = []}) "True"))]))))) Nothing,PatBind (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 1 30 50, srcInfoPoints = []}) (PVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 1 30 3, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 1 30 3, srcInfoPoints = []}) "y2")) (UnGuardedRhs (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 4 30 50, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 30 4 30 5]}) (ExpTypeSig (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 6 30 50, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 30 16 30 18]}) (Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 6 30 15, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 6 30 15, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 6 30 15, srcInfoPoints = []}) "undefined"))) (TyApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 19 30 50, srcInfoPoints = []}) (TyCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 19 30 20, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 19 30 20, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 19 30 20, srcInfoPoints = []}) "Y"))) (TyPromoted (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 21 30 50, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 30 21 30 22,SrcSpan "tests/examples/DataKinds.hs" 30 29 30 30,SrcSpan "tests/examples/DataKinds.hs" 30 49 30 50]}) (PromotedTuple (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 21 30 50, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 30 21 30 22,SrcSpan "tests/examples/DataKinds.hs" 30 29 30 30,SrcSpan "tests/examples/DataKinds.hs" 30 49 30 50]}) [TyCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 23 30 29, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 23 30 29, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 23 30 29, srcInfoPoints = []}) "Double")),TyPromoted (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 31 30 37, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 30 31 30 32]}) (PromotedCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 31 30 37, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 30 31 30 32]}) True (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 32 30 37, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 32 30 37, srcInfoPoints = []}) "False")))]))))) Nothing,PatBind (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 1 33 38, srcInfoPoints = []}) (PVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 1 33 3, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 1 33 3, srcInfoPoints = []}) "z1")) (UnGuardedRhs (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 4 33 38, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 33 4 33 5]}) (ExpTypeSig (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 6 33 38, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 33 16 33 18]}) (Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 6 33 15, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 6 33 15, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 6 33 15, srcInfoPoints = []}) "undefined"))) (TyApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 19 33 38, srcInfoPoints = []}) (TyCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 19 33 20, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 19 33 20, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 19 33 20, srcInfoPoints = []}) "X"))) (TyPromoted (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 21 33 38, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 33 21 33 22,SrcSpan "tests/examples/DataKinds.hs" 33 29 33 30,SrcSpan "tests/examples/DataKinds.hs" 33 37 33 38]}) (PromotedList (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 21 33 38, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 33 21 33 22,SrcSpan "tests/examples/DataKinds.hs" 33 29 33 30,SrcSpan "tests/examples/DataKinds.hs" 33 37 33 38]}) False [TyFun (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 23 33 29, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 33 25 33 27]}) (TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 23 33 24, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 23 33 24, srcInfoPoints = []}) "a")) (TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 28 33 29, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 28 33 29, srcInfoPoints = []}) "b")),TyApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 31 33 36, srcInfoPoints = []}) (TyCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 31 33 32, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 31 33 32, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 31 33 32, srcInfoPoints = []}) "X"))) (TyPromoted (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 33 33 36, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 33 33 33 34,SrcSpan "tests/examples/DataKinds.hs" 33 35 33 36]}) (PromotedList (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 33 33 36, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 33 33 33 34,SrcSpan "tests/examples/DataKinds.hs" 33 35 33 36]}) True []))]))))) Nothing,PatBind (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 1 34 35, srcInfoPoints = []}) (PVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 1 34 3, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 1 34 3, srcInfoPoints = []}) "z2")) (UnGuardedRhs (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 4 34 35, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 34 4 34 5]}) (ExpTypeSig (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 6 34 35, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 34 16 34 18]}) (Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 6 34 15, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 6 34 15, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 6 34 15, srcInfoPoints = []}) "undefined"))) (TyApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 19 34 35, srcInfoPoints = []}) (TyCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 19 34 20, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 19 34 20, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 19 34 20, srcInfoPoints = []}) "Y"))) (TyTuple (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 21 34 35, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 34 21 34 22,SrcSpan "tests/examples/DataKinds.hs" 34 28 34 29,SrcSpan "tests/examples/DataKinds.hs" 34 34 34 35]}) Boxed [TyFun (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 22 34 28, srcInfoPoints = [SrcSpan "tests/examples/DataKinds.hs" 34 24 34 26]}) (TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 22 34 23, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 22 34 23, srcInfoPoints = []}) "a")) (TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 27 34 28, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 27 34 28, srcInfoPoints = []}) "b")),TyCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 30 34 34, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 30 34 34, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 30 34 34, srcInfoPoints = []}) "True"))])))) Nothing],[Comment True (SrcSpan "tests/examples/DataKinds.hs" 5 21 5 28) " 1 ",Comment True (SrcSpan "tests/examples/DataKinds.hs" 30 38 30 49) "comment"])
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 1 1 35 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/DataKinds.hs" 1 1 1 1
+            , SrcSpan "tests/examples/DataKinds.hs" 2 1 2 1
+            , SrcSpan "tests/examples/DataKinds.hs" 3 1 3 1
+            , SrcSpan "tests/examples/DataKinds.hs" 5 1 5 1
+            , SrcSpan "tests/examples/DataKinds.hs" 5 1 5 1
+            , SrcSpan "tests/examples/DataKinds.hs" 5 1 5 1
+            , SrcSpan "tests/examples/DataKinds.hs" 8 1 8 1
+            , SrcSpan "tests/examples/DataKinds.hs" 10 1 10 1
+            , SrcSpan "tests/examples/DataKinds.hs" 11 1 11 1
+            , SrcSpan "tests/examples/DataKinds.hs" 13 1 13 1
+            , SrcSpan "tests/examples/DataKinds.hs" 15 1 15 1
+            , SrcSpan "tests/examples/DataKinds.hs" 18 1 18 1
+            , SrcSpan "tests/examples/DataKinds.hs" 20 1 20 1
+            , SrcSpan "tests/examples/DataKinds.hs" 22 1 22 1
+            , SrcSpan "tests/examples/DataKinds.hs" 24 1 24 1
+            , SrcSpan "tests/examples/DataKinds.hs" 25 1 25 1
+            , SrcSpan "tests/examples/DataKinds.hs" 27 1 27 1
+            , SrcSpan "tests/examples/DataKinds.hs" 29 1 29 1
+            , SrcSpan "tests/examples/DataKinds.hs" 30 1 30 1
+            , SrcSpan "tests/examples/DataKinds.hs" 33 1 33 1
+            , SrcSpan "tests/examples/DataKinds.hs" 34 1 34 1
+            , SrcSpan "tests/examples/DataKinds.hs" 35 1 35 1
+            , SrcSpan "tests/examples/DataKinds.hs" 35 1 35 1
+            ]
+        }
+      Nothing
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 1 1 1 32
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/DataKinds.hs" 1 1 1 13
+                , SrcSpan "tests/examples/DataKinds.hs" 1 29 1 32
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 1 14 1 28
+                , srcInfoPoints = []
+                }
+              "KindSignatures"
+          ]
+      , LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 2 1 2 27
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/DataKinds.hs" 2 1 2 13
+                , SrcSpan "tests/examples/DataKinds.hs" 2 24 2 27
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 2 14 2 23
+                , srcInfoPoints = []
+                }
+              "DataKinds"
+          ]
+      , LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 3 1 3 27
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/DataKinds.hs" 3 1 3 13
+                , SrcSpan "tests/examples/DataKinds.hs" 3 24 3 27
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 3 14 3 23
+                , srcInfoPoints = []
+                }
+              "PolyKinds"
+          ]
+      ]
+      []
+      [ ClassDecl
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 5 1 6 24
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/DataKinds.hs" 5 1 5 6
+                , SrcSpan "tests/examples/DataKinds.hs" 5 30 5 35
+                , SrcSpan "tests/examples/DataKinds.hs" 6 5 6 5
+                , SrcSpan "tests/examples/DataKinds.hs" 8 1 8 0
+                ]
+            }
+          Nothing
+          (DHApp
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 5 7 5 29
+               , srcInfoPoints = []
+               }
+             (DHead
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 5 7 5 9
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 5 7 5 9
+                     , srcInfoPoints = []
+                     }
+                   "C1"))
+             (KindedVar
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 5 10 5 29
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/DataKinds.hs" 5 10 5 11
+                      , SrcSpan "tests/examples/DataKinds.hs" 5 13 5 15
+                      , SrcSpan "tests/examples/DataKinds.hs" 5 28 5 29
+                      ]
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 5 11 5 12
+                     , srcInfoPoints = []
+                     }
+                   "a")
+                (KindVar
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 5 16 5 20
+                     , srcInfoPoints = []
+                     }
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 5 16 5 20
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 5 16 5 20
+                           , srcInfoPoints = []
+                           }
+                         "Bool")))))
+          []
+          (Just
+             [ ClsDecl
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 6 5 6 24
+                   , srcInfoPoints = [ SrcSpan "tests/examples/DataKinds.hs" 6 7 6 9 ]
+                   }
+                 (TypeSig
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 6 5 6 24
+                      , srcInfoPoints = [ SrcSpan "tests/examples/DataKinds.hs" 6 7 6 9 ]
+                      }
+                    [ Ident
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 6 5 6 6
+                          , srcInfoPoints = []
+                          }
+                        "c"
+                    ]
+                    (TyFun
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 6 10 6 24
+                         , srcInfoPoints =
+                             [ SrcSpan "tests/examples/DataKinds.hs" 6 18 6 20 ]
+                         }
+                       (TyApp
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 6 10 6 17
+                            , srcInfoPoints = []
+                            }
+                          (TyVar
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 6 10 6 15
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 6 10 6 15
+                                  , srcInfoPoints = []
+                                  }
+                                "proxy"))
+                          (TyVar
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 6 16 6 17
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 6 16 6 17
+                                  , srcInfoPoints = []
+                                  }
+                                "a")))
+                       (TyCon
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 6 21 6 24
+                            , srcInfoPoints = []
+                            }
+                          (UnQual
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 6 21 6 24
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 6 21 6 24
+                                  , srcInfoPoints = []
+                                  }
+                                "Int")))))
+             ])
+      , ClassDecl
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 8 1 8 22
+            , srcInfoPoints = [ SrcSpan "tests/examples/DataKinds.hs" 8 1 8 6 ]
+            }
+          Nothing
+          (DHApp
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 8 7 8 22
+               , srcInfoPoints = []
+               }
+             (DHead
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 8 7 8 9
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 8 7 8 9
+                     , srcInfoPoints = []
+                     }
+                   "C2"))
+             (KindedVar
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 8 10 8 22
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/DataKinds.hs" 8 10 8 11
+                      , SrcSpan "tests/examples/DataKinds.hs" 8 13 8 15
+                      , SrcSpan "tests/examples/DataKinds.hs" 8 21 8 22
+                      ]
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 8 11 8 12
+                     , srcInfoPoints = []
+                     }
+                   "a")
+                (KindList
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 8 16 8 21
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/DataKinds.hs" 8 16 8 17
+                         , SrcSpan "tests/examples/DataKinds.hs" 8 20 8 21
+                         ]
+                     }
+                   (KindStar
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 8 18 8 19
+                        , srcInfoPoints = []
+                        }))))
+          []
+          Nothing
+      , DataDecl
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 10 1 10 15
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/DataKinds.hs" 10 10 10 11 ]
+            }
+          (DataType
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 10 1 10 5
+               , srcInfoPoints = []
+               })
+          Nothing
+          (DHead
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 10 6 10 9
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 10 6 10 9
+                  , srcInfoPoints = []
+                  }
+                "Baz"))
+          [ QualConDecl
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 10 12 10 15
+                , srcInfoPoints = []
+                }
+              Nothing
+              Nothing
+              (ConDecl
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 10 12 10 15
+                   , srcInfoPoints = []
+                   }
+                 (Ident
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 10 12 10 15
+                      , srcInfoPoints = []
+                      }
+                    "Baz")
+                 [])
+          ]
+          Nothing
+      , DataDecl
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 11 1 11 15
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/DataKinds.hs" 11 10 11 11 ]
+            }
+          (DataType
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 11 1 11 5
+               , srcInfoPoints = []
+               })
+          Nothing
+          (DHead
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 11 6 11 9
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 11 6 11 9
+                  , srcInfoPoints = []
+                  }
+                "Foo"))
+          [ QualConDecl
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 11 12 11 15
+                , srcInfoPoints = []
+                }
+              Nothing
+              Nothing
+              (ConDecl
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 11 12 11 15
+                   , srcInfoPoints = []
+                   }
+                 (Ident
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 11 12 11 15
+                      , srcInfoPoints = []
+                      }
+                    "Foo")
+                 [])
+          ]
+          Nothing
+      , ClassDecl
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 13 1 13 29
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/DataKinds.hs" 13 1 13 6 ]
+            }
+          Nothing
+          (DHApp
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 13 7 13 29
+               , srcInfoPoints = []
+               }
+             (DHead
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 13 7 13 9
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 13 7 13 9
+                     , srcInfoPoints = []
+                     }
+                   "C3"))
+             (KindedVar
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 13 10 13 29
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/DataKinds.hs" 13 10 13 11
+                      , SrcSpan "tests/examples/DataKinds.hs" 13 13 13 15
+                      , SrcSpan "tests/examples/DataKinds.hs" 13 28 13 29
+                      ]
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 13 11 13 12
+                     , srcInfoPoints = []
+                     }
+                   "a")
+                (KindList
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 13 16 13 28
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/DataKinds.hs" 13 16 13 17
+                         , SrcSpan "tests/examples/DataKinds.hs" 13 27 13 28
+                         ]
+                     }
+                   (KindTuple
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 13 17 13 27
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/DataKinds.hs" 13 17 13 18
+                            , SrcSpan "tests/examples/DataKinds.hs" 13 21 13 22
+                            , SrcSpan "tests/examples/DataKinds.hs" 13 26 13 27
+                            ]
+                        }
+                      [ KindVar
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 13 18 13 21
+                            , srcInfoPoints = []
+                            }
+                          (UnQual
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 13 18 13 21
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 13 18 13 21
+                                  , srcInfoPoints = []
+                                  }
+                                "Baz"))
+                      , KindVar
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 13 23 13 26
+                            , srcInfoPoints = []
+                            }
+                          (UnQual
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 13 23 13 26
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 13 23 13 26
+                                  , srcInfoPoints = []
+                                  }
+                                "Foo"))
+                      ]))))
+          []
+          Nothing
+      , ClassDecl
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 15 1 15 22
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/DataKinds.hs" 15 1 15 6 ]
+            }
+          Nothing
+          (DHApp
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 15 7 15 22
+               , srcInfoPoints = []
+               }
+             (DHead
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 15 7 15 9
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 15 7 15 9
+                     , srcInfoPoints = []
+                     }
+                   "C4"))
+             (KindedVar
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 15 10 15 22
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/DataKinds.hs" 15 10 15 11
+                      , SrcSpan "tests/examples/DataKinds.hs" 15 13 15 15
+                      , SrcSpan "tests/examples/DataKinds.hs" 15 21 15 22
+                      ]
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 15 11 15 12
+                     , srcInfoPoints = []
+                     }
+                   "a")
+                (KindParen
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 15 16 15 21
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/DataKinds.hs" 15 16 15 17
+                         , SrcSpan "tests/examples/DataKinds.hs" 15 20 15 21
+                         ]
+                     }
+                   (KindStar
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 15 18 15 19
+                        , srcInfoPoints = []
+                        }))))
+          []
+          Nothing
+      , ClassDecl
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 1 18 28
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/DataKinds.hs" 18 1 18 6 ]
+            }
+          Nothing
+          (DHApp
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 7 18 28
+               , srcInfoPoints = []
+               }
+             (DHead
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 7 18 9
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 7 18 9
+                     , srcInfoPoints = []
+                     }
+                   "C5"))
+             (KindedVar
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 10 18 28
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/DataKinds.hs" 18 10 18 11
+                      , SrcSpan "tests/examples/DataKinds.hs" 18 13 18 15
+                      , SrcSpan "tests/examples/DataKinds.hs" 18 27 18 28
+                      ]
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 11 18 12
+                     , srcInfoPoints = []
+                     }
+                   "a")
+                (KindApp
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 16 18 27
+                     , srcInfoPoints = []
+                     }
+                   (KindApp
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 16 18 23
+                        , srcInfoPoints = []
+                        }
+                      (KindVar
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 16 18 19
+                           , srcInfoPoints = []
+                           }
+                         (UnQual
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 16 18 19
+                              , srcInfoPoints = []
+                              }
+                            (Ident
+                               SrcSpanInfo
+                                 { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 16 18 19
+                                 , srcInfoPoints = []
+                                 }
+                               "App")))
+                      (KindVar
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 20 18 23
+                           , srcInfoPoints = []
+                           }
+                         (UnQual
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 20 18 23
+                              , srcInfoPoints = []
+                              }
+                            (Ident
+                               SrcSpanInfo
+                                 { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 20 18 23
+                                 , srcInfoPoints = []
+                                 }
+                               "foo"))))
+                   (KindVar
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 24 18 27
+                        , srcInfoPoints = []
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 24 18 27
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 24 18 27
+                              , srcInfoPoints = []
+                              }
+                            "baz"))))))
+          []
+          Nothing
+      , ClassDecl
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 20 1 20 25
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/DataKinds.hs" 20 1 20 6 ]
+            }
+          Nothing
+          (DHApp
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 20 7 20 25
+               , srcInfoPoints = []
+               }
+             (DHead
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 20 7 20 9
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 20 7 20 9
+                     , srcInfoPoints = []
+                     }
+                   "C6"))
+             (KindedVar
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 20 10 20 25
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/DataKinds.hs" 20 10 20 11
+                      , SrcSpan "tests/examples/DataKinds.hs" 20 13 20 15
+                      , SrcSpan "tests/examples/DataKinds.hs" 20 24 20 25
+                      ]
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 20 11 20 12
+                     , srcInfoPoints = []
+                     }
+                   "a")
+                (KindParen
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 20 16 20 24
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/DataKinds.hs" 20 16 20 17
+                         , SrcSpan "tests/examples/DataKinds.hs" 20 23 20 24
+                         ]
+                     }
+                   (KindVar
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 20 17 20 23
+                        , srcInfoPoints = []
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 20 17 20 23
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 20 17 20 23
+                              , srcInfoPoints = []
+                              }
+                            "parens"))))))
+          []
+          Nothing
+      , DataDecl
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 22 1 22 5
+            , srcInfoPoints = []
+            }
+          (DataType
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 22 1 22 5
+               , srcInfoPoints = []
+               })
+          Nothing
+          (DHApp
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 22 6 22 18
+               , srcInfoPoints = []
+               }
+             (DHead
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 22 6 22 7
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 22 6 22 7
+                     , srcInfoPoints = []
+                     }
+                   "X"))
+             (KindedVar
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 22 8 22 18
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/DataKinds.hs" 22 8 22 9
+                      , SrcSpan "tests/examples/DataKinds.hs" 22 11 22 13
+                      , SrcSpan "tests/examples/DataKinds.hs" 22 17 22 18
+                      ]
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 22 9 22 10
+                     , srcInfoPoints = []
+                     }
+                   "a")
+                (KindList
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 22 14 22 17
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/DataKinds.hs" 22 14 22 15
+                         , SrcSpan "tests/examples/DataKinds.hs" 22 16 22 17
+                         ]
+                     }
+                   (KindStar
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 22 15 22 16
+                        , srcInfoPoints = []
+                        }))))
+          []
+          Nothing
+      , PatBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 24 1 24 27
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 24 1 24 3
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 24 1 24 3
+                  , srcInfoPoints = []
+                  }
+                "x1"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 24 4 24 27
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/DataKinds.hs" 24 4 24 5 ]
+               }
+             (ExpTypeSig
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 24 6 24 27
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/DataKinds.hs" 24 16 24 18 ]
+                  }
+                (Var
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 24 6 24 15
+                     , srcInfoPoints = []
+                     }
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 24 6 24 15
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 24 6 24 15
+                           , srcInfoPoints = []
+                           }
+                         "undefined")))
+                (TyApp
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 24 19 24 27
+                     , srcInfoPoints = []
+                     }
+                   (TyCon
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 24 19 24 20
+                        , srcInfoPoints = []
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 24 19 24 20
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 24 19 24 20
+                              , srcInfoPoints = []
+                              }
+                            "X")))
+                   (TyPromoted
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 24 21 24 27
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/DataKinds.hs" 24 21 24 22
+                            , SrcSpan "tests/examples/DataKinds.hs" 24 26 24 27
+                            ]
+                        }
+                      (PromotedList
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 24 21 24 27
+                           , srcInfoPoints =
+                               [ SrcSpan "tests/examples/DataKinds.hs" 24 21 24 22
+                               , SrcSpan "tests/examples/DataKinds.hs" 24 26 24 27
+                               ]
+                           }
+                         True
+                         [ TyCon
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 24 23 24 26
+                               , srcInfoPoints = []
+                               }
+                             (UnQual
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 24 23 24 26
+                                  , srcInfoPoints = []
+                                  }
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/DataKinds.hs" 24 23 24 26
+                                     , srcInfoPoints = []
+                                     }
+                                   "Int"))
+                         ])))))
+          Nothing
+      , PatBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 1 25 35
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 1 25 3
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 1 25 3
+                  , srcInfoPoints = []
+                  }
+                "x2"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 4 25 35
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/DataKinds.hs" 25 4 25 5 ]
+               }
+             (ExpTypeSig
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 6 25 35
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/DataKinds.hs" 25 16 25 18 ]
+                  }
+                (Var
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 6 25 15
+                     , srcInfoPoints = []
+                     }
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 6 25 15
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 6 25 15
+                           , srcInfoPoints = []
+                           }
+                         "undefined")))
+                (TyApp
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 19 25 35
+                     , srcInfoPoints = []
+                     }
+                   (TyCon
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 19 25 20
+                        , srcInfoPoints = []
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 19 25 20
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 19 25 20
+                              , srcInfoPoints = []
+                              }
+                            "X")))
+                   (TyPromoted
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 21 25 35
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/DataKinds.hs" 25 21 25 22
+                            , SrcSpan "tests/examples/DataKinds.hs" 25 26 25 27
+                            , SrcSpan "tests/examples/DataKinds.hs" 25 34 25 35
+                            ]
+                        }
+                      (PromotedList
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 21 25 35
+                           , srcInfoPoints =
+                               [ SrcSpan "tests/examples/DataKinds.hs" 25 21 25 22
+                               , SrcSpan "tests/examples/DataKinds.hs" 25 26 25 27
+                               , SrcSpan "tests/examples/DataKinds.hs" 25 34 25 35
+                               ]
+                           }
+                         True
+                         [ TyCon
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 23 25 26
+                               , srcInfoPoints = []
+                               }
+                             (UnQual
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 23 25 26
+                                  , srcInfoPoints = []
+                                  }
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/DataKinds.hs" 25 23 25 26
+                                     , srcInfoPoints = []
+                                     }
+                                   "Int"))
+                         , TyCon
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 28 25 34
+                               , srcInfoPoints = []
+                               }
+                             (UnQual
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 25 28 25 34
+                                  , srcInfoPoints = []
+                                  }
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/DataKinds.hs" 25 28 25 34
+                                     , srcInfoPoints = []
+                                     }
+                                   "Double"))
+                         ])))))
+          Nothing
+      , DataDecl
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 27 1 27 5
+            , srcInfoPoints = []
+            }
+          (DataType
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 27 1 27 5
+               , srcInfoPoints = []
+               })
+          Nothing
+          (DHApp
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 27 6 27 24
+               , srcInfoPoints = []
+               }
+             (DHead
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 27 6 27 7
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 27 6 27 7
+                     , srcInfoPoints = []
+                     }
+                   "Y"))
+             (KindedVar
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 27 8 27 24
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/DataKinds.hs" 27 8 27 9
+                      , SrcSpan "tests/examples/DataKinds.hs" 27 11 27 13
+                      , SrcSpan "tests/examples/DataKinds.hs" 27 23 27 24
+                      ]
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 27 9 27 10
+                     , srcInfoPoints = []
+                     }
+                   "a")
+                (KindTuple
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 27 14 27 23
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/DataKinds.hs" 27 14 27 15
+                         , SrcSpan "tests/examples/DataKinds.hs" 27 16 27 17
+                         , SrcSpan "tests/examples/DataKinds.hs" 27 22 27 23
+                         ]
+                     }
+                   [ KindStar
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 27 15 27 16
+                         , srcInfoPoints = []
+                         }
+                   , KindVar
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 27 18 27 22
+                         , srcInfoPoints = []
+                         }
+                       (UnQual
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 27 18 27 22
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 27 18 27 22
+                               , srcInfoPoints = []
+                               }
+                             "Bool"))
+                   ])))
+          []
+          Nothing
+      , PatBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 1 29 36
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 1 29 3
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 1 29 3
+                  , srcInfoPoints = []
+                  }
+                "y1"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 4 29 36
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/DataKinds.hs" 29 4 29 5 ]
+               }
+             (ExpTypeSig
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 6 29 36
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/DataKinds.hs" 29 16 29 18 ]
+                  }
+                (Var
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 6 29 15
+                     , srcInfoPoints = []
+                     }
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 6 29 15
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 6 29 15
+                           , srcInfoPoints = []
+                           }
+                         "undefined")))
+                (TyApp
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 19 29 36
+                     , srcInfoPoints = []
+                     }
+                   (TyCon
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 19 29 20
+                        , srcInfoPoints = []
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 19 29 20
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 19 29 20
+                              , srcInfoPoints = []
+                              }
+                            "Y")))
+                   (TyPromoted
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 21 29 36
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/DataKinds.hs" 29 21 29 22
+                            , SrcSpan "tests/examples/DataKinds.hs" 29 29 29 30
+                            , SrcSpan "tests/examples/DataKinds.hs" 29 35 29 36
+                            ]
+                        }
+                      (PromotedTuple
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 21 29 36
+                           , srcInfoPoints =
+                               [ SrcSpan "tests/examples/DataKinds.hs" 29 21 29 22
+                               , SrcSpan "tests/examples/DataKinds.hs" 29 29 29 30
+                               , SrcSpan "tests/examples/DataKinds.hs" 29 35 29 36
+                               ]
+                           }
+                         [ TyCon
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 23 29 29
+                               , srcInfoPoints = []
+                               }
+                             (UnQual
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 23 29 29
+                                  , srcInfoPoints = []
+                                  }
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/DataKinds.hs" 29 23 29 29
+                                     , srcInfoPoints = []
+                                     }
+                                   "Double"))
+                         , TyCon
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 31 29 35
+                               , srcInfoPoints = []
+                               }
+                             (UnQual
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 31 29 35
+                                  , srcInfoPoints = []
+                                  }
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/DataKinds.hs" 29 31 29 35
+                                     , srcInfoPoints = []
+                                     }
+                                   "True"))
+                         ])))))
+          Nothing
+      , PatBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 1 30 50
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 1 30 3
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 1 30 3
+                  , srcInfoPoints = []
+                  }
+                "y2"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 4 30 50
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/DataKinds.hs" 30 4 30 5 ]
+               }
+             (ExpTypeSig
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 6 30 50
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/DataKinds.hs" 30 16 30 18 ]
+                  }
+                (Var
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 6 30 15
+                     , srcInfoPoints = []
+                     }
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 6 30 15
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 6 30 15
+                           , srcInfoPoints = []
+                           }
+                         "undefined")))
+                (TyApp
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 19 30 50
+                     , srcInfoPoints = []
+                     }
+                   (TyCon
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 19 30 20
+                        , srcInfoPoints = []
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 19 30 20
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 19 30 20
+                              , srcInfoPoints = []
+                              }
+                            "Y")))
+                   (TyPromoted
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 21 30 50
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/DataKinds.hs" 30 21 30 22
+                            , SrcSpan "tests/examples/DataKinds.hs" 30 29 30 30
+                            , SrcSpan "tests/examples/DataKinds.hs" 30 49 30 50
+                            ]
+                        }
+                      (PromotedTuple
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 21 30 50
+                           , srcInfoPoints =
+                               [ SrcSpan "tests/examples/DataKinds.hs" 30 21 30 22
+                               , SrcSpan "tests/examples/DataKinds.hs" 30 29 30 30
+                               , SrcSpan "tests/examples/DataKinds.hs" 30 49 30 50
+                               ]
+                           }
+                         [ TyCon
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 23 30 29
+                               , srcInfoPoints = []
+                               }
+                             (UnQual
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 23 30 29
+                                  , srcInfoPoints = []
+                                  }
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/DataKinds.hs" 30 23 30 29
+                                     , srcInfoPoints = []
+                                     }
+                                   "Double"))
+                         , TyPromoted
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 31 30 37
+                               , srcInfoPoints =
+                                   [ SrcSpan "tests/examples/DataKinds.hs" 30 31 30 32 ]
+                               }
+                             (PromotedCon
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 30 31 30 37
+                                  , srcInfoPoints =
+                                      [ SrcSpan "tests/examples/DataKinds.hs" 30 31 30 32 ]
+                                  }
+                                True
+                                (UnQual
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/DataKinds.hs" 30 32 30 37
+                                     , srcInfoPoints = []
+                                     }
+                                   (Ident
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/DataKinds.hs" 30 32 30 37
+                                        , srcInfoPoints = []
+                                        }
+                                      "False")))
+                         ])))))
+          Nothing
+      , PatBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 1 33 38
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 1 33 3
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 1 33 3
+                  , srcInfoPoints = []
+                  }
+                "z1"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 4 33 38
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/DataKinds.hs" 33 4 33 5 ]
+               }
+             (ExpTypeSig
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 6 33 38
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/DataKinds.hs" 33 16 33 18 ]
+                  }
+                (Var
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 6 33 15
+                     , srcInfoPoints = []
+                     }
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 6 33 15
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 6 33 15
+                           , srcInfoPoints = []
+                           }
+                         "undefined")))
+                (TyApp
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 19 33 38
+                     , srcInfoPoints = []
+                     }
+                   (TyCon
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 19 33 20
+                        , srcInfoPoints = []
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 19 33 20
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 19 33 20
+                              , srcInfoPoints = []
+                              }
+                            "X")))
+                   (TyPromoted
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 21 33 38
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/DataKinds.hs" 33 21 33 22
+                            , SrcSpan "tests/examples/DataKinds.hs" 33 29 33 30
+                            , SrcSpan "tests/examples/DataKinds.hs" 33 37 33 38
+                            ]
+                        }
+                      (PromotedList
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 21 33 38
+                           , srcInfoPoints =
+                               [ SrcSpan "tests/examples/DataKinds.hs" 33 21 33 22
+                               , SrcSpan "tests/examples/DataKinds.hs" 33 29 33 30
+                               , SrcSpan "tests/examples/DataKinds.hs" 33 37 33 38
+                               ]
+                           }
+                         False
+                         [ TyFun
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 23 33 29
+                               , srcInfoPoints =
+                                   [ SrcSpan "tests/examples/DataKinds.hs" 33 25 33 27 ]
+                               }
+                             (TyVar
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 23 33 24
+                                  , srcInfoPoints = []
+                                  }
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/DataKinds.hs" 33 23 33 24
+                                     , srcInfoPoints = []
+                                     }
+                                   "a"))
+                             (TyVar
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 28 33 29
+                                  , srcInfoPoints = []
+                                  }
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/DataKinds.hs" 33 28 33 29
+                                     , srcInfoPoints = []
+                                     }
+                                   "b"))
+                         , TyApp
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 31 33 36
+                               , srcInfoPoints = []
+                               }
+                             (TyCon
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 31 33 32
+                                  , srcInfoPoints = []
+                                  }
+                                (UnQual
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/DataKinds.hs" 33 31 33 32
+                                     , srcInfoPoints = []
+                                     }
+                                   (Ident
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/DataKinds.hs" 33 31 33 32
+                                        , srcInfoPoints = []
+                                        }
+                                      "X")))
+                             (TyPromoted
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 33 33 33 36
+                                  , srcInfoPoints =
+                                      [ SrcSpan "tests/examples/DataKinds.hs" 33 33 33 34
+                                      , SrcSpan "tests/examples/DataKinds.hs" 33 35 33 36
+                                      ]
+                                  }
+                                (PromotedList
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/DataKinds.hs" 33 33 33 36
+                                     , srcInfoPoints =
+                                         [ SrcSpan "tests/examples/DataKinds.hs" 33 33 33 34
+                                         , SrcSpan "tests/examples/DataKinds.hs" 33 35 33 36
+                                         ]
+                                     }
+                                   True
+                                   []))
+                         ])))))
+          Nothing
+      , PatBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 1 34 35
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 1 34 3
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 1 34 3
+                  , srcInfoPoints = []
+                  }
+                "z2"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 4 34 35
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/DataKinds.hs" 34 4 34 5 ]
+               }
+             (ExpTypeSig
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 6 34 35
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/DataKinds.hs" 34 16 34 18 ]
+                  }
+                (Var
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 6 34 15
+                     , srcInfoPoints = []
+                     }
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 6 34 15
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 6 34 15
+                           , srcInfoPoints = []
+                           }
+                         "undefined")))
+                (TyApp
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 19 34 35
+                     , srcInfoPoints = []
+                     }
+                   (TyCon
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 19 34 20
+                        , srcInfoPoints = []
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 19 34 20
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 19 34 20
+                              , srcInfoPoints = []
+                              }
+                            "Y")))
+                   (TyTuple
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 21 34 35
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/DataKinds.hs" 34 21 34 22
+                            , SrcSpan "tests/examples/DataKinds.hs" 34 28 34 29
+                            , SrcSpan "tests/examples/DataKinds.hs" 34 34 34 35
+                            ]
+                        }
+                      Boxed
+                      [ TyFun
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 22 34 28
+                            , srcInfoPoints =
+                                [ SrcSpan "tests/examples/DataKinds.hs" 34 24 34 26 ]
+                            }
+                          (TyVar
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 22 34 23
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 22 34 23
+                                  , srcInfoPoints = []
+                                  }
+                                "a"))
+                          (TyVar
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 27 34 28
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 27 34 28
+                                  , srcInfoPoints = []
+                                  }
+                                "b"))
+                      , TyCon
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 30 34 34
+                            , srcInfoPoints = []
+                            }
+                          (UnQual
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 30 34 34
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 34 30 34 34
+                                  , srcInfoPoints = []
+                                  }
+                                "True"))
+                      ]))))
+          Nothing
+      ]
+  , [ Comment
+        True (SrcSpan "tests/examples/DataKinds.hs" 5 21 5 28) " 1 "
+    , Comment
+        True (SrcSpan "tests/examples/DataKinds.hs" 30 38 30 49) "comment"
+    ]
+  )

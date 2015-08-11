@@ -1,1 +1,208 @@
-ParseOk (Module (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstraintKinds2.hs" 1 1 7 1, srcInfoPoints = [SrcSpan "tests/examples/ConstraintKinds2.hs" 1 1 1 1,SrcSpan "tests/examples/ConstraintKinds2.hs" 2 1 2 1,SrcSpan "tests/examples/ConstraintKinds2.hs" 3 1 3 1,SrcSpan "tests/examples/ConstraintKinds2.hs" 5 1 5 1,SrcSpan "tests/examples/ConstraintKinds2.hs" 5 1 5 1,SrcSpan "tests/examples/ConstraintKinds2.hs" 5 1 5 1,SrcSpan "tests/examples/ConstraintKinds2.hs" 7 1 7 1,SrcSpan "tests/examples/ConstraintKinds2.hs" 7 1 7 1]}) Nothing [LanguagePragma (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstraintKinds2.hs" 1 1 1 33, srcInfoPoints = [SrcSpan "tests/examples/ConstraintKinds2.hs" 1 1 1 13,SrcSpan "tests/examples/ConstraintKinds2.hs" 1 30 1 33]}) [Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstraintKinds2.hs" 1 14 1 29, srcInfoPoints = []}) "ConstraintKinds"],LanguagePragma (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstraintKinds2.hs" 2 1 2 23, srcInfoPoints = [SrcSpan "tests/examples/ConstraintKinds2.hs" 2 1 2 13,SrcSpan "tests/examples/ConstraintKinds2.hs" 2 20 2 23]}) [Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstraintKinds2.hs" 2 14 2 19, srcInfoPoints = []}) "GADTs"],LanguagePragma (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstraintKinds2.hs" 3 1 3 28, srcInfoPoints = [SrcSpan "tests/examples/ConstraintKinds2.hs" 3 1 3 13,SrcSpan "tests/examples/ConstraintKinds2.hs" 3 25 3 28]}) [Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstraintKinds2.hs" 3 14 3 24, srcInfoPoints = []}) "RankNTypes"]] [] [GDataDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstraintKinds2.hs" 5 1 7 0, srcInfoPoints = [SrcSpan "tests/examples/ConstraintKinds2.hs" 5 13 5 18,SrcSpan "tests/examples/ConstraintKinds2.hs" 6 5 6 5,SrcSpan "tests/examples/ConstraintKinds2.hs" 7 1 7 0]}) (DataType (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstraintKinds2.hs" 5 1 5 5, srcInfoPoints = []})) Nothing (DHApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstraintKinds2.hs" 5 6 5 12, srcInfoPoints = []}) (DHead (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstraintKinds2.hs" 5 6 5 10, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstraintKinds2.hs" 5 6 5 10, srcInfoPoints = []}) "Dict")) (UnkindedVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstraintKinds2.hs" 5 11 5 12, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstraintKinds2.hs" 5 11 5 12, srcInfoPoints = []}) "p"))) Nothing [GadtDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstraintKinds2.hs" 6 5 6 24, srcInfoPoints = [SrcSpan "tests/examples/ConstraintKinds2.hs" 6 10 6 12]}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstraintKinds2.hs" 6 5 6 9, srcInfoPoints = []}) "Dict") Nothing (TyForall (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstraintKinds2.hs" 6 13 6 24, srcInfoPoints = []}) Nothing (Just (CxSingle (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstraintKinds2.hs" 6 13 6 17, srcInfoPoints = [SrcSpan "tests/examples/ConstraintKinds2.hs" 6 15 6 17]}) (AppA (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstraintKinds2.hs" 6 13 6 17, srcInfoPoints = [SrcSpan "tests/examples/ConstraintKinds2.hs" 6 15 6 17]}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstraintKinds2.hs" 6 13 6 14, srcInfoPoints = []}) "p") []))) (TyApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstraintKinds2.hs" 6 18 6 24, srcInfoPoints = []}) (TyCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstraintKinds2.hs" 6 18 6 22, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstraintKinds2.hs" 6 18 6 22, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstraintKinds2.hs" 6 18 6 22, srcInfoPoints = []}) "Dict"))) (TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstraintKinds2.hs" 6 23 6 24, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ConstraintKinds2.hs" 6 23 6 24, srcInfoPoints = []}) "p"))))] Nothing],[])
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan =
+            SrcSpan "tests/examples/ConstraintKinds2.hs" 1 1 7 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/ConstraintKinds2.hs" 1 1 1 1
+            , SrcSpan "tests/examples/ConstraintKinds2.hs" 2 1 2 1
+            , SrcSpan "tests/examples/ConstraintKinds2.hs" 3 1 3 1
+            , SrcSpan "tests/examples/ConstraintKinds2.hs" 5 1 5 1
+            , SrcSpan "tests/examples/ConstraintKinds2.hs" 5 1 5 1
+            , SrcSpan "tests/examples/ConstraintKinds2.hs" 5 1 5 1
+            , SrcSpan "tests/examples/ConstraintKinds2.hs" 7 1 7 1
+            , SrcSpan "tests/examples/ConstraintKinds2.hs" 7 1 7 1
+            ]
+        }
+      Nothing
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/ConstraintKinds2.hs" 1 1 1 33
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/ConstraintKinds2.hs" 1 1 1 13
+                , SrcSpan "tests/examples/ConstraintKinds2.hs" 1 30 1 33
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/ConstraintKinds2.hs" 1 14 1 29
+                , srcInfoPoints = []
+                }
+              "ConstraintKinds"
+          ]
+      , LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/ConstraintKinds2.hs" 2 1 2 23
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/ConstraintKinds2.hs" 2 1 2 13
+                , SrcSpan "tests/examples/ConstraintKinds2.hs" 2 20 2 23
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/ConstraintKinds2.hs" 2 14 2 19
+                , srcInfoPoints = []
+                }
+              "GADTs"
+          ]
+      , LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/ConstraintKinds2.hs" 3 1 3 28
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/ConstraintKinds2.hs" 3 1 3 13
+                , SrcSpan "tests/examples/ConstraintKinds2.hs" 3 25 3 28
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/ConstraintKinds2.hs" 3 14 3 24
+                , srcInfoPoints = []
+                }
+              "RankNTypes"
+          ]
+      ]
+      []
+      [ GDataDecl
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/ConstraintKinds2.hs" 5 1 7 0
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/ConstraintKinds2.hs" 5 13 5 18
+                , SrcSpan "tests/examples/ConstraintKinds2.hs" 6 5 6 5
+                , SrcSpan "tests/examples/ConstraintKinds2.hs" 7 1 7 0
+                ]
+            }
+          (DataType
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/ConstraintKinds2.hs" 5 1 5 5
+               , srcInfoPoints = []
+               })
+          Nothing
+          (DHApp
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/ConstraintKinds2.hs" 5 6 5 12
+               , srcInfoPoints = []
+               }
+             (DHead
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/ConstraintKinds2.hs" 5 6 5 10
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/ConstraintKinds2.hs" 5 6 5 10
+                     , srcInfoPoints = []
+                     }
+                   "Dict"))
+             (UnkindedVar
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/ConstraintKinds2.hs" 5 11 5 12
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/ConstraintKinds2.hs" 5 11 5 12
+                     , srcInfoPoints = []
+                     }
+                   "p")))
+          Nothing
+          [ GadtDecl
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/ConstraintKinds2.hs" 6 5 6 24
+                , srcInfoPoints =
+                    [ SrcSpan "tests/examples/ConstraintKinds2.hs" 6 10 6 12 ]
+                }
+              (Ident
+                 SrcSpanInfo
+                   { srcInfoSpan =
+                       SrcSpan "tests/examples/ConstraintKinds2.hs" 6 5 6 9
+                   , srcInfoPoints = []
+                   }
+                 "Dict")
+              Nothing
+              (TyForall
+                 SrcSpanInfo
+                   { srcInfoSpan =
+                       SrcSpan "tests/examples/ConstraintKinds2.hs" 6 13 6 24
+                   , srcInfoPoints = []
+                   }
+                 Nothing
+                 (Just
+                    (CxSingle
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/ConstraintKinds2.hs" 6 13 6 17
+                         , srcInfoPoints =
+                             [ SrcSpan "tests/examples/ConstraintKinds2.hs" 6 15 6 17 ]
+                         }
+                       (AppA
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/ConstraintKinds2.hs" 6 13 6 17
+                            , srcInfoPoints =
+                                [ SrcSpan "tests/examples/ConstraintKinds2.hs" 6 15 6 17 ]
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/ConstraintKinds2.hs" 6 13 6 14
+                               , srcInfoPoints = []
+                               }
+                             "p")
+                          [])))
+                 (TyApp
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/ConstraintKinds2.hs" 6 18 6 24
+                      , srcInfoPoints = []
+                      }
+                    (TyCon
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/ConstraintKinds2.hs" 6 18 6 22
+                         , srcInfoPoints = []
+                         }
+                       (UnQual
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/ConstraintKinds2.hs" 6 18 6 22
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/ConstraintKinds2.hs" 6 18 6 22
+                               , srcInfoPoints = []
+                               }
+                             "Dict")))
+                    (TyVar
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/ConstraintKinds2.hs" 6 23 6 24
+                         , srcInfoPoints = []
+                         }
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/ConstraintKinds2.hs" 6 23 6 24
+                            , srcInfoPoints = []
+                            }
+                          "p"))))
+          ]
+          Nothing
+      ]
+  , []
+  )

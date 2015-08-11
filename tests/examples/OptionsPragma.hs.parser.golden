@@ -1,1 +1,28 @@
-ParseOk (Module (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/OptionsPragma.hs" 1 1 3 1, srcInfoPoints = [SrcSpan "tests/examples/OptionsPragma.hs" 1 1 1 1,SrcSpan "tests/examples/OptionsPragma.hs" 3 1 3 1,SrcSpan "tests/examples/OptionsPragma.hs" 3 1 3 1,SrcSpan "tests/examples/OptionsPragma.hs" 3 1 3 1,SrcSpan "tests/examples/OptionsPragma.hs" 3 1 3 1]}) Nothing [OptionsPragma (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/OptionsPragma.hs" 1 1 1 34, srcInfoPoints = [SrcSpan "tests/examples/OptionsPragma.hs" 1 1 1 31,SrcSpan "tests/examples/OptionsPragma.hs" 1 31 1 34]}) Nothing "-fno-warn-orphans "] [] [],[])
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/OptionsPragma.hs" 1 1 3 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/OptionsPragma.hs" 1 1 1 1
+            , SrcSpan "tests/examples/OptionsPragma.hs" 3 1 3 1
+            , SrcSpan "tests/examples/OptionsPragma.hs" 3 1 3 1
+            , SrcSpan "tests/examples/OptionsPragma.hs" 3 1 3 1
+            , SrcSpan "tests/examples/OptionsPragma.hs" 3 1 3 1
+            ]
+        }
+      Nothing
+      [ OptionsPragma
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/OptionsPragma.hs" 1 1 1 34
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/OptionsPragma.hs" 1 1 1 31
+                , SrcSpan "tests/examples/OptionsPragma.hs" 1 31 1 34
+                ]
+            }
+          Nothing
+          "-fno-warn-orphans "
+      ]
+      []
+      []
+  , []
+  )

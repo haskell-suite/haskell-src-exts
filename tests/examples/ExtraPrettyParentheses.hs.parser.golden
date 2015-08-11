@@ -1,1 +1,480 @@
-ParseOk (Module (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 1 10 1, srcInfoPoints = [SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 1 1 1,SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 1 1 1,SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 1 1 1,SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 1 5 1,SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 1 8 1,SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 1 9 1,SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 10 1 10 1,SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 10 1 10 1]}) Nothing [] [] [DataDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 1 1 17, srcInfoPoints = [SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 10 1 11]}) (DataType (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 1 1 5, srcInfoPoints = []})) Nothing (DHApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 6 1 9, srcInfoPoints = []}) (DHead (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 6 1 7, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 6 1 7, srcInfoPoints = []}) "Q")) (UnkindedVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 8 1 9, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 8 1 9, srcInfoPoints = []}) "a"))) [QualConDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 12 1 17, srcInfoPoints = []}) Nothing Nothing (ConDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 12 1 17, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 12 1 13, srcInfoPoints = []}) "Q") [TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 14 1 15, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 14 1 15, srcInfoPoints = []}) "a"),TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 16 1 17, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 16 1 17, srcInfoPoints = []}) "a")])] Nothing,FunBind (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 1 5 19, srcInfoPoints = []}) [InfixMatch (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 1 5 19, srcInfoPoints = []}) (PVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 1 5 2, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 1 5 2, srcInfoPoints = []}) "x")) (Symbol (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 3 5 4, srcInfoPoints = []}) "*") [PLit (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 5 5 8, srcInfoPoints = [SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 5 5 6]}) (Negative (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 5 5 6, srcInfoPoints = [SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 5 5 6]})) (Int (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 7 5 8, srcInfoPoints = []}) 1 "1")] (UnGuardedRhs (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 9 5 19, srcInfoPoints = [SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 9 5 10]}) (App (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 11 5 19, srcInfoPoints = []}) (Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 11 5 17, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 11 5 17, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 11 5 17, srcInfoPoints = []}) "negate"))) (Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 18 5 19, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 18 5 19, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 18 5 19, srcInfoPoints = []}) "x"))))) Nothing],FunBind (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 1 8 27, srcInfoPoints = []}) [InfixMatch (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 1 8 27, srcInfoPoints = []}) (PApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 1 8 7, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 1 8 5, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 1 8 5, srcInfoPoints = []}) "Just")) [PVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 6 8 7, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 6 8 7, srcInfoPoints = []}) "x")]) (Symbol (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 8 8 10, srcInfoPoints = []}) "<>") [PApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 11 8 18, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 11 8 18, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 11 8 18, srcInfoPoints = []}) "Nothing")) []] (UnGuardedRhs (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 19 8 27, srcInfoPoints = [SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 19 8 20]}) (App (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 21 8 27, srcInfoPoints = []}) (Con (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 21 8 25, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 21 8 25, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 21 8 25, srcInfoPoints = []}) "Just"))) (Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 26 8 27, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 26 8 27, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 26 8 27, srcInfoPoints = []}) "x"))))) Nothing],FunBind (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 1 9 19, srcInfoPoints = []}) [Match (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 1 9 19, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 1 9 2, srcInfoPoints = []}) "f") [PParen (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 3 9 14, srcInfoPoints = [SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 3 9 4,SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 13 9 14]}) (PInfixApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 4 9 13, srcInfoPoints = []}) (PLit (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 4 9 7, srcInfoPoints = [SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 4 9 5]}) (Negative (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 4 9 5, srcInfoPoints = [SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 4 9 5]})) (Int (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 6 9 7, srcInfoPoints = []}) 1 "1")) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 8 9 11, srcInfoPoints = [SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 8 9 9,SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 9 9 10,SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 10 9 11]}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 9 9 10, srcInfoPoints = []}) "Q")) (PWildCard (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 12 9 13, srcInfoPoints = []})))] (UnGuardedRhs (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 15 9 19, srcInfoPoints = [SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 15 9 16]}) (Con (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 17 9 19, srcInfoPoints = [SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 17 9 18,SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 18 9 19]}) (Special (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 17 9 19, srcInfoPoints = [SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 17 9 18,SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 18 9 19]}) (UnitCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 17 9 19, srcInfoPoints = [SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 17 9 18,SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 18 9 19]}))))) Nothing]],[Comment False (SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 3 1 3 78) " In this example, the pretty-printer should insert extra parentheses around",Comment False (SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 4 1 4 33) " the negative literal pattern.",Comment False (SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 7 1 7 78) " In these examples, the pretty-printer should not insert extra parentheses."])
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan =
+            SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 1 10 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 1 1 1
+            , SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 1 1 1
+            , SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 1 1 1
+            , SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 1 5 1
+            , SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 1 8 1
+            , SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 1 9 1
+            , SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 10 1 10 1
+            , SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 10 1 10 1
+            ]
+        }
+      Nothing
+      []
+      []
+      [ DataDecl
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 1 1 17
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 10 1 11 ]
+            }
+          (DataType
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 1 1 5
+               , srcInfoPoints = []
+               })
+          Nothing
+          (DHApp
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 6 1 9
+               , srcInfoPoints = []
+               }
+             (DHead
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 6 1 7
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 6 1 7
+                     , srcInfoPoints = []
+                     }
+                   "Q"))
+             (UnkindedVar
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 8 1 9
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 8 1 9
+                     , srcInfoPoints = []
+                     }
+                   "a")))
+          [ QualConDecl
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 12 1 17
+                , srcInfoPoints = []
+                }
+              Nothing
+              Nothing
+              (ConDecl
+                 SrcSpanInfo
+                   { srcInfoSpan =
+                       SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 12 1 17
+                   , srcInfoPoints = []
+                   }
+                 (Ident
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 12 1 13
+                      , srcInfoPoints = []
+                      }
+                    "Q")
+                 [ TyVar
+                     SrcSpanInfo
+                       { srcInfoSpan =
+                           SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 14 1 15
+                       , srcInfoPoints = []
+                       }
+                     (Ident
+                        SrcSpanInfo
+                          { srcInfoSpan =
+                              SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 14 1 15
+                          , srcInfoPoints = []
+                          }
+                        "a")
+                 , TyVar
+                     SrcSpanInfo
+                       { srcInfoSpan =
+                           SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 16 1 17
+                       , srcInfoPoints = []
+                       }
+                     (Ident
+                        SrcSpanInfo
+                          { srcInfoSpan =
+                              SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 1 16 1 17
+                          , srcInfoPoints = []
+                          }
+                        "a")
+                 ])
+          ]
+          Nothing
+      , FunBind
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 1 5 19
+            , srcInfoPoints = []
+            }
+          [ InfixMatch
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 1 5 19
+                , srcInfoPoints = []
+                }
+              (PVar
+                 SrcSpanInfo
+                   { srcInfoSpan =
+                       SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 1 5 2
+                   , srcInfoPoints = []
+                   }
+                 (Ident
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 1 5 2
+                      , srcInfoPoints = []
+                      }
+                    "x"))
+              (Symbol
+                 SrcSpanInfo
+                   { srcInfoSpan =
+                       SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 3 5 4
+                   , srcInfoPoints = []
+                   }
+                 "*")
+              [ PLit
+                  SrcSpanInfo
+                    { srcInfoSpan =
+                        SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 5 5 8
+                    , srcInfoPoints =
+                        [ SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 5 5 6 ]
+                    }
+                  (Negative
+                     SrcSpanInfo
+                       { srcInfoSpan =
+                           SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 5 5 6
+                       , srcInfoPoints =
+                           [ SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 5 5 6 ]
+                       })
+                  (Int
+                     SrcSpanInfo
+                       { srcInfoSpan =
+                           SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 7 5 8
+                       , srcInfoPoints = []
+                       }
+                     1
+                     "1")
+              ]
+              (UnGuardedRhs
+                 SrcSpanInfo
+                   { srcInfoSpan =
+                       SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 9 5 19
+                   , srcInfoPoints =
+                       [ SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 9 5 10 ]
+                   }
+                 (App
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 11 5 19
+                      , srcInfoPoints = []
+                      }
+                    (Var
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 11 5 17
+                         , srcInfoPoints = []
+                         }
+                       (UnQual
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 11 5 17
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 11 5 17
+                               , srcInfoPoints = []
+                               }
+                             "negate")))
+                    (Var
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 18 5 19
+                         , srcInfoPoints = []
+                         }
+                       (UnQual
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 18 5 19
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 5 18 5 19
+                               , srcInfoPoints = []
+                               }
+                             "x")))))
+              Nothing
+          ]
+      , FunBind
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 1 8 27
+            , srcInfoPoints = []
+            }
+          [ InfixMatch
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 1 8 27
+                , srcInfoPoints = []
+                }
+              (PApp
+                 SrcSpanInfo
+                   { srcInfoSpan =
+                       SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 1 8 7
+                   , srcInfoPoints = []
+                   }
+                 (UnQual
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 1 8 5
+                      , srcInfoPoints = []
+                      }
+                    (Ident
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 1 8 5
+                         , srcInfoPoints = []
+                         }
+                       "Just"))
+                 [ PVar
+                     SrcSpanInfo
+                       { srcInfoSpan =
+                           SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 6 8 7
+                       , srcInfoPoints = []
+                       }
+                     (Ident
+                        SrcSpanInfo
+                          { srcInfoSpan =
+                              SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 6 8 7
+                          , srcInfoPoints = []
+                          }
+                        "x")
+                 ])
+              (Symbol
+                 SrcSpanInfo
+                   { srcInfoSpan =
+                       SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 8 8 10
+                   , srcInfoPoints = []
+                   }
+                 "<>")
+              [ PApp
+                  SrcSpanInfo
+                    { srcInfoSpan =
+                        SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 11 8 18
+                    , srcInfoPoints = []
+                    }
+                  (UnQual
+                     SrcSpanInfo
+                       { srcInfoSpan =
+                           SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 11 8 18
+                       , srcInfoPoints = []
+                       }
+                     (Ident
+                        SrcSpanInfo
+                          { srcInfoSpan =
+                              SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 11 8 18
+                          , srcInfoPoints = []
+                          }
+                        "Nothing"))
+                  []
+              ]
+              (UnGuardedRhs
+                 SrcSpanInfo
+                   { srcInfoSpan =
+                       SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 19 8 27
+                   , srcInfoPoints =
+                       [ SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 19 8 20 ]
+                   }
+                 (App
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 21 8 27
+                      , srcInfoPoints = []
+                      }
+                    (Con
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 21 8 25
+                         , srcInfoPoints = []
+                         }
+                       (UnQual
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 21 8 25
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 21 8 25
+                               , srcInfoPoints = []
+                               }
+                             "Just")))
+                    (Var
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 26 8 27
+                         , srcInfoPoints = []
+                         }
+                       (UnQual
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 26 8 27
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 8 26 8 27
+                               , srcInfoPoints = []
+                               }
+                             "x")))))
+              Nothing
+          ]
+      , FunBind
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 1 9 19
+            , srcInfoPoints = []
+            }
+          [ Match
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 1 9 19
+                , srcInfoPoints = []
+                }
+              (Ident
+                 SrcSpanInfo
+                   { srcInfoSpan =
+                       SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 1 9 2
+                   , srcInfoPoints = []
+                   }
+                 "f")
+              [ PParen
+                  SrcSpanInfo
+                    { srcInfoSpan =
+                        SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 3 9 14
+                    , srcInfoPoints =
+                        [ SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 3 9 4
+                        , SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 13 9 14
+                        ]
+                    }
+                  (PInfixApp
+                     SrcSpanInfo
+                       { srcInfoSpan =
+                           SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 4 9 13
+                       , srcInfoPoints = []
+                       }
+                     (PLit
+                        SrcSpanInfo
+                          { srcInfoSpan =
+                              SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 4 9 7
+                          , srcInfoPoints =
+                              [ SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 4 9 5 ]
+                          }
+                        (Negative
+                           SrcSpanInfo
+                             { srcInfoSpan =
+                                 SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 4 9 5
+                             , srcInfoPoints =
+                                 [ SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 4 9 5 ]
+                             })
+                        (Int
+                           SrcSpanInfo
+                             { srcInfoSpan =
+                                 SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 6 9 7
+                             , srcInfoPoints = []
+                             }
+                           1
+                           "1"))
+                     (UnQual
+                        SrcSpanInfo
+                          { srcInfoSpan =
+                              SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 8 9 11
+                          , srcInfoPoints =
+                              [ SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 8 9 9
+                              , SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 9 9 10
+                              , SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 10 9 11
+                              ]
+                          }
+                        (Ident
+                           SrcSpanInfo
+                             { srcInfoSpan =
+                                 SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 9 9 10
+                             , srcInfoPoints = []
+                             }
+                           "Q"))
+                     (PWildCard
+                        SrcSpanInfo
+                          { srcInfoSpan =
+                              SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 12 9 13
+                          , srcInfoPoints = []
+                          }))
+              ]
+              (UnGuardedRhs
+                 SrcSpanInfo
+                   { srcInfoSpan =
+                       SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 15 9 19
+                   , srcInfoPoints =
+                       [ SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 15 9 16 ]
+                   }
+                 (Con
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 17 9 19
+                      , srcInfoPoints =
+                          [ SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 17 9 18
+                          , SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 18 9 19
+                          ]
+                      }
+                    (Special
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 17 9 19
+                         , srcInfoPoints =
+                             [ SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 17 9 18
+                             , SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 18 9 19
+                             ]
+                         }
+                       (UnitCon
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 17 9 19
+                            , srcInfoPoints =
+                                [ SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 17 9 18
+                                , SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 9 18 9 19
+                                ]
+                            }))))
+              Nothing
+          ]
+      ]
+  , [ Comment
+        False
+        (SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 3 1 3 78)
+        " In this example, the pretty-printer should insert extra parentheses around"
+    , Comment
+        False
+        (SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 4 1 4 33)
+        " the negative literal pattern."
+    , Comment
+        False
+        (SrcSpan "tests/examples/ExtraPrettyParentheses.hs" 7 1 7 78)
+        " In these examples, the pretty-printer should not insert extra parentheses."
+    ]
+  )

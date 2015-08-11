@@ -1,1 +1,222 @@
-ParseOk (Module (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 1 1 6 1, srcInfoPoints = [SrcSpan "tests/examples/RCategory3.hs" 1 1 1 1,SrcSpan "tests/examples/RCategory3.hs" 3 1 3 1,SrcSpan "tests/examples/RCategory3.hs" 3 1 3 1,SrcSpan "tests/examples/RCategory3.hs" 3 1 3 1,SrcSpan "tests/examples/RCategory3.hs" 6 1 6 1,SrcSpan "tests/examples/RCategory3.hs" 6 1 6 1]}) Nothing [LanguagePragma (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 1 1 1 47, srcInfoPoints = [SrcSpan "tests/examples/RCategory3.hs" 1 1 1 13,SrcSpan "tests/examples/RCategory3.hs" 1 26 1 27,SrcSpan "tests/examples/RCategory3.hs" 1 44 1 47]}) [Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 1 14 1 26, srcInfoPoints = []}) "TypeFamilies",Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 1 28 1 43, srcInfoPoints = []}) "ConstraintKinds"]] [] [InstDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 3 1 6 0, srcInfoPoints = [SrcSpan "tests/examples/RCategory3.hs" 3 1 3 9,SrcSpan "tests/examples/RCategory3.hs" 3 25 3 30,SrcSpan "tests/examples/RCategory3.hs" 4 3 4 3,SrcSpan "tests/examples/RCategory3.hs" 6 1 6 0]}) Nothing (IRule (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 3 10 3 24, srcInfoPoints = []}) Nothing Nothing (IHApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 3 10 3 24, srcInfoPoints = []}) (IHCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 3 10 3 19, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 3 10 3 19, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 3 10 3 19, srcInfoPoints = []}) "RCategory"))) (TyCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 3 20 3 24, srcInfoPoints = [SrcSpan "tests/examples/RCategory3.hs" 3 20 3 21,SrcSpan "tests/examples/RCategory3.hs" 3 21 3 23,SrcSpan "tests/examples/RCategory3.hs" 3 23 3 24]}) (Special (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 3 20 3 24, srcInfoPoints = [SrcSpan "tests/examples/RCategory3.hs" 3 20 3 21,SrcSpan "tests/examples/RCategory3.hs" 3 21 3 23,SrcSpan "tests/examples/RCategory3.hs" 3 23 3 24]}) (FunCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 3 20 3 24, srcInfoPoints = [SrcSpan "tests/examples/RCategory3.hs" 3 20 3 21,SrcSpan "tests/examples/RCategory3.hs" 3 21 3 23,SrcSpan "tests/examples/RCategory3.hs" 3 23 3 24]})))))) (Just [InsType (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 4 3 4 35, srcInfoPoints = [SrcSpan "tests/examples/RCategory3.hs" 4 3 4 7,SrcSpan "tests/examples/RCategory3.hs" 4 31 4 32]}) (TyApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 4 8 4 30, srcInfoPoints = []}) (TyApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 4 8 4 28, srcInfoPoints = []}) (TyApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 4 8 4 26, srcInfoPoints = []}) (TyCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 4 8 4 21, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 4 8 4 21, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 4 8 4 21, srcInfoPoints = []}) "RCategoryCtxt"))) (TyCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 4 22 4 26, srcInfoPoints = [SrcSpan "tests/examples/RCategory3.hs" 4 22 4 23,SrcSpan "tests/examples/RCategory3.hs" 4 23 4 25,SrcSpan "tests/examples/RCategory3.hs" 4 25 4 26]}) (Special (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 4 22 4 26, srcInfoPoints = [SrcSpan "tests/examples/RCategory3.hs" 4 22 4 23,SrcSpan "tests/examples/RCategory3.hs" 4 23 4 25,SrcSpan "tests/examples/RCategory3.hs" 4 25 4 26]}) (FunCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 4 22 4 26, srcInfoPoints = [SrcSpan "tests/examples/RCategory3.hs" 4 22 4 23,SrcSpan "tests/examples/RCategory3.hs" 4 23 4 25,SrcSpan "tests/examples/RCategory3.hs" 4 25 4 26]}))))) (TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 4 27 4 28, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 4 27 4 28, srcInfoPoints = []}) "a"))) (TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 4 29 4 30, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 4 29 4 30, srcInfoPoints = []}) "a"))) (TyCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 4 33 4 35, srcInfoPoints = [SrcSpan "tests/examples/RCategory3.hs" 4 33 4 34,SrcSpan "tests/examples/RCategory3.hs" 4 34 4 35]}) (Special (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 4 33 4 35, srcInfoPoints = [SrcSpan "tests/examples/RCategory3.hs" 4 33 4 34,SrcSpan "tests/examples/RCategory3.hs" 4 34 4 35]}) (UnitCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 4 33 4 35, srcInfoPoints = [SrcSpan "tests/examples/RCategory3.hs" 4 33 4 34,SrcSpan "tests/examples/RCategory3.hs" 4 34 4 35]}))))])],[])
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 1 1 6 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/RCategory3.hs" 1 1 1 1
+            , SrcSpan "tests/examples/RCategory3.hs" 3 1 3 1
+            , SrcSpan "tests/examples/RCategory3.hs" 3 1 3 1
+            , SrcSpan "tests/examples/RCategory3.hs" 3 1 3 1
+            , SrcSpan "tests/examples/RCategory3.hs" 6 1 6 1
+            , SrcSpan "tests/examples/RCategory3.hs" 6 1 6 1
+            ]
+        }
+      Nothing
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 1 1 1 47
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/RCategory3.hs" 1 1 1 13
+                , SrcSpan "tests/examples/RCategory3.hs" 1 26 1 27
+                , SrcSpan "tests/examples/RCategory3.hs" 1 44 1 47
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 1 14 1 26
+                , srcInfoPoints = []
+                }
+              "TypeFamilies"
+          , Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 1 28 1 43
+                , srcInfoPoints = []
+                }
+              "ConstraintKinds"
+          ]
+      ]
+      []
+      [ InstDecl
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 3 1 6 0
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/RCategory3.hs" 3 1 3 9
+                , SrcSpan "tests/examples/RCategory3.hs" 3 25 3 30
+                , SrcSpan "tests/examples/RCategory3.hs" 4 3 4 3
+                , SrcSpan "tests/examples/RCategory3.hs" 6 1 6 0
+                ]
+            }
+          Nothing
+          (IRule
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 3 10 3 24
+               , srcInfoPoints = []
+               }
+             Nothing
+             Nothing
+             (IHApp
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 3 10 3 24
+                  , srcInfoPoints = []
+                  }
+                (IHCon
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 3 10 3 19
+                     , srcInfoPoints = []
+                     }
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 3 10 3 19
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 3 10 3 19
+                           , srcInfoPoints = []
+                           }
+                         "RCategory")))
+                (TyCon
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 3 20 3 24
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/RCategory3.hs" 3 20 3 21
+                         , SrcSpan "tests/examples/RCategory3.hs" 3 21 3 23
+                         , SrcSpan "tests/examples/RCategory3.hs" 3 23 3 24
+                         ]
+                     }
+                   (Special
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 3 20 3 24
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/RCategory3.hs" 3 20 3 21
+                            , SrcSpan "tests/examples/RCategory3.hs" 3 21 3 23
+                            , SrcSpan "tests/examples/RCategory3.hs" 3 23 3 24
+                            ]
+                        }
+                      (FunCon
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 3 20 3 24
+                           , srcInfoPoints =
+                               [ SrcSpan "tests/examples/RCategory3.hs" 3 20 3 21
+                               , SrcSpan "tests/examples/RCategory3.hs" 3 21 3 23
+                               , SrcSpan "tests/examples/RCategory3.hs" 3 23 3 24
+                               ]
+                           })))))
+          (Just
+             [ InsType
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 4 3 4 35
+                   , srcInfoPoints =
+                       [ SrcSpan "tests/examples/RCategory3.hs" 4 3 4 7
+                       , SrcSpan "tests/examples/RCategory3.hs" 4 31 4 32
+                       ]
+                   }
+                 (TyApp
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 4 8 4 30
+                      , srcInfoPoints = []
+                      }
+                    (TyApp
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 4 8 4 28
+                         , srcInfoPoints = []
+                         }
+                       (TyApp
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 4 8 4 26
+                            , srcInfoPoints = []
+                            }
+                          (TyCon
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 4 8 4 21
+                               , srcInfoPoints = []
+                               }
+                             (UnQual
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 4 8 4 21
+                                  , srcInfoPoints = []
+                                  }
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 4 8 4 21
+                                     , srcInfoPoints = []
+                                     }
+                                   "RCategoryCtxt")))
+                          (TyCon
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 4 22 4 26
+                               , srcInfoPoints =
+                                   [ SrcSpan "tests/examples/RCategory3.hs" 4 22 4 23
+                                   , SrcSpan "tests/examples/RCategory3.hs" 4 23 4 25
+                                   , SrcSpan "tests/examples/RCategory3.hs" 4 25 4 26
+                                   ]
+                               }
+                             (Special
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 4 22 4 26
+                                  , srcInfoPoints =
+                                      [ SrcSpan "tests/examples/RCategory3.hs" 4 22 4 23
+                                      , SrcSpan "tests/examples/RCategory3.hs" 4 23 4 25
+                                      , SrcSpan "tests/examples/RCategory3.hs" 4 25 4 26
+                                      ]
+                                  }
+                                (FunCon
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/RCategory3.hs" 4 22 4 26
+                                     , srcInfoPoints =
+                                         [ SrcSpan "tests/examples/RCategory3.hs" 4 22 4 23
+                                         , SrcSpan "tests/examples/RCategory3.hs" 4 23 4 25
+                                         , SrcSpan "tests/examples/RCategory3.hs" 4 25 4 26
+                                         ]
+                                     }))))
+                       (TyVar
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 4 27 4 28
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 4 27 4 28
+                               , srcInfoPoints = []
+                               }
+                             "a")))
+                    (TyVar
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 4 29 4 30
+                         , srcInfoPoints = []
+                         }
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 4 29 4 30
+                            , srcInfoPoints = []
+                            }
+                          "a")))
+                 (TyCon
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 4 33 4 35
+                      , srcInfoPoints =
+                          [ SrcSpan "tests/examples/RCategory3.hs" 4 33 4 34
+                          , SrcSpan "tests/examples/RCategory3.hs" 4 34 4 35
+                          ]
+                      }
+                    (Special
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 4 33 4 35
+                         , srcInfoPoints =
+                             [ SrcSpan "tests/examples/RCategory3.hs" 4 33 4 34
+                             , SrcSpan "tests/examples/RCategory3.hs" 4 34 4 35
+                             ]
+                         }
+                       (UnitCon
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/RCategory3.hs" 4 33 4 35
+                            , srcInfoPoints =
+                                [ SrcSpan "tests/examples/RCategory3.hs" 4 33 4 34
+                                , SrcSpan "tests/examples/RCategory3.hs" 4 34 4 35
+                                ]
+                            })))
+             ])
+      ]
+  , []
+  )

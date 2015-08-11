@@ -1,1 +1,437 @@
-ParseOk (Module (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 1 1 9 1, srcInfoPoints = [SrcSpan "tests/examples/PolyKinds.hs" 1 1 1 1,SrcSpan "tests/examples/PolyKinds.hs" 2 1 2 1,SrcSpan "tests/examples/PolyKinds.hs" 2 1 2 1,SrcSpan "tests/examples/PolyKinds.hs" 2 1 2 1,SrcSpan "tests/examples/PolyKinds.hs" 4 1 4 1,SrcSpan "tests/examples/PolyKinds.hs" 7 1 7 1,SrcSpan "tests/examples/PolyKinds.hs" 8 1 8 1,SrcSpan "tests/examples/PolyKinds.hs" 9 1 9 1,SrcSpan "tests/examples/PolyKinds.hs" 9 1 9 1]}) Nothing [LanguagePragma (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 1 1 1 27, srcInfoPoints = [SrcSpan "tests/examples/PolyKinds.hs" 1 1 1 13,SrcSpan "tests/examples/PolyKinds.hs" 1 24 1 27]}) [Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 1 14 1 23, srcInfoPoints = []}) "PolyKinds"]] [] [DataDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 2 1 2 21, srcInfoPoints = [SrcSpan "tests/examples/PolyKinds.hs" 2 14 2 15]}) (DataType (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 2 1 2 5, srcInfoPoints = []})) Nothing (DHApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 2 6 2 13, srcInfoPoints = []}) (DHead (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 2 6 2 11, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 2 6 2 11, srcInfoPoints = []}) "Proxy")) (UnkindedVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 2 12 2 13, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 2 12 2 13, srcInfoPoints = []}) "t"))) [QualConDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 2 16 2 21, srcInfoPoints = []}) Nothing Nothing (ConDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 2 16 2 21, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 2 16 2 21, srcInfoPoints = []}) "Proxy") [])] Nothing,ClassDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 4 1 5 31, srcInfoPoints = [SrcSpan "tests/examples/PolyKinds.hs" 4 1 4 6,SrcSpan "tests/examples/PolyKinds.hs" 4 18 4 23,SrcSpan "tests/examples/PolyKinds.hs" 5 3 5 3,SrcSpan "tests/examples/PolyKinds.hs" 7 1 7 0]}) Nothing (DHApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 4 7 4 17, srcInfoPoints = []}) (DHead (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 4 7 4 15, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 4 7 4 15, srcInfoPoints = []}) "Typeable")) (UnkindedVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 4 16 4 17, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 4 16 4 17, srcInfoPoints = []}) "t"))) [] (Just [ClsDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 5 3 5 31, srcInfoPoints = [SrcSpan "tests/examples/PolyKinds.hs" 5 10 5 12]}) (TypeSig (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 5 3 5 31, srcInfoPoints = [SrcSpan "tests/examples/PolyKinds.hs" 5 10 5 12]}) [Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 5 3 5 9, srcInfoPoints = []}) "typeOf"] (TyFun (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 5 13 5 31, srcInfoPoints = [SrcSpan "tests/examples/PolyKinds.hs" 5 21 5 23]}) (TyApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 5 13 5 20, srcInfoPoints = []}) (TyCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 5 13 5 18, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 5 13 5 18, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 5 13 5 18, srcInfoPoints = []}) "Proxy"))) (TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 5 19 5 20, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 5 19 5 20, srcInfoPoints = []}) "t"))) (TyCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 5 24 5 31, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 5 24 5 31, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 5 24 5 31, srcInfoPoints = []}) "TypeRep")))))]),InstDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 7 1 8 0, srcInfoPoints = [SrcSpan "tests/examples/PolyKinds.hs" 7 1 7 9,SrcSpan "tests/examples/PolyKinds.hs" 7 24 7 29,SrcSpan "tests/examples/PolyKinds.hs" 7 30 7 30,SrcSpan "tests/examples/PolyKinds.hs" 8 1 8 0]}) Nothing (IRule (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 7 10 7 22, srcInfoPoints = []}) Nothing Nothing (IHApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 7 10 7 22, srcInfoPoints = []}) (IHCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 7 10 7 18, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 7 10 7 18, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 7 10 7 18, srcInfoPoints = []}) "Typeable"))) (TyCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 7 19 7 22, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 7 19 7 22, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 7 19 7 22, srcInfoPoints = []}) "Int"))))) (Just [InsDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 7 30 7 48, srcInfoPoints = []}) (FunBind (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 7 30 7 48, srcInfoPoints = []}) [Match (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 7 30 7 48, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 7 30 7 36, srcInfoPoints = []}) "typeOf") [PWildCard (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 7 37 7 38, srcInfoPoints = []})] (UnGuardedRhs (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 7 39 7 48, srcInfoPoints = [SrcSpan "tests/examples/PolyKinds.hs" 7 39 7 40]}) (Con (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 7 41 7 48, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 7 41 7 48, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 7 41 7 48, srcInfoPoints = []}) "TypeRep")))) Nothing])]),InstDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 8 1 9 0, srcInfoPoints = [SrcSpan "tests/examples/PolyKinds.hs" 8 1 8 9,SrcSpan "tests/examples/PolyKinds.hs" 8 24 8 29,SrcSpan "tests/examples/PolyKinds.hs" 8 30 8 30,SrcSpan "tests/examples/PolyKinds.hs" 9 1 9 0]}) Nothing (IRule (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 8 10 8 21, srcInfoPoints = []}) Nothing Nothing (IHApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 8 10 8 21, srcInfoPoints = []}) (IHCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 8 10 8 18, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 8 10 8 18, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 8 10 8 18, srcInfoPoints = []}) "Typeable"))) (TyCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 8 19 8 21, srcInfoPoints = [SrcSpan "tests/examples/PolyKinds.hs" 8 19 8 20,SrcSpan "tests/examples/PolyKinds.hs" 8 20 8 21]}) (Special (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 8 19 8 21, srcInfoPoints = [SrcSpan "tests/examples/PolyKinds.hs" 8 19 8 20,SrcSpan "tests/examples/PolyKinds.hs" 8 20 8 21]}) (ListCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 8 19 8 21, srcInfoPoints = [SrcSpan "tests/examples/PolyKinds.hs" 8 19 8 20,SrcSpan "tests/examples/PolyKinds.hs" 8 20 8 21]})))))) (Just [InsDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 8 30 8 48, srcInfoPoints = []}) (FunBind (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 8 30 8 48, srcInfoPoints = []}) [Match (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 8 30 8 48, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 8 30 8 36, srcInfoPoints = []}) "typeOf") [PWildCard (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 8 37 8 38, srcInfoPoints = []})] (UnGuardedRhs (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 8 39 8 48, srcInfoPoints = [SrcSpan "tests/examples/PolyKinds.hs" 8 39 8 40]}) (Con (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 8 41 8 48, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 8 41 8 48, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 8 41 8 48, srcInfoPoints = []}) "TypeRep")))) Nothing])])],[])
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 1 1 9 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/PolyKinds.hs" 1 1 1 1
+            , SrcSpan "tests/examples/PolyKinds.hs" 2 1 2 1
+            , SrcSpan "tests/examples/PolyKinds.hs" 2 1 2 1
+            , SrcSpan "tests/examples/PolyKinds.hs" 2 1 2 1
+            , SrcSpan "tests/examples/PolyKinds.hs" 4 1 4 1
+            , SrcSpan "tests/examples/PolyKinds.hs" 7 1 7 1
+            , SrcSpan "tests/examples/PolyKinds.hs" 8 1 8 1
+            , SrcSpan "tests/examples/PolyKinds.hs" 9 1 9 1
+            , SrcSpan "tests/examples/PolyKinds.hs" 9 1 9 1
+            ]
+        }
+      Nothing
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 1 1 1 27
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/PolyKinds.hs" 1 1 1 13
+                , SrcSpan "tests/examples/PolyKinds.hs" 1 24 1 27
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 1 14 1 23
+                , srcInfoPoints = []
+                }
+              "PolyKinds"
+          ]
+      ]
+      []
+      [ DataDecl
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 2 1 2 21
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/PolyKinds.hs" 2 14 2 15 ]
+            }
+          (DataType
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 2 1 2 5
+               , srcInfoPoints = []
+               })
+          Nothing
+          (DHApp
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 2 6 2 13
+               , srcInfoPoints = []
+               }
+             (DHead
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 2 6 2 11
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 2 6 2 11
+                     , srcInfoPoints = []
+                     }
+                   "Proxy"))
+             (UnkindedVar
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 2 12 2 13
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 2 12 2 13
+                     , srcInfoPoints = []
+                     }
+                   "t")))
+          [ QualConDecl
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 2 16 2 21
+                , srcInfoPoints = []
+                }
+              Nothing
+              Nothing
+              (ConDecl
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 2 16 2 21
+                   , srcInfoPoints = []
+                   }
+                 (Ident
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 2 16 2 21
+                      , srcInfoPoints = []
+                      }
+                    "Proxy")
+                 [])
+          ]
+          Nothing
+      , ClassDecl
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 4 1 5 31
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/PolyKinds.hs" 4 1 4 6
+                , SrcSpan "tests/examples/PolyKinds.hs" 4 18 4 23
+                , SrcSpan "tests/examples/PolyKinds.hs" 5 3 5 3
+                , SrcSpan "tests/examples/PolyKinds.hs" 7 1 7 0
+                ]
+            }
+          Nothing
+          (DHApp
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 4 7 4 17
+               , srcInfoPoints = []
+               }
+             (DHead
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 4 7 4 15
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 4 7 4 15
+                     , srcInfoPoints = []
+                     }
+                   "Typeable"))
+             (UnkindedVar
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 4 16 4 17
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 4 16 4 17
+                     , srcInfoPoints = []
+                     }
+                   "t")))
+          []
+          (Just
+             [ ClsDecl
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 5 3 5 31
+                   , srcInfoPoints =
+                       [ SrcSpan "tests/examples/PolyKinds.hs" 5 10 5 12 ]
+                   }
+                 (TypeSig
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 5 3 5 31
+                      , srcInfoPoints =
+                          [ SrcSpan "tests/examples/PolyKinds.hs" 5 10 5 12 ]
+                      }
+                    [ Ident
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 5 3 5 9
+                          , srcInfoPoints = []
+                          }
+                        "typeOf"
+                    ]
+                    (TyFun
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 5 13 5 31
+                         , srcInfoPoints =
+                             [ SrcSpan "tests/examples/PolyKinds.hs" 5 21 5 23 ]
+                         }
+                       (TyApp
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 5 13 5 20
+                            , srcInfoPoints = []
+                            }
+                          (TyCon
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 5 13 5 18
+                               , srcInfoPoints = []
+                               }
+                             (UnQual
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 5 13 5 18
+                                  , srcInfoPoints = []
+                                  }
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 5 13 5 18
+                                     , srcInfoPoints = []
+                                     }
+                                   "Proxy")))
+                          (TyVar
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 5 19 5 20
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 5 19 5 20
+                                  , srcInfoPoints = []
+                                  }
+                                "t")))
+                       (TyCon
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 5 24 5 31
+                            , srcInfoPoints = []
+                            }
+                          (UnQual
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 5 24 5 31
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 5 24 5 31
+                                  , srcInfoPoints = []
+                                  }
+                                "TypeRep")))))
+             ])
+      , InstDecl
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 7 1 8 0
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/PolyKinds.hs" 7 1 7 9
+                , SrcSpan "tests/examples/PolyKinds.hs" 7 24 7 29
+                , SrcSpan "tests/examples/PolyKinds.hs" 7 30 7 30
+                , SrcSpan "tests/examples/PolyKinds.hs" 8 1 8 0
+                ]
+            }
+          Nothing
+          (IRule
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 7 10 7 22
+               , srcInfoPoints = []
+               }
+             Nothing
+             Nothing
+             (IHApp
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 7 10 7 22
+                  , srcInfoPoints = []
+                  }
+                (IHCon
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 7 10 7 18
+                     , srcInfoPoints = []
+                     }
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 7 10 7 18
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 7 10 7 18
+                           , srcInfoPoints = []
+                           }
+                         "Typeable")))
+                (TyCon
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 7 19 7 22
+                     , srcInfoPoints = []
+                     }
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 7 19 7 22
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 7 19 7 22
+                           , srcInfoPoints = []
+                           }
+                         "Int")))))
+          (Just
+             [ InsDecl
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 7 30 7 48
+                   , srcInfoPoints = []
+                   }
+                 (FunBind
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 7 30 7 48
+                      , srcInfoPoints = []
+                      }
+                    [ Match
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 7 30 7 48
+                          , srcInfoPoints = []
+                          }
+                        (Ident
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 7 30 7 36
+                             , srcInfoPoints = []
+                             }
+                           "typeOf")
+                        [ PWildCard
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 7 37 7 38
+                              , srcInfoPoints = []
+                              }
+                        ]
+                        (UnGuardedRhs
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 7 39 7 48
+                             , srcInfoPoints =
+                                 [ SrcSpan "tests/examples/PolyKinds.hs" 7 39 7 40 ]
+                             }
+                           (Con
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 7 41 7 48
+                                , srcInfoPoints = []
+                                }
+                              (UnQual
+                                 SrcSpanInfo
+                                   { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 7 41 7 48
+                                   , srcInfoPoints = []
+                                   }
+                                 (Ident
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan "tests/examples/PolyKinds.hs" 7 41 7 48
+                                      , srcInfoPoints = []
+                                      }
+                                    "TypeRep"))))
+                        Nothing
+                    ])
+             ])
+      , InstDecl
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 8 1 9 0
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/PolyKinds.hs" 8 1 8 9
+                , SrcSpan "tests/examples/PolyKinds.hs" 8 24 8 29
+                , SrcSpan "tests/examples/PolyKinds.hs" 8 30 8 30
+                , SrcSpan "tests/examples/PolyKinds.hs" 9 1 9 0
+                ]
+            }
+          Nothing
+          (IRule
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 8 10 8 21
+               , srcInfoPoints = []
+               }
+             Nothing
+             Nothing
+             (IHApp
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 8 10 8 21
+                  , srcInfoPoints = []
+                  }
+                (IHCon
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 8 10 8 18
+                     , srcInfoPoints = []
+                     }
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 8 10 8 18
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 8 10 8 18
+                           , srcInfoPoints = []
+                           }
+                         "Typeable")))
+                (TyCon
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 8 19 8 21
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/PolyKinds.hs" 8 19 8 20
+                         , SrcSpan "tests/examples/PolyKinds.hs" 8 20 8 21
+                         ]
+                     }
+                   (Special
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 8 19 8 21
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/PolyKinds.hs" 8 19 8 20
+                            , SrcSpan "tests/examples/PolyKinds.hs" 8 20 8 21
+                            ]
+                        }
+                      (ListCon
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 8 19 8 21
+                           , srcInfoPoints =
+                               [ SrcSpan "tests/examples/PolyKinds.hs" 8 19 8 20
+                               , SrcSpan "tests/examples/PolyKinds.hs" 8 20 8 21
+                               ]
+                           })))))
+          (Just
+             [ InsDecl
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 8 30 8 48
+                   , srcInfoPoints = []
+                   }
+                 (FunBind
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 8 30 8 48
+                      , srcInfoPoints = []
+                      }
+                    [ Match
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 8 30 8 48
+                          , srcInfoPoints = []
+                          }
+                        (Ident
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 8 30 8 36
+                             , srcInfoPoints = []
+                             }
+                           "typeOf")
+                        [ PWildCard
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 8 37 8 38
+                              , srcInfoPoints = []
+                              }
+                        ]
+                        (UnGuardedRhs
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 8 39 8 48
+                             , srcInfoPoints =
+                                 [ SrcSpan "tests/examples/PolyKinds.hs" 8 39 8 40 ]
+                             }
+                           (Con
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 8 41 8 48
+                                , srcInfoPoints = []
+                                }
+                              (UnQual
+                                 SrcSpanInfo
+                                   { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 8 41 8 48
+                                   , srcInfoPoints = []
+                                   }
+                                 (Ident
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan "tests/examples/PolyKinds.hs" 8 41 8 48
+                                      , srcInfoPoints = []
+                                      }
+                                    "TypeRep"))))
+                        Nothing
+                    ])
+             ])
+      ]
+  , []
+  )
