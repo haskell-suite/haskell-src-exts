@@ -1,1 +1,79 @@
-ParseOk (Module (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/InfixFunBind.hs" 1 1 2 1, srcInfoPoints = [SrcSpan "tests/examples/InfixFunBind.hs" 1 1 1 1,SrcSpan "tests/examples/InfixFunBind.hs" 1 1 1 1,SrcSpan "tests/examples/InfixFunBind.hs" 1 1 1 1,SrcSpan "tests/examples/InfixFunBind.hs" 2 1 2 1,SrcSpan "tests/examples/InfixFunBind.hs" 2 1 2 1]}) Nothing [] [] [FunBind (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/InfixFunBind.hs" 1 1 1 22, srcInfoPoints = []}) [InfixMatch (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/InfixFunBind.hs" 1 1 1 22, srcInfoPoints = []}) (PVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/InfixFunBind.hs" 1 1 1 5, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/InfixFunBind.hs" 1 1 1 5, srcInfoPoints = []}) "left")) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/InfixFunBind.hs" 1 7 1 12, srcInfoPoints = [SrcSpan "tests/examples/InfixFunBind.hs" 1 6 1 7,SrcSpan "tests/examples/InfixFunBind.hs" 1 7 1 12,SrcSpan "tests/examples/InfixFunBind.hs" 1 12 1 13]}) "first") [PWildCard (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/InfixFunBind.hs" 1 14 1 15, srcInfoPoints = []})] (UnGuardedRhs (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/InfixFunBind.hs" 1 16 1 22, srcInfoPoints = [SrcSpan "tests/examples/InfixFunBind.hs" 1 16 1 17]}) (Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/InfixFunBind.hs" 1 18 1 22, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/InfixFunBind.hs" 1 18 1 22, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/InfixFunBind.hs" 1 18 1 22, srcInfoPoints = []}) "left")))) Nothing]],[])
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/InfixFunBind.hs" 1 1 2 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/InfixFunBind.hs" 1 1 1 1
+            , SrcSpan "tests/examples/InfixFunBind.hs" 1 1 1 1
+            , SrcSpan "tests/examples/InfixFunBind.hs" 1 1 1 1
+            , SrcSpan "tests/examples/InfixFunBind.hs" 2 1 2 1
+            , SrcSpan "tests/examples/InfixFunBind.hs" 2 1 2 1
+            ]
+        }
+      Nothing
+      []
+      []
+      [ FunBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/InfixFunBind.hs" 1 1 1 22
+            , srcInfoPoints = []
+            }
+          [ InfixMatch
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/InfixFunBind.hs" 1 1 1 22
+                , srcInfoPoints = []
+                }
+              (PVar
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/InfixFunBind.hs" 1 1 1 5
+                   , srcInfoPoints = []
+                   }
+                 (Ident
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/InfixFunBind.hs" 1 1 1 5
+                      , srcInfoPoints = []
+                      }
+                    "left"))
+              (Ident
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/InfixFunBind.hs" 1 7 1 12
+                   , srcInfoPoints =
+                       [ SrcSpan "tests/examples/InfixFunBind.hs" 1 6 1 7
+                       , SrcSpan "tests/examples/InfixFunBind.hs" 1 7 1 12
+                       , SrcSpan "tests/examples/InfixFunBind.hs" 1 12 1 13
+                       ]
+                   }
+                 "first")
+              [ PWildCard
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/InfixFunBind.hs" 1 14 1 15
+                    , srcInfoPoints = []
+                    }
+              ]
+              (UnGuardedRhs
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/InfixFunBind.hs" 1 16 1 22
+                   , srcInfoPoints =
+                       [ SrcSpan "tests/examples/InfixFunBind.hs" 1 16 1 17 ]
+                   }
+                 (Var
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/InfixFunBind.hs" 1 18 1 22
+                      , srcInfoPoints = []
+                      }
+                    (UnQual
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/InfixFunBind.hs" 1 18 1 22
+                         , srcInfoPoints = []
+                         }
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/InfixFunBind.hs" 1 18 1 22
+                            , srcInfoPoints = []
+                            }
+                          "left"))))
+              Nothing
+          ]
+      ]
+  , []
+  )

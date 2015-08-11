@@ -1,1 +1,3 @@
-ParseFailed (SrcLoc "tests/examples/TypeErrorMessage.hs" 2 1) "At least one of ExplicitForAll or TypeOperators language extensions needs to be enabled. Please add: {-# LANGUAGE ExplicitForAll #-} or {-# LANGUAGE TypeOperators #-} language pragma at the top of your module."
+ParseFailed
+  (SrcLoc "tests/examples/TypeErrorMessage.hs" 2 1)
+  "At least one of ExplicitForAll or TypeOperators language extensions needs to be enabled. Please add: {-# LANGUAGE ExplicitForAll #-} or {-# LANGUAGE TypeOperators #-} language pragma at the top of your module."

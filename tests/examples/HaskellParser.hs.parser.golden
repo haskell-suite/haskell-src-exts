@@ -1,1 +1,809 @@
-ParseOk (Module (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 1 1 17 1, srcInfoPoints = [SrcSpan "tests/examples/HaskellParser.hs" 1 1 1 1,SrcSpan "tests/examples/HaskellParser.hs" 1 1 1 1,SrcSpan "tests/examples/HaskellParser.hs" 1 1 1 1,SrcSpan "tests/examples/HaskellParser.hs" 2 1 2 1,SrcSpan "tests/examples/HaskellParser.hs" 3 1 3 1,SrcSpan "tests/examples/HaskellParser.hs" 5 1 5 1,SrcSpan "tests/examples/HaskellParser.hs" 13 1 13 1,SrcSpan "tests/examples/HaskellParser.hs" 17 1 17 1,SrcSpan "tests/examples/HaskellParser.hs" 17 1 17 1]}) Nothing [] [ImportDecl {importAnn = SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 1 1 1 59, srcInfoPoints = [SrcSpan "tests/examples/HaskellParser.hs" 1 1 1 7,SrcSpan "tests/examples/HaskellParser.hs" 1 8 1 17,SrcSpan "tests/examples/HaskellParser.hs" 1 50 1 52]}, importModule = ModuleName (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 1 18 1 49, srcInfoPoints = []}) "Language.Haskell.Exts.Annotated", importQualified = True, importSrc = False, importSafe = False, importPkg = Nothing, importAs = Just (ModuleName (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 1 53 1 59, srcInfoPoints = []}) "Parser"), importSpecs = Nothing},ImportDecl {importAnn = SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 2 1 2 63, srcInfoPoints = [SrcSpan "tests/examples/HaskellParser.hs" 2 1 2 7,SrcSpan "tests/examples/HaskellParser.hs" 2 8 2 17,SrcSpan "tests/examples/HaskellParser.hs" 2 57 2 59]}, importModule = ModuleName (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 2 18 2 56, srcInfoPoints = []}) "Language.Haskell.Exts.Annotated.Syntax", importQualified = True, importSrc = False, importSafe = False, importPkg = Nothing, importAs = Just (ModuleName (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 2 60 2 63, srcInfoPoints = []}) "Syn"), importSpecs = Nothing},ImportDecl {importAnn = SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 3 1 3 56, srcInfoPoints = [SrcSpan "tests/examples/HaskellParser.hs" 3 1 3 7,SrcSpan "tests/examples/HaskellParser.hs" 3 8 3 17,SrcSpan "tests/examples/HaskellParser.hs" 3 50 3 52]}, importModule = ModuleName (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 3 18 3 49, srcInfoPoints = []}) "Language.Haskell.Exts.Extension", importQualified = True, importSrc = False, importSafe = False, importPkg = Nothing, importAs = Just (ModuleName (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 3 53 3 56, srcInfoPoints = []}) "Ext"), importSpecs = Nothing}] [FunBind (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 5 1 12 44, srcInfoPoints = [SrcSpan "tests/examples/HaskellParser.hs" 6 5 6 10]}) [Match (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 5 1 12 44, srcInfoPoints = [SrcSpan "tests/examples/HaskellParser.hs" 6 5 6 10]}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 5 1 5 6, srcInfoPoints = []}) "parse") [PVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 5 7 5 23, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 5 7 5 23, srcInfoPoints = []}) "originalFileName"),PVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 5 24 5 29, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 5 24 5 29, srcInfoPoints = []}) "input")] (UnGuardedRhs (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 5 30 5 74, srcInfoPoints = [SrcSpan "tests/examples/HaskellParser.hs" 5 30 5 31]}) (App (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 5 32 5 74, srcInfoPoints = []}) (App (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 5 32 5 68, srcInfoPoints = []}) (Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 5 32 5 58, srcInfoPoints = []}) (Qual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 5 32 5 58, srcInfoPoints = []}) (ModuleName (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 5 32 5 58, srcInfoPoints = []}) "Parser") (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 5 32 5 58, srcInfoPoints = []}) "parseModuleWithMode"))) (Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 5 59 5 68, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 5 59 5 68, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 5 59 5 68, srcInfoPoints = []}) "parseMode")))) (Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 5 69 5 74, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 5 69 5 74, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 5 69 5 74, srcInfoPoints = []}) "input"))))) (Just (BDecls (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 7 7 12 44, srcInfoPoints = [SrcSpan "tests/examples/HaskellParser.hs" 7 7 7 7,SrcSpan "tests/examples/HaskellParser.hs" 8 7 8 7,SrcSpan "tests/examples/HaskellParser.hs" 13 1 13 0]}) [TypeSig (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 7 7 7 36, srcInfoPoints = [SrcSpan "tests/examples/HaskellParser.hs" 7 17 7 19]}) [Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 7 7 7 16, srcInfoPoints = []}) "parseMode"] (TyCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 7 20 7 36, srcInfoPoints = []}) (Qual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 7 20 7 36, srcInfoPoints = []}) (ModuleName (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 7 20 7 36, srcInfoPoints = []}) "Parser") (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 7 20 7 36, srcInfoPoints = []}) "ParseMode"))),PatBind (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 8 7 12 44, srcInfoPoints = []}) (PVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 8 7 8 16, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 8 7 8 16, srcInfoPoints = []}) "parseMode")) (UnGuardedRhs (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 8 17 12 44, srcInfoPoints = [SrcSpan "tests/examples/HaskellParser.hs" 8 17 8 18]}) (RecUpdate (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 8 19 12 44, srcInfoPoints = [SrcSpan "tests/examples/HaskellParser.hs" 8 43 8 44,SrcSpan "tests/examples/HaskellParser.hs" 9 43 9 44,SrcSpan "tests/examples/HaskellParser.hs" 12 43 12 44]}) (Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 8 19 8 42, srcInfoPoints = []}) (Qual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 8 19 8 42, srcInfoPoints = []}) (ModuleName (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 8 19 8 42, srcInfoPoints = []}) "Parser") (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 8 19 8 42, srcInfoPoints = []}) "defaultParseMode"))) [FieldUpdate (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 8 45 8 84, srcInfoPoints = [SrcSpan "tests/examples/HaskellParser.hs" 8 66 8 67]}) (Qual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 8 45 8 65, srcInfoPoints = []}) (ModuleName (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 8 45 8 65, srcInfoPoints = []}) "Parser") (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 8 45 8 65, srcInfoPoints = []}) "parseFilename")) (Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 8 68 8 84, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 8 68 8 84, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 8 68 8 84, srcInfoPoints = []}) "originalFileName"))),FieldUpdate (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 9 45 11 67, srcInfoPoints = [SrcSpan "tests/examples/HaskellParser.hs" 9 63 9 64]}) (Qual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 9 45 9 62, srcInfoPoints = []}) (ModuleName (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 9 45 9 62, srcInfoPoints = []}) "Parser") (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 9 45 9 62, srcInfoPoints = []}) "extensions")) (InfixApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 10 47 11 67, srcInfoPoints = []}) (Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 10 47 10 62, srcInfoPoints = []}) (Qual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 10 47 10 62, srcInfoPoints = []}) (ModuleName (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 10 47 10 62, srcInfoPoints = []}) "Ext") (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 10 47 10 62, srcInfoPoints = []}) "glasgowExts"))) (QVarOp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 10 63 10 65, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 10 63 10 65, srcInfoPoints = []}) (Symbol (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 10 63 10 65, srcInfoPoints = []}) "++"))) (List (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 11 47 11 67, srcInfoPoints = [SrcSpan "tests/examples/HaskellParser.hs" 11 47 11 48,SrcSpan "tests/examples/HaskellParser.hs" 11 66 11 67]}) [Con (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 11 48 11 66, srcInfoPoints = []}) (Qual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 11 48 11 66, srcInfoPoints = []}) (ModuleName (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 11 48 11 66, srcInfoPoints = []}) "Ext") (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 11 48 11 66, srcInfoPoints = []}) "ExplicitForall"))]))])) Nothing]))],PatBind (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 13 1 16 25, srcInfoPoints = []}) (PVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 13 1 13 5, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 13 1 13 5, srcInfoPoints = []}) "main")) (UnGuardedRhs (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 13 6 16 25, srcInfoPoints = [SrcSpan "tests/examples/HaskellParser.hs" 13 6 13 7]}) (Do (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 14 5 16 25, srcInfoPoints = [SrcSpan "tests/examples/HaskellParser.hs" 14 5 14 7,SrcSpan "tests/examples/HaskellParser.hs" 14 8 14 8,SrcSpan "tests/examples/HaskellParser.hs" 15 8 15 8,SrcSpan "tests/examples/HaskellParser.hs" 16 8 16 8,SrcSpan "tests/examples/HaskellParser.hs" 17 1 17 0]}) [Generator (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 14 8 14 30, srcInfoPoints = [SrcSpan "tests/examples/HaskellParser.hs" 14 10 14 12]}) (PVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 14 8 14 9, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 14 8 14 9, srcInfoPoints = []}) "s")) (App (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 14 13 14 30, srcInfoPoints = []}) (Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 14 13 14 21, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 14 13 14 21, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 14 13 14 21, srcInfoPoints = []}) "readFile"))) (Lit (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 14 22 14 30, srcInfoPoints = []}) (String (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 14 22 14 30, srcInfoPoints = []}) "Bug.hs" "Bug.hs"))),LetStmt (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 15 8 15 32, srcInfoPoints = [SrcSpan "tests/examples/HaskellParser.hs" 15 8 15 11]}) (BDecls (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 15 12 15 32, srcInfoPoints = [SrcSpan "tests/examples/HaskellParser.hs" 15 12 15 12,SrcSpan "tests/examples/HaskellParser.hs" 16 8 16 0]}) [PatBind (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 15 12 15 32, srcInfoPoints = []}) (PVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 15 12 15 13, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 15 12 15 13, srcInfoPoints = []}) "x")) (UnGuardedRhs (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 15 14 15 32, srcInfoPoints = [SrcSpan "tests/examples/HaskellParser.hs" 15 14 15 15]}) (App (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 15 16 15 32, srcInfoPoints = []}) (App (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 15 16 15 30, srcInfoPoints = []}) (Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 15 16 15 21, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 15 16 15 21, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 15 16 15 21, srcInfoPoints = []}) "parse"))) (Lit (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 15 22 15 30, srcInfoPoints = []}) (String (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 15 22 15 30, srcInfoPoints = []}) "Bug.hs" "Bug.hs"))) (Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 15 31 15 32, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 15 31 15 32, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 15 31 15 32, srcInfoPoints = []}) "s"))))) Nothing]),Qualifier (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 16 8 16 25, srcInfoPoints = []}) (App (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 16 8 16 25, srcInfoPoints = []}) (Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 16 8 16 16, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 16 8 16 16, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 16 8 16 16, srcInfoPoints = []}) "putStrLn"))) (Paren (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 16 17 16 25, srcInfoPoints = [SrcSpan "tests/examples/HaskellParser.hs" 16 17 16 18,SrcSpan "tests/examples/HaskellParser.hs" 16 24 16 25]}) (App (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 16 18 16 24, srcInfoPoints = []}) (Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 16 18 16 22, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 16 18 16 22, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 16 18 16 22, srcInfoPoints = []}) "show"))) (Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 16 23 16 24, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 16 23 16 24, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 16 23 16 24, srcInfoPoints = []}) "x"))))))])) Nothing],[])
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 1 1 17 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/HaskellParser.hs" 1 1 1 1
+            , SrcSpan "tests/examples/HaskellParser.hs" 1 1 1 1
+            , SrcSpan "tests/examples/HaskellParser.hs" 1 1 1 1
+            , SrcSpan "tests/examples/HaskellParser.hs" 2 1 2 1
+            , SrcSpan "tests/examples/HaskellParser.hs" 3 1 3 1
+            , SrcSpan "tests/examples/HaskellParser.hs" 5 1 5 1
+            , SrcSpan "tests/examples/HaskellParser.hs" 13 1 13 1
+            , SrcSpan "tests/examples/HaskellParser.hs" 17 1 17 1
+            , SrcSpan "tests/examples/HaskellParser.hs" 17 1 17 1
+            ]
+        }
+      Nothing
+      []
+      [ ImportDecl
+          { importAnn =
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 1 1 1 59
+                , srcInfoPoints =
+                    [ SrcSpan "tests/examples/HaskellParser.hs" 1 1 1 7
+                    , SrcSpan "tests/examples/HaskellParser.hs" 1 8 1 17
+                    , SrcSpan "tests/examples/HaskellParser.hs" 1 50 1 52
+                    ]
+                }
+          , importModule =
+              ModuleName
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 1 18 1 49
+                  , srcInfoPoints = []
+                  }
+                "Language.Haskell.Exts.Annotated"
+          , importQualified = True
+          , importSrc = False
+          , importSafe = False
+          , importPkg = Nothing
+          , importAs =
+              Just
+                (ModuleName
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 1 53 1 59
+                     , srcInfoPoints = []
+                     }
+                   "Parser")
+          , importSpecs = Nothing
+          }
+      , ImportDecl
+          { importAnn =
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 2 1 2 63
+                , srcInfoPoints =
+                    [ SrcSpan "tests/examples/HaskellParser.hs" 2 1 2 7
+                    , SrcSpan "tests/examples/HaskellParser.hs" 2 8 2 17
+                    , SrcSpan "tests/examples/HaskellParser.hs" 2 57 2 59
+                    ]
+                }
+          , importModule =
+              ModuleName
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 2 18 2 56
+                  , srcInfoPoints = []
+                  }
+                "Language.Haskell.Exts.Annotated.Syntax"
+          , importQualified = True
+          , importSrc = False
+          , importSafe = False
+          , importPkg = Nothing
+          , importAs =
+              Just
+                (ModuleName
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 2 60 2 63
+                     , srcInfoPoints = []
+                     }
+                   "Syn")
+          , importSpecs = Nothing
+          }
+      , ImportDecl
+          { importAnn =
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 3 1 3 56
+                , srcInfoPoints =
+                    [ SrcSpan "tests/examples/HaskellParser.hs" 3 1 3 7
+                    , SrcSpan "tests/examples/HaskellParser.hs" 3 8 3 17
+                    , SrcSpan "tests/examples/HaskellParser.hs" 3 50 3 52
+                    ]
+                }
+          , importModule =
+              ModuleName
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 3 18 3 49
+                  , srcInfoPoints = []
+                  }
+                "Language.Haskell.Exts.Extension"
+          , importQualified = True
+          , importSrc = False
+          , importSafe = False
+          , importPkg = Nothing
+          , importAs =
+              Just
+                (ModuleName
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 3 53 3 56
+                     , srcInfoPoints = []
+                     }
+                   "Ext")
+          , importSpecs = Nothing
+          }
+      ]
+      [ FunBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 5 1 12 44
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/HaskellParser.hs" 6 5 6 10 ]
+            }
+          [ Match
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 5 1 12 44
+                , srcInfoPoints =
+                    [ SrcSpan "tests/examples/HaskellParser.hs" 6 5 6 10 ]
+                }
+              (Ident
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 5 1 5 6
+                   , srcInfoPoints = []
+                   }
+                 "parse")
+              [ PVar
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 5 7 5 23
+                    , srcInfoPoints = []
+                    }
+                  (Ident
+                     SrcSpanInfo
+                       { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 5 7 5 23
+                       , srcInfoPoints = []
+                       }
+                     "originalFileName")
+              , PVar
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 5 24 5 29
+                    , srcInfoPoints = []
+                    }
+                  (Ident
+                     SrcSpanInfo
+                       { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 5 24 5 29
+                       , srcInfoPoints = []
+                       }
+                     "input")
+              ]
+              (UnGuardedRhs
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 5 30 5 74
+                   , srcInfoPoints =
+                       [ SrcSpan "tests/examples/HaskellParser.hs" 5 30 5 31 ]
+                   }
+                 (App
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 5 32 5 74
+                      , srcInfoPoints = []
+                      }
+                    (App
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 5 32 5 68
+                         , srcInfoPoints = []
+                         }
+                       (Var
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 5 32 5 58
+                            , srcInfoPoints = []
+                            }
+                          (Qual
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 5 32 5 58
+                               , srcInfoPoints = []
+                               }
+                             (ModuleName
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/HaskellParser.hs" 5 32 5 58
+                                  , srcInfoPoints = []
+                                  }
+                                "Parser")
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/HaskellParser.hs" 5 32 5 58
+                                  , srcInfoPoints = []
+                                  }
+                                "parseModuleWithMode")))
+                       (Var
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 5 59 5 68
+                            , srcInfoPoints = []
+                            }
+                          (UnQual
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 5 59 5 68
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/HaskellParser.hs" 5 59 5 68
+                                  , srcInfoPoints = []
+                                  }
+                                "parseMode"))))
+                    (Var
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 5 69 5 74
+                         , srcInfoPoints = []
+                         }
+                       (UnQual
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 5 69 5 74
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 5 69 5 74
+                               , srcInfoPoints = []
+                               }
+                             "input")))))
+              (Just
+                 (BDecls
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 7 7 12 44
+                      , srcInfoPoints =
+                          [ SrcSpan "tests/examples/HaskellParser.hs" 7 7 7 7
+                          , SrcSpan "tests/examples/HaskellParser.hs" 8 7 8 7
+                          , SrcSpan "tests/examples/HaskellParser.hs" 13 1 13 0
+                          ]
+                      }
+                    [ TypeSig
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 7 7 7 36
+                          , srcInfoPoints =
+                              [ SrcSpan "tests/examples/HaskellParser.hs" 7 17 7 19 ]
+                          }
+                        [ Ident
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 7 7 7 16
+                              , srcInfoPoints = []
+                              }
+                            "parseMode"
+                        ]
+                        (TyCon
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 7 20 7 36
+                             , srcInfoPoints = []
+                             }
+                           (Qual
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 7 20 7 36
+                                , srcInfoPoints = []
+                                }
+                              (ModuleName
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HaskellParser.hs" 7 20 7 36
+                                   , srcInfoPoints = []
+                                   }
+                                 "Parser")
+                              (Ident
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HaskellParser.hs" 7 20 7 36
+                                   , srcInfoPoints = []
+                                   }
+                                 "ParseMode")))
+                    , PatBind
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 8 7 12 44
+                          , srcInfoPoints = []
+                          }
+                        (PVar
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 8 7 8 16
+                             , srcInfoPoints = []
+                             }
+                           (Ident
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 8 7 8 16
+                                , srcInfoPoints = []
+                                }
+                              "parseMode"))
+                        (UnGuardedRhs
+                           SrcSpanInfo
+                             { srcInfoSpan =
+                                 SrcSpan "tests/examples/HaskellParser.hs" 8 17 12 44
+                             , srcInfoPoints =
+                                 [ SrcSpan "tests/examples/HaskellParser.hs" 8 17 8 18 ]
+                             }
+                           (RecUpdate
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HaskellParser.hs" 8 19 12 44
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/HaskellParser.hs" 8 43 8 44
+                                    , SrcSpan "tests/examples/HaskellParser.hs" 9 43 9 44
+                                    , SrcSpan "tests/examples/HaskellParser.hs" 12 43 12 44
+                                    ]
+                                }
+                              (Var
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HaskellParser.hs" 8 19 8 42
+                                   , srcInfoPoints = []
+                                   }
+                                 (Qual
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan "tests/examples/HaskellParser.hs" 8 19 8 42
+                                      , srcInfoPoints = []
+                                      }
+                                    (ModuleName
+                                       SrcSpanInfo
+                                         { srcInfoSpan =
+                                             SrcSpan "tests/examples/HaskellParser.hs" 8 19 8 42
+                                         , srcInfoPoints = []
+                                         }
+                                       "Parser")
+                                    (Ident
+                                       SrcSpanInfo
+                                         { srcInfoSpan =
+                                             SrcSpan "tests/examples/HaskellParser.hs" 8 19 8 42
+                                         , srcInfoPoints = []
+                                         }
+                                       "defaultParseMode")))
+                              [ FieldUpdate
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/HaskellParser.hs" 8 45 8 84
+                                    , srcInfoPoints =
+                                        [ SrcSpan "tests/examples/HaskellParser.hs" 8 66 8 67 ]
+                                    }
+                                  (Qual
+                                     SrcSpanInfo
+                                       { srcInfoSpan =
+                                           SrcSpan "tests/examples/HaskellParser.hs" 8 45 8 65
+                                       , srcInfoPoints = []
+                                       }
+                                     (ModuleName
+                                        SrcSpanInfo
+                                          { srcInfoSpan =
+                                              SrcSpan "tests/examples/HaskellParser.hs" 8 45 8 65
+                                          , srcInfoPoints = []
+                                          }
+                                        "Parser")
+                                     (Ident
+                                        SrcSpanInfo
+                                          { srcInfoSpan =
+                                              SrcSpan "tests/examples/HaskellParser.hs" 8 45 8 65
+                                          , srcInfoPoints = []
+                                          }
+                                        "parseFilename"))
+                                  (Var
+                                     SrcSpanInfo
+                                       { srcInfoSpan =
+                                           SrcSpan "tests/examples/HaskellParser.hs" 8 68 8 84
+                                       , srcInfoPoints = []
+                                       }
+                                     (UnQual
+                                        SrcSpanInfo
+                                          { srcInfoSpan =
+                                              SrcSpan "tests/examples/HaskellParser.hs" 8 68 8 84
+                                          , srcInfoPoints = []
+                                          }
+                                        (Ident
+                                           SrcSpanInfo
+                                             { srcInfoSpan =
+                                                 SrcSpan "tests/examples/HaskellParser.hs" 8 68 8 84
+                                             , srcInfoPoints = []
+                                             }
+                                           "originalFileName")))
+                              , FieldUpdate
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/HaskellParser.hs" 9 45 11 67
+                                    , srcInfoPoints =
+                                        [ SrcSpan "tests/examples/HaskellParser.hs" 9 63 9 64 ]
+                                    }
+                                  (Qual
+                                     SrcSpanInfo
+                                       { srcInfoSpan =
+                                           SrcSpan "tests/examples/HaskellParser.hs" 9 45 9 62
+                                       , srcInfoPoints = []
+                                       }
+                                     (ModuleName
+                                        SrcSpanInfo
+                                          { srcInfoSpan =
+                                              SrcSpan "tests/examples/HaskellParser.hs" 9 45 9 62
+                                          , srcInfoPoints = []
+                                          }
+                                        "Parser")
+                                     (Ident
+                                        SrcSpanInfo
+                                          { srcInfoSpan =
+                                              SrcSpan "tests/examples/HaskellParser.hs" 9 45 9 62
+                                          , srcInfoPoints = []
+                                          }
+                                        "extensions"))
+                                  (InfixApp
+                                     SrcSpanInfo
+                                       { srcInfoSpan =
+                                           SrcSpan "tests/examples/HaskellParser.hs" 10 47 11 67
+                                       , srcInfoPoints = []
+                                       }
+                                     (Var
+                                        SrcSpanInfo
+                                          { srcInfoSpan =
+                                              SrcSpan "tests/examples/HaskellParser.hs" 10 47 10 62
+                                          , srcInfoPoints = []
+                                          }
+                                        (Qual
+                                           SrcSpanInfo
+                                             { srcInfoSpan =
+                                                 SrcSpan
+                                                   "tests/examples/HaskellParser.hs" 10 47 10 62
+                                             , srcInfoPoints = []
+                                             }
+                                           (ModuleName
+                                              SrcSpanInfo
+                                                { srcInfoSpan =
+                                                    SrcSpan
+                                                      "tests/examples/HaskellParser.hs" 10 47 10 62
+                                                , srcInfoPoints = []
+                                                }
+                                              "Ext")
+                                           (Ident
+                                              SrcSpanInfo
+                                                { srcInfoSpan =
+                                                    SrcSpan
+                                                      "tests/examples/HaskellParser.hs" 10 47 10 62
+                                                , srcInfoPoints = []
+                                                }
+                                              "glasgowExts")))
+                                     (QVarOp
+                                        SrcSpanInfo
+                                          { srcInfoSpan =
+                                              SrcSpan "tests/examples/HaskellParser.hs" 10 63 10 65
+                                          , srcInfoPoints = []
+                                          }
+                                        (UnQual
+                                           SrcSpanInfo
+                                             { srcInfoSpan =
+                                                 SrcSpan
+                                                   "tests/examples/HaskellParser.hs" 10 63 10 65
+                                             , srcInfoPoints = []
+                                             }
+                                           (Symbol
+                                              SrcSpanInfo
+                                                { srcInfoSpan =
+                                                    SrcSpan
+                                                      "tests/examples/HaskellParser.hs" 10 63 10 65
+                                                , srcInfoPoints = []
+                                                }
+                                              "++")))
+                                     (List
+                                        SrcSpanInfo
+                                          { srcInfoSpan =
+                                              SrcSpan "tests/examples/HaskellParser.hs" 11 47 11 67
+                                          , srcInfoPoints =
+                                              [ SrcSpan
+                                                  "tests/examples/HaskellParser.hs" 11 47 11 48
+                                              , SrcSpan
+                                                  "tests/examples/HaskellParser.hs" 11 66 11 67
+                                              ]
+                                          }
+                                        [ Con
+                                            SrcSpanInfo
+                                              { srcInfoSpan =
+                                                  SrcSpan
+                                                    "tests/examples/HaskellParser.hs" 11 48 11 66
+                                              , srcInfoPoints = []
+                                              }
+                                            (Qual
+                                               SrcSpanInfo
+                                                 { srcInfoSpan =
+                                                     SrcSpan
+                                                       "tests/examples/HaskellParser.hs" 11 48 11 66
+                                                 , srcInfoPoints = []
+                                                 }
+                                               (ModuleName
+                                                  SrcSpanInfo
+                                                    { srcInfoSpan =
+                                                        SrcSpan
+                                                          "tests/examples/HaskellParser.hs"
+                                                          11
+                                                          48
+                                                          11
+                                                          66
+                                                    , srcInfoPoints = []
+                                                    }
+                                                  "Ext")
+                                               (Ident
+                                                  SrcSpanInfo
+                                                    { srcInfoSpan =
+                                                        SrcSpan
+                                                          "tests/examples/HaskellParser.hs"
+                                                          11
+                                                          48
+                                                          11
+                                                          66
+                                                    , srcInfoPoints = []
+                                                    }
+                                                  "ExplicitForall"))
+                                        ]))
+                              ]))
+                        Nothing
+                    ]))
+          ]
+      , PatBind
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/HaskellParser.hs" 13 1 16 25
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 13 1 13 5
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 13 1 13 5
+                  , srcInfoPoints = []
+                  }
+                "main"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/HaskellParser.hs" 13 6 16 25
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/HaskellParser.hs" 13 6 13 7 ]
+               }
+             (Do
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/HaskellParser.hs" 14 5 16 25
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/HaskellParser.hs" 14 5 14 7
+                      , SrcSpan "tests/examples/HaskellParser.hs" 14 8 14 8
+                      , SrcSpan "tests/examples/HaskellParser.hs" 15 8 15 8
+                      , SrcSpan "tests/examples/HaskellParser.hs" 16 8 16 8
+                      , SrcSpan "tests/examples/HaskellParser.hs" 17 1 17 0
+                      ]
+                  }
+                [ Generator
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/HaskellParser.hs" 14 8 14 30
+                      , srcInfoPoints =
+                          [ SrcSpan "tests/examples/HaskellParser.hs" 14 10 14 12 ]
+                      }
+                    (PVar
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 14 8 14 9
+                         , srcInfoPoints = []
+                         }
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/HaskellParser.hs" 14 8 14 9
+                            , srcInfoPoints = []
+                            }
+                          "s"))
+                    (App
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/HaskellParser.hs" 14 13 14 30
+                         , srcInfoPoints = []
+                         }
+                       (Var
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/HaskellParser.hs" 14 13 14 21
+                            , srcInfoPoints = []
+                            }
+                          (UnQual
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/HaskellParser.hs" 14 13 14 21
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/HaskellParser.hs" 14 13 14 21
+                                  , srcInfoPoints = []
+                                  }
+                                "readFile")))
+                       (Lit
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/HaskellParser.hs" 14 22 14 30
+                            , srcInfoPoints = []
+                            }
+                          (String
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/HaskellParser.hs" 14 22 14 30
+                               , srcInfoPoints = []
+                               }
+                             "Bug.hs"
+                             "Bug.hs")))
+                , LetStmt
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/HaskellParser.hs" 15 8 15 32
+                      , srcInfoPoints =
+                          [ SrcSpan "tests/examples/HaskellParser.hs" 15 8 15 11 ]
+                      }
+                    (BDecls
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/HaskellParser.hs" 15 12 15 32
+                         , srcInfoPoints =
+                             [ SrcSpan "tests/examples/HaskellParser.hs" 15 12 15 12
+                             , SrcSpan "tests/examples/HaskellParser.hs" 16 8 16 0
+                             ]
+                         }
+                       [ PatBind
+                           SrcSpanInfo
+                             { srcInfoSpan =
+                                 SrcSpan "tests/examples/HaskellParser.hs" 15 12 15 32
+                             , srcInfoPoints = []
+                             }
+                           (PVar
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HaskellParser.hs" 15 12 15 13
+                                , srcInfoPoints = []
+                                }
+                              (Ident
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HaskellParser.hs" 15 12 15 13
+                                   , srcInfoPoints = []
+                                   }
+                                 "x"))
+                           (UnGuardedRhs
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HaskellParser.hs" 15 14 15 32
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/HaskellParser.hs" 15 14 15 15 ]
+                                }
+                              (App
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HaskellParser.hs" 15 16 15 32
+                                   , srcInfoPoints = []
+                                   }
+                                 (App
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan "tests/examples/HaskellParser.hs" 15 16 15 30
+                                      , srcInfoPoints = []
+                                      }
+                                    (Var
+                                       SrcSpanInfo
+                                         { srcInfoSpan =
+                                             SrcSpan "tests/examples/HaskellParser.hs" 15 16 15 21
+                                         , srcInfoPoints = []
+                                         }
+                                       (UnQual
+                                          SrcSpanInfo
+                                            { srcInfoSpan =
+                                                SrcSpan
+                                                  "tests/examples/HaskellParser.hs" 15 16 15 21
+                                            , srcInfoPoints = []
+                                            }
+                                          (Ident
+                                             SrcSpanInfo
+                                               { srcInfoSpan =
+                                                   SrcSpan
+                                                     "tests/examples/HaskellParser.hs" 15 16 15 21
+                                               , srcInfoPoints = []
+                                               }
+                                             "parse")))
+                                    (Lit
+                                       SrcSpanInfo
+                                         { srcInfoSpan =
+                                             SrcSpan "tests/examples/HaskellParser.hs" 15 22 15 30
+                                         , srcInfoPoints = []
+                                         }
+                                       (String
+                                          SrcSpanInfo
+                                            { srcInfoSpan =
+                                                SrcSpan
+                                                  "tests/examples/HaskellParser.hs" 15 22 15 30
+                                            , srcInfoPoints = []
+                                            }
+                                          "Bug.hs"
+                                          "Bug.hs")))
+                                 (Var
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan "tests/examples/HaskellParser.hs" 15 31 15 32
+                                      , srcInfoPoints = []
+                                      }
+                                    (UnQual
+                                       SrcSpanInfo
+                                         { srcInfoSpan =
+                                             SrcSpan "tests/examples/HaskellParser.hs" 15 31 15 32
+                                         , srcInfoPoints = []
+                                         }
+                                       (Ident
+                                          SrcSpanInfo
+                                            { srcInfoSpan =
+                                                SrcSpan
+                                                  "tests/examples/HaskellParser.hs" 15 31 15 32
+                                            , srcInfoPoints = []
+                                            }
+                                          "s")))))
+                           Nothing
+                       ])
+                , Qualifier
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/HaskellParser.hs" 16 8 16 25
+                      , srcInfoPoints = []
+                      }
+                    (App
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/HaskellParser.hs" 16 8 16 25
+                         , srcInfoPoints = []
+                         }
+                       (Var
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/HaskellParser.hs" 16 8 16 16
+                            , srcInfoPoints = []
+                            }
+                          (UnQual
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/HaskellParser.hs" 16 8 16 16
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/HaskellParser.hs" 16 8 16 16
+                                  , srcInfoPoints = []
+                                  }
+                                "putStrLn")))
+                       (Paren
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/HaskellParser.hs" 16 17 16 25
+                            , srcInfoPoints =
+                                [ SrcSpan "tests/examples/HaskellParser.hs" 16 17 16 18
+                                , SrcSpan "tests/examples/HaskellParser.hs" 16 24 16 25
+                                ]
+                            }
+                          (App
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/HaskellParser.hs" 16 18 16 24
+                               , srcInfoPoints = []
+                               }
+                             (Var
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/HaskellParser.hs" 16 18 16 22
+                                  , srcInfoPoints = []
+                                  }
+                                (UnQual
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/HaskellParser.hs" 16 18 16 22
+                                     , srcInfoPoints = []
+                                     }
+                                   (Ident
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/HaskellParser.hs" 16 18 16 22
+                                        , srcInfoPoints = []
+                                        }
+                                      "show")))
+                             (Var
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/HaskellParser.hs" 16 23 16 24
+                                  , srcInfoPoints = []
+                                  }
+                                (UnQual
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/HaskellParser.hs" 16 23 16 24
+                                     , srcInfoPoints = []
+                                     }
+                                   (Ident
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/HaskellParser.hs" 16 23 16 24
+                                        , srcInfoPoints = []
+                                        }
+                                      "x"))))))
+                ]))
+          Nothing
+      ]
+  , []
+  )

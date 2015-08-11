@@ -1,1 +1,2 @@
-ParseFailed (SrcLoc "tests/examples/ExtraEndBrace.hs" 3 20) "Unexpected }"
+ParseFailed
+  (SrcLoc "tests/examples/ExtraEndBrace.hs" 3 20) "Unexpected }"

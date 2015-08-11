@@ -1,1 +1,208 @@
-ParseOk (Module (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymImport.hs" 1 1 6 1, srcInfoPoints = [SrcSpan "tests/examples/PatternSynonymImport.hs" 1 1 1 1,SrcSpan "tests/examples/PatternSynonymImport.hs" 3 1 3 1,SrcSpan "tests/examples/PatternSynonymImport.hs" 3 1 3 1,SrcSpan "tests/examples/PatternSynonymImport.hs" 5 1 5 1,SrcSpan "tests/examples/PatternSynonymImport.hs" 6 1 6 1,SrcSpan "tests/examples/PatternSynonymImport.hs" 6 1 6 1]}) (Just (ModuleHead (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymImport.hs" 3 1 3 46, srcInfoPoints = [SrcSpan "tests/examples/PatternSynonymImport.hs" 3 1 3 7,SrcSpan "tests/examples/PatternSynonymImport.hs" 3 41 3 46]}) (ModuleName (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymImport.hs" 3 8 3 12, srcInfoPoints = []}) "Main") Nothing (Just (ExportSpecList (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymImport.hs" 3 13 3 40, srcInfoPoints = [SrcSpan "tests/examples/PatternSynonymImport.hs" 3 13 3 14,SrcSpan "tests/examples/PatternSynonymImport.hs" 3 25 3 26,SrcSpan "tests/examples/PatternSynonymImport.hs" 3 39 3 40]}) [EAbs (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymImport.hs" 3 14 3 25, srcInfoPoints = [SrcSpan "tests/examples/PatternSynonymImport.hs" 3 14 3 21]}) (PatternNamespace (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymImport.hs" 3 14 3 21, srcInfoPoints = []})) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymImport.hs" 3 22 3 25, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymImport.hs" 3 22 3 25, srcInfoPoints = []}) "Foo")),EAbs (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymImport.hs" 3 27 3 39, srcInfoPoints = [SrcSpan "tests/examples/PatternSynonymImport.hs" 3 27 3 34]}) (PatternNamespace (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymImport.hs" 3 27 3 34, srcInfoPoints = []})) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymImport.hs" 3 35 3 39, srcInfoPoints = [SrcSpan "tests/examples/PatternSynonymImport.hs" 3 35 3 36,SrcSpan "tests/examples/PatternSynonymImport.hs" 3 36 3 38,SrcSpan "tests/examples/PatternSynonymImport.hs" 3 38 3 39]}) (Symbol (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymImport.hs" 3 36 3 38, srcInfoPoints = []}) ":>"))])))) [LanguagePragma (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymImport.hs" 1 1 1 33, srcInfoPoints = [SrcSpan "tests/examples/PatternSynonymImport.hs" 1 1 1 13,SrcSpan "tests/examples/PatternSynonymImport.hs" 1 30 1 33]}) [Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymImport.hs" 1 14 1 29, srcInfoPoints = []}) "PatternSynonyms"]] [ImportDecl {importAnn = SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymImport.hs" 5 1 5 39, srcInfoPoints = [SrcSpan "tests/examples/PatternSynonymImport.hs" 5 1 5 7]}, importModule = ModuleName (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymImport.hs" 5 8 5 11, srcInfoPoints = []}) "Foo", importQualified = False, importSrc = False, importSafe = False, importPkg = Nothing, importAs = Nothing, importSpecs = Just (ImportSpecList (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymImport.hs" 5 12 5 39, srcInfoPoints = [SrcSpan "tests/examples/PatternSynonymImport.hs" 5 12 5 13,SrcSpan "tests/examples/PatternSynonymImport.hs" 5 24 5 25,SrcSpan "tests/examples/PatternSynonymImport.hs" 5 38 5 39]}) False [IAbs (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymImport.hs" 5 13 5 24, srcInfoPoints = [SrcSpan "tests/examples/PatternSynonymImport.hs" 5 13 5 20,SrcSpan "tests/examples/PatternSynonymImport.hs" 5 21 5 24]}) (PatternNamespace (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymImport.hs" 5 13 5 20, srcInfoPoints = [SrcSpan "tests/examples/PatternSynonymImport.hs" 5 13 5 20]})) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymImport.hs" 5 21 5 24, srcInfoPoints = []}) "Foo"),IAbs (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymImport.hs" 5 26 5 38, srcInfoPoints = [SrcSpan "tests/examples/PatternSynonymImport.hs" 5 26 5 33,SrcSpan "tests/examples/PatternSynonymImport.hs" 5 34 5 38]}) (PatternNamespace (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymImport.hs" 5 26 5 33, srcInfoPoints = [SrcSpan "tests/examples/PatternSynonymImport.hs" 5 26 5 33]})) (Symbol (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymImport.hs" 5 34 5 38, srcInfoPoints = [SrcSpan "tests/examples/PatternSynonymImport.hs" 5 34 5 35,SrcSpan "tests/examples/PatternSynonymImport.hs" 5 35 5 37,SrcSpan "tests/examples/PatternSynonymImport.hs" 5 37 5 38]}) ":>")])}] [],[])
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan =
+            SrcSpan "tests/examples/PatternSynonymImport.hs" 1 1 6 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/PatternSynonymImport.hs" 1 1 1 1
+            , SrcSpan "tests/examples/PatternSynonymImport.hs" 3 1 3 1
+            , SrcSpan "tests/examples/PatternSynonymImport.hs" 3 1 3 1
+            , SrcSpan "tests/examples/PatternSynonymImport.hs" 5 1 5 1
+            , SrcSpan "tests/examples/PatternSynonymImport.hs" 6 1 6 1
+            , SrcSpan "tests/examples/PatternSynonymImport.hs" 6 1 6 1
+            ]
+        }
+      (Just
+         (ModuleHead
+            SrcSpanInfo
+              { srcInfoSpan =
+                  SrcSpan "tests/examples/PatternSynonymImport.hs" 3 1 3 46
+              , srcInfoPoints =
+                  [ SrcSpan "tests/examples/PatternSynonymImport.hs" 3 1 3 7
+                  , SrcSpan "tests/examples/PatternSynonymImport.hs" 3 41 3 46
+                  ]
+              }
+            (ModuleName
+               SrcSpanInfo
+                 { srcInfoSpan =
+                     SrcSpan "tests/examples/PatternSynonymImport.hs" 3 8 3 12
+                 , srcInfoPoints = []
+                 }
+               "Main")
+            Nothing
+            (Just
+               (ExportSpecList
+                  SrcSpanInfo
+                    { srcInfoSpan =
+                        SrcSpan "tests/examples/PatternSynonymImport.hs" 3 13 3 40
+                    , srcInfoPoints =
+                        [ SrcSpan "tests/examples/PatternSynonymImport.hs" 3 13 3 14
+                        , SrcSpan "tests/examples/PatternSynonymImport.hs" 3 25 3 26
+                        , SrcSpan "tests/examples/PatternSynonymImport.hs" 3 39 3 40
+                        ]
+                    }
+                  [ EAbs
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/PatternSynonymImport.hs" 3 14 3 25
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/PatternSynonymImport.hs" 3 14 3 21 ]
+                        }
+                      (PatternNamespace
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/PatternSynonymImport.hs" 3 14 3 21
+                           , srcInfoPoints = []
+                           })
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/PatternSynonymImport.hs" 3 22 3 25
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/PatternSynonymImport.hs" 3 22 3 25
+                              , srcInfoPoints = []
+                              }
+                            "Foo"))
+                  , EAbs
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/PatternSynonymImport.hs" 3 27 3 39
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/PatternSynonymImport.hs" 3 27 3 34 ]
+                        }
+                      (PatternNamespace
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/PatternSynonymImport.hs" 3 27 3 34
+                           , srcInfoPoints = []
+                           })
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/PatternSynonymImport.hs" 3 35 3 39
+                           , srcInfoPoints =
+                               [ SrcSpan "tests/examples/PatternSynonymImport.hs" 3 35 3 36
+                               , SrcSpan "tests/examples/PatternSynonymImport.hs" 3 36 3 38
+                               , SrcSpan "tests/examples/PatternSynonymImport.hs" 3 38 3 39
+                               ]
+                           }
+                         (Symbol
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/PatternSynonymImport.hs" 3 36 3 38
+                              , srcInfoPoints = []
+                              }
+                            ":>"))
+                  ]))))
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/PatternSynonymImport.hs" 1 1 1 33
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/PatternSynonymImport.hs" 1 1 1 13
+                , SrcSpan "tests/examples/PatternSynonymImport.hs" 1 30 1 33
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/PatternSynonymImport.hs" 1 14 1 29
+                , srcInfoPoints = []
+                }
+              "PatternSynonyms"
+          ]
+      ]
+      [ ImportDecl
+          { importAnn =
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/PatternSynonymImport.hs" 5 1 5 39
+                , srcInfoPoints =
+                    [ SrcSpan "tests/examples/PatternSynonymImport.hs" 5 1 5 7 ]
+                }
+          , importModule =
+              ModuleName
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/PatternSynonymImport.hs" 5 8 5 11
+                  , srcInfoPoints = []
+                  }
+                "Foo"
+          , importQualified = False
+          , importSrc = False
+          , importSafe = False
+          , importPkg = Nothing
+          , importAs = Nothing
+          , importSpecs =
+              Just
+                (ImportSpecList
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/PatternSynonymImport.hs" 5 12 5 39
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/PatternSynonymImport.hs" 5 12 5 13
+                         , SrcSpan "tests/examples/PatternSynonymImport.hs" 5 24 5 25
+                         , SrcSpan "tests/examples/PatternSynonymImport.hs" 5 38 5 39
+                         ]
+                     }
+                   False
+                   [ IAbs
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/PatternSynonymImport.hs" 5 13 5 24
+                         , srcInfoPoints =
+                             [ SrcSpan "tests/examples/PatternSynonymImport.hs" 5 13 5 20
+                             , SrcSpan "tests/examples/PatternSynonymImport.hs" 5 21 5 24
+                             ]
+                         }
+                       (PatternNamespace
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/PatternSynonymImport.hs" 5 13 5 20
+                            , srcInfoPoints =
+                                [ SrcSpan "tests/examples/PatternSynonymImport.hs" 5 13 5 20 ]
+                            })
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/PatternSynonymImport.hs" 5 21 5 24
+                            , srcInfoPoints = []
+                            }
+                          "Foo")
+                   , IAbs
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/PatternSynonymImport.hs" 5 26 5 38
+                         , srcInfoPoints =
+                             [ SrcSpan "tests/examples/PatternSynonymImport.hs" 5 26 5 33
+                             , SrcSpan "tests/examples/PatternSynonymImport.hs" 5 34 5 38
+                             ]
+                         }
+                       (PatternNamespace
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/PatternSynonymImport.hs" 5 26 5 33
+                            , srcInfoPoints =
+                                [ SrcSpan "tests/examples/PatternSynonymImport.hs" 5 26 5 33 ]
+                            })
+                       (Symbol
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/PatternSynonymImport.hs" 5 34 5 38
+                            , srcInfoPoints =
+                                [ SrcSpan "tests/examples/PatternSynonymImport.hs" 5 34 5 35
+                                , SrcSpan "tests/examples/PatternSynonymImport.hs" 5 35 5 37
+                                , SrcSpan "tests/examples/PatternSynonymImport.hs" 5 37 5 38
+                                ]
+                            }
+                          ":>")
+                   ])
+          }
+      ]
+      []
+  , []
+  )

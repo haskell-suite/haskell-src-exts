@@ -1,1 +1,148 @@
-ParseOk (Module (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 2 1 5 1, srcInfoPoints = [SrcSpan "tests/examples/IndentedWhere.hs" 2 1 2 1,SrcSpan "tests/examples/IndentedWhere.hs" 2 1 2 1,SrcSpan "tests/examples/IndentedWhere.hs" 2 1 2 1,SrcSpan "tests/examples/IndentedWhere.hs" 5 1 5 1,SrcSpan "tests/examples/IndentedWhere.hs" 5 1 5 1]}) Nothing [] [] [FunBind (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 2 1 4 14, srcInfoPoints = [SrcSpan "tests/examples/IndentedWhere.hs" 3 3 3 8]}) [Match (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 2 1 4 14, srcInfoPoints = [SrcSpan "tests/examples/IndentedWhere.hs" 3 3 3 8]}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 2 1 2 2, srcInfoPoints = []}) "f") [PVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 2 3 2 4, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 2 3 2 4, srcInfoPoints = []}) "x")] (UnGuardedRhs (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 2 5 2 8, srcInfoPoints = [SrcSpan "tests/examples/IndentedWhere.hs" 2 5 2 6]}) (Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 2 7 2 8, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 2 7 2 8, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 2 7 2 8, srcInfoPoints = []}) "g")))) (Just (BDecls (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 3 9 4 14, srcInfoPoints = [SrcSpan "tests/examples/IndentedWhere.hs" 3 9 3 9,SrcSpan "tests/examples/IndentedWhere.hs" 4 9 4 9,SrcSpan "tests/examples/IndentedWhere.hs" 5 1 5 0]}) [TypeSig (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 3 9 3 17, srcInfoPoints = [SrcSpan "tests/examples/IndentedWhere.hs" 3 11 3 13]}) [Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 3 9 3 10, srcInfoPoints = []}) "g"] (TyCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 3 14 3 17, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 3 14 3 17, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 3 14 3 17, srcInfoPoints = []}) "Int"))),PatBind (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 4 9 4 14, srcInfoPoints = []}) (PVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 4 9 4 10, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 4 9 4 10, srcInfoPoints = []}) "g")) (UnGuardedRhs (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 4 11 4 14, srcInfoPoints = [SrcSpan "tests/examples/IndentedWhere.hs" 4 11 4 12]}) (Lit (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 4 13 4 14, srcInfoPoints = []}) (Int (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 4 13 4 14, srcInfoPoints = []}) 0 "0"))) Nothing]))]],[])
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 2 1 5 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/IndentedWhere.hs" 2 1 2 1
+            , SrcSpan "tests/examples/IndentedWhere.hs" 2 1 2 1
+            , SrcSpan "tests/examples/IndentedWhere.hs" 2 1 2 1
+            , SrcSpan "tests/examples/IndentedWhere.hs" 5 1 5 1
+            , SrcSpan "tests/examples/IndentedWhere.hs" 5 1 5 1
+            ]
+        }
+      Nothing
+      []
+      []
+      [ FunBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 2 1 4 14
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/IndentedWhere.hs" 3 3 3 8 ]
+            }
+          [ Match
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 2 1 4 14
+                , srcInfoPoints =
+                    [ SrcSpan "tests/examples/IndentedWhere.hs" 3 3 3 8 ]
+                }
+              (Ident
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 2 1 2 2
+                   , srcInfoPoints = []
+                   }
+                 "f")
+              [ PVar
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 2 3 2 4
+                    , srcInfoPoints = []
+                    }
+                  (Ident
+                     SrcSpanInfo
+                       { srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 2 3 2 4
+                       , srcInfoPoints = []
+                       }
+                     "x")
+              ]
+              (UnGuardedRhs
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 2 5 2 8
+                   , srcInfoPoints =
+                       [ SrcSpan "tests/examples/IndentedWhere.hs" 2 5 2 6 ]
+                   }
+                 (Var
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 2 7 2 8
+                      , srcInfoPoints = []
+                      }
+                    (UnQual
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 2 7 2 8
+                         , srcInfoPoints = []
+                         }
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 2 7 2 8
+                            , srcInfoPoints = []
+                            }
+                          "g"))))
+              (Just
+                 (BDecls
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 3 9 4 14
+                      , srcInfoPoints =
+                          [ SrcSpan "tests/examples/IndentedWhere.hs" 3 9 3 9
+                          , SrcSpan "tests/examples/IndentedWhere.hs" 4 9 4 9
+                          , SrcSpan "tests/examples/IndentedWhere.hs" 5 1 5 0
+                          ]
+                      }
+                    [ TypeSig
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 3 9 3 17
+                          , srcInfoPoints =
+                              [ SrcSpan "tests/examples/IndentedWhere.hs" 3 11 3 13 ]
+                          }
+                        [ Ident
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 3 9 3 10
+                              , srcInfoPoints = []
+                              }
+                            "g"
+                        ]
+                        (TyCon
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 3 14 3 17
+                             , srcInfoPoints = []
+                             }
+                           (UnQual
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 3 14 3 17
+                                , srcInfoPoints = []
+                                }
+                              (Ident
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/IndentedWhere.hs" 3 14 3 17
+                                   , srcInfoPoints = []
+                                   }
+                                 "Int")))
+                    , PatBind
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 4 9 4 14
+                          , srcInfoPoints = []
+                          }
+                        (PVar
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 4 9 4 10
+                             , srcInfoPoints = []
+                             }
+                           (Ident
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 4 9 4 10
+                                , srcInfoPoints = []
+                                }
+                              "g"))
+                        (UnGuardedRhs
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 4 11 4 14
+                             , srcInfoPoints =
+                                 [ SrcSpan "tests/examples/IndentedWhere.hs" 4 11 4 12 ]
+                             }
+                           (Lit
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/IndentedWhere.hs" 4 13 4 14
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/IndentedWhere.hs" 4 13 4 14
+                                   , srcInfoPoints = []
+                                   }
+                                 0
+                                 "0")))
+                        Nothing
+                    ]))
+          ]
+      ]
+  , []
+  )

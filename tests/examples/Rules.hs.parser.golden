@@ -1,1 +1,321 @@
-ParseOk (Module (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 1 2 1, srcInfoPoints = [SrcSpan "tests/examples/Rules.hs" 1 1 1 1,SrcSpan "tests/examples/Rules.hs" 1 1 1 1,SrcSpan "tests/examples/Rules.hs" 1 1 1 1,SrcSpan "tests/examples/Rules.hs" 2 1 2 1,SrcSpan "tests/examples/Rules.hs" 2 1 2 1]}) Nothing [] [] [RulePragmaDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 1 1 105, srcInfoPoints = [SrcSpan "tests/examples/Rules.hs" 1 1 1 10,SrcSpan "tests/examples/Rules.hs" 1 102 1 105]}) [Rule (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 11 1 101, srcInfoPoints = [SrcSpan "tests/examples/Rules.hs" 1 11 1 23,SrcSpan "tests/examples/Rules.hs" 1 24 1 30,SrcSpan "tests/examples/Rules.hs" 1 61 1 62,SrcSpan "tests/examples/Rules.hs" 1 78 1 79]}) "head/build" Nothing (Just [TypedRuleVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 31 1 60, srcInfoPoints = [SrcSpan "tests/examples/Rules.hs" 1 31 1 32,SrcSpan "tests/examples/Rules.hs" 1 33 1 35,SrcSpan "tests/examples/Rules.hs" 1 59 1 60]}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 32 1 33, srcInfoPoints = []}) "g") (TyForall (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 35 1 59, srcInfoPoints = [SrcSpan "tests/examples/Rules.hs" 1 35 1 41,SrcSpan "tests/examples/Rules.hs" 1 43 1 44]}) (Just [UnkindedVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 42 1 43, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 42 1 43, srcInfoPoints = []}) "b")]) Nothing (TyFun (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 44 1 59, srcInfoPoints = [SrcSpan "tests/examples/Rules.hs" 1 53 1 55]}) (TyParen (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 44 1 53, srcInfoPoints = [SrcSpan "tests/examples/Rules.hs" 1 44 1 45,SrcSpan "tests/examples/Rules.hs" 1 52 1 53]}) (TyFun (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 45 1 52, srcInfoPoints = [SrcSpan "tests/examples/Rules.hs" 1 46 1 48]}) (TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 45 1 46, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 45 1 46, srcInfoPoints = []}) "a")) (TyFun (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 48 1 52, srcInfoPoints = [SrcSpan "tests/examples/Rules.hs" 1 49 1 51]}) (TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 48 1 49, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 48 1 49, srcInfoPoints = []}) "b")) (TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 51 1 52, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 51 1 52, srcInfoPoints = []}) "b"))))) (TyFun (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 55 1 59, srcInfoPoints = [SrcSpan "tests/examples/Rules.hs" 1 56 1 58]}) (TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 55 1 56, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 55 1 56, srcInfoPoints = []}) "b")) (TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 58 1 59, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 58 1 59, srcInfoPoints = []}) "b")))))]) (App (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 63 1 77, srcInfoPoints = []}) (Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 63 1 67, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 63 1 67, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 63 1 67, srcInfoPoints = []}) "head"))) (Paren (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 68 1 77, srcInfoPoints = [SrcSpan "tests/examples/Rules.hs" 1 68 1 69,SrcSpan "tests/examples/Rules.hs" 1 76 1 77]}) (App (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 69 1 76, srcInfoPoints = []}) (Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 69 1 74, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 69 1 74, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 69 1 74, srcInfoPoints = []}) "build"))) (Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 75 1 76, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 75 1 76, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 75 1 76, srcInfoPoints = []}) "g")))))) (App (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 80 1 101, srcInfoPoints = []}) (App (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 80 1 93, srcInfoPoints = []}) (Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 80 1 81, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 80 1 81, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 80 1 81, srcInfoPoints = []}) "g"))) (Paren (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 82 1 93, srcInfoPoints = [SrcSpan "tests/examples/Rules.hs" 1 82 1 83,SrcSpan "tests/examples/Rules.hs" 1 92 1 93]}) (Lambda (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 83 1 92, srcInfoPoints = [SrcSpan "tests/examples/Rules.hs" 1 83 1 84,SrcSpan "tests/examples/Rules.hs" 1 88 1 90]}) [PVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 84 1 85, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 84 1 85, srcInfoPoints = []}) "x"),PWildCard (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 86 1 87, srcInfoPoints = []})] (Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 91 1 92, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 91 1 92, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 91 1 92, srcInfoPoints = []}) "x")))))) (Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 94 1 101, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 94 1 101, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 94 1 101, srcInfoPoints = []}) "badHead"))))]],[])
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 1 2 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/Rules.hs" 1 1 1 1
+            , SrcSpan "tests/examples/Rules.hs" 1 1 1 1
+            , SrcSpan "tests/examples/Rules.hs" 1 1 1 1
+            , SrcSpan "tests/examples/Rules.hs" 2 1 2 1
+            , SrcSpan "tests/examples/Rules.hs" 2 1 2 1
+            ]
+        }
+      Nothing
+      []
+      []
+      [ RulePragmaDecl
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 1 1 105
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/Rules.hs" 1 1 1 10
+                , SrcSpan "tests/examples/Rules.hs" 1 102 1 105
+                ]
+            }
+          [ Rule
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 11 1 101
+                , srcInfoPoints =
+                    [ SrcSpan "tests/examples/Rules.hs" 1 11 1 23
+                    , SrcSpan "tests/examples/Rules.hs" 1 24 1 30
+                    , SrcSpan "tests/examples/Rules.hs" 1 61 1 62
+                    , SrcSpan "tests/examples/Rules.hs" 1 78 1 79
+                    ]
+                }
+              "head/build"
+              Nothing
+              (Just
+                 [ TypedRuleVar
+                     SrcSpanInfo
+                       { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 31 1 60
+                       , srcInfoPoints =
+                           [ SrcSpan "tests/examples/Rules.hs" 1 31 1 32
+                           , SrcSpan "tests/examples/Rules.hs" 1 33 1 35
+                           , SrcSpan "tests/examples/Rules.hs" 1 59 1 60
+                           ]
+                       }
+                     (Ident
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 32 1 33
+                          , srcInfoPoints = []
+                          }
+                        "g")
+                     (TyForall
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 35 1 59
+                          , srcInfoPoints =
+                              [ SrcSpan "tests/examples/Rules.hs" 1 35 1 41
+                              , SrcSpan "tests/examples/Rules.hs" 1 43 1 44
+                              ]
+                          }
+                        (Just
+                           [ UnkindedVar
+                               SrcSpanInfo
+                                 { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 42 1 43
+                                 , srcInfoPoints = []
+                                 }
+                               (Ident
+                                  SrcSpanInfo
+                                    { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 42 1 43
+                                    , srcInfoPoints = []
+                                    }
+                                  "b")
+                           ])
+                        Nothing
+                        (TyFun
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 44 1 59
+                             , srcInfoPoints = [ SrcSpan "tests/examples/Rules.hs" 1 53 1 55 ]
+                             }
+                           (TyParen
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 44 1 53
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/Rules.hs" 1 44 1 45
+                                    , SrcSpan "tests/examples/Rules.hs" 1 52 1 53
+                                    ]
+                                }
+                              (TyFun
+                                 SrcSpanInfo
+                                   { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 45 1 52
+                                   , srcInfoPoints = [ SrcSpan "tests/examples/Rules.hs" 1 46 1 48 ]
+                                   }
+                                 (TyVar
+                                    SrcSpanInfo
+                                      { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 45 1 46
+                                      , srcInfoPoints = []
+                                      }
+                                    (Ident
+                                       SrcSpanInfo
+                                         { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 45 1 46
+                                         , srcInfoPoints = []
+                                         }
+                                       "a"))
+                                 (TyFun
+                                    SrcSpanInfo
+                                      { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 48 1 52
+                                      , srcInfoPoints =
+                                          [ SrcSpan "tests/examples/Rules.hs" 1 49 1 51 ]
+                                      }
+                                    (TyVar
+                                       SrcSpanInfo
+                                         { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 48 1 49
+                                         , srcInfoPoints = []
+                                         }
+                                       (Ident
+                                          SrcSpanInfo
+                                            { srcInfoSpan =
+                                                SrcSpan "tests/examples/Rules.hs" 1 48 1 49
+                                            , srcInfoPoints = []
+                                            }
+                                          "b"))
+                                    (TyVar
+                                       SrcSpanInfo
+                                         { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 51 1 52
+                                         , srcInfoPoints = []
+                                         }
+                                       (Ident
+                                          SrcSpanInfo
+                                            { srcInfoSpan =
+                                                SrcSpan "tests/examples/Rules.hs" 1 51 1 52
+                                            , srcInfoPoints = []
+                                            }
+                                          "b")))))
+                           (TyFun
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 55 1 59
+                                , srcInfoPoints = [ SrcSpan "tests/examples/Rules.hs" 1 56 1 58 ]
+                                }
+                              (TyVar
+                                 SrcSpanInfo
+                                   { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 55 1 56
+                                   , srcInfoPoints = []
+                                   }
+                                 (Ident
+                                    SrcSpanInfo
+                                      { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 55 1 56
+                                      , srcInfoPoints = []
+                                      }
+                                    "b"))
+                              (TyVar
+                                 SrcSpanInfo
+                                   { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 58 1 59
+                                   , srcInfoPoints = []
+                                   }
+                                 (Ident
+                                    SrcSpanInfo
+                                      { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 58 1 59
+                                      , srcInfoPoints = []
+                                      }
+                                    "b")))))
+                 ])
+              (App
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 63 1 77
+                   , srcInfoPoints = []
+                   }
+                 (Var
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 63 1 67
+                      , srcInfoPoints = []
+                      }
+                    (UnQual
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 63 1 67
+                         , srcInfoPoints = []
+                         }
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 63 1 67
+                            , srcInfoPoints = []
+                            }
+                          "head")))
+                 (Paren
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 68 1 77
+                      , srcInfoPoints =
+                          [ SrcSpan "tests/examples/Rules.hs" 1 68 1 69
+                          , SrcSpan "tests/examples/Rules.hs" 1 76 1 77
+                          ]
+                      }
+                    (App
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 69 1 76
+                         , srcInfoPoints = []
+                         }
+                       (Var
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 69 1 74
+                            , srcInfoPoints = []
+                            }
+                          (UnQual
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 69 1 74
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 69 1 74
+                                  , srcInfoPoints = []
+                                  }
+                                "build")))
+                       (Var
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 75 1 76
+                            , srcInfoPoints = []
+                            }
+                          (UnQual
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 75 1 76
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 75 1 76
+                                  , srcInfoPoints = []
+                                  }
+                                "g"))))))
+              (App
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 80 1 101
+                   , srcInfoPoints = []
+                   }
+                 (App
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 80 1 93
+                      , srcInfoPoints = []
+                      }
+                    (Var
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 80 1 81
+                         , srcInfoPoints = []
+                         }
+                       (UnQual
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 80 1 81
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 80 1 81
+                               , srcInfoPoints = []
+                               }
+                             "g")))
+                    (Paren
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 82 1 93
+                         , srcInfoPoints =
+                             [ SrcSpan "tests/examples/Rules.hs" 1 82 1 83
+                             , SrcSpan "tests/examples/Rules.hs" 1 92 1 93
+                             ]
+                         }
+                       (Lambda
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 83 1 92
+                            , srcInfoPoints =
+                                [ SrcSpan "tests/examples/Rules.hs" 1 83 1 84
+                                , SrcSpan "tests/examples/Rules.hs" 1 88 1 90
+                                ]
+                            }
+                          [ PVar
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 84 1 85
+                                , srcInfoPoints = []
+                                }
+                              (Ident
+                                 SrcSpanInfo
+                                   { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 84 1 85
+                                   , srcInfoPoints = []
+                                   }
+                                 "x")
+                          , PWildCard
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 86 1 87
+                                , srcInfoPoints = []
+                                }
+                          ]
+                          (Var
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 91 1 92
+                               , srcInfoPoints = []
+                               }
+                             (UnQual
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 91 1 92
+                                  , srcInfoPoints = []
+                                  }
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 91 1 92
+                                     , srcInfoPoints = []
+                                     }
+                                   "x"))))))
+                 (Var
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 94 1 101
+                      , srcInfoPoints = []
+                      }
+                    (UnQual
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 94 1 101
+                         , srcInfoPoints = []
+                         }
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/Rules.hs" 1 94 1 101
+                            , srcInfoPoints = []
+                            }
+                          "badHead"))))
+          ]
+      ]
+  , []
+  )

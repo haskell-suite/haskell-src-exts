@@ -1,1 +1,145 @@
-ParseOk (Module (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QualifiedQQuote.hs" 1 1 7 1, srcInfoPoints = [SrcSpan "tests/examples/QualifiedQQuote.hs" 1 1 1 1,SrcSpan "tests/examples/QualifiedQQuote.hs" 2 1 2 1,SrcSpan "tests/examples/QualifiedQQuote.hs" 2 1 2 1,SrcSpan "tests/examples/QualifiedQQuote.hs" 2 1 2 1,SrcSpan "tests/examples/QualifiedQQuote.hs" 4 1 4 1,SrcSpan "tests/examples/QualifiedQQuote.hs" 5 1 5 1,SrcSpan "tests/examples/QualifiedQQuote.hs" 7 1 7 1,SrcSpan "tests/examples/QualifiedQQuote.hs" 7 1 7 1]}) Nothing [LanguagePragma (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QualifiedQQuote.hs" 1 1 1 29, srcInfoPoints = [SrcSpan "tests/examples/QualifiedQQuote.hs" 1 1 1 13,SrcSpan "tests/examples/QualifiedQQuote.hs" 1 26 1 29]}) [Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QualifiedQQuote.hs" 1 14 1 25, srcInfoPoints = []}) "QuasiQuotes"]] [ImportDecl {importAnn = SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QualifiedQQuote.hs" 2 1 2 42, srcInfoPoints = [SrcSpan "tests/examples/QualifiedQQuote.hs" 2 1 2 7,SrcSpan "tests/examples/QualifiedQQuote.hs" 2 8 2 17,SrcSpan "tests/examples/QualifiedQQuote.hs" 2 38 2 40]}, importModule = ModuleName (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QualifiedQQuote.hs" 2 18 2 37, srcInfoPoints = []}) "Language.Haskell.TH", importQualified = True, importSrc = False, importSafe = False, importPkg = Nothing, importAs = Just (ModuleName (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QualifiedQQuote.hs" 2 41 2 42, srcInfoPoints = []}) "T"), importSpecs = Nothing}] [TypeSig (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QualifiedQQuote.hs" 4 1 4 13, srcInfoPoints = [SrcSpan "tests/examples/QualifiedQQuote.hs" 4 3 4 5]}) [Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QualifiedQQuote.hs" 4 1 4 2, srcInfoPoints = []}) "x"] (TyCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QualifiedQQuote.hs" 4 6 4 13, srcInfoPoints = []}) (Qual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QualifiedQQuote.hs" 4 6 4 13, srcInfoPoints = []}) (ModuleName (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QualifiedQQuote.hs" 4 6 4 13, srcInfoPoints = []}) "T") (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QualifiedQQuote.hs" 4 6 4 13, srcInfoPoints = []}) "DecsQ"))),PatBind (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QualifiedQQuote.hs" 5 1 5 14, srcInfoPoints = []}) (PVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QualifiedQQuote.hs" 5 1 5 2, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QualifiedQQuote.hs" 5 1 5 2, srcInfoPoints = []}) "x")) (UnGuardedRhs (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QualifiedQQuote.hs" 5 3 5 14, srcInfoPoints = [SrcSpan "tests/examples/QualifiedQQuote.hs" 5 3 5 4]}) (QuasiQuote (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/QualifiedQQuote.hs" 5 5 5 14, srcInfoPoints = []}) "T.d" "id")) Nothing],[])
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/QualifiedQQuote.hs" 1 1 7 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/QualifiedQQuote.hs" 1 1 1 1
+            , SrcSpan "tests/examples/QualifiedQQuote.hs" 2 1 2 1
+            , SrcSpan "tests/examples/QualifiedQQuote.hs" 2 1 2 1
+            , SrcSpan "tests/examples/QualifiedQQuote.hs" 2 1 2 1
+            , SrcSpan "tests/examples/QualifiedQQuote.hs" 4 1 4 1
+            , SrcSpan "tests/examples/QualifiedQQuote.hs" 5 1 5 1
+            , SrcSpan "tests/examples/QualifiedQQuote.hs" 7 1 7 1
+            , SrcSpan "tests/examples/QualifiedQQuote.hs" 7 1 7 1
+            ]
+        }
+      Nothing
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/QualifiedQQuote.hs" 1 1 1 29
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/QualifiedQQuote.hs" 1 1 1 13
+                , SrcSpan "tests/examples/QualifiedQQuote.hs" 1 26 1 29
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/QualifiedQQuote.hs" 1 14 1 25
+                , srcInfoPoints = []
+                }
+              "QuasiQuotes"
+          ]
+      ]
+      [ ImportDecl
+          { importAnn =
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/QualifiedQQuote.hs" 2 1 2 42
+                , srcInfoPoints =
+                    [ SrcSpan "tests/examples/QualifiedQQuote.hs" 2 1 2 7
+                    , SrcSpan "tests/examples/QualifiedQQuote.hs" 2 8 2 17
+                    , SrcSpan "tests/examples/QualifiedQQuote.hs" 2 38 2 40
+                    ]
+                }
+          , importModule =
+              ModuleName
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/QualifiedQQuote.hs" 2 18 2 37
+                  , srcInfoPoints = []
+                  }
+                "Language.Haskell.TH"
+          , importQualified = True
+          , importSrc = False
+          , importSafe = False
+          , importPkg = Nothing
+          , importAs =
+              Just
+                (ModuleName
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/QualifiedQQuote.hs" 2 41 2 42
+                     , srcInfoPoints = []
+                     }
+                   "T")
+          , importSpecs = Nothing
+          }
+      ]
+      [ TypeSig
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/QualifiedQQuote.hs" 4 1 4 13
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/QualifiedQQuote.hs" 4 3 4 5 ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/QualifiedQQuote.hs" 4 1 4 2
+                , srcInfoPoints = []
+                }
+              "x"
+          ]
+          (TyCon
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/QualifiedQQuote.hs" 4 6 4 13
+               , srcInfoPoints = []
+               }
+             (Qual
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/QualifiedQQuote.hs" 4 6 4 13
+                  , srcInfoPoints = []
+                  }
+                (ModuleName
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/QualifiedQQuote.hs" 4 6 4 13
+                     , srcInfoPoints = []
+                     }
+                   "T")
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/QualifiedQQuote.hs" 4 6 4 13
+                     , srcInfoPoints = []
+                     }
+                   "DecsQ")))
+      , PatBind
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/QualifiedQQuote.hs" 5 1 5 14
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/QualifiedQQuote.hs" 5 1 5 2
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/QualifiedQQuote.hs" 5 1 5 2
+                  , srcInfoPoints = []
+                  }
+                "x"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/QualifiedQQuote.hs" 5 3 5 14
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/QualifiedQQuote.hs" 5 3 5 4 ]
+               }
+             (QuasiQuote
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/QualifiedQQuote.hs" 5 5 5 14
+                  , srcInfoPoints = []
+                  }
+                "T.d"
+                "id"))
+          Nothing
+      ]
+  , []
+  )

@@ -14,6 +14,8 @@ import Control.Monad.Trans
 import Control.Applicative
 import Data.Generics
 import Extensions
+import Text.Show.Pretty
+
 
 main :: IO ()
 main = do
@@ -46,7 +48,7 @@ parserTests sources = testGroup "Parser tests" $ do
         parseUTF8FileWithComments
           (defaultParseMode { parseFilename = file })
           file
-      writeBinaryFile out $ show ast ++ "\n"
+      writeBinaryFile out $ ppShow ast ++ "\n"
   return $ goldenVsFile (takeBaseName file) golden out run
 -- }}}
 
@@ -173,9 +175,9 @@ commentsTests dir = testGroup "Comments tests" $ do
               withC = case parse1Result of
                         ParseOk res         -> ParseOk $ associateHaddock res
                         ParseFailed sloc msg -> ParseFailed sloc msg
-            writeBinaryFile out $ show withC ++ "\n"   
+            writeBinaryFile out $ show withC ++ "\n"
     return $ goldenVsFile (takeBaseName file) golden out run
-    
+
 -- UTF8 utils {{{
 readUTF8File :: FilePath -> IO String
 readUTF8File fp = openFile fp ReadMode >>= \h -> do

@@ -1,1 +1,521 @@
-ParseOk (Module (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 1 1 16 1, srcInfoPoints = [SrcSpan "tests/examples/PatternSynonymSignatures.hs" 1 1 1 1,SrcSpan "tests/examples/PatternSynonymSignatures.hs" 4 1 4 1,SrcSpan "tests/examples/PatternSynonymSignatures.hs" 4 1 4 1,SrcSpan "tests/examples/PatternSynonymSignatures.hs" 4 1 4 1,SrcSpan "tests/examples/PatternSynonymSignatures.hs" 6 1 6 1,SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 1 8 1,SrcSpan "tests/examples/PatternSynonymSignatures.hs" 10 1 10 1,SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 1 12 1,SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 1 14 1,SrcSpan "tests/examples/PatternSynonymSignatures.hs" 16 1 16 1,SrcSpan "tests/examples/PatternSynonymSignatures.hs" 16 1 16 1]}) Nothing [LanguagePragma (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 1 1 1 33, srcInfoPoints = [SrcSpan "tests/examples/PatternSynonymSignatures.hs" 1 1 1 13,SrcSpan "tests/examples/PatternSynonymSignatures.hs" 1 30 1 33]}) [Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 1 14 1 29, srcInfoPoints = []}) "PatternSynonyms"]] [] [PatSynSig (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 4 1 4 19, srcInfoPoints = [SrcSpan "tests/examples/PatternSynonymSignatures.hs" 4 1 4 8,SrcSpan "tests/examples/PatternSynonymSignatures.hs" 4 13 4 15]}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 4 9 4 12, srcInfoPoints = []}) "Syn") Nothing Nothing Nothing (TyCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 4 16 4 19, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 4 16 4 19, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 4 16 4 19, srcInfoPoints = []}) "Typ"))),PatSynSig (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 6 1 6 31, srcInfoPoints = [SrcSpan "tests/examples/PatternSynonymSignatures.hs" 6 1 6 8,SrcSpan "tests/examples/PatternSynonymSignatures.hs" 6 13 6 15]}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 6 9 6 12, srcInfoPoints = []}) "Syn") Nothing (Just (CxEmpty (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 6 16 6 21, srcInfoPoints = [SrcSpan "tests/examples/PatternSynonymSignatures.hs" 6 16 6 17,SrcSpan "tests/examples/PatternSynonymSignatures.hs" 6 17 6 18,SrcSpan "tests/examples/PatternSynonymSignatures.hs" 6 19 6 21]}))) (Just (CxEmpty (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 6 22 6 27, srcInfoPoints = [SrcSpan "tests/examples/PatternSynonymSignatures.hs" 6 22 6 23,SrcSpan "tests/examples/PatternSynonymSignatures.hs" 6 23 6 24,SrcSpan "tests/examples/PatternSynonymSignatures.hs" 6 25 6 27]}))) (TyCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 6 28 6 31, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 6 28 6 31, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 6 28 6 31, srcInfoPoints = []}) "Typ"))),PatSynSig (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 1 8 39, srcInfoPoints = [SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 1 8 8,SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 13 8 15]}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 9 8 12, srcInfoPoints = []}) "Syn") Nothing (Just (CxSingle (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 16 8 25, srcInfoPoints = [SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 23 8 25]}) (ClassA (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 16 8 25, srcInfoPoints = [SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 23 8 25]}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 16 8 20, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 16 8 20, srcInfoPoints = []}) "Show")) [TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 21 8 22, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 21 8 22, srcInfoPoints = []}) "a")]))) (Just (CxSingle (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 26 8 35, srcInfoPoints = [SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 33 8 35]}) (ClassA (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 26 8 35, srcInfoPoints = [SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 33 8 35]}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 26 8 30, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 26 8 30, srcInfoPoints = []}) "Show")) [TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 31 8 32, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 31 8 32, srcInfoPoints = []}) "b")]))) (TyCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 36 8 39, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 36 8 39, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 36 8 39, srcInfoPoints = []}) "Typ"))),PatSynSig (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 10 1 10 29, srcInfoPoints = [SrcSpan "tests/examples/PatternSynonymSignatures.hs" 10 1 10 8,SrcSpan "tests/examples/PatternSynonymSignatures.hs" 10 13 10 15]}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 10 9 10 12, srcInfoPoints = []}) "Syn") Nothing (Just (CxSingle (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 10 16 10 25, srcInfoPoints = [SrcSpan "tests/examples/PatternSynonymSignatures.hs" 10 23 10 25]}) (ClassA (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 10 16 10 25, srcInfoPoints = [SrcSpan "tests/examples/PatternSynonymSignatures.hs" 10 23 10 25]}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 10 16 10 20, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 10 16 10 20, srcInfoPoints = []}) "Show")) [TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 10 21 10 22, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 10 21 10 22, srcInfoPoints = []}) "b")]))) Nothing (TyCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 10 26 10 29, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 10 26 10 29, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 10 26 10 29, srcInfoPoints = []}) "Typ"))),PatSynSig (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 1 12 35, srcInfoPoints = [SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 1 12 8,SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 13 12 15]}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 9 12 12, srcInfoPoints = []}) "Syn") Nothing (Just (CxSingle (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 16 12 25, srcInfoPoints = [SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 23 12 25]}) (ClassA (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 16 12 25, srcInfoPoints = [SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 23 12 25]}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 16 12 20, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 16 12 20, srcInfoPoints = []}) "Show")) [TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 21 12 22, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 21 12 22, srcInfoPoints = []}) "b")]))) (Just (CxEmpty (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 26 12 31, srcInfoPoints = [SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 26 12 27,SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 27 12 28,SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 29 12 31]}))) (TyCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 32 12 35, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 32 12 35, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 32 12 35, srcInfoPoints = []}) "Typ"))),PatSynSig (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 1 14 35, srcInfoPoints = [SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 1 14 8,SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 13 14 15]}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 9 14 12, srcInfoPoints = []}) "Syn") Nothing (Just (CxEmpty (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 16 14 21, srcInfoPoints = [SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 16 14 17,SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 17 14 18,SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 19 14 21]}))) (Just (CxSingle (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 22 14 31, srcInfoPoints = [SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 29 14 31]}) (ClassA (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 22 14 31, srcInfoPoints = [SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 29 14 31]}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 22 14 26, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 22 14 26, srcInfoPoints = []}) "Show")) [TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 27 14 28, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 27 14 28, srcInfoPoints = []}) "b")]))) (TyCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 32 14 35, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 32 14 35, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 32 14 35, srcInfoPoints = []}) "Typ")))],[])
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan =
+            SrcSpan "tests/examples/PatternSynonymSignatures.hs" 1 1 16 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/PatternSynonymSignatures.hs" 1 1 1 1
+            , SrcSpan "tests/examples/PatternSynonymSignatures.hs" 4 1 4 1
+            , SrcSpan "tests/examples/PatternSynonymSignatures.hs" 4 1 4 1
+            , SrcSpan "tests/examples/PatternSynonymSignatures.hs" 4 1 4 1
+            , SrcSpan "tests/examples/PatternSynonymSignatures.hs" 6 1 6 1
+            , SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 1 8 1
+            , SrcSpan "tests/examples/PatternSynonymSignatures.hs" 10 1 10 1
+            , SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 1 12 1
+            , SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 1 14 1
+            , SrcSpan "tests/examples/PatternSynonymSignatures.hs" 16 1 16 1
+            , SrcSpan "tests/examples/PatternSynonymSignatures.hs" 16 1 16 1
+            ]
+        }
+      Nothing
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/PatternSynonymSignatures.hs" 1 1 1 33
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/PatternSynonymSignatures.hs" 1 1 1 13
+                , SrcSpan "tests/examples/PatternSynonymSignatures.hs" 1 30 1 33
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/PatternSynonymSignatures.hs" 1 14 1 29
+                , srcInfoPoints = []
+                }
+              "PatternSynonyms"
+          ]
+      ]
+      []
+      [ PatSynSig
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/PatternSynonymSignatures.hs" 4 1 4 19
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/PatternSynonymSignatures.hs" 4 1 4 8
+                , SrcSpan "tests/examples/PatternSynonymSignatures.hs" 4 13 4 15
+                ]
+            }
+          (Ident
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/PatternSynonymSignatures.hs" 4 9 4 12
+               , srcInfoPoints = []
+               }
+             "Syn")
+          Nothing
+          Nothing
+          Nothing
+          (TyCon
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/PatternSynonymSignatures.hs" 4 16 4 19
+               , srcInfoPoints = []
+               }
+             (UnQual
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/PatternSynonymSignatures.hs" 4 16 4 19
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/PatternSynonymSignatures.hs" 4 16 4 19
+                     , srcInfoPoints = []
+                     }
+                   "Typ")))
+      , PatSynSig
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/PatternSynonymSignatures.hs" 6 1 6 31
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/PatternSynonymSignatures.hs" 6 1 6 8
+                , SrcSpan "tests/examples/PatternSynonymSignatures.hs" 6 13 6 15
+                ]
+            }
+          (Ident
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/PatternSynonymSignatures.hs" 6 9 6 12
+               , srcInfoPoints = []
+               }
+             "Syn")
+          Nothing
+          (Just
+             (CxEmpty
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/PatternSynonymSignatures.hs" 6 16 6 21
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/PatternSynonymSignatures.hs" 6 16 6 17
+                      , SrcSpan "tests/examples/PatternSynonymSignatures.hs" 6 17 6 18
+                      , SrcSpan "tests/examples/PatternSynonymSignatures.hs" 6 19 6 21
+                      ]
+                  }))
+          (Just
+             (CxEmpty
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/PatternSynonymSignatures.hs" 6 22 6 27
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/PatternSynonymSignatures.hs" 6 22 6 23
+                      , SrcSpan "tests/examples/PatternSynonymSignatures.hs" 6 23 6 24
+                      , SrcSpan "tests/examples/PatternSynonymSignatures.hs" 6 25 6 27
+                      ]
+                  }))
+          (TyCon
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/PatternSynonymSignatures.hs" 6 28 6 31
+               , srcInfoPoints = []
+               }
+             (UnQual
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/PatternSynonymSignatures.hs" 6 28 6 31
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/PatternSynonymSignatures.hs" 6 28 6 31
+                     , srcInfoPoints = []
+                     }
+                   "Typ")))
+      , PatSynSig
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 1 8 39
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 1 8 8
+                , SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 13 8 15
+                ]
+            }
+          (Ident
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 9 8 12
+               , srcInfoPoints = []
+               }
+             "Syn")
+          Nothing
+          (Just
+             (CxSingle
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 16 8 25
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 23 8 25 ]
+                  }
+                (ClassA
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 16 8 25
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 23 8 25 ]
+                     }
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 16 8 20
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 16 8 20
+                           , srcInfoPoints = []
+                           }
+                         "Show"))
+                   [ TyVar
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 21 8 22
+                         , srcInfoPoints = []
+                         }
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 21 8 22
+                            , srcInfoPoints = []
+                            }
+                          "a")
+                   ])))
+          (Just
+             (CxSingle
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 26 8 35
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 33 8 35 ]
+                  }
+                (ClassA
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 26 8 35
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 33 8 35 ]
+                     }
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 26 8 30
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 26 8 30
+                           , srcInfoPoints = []
+                           }
+                         "Show"))
+                   [ TyVar
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 31 8 32
+                         , srcInfoPoints = []
+                         }
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 31 8 32
+                            , srcInfoPoints = []
+                            }
+                          "b")
+                   ])))
+          (TyCon
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 36 8 39
+               , srcInfoPoints = []
+               }
+             (UnQual
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 36 8 39
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 36 8 39
+                     , srcInfoPoints = []
+                     }
+                   "Typ")))
+      , PatSynSig
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/PatternSynonymSignatures.hs" 10 1 10 29
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/PatternSynonymSignatures.hs" 10 1 10 8
+                , SrcSpan "tests/examples/PatternSynonymSignatures.hs" 10 13 10 15
+                ]
+            }
+          (Ident
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/PatternSynonymSignatures.hs" 10 9 10 12
+               , srcInfoPoints = []
+               }
+             "Syn")
+          Nothing
+          (Just
+             (CxSingle
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/PatternSynonymSignatures.hs" 10 16 10 25
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/PatternSynonymSignatures.hs" 10 23 10 25
+                      ]
+                  }
+                (ClassA
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/PatternSynonymSignatures.hs" 10 16 10 25
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/PatternSynonymSignatures.hs" 10 23 10 25
+                         ]
+                     }
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/PatternSynonymSignatures.hs" 10 16 10 20
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/PatternSynonymSignatures.hs" 10 16 10 20
+                           , srcInfoPoints = []
+                           }
+                         "Show"))
+                   [ TyVar
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/PatternSynonymSignatures.hs" 10 21 10 22
+                         , srcInfoPoints = []
+                         }
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/PatternSynonymSignatures.hs" 10 21 10 22
+                            , srcInfoPoints = []
+                            }
+                          "b")
+                   ])))
+          Nothing
+          (TyCon
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/PatternSynonymSignatures.hs" 10 26 10 29
+               , srcInfoPoints = []
+               }
+             (UnQual
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/PatternSynonymSignatures.hs" 10 26 10 29
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/PatternSynonymSignatures.hs" 10 26 10 29
+                     , srcInfoPoints = []
+                     }
+                   "Typ")))
+      , PatSynSig
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 1 12 35
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 1 12 8
+                , SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 13 12 15
+                ]
+            }
+          (Ident
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 9 12 12
+               , srcInfoPoints = []
+               }
+             "Syn")
+          Nothing
+          (Just
+             (CxSingle
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 16 12 25
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 23 12 25
+                      ]
+                  }
+                (ClassA
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 16 12 25
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 23 12 25
+                         ]
+                     }
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 16 12 20
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 16 12 20
+                           , srcInfoPoints = []
+                           }
+                         "Show"))
+                   [ TyVar
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 21 12 22
+                         , srcInfoPoints = []
+                         }
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 21 12 22
+                            , srcInfoPoints = []
+                            }
+                          "b")
+                   ])))
+          (Just
+             (CxEmpty
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 26 12 31
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 26 12 27
+                      , SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 27 12 28
+                      , SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 29 12 31
+                      ]
+                  }))
+          (TyCon
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 32 12 35
+               , srcInfoPoints = []
+               }
+             (UnQual
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 32 12 35
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 32 12 35
+                     , srcInfoPoints = []
+                     }
+                   "Typ")))
+      , PatSynSig
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 1 14 35
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 1 14 8
+                , SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 13 14 15
+                ]
+            }
+          (Ident
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 9 14 12
+               , srcInfoPoints = []
+               }
+             "Syn")
+          Nothing
+          (Just
+             (CxEmpty
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 16 14 21
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 16 14 17
+                      , SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 17 14 18
+                      , SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 19 14 21
+                      ]
+                  }))
+          (Just
+             (CxSingle
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 22 14 31
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 29 14 31
+                      ]
+                  }
+                (ClassA
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 22 14 31
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 29 14 31
+                         ]
+                     }
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 22 14 26
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 22 14 26
+                           , srcInfoPoints = []
+                           }
+                         "Show"))
+                   [ TyVar
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 27 14 28
+                         , srcInfoPoints = []
+                         }
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 27 14 28
+                            , srcInfoPoints = []
+                            }
+                          "b")
+                   ])))
+          (TyCon
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 32 14 35
+               , srcInfoPoints = []
+               }
+             (UnQual
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 32 14 35
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 32 14 35
+                     , srcInfoPoints = []
+                     }
+                   "Typ")))
+      ]
+  , []
+  )

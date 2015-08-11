@@ -1,1 +1,89 @@
-ParseOk (Module (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Testing.hs" 2 1 3 1, srcInfoPoints = [SrcSpan "tests/examples/Testing.hs" 2 1 2 1,SrcSpan "tests/examples/Testing.hs" 2 1 2 1,SrcSpan "tests/examples/Testing.hs" 2 1 2 1,SrcSpan "tests/examples/Testing.hs" 3 1 3 1,SrcSpan "tests/examples/Testing.hs" 3 1 3 1]}) Nothing [] [] [PatBind (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Testing.hs" 2 1 2 17, srcInfoPoints = []}) (PVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Testing.hs" 2 1 2 5, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Testing.hs" 2 1 2 5, srcInfoPoints = []}) "main")) (UnGuardedRhs (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Testing.hs" 2 6 2 17, srcInfoPoints = [SrcSpan "tests/examples/Testing.hs" 2 6 2 7]}) (App (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Testing.hs" 2 8 2 17, srcInfoPoints = []}) (Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Testing.hs" 2 8 2 14, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Testing.hs" 2 8 2 14, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Testing.hs" 2 8 2 14, srcInfoPoints = []}) "return"))) (Con (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Testing.hs" 2 15 2 17, srcInfoPoints = [SrcSpan "tests/examples/Testing.hs" 2 15 2 16,SrcSpan "tests/examples/Testing.hs" 2 16 2 17]}) (Special (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Testing.hs" 2 15 2 17, srcInfoPoints = [SrcSpan "tests/examples/Testing.hs" 2 15 2 16,SrcSpan "tests/examples/Testing.hs" 2 16 2 17]}) (UnitCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/Testing.hs" 2 15 2 17, srcInfoPoints = [SrcSpan "tests/examples/Testing.hs" 2 15 2 16,SrcSpan "tests/examples/Testing.hs" 2 16 2 17]})))))) Nothing],[Comment True (SrcSpan "tests/examples/Testing.hs" 1 1 1 46) "# LINE 5 \"templates\\GenericTemplate.hs\" #"])
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/Testing.hs" 2 1 3 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/Testing.hs" 2 1 2 1
+            , SrcSpan "tests/examples/Testing.hs" 2 1 2 1
+            , SrcSpan "tests/examples/Testing.hs" 2 1 2 1
+            , SrcSpan "tests/examples/Testing.hs" 3 1 3 1
+            , SrcSpan "tests/examples/Testing.hs" 3 1 3 1
+            ]
+        }
+      Nothing
+      []
+      []
+      [ PatBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/Testing.hs" 2 1 2 17
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/Testing.hs" 2 1 2 5
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/Testing.hs" 2 1 2 5
+                  , srcInfoPoints = []
+                  }
+                "main"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/Testing.hs" 2 6 2 17
+               , srcInfoPoints = [ SrcSpan "tests/examples/Testing.hs" 2 6 2 7 ]
+               }
+             (App
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/Testing.hs" 2 8 2 17
+                  , srcInfoPoints = []
+                  }
+                (Var
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/Testing.hs" 2 8 2 14
+                     , srcInfoPoints = []
+                     }
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/Testing.hs" 2 8 2 14
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/Testing.hs" 2 8 2 14
+                           , srcInfoPoints = []
+                           }
+                         "return")))
+                (Con
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/Testing.hs" 2 15 2 17
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/Testing.hs" 2 15 2 16
+                         , SrcSpan "tests/examples/Testing.hs" 2 16 2 17
+                         ]
+                     }
+                   (Special
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/Testing.hs" 2 15 2 17
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/Testing.hs" 2 15 2 16
+                            , SrcSpan "tests/examples/Testing.hs" 2 16 2 17
+                            ]
+                        }
+                      (UnitCon
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/Testing.hs" 2 15 2 17
+                           , srcInfoPoints =
+                               [ SrcSpan "tests/examples/Testing.hs" 2 15 2 16
+                               , SrcSpan "tests/examples/Testing.hs" 2 16 2 17
+                               ]
+                           })))))
+          Nothing
+      ]
+  , [ Comment
+        True
+        (SrcSpan "tests/examples/Testing.hs" 1 1 1 46)
+        "# LINE 5 \"templates\\GenericTemplate.hs\" #"
+    ]
+  )

@@ -1,1 +1,129 @@
-ParseOk (Module (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataHeadParen.hs" 1 1 5 1, srcInfoPoints = [SrcSpan "tests/examples/DataHeadParen.hs" 1 1 1 1,SrcSpan "tests/examples/DataHeadParen.hs" 2 1 2 1,SrcSpan "tests/examples/DataHeadParen.hs" 2 1 2 1,SrcSpan "tests/examples/DataHeadParen.hs" 4 1 4 1,SrcSpan "tests/examples/DataHeadParen.hs" 5 1 5 1,SrcSpan "tests/examples/DataHeadParen.hs" 5 1 5 1]}) (Just (ModuleHead (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataHeadParen.hs" 2 1 2 27, srcInfoPoints = [SrcSpan "tests/examples/DataHeadParen.hs" 2 1 2 7,SrcSpan "tests/examples/DataHeadParen.hs" 2 22 2 27]}) (ModuleName (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataHeadParen.hs" 2 8 2 21, srcInfoPoints = []}) "DataHeadParen") Nothing Nothing)) [LanguagePragma (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataHeadParen.hs" 1 1 1 31, srcInfoPoints = [SrcSpan "tests/examples/DataHeadParen.hs" 1 1 1 13,SrcSpan "tests/examples/DataHeadParen.hs" 1 28 1 31]}) [Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataHeadParen.hs" 1 14 1 27, srcInfoPoints = []}) "TypeOperators"]] [] [DataDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataHeadParen.hs" 4 1 4 23, srcInfoPoints = [SrcSpan "tests/examples/DataHeadParen.hs" 4 18 4 19]}) (DataType (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataHeadParen.hs" 4 1 4 5, srcInfoPoints = []})) Nothing (DHParen (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataHeadParen.hs" 4 6 4 16, srcInfoPoints = [SrcSpan "tests/examples/DataHeadParen.hs" 4 6 4 7,SrcSpan "tests/examples/DataHeadParen.hs" 4 15 4 16]}) (DHApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataHeadParen.hs" 4 7 4 15, srcInfoPoints = []}) (DHInfix (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataHeadParen.hs" 4 7 4 15, srcInfoPoints = []}) (UnkindedVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataHeadParen.hs" 4 7 4 9, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataHeadParen.hs" 4 7 4 9, srcInfoPoints = []}) "a1")) (Symbol (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataHeadParen.hs" 4 10 4 12, srcInfoPoints = []}) ":<")) (UnkindedVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataHeadParen.hs" 4 13 4 15, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataHeadParen.hs" 4 13 4 15, srcInfoPoints = []}) "a2")))) [QualConDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataHeadParen.hs" 4 20 4 23, srcInfoPoints = []}) Nothing Nothing (ConDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataHeadParen.hs" 4 20 4 23, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DataHeadParen.hs" 4 20 4 23, srcInfoPoints = []}) "Foo") [])] Nothing],[])
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/DataHeadParen.hs" 1 1 5 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/DataHeadParen.hs" 1 1 1 1
+            , SrcSpan "tests/examples/DataHeadParen.hs" 2 1 2 1
+            , SrcSpan "tests/examples/DataHeadParen.hs" 2 1 2 1
+            , SrcSpan "tests/examples/DataHeadParen.hs" 4 1 4 1
+            , SrcSpan "tests/examples/DataHeadParen.hs" 5 1 5 1
+            , SrcSpan "tests/examples/DataHeadParen.hs" 5 1 5 1
+            ]
+        }
+      (Just
+         (ModuleHead
+            SrcSpanInfo
+              { srcInfoSpan = SrcSpan "tests/examples/DataHeadParen.hs" 2 1 2 27
+              , srcInfoPoints =
+                  [ SrcSpan "tests/examples/DataHeadParen.hs" 2 1 2 7
+                  , SrcSpan "tests/examples/DataHeadParen.hs" 2 22 2 27
+                  ]
+              }
+            (ModuleName
+               SrcSpanInfo
+                 { srcInfoSpan = SrcSpan "tests/examples/DataHeadParen.hs" 2 8 2 21
+                 , srcInfoPoints = []
+                 }
+               "DataHeadParen")
+            Nothing
+            Nothing))
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/DataHeadParen.hs" 1 1 1 31
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/DataHeadParen.hs" 1 1 1 13
+                , SrcSpan "tests/examples/DataHeadParen.hs" 1 28 1 31
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/DataHeadParen.hs" 1 14 1 27
+                , srcInfoPoints = []
+                }
+              "TypeOperators"
+          ]
+      ]
+      []
+      [ DataDecl
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/DataHeadParen.hs" 4 1 4 23
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/DataHeadParen.hs" 4 18 4 19 ]
+            }
+          (DataType
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/DataHeadParen.hs" 4 1 4 5
+               , srcInfoPoints = []
+               })
+          Nothing
+          (DHParen
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/DataHeadParen.hs" 4 6 4 16
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/DataHeadParen.hs" 4 6 4 7
+                   , SrcSpan "tests/examples/DataHeadParen.hs" 4 15 4 16
+                   ]
+               }
+             (DHApp
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/DataHeadParen.hs" 4 7 4 15
+                  , srcInfoPoints = []
+                  }
+                (DHInfix
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataHeadParen.hs" 4 7 4 15
+                     , srcInfoPoints = []
+                     }
+                   (UnkindedVar
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/DataHeadParen.hs" 4 7 4 9
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/DataHeadParen.hs" 4 7 4 9
+                           , srcInfoPoints = []
+                           }
+                         "a1"))
+                   (Symbol
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/DataHeadParen.hs" 4 10 4 12
+                        , srcInfoPoints = []
+                        }
+                      ":<"))
+                (UnkindedVar
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/DataHeadParen.hs" 4 13 4 15
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/DataHeadParen.hs" 4 13 4 15
+                        , srcInfoPoints = []
+                        }
+                      "a2"))))
+          [ QualConDecl
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/DataHeadParen.hs" 4 20 4 23
+                , srcInfoPoints = []
+                }
+              Nothing
+              Nothing
+              (ConDecl
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/DataHeadParen.hs" 4 20 4 23
+                   , srcInfoPoints = []
+                   }
+                 (Ident
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/DataHeadParen.hs" 4 20 4 23
+                      , srcInfoPoints = []
+                      }
+                    "Foo")
+                 [])
+          ]
+          Nothing
+      ]
+  , []
+  )

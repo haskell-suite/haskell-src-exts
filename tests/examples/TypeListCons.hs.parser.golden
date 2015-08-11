@@ -1,1 +1,491 @@
-ParseOk (Module (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 1 1 8 1, srcInfoPoints = [SrcSpan "tests/examples/TypeListCons.hs" 1 1 1 1,SrcSpan "tests/examples/TypeListCons.hs" 3 1 3 1,SrcSpan "tests/examples/TypeListCons.hs" 3 1 3 1,SrcSpan "tests/examples/TypeListCons.hs" 5 1 5 1,SrcSpan "tests/examples/TypeListCons.hs" 6 1 6 1,SrcSpan "tests/examples/TypeListCons.hs" 7 1 7 1,SrcSpan "tests/examples/TypeListCons.hs" 8 1 8 1,SrcSpan "tests/examples/TypeListCons.hs" 8 1 8 1]}) (Just (ModuleHead (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 3 1 3 26, srcInfoPoints = [SrcSpan "tests/examples/TypeListCons.hs" 3 1 3 7,SrcSpan "tests/examples/TypeListCons.hs" 3 21 3 26]}) (ModuleName (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 3 8 3 20, srcInfoPoints = []}) "TypeListCons") Nothing Nothing)) [LanguagePragma (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 1 1 1 42, srcInfoPoints = [SrcSpan "tests/examples/TypeListCons.hs" 1 1 1 13,SrcSpan "tests/examples/TypeListCons.hs" 1 23 1 24,SrcSpan "tests/examples/TypeListCons.hs" 1 39 1 42]}) [Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 1 14 1 23, srcInfoPoints = []}) "DataKinds",Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 1 25 1 38, srcInfoPoints = []}) "TypeOperators"]] [] [TypeDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 5 1 5 24, srcInfoPoints = [SrcSpan "tests/examples/TypeListCons.hs" 5 1 5 5,SrcSpan "tests/examples/TypeListCons.hs" 5 14 5 15]}) (DHApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 5 6 5 13, srcInfoPoints = []}) (DHead (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 5 6 5 11, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 5 6 5 11, srcInfoPoints = []}) "List1")) (UnkindedVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 5 12 5 13, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 5 12 5 13, srcInfoPoints = []}) "a"))) (TyApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 5 16 5 24, srcInfoPoints = []}) (TyApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 5 16 5 20, srcInfoPoints = []}) (TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 5 16 5 17, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 5 16 5 17, srcInfoPoints = []}) "a")) (TyPromoted (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 5 18 5 20, srcInfoPoints = [SrcSpan "tests/examples/TypeListCons.hs" 5 18 5 19]}) (PromotedCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 5 18 5 20, srcInfoPoints = [SrcSpan "tests/examples/TypeListCons.hs" 5 18 5 19]}) True (Special (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 5 19 5 20, srcInfoPoints = []}) (Cons (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 5 19 5 20, srcInfoPoints = []})))))) (TyPromoted (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 5 21 5 24, srcInfoPoints = [SrcSpan "tests/examples/TypeListCons.hs" 5 21 5 22,SrcSpan "tests/examples/TypeListCons.hs" 5 23 5 24]}) (PromotedList (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 5 21 5 24, srcInfoPoints = [SrcSpan "tests/examples/TypeListCons.hs" 5 21 5 22,SrcSpan "tests/examples/TypeListCons.hs" 5 23 5 24]}) True []))),TypeDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 1 6 26, srcInfoPoints = [SrcSpan "tests/examples/TypeListCons.hs" 6 1 6 5,SrcSpan "tests/examples/TypeListCons.hs" 6 16 6 17]}) (DHApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 6 6 15, srcInfoPoints = []}) (DHApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 6 6 13, srcInfoPoints = []}) (DHead (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 6 6 11, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 6 6 11, srcInfoPoints = []}) "List2")) (UnkindedVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 12 6 13, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 12 6 13, srcInfoPoints = []}) "a"))) (UnkindedVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 14 6 15, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 14 6 15, srcInfoPoints = []}) "b"))) (TyApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 18 6 26, srcInfoPoints = []}) (TyApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 18 6 22, srcInfoPoints = []}) (TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 18 6 19, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 18 6 19, srcInfoPoints = []}) "a")) (TyPromoted (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 20 6 22, srcInfoPoints = [SrcSpan "tests/examples/TypeListCons.hs" 6 20 6 21]}) (PromotedCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 20 6 22, srcInfoPoints = [SrcSpan "tests/examples/TypeListCons.hs" 6 20 6 21]}) True (Special (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 21 6 22, srcInfoPoints = []}) (Cons (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 21 6 22, srcInfoPoints = []})))))) (TyPromoted (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 23 6 26, srcInfoPoints = [SrcSpan "tests/examples/TypeListCons.hs" 6 23 6 24,SrcSpan "tests/examples/TypeListCons.hs" 6 25 6 26]}) (PromotedList (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 23 6 26, srcInfoPoints = [SrcSpan "tests/examples/TypeListCons.hs" 6 23 6 24,SrcSpan "tests/examples/TypeListCons.hs" 6 25 6 26]}) True []))),TypeDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 1 7 38, srcInfoPoints = [SrcSpan "tests/examples/TypeListCons.hs" 7 1 7 5,SrcSpan "tests/examples/TypeListCons.hs" 7 18 7 19]}) (DHApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 6 7 17, srcInfoPoints = []}) (DHApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 6 7 15, srcInfoPoints = []}) (DHApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 6 7 13, srcInfoPoints = []}) (DHead (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 6 7 11, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 6 7 11, srcInfoPoints = []}) "List3")) (UnkindedVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 12 7 13, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 12 7 13, srcInfoPoints = []}) "a"))) (UnkindedVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 14 7 15, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 14 7 15, srcInfoPoints = []}) "b"))) (UnkindedVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 16 7 17, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 16 7 17, srcInfoPoints = []}) "c"))) (TyApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 20 7 38, srcInfoPoints = []}) (TyApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 20 7 34, srcInfoPoints = []}) (TyApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 20 7 31, srcInfoPoints = []}) (TyApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 20 7 29, srcInfoPoints = []}) (TyApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 20 7 26, srcInfoPoints = []}) (TyApp (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 20 7 24, srcInfoPoints = []}) (TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 20 7 21, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 20 7 21, srcInfoPoints = []}) "a")) (TyPromoted (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 22 7 24, srcInfoPoints = [SrcSpan "tests/examples/TypeListCons.hs" 7 22 7 23]}) (PromotedCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 22 7 24, srcInfoPoints = [SrcSpan "tests/examples/TypeListCons.hs" 7 22 7 23]}) True (Special (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 23 7 24, srcInfoPoints = []}) (Cons (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 23 7 24, srcInfoPoints = []})))))) (TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 25 7 26, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 25 7 26, srcInfoPoints = []}) "b"))) (TyPromoted (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 27 7 29, srcInfoPoints = [SrcSpan "tests/examples/TypeListCons.hs" 7 27 7 28]}) (PromotedCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 27 7 29, srcInfoPoints = [SrcSpan "tests/examples/TypeListCons.hs" 7 27 7 28]}) True (Special (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 28 7 29, srcInfoPoints = []}) (Cons (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 28 7 29, srcInfoPoints = []})))))) (TyVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 30 7 31, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 30 7 31, srcInfoPoints = []}) "c"))) (TyPromoted (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 32 7 34, srcInfoPoints = [SrcSpan "tests/examples/TypeListCons.hs" 7 32 7 33]}) (PromotedCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 32 7 34, srcInfoPoints = [SrcSpan "tests/examples/TypeListCons.hs" 7 32 7 33]}) True (Special (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 33 7 34, srcInfoPoints = []}) (Cons (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 33 7 34, srcInfoPoints = []})))))) (TyPromoted (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 35 7 38, srcInfoPoints = [SrcSpan "tests/examples/TypeListCons.hs" 7 35 7 36,SrcSpan "tests/examples/TypeListCons.hs" 7 37 7 38]}) (PromotedList (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 35 7 38, srcInfoPoints = [SrcSpan "tests/examples/TypeListCons.hs" 7 35 7 36,SrcSpan "tests/examples/TypeListCons.hs" 7 37 7 38]}) True [])))],[])
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 1 1 8 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/TypeListCons.hs" 1 1 1 1
+            , SrcSpan "tests/examples/TypeListCons.hs" 3 1 3 1
+            , SrcSpan "tests/examples/TypeListCons.hs" 3 1 3 1
+            , SrcSpan "tests/examples/TypeListCons.hs" 5 1 5 1
+            , SrcSpan "tests/examples/TypeListCons.hs" 6 1 6 1
+            , SrcSpan "tests/examples/TypeListCons.hs" 7 1 7 1
+            , SrcSpan "tests/examples/TypeListCons.hs" 8 1 8 1
+            , SrcSpan "tests/examples/TypeListCons.hs" 8 1 8 1
+            ]
+        }
+      (Just
+         (ModuleHead
+            SrcSpanInfo
+              { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 3 1 3 26
+              , srcInfoPoints =
+                  [ SrcSpan "tests/examples/TypeListCons.hs" 3 1 3 7
+                  , SrcSpan "tests/examples/TypeListCons.hs" 3 21 3 26
+                  ]
+              }
+            (ModuleName
+               SrcSpanInfo
+                 { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 3 8 3 20
+                 , srcInfoPoints = []
+                 }
+               "TypeListCons")
+            Nothing
+            Nothing))
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 1 1 1 42
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/TypeListCons.hs" 1 1 1 13
+                , SrcSpan "tests/examples/TypeListCons.hs" 1 23 1 24
+                , SrcSpan "tests/examples/TypeListCons.hs" 1 39 1 42
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 1 14 1 23
+                , srcInfoPoints = []
+                }
+              "DataKinds"
+          , Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 1 25 1 38
+                , srcInfoPoints = []
+                }
+              "TypeOperators"
+          ]
+      ]
+      []
+      [ TypeDecl
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 5 1 5 24
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/TypeListCons.hs" 5 1 5 5
+                , SrcSpan "tests/examples/TypeListCons.hs" 5 14 5 15
+                ]
+            }
+          (DHApp
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 5 6 5 13
+               , srcInfoPoints = []
+               }
+             (DHead
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 5 6 5 11
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 5 6 5 11
+                     , srcInfoPoints = []
+                     }
+                   "List1"))
+             (UnkindedVar
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 5 12 5 13
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 5 12 5 13
+                     , srcInfoPoints = []
+                     }
+                   "a")))
+          (TyApp
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 5 16 5 24
+               , srcInfoPoints = []
+               }
+             (TyApp
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 5 16 5 20
+                  , srcInfoPoints = []
+                  }
+                (TyVar
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 5 16 5 17
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 5 16 5 17
+                        , srcInfoPoints = []
+                        }
+                      "a"))
+                (TyPromoted
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 5 18 5 20
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/TypeListCons.hs" 5 18 5 19 ]
+                     }
+                   (PromotedCon
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 5 18 5 20
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/TypeListCons.hs" 5 18 5 19 ]
+                        }
+                      True
+                      (Special
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 5 19 5 20
+                           , srcInfoPoints = []
+                           }
+                         (Cons
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 5 19 5 20
+                              , srcInfoPoints = []
+                              })))))
+             (TyPromoted
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 5 21 5 24
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/TypeListCons.hs" 5 21 5 22
+                      , SrcSpan "tests/examples/TypeListCons.hs" 5 23 5 24
+                      ]
+                  }
+                (PromotedList
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 5 21 5 24
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/TypeListCons.hs" 5 21 5 22
+                         , SrcSpan "tests/examples/TypeListCons.hs" 5 23 5 24
+                         ]
+                     }
+                   True
+                   [])))
+      , TypeDecl
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 1 6 26
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/TypeListCons.hs" 6 1 6 5
+                , SrcSpan "tests/examples/TypeListCons.hs" 6 16 6 17
+                ]
+            }
+          (DHApp
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 6 6 15
+               , srcInfoPoints = []
+               }
+             (DHApp
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 6 6 13
+                  , srcInfoPoints = []
+                  }
+                (DHead
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 6 6 11
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 6 6 11
+                        , srcInfoPoints = []
+                        }
+                      "List2"))
+                (UnkindedVar
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 12 6 13
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 12 6 13
+                        , srcInfoPoints = []
+                        }
+                      "a")))
+             (UnkindedVar
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 14 6 15
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 14 6 15
+                     , srcInfoPoints = []
+                     }
+                   "b")))
+          (TyApp
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 18 6 26
+               , srcInfoPoints = []
+               }
+             (TyApp
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 18 6 22
+                  , srcInfoPoints = []
+                  }
+                (TyVar
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 18 6 19
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 18 6 19
+                        , srcInfoPoints = []
+                        }
+                      "a"))
+                (TyPromoted
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 20 6 22
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/TypeListCons.hs" 6 20 6 21 ]
+                     }
+                   (PromotedCon
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 20 6 22
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/TypeListCons.hs" 6 20 6 21 ]
+                        }
+                      True
+                      (Special
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 21 6 22
+                           , srcInfoPoints = []
+                           }
+                         (Cons
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 21 6 22
+                              , srcInfoPoints = []
+                              })))))
+             (TyPromoted
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 23 6 26
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/TypeListCons.hs" 6 23 6 24
+                      , SrcSpan "tests/examples/TypeListCons.hs" 6 25 6 26
+                      ]
+                  }
+                (PromotedList
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 6 23 6 26
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/TypeListCons.hs" 6 23 6 24
+                         , SrcSpan "tests/examples/TypeListCons.hs" 6 25 6 26
+                         ]
+                     }
+                   True
+                   [])))
+      , TypeDecl
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 1 7 38
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/TypeListCons.hs" 7 1 7 5
+                , SrcSpan "tests/examples/TypeListCons.hs" 7 18 7 19
+                ]
+            }
+          (DHApp
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 6 7 17
+               , srcInfoPoints = []
+               }
+             (DHApp
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 6 7 15
+                  , srcInfoPoints = []
+                  }
+                (DHApp
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 6 7 13
+                     , srcInfoPoints = []
+                     }
+                   (DHead
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 6 7 11
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 6 7 11
+                           , srcInfoPoints = []
+                           }
+                         "List3"))
+                   (UnkindedVar
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 12 7 13
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 12 7 13
+                           , srcInfoPoints = []
+                           }
+                         "a")))
+                (UnkindedVar
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 14 7 15
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 14 7 15
+                        , srcInfoPoints = []
+                        }
+                      "b")))
+             (UnkindedVar
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 16 7 17
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 16 7 17
+                     , srcInfoPoints = []
+                     }
+                   "c")))
+          (TyApp
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 20 7 38
+               , srcInfoPoints = []
+               }
+             (TyApp
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 20 7 34
+                  , srcInfoPoints = []
+                  }
+                (TyApp
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 20 7 31
+                     , srcInfoPoints = []
+                     }
+                   (TyApp
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 20 7 29
+                        , srcInfoPoints = []
+                        }
+                      (TyApp
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 20 7 26
+                           , srcInfoPoints = []
+                           }
+                         (TyApp
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 20 7 24
+                              , srcInfoPoints = []
+                              }
+                            (TyVar
+                               SrcSpanInfo
+                                 { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 20 7 21
+                                 , srcInfoPoints = []
+                                 }
+                               (Ident
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/TypeListCons.hs" 7 20 7 21
+                                    , srcInfoPoints = []
+                                    }
+                                  "a"))
+                            (TyPromoted
+                               SrcSpanInfo
+                                 { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 22 7 24
+                                 , srcInfoPoints =
+                                     [ SrcSpan "tests/examples/TypeListCons.hs" 7 22 7 23 ]
+                                 }
+                               (PromotedCon
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/TypeListCons.hs" 7 22 7 24
+                                    , srcInfoPoints =
+                                        [ SrcSpan "tests/examples/TypeListCons.hs" 7 22 7 23 ]
+                                    }
+                                  True
+                                  (Special
+                                     SrcSpanInfo
+                                       { srcInfoSpan =
+                                           SrcSpan "tests/examples/TypeListCons.hs" 7 23 7 24
+                                       , srcInfoPoints = []
+                                       }
+                                     (Cons
+                                        SrcSpanInfo
+                                          { srcInfoSpan =
+                                              SrcSpan "tests/examples/TypeListCons.hs" 7 23 7 24
+                                          , srcInfoPoints = []
+                                          })))))
+                         (TyVar
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 25 7 26
+                              , srcInfoPoints = []
+                              }
+                            (Ident
+                               SrcSpanInfo
+                                 { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 25 7 26
+                                 , srcInfoPoints = []
+                                 }
+                               "b")))
+                      (TyPromoted
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 27 7 29
+                           , srcInfoPoints =
+                               [ SrcSpan "tests/examples/TypeListCons.hs" 7 27 7 28 ]
+                           }
+                         (PromotedCon
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 27 7 29
+                              , srcInfoPoints =
+                                  [ SrcSpan "tests/examples/TypeListCons.hs" 7 27 7 28 ]
+                              }
+                            True
+                            (Special
+                               SrcSpanInfo
+                                 { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 28 7 29
+                                 , srcInfoPoints = []
+                                 }
+                               (Cons
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/TypeListCons.hs" 7 28 7 29
+                                    , srcInfoPoints = []
+                                    })))))
+                   (TyVar
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 30 7 31
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 30 7 31
+                           , srcInfoPoints = []
+                           }
+                         "c")))
+                (TyPromoted
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 32 7 34
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/TypeListCons.hs" 7 32 7 33 ]
+                     }
+                   (PromotedCon
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 32 7 34
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/TypeListCons.hs" 7 32 7 33 ]
+                        }
+                      True
+                      (Special
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 33 7 34
+                           , srcInfoPoints = []
+                           }
+                         (Cons
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 33 7 34
+                              , srcInfoPoints = []
+                              })))))
+             (TyPromoted
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 35 7 38
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/TypeListCons.hs" 7 35 7 36
+                      , SrcSpan "tests/examples/TypeListCons.hs" 7 37 7 38
+                      ]
+                  }
+                (PromotedList
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TypeListCons.hs" 7 35 7 38
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/TypeListCons.hs" 7 35 7 36
+                         , SrcSpan "tests/examples/TypeListCons.hs" 7 37 7 38
+                         ]
+                     }
+                   True
+                   [])))
+      ]
+  , []
+  )

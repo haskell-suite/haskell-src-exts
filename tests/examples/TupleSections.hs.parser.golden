@@ -1,1 +1,138 @@
-ParseOk (Module (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TupleSections.hs" 1 1 4 1, srcInfoPoints = [SrcSpan "tests/examples/TupleSections.hs" 1 1 1 1,SrcSpan "tests/examples/TupleSections.hs" 3 1 3 1,SrcSpan "tests/examples/TupleSections.hs" 3 1 3 1,SrcSpan "tests/examples/TupleSections.hs" 3 1 3 1,SrcSpan "tests/examples/TupleSections.hs" 4 1 4 1,SrcSpan "tests/examples/TupleSections.hs" 4 1 4 1]}) Nothing [LanguagePragma (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TupleSections.hs" 1 1 1 31, srcInfoPoints = [SrcSpan "tests/examples/TupleSections.hs" 1 1 1 13,SrcSpan "tests/examples/TupleSections.hs" 1 28 1 31]}) [Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TupleSections.hs" 1 14 1 27, srcInfoPoints = []}) "TupleSections"]] [] [FunBind (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TupleSections.hs" 3 1 3 18, srcInfoPoints = []}) [Match (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TupleSections.hs" 3 1 3 18, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TupleSections.hs" 3 1 3 4, srcInfoPoints = []}) "foo") [PVar (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TupleSections.hs" 3 5 3 6, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TupleSections.hs" 3 5 3 6, srcInfoPoints = []}) "x")] (UnGuardedRhs (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TupleSections.hs" 3 7 3 18, srcInfoPoints = [SrcSpan "tests/examples/TupleSections.hs" 3 7 3 8]}) (App (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TupleSections.hs" 3 9 3 18, srcInfoPoints = []}) (App (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TupleSections.hs" 3 9 3 16, srcInfoPoints = []}) (TupleSection (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TupleSections.hs" 3 9 3 14, srcInfoPoints = [SrcSpan "tests/examples/TupleSections.hs" 3 9 3 10,SrcSpan "tests/examples/TupleSections.hs" 3 11 3 12,SrcSpan "tests/examples/TupleSections.hs" 3 12 3 13,SrcSpan "tests/examples/TupleSections.hs" 3 13 3 14]}) Boxed [Just (Lit (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TupleSections.hs" 3 10 3 11, srcInfoPoints = []}) (Int (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TupleSections.hs" 3 10 3 11, srcInfoPoints = []}) 1 "1")),Nothing,Nothing]) (Var (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TupleSections.hs" 3 15 3 16, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TupleSections.hs" 3 15 3 16, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TupleSections.hs" 3 15 3 16, srcInfoPoints = []}) "x")))) (Lit (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TupleSections.hs" 3 17 3 18, srcInfoPoints = []}) (Int (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/TupleSections.hs" 3 17 3 18, srcInfoPoints = []}) 3 "3")))) Nothing]],[])
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/TupleSections.hs" 1 1 4 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/TupleSections.hs" 1 1 1 1
+            , SrcSpan "tests/examples/TupleSections.hs" 3 1 3 1
+            , SrcSpan "tests/examples/TupleSections.hs" 3 1 3 1
+            , SrcSpan "tests/examples/TupleSections.hs" 3 1 3 1
+            , SrcSpan "tests/examples/TupleSections.hs" 4 1 4 1
+            , SrcSpan "tests/examples/TupleSections.hs" 4 1 4 1
+            ]
+        }
+      Nothing
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/TupleSections.hs" 1 1 1 31
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/TupleSections.hs" 1 1 1 13
+                , SrcSpan "tests/examples/TupleSections.hs" 1 28 1 31
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/TupleSections.hs" 1 14 1 27
+                , srcInfoPoints = []
+                }
+              "TupleSections"
+          ]
+      ]
+      []
+      [ FunBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/TupleSections.hs" 3 1 3 18
+            , srcInfoPoints = []
+            }
+          [ Match
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/TupleSections.hs" 3 1 3 18
+                , srcInfoPoints = []
+                }
+              (Ident
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/TupleSections.hs" 3 1 3 4
+                   , srcInfoPoints = []
+                   }
+                 "foo")
+              [ PVar
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/TupleSections.hs" 3 5 3 6
+                    , srcInfoPoints = []
+                    }
+                  (Ident
+                     SrcSpanInfo
+                       { srcInfoSpan = SrcSpan "tests/examples/TupleSections.hs" 3 5 3 6
+                       , srcInfoPoints = []
+                       }
+                     "x")
+              ]
+              (UnGuardedRhs
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/TupleSections.hs" 3 7 3 18
+                   , srcInfoPoints =
+                       [ SrcSpan "tests/examples/TupleSections.hs" 3 7 3 8 ]
+                   }
+                 (App
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/TupleSections.hs" 3 9 3 18
+                      , srcInfoPoints = []
+                      }
+                    (App
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/TupleSections.hs" 3 9 3 16
+                         , srcInfoPoints = []
+                         }
+                       (TupleSection
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/TupleSections.hs" 3 9 3 14
+                            , srcInfoPoints =
+                                [ SrcSpan "tests/examples/TupleSections.hs" 3 9 3 10
+                                , SrcSpan "tests/examples/TupleSections.hs" 3 11 3 12
+                                , SrcSpan "tests/examples/TupleSections.hs" 3 12 3 13
+                                , SrcSpan "tests/examples/TupleSections.hs" 3 13 3 14
+                                ]
+                            }
+                          Boxed
+                          [ Just
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/TupleSections.hs" 3 10 3 11
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan "tests/examples/TupleSections.hs" 3 10 3 11
+                                      , srcInfoPoints = []
+                                      }
+                                    1
+                                    "1"))
+                          , Nothing
+                          , Nothing
+                          ])
+                       (Var
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/TupleSections.hs" 3 15 3 16
+                            , srcInfoPoints = []
+                            }
+                          (UnQual
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/TupleSections.hs" 3 15 3 16
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/TupleSections.hs" 3 15 3 16
+                                  , srcInfoPoints = []
+                                  }
+                                "x"))))
+                    (Lit
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/TupleSections.hs" 3 17 3 18
+                         , srcInfoPoints = []
+                         }
+                       (Int
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/TupleSections.hs" 3 17 3 18
+                            , srcInfoPoints = []
+                            }
+                          3
+                          "3"))))
+              Nothing
+          ]
+      ]
+  , []
+  )

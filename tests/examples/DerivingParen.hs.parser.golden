@@ -1,1 +1,176 @@
-ParseOk (Module (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 1 1 3 1, srcInfoPoints = [SrcSpan "tests/examples/DerivingParen.hs" 1 1 1 1,SrcSpan "tests/examples/DerivingParen.hs" 1 1 1 1,SrcSpan "tests/examples/DerivingParen.hs" 1 1 1 1,SrcSpan "tests/examples/DerivingParen.hs" 2 1 2 1,SrcSpan "tests/examples/DerivingParen.hs" 3 1 3 1,SrcSpan "tests/examples/DerivingParen.hs" 3 1 3 1]}) Nothing [] [] [DataDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 1 1 1 25, srcInfoPoints = [SrcSpan "tests/examples/DerivingParen.hs" 1 8 1 9]}) (DataType (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 1 1 1 5, srcInfoPoints = []})) Nothing (DHead (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 1 6 1 7, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 1 6 1 7, srcInfoPoints = []}) "X")) [QualConDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 1 10 1 11, srcInfoPoints = []}) Nothing Nothing (ConDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 1 10 1 11, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 1 10 1 11, srcInfoPoints = []}) "X") [])] (Just (Deriving (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 1 12 1 25, srcInfoPoints = [SrcSpan "tests/examples/DerivingParen.hs" 1 12 1 20]}) [IRule (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 1 21 1 25, srcInfoPoints = []}) Nothing Nothing (IHCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 1 21 1 25, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 1 21 1 25, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 1 21 1 25, srcInfoPoints = []}) "Show")))])),DataDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 2 1 2 27, srcInfoPoints = [SrcSpan "tests/examples/DerivingParen.hs" 2 8 2 9]}) (DataType (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 2 1 2 5, srcInfoPoints = []})) Nothing (DHead (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 2 6 2 7, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 2 6 2 7, srcInfoPoints = []}) "X")) [QualConDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 2 10 2 11, srcInfoPoints = []}) Nothing Nothing (ConDecl (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 2 10 2 11, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 2 10 2 11, srcInfoPoints = []}) "X") [])] (Just (Deriving (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 2 12 2 27, srcInfoPoints = [SrcSpan "tests/examples/DerivingParen.hs" 2 12 2 20]}) [IParen (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 2 21 2 27, srcInfoPoints = [SrcSpan "tests/examples/DerivingParen.hs" 2 21 2 22,SrcSpan "tests/examples/DerivingParen.hs" 2 26 2 27]}) (IRule (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 2 22 2 26, srcInfoPoints = []}) Nothing Nothing (IHCon (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 2 22 2 26, srcInfoPoints = []}) (UnQual (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 2 22 2 26, srcInfoPoints = []}) (Ident (SrcSpanInfo {srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 2 22 2 26, srcInfoPoints = []}) "Show"))))]))],[])
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 1 1 3 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/DerivingParen.hs" 1 1 1 1
+            , SrcSpan "tests/examples/DerivingParen.hs" 1 1 1 1
+            , SrcSpan "tests/examples/DerivingParen.hs" 1 1 1 1
+            , SrcSpan "tests/examples/DerivingParen.hs" 2 1 2 1
+            , SrcSpan "tests/examples/DerivingParen.hs" 3 1 3 1
+            , SrcSpan "tests/examples/DerivingParen.hs" 3 1 3 1
+            ]
+        }
+      Nothing
+      []
+      []
+      [ DataDecl
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 1 1 1 25
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/DerivingParen.hs" 1 8 1 9 ]
+            }
+          (DataType
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 1 1 1 5
+               , srcInfoPoints = []
+               })
+          Nothing
+          (DHead
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 1 6 1 7
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 1 6 1 7
+                  , srcInfoPoints = []
+                  }
+                "X"))
+          [ QualConDecl
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 1 10 1 11
+                , srcInfoPoints = []
+                }
+              Nothing
+              Nothing
+              (ConDecl
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 1 10 1 11
+                   , srcInfoPoints = []
+                   }
+                 (Ident
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 1 10 1 11
+                      , srcInfoPoints = []
+                      }
+                    "X")
+                 [])
+          ]
+          (Just
+             (Deriving
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 1 12 1 25
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/DerivingParen.hs" 1 12 1 20 ]
+                  }
+                [ IRule
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 1 21 1 25
+                      , srcInfoPoints = []
+                      }
+                    Nothing
+                    Nothing
+                    (IHCon
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 1 21 1 25
+                         , srcInfoPoints = []
+                         }
+                       (UnQual
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 1 21 1 25
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 1 21 1 25
+                               , srcInfoPoints = []
+                               }
+                             "Show")))
+                ]))
+      , DataDecl
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 2 1 2 27
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/DerivingParen.hs" 2 8 2 9 ]
+            }
+          (DataType
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 2 1 2 5
+               , srcInfoPoints = []
+               })
+          Nothing
+          (DHead
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 2 6 2 7
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 2 6 2 7
+                  , srcInfoPoints = []
+                  }
+                "X"))
+          [ QualConDecl
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 2 10 2 11
+                , srcInfoPoints = []
+                }
+              Nothing
+              Nothing
+              (ConDecl
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 2 10 2 11
+                   , srcInfoPoints = []
+                   }
+                 (Ident
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 2 10 2 11
+                      , srcInfoPoints = []
+                      }
+                    "X")
+                 [])
+          ]
+          (Just
+             (Deriving
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 2 12 2 27
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/DerivingParen.hs" 2 12 2 20 ]
+                  }
+                [ IParen
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 2 21 2 27
+                      , srcInfoPoints =
+                          [ SrcSpan "tests/examples/DerivingParen.hs" 2 21 2 22
+                          , SrcSpan "tests/examples/DerivingParen.hs" 2 26 2 27
+                          ]
+                      }
+                    (IRule
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 2 22 2 26
+                         , srcInfoPoints = []
+                         }
+                       Nothing
+                       Nothing
+                       (IHCon
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 2 22 2 26
+                            , srcInfoPoints = []
+                            }
+                          (UnQual
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/DerivingParen.hs" 2 22 2 26
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/DerivingParen.hs" 2 22 2 26
+                                  , srcInfoPoints = []
+                                  }
+                                "Show"))))
+                ]))
+      ]
+  , []
+  )
