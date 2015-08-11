@@ -191,8 +191,8 @@ data ExportSpecList l
 
 -- | An item in a module's export specification.
 data ExportSpec l
-     = EVar l (Namespace l) (QName l)   -- ^ variable.
-     | EAbs l (QName l)                 -- ^ @T@:
+     = EVar l (QName l)                 -- ^ variable.
+     | EAbs l (Namespace l) (QName l)   -- ^ @T@:
                                         --   a class or datatype exported abstractly,
                                         --   or a type synonym.
      | EThingAll l (QName l)            -- ^ @T(..)@:
@@ -234,8 +234,8 @@ data ImportSpecList l
 -- | An import specification, representing a single explicit item imported
 --   (or hidden) from a module.
 data ImportSpec l
-     = IVar l (Namespace l) (Name l)    -- ^ variable
-     | IAbs l (Name l)                  -- ^ @T@:
+     = IVar l (Name l)                  -- ^ variable
+     | IAbs l (Namespace l) (Name l)    -- ^ @T@:
                                         --   the name of a class, datatype or type synonym.
      | IThingAll l (Name l)             -- ^ @T(..)@:
                                         --   a class imported with all of its methods, or
@@ -1123,14 +1123,14 @@ instance Annotated ExportSpecList where
 
 instance Annotated ExportSpec where
     ann es = case es of
-        EVar l _ _          -> l
-        EAbs l _            -> l
+        EVar l _            -> l
+        EAbs l _ _          -> l
         EThingAll l _       -> l
         EThingWith l _ _    -> l
         EModuleContents l _ -> l
     amap f es = case es of
-        EVar l t qn     -> EVar (f l) t qn
-        EAbs l qn       -> EAbs (f l) qn
+        EVar l qn     -> EVar (f l) qn
+        EAbs l n qn       -> EAbs (f l) n qn
         EThingAll l qn  -> EThingAll (f l) qn
         EThingWith l qn cns -> EThingWith (f l) qn cns
         EModuleContents l mn    -> EModuleContents (f l) mn
@@ -1156,13 +1156,13 @@ instance Annotated ImportSpecList where
 
 instance Annotated ImportSpec where
     ann is = case is of
-        IVar l _ _       -> l
-        IAbs l _         -> l
+        IVar l _         -> l
+        IAbs l _ _       -> l
         IThingAll l _    -> l
         IThingWith l _ _ -> l
     amap f is = case is of
-        IVar l t n      -> IVar (f l) t n
-        IAbs l n        -> IAbs (f l) n
+        IVar l n        -> IVar (f l) n
+        IAbs l ns n     -> IAbs (f l) ns n
         IThingAll l n   -> IThingAll (f l) n
         IThingWith l n cns  -> IThingWith (f l) n cns
 
