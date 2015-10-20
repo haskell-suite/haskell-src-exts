@@ -467,8 +467,7 @@ checkPat e' [] = case e' of
                   return (PIrrPat l p)
     ViewPat l e p  -> do
                   e1 <- checkExpr e
-                  p1 <- checkPat p []
-                  return (PViewPat l e1 p1)
+                  return (PViewPat l e1 p)
     RecConstr l c fs   -> do
                   fs' <- mapM checkPatField fs
                   return (PRec l c fs')
