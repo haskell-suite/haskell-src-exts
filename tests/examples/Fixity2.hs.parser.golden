@@ -1,0 +1,297 @@
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 1 1 4 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/Fixity2.hs" 1 1 1 1
+            , SrcSpan "tests/examples/Fixity2.hs" 1 1 1 1
+            , SrcSpan "tests/examples/Fixity2.hs" 1 1 1 1
+            , SrcSpan "tests/examples/Fixity2.hs" 4 1 4 1
+            , SrcSpan "tests/examples/Fixity2.hs" 4 1 4 1
+            ]
+        }
+      Nothing
+      []
+      []
+      [ PatBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 1 1 3 15
+            , srcInfoPoints = [ SrcSpan "tests/examples/Fixity2.hs" 1 38 1 43 ]
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 1 1 1 4
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 1 1 1 4
+                  , srcInfoPoints = []
+                  }
+                "foo"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 1 5 1 37
+               , srcInfoPoints = [ SrcSpan "tests/examples/Fixity2.hs" 1 5 1 6 ]
+               }
+             (InfixApp
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 1 7 1 37
+                  , srcInfoPoints = []
+                  }
+                (App
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 1 7 1 13
+                     , srcInfoPoints = []
+                     }
+                   (Var
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 1 7 1 11
+                        , srcInfoPoints = []
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 1 7 1 11
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 1 7 1 11
+                              , srcInfoPoints = []
+                              }
+                            "pure")))
+                   (Lit
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 1 12 1 13
+                        , srcInfoPoints = []
+                        }
+                      (Int
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 1 12 1 13
+                           , srcInfoPoints = []
+                           }
+                         1
+                         "1")))
+                (QVarOp
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 1 14 1 17
+                     , srcInfoPoints = []
+                     }
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 1 14 1 17
+                        , srcInfoPoints = []
+                        }
+                      (Symbol
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 1 14 1 17
+                           , srcInfoPoints = []
+                           }
+                         "<^>")))
+                (InfixApp
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 1 18 1 37
+                     , srcInfoPoints = []
+                     }
+                   (App
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 1 18 1 24
+                        , srcInfoPoints = []
+                        }
+                      (Var
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 1 18 1 22
+                           , srcInfoPoints = []
+                           }
+                         (UnQual
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 1 18 1 22
+                              , srcInfoPoints = []
+                              }
+                            (Ident
+                               SrcSpanInfo
+                                 { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 1 18 1 22
+                                 , srcInfoPoints = []
+                                 }
+                               "pure")))
+                      (Lit
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 1 23 1 24
+                           , srcInfoPoints = []
+                           }
+                         (Int
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 1 23 1 24
+                              , srcInfoPoints = []
+                              }
+                            2
+                            "2")))
+                   (QVarOp
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 1 25 1 28
+                        , srcInfoPoints = []
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 1 25 1 28
+                           , srcInfoPoints = []
+                           }
+                         (Symbol
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 1 25 1 28
+                              , srcInfoPoints = []
+                              }
+                            "<^>")))
+                   (App
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 1 29 1 37
+                        , srcInfoPoints = []
+                        }
+                      (Var
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 1 29 1 33
+                           , srcInfoPoints = []
+                           }
+                         (UnQual
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 1 29 1 33
+                              , srcInfoPoints = []
+                              }
+                            (Ident
+                               SrcSpanInfo
+                                 { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 1 29 1 33
+                                 , srcInfoPoints = []
+                                 }
+                               "pure")))
+                      (Var
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 1 34 1 37
+                           , srcInfoPoints =
+                               [ SrcSpan "tests/examples/Fixity2.hs" 1 34 1 35
+                               , SrcSpan "tests/examples/Fixity2.hs" 1 35 1 36
+                               , SrcSpan "tests/examples/Fixity2.hs" 1 36 1 37
+                               ]
+                           }
+                         (UnQual
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 1 34 1 37
+                              , srcInfoPoints =
+                                  [ SrcSpan "tests/examples/Fixity2.hs" 1 34 1 35
+                                  , SrcSpan "tests/examples/Fixity2.hs" 1 35 1 36
+                                  , SrcSpan "tests/examples/Fixity2.hs" 1 36 1 37
+                                  ]
+                              }
+                            (Symbol
+                               SrcSpanInfo
+                                 { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 1 35 1 36
+                                 , srcInfoPoints = []
+                                 }
+                               "+")))))))
+          (Just
+             (BDecls
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 2 3 3 15
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/Fixity2.hs" 2 3 2 3
+                      , SrcSpan "tests/examples/Fixity2.hs" 3 3 3 3
+                      , SrcSpan "tests/examples/Fixity2.hs" 4 1 4 0
+                      ]
+                  }
+                [ PatBind
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 2 3 2 21
+                      , srcInfoPoints = []
+                      }
+                    (PVar
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 2 3 2 8
+                         , srcInfoPoints =
+                             [ SrcSpan "tests/examples/Fixity2.hs" 2 3 2 4
+                             , SrcSpan "tests/examples/Fixity2.hs" 2 4 2 7
+                             , SrcSpan "tests/examples/Fixity2.hs" 2 7 2 8
+                             ]
+                         }
+                       (Symbol
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 2 4 2 7
+                            , srcInfoPoints = []
+                            }
+                          "<^>"))
+                    (UnGuardedRhs
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 2 9 2 21
+                         , srcInfoPoints = [ SrcSpan "tests/examples/Fixity2.hs" 2 9 2 10 ]
+                         }
+                       (App
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 2 11 2 21
+                            , srcInfoPoints = []
+                            }
+                          (Var
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 2 11 2 15
+                               , srcInfoPoints = []
+                               }
+                             (UnQual
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 2 11 2 15
+                                  , srcInfoPoints = []
+                                  }
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 2 11 2 15
+                                     , srcInfoPoints = []
+                                     }
+                                   "flip")))
+                          (Var
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 2 16 2 21
+                               , srcInfoPoints =
+                                   [ SrcSpan "tests/examples/Fixity2.hs" 2 16 2 17
+                                   , SrcSpan "tests/examples/Fixity2.hs" 2 17 2 20
+                                   , SrcSpan "tests/examples/Fixity2.hs" 2 20 2 21
+                                   ]
+                               }
+                             (UnQual
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 2 16 2 21
+                                  , srcInfoPoints =
+                                      [ SrcSpan "tests/examples/Fixity2.hs" 2 16 2 17
+                                      , SrcSpan "tests/examples/Fixity2.hs" 2 17 2 20
+                                      , SrcSpan "tests/examples/Fixity2.hs" 2 20 2 21
+                                      ]
+                                  }
+                                (Symbol
+                                   SrcSpanInfo
+                                     { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 2 17 2 20
+                                     , srcInfoPoints = []
+                                     }
+                                   "<*>")))))
+                    Nothing
+                , InfixDecl
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 3 3 3 15
+                      , srcInfoPoints = [ SrcSpan "tests/examples/Fixity2.hs" 3 10 3 11 ]
+                      }
+                    (AssocRight
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 3 3 3 9
+                         , srcInfoPoints = []
+                         })
+                    (Just 4)
+                    [ VarOp
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 3 12 3 15
+                          , srcInfoPoints = []
+                          }
+                        (Symbol
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/Fixity2.hs" 3 12 3 15
+                             , srcInfoPoints = []
+                             }
+                           "<^>")
+                    ]
+                ]))
+      ]
+  , []
+  )
