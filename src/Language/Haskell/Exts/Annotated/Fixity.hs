@@ -158,13 +158,19 @@ getFixities :: Maybe S.ModuleName -> [Decl l] -> [Fixity]
 getFixities mmdl = concatMap (getFixity mmdl)
 
 getFixity :: Maybe S.ModuleName -> Decl l -> [Fixity]
-getFixity mmdl (InfixDecl _ a mp ops) = let p = maybe 9 id mp in map (Fixity (sAssoc a) p) (concatMap g ops)
+getFixity mmdl d =
+  case d of
+    InfixDecl _ a mp ops  -> let p = maybe 9 id mp
+                              in map (Fixity (sAssoc a) p) (concatMap g ops)
+    ClassDecl _ _ _ _ cds -> maybe [] (concatMap getClassFixity) cds
+    _ -> []
   where g (VarOp _ x) = f $ sName x
         g (ConOp _ x) = f $ sName x
         f x = case mmdl of
               Nothing -> [            S.UnQual x]
               Just m  -> [S.Qual m x, S.UnQual x]
-getFixity _ _ = []
+        getClassFixity (ClsDecl _ cd) = getFixity mmdl cd
+        getClassFixity _              = []
 
 getBindFixities :: Binds l -> [Fixity]
 getBindFixities bs = case bs of

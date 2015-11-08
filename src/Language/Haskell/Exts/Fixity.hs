@@ -209,10 +209,13 @@ appFixDecls fixs decls =
 
 getFixities :: [Decl] -> [Fixity]
 getFixities = concatMap getFixity
-  where getFixity (InfixDecl _ a p ops) = map (Fixity a p . g) ops
+  where getFixity (InfixDecl _ a p ops)     = map (Fixity a p . g) ops
+        getFixity (ClassDecl _ _ _ _ _ cds) = concatMap getClassFixity cds
         getFixity _ = []
         g (VarOp x) = UnQual x
         g (ConOp x) = UnQual x
+        getClassFixity (ClsDecl d) = getFixities [d]
+        getClassFixity _           = []
 
 getBindFixities :: Binds -> [Fixity]
 getBindFixities bs = case bs of
