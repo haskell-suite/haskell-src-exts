@@ -142,7 +142,9 @@ instance AppFixity Decl where
         InstDecl  l olp ih idecls         -> liftM (InstDecl  l olp ih)  $ mapM (mapM fix) idecls
         SpliceDecl l spl        -> liftM (SpliceDecl l) $ fix spl
         FunBind l matches       -> liftM (FunBind l) $ mapM fix matches
-        PatBind l p rhs bs      -> liftM3 (PatBind l) (fix p) (fix rhs) (mapM fix bs)
+        PatBind l p rhs bs      ->
+         let extraFix x = applyFixities (fixs ++ maybe [] getBindFixities bs) x
+          in liftM3 (PatBind l) (extraFix p) (extraFix rhs) (mapM extraFix bs)
         AnnPragma l ann'         -> liftM (AnnPragma l) $ fix ann'
         _                       -> return decl
       where fix x = applyFixities fixs x
@@ -164,6 +166,11 @@ getFixity mmdl (InfixDecl _ a mp ops) = let p = maybe 9 id mp in map (Fixity (sA
               Just m  -> [S.Qual m x, S.UnQual x]
 getFixity _ _ = []
 
+getBindFixities :: Binds l -> [Fixity]
+getBindFixities bs = case bs of
+                        BDecls _ ds -> getFixities Nothing ds
+                        _           -> []
+
 instance AppFixity Annotation where
     applyFixities fixs ann' = case ann' of
         Ann     l n e   -> liftM (Ann l n) $ fix e
@@ -181,9 +188,10 @@ instance AppFixity InstDecl where
 
 instance AppFixity Match where
     applyFixities fixs match = case match of
-        Match l n ps rhs bs -> liftM3 (Match l n) (mapM fix ps) (fix rhs) (mapM fix bs)
-        InfixMatch l a n ps rhs bs -> liftM4 (flip (InfixMatch l) n) (fix a) (mapM fix ps) (fix rhs) (mapM fix bs)
-      where fix x = applyFixities fixs x
+        Match l n ps rhs bs -> liftM3 (Match l n) (mapM (fix bs) ps) (fix bs rhs) (mapM (fix bs) bs)
+        InfixMatch l a n ps rhs bs -> liftM4 (flip (InfixMatch l) n) (fix bs a) (mapM (fix bs) ps) (fix bs rhs) (mapM (fix bs) bs)
+      where fix bs x = applyFixities fixs' x
+             where fixs' = fixs ++ maybe [] getBindFixities bs
 
 instance AppFixity Rhs where
     applyFixities fixs rhs = case rhs of
@@ -276,7 +284,9 @@ leafFix fixs e' = case e' of
     App l e1 e2               -> liftM2 (App l) (fix e1) (fix e2)
     NegApp l e                -> liftM (NegApp l) $ fix e
     Lambda l pats e           -> liftM2 (Lambda l) (mapM fix pats) $ fix e
-    Let l bs e                -> liftM2 (Let l) (fix bs) $ fix e
+    Let l bs e                ->
+        let extraFix x = applyFixities (fixs ++ getBindFixities bs) x
+         in liftM2 (Let l) (extraFix bs) $ extraFix e
     If l e a b                -> liftM3 (If l) (fix e) (fix a) (fix b)
     MultiIf l alts            -> liftM (MultiIf l) (mapM fix alts)
     Case l e alts             -> liftM2 (Case l) (fix e) $ mapM fix alts
