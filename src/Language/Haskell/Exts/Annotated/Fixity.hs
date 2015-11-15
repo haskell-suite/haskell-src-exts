@@ -42,6 +42,7 @@ import Language.Haskell.Exts.Annotated.Simplify ( sQOp, sAssoc, sQName, sModuleH
 
 import Control.Monad (when, (<=<), liftM, liftM2, liftM3, liftM4)
 import Data.Traversable (mapM)
+import Data.Maybe (fromMaybe)
 import Prelude hiding (mapM)
 
 -- | All AST elements that may include expressions which in turn may
@@ -63,7 +64,7 @@ instance AppFixity Exp where
               let fixup (a1,p1) (a2,p2) y pre = do
                       when (p1 == p2 && (a1 /= a2 || a1 == S.AssocNone)) -- Ambiguous infix expression!
                            $ fail "Ambiguous infix expression"
-                      if (p1 > p2 || p1 == p2 && (a1 == S.AssocLeft || a2 == S.AssocNone)) -- Already right order
+                      if p1 > p2 || p1 == p2 && (a1 == S.AssocLeft || a2 == S.AssocNone) -- Already right order
                        then return $ InfixApp l2 e op2 z
                        else liftM pre (infFix fixs $ InfixApp (ann y <++> ann z) y op2 z)
               case e of
@@ -83,7 +84,7 @@ instance AppFixity Pat where
               let fixup (a1,p1) (a2,p2) y pre = do
                       when (p1 == p2 && (a1 /= a2 || a1 == S.AssocNone )) -- Ambiguous infix expression!
                            $ fail "Ambiguous infix expression"
-                      if (p1 > p2 || p1 == p2 && (a1 == S.AssocLeft || a2 == S.AssocNone)) -- Already right order
+                      if p1 > p2 || p1 == p2 && (a1 == S.AssocLeft || a2 == S.AssocNone) -- Already right order
                        then return $ PInfixApp l2 p op2 z
                        else liftM pre (infFix fixs $ PInfixApp (ann y <++> ann z) y op2 z)
               case p of
@@ -112,9 +113,7 @@ askFixityP xs qn = askFix xs (g $ sQName qn)
 askFix :: [Fixity] -> S.QName -> (S.Assoc, Int)
 askFix xs = \k -> lookupWithDefault (S.AssocLeft, 9) k mp
     where
-        lookupWithDefault def k mp' = case lookup k mp' of
-            Nothing -> def
-            Just x  -> x
+        lookupWithDefault def k mp' = fromMaybe def $ lookup k mp'
 
         mp = [(x,(a,p)) | Fixity a p x <- xs]
 
@@ -160,7 +159,7 @@ getFixities mmdl = concatMap (getFixity mmdl)
 getFixity :: Maybe S.ModuleName -> Decl l -> [Fixity]
 getFixity mmdl d =
   case d of
-    InfixDecl _ a mp ops  -> let p = maybe 9 id mp
+    InfixDecl _ a mp ops  -> let p = fromMaybe 9 mp
                               in map (Fixity (sAssoc a) p) (concatMap g ops)
     ClassDecl _ _ _ _ cds -> maybe [] (concatMap getClassFixity) cds
     _ -> []
