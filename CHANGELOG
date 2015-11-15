@@ -11,6 +11,7 @@ AST changes:
   distinguish between empty where clauses and where clauses with no
   binds (#244).
 * Add RoleAnnotDecl and Role to support Role annotations (#215).
+* Move NameSpace field from EVar/IVar to EAbs/IAbs.
 
 Other changes:
 
@@ -46,6 +47,7 @@ Other changes:
 * Parse trailing where (#25).
 * Parse modules starting with pragmas and indented
   "module" keyword (#122).
+* Use pretty-show to get human readable test outputs.
 
 ** 1.16.x
 
