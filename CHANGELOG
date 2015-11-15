@@ -48,6 +48,8 @@ Other changes:
 * Parse modules starting with pragmas and indented
   "module" keyword (#122).
 * Use pretty-show to get human readable test outputs.
+* Respect fixity declarations inside where/let/class in
+  `applyFixities` (#212).
 
 ** 1.16.x
 
