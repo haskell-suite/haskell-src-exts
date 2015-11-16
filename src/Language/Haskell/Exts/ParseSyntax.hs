@@ -61,7 +61,7 @@ data PExp l
     | PreOp l (QOp l) (PExp l)              -- ^ pre-ops
 
 -- View patterns
-    | ViewPat l (PExp l) (PExp l)           -- ^ patterns only
+    | ViewPat l (PExp l) (Pat l)            -- ^ patterns only
 
 -- HaRP
     | SeqRP l [PExp l]                      -- ^ regular patterns only

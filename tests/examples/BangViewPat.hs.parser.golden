@@ -1,0 +1,129 @@
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/BangViewPat.hs" 1 1 3 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/BangViewPat.hs" 1 1 1 1
+            , SrcSpan "tests/examples/BangViewPat.hs" 2 1 2 1
+            , SrcSpan "tests/examples/BangViewPat.hs" 2 1 2 1
+            , SrcSpan "tests/examples/BangViewPat.hs" 2 1 2 1
+            , SrcSpan "tests/examples/BangViewPat.hs" 3 1 3 1
+            , SrcSpan "tests/examples/BangViewPat.hs" 3 1 3 1
+            ]
+        }
+      Nothing
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/BangViewPat.hs" 1 1 1 44
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/BangViewPat.hs" 1 1 1 13
+                , SrcSpan "tests/examples/BangViewPat.hs" 1 26 1 27
+                , SrcSpan "tests/examples/BangViewPat.hs" 1 41 1 44
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/BangViewPat.hs" 1 14 1 26
+                , srcInfoPoints = []
+                }
+              "BangPatterns"
+          , Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/BangViewPat.hs" 1 28 1 40
+                , srcInfoPoints = []
+                }
+              "ViewPatterns"
+          ]
+      ]
+      []
+      [ FunBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/BangViewPat.hs" 2 1 2 33
+            , srcInfoPoints = []
+            }
+          [ Match
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/BangViewPat.hs" 2 1 2 33
+                , srcInfoPoints = []
+                }
+              (Ident
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/BangViewPat.hs" 2 1 2 8
+                   , srcInfoPoints = []
+                   }
+                 "someFun")
+              [ PParen
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/BangViewPat.hs" 2 9 2 21
+                    , srcInfoPoints =
+                        [ SrcSpan "tests/examples/BangViewPat.hs" 2 9 2 10
+                        , SrcSpan "tests/examples/BangViewPat.hs" 2 20 2 21
+                        ]
+                    }
+                  (PViewPat
+                     SrcSpanInfo
+                       { srcInfoSpan = SrcSpan "tests/examples/BangViewPat.hs" 2 10 2 20
+                       , srcInfoPoints =
+                           [ SrcSpan "tests/examples/BangViewPat.hs" 2 13 2 15 ]
+                       }
+                     (Var
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/BangViewPat.hs" 2 10 2 12
+                          , srcInfoPoints = []
+                          }
+                        (UnQual
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/BangViewPat.hs" 2 10 2 12
+                             , srcInfoPoints = []
+                             }
+                           (Ident
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/BangViewPat.hs" 2 10 2 12
+                                , srcInfoPoints = []
+                                }
+                              "id")))
+                     (PBangPat
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/BangViewPat.hs" 2 16 2 20
+                          , srcInfoPoints =
+                              [ SrcSpan "tests/examples/BangViewPat.hs" 2 16 2 17 ]
+                          }
+                        (PVar
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/BangViewPat.hs" 2 17 2 20
+                             , srcInfoPoints = []
+                             }
+                           (Ident
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/BangViewPat.hs" 2 17 2 20
+                                , srcInfoPoints = []
+                                }
+                              "arg"))))
+              ]
+              (UnGuardedRhs
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/BangViewPat.hs" 2 22 2 33
+                   , srcInfoPoints =
+                       [ SrcSpan "tests/examples/BangViewPat.hs" 2 22 2 23 ]
+                   }
+                 (Var
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/BangViewPat.hs" 2 24 2 33
+                      , srcInfoPoints = []
+                      }
+                    (UnQual
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/BangViewPat.hs" 2 24 2 33
+                         , srcInfoPoints = []
+                         }
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/BangViewPat.hs" 2 24 2 33
+                            , srcInfoPoints = []
+                            }
+                          "undefined"))))
+              Nothing
+          ]
+      ]
+  , []
+  )
