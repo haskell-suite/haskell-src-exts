@@ -50,7 +50,7 @@ Other changes:
 * Use pretty-show to get human readable test outputs.
 * Respect fixity declarations inside where/let/class in
   `applyFixities` (#212).
-* Correct parse the combination of view patterns and bang patterns. (#276)
+* Correctly parse the combination of view patterns and bang patterns. (#276)
 
 ** 1.16.x
 
