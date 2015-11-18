@@ -1,0 +1,35 @@
+I am pleased to announce the release of haskell-src-exts-1.17.0! 
+
+Hackage: https://hackage.haskell.org/package/haskell-src-exts-1.17.0 
+GitHub:  https://github.com/haskell-suite/haskell-src-exts 
+
+This release brings bugfixes, as well as the following language 
+features: 
+
+* Type wildcards and expression holes (#252).
+* Pattern Synonyms (#197).
+
+The full changelog is available at 
+
+https://github.com/haskell-suite/haskell-src-exts/blob/1.17.0/CHANGELOG
+
+This release is brought to you by:
+
+Matthew Pickering
+Michael Walker
+Simon Marlow
+Neil Mitchell
+JP Moresmau
+Артур Файзрахманов
+phischu
+Michael Sloan
+m00nlight
+Niklas Broberg
+Stijn van Drongelen
+Jakub Kozlowski
+Leonid Onokhov
+
+Matthew Pickering is a force of nature who deserves a special mention
+for all his contributions to this release.
+
+Peter

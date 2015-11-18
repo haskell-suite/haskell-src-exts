@@ -34,6 +34,7 @@ Cabal-Version:          >= 1.10
 Extra-Source-Files:
                         README.md
                         CHANGELOG
+                        RELEASENOTES-1.17.0
                         tests/examples/*.hs
                         tests/examples/*.lhs
                         tests/examples/*.hs.parser.golden
