@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Language.Haskell.Exts.Pretty
@@ -36,7 +37,9 @@ import Prelude hiding (exp)
 import qualified Text.PrettyPrint as P
 import Data.List (intersperse)
 import Data.Maybe (isJust)
+#if __GLASGOW_HASKELL__ < 710
 import Control.Applicative (Applicative(..))
+#endif
 import qualified Control.Monad as M (ap)
 
 infixl 5 $$$

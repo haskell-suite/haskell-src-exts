@@ -1,4 +1,10 @@
-{-# LANGUAGE DeriveDataTypeable, DeriveFoldable, DeriveTraversable, DeriveFunctor, DeriveGeneric #-}
+{-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DeriveFoldable #-}
+{-# LANGUAGE DeriveTraversable #-}
+{-# LANGUAGE DeriveFunctor #-}
+{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE CPP #-}
+
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Language.Haskell.Exts.Annotated.Syntax
@@ -109,8 +115,10 @@ import Prelude hiding (id)
 
 import Data.Data
 import GHC.Generics (Generic)
+#if __GLASGOW_HASKELL__ < 710
 import Data.Foldable (Foldable)
 import Data.Traversable (Traversable)
+#endif
 
 -- | The name of a Haskell module.
 data ModuleName l = ModuleName l String

@@ -45,6 +45,8 @@ import Data.List (intercalate)
 import Control.Applicative
 import Control.Monad (when, liftM, ap)
 import Data.Monoid
+-- To avoid import warnings for Control.Applicative and Data.Monoid
+import Prelude
 
 -- | Class providing function for parsing at many different types.
 --

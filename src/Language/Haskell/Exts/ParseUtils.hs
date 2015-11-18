@@ -1,4 +1,5 @@
 {-# OPTIONS_HADDOCK hide #-}
+{-# LANGUAGE CPP #-}
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Language.Haskell.Exts.ParseUtils
@@ -87,7 +88,9 @@ import Prelude hiding (mod)
 import Data.List (intercalate, intersperse)
 import Data.Maybe (fromJust, fromMaybe)
 import Control.Monad (when,unless)
+#if __GLASGOW_HASKELL__ < 710
 import Control.Applicative (Applicative (..), (<$>))
+#endif
 
 --- import Debug.Trace (trace)
 

@@ -1,4 +1,5 @@
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE CPP #-}
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Language.Haskell.Exts.Extension
@@ -39,7 +40,11 @@ module Language.Haskell.Exts.Extension (
 
     ) where
 
+#if __GLASGOW_HASKELL__ < 710
 import Control.Applicative ((<$>), (<|>))
+#else
+import Control.Applicative ((<|>))
+#endif
 import Data.Array (Array, accumArray, bounds, Ix(inRange), (!))
 import Data.List (nub)
 import Data.Maybe (fromMaybe)

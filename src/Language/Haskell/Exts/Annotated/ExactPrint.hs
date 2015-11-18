@@ -1,4 +1,5 @@
 {-# LANGUAGE DeriveFunctor #-}
+{-# LANGUAGE CPP #-}
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Language.Haskell.Exts.Annotated.ExactPrint
@@ -24,7 +25,9 @@ import Language.Haskell.Exts.SrcLoc
 import Language.Haskell.Exts.Comments
 
 import Control.Monad (when, liftM, ap, unless)
+#if __GLASGOW_HASKELL__ < 710
 import Control.Applicative (Applicative(..))
+#endif
 import Control.Arrow ((***), (&&&))
 import Prelude hiding (exp)
 import Data.List (intersperse)
