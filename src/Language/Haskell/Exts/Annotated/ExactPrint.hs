@@ -1110,6 +1110,11 @@ instance ExactP Type where
     TySplice _ sp  -> exactP sp
     TyBang _ b t -> exactPC b >> exactPC t
     TyWildCard _ mn      -> printString "_" >> maybeEP exactPC mn
+    TyQuasiQuote _ name qt    -> do
+        let qtLines = lines qt
+        printString $ "[" ++ name ++ "|"
+        sequence_ (intersperse newLine $ map printString qtLines)
+        printString "|]"
 
 instance ExactP Promoted where
   exactP (PromotedInteger _ _ rw) = printString rw

@@ -444,6 +444,7 @@ data Type
      | TySplice Splice          -- ^ template haskell splice type
      | TyBang BangType Type     -- ^ Strict type marked with \"@!@\" or type marked with UNPACK pragma.
      | TyWildCard (Maybe Name)  -- ^ Type wildcard
+     | TyQuasiQuote String String -- ^ quasi quote @[qq|  |]@
   deriving (Eq,Ord,Show,Typeable,Data)
 
 data Promoted

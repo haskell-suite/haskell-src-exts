@@ -879,7 +879,7 @@ instance Pretty Type where
         prettyPrec _ (TySplice s) = pretty s
         prettyPrec _ (TyBang b t) = pretty b <> prettyPrec prec_atype t
         prettyPrec _ (TyWildCard mn) = char '_' <> maybePP pretty mn
-
+        prettyPrec _ (TyQuasiQuote n qt) = text ("[" ++ n ++ "|" ++ qt ++ "|]")
 
 instance Pretty Promoted where
   pretty p =
@@ -1950,3 +1950,4 @@ instance SrcInfo loc => Pretty (P.PType loc) where
         prettyPrec _ (P.TySplice _ s) = pretty s
         prettyPrec _ (P.TyBang _ b t) = pretty b <> prettyPrec prec_atype t
         prettyPrec _ (P.TyWildCard _ mn) = char '_' <> maybePP pretty mn
+        prettyPrec _ (P.TyQuasiQuote _ n qt) = text ("[$" ++ n ++ "|" ++ qt ++ "|]")

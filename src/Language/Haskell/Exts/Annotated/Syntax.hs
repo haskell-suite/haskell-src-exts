@@ -605,6 +605,7 @@ data Type l
      | TySplice l (Splice l)                    -- ^ template haskell splice type
      | TyBang l (BangType l) (Type l)           -- ^ Strict type marked with \"@!@\" or type marked with UNPACK pragma.
      | TyWildCard l (Maybe (Name l))            -- ^ Either an anonymous of named type wildcard
+     | TyQuasiQuote l String String             -- ^ @[$/name/| /string/ |]@
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | Bools here are True if there was a leading quote which may be
@@ -1417,6 +1418,7 @@ instance Annotated Type where
       TySplice l _                  -> l
       TyBang l _ _                  -> l
       TyWildCard l _                -> l
+      TyQuasiQuote l _ _            -> l
     amap f t1 = case t1 of
       TyForall l mtvs mcx t         -> TyForall (f l) mtvs mcx t
       TyFun   l t1' t2              -> TyFun (f l) t1' t2
@@ -1434,6 +1436,7 @@ instance Annotated Type where
       TySplice l s                  -> TySplice (f l) s
       TyBang l b t                  -> TyBang (f l) b t
       TyWildCard l n                -> TyWildCard (f l) n
+      TyQuasiQuote l n s            -> TyQuasiQuote (f l) n s
 
 instance Annotated TyVarBind where
     ann (KindedVar   l _ _) = l
