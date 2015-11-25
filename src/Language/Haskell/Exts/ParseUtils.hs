@@ -1106,6 +1106,9 @@ checkT t simple = case t of
                               return $ S.TySplice l s
     TyBang l b t' -> check1Type t' (S.TyBang l b)
     TyWildCard l mn -> return $ S.TyWildCard l mn
+    TyQuasiQuote l n s -> do
+                              checkEnabled QuasiQuotes
+                              return $ S.TyQuasiQuote l n s
     _   -> fail $ "Parse error in type: " ++ prettyPrint t
 
 check1Type :: PType L -> (S.Type L -> S.Type L) -> P (S.Type L)
