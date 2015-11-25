@@ -1,3 +1,3 @@
 {-# LANGUAGE QuasiQuotes, TemplateHaskell #-}
-f :: [$qq| something in here |]
+f :: [qq| something in here |]
 f = ()

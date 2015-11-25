@@ -39,7 +39,7 @@ ParseOk
       []
       [ TypeSig
           SrcSpanInfo
-            { srcInfoSpan = SrcSpan "tests/examples/TyQuasiQuote.hs" 2 1 2 32
+            { srcInfoSpan = SrcSpan "tests/examples/TyQuasiQuote.hs" 2 1 2 31
             , srcInfoPoints =
                 [ SrcSpan "tests/examples/TyQuasiQuote.hs" 2 3 2 5 ]
             }
@@ -52,7 +52,7 @@ ParseOk
           ]
           (TyQuasiQuote
              SrcSpanInfo
-               { srcInfoSpan = SrcSpan "tests/examples/TyQuasiQuote.hs" 2 6 2 32
+               { srcInfoSpan = SrcSpan "tests/examples/TyQuasiQuote.hs" 2 6 2 31
                , srcInfoPoints = []
                }
              "qq"
