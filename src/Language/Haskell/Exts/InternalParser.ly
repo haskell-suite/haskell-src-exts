@@ -1446,7 +1446,7 @@ End Template Haskell
 > texp :: { PExp L }
 >       : exp                           { $1 }
 >       | qopm exp0                     { PreOp ($1 <> $2) $1 $2 }
->       | exp '->' apat                 {% do {checkEnabled ViewPatterns;
+>       | exp '->' pat                  {% do {checkEnabled ViewPatterns;
 >                                              return $ ViewPat ($1 <> $3 <** [$2]) $1 $3} }
 
 > tsectend :: { ([Maybe (PExp L)],[S]) }
