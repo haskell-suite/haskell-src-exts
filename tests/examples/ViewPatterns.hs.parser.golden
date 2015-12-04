@@ -1,0 +1,229 @@
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/ViewPatterns.hs" 1 1 6 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/ViewPatterns.hs" 1 1 1 1
+            , SrcSpan "tests/examples/ViewPatterns.hs" 2 1 2 1
+            , SrcSpan "tests/examples/ViewPatterns.hs" 2 1 2 1
+            , SrcSpan "tests/examples/ViewPatterns.hs" 2 1 2 1
+            , SrcSpan "tests/examples/ViewPatterns.hs" 4 1 4 1
+            , SrcSpan "tests/examples/ViewPatterns.hs" 6 1 6 1
+            , SrcSpan "tests/examples/ViewPatterns.hs" 6 1 6 1
+            ]
+        }
+      Nothing
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/ViewPatterns.hs" 1 1 1 30
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/ViewPatterns.hs" 1 1 1 13
+                , SrcSpan "tests/examples/ViewPatterns.hs" 1 27 1 30
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/ViewPatterns.hs" 1 14 1 26
+                , srcInfoPoints = []
+                }
+              "ViewPatterns"
+          ]
+      ]
+      []
+      [ FunBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/ViewPatterns.hs" 2 1 2 25
+            , srcInfoPoints = []
+            }
+          [ Match
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/ViewPatterns.hs" 2 1 2 25
+                , srcInfoPoints = []
+                }
+              (Ident
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/ViewPatterns.hs" 2 1 2 2
+                   , srcInfoPoints = []
+                   }
+                 "f")
+              [ PParen
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/ViewPatterns.hs" 2 3 2 17
+                    , srcInfoPoints =
+                        [ SrcSpan "tests/examples/ViewPatterns.hs" 2 3 2 4
+                        , SrcSpan "tests/examples/ViewPatterns.hs" 2 16 2 17
+                        ]
+                    }
+                  (PViewPat
+                     SrcSpanInfo
+                       { srcInfoSpan = SrcSpan "tests/examples/ViewPatterns.hs" 2 4 2 16
+                       , srcInfoPoints =
+                           [ SrcSpan "tests/examples/ViewPatterns.hs" 2 7 2 9 ]
+                       }
+                     (Var
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/ViewPatterns.hs" 2 4 2 6
+                          , srcInfoPoints = []
+                          }
+                        (UnQual
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/ViewPatterns.hs" 2 4 2 6
+                             , srcInfoPoints = []
+                             }
+                           (Ident
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/ViewPatterns.hs" 2 4 2 6
+                                , srcInfoPoints = []
+                                }
+                              "id")))
+                     (PApp
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/ViewPatterns.hs" 2 10 2 16
+                          , srcInfoPoints = []
+                          }
+                        (UnQual
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/ViewPatterns.hs" 2 10 2 14
+                             , srcInfoPoints = []
+                             }
+                           (Ident
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/ViewPatterns.hs" 2 10 2 14
+                                , srcInfoPoints = []
+                                }
+                              "Just"))
+                        [ PWildCard
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/ViewPatterns.hs" 2 15 2 16
+                              , srcInfoPoints = []
+                              }
+                        ]))
+              , PLit
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/ViewPatterns.hs" 2 18 2 20
+                    , srcInfoPoints = []
+                    }
+                  (Signless
+                     SrcSpanInfo
+                       { srcInfoSpan = SrcSpan "tests/examples/ViewPatterns.hs" 2 18 2 20
+                       , srcInfoPoints = []
+                       })
+                  (String
+                     SrcSpanInfo
+                       { srcInfoSpan = SrcSpan "tests/examples/ViewPatterns.hs" 2 18 2 20
+                       , srcInfoPoints = []
+                       }
+                     ""
+                     "")
+              ]
+              (UnGuardedRhs
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/ViewPatterns.hs" 2 21 2 25
+                   , srcInfoPoints =
+                       [ SrcSpan "tests/examples/ViewPatterns.hs" 2 21 2 22 ]
+                   }
+                 (Lit
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/ViewPatterns.hs" 2 23 2 25
+                      , srcInfoPoints = []
+                      }
+                    (String
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/ViewPatterns.hs" 2 23 2 25
+                         , srcInfoPoints = []
+                         }
+                       ""
+                       "")))
+              Nothing
+          ]
+      , FunBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/ViewPatterns.hs" 4 1 4 23
+            , srcInfoPoints = []
+            }
+          [ Match
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/ViewPatterns.hs" 4 1 4 23
+                , srcInfoPoints = []
+                }
+              (Ident
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/ViewPatterns.hs" 4 1 4 2
+                   , srcInfoPoints = []
+                   }
+                 "g")
+              [ PParen
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/ViewPatterns.hs" 4 3 4 15
+                    , srcInfoPoints =
+                        [ SrcSpan "tests/examples/ViewPatterns.hs" 4 3 4 4
+                        , SrcSpan "tests/examples/ViewPatterns.hs" 4 14 4 15
+                        ]
+                    }
+                  (PViewPat
+                     SrcSpanInfo
+                       { srcInfoSpan = SrcSpan "tests/examples/ViewPatterns.hs" 4 4 4 14
+                       , srcInfoPoints =
+                           [ SrcSpan "tests/examples/ViewPatterns.hs" 4 7 4 9 ]
+                       }
+                     (Var
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/ViewPatterns.hs" 4 4 4 6
+                          , srcInfoPoints = []
+                          }
+                        (UnQual
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/ViewPatterns.hs" 4 4 4 6
+                             , srcInfoPoints = []
+                             }
+                           (Ident
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/ViewPatterns.hs" 4 4 4 6
+                                , srcInfoPoints = []
+                                }
+                              "id")))
+                     (PApp
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/ViewPatterns.hs" 4 10 4 14
+                          , srcInfoPoints = []
+                          }
+                        (UnQual
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/ViewPatterns.hs" 4 10 4 14
+                             , srcInfoPoints = []
+                             }
+                           (Ident
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/ViewPatterns.hs" 4 10 4 14
+                                , srcInfoPoints = []
+                                }
+                              "True"))
+                        []))
+              ]
+              (UnGuardedRhs
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/ViewPatterns.hs" 4 16 4 23
+                   , srcInfoPoints =
+                       [ SrcSpan "tests/examples/ViewPatterns.hs" 4 16 4 17 ]
+                   }
+                 (Con
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/ViewPatterns.hs" 4 18 4 23
+                      , srcInfoPoints = []
+                      }
+                    (UnQual
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/ViewPatterns.hs" 4 18 4 23
+                         , srcInfoPoints = []
+                         }
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/ViewPatterns.hs" 4 18 4 23
+                            , srcInfoPoints = []
+                            }
+                          "False"))))
+              Nothing
+          ]
+      ]
+  , []
+  )
