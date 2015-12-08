@@ -1838,8 +1838,9 @@ Identifiers and Symbols
 >       | 'unsafe'              { unsafe_name     (nIS $1) }
 >       | 'interruptible'       { interruptible_name (nIS $1) }
 >       | 'threadsafe'          { threadsafe_name (nIS $1) }
->	| 'forall'		{ forall_name	  (nIS $1) }
->	| 'family'		{ family_name     (nIS $1) }
+>	      | 'forall'		          { forall_name	  (nIS $1) }
+>	      | 'family'		          { family_name     (nIS $1) }
+>       | 'role'                { role_name  (nIS $1) }
 
 
 Implicit parameter
