@@ -1,0 +1,379 @@
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan =
+            SrcSpan "tests/examples/RoleAnnotations2.hs" 1 1 10 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/RoleAnnotations2.hs" 1 1 1 1
+            , SrcSpan "tests/examples/RoleAnnotations2.hs" 3 1 3 1
+            , SrcSpan "tests/examples/RoleAnnotations2.hs" 3 1 3 1
+            , SrcSpan "tests/examples/RoleAnnotations2.hs" 3 1 3 1
+            , SrcSpan "tests/examples/RoleAnnotations2.hs" 4 1 4 1
+            , SrcSpan "tests/examples/RoleAnnotations2.hs" 6 1 6 1
+            , SrcSpan "tests/examples/RoleAnnotations2.hs" 8 1 8 1
+            , SrcSpan "tests/examples/RoleAnnotations2.hs" 9 1 9 1
+            , SrcSpan "tests/examples/RoleAnnotations2.hs" 10 1 10 1
+            , SrcSpan "tests/examples/RoleAnnotations2.hs" 10 1 10 1
+            ]
+        }
+      Nothing
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/RoleAnnotations2.hs" 1 1 1 33
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/RoleAnnotations2.hs" 1 1 1 13
+                , SrcSpan "tests/examples/RoleAnnotations2.hs" 1 30 1 33
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/RoleAnnotations2.hs" 1 14 1 29
+                , srcInfoPoints = []
+                }
+              "RoleAnnotations"
+          ]
+      ]
+      []
+      [ DataDecl
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/RoleAnnotations2.hs" 3 1 3 19
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/RoleAnnotations2.hs" 3 12 3 13 ]
+            }
+          (DataType
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/RoleAnnotations2.hs" 3 1 3 5
+               , srcInfoPoints = []
+               })
+          Nothing
+          (DHApp
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/RoleAnnotations2.hs" 3 6 3 11
+               , srcInfoPoints = []
+               }
+             (DHead
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/RoleAnnotations2.hs" 3 6 3 9
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/RoleAnnotations2.hs" 3 6 3 9
+                     , srcInfoPoints = []
+                     }
+                   "Foo"))
+             (UnkindedVar
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/RoleAnnotations2.hs" 3 10 3 11
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/RoleAnnotations2.hs" 3 10 3 11
+                     , srcInfoPoints = []
+                     }
+                   "a")))
+          [ QualConDecl
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/RoleAnnotations2.hs" 3 14 3 19
+                , srcInfoPoints = []
+                }
+              Nothing
+              Nothing
+              (ConDecl
+                 SrcSpanInfo
+                   { srcInfoSpan =
+                       SrcSpan "tests/examples/RoleAnnotations2.hs" 3 14 3 19
+                   , srcInfoPoints = []
+                   }
+                 (Ident
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/RoleAnnotations2.hs" 3 14 3 17
+                      , srcInfoPoints = []
+                      }
+                    "Foo")
+                 [ TyVar
+                     SrcSpanInfo
+                       { srcInfoSpan =
+                           SrcSpan "tests/examples/RoleAnnotations2.hs" 3 18 3 19
+                       , srcInfoPoints = []
+                       }
+                     (Ident
+                        SrcSpanInfo
+                          { srcInfoSpan =
+                              SrcSpan "tests/examples/RoleAnnotations2.hs" 3 18 3 19
+                          , srcInfoPoints = []
+                          }
+                        "a")
+                 ])
+          ]
+          Nothing
+      , RoleAnnotDecl
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/RoleAnnotations2.hs" 4 1 4 31
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/RoleAnnotations2.hs" 4 1 4 5
+                , SrcSpan "tests/examples/RoleAnnotations2.hs" 4 6 4 10
+                ]
+            }
+          (UnQual
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/RoleAnnotations2.hs" 4 11 4 14
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/RoleAnnotations2.hs" 4 11 4 14
+                  , srcInfoPoints = []
+                  }
+                "Foo"))
+          [ Representational
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/RoleAnnotations2.hs" 4 15 4 31
+                , srcInfoPoints = []
+                }
+          ]
+      , PatBind
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/RoleAnnotations2.hs" 6 1 6 21
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/RoleAnnotations2.hs" 6 1 6 5
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/RoleAnnotations2.hs" 6 1 6 5
+                  , srcInfoPoints = []
+                  }
+                "main"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/RoleAnnotations2.hs" 6 6 6 21
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/RoleAnnotations2.hs" 6 6 6 7 ]
+               }
+             (InfixApp
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/RoleAnnotations2.hs" 6 8 6 21
+                  , srcInfoPoints = []
+                  }
+                (Var
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/RoleAnnotations2.hs" 6 8 6 13
+                     , srcInfoPoints = []
+                     }
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/RoleAnnotations2.hs" 6 8 6 13
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/RoleAnnotations2.hs" 6 8 6 13
+                           , srcInfoPoints = []
+                           }
+                         "print")))
+                (QVarOp
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/RoleAnnotations2.hs" 6 14 6 15
+                     , srcInfoPoints = []
+                     }
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/RoleAnnotations2.hs" 6 14 6 15
+                        , srcInfoPoints = []
+                        }
+                      (Symbol
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/RoleAnnotations2.hs" 6 14 6 15
+                           , srcInfoPoints = []
+                           }
+                         "$")))
+                (App
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/RoleAnnotations2.hs" 6 16 6 21
+                     , srcInfoPoints = []
+                     }
+                   (Var
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/RoleAnnotations2.hs" 6 16 6 19
+                        , srcInfoPoints = []
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/RoleAnnotations2.hs" 6 16 6 19
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/RoleAnnotations2.hs" 6 16 6 19
+                              , srcInfoPoints = []
+                              }
+                            "foo")))
+                   (Lit
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/RoleAnnotations2.hs" 6 20 6 21
+                        , srcInfoPoints = []
+                        }
+                      (Int
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/RoleAnnotations2.hs" 6 20 6 21
+                           , srcInfoPoints = []
+                           }
+                         1
+                         "1")))))
+          Nothing
+      , TypeSig
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/RoleAnnotations2.hs" 8 1 8 18
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/RoleAnnotations2.hs" 8 5 8 7 ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/RoleAnnotations2.hs" 8 1 8 4
+                , srcInfoPoints = []
+                }
+              "foo"
+          ]
+          (TyFun
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/RoleAnnotations2.hs" 8 8 8 18
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/RoleAnnotations2.hs" 8 12 8 14 ]
+               }
+             (TyCon
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/RoleAnnotations2.hs" 8 8 8 11
+                  , srcInfoPoints = []
+                  }
+                (UnQual
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/RoleAnnotations2.hs" 8 8 8 11
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/RoleAnnotations2.hs" 8 8 8 11
+                        , srcInfoPoints = []
+                        }
+                      "Int")))
+             (TyCon
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/RoleAnnotations2.hs" 8 15 8 18
+                  , srcInfoPoints = []
+                  }
+                (UnQual
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/RoleAnnotations2.hs" 8 15 8 18
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/RoleAnnotations2.hs" 8 15 8 18
+                        , srcInfoPoints = []
+                        }
+                      "Int"))))
+      , FunBind
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/RoleAnnotations2.hs" 9 1 9 14
+            , srcInfoPoints = []
+            }
+          [ Match
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/RoleAnnotations2.hs" 9 1 9 14
+                , srcInfoPoints = []
+                }
+              (Ident
+                 SrcSpanInfo
+                   { srcInfoSpan =
+                       SrcSpan "tests/examples/RoleAnnotations2.hs" 9 1 9 4
+                   , srcInfoPoints = []
+                   }
+                 "foo")
+              [ PVar
+                  SrcSpanInfo
+                    { srcInfoSpan =
+                        SrcSpan "tests/examples/RoleAnnotations2.hs" 9 5 9 9
+                    , srcInfoPoints = []
+                    }
+                  (Ident
+                     SrcSpanInfo
+                       { srcInfoSpan =
+                           SrcSpan "tests/examples/RoleAnnotations2.hs" 9 5 9 9
+                       , srcInfoPoints = []
+                       }
+                     "role")
+              ]
+              (UnGuardedRhs
+                 SrcSpanInfo
+                   { srcInfoSpan =
+                       SrcSpan "tests/examples/RoleAnnotations2.hs" 9 10 9 14
+                   , srcInfoPoints =
+                       [ SrcSpan "tests/examples/RoleAnnotations2.hs" 9 10 9 11 ]
+                   }
+                 (Lit
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/RoleAnnotations2.hs" 9 12 9 14
+                      , srcInfoPoints = []
+                      }
+                    (Int
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/RoleAnnotations2.hs" 9 12 9 14
+                         , srcInfoPoints = []
+                         }
+                       42
+                       "42")))
+              Nothing
+          ]
+      ]
+  , []
+  )
