@@ -652,7 +652,9 @@ instance Pretty Match where
                 $$$ ppWhere whereBinds
             where
                 lhs = case ps of
-                        l:r:ps' | isSymbolName f ->
+                        -- We pretty print all symbols infix except for '!' because
+                        -- doing so would change the semantics when BangPatterns is on.
+                        l:r:ps' | isSymbolName f && (f /= Symbol "!") ->
                                 let hd = [prettyPrec 2 l, ppName f, prettyPrec 2 r] in
                                 if null ps' then hd
                                 else parens (myFsep hd) : map (prettyPrec 3) ps'
