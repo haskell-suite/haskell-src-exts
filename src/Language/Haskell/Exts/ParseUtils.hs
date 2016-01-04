@@ -842,7 +842,7 @@ isFunLhs (InfixApp _ l (QVarOp loc (UnQual _ op)) r) es
         let infos = srcInfoPoints loc
             op'   = amap (\s -> s { srcInfoPoints = infos }) op
         in (return $ Just (op', l:r:es, False, []))
-isFunLhs (App _ (Var _ (UnQual _ f)) e) es = return $ Just (f, e:es, True, [])
+isFunLhs (App _ (Var l (UnQual _ f)) e) es = return $ Just (f, e:es, True, srcInfoPoints l)
 isFunLhs (App _ f e) es = isFunLhs f (e:es)
 isFunLhs (Var _ (UnQual _ f)) es@(_:_) = return $ Just (f, es, True, [])
 isFunLhs (Paren l f) es@(_:_) = do mlhs <- isFunLhs f es
