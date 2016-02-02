@@ -1,0 +1,3 @@
+{-# LANGUAGE PatternSynonyms #-}
+pattern A <- (True, True) where A = (not $ False && True, True)
+exp = not $ False && True

@@ -1,0 +1,381 @@
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 1 1 4 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/PatSynFix.hs" 1 1 1 1
+            , SrcSpan "tests/examples/PatSynFix.hs" 2 1 2 1
+            , SrcSpan "tests/examples/PatSynFix.hs" 2 1 2 1
+            , SrcSpan "tests/examples/PatSynFix.hs" 2 1 2 1
+            , SrcSpan "tests/examples/PatSynFix.hs" 3 1 3 1
+            , SrcSpan "tests/examples/PatSynFix.hs" 4 1 4 1
+            , SrcSpan "tests/examples/PatSynFix.hs" 4 1 4 1
+            ]
+        }
+      Nothing
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 1 1 1 33
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/PatSynFix.hs" 1 1 1 13
+                , SrcSpan "tests/examples/PatSynFix.hs" 1 30 1 33
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 1 14 1 29
+                , srcInfoPoints = []
+                }
+              "PatternSynonyms"
+          ]
+      ]
+      []
+      [ PatSyn
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 2 1 2 26
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/PatSynFix.hs" 2 1 2 8
+                , SrcSpan "tests/examples/PatSynFix.hs" 2 11 2 13
+                ]
+            }
+          (PApp
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 2 9 2 10
+               , srcInfoPoints = []
+               }
+             (UnQual
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 2 9 2 10
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 2 9 2 10
+                     , srcInfoPoints = []
+                     }
+                   "A"))
+             [])
+          (PTuple
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 2 14 2 26
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/PatSynFix.hs" 2 14 2 15
+                   , SrcSpan "tests/examples/PatSynFix.hs" 2 19 2 20
+                   , SrcSpan "tests/examples/PatSynFix.hs" 2 25 2 26
+                   ]
+               }
+             Boxed
+             [ PApp
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 2 15 2 19
+                   , srcInfoPoints = []
+                   }
+                 (UnQual
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 2 15 2 19
+                      , srcInfoPoints = []
+                      }
+                    (Ident
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 2 15 2 19
+                         , srcInfoPoints = []
+                         }
+                       "True"))
+                 []
+             , PApp
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 2 21 2 25
+                   , srcInfoPoints = []
+                   }
+                 (UnQual
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 2 21 2 25
+                      , srcInfoPoints = []
+                      }
+                    (Ident
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 2 21 2 25
+                         , srcInfoPoints = []
+                         }
+                       "True"))
+                 []
+             ])
+          (ExplicitBidirectional
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 2 27 3 0
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/PatSynFix.hs" 2 27 2 32
+                   , SrcSpan "tests/examples/PatSynFix.hs" 2 33 2 33
+                   , SrcSpan "tests/examples/PatSynFix.hs" 3 1 3 0
+                   ]
+               }
+             [ PatBind
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 2 33 2 64
+                   , srcInfoPoints = []
+                   }
+                 (PApp
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 2 33 2 34
+                      , srcInfoPoints = []
+                      }
+                    (UnQual
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 2 33 2 34
+                         , srcInfoPoints = []
+                         }
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 2 33 2 34
+                            , srcInfoPoints = []
+                            }
+                          "A"))
+                    [])
+                 (UnGuardedRhs
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 2 35 2 64
+                      , srcInfoPoints =
+                          [ SrcSpan "tests/examples/PatSynFix.hs" 2 35 2 36 ]
+                      }
+                    (Tuple
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 2 37 2 64
+                         , srcInfoPoints =
+                             [ SrcSpan "tests/examples/PatSynFix.hs" 2 37 2 38
+                             , SrcSpan "tests/examples/PatSynFix.hs" 2 57 2 58
+                             , SrcSpan "tests/examples/PatSynFix.hs" 2 63 2 64
+                             ]
+                         }
+                       Boxed
+                       [ InfixApp
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 2 38 2 57
+                             , srcInfoPoints = []
+                             }
+                           (Var
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 2 38 2 41
+                                , srcInfoPoints = []
+                                }
+                              (UnQual
+                                 SrcSpanInfo
+                                   { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 2 38 2 41
+                                   , srcInfoPoints = []
+                                   }
+                                 (Ident
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan "tests/examples/PatSynFix.hs" 2 38 2 41
+                                      , srcInfoPoints = []
+                                      }
+                                    "not")))
+                           (QVarOp
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 2 42 2 43
+                                , srcInfoPoints = []
+                                }
+                              (UnQual
+                                 SrcSpanInfo
+                                   { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 2 42 2 43
+                                   , srcInfoPoints = []
+                                   }
+                                 (Symbol
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan "tests/examples/PatSynFix.hs" 2 42 2 43
+                                      , srcInfoPoints = []
+                                      }
+                                    "$")))
+                           (InfixApp
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 2 44 2 57
+                                , srcInfoPoints = []
+                                }
+                              (Con
+                                 SrcSpanInfo
+                                   { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 2 44 2 49
+                                   , srcInfoPoints = []
+                                   }
+                                 (UnQual
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan "tests/examples/PatSynFix.hs" 2 44 2 49
+                                      , srcInfoPoints = []
+                                      }
+                                    (Ident
+                                       SrcSpanInfo
+                                         { srcInfoSpan =
+                                             SrcSpan "tests/examples/PatSynFix.hs" 2 44 2 49
+                                         , srcInfoPoints = []
+                                         }
+                                       "False")))
+                              (QVarOp
+                                 SrcSpanInfo
+                                   { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 2 50 2 52
+                                   , srcInfoPoints = []
+                                   }
+                                 (UnQual
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan "tests/examples/PatSynFix.hs" 2 50 2 52
+                                      , srcInfoPoints = []
+                                      }
+                                    (Symbol
+                                       SrcSpanInfo
+                                         { srcInfoSpan =
+                                             SrcSpan "tests/examples/PatSynFix.hs" 2 50 2 52
+                                         , srcInfoPoints = []
+                                         }
+                                       "&&")))
+                              (Con
+                                 SrcSpanInfo
+                                   { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 2 53 2 57
+                                   , srcInfoPoints = []
+                                   }
+                                 (UnQual
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan "tests/examples/PatSynFix.hs" 2 53 2 57
+                                      , srcInfoPoints = []
+                                      }
+                                    (Ident
+                                       SrcSpanInfo
+                                         { srcInfoSpan =
+                                             SrcSpan "tests/examples/PatSynFix.hs" 2 53 2 57
+                                         , srcInfoPoints = []
+                                         }
+                                       "True"))))
+                       , Con
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 2 59 2 63
+                             , srcInfoPoints = []
+                             }
+                           (UnQual
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 2 59 2 63
+                                , srcInfoPoints = []
+                                }
+                              (Ident
+                                 SrcSpanInfo
+                                   { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 2 59 2 63
+                                   , srcInfoPoints = []
+                                   }
+                                 "True"))
+                       ]))
+                 Nothing
+             ])
+      , PatBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 3 1 3 26
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 3 1 3 4
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 3 1 3 4
+                  , srcInfoPoints = []
+                  }
+                "exp"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 3 5 3 26
+               , srcInfoPoints = [ SrcSpan "tests/examples/PatSynFix.hs" 3 5 3 6 ]
+               }
+             (InfixApp
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 3 7 3 26
+                  , srcInfoPoints = []
+                  }
+                (Var
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 3 7 3 10
+                     , srcInfoPoints = []
+                     }
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 3 7 3 10
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 3 7 3 10
+                           , srcInfoPoints = []
+                           }
+                         "not")))
+                (QVarOp
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 3 11 3 12
+                     , srcInfoPoints = []
+                     }
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 3 11 3 12
+                        , srcInfoPoints = []
+                        }
+                      (Symbol
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 3 11 3 12
+                           , srcInfoPoints = []
+                           }
+                         "$")))
+                (InfixApp
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 3 13 3 26
+                     , srcInfoPoints = []
+                     }
+                   (Con
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 3 13 3 18
+                        , srcInfoPoints = []
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 3 13 3 18
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 3 13 3 18
+                              , srcInfoPoints = []
+                              }
+                            "False")))
+                   (QVarOp
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 3 19 3 21
+                        , srcInfoPoints = []
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 3 19 3 21
+                           , srcInfoPoints = []
+                           }
+                         (Symbol
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 3 19 3 21
+                              , srcInfoPoints = []
+                              }
+                            "&&")))
+                   (Con
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 3 22 3 26
+                        , srcInfoPoints = []
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 3 22 3 26
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/PatSynFix.hs" 3 22 3 26
+                              , srcInfoPoints = []
+                              }
+                            "True"))))))
+          Nothing
+      ]
+  , []
+  )
