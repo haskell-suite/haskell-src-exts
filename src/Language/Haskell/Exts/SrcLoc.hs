@@ -107,6 +107,11 @@ instance Show SrcSpanInfo where
 noInfoSpan :: SrcSpan -> SrcSpanInfo
 noInfoSpan ss = SrcSpanInfo ss []
 
+-- | A bogus `SrcSpanInfo`, the location is @noLoc@.
+-- `noSrcSpan = noInfoSpan (mkSrcSpan noLoc noLoc)`
+noSrcSpan :: SrcSpanInfo
+noSrcSpan = noInfoSpan (mkSrcSpan noLoc noLoc)
+
 -- | Generate a 'SrcSpanInfo' with the supplied positional information for entities.
 infoSpan :: SrcSpan -> [SrcSpan] -> SrcSpanInfo
 infoSpan = SrcSpanInfo

@@ -18,6 +18,7 @@ module Language.Haskell.Exts.Annotated.Parser
     (
     -- * General parsing
       Parseable(parse, parseWithMode, parseWithComments)
+    , ParseMode(..), defaultParseMode, ParseResult(..), fromParseResult
     -- * Parsing of specific AST elements
     -- ** Modules
     , parseModule, parseModuleWithMode, parseModuleWithComments

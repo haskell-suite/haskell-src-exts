@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveDataTypeable #-}
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Language.Haskell.Exts.Annotated.Fixity
@@ -36,14 +37,19 @@ module Language.Haskell.Exts.Annotated.Fixity
 import Language.Haskell.Exts.Annotated.Syntax
 import Language.Haskell.Exts.SrcLoc
 
-import Language.Haskell.Exts.Fixity ( Fixity(..), infix_, infixl_, infixr_, preludeFixities, baseFixities, prefixMinusFixity )
-import qualified Language.Haskell.Exts.Syntax as S ( Assoc(..), QOp(..), QName(..), Name(..), SpecialCon(..), ModuleName )
-import Language.Haskell.Exts.Annotated.Simplify ( sQOp, sAssoc, sQName, sModuleHead, sName )
+--import Language.Haskell.Exts.Annotated.Simplify ( sQOp, sAssoc, sQName, sModuleHead, sName )
 
 import Control.Monad (when, (<=<), liftM, liftM2, liftM3, liftM4)
 import Data.Traversable (mapM)
 import Data.Maybe (fromMaybe)
+import Data.Typeable
+import Data.Data hiding (Fixity)
 import Prelude hiding (mapM)
+
+-- | Operator fixities are represented by their associativity
+--   (left, right or none) and their precedence (0-9).
+data Fixity = Fixity (Assoc ()) Int (QName ())
+  deriving (Eq,Ord,Show,Typeable,Data)
 
 -- | All AST elements that may include expressions which in turn may
 --   need fixity tweaking will be instances of this class.
@@ -55,6 +61,10 @@ class AppFixity ast where
                     -> ast SrcSpanInfo      -- ^ The element to tweak.
                     -> m (ast SrcSpanInfo)  -- ^ The same element, but with operator expressions updated, or a failure.
 
+assocNone, assocLeft, assocRight :: Assoc ()
+assocNone = AssocNone ()
+assocLeft = AssocLeft ()
+assocRight = AssocRight ()
 
 instance AppFixity Exp where
   applyFixities fixs' = infFix fixs' <=< leafFix fixs'
@@ -62,9 +72,9 @@ instance AppFixity Exp where
           infFix fixs (InfixApp l2 a op2 z) = do
               e <- infFix fixs a
               let fixup (a1,p1) (a2,p2) y pre = do
-                      when (p1 == p2 && (a1 /= a2 || a1 == S.AssocNone)) -- Ambiguous infix expression!
+                      when (p1 == p2 && (a1 /= a2 || a1 == assocNone)) -- Ambiguous infix expression!
                            $ fail "Ambiguous infix expression"
-                      if p1 > p2 || p1 == p2 && (a1 == S.AssocLeft || a2 == S.AssocNone) -- Already right order
+                      if p1 > p2 || p1 == p2 && (a1 == assocLeft || a2 == assocNone) -- Already right order
                        then return $ InfixApp l2 e op2 z
                        else liftM pre (infFix fixs $ InfixApp (ann y <++> ann z) y op2 z)
               case e of
@@ -82,9 +92,9 @@ instance AppFixity Pat where
           infFix fixs (PInfixApp l2 a op2 z) = do
               p <- infFix fixs a
               let fixup (a1,p1) (a2,p2) y pre = do
-                      when (p1 == p2 && (a1 /= a2 || a1 == S.AssocNone )) -- Ambiguous infix expression!
+                      when (p1 == p2 && (a1 /= a2 || a1 == assocNone )) -- Ambiguous infix expression!
                            $ fail "Ambiguous infix expression"
-                      if p1 > p2 || p1 == p2 && (a1 == S.AssocLeft || a2 == S.AssocNone) -- Already right order
+                      if p1 > p2 || p1 == p2 && (a1 == assocLeft || a2 == assocNone) -- Already right order
                        then return $ PInfixApp l2 p op2 z
                        else liftM pre (infFix fixs $ PInfixApp (ann y <++> ann z) y op2 z)
               case p of
@@ -94,28 +104,94 @@ instance AppFixity Pat where
           infFix _ p = return p
 
 -- Internal: lookup associativity and precedence of an operator
-askFixity :: [Fixity] -> QOp l -> (S.Assoc, Int)
-askFixity xs k = askFix xs (f $ sQOp k) -- undefined -- \k -> askFixityP xs (f k) -- lookupWithDefault (AssocLeft, 9) (f k) mp
+askFixity :: [Fixity] -> QOp l -> (Assoc (), Int)
+askFixity xs k = askFix xs (f (() <$ k))
     where
-        f (S.QVarOp x) = g x
-        f (S.QConOp x) = g x
+        f (QVarOp _ x) = g x
+        f (QConOp _ x) = g x
 
-        g (S.Special S.Cons) = S.UnQual (S.Symbol ":")
+        g (Special _ (Cons _)) = UnQual () (Symbol () ":")
         g x                  = x
 
 -- Same using patterns
-askFixityP :: [Fixity] -> QName l -> (S.Assoc, Int)
-askFixityP xs qn = askFix xs (g $ sQName qn)
+askFixityP :: [Fixity] -> QName l -> (Assoc (), Int)
+askFixityP xs qn = askFix xs (g (() <$ qn))
     where
-        g (S.Special S.Cons) = S.UnQual (S.Symbol ":")
+        g (Special _ (Cons _)) = UnQual () (Symbol () ":")
         g x                  = x
 
-askFix :: [Fixity] -> S.QName -> (S.Assoc, Int)
-askFix xs = \k -> lookupWithDefault (S.AssocLeft, 9) k mp
+askFix :: [Fixity] -> QName l -> (Assoc (), Int)
+askFix xs = \k -> lookupWithDefault (assocLeft, 9) (() <$ k) mp
     where
         lookupWithDefault def k mp' = fromMaybe def $ lookup k mp'
 
         mp = [(x,(a,p)) | Fixity a p x <- xs]
+
+
+
+-- | Built-in fixity for prefix minus
+prefixMinusFixity :: (Assoc (), Int)
+prefixMinusFixity = (AssocLeft (), 6)
+
+-- | All fixities defined in the Prelude.
+preludeFixities :: [Fixity]
+preludeFixities = concat
+    [infixr_ 9  ["."]
+    ,infixl_ 9  ["!!"]
+    ,infixr_ 8  ["^","^^","**"]
+    ,infixl_ 7  ["*","/","`quot`","`rem`","`div`","`mod`",":%","%"]
+    ,infixl_ 6  ["+","-"]
+    ,infixr_ 5  [":","++"]
+    ,infix_  4  ["==","/=","<","<=",">=",">","`elem`","`notElem`"]
+    ,infixr_ 3  ["&&"]
+    ,infixr_ 2  ["||"]
+    ,infixl_ 1  [">>",">>="]
+    ,infixr_ 1  ["=<<"]
+    ,infixr_ 0  ["$","$!","`seq`"]
+    ]
+
+-- | All fixities defined in the base package.
+--
+--   Note that the @+++@ operator appears in both Control.Arrows and
+--   Text.ParserCombinators.ReadP. The listed precedence for @+++@ in
+--   this list is that of Control.Arrows.
+baseFixities :: [Fixity]
+baseFixities = preludeFixities ++ concat
+    [infixl_ 9 ["!","//","!:"]
+    ,infixl_ 8 ["`shift`","`rotate`","`shiftL`","`shiftR`","`rotateL`","`rotateR`"]
+    ,infixl_ 7 [".&."]
+    ,infixl_ 6 ["`xor`"]
+    ,infix_  6 [":+"]
+    ,infixl_ 5 [".|."]
+    ,infixr_ 5 ["+:+","<++","<+>"] -- fixity conflict for +++ between ReadP and Arrow
+    ,infix_  5 ["\\\\"]
+    ,infixl_ 4 ["<$>","<$","<*>","<*","*>","<**>"]
+    ,infix_  4 ["`elemP`","`notElemP`"]
+    ,infixl_ 3 ["<|>"]
+    ,infixr_ 3 ["&&&","***"]
+    ,infixr_ 2 ["+++","|||"]
+    ,infixr_ 1 ["<=<",">=>",">>>","<<<","^<<","<<^","^>>",">>^"]
+    ,infixl_ 0 ["`on`"]
+    ,infixr_ 0 ["`par`","`pseq`"]
+    ]
+
+infixr_, infixl_, infix_ :: Int -> [String] -> [Fixity]
+infixr_ = fixity  assocRight
+infixl_ = fixity  assocLeft
+infix_  = fixity  assocNone
+
+-- Internal: help function for the above definitions.
+fixity :: Assoc () -> Int -> [String] -> [Fixity]
+fixity a p = map (Fixity a p . op)
+    where
+        op ('`':xs) = UnQual () $ Ident () $ init xs
+        op xs = UnQual () $ Symbol () xs
+
+
+
+
+
+
 
 
 -------------------------------------------------------------------
@@ -123,17 +199,21 @@ askFix xs = \k -> lookupWithDefault (S.AssocLeft, 9) k mp
 
 instance AppFixity Module where
     applyFixities fixs (Module l mmh prs imp decls) =
-        liftM (Module l mmh prs imp) $ appFixDecls (Just mn) fixs decls
-      where (mn, _, _) = sModuleHead mmh
+        liftM (Module l mmh prs imp) $ appFixDecls mmn fixs decls
+      where mmn = getMmn mmh
+            getMmn (Just (ModuleHead _ n _ _)) = Just n
+            getMmn _ = Nothing
     applyFixities fixs (XmlPage l mn os xn xas mexp cs) =
         liftM3 (XmlPage l mn os xn) (fix xas) (fix mexp) (fix cs)
       where fix xs = mapM (applyFixities fixs) xs
     applyFixities fixs (XmlHybrid l mmh prs imp decls xn xas mexp cs) =
-        liftM4 (flip (XmlHybrid l mmh prs imp) xn) (appFixDecls (Just mn) fixs decls)
+        liftM4 (flip (XmlHybrid l mmh prs imp) xn) (appFixDecls mmn fixs decls)
                 (fixe xas) (fixe mexp) (fixe cs)
-      where fixe xs = let extraFixs = getFixities (Just mn) decls
+      where mmn = getMmn mmh
+            getMmn (Just (ModuleHead _ n _ _)) = Just n
+            getMmn _ = Nothing
+            fixe xs = let extraFixs = getFixities mmn decls
                        in mapM (applyFixities (fixs++extraFixs)) xs
-            (mn, _, _) = sModuleHead mmh
 
 instance AppFixity Decl where
     applyFixities fixs decl = case decl of
@@ -155,28 +235,31 @@ instance AppFixity PatternSynDirection where
     _ -> return dir
     where fix x = applyFixities fixs x
 
-appFixDecls :: Monad m => Maybe S.ModuleName -> [Fixity] -> [Decl SrcSpanInfo] -> m [Decl SrcSpanInfo]
+appFixDecls :: Monad m => Maybe (ModuleName SrcSpanInfo) -> [Fixity] -> [Decl SrcSpanInfo] -> m [Decl SrcSpanInfo]
 appFixDecls mmdl fixs decls =
     let extraFixs = getFixities mmdl decls
      in mapM (applyFixities (fixs++extraFixs)) decls
 
-getFixities :: Maybe S.ModuleName -> [Decl l] -> [Fixity]
+getFixities :: Maybe (ModuleName l) -> [Decl l] -> [Fixity]
 getFixities mmdl = concatMap (getFixity mmdl)
 
-getFixity :: Maybe S.ModuleName -> Decl l -> [Fixity]
+getFixity :: Maybe (ModuleName l) -> Decl l -> [Fixity]
 getFixity mmdl d =
   case d of
     InfixDecl _ a mp ops  -> let p = fromMaybe 9 mp
-                              in map (Fixity (sAssoc a) p) (concatMap g ops)
+                              in map (Fixity (scrub a) p) (concatMap g (map scrub ops))
     ClassDecl _ _ _ _ cds -> maybe [] (concatMap getClassFixity) cds
     _ -> []
-  where g (VarOp _ x) = f $ sName x
-        g (ConOp _ x) = f $ sName x
+  where g (VarOp _ x) = f x
+        g (ConOp _ x) = f x
         f x = case mmdl of
-              Nothing -> [            S.UnQual x]
-              Just m  -> [S.Qual m x, S.UnQual x]
+              Nothing -> [UnQual () x]
+              Just m  -> [Qual () (scrub m) x, UnQual () x]
         getClassFixity (ClsDecl _ cd) = getFixity mmdl cd
         getClassFixity _              = []
+
+scrub :: Functor f => f a -> f ()
+scrub f = () <$ f
 
 getBindFixities :: Binds l -> [Fixity]
 getBindFixities bs = case bs of

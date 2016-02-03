@@ -17,7 +17,6 @@ module Language.Haskell.Exts.Annotated (
     -- * Re-exported modules
       module Language.Haskell.Exts.Annotated.Syntax
     , module Language.Haskell.Exts.Annotated.Build
-    , module Language.Haskell.Exts.Parser
     , module Language.Haskell.Exts.Lexer
     , module Language.Haskell.Exts.Pretty
     , module Language.Haskell.Exts.Annotated.Fixity
@@ -32,6 +31,7 @@ module Language.Haskell.Exts.Annotated (
     , parseFileWithMode
     , parseFileWithExts
     , parseFileWithComments
+    , parseFileWithCommentsAndPragmas
     , parseFileContents
     , parseFileContentsWithMode
     , parseFileContentsWithExts
@@ -44,7 +44,6 @@ import Language.Haskell.Exts.Annotated.Build
 import Language.Haskell.Exts.Annotated.Comments
 import Language.Haskell.Exts.Annotated.Parser
 import Language.Haskell.Exts.Annotated.Syntax
-import Language.Haskell.Exts.Parser ( Parseable(..), ParseResult(..), fromParseResult, ParseMode(..), defaultParseMode )
 import Language.Haskell.Exts.Lexer ( lexTokenStream, lexTokenStreamWithMode, Token(..) )
 import Language.Haskell.Exts.Pretty
 import Language.Haskell.Exts.Annotated.Fixity
@@ -76,6 +75,22 @@ parseFileWithMode p fp = readUTF8File fp >>= return . parseFileContentsWithMode 
 
 parseFileWithComments :: ParseMode -> FilePath -> IO (ParseResult (Module SrcSpanInfo, [Comment]))
 parseFileWithComments p fp = readUTF8File fp >>= return . parseFileContentsWithComments p
+
+-- | Parse a source file on disk, supplying a custom parse mode, and retaining comments
+--  as well as unknown pragmas.
+parseFileWithCommentsAndPragmas
+  :: ParseMode -> FilePath
+  -> IO (ParseResult (Module SrcSpanInfo, [Comment], [UnknownPragma]))
+parseFileWithCommentsAndPragmas p fp =
+    readUTF8File fp >>= return . parseFileContentsWithCommentsAndPragmas p
+
+-- | Parse a source file from a string using a custom parse mode retaining comments
+--   as well as unknown pragmas.
+parseFileContentsWithCommentsAndPragmas
+  :: ParseMode -> String
+  -> ParseResult (Module SrcSpanInfo, [Comment], [UnknownPragma])
+parseFileContentsWithCommentsAndPragmas pmode str = separatePragmas parseResult
+    where parseResult = parseFileContentsWithComments pmode str
 
 -- | Parse a source file from a string using the default parse mode.
 parseFileContents :: String -> ParseResult (Module SrcSpanInfo)
@@ -148,3 +163,18 @@ readUTF8File fp = do
   h <- openFile fp ReadMode
   hSetEncoding h utf8
   hGetContents h
+
+-- | Converts a parse result with comments to a parse result with comments and
+--   unknown pragmas.
+separatePragmas :: ParseResult (Module SrcSpanInfo, [Comment])
+                -> ParseResult (Module SrcSpanInfo, [Comment], [UnknownPragma])
+separatePragmas r =
+    case r of
+        ParseOk (m, comments) ->
+            let (pragmas, comments') = partition pragLike comments
+              in  ParseOk (m, comments', map commentToPragma pragmas)
+                where commentToPragma (Comment _ l s) =
+                            UnknownPragma l $ init $ drop 1 s
+                      pragLike (Comment b _ s) = b && pcond s
+                      pcond s = length s > 1 && take 1 s == "#" && last s == '#'
+        ParseFailed l s ->  ParseFailed l s
