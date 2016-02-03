@@ -1,3 +1,2 @@
 {-# LANGUAGE NPlusKPatterns #-}
-module Main (main) where
 f (n + 3) = n

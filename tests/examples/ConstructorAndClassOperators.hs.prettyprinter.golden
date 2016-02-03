@@ -1,5 +1,4 @@
 {-# LANGUAGE TypeOperators, MultiParamTypeClasses #-}
-module Main (main) where
 
 ins :: (:=>) b h => b :- h
 

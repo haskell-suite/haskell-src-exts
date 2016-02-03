@@ -1,5 +1,4 @@
 {-# LANGUAGE GADTs #-}
-module Main (main) where
 
 data X where
         X :: !Int -> X

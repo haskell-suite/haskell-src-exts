@@ -1,5 +1,4 @@
 {-# LANGUAGE QuasiQuotes #-}
-module Main (main) where
 
 [undefined|
 this quasiquote is acceptable to ghc's

@@ -1,5 +1,4 @@
 {-# LANGUAGE DoRec #-}
-module Main (main) where
 main
   = do rec let x = 1
        return ()

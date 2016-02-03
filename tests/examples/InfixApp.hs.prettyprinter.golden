@@ -1,2 +1,1 @@
-module Main (main) where
 f = -w / 2

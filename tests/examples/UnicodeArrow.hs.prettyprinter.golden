@@ -1,5 +1,4 @@
 {-# LANGUAGE UnicodeSyntax #-}
-module Main (main) where
 
 arrowTest :: String -> String
 arrowTest input

@@ -1,6 +1,5 @@
 {-# LANGUAGE BinaryLiterals #-}
 {-# LANGUAGE MagicHash #-}
-module Main (main) where
 import GHC.Types
 main
   = do print

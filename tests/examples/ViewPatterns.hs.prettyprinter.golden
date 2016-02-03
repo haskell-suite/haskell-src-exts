@@ -1,4 +1,3 @@
 {-# LANGUAGE ViewPatterns #-}
-module Main (main) where
 f (id -> Just _) "" = ""
 g (id -> True) = False

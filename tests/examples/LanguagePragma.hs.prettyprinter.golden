@@ -1,3 +1,2 @@
 {-# LANGUAGE RecordWildCards #-}
-module Main (main) where
 main = print "hello"

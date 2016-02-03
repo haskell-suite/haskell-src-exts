@@ -1,3 +1,2 @@
 {-# LANGUAGE NamedFieldPuns #-}
-module Main (main) where
 f (C{M.a}) = a

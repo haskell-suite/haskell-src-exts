@@ -1,5 +1,4 @@
 {-# LANGUAGE RoleAnnotations #-}
-module Main (main) where
 
 data Foo a = Foo a
 

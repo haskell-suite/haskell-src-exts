@@ -1,5 +1,4 @@
 {-# LANGUAGE TypeFamilies #-}
-module Main (main) where
 
 class MapType v where
         type Key v :: *

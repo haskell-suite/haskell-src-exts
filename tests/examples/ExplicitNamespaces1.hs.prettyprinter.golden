@@ -1,5 +1,4 @@
 {-# LANGUAGE ExplicitNamespaces #-}
-module Main (main) where
 import Data.Array.Repa (type (++))
 import Data.Array.Repa (type (++))
 import Data.Array.Repa (type (++))

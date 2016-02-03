@@ -1,5 +1,3 @@
-module Main (main) where
-
 class Foo f where
         (<^>) :: Applicative f => f a -> f (a -> b) -> f b
         

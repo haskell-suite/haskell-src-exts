@@ -1,3 +1,2 @@
 {-# LANGUAGE TupleSections #-}
-module Main (main) where
 foo x = (1, ,) x 3

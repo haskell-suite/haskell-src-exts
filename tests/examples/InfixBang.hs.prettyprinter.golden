@@ -1,3 +1,2 @@
 {-# LANGUAGE BangPatterns #-}
-module Main (main) where
 (!) arr i = arr i

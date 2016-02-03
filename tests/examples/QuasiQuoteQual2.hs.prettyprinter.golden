@@ -1,4 +1,3 @@
 {-# LANGUAGE QuasiQuotes #-}
-module Main (main) where
 f [True] = 1
 f _ = 0

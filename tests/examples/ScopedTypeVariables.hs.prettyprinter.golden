@@ -1,5 +1,4 @@
 {-# LANGUAGE ScopedTypeVariables #-}
-module Main (main) where
 
 test :: IO Char
 test

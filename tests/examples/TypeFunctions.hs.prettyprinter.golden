@@ -1,5 +1,4 @@
 {-# LANGUAGE TypeFamilies, KindSignatures #-}
-module Main (main) where
 
 data Id = Id
 

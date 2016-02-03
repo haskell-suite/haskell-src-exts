@@ -1,5 +1,4 @@
 {-# LANGUAGE UnicodeSyntax #-}
-module Main (main) where
 import Prelude.Unicode
 
 testAnd :: Int -> Int -> Bool

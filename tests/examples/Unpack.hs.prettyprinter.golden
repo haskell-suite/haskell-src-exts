@@ -1,5 +1,4 @@
 {-# LANGUAGE GADTs #-}
-module Main (main) where
 
 data CmmNode e x where
         CmmEntry :: {-# UNPACK #-} !Int -> CmmNode e x

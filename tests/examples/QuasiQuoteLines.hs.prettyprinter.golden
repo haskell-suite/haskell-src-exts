@@ -1,5 +1,4 @@
 {-# LANGUAGE QuasiQuotes #-}
-module Main (main) where
 import Here
 
 str :: String

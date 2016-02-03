@@ -1,9 +1,8 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-module Main (main) where
 
-class Foo a
+class Foo a where
 
 data Bar a
 

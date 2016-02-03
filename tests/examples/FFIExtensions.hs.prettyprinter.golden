@@ -5,4 +5,4 @@ module FFIExtensions where
 foreign import ccall interruptible "sleep" sleep ::
                CUint -> IO CUint
 
-foreign import capi safe "header.h f" f :: CInt -> IO CInt
+foreign import capi "header.h f" f :: CInt -> IO CInt

@@ -1,4 +1,3 @@
-module Main (main) where
 import qualified Language.Haskell.Exts.Annotated as Parser
 import qualified Language.Haskell.Exts.Annotated.Syntax as Syn
 import qualified Language.Haskell.Exts.Extension as Ext

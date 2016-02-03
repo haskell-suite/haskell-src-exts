@@ -1,4 +1,3 @@
-module Main (main) where
 f 1 = -1
 f (-1) = 1
 f (-2) = 2

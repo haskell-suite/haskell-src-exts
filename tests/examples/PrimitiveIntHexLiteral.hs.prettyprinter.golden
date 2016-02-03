@@ -1,3 +1,2 @@
 {-# LANGUAGE MagicHash #-}
-module Main (main) where
 minInt = I# (9223372036854775808#)

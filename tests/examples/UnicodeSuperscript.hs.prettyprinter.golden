@@ -1,5 +1,4 @@
 {-# LANGUAGE UnicodeSyntax #-}
-module Main (main) where
 
 dumy :: Double -> Double -> Double
 dumy a b

@@ -1,7 +1,6 @@
 {-# LANGUAGE KindSignatures #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE PolyKinds #-}
-module Main (main) where
 
 class C1 (a :: Bool) where
         c :: proxy a -> Int

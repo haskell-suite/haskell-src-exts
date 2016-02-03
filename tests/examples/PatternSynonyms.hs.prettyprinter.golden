@@ -1,5 +1,4 @@
 {-# LANGUAGE PatternSynonyms #-}
-module Main (main) where
 
 pattern A = Nothing
 

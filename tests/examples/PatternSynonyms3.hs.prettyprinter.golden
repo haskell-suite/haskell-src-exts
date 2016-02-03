@@ -1,7 +1,6 @@
 {-# LANGUAGE PatternSynonyms, BangPatterns, PolyKinds, DataKinds,
   GADTs, FlexibleContexts, ViewPatterns #-}
 {-# LANGUAGE ExplicitForAll #-}
-module Main (main) where
 
 pattern Single x <- [x]
 
@@ -33,7 +32,7 @@ pattern C :: a -> X Maybe (Maybe a)
 
 pattern C x = Y (Just x)
 
-pattern Syn :: forall a b c . Int
+pattern Syn :: forall a b c . () => () => Int
 
 pattern C :: (Show (a, Bool)) => a -> X Maybe (Maybe (a, Bool))
 

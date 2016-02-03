@@ -1,5 +1,4 @@
 {-# LANGUAGE GADTs, NamedWildCards, ScopedTypeVariables #-}
-module Main (main) where
 
 bar :: Int -> _ Int
 bar x = Foo True () x
@@ -7,32 +6,32 @@ bar x = Foo True () x
 addAndOr1 :: _
 addAndOr1 (a, b) (c, d) = (a `plus` d, b || c)
   where plus :: Int -> Int -> Int
-        plus x y = x + y
+        x `plus` y = x + y
 
 addAndOr2 :: _ -> _
 addAndOr2 (a, b) (c, d) = (a `plus` d, b || c)
   where plus :: Int -> Int -> Int
-        plus x y = x + y
+        x `plus` y = x + y
 
 addAndOr3 :: _ -> _ -> _
 addAndOr3 (a, b) (c, d) = (a `plus` d, b || c)
   where plus :: Int -> Int -> Int
-        plus x y = x + y
+        x `plus` y = x + y
 
 addAndOr4 :: (_ _ _) -> (_ _ _) -> (_ _ _)
 addAndOr4 (a, b) (c, d) = (a `plus` d, b || c)
   where plus :: Int -> Int -> Int
-        plus x y = x + y
+        x `plus` y = x + y
 
 addAndOr5 :: (_, _) -> (_, _) -> (_, _)
 addAndOr5 (a, b) (c, d) = (a `plus` d, b || c)
   where plus :: Int -> Int -> Int
-        plus x y = x + y
+        x `plus` y = x + y
 
 addAndOr6 :: (Int, _) -> (Bool, _) -> (_ Int Bool)
 addAndOr6 (a, b) (c, d) = (a `plus` d, b || c)
   where plus :: Int -> Int -> Int
-        plus x y = x + y
+        x `plus` y = x + y
 
 bar :: _ -> _
 bar x = not x

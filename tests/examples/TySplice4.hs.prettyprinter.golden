@@ -1,5 +1,4 @@
 {-# LANGUAGE TemplateHaskell #-}
-module Main (main) where
 x = [d|
       
       f :: a -> Int

@@ -1,5 +1,3 @@
-module Main (main) where
-
 data Baz = Baz
 
 instance Show Baz where

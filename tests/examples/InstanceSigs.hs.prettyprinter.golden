@@ -1,7 +1,6 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE InstanceSigs #-}
 {-# LANGUAGE TypeFamilies #-}
-module Main (main) where
 
 instance SupportsDelta (Map k v) where
         type Delta (Map k v) = Map k v

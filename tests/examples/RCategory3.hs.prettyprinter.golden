@@ -1,5 +1,4 @@
 {-# LANGUAGE TypeFamilies, ConstraintKinds #-}
-module Main (main) where
 
 instance RCategory (->) where
         type RCategoryCtxt (->) a a = ()

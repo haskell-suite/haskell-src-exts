@@ -1,5 +1,3 @@
-module Main (main) where
-
 class Eq a where
         (==) :: a -> a -> Bool
         

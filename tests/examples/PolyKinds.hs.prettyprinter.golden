@@ -1,5 +1,4 @@
 {-# LANGUAGE PolyKinds #-}
-module Main (main) where
 
 data Proxy t = Proxy
 

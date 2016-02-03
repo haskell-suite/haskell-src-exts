@@ -1,5 +1,4 @@
 {-# LANGUAGE GADTs #-}
-module Main (main) where
 
 one :: a ~ Int => a
 one = 1

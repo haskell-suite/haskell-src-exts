@@ -1,5 +1,3 @@
-module Main (main) where
-
 instance Sized a => Sized (Digit a) where
         {-# SPECIALISE instance Sized (Digit (Elem a)) #-}
         

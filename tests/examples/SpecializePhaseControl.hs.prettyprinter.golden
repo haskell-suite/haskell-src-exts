@@ -1,5 +1,3 @@
-module Main (main) where
-
 {-# SPECIALISE [1] x :: Integer -> Integer -> Integer,
                  Integer -> Int -> Integer, Int -> Int -> Int #-}
 

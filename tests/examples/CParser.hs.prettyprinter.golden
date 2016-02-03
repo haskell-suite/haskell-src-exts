@@ -6143,17 +6143,17 @@ happyNewToken action sts stk
                _ -> happyError' tk)
 happyError_ tk = happyError' tk
 
-happyThen :: P a -> (a -> P b) -> P b
+happyThen :: () => P a -> (a -> P b) -> P b
 happyThen = (>>=)
 
-happyReturn :: a -> P a
+happyReturn :: () => a -> P a
 happyReturn = (return)
 happyThen1 = happyThen
 
-happyReturn1 :: a -> P a
+happyReturn1 :: () => a -> P a
 happyReturn1 = happyReturn
 
-happyError' :: CToken -> P a
+happyError' :: () => CToken -> P a
 happyError' tk = (\ token -> happyError) tk
 translation_unit = happySomeParser
   where happySomeParser

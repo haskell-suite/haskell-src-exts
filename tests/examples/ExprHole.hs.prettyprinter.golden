@@ -1,4 +1,3 @@
-module Main (main) where
 foo = _
 foo = _ x
 foo = _

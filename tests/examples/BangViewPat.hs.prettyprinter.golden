@@ -1,3 +1,2 @@
 {-# LANGUAGE BangPatterns, ViewPatterns #-}
-module Main (main) where
 someFun (id -> !arg) = undefined

@@ -1,6 +1,4 @@
-module Main (main) where
-
-instance Traversable Tree
+instance Traversable Tree where
 
 x :: Int
 x = 1

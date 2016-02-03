@@ -1,4 +1,2 @@
-module Main (main) where
-
 data RecordWithInfixSelector = Cons{(<>) :: Int -> Int}
 idRecord = Cons{(<>) = id}

@@ -10,7 +10,6 @@
     -a
     -a
     -a #-}
-module Main (main) where
 
 main :: IO ()
 main = dat
