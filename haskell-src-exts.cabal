@@ -30,7 +30,11 @@ Description:            Haskell-Source with Extensions (HSE, haskell-src-exts)
 Homepage:               https://github.com/haskell-suite/haskell-src-exts
 Stability:              Stable
 Cabal-Version:          >= 1.10
-Tested-With:            GHC == 7.4.2, GHC == 7.6.3, GHC == 7.8.2, GHC == 7.10.2
+Tested-With:              GHC == 7.4.2
+                        , GHC == 7.6.3
+                        , GHC == 7.8.2
+                        , GHC == 7.10.3
+                        , GHC == 8.1
 
 Extra-Source-Files:
                         README.md
