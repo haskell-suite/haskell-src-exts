@@ -15,12 +15,12 @@
 -- printing the tree exactly as it was parsed.
 --
 -----------------------------------------------------------------------------
-module Language.Haskell.Exts.Annotated.ExactPrint
+module Language.Haskell.Exts.ExactPrint
         ( exactPrint
         , ExactP
         ) where
 
-import Language.Haskell.Exts.Annotated.Syntax
+import Language.Haskell.Exts.Syntax
 import Language.Haskell.Exts.SrcLoc
 import Language.Haskell.Exts.Comments
 

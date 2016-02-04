@@ -70,7 +70,7 @@ module Language.Haskell.Exts.Annotated.Build (
     metaConPat      -- :: String -> [Pat] -> Pat
   ) where
 
-import Language.Haskell.Exts.Annotated.Syntax
+import Language.Haskell.Exts.Syntax
 
 -----------------------------------------------------------------------------
 -- Help functions for Abstract syntax

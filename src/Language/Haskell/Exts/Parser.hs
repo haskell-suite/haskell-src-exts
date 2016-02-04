@@ -14,7 +14,7 @@
 -- Annotated parser for Haskell with extensions.
 --
 -----------------------------------------------------------------------------
-module Language.Haskell.Exts.Annotated.Parser
+module Language.Haskell.Exts.Parser
     (
     -- * General parsing
       Parseable(parse, parseWithMode, parseWithComments)
@@ -45,8 +45,8 @@ module Language.Haskell.Exts.Annotated.Parser
     ) where
 
 import Data.Data hiding (Fixity)
-import Language.Haskell.Exts.Annotated.Fixity
-import Language.Haskell.Exts.Annotated.Syntax
+import Language.Haskell.Exts.Fixity
+import Language.Haskell.Exts.Syntax
 import Language.Haskell.Exts.Comments
 import Language.Haskell.Exts.InternalParser
 import Language.Haskell.Exts.ParseMonad

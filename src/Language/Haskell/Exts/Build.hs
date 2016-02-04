@@ -70,7 +70,7 @@ module Language.Haskell.Exts.Build (
     metaConPat      -- :: String -> [Pat] -> Pat ()
   ) where
 
-import Language.Haskell.Exts.Annotated.Syntax
+import Language.Haskell.Exts.Syntax
 import Language.Haskell.Exts.SrcLoc
 
 -----------------------------------------------------------------------------

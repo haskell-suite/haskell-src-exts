@@ -74,8 +74,8 @@ module Language.Haskell.Exts.ParseUtils (
     , p_unboxed_singleton_con   -- PExp
     ) where
 
-import Language.Haskell.Exts.Annotated.Syntax hiding ( Type(..), Asst(..), Exp(..), FieldUpdate(..), XAttr(..), Context(..) )
-import qualified Language.Haskell.Exts.Annotated.Syntax as S ( Type(..), Asst(..), Exp(..), FieldUpdate(..), XAttr(..), Context(..), Role(..), PatternSynDirection(..))
+import Language.Haskell.Exts.Syntax hiding ( Type(..), Asst(..), Exp(..), FieldUpdate(..), XAttr(..), Context(..) )
+import qualified Language.Haskell.Exts.Syntax as S ( Type(..), Asst(..), Exp(..), FieldUpdate(..), XAttr(..), Context(..), Role(..), PatternSynDirection(..))
 
 import Language.Haskell.Exts.ParseSyntax
 import Language.Haskell.Exts.ParseMonad

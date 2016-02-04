@@ -26,8 +26,7 @@ module Language.Haskell.Exts.Pretty (
                 , prettyPrim, prettyPrimWithMode
                 ) where
 
-import Language.Haskell.Exts.Annotated.Syntax
---import Language.Haskell.Exts.Annotated.Simplify
+import Language.Haskell.Exts.Syntax
 import qualified Language.Haskell.Exts.ParseSyntax as P
 
 import Language.Haskell.Exts.SrcLoc hiding (loc)

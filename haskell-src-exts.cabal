@@ -62,16 +62,14 @@ Library
                         Language.Haskell.Exts.Pretty,
                         Language.Haskell.Exts.Extension,
                         Language.Haskell.Exts.Build,
-                        Language.Haskell.Exts.Comments,
                         Language.Haskell.Exts.SrcLoc,
 
-                        Language.Haskell.Exts.Annotated,
-                        Language.Haskell.Exts.Annotated.Syntax,
-                        Language.Haskell.Exts.Annotated.Fixity,
+                        Language.Haskell.Exts.Syntax,
+                        Language.Haskell.Exts.Fixity,
                         Language.Haskell.Exts.Annotated.Build,
-                        Language.Haskell.Exts.Annotated.ExactPrint,
-                        Language.Haskell.Exts.Annotated.Parser,
-                        Language.Haskell.Exts.Annotated.Comments
+                        Language.Haskell.Exts.ExactPrint,
+                        Language.Haskell.Exts.Parser,
+                        Language.Haskell.Exts.Comments
 
   Other-modules:        Language.Haskell.Exts.ExtScheme,
                         Language.Haskell.Exts.ParseMonad,

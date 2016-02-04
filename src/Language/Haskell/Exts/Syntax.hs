@@ -7,7 +7,7 @@
 
 -----------------------------------------------------------------------------
 -- |
--- Module      :  Language.Haskell.Exts.Annotated.Syntax
+-- Module      :  Language.Haskell.Exts.Syntax
 -- Copyright   :  (c) Niklas Broberg 2004-2009,
 --                (c) The GHC Team, 1997-2000
 -- License     :  BSD-style (see the file LICENSE.txt)
@@ -47,7 +47,7 @@
 --
 -----------------------------------------------------------------------------
 
-module Language.Haskell.Exts.Annotated.Syntax (
+module Language.Haskell.Exts.Syntax (
     -- * Modules
     Module(..), ModuleHead(..), WarningText(..), ExportSpecList(..), ExportSpec(..),
     ImportDecl(..), ImportSpecList(..), ImportSpec(..), Assoc(..), Namespace(..),
