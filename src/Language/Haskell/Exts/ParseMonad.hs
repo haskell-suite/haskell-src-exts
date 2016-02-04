@@ -1,7 +1,7 @@
 {-# OPTIONS_HADDOCK hide #-}
 -----------------------------------------------------------------------------
 -- |
--- Module      :  Language.Haskell.Exts.Annotated.ParseMonad
+-- Module      :  Language.Haskell.Exts.ParseMonad
 -- Copyright   :  Niklas Broberg (c) 2004-2009,
 --                Original (c) The GHC Team, 1997-2000
 -- License     :  BSD-style (see the file libraries/base/LICENSE)

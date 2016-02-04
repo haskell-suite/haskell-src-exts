@@ -1,7 +1,8 @@
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE CPP #-}
 -----------------------------------------------------------------------------
 -- |
--- Module      :  Language.Haskell.Exts.Annotated.Fixity
+-- Module      :  Language.Haskell.Exts.Fixity
 -- Copyright   :  (c) Niklas Broberg 2009
 -- License     :  BSD-style (see the file LICENSE.txt)
 --
@@ -37,13 +38,14 @@ module Language.Haskell.Exts.Fixity
 import Language.Haskell.Exts.Syntax
 import Language.Haskell.Exts.SrcLoc
 
---import Language.Haskell.Exts.Annotated.Simplify ( sQOp, sAssoc, sQName, sModuleHead, sName )
-
 import Control.Monad (when, (<=<), liftM, liftM2, liftM3, liftM4)
 import Data.Traversable (mapM)
 import Data.Maybe (fromMaybe)
 import Data.Typeable
 import Data.Data hiding (Fixity)
+#if __GLASGOW_HASKELL__ < 710
+import Control.Applicative ((<$))
+#endif
 import Prelude hiding (mapM)
 
 -- | Operator fixities are represented by their associativity
