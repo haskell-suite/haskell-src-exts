@@ -225,13 +225,13 @@ instance AppFixity Decl where
          let extraFix x = applyFixities (fixs ++ maybe [] getBindFixities bs) x
           in liftM3 (PatBind l) (extraFix p) (extraFix rhs) (mapM extraFix bs)
         AnnPragma l ann'         -> liftM (AnnPragma l) $ fix ann'
-        PatSyn loc p1 p2 dir -> liftM (PatSyn loc p1 p2) (fix dir)
+        PatSyn l p1 p2 dir -> liftM (PatSyn l p1 p2) (fix dir)
         _                       -> return decl
       where fix x = applyFixities fixs x
 
 instance AppFixity PatternSynDirection where
   applyFixities fixs dir = case dir of
-    ExplicitBidirectional loc ds -> liftM (ExplicitBidirectional loc) (mapM fix ds)
+    ExplicitBidirectional l ds -> liftM (ExplicitBidirectional l) (mapM fix ds)
     _ -> return dir
     where fix x = applyFixities fixs x
 

@@ -343,7 +343,7 @@ instance  Pretty (ExportSpec l) where
         pretty (EModuleContents _ m)        = text "module" <+> pretty m
 
 instance  Pretty (ImportDecl l) where
-        pretty (ImportDecl pos m qual src safe mbPkg mbName mbSpecs) =
+        pretty (ImportDecl _ m qual src safe mbPkg mbName mbSpecs) =
                 mySep [text "import",
                        if src  then text "{-# SOURCE #-}" else empty,
                        if safe then text "safe" else empty,
@@ -446,8 +446,7 @@ instance  Pretty (Decl l) where
         pretty (InstDecl _ moverlap iHead Nothing) =
                   mySep ( [text "instance", maybePP pretty moverlap, pretty iHead])
         pretty (InstDecl _ overlap iHead declList) =
-                let olp = case overlap of { Nothing -> empty; Just o -> space <> pretty o }
-                in mySep ( [ text "instance", maybePP pretty overlap
+                mySep ( [ text "instance", maybePP pretty overlap
                            , pretty iHead, text "where"])
                 $$$ ppBody classIndent (fromMaybe [] ((ppDecls False) <$> declList))
 
@@ -456,10 +455,10 @@ instance  Pretty (Decl l) where
                           , text "instance"
                           , maybePP pretty overlap
                           , pretty irule])
-        pretty (DefaultDecl pos htypes) =
+        pretty (DefaultDecl _ htypes) =
                 text "default" <+> parenList (map pretty htypes)
 
-        pretty (SpliceDecl pos splice) =
+        pretty (SpliceDecl _ splice) =
                 pretty splice
 
         pretty (TypeSig _ nameList qualType) =
@@ -538,8 +537,8 @@ instance  Pretty (Decl l) where
                 mySep $ [ text "{-# SPECIALISE", text "instance", pretty irule
                         , text "#-}"]
 
-        pretty (AnnPragma _ ann) =
-                mySep [text "{-# ANN", pretty ann, text "#-}"]
+        pretty (AnnPragma _ annp) =
+                mySep [text "{-# ANN", pretty annp, text "#-}"]
 
         pretty (MinimalPragma _ b) =
                 let bs = case b of { Just b' -> pretty b'; _ -> empty }
@@ -593,14 +592,14 @@ instance  Pretty (Match l) where
           let
               lhs = case rs of
                       []  -> [] -- Should never reach
-                      (r:rs) ->
+                      (r:rs') ->
                         let hd = [prettyPrec 2 l, ppNameInfix op, prettyPrec 2 r]
-                        in if null rs
+                        in if null rs'
                             then hd
                             else parens (myFsep hd) : map (prettyPrec 3) rs
 
           in myFsep (lhs ++ [pretty rhs]) $$$ ppWhere wbinds
-        pretty (Match pos f ps rhs whereBinds) =
+        pretty (Match _ f ps rhs whereBinds) =
                 myFsep (pretty f : map (prettyPrec 3) ps ++ [pretty rhs])
                 $$$ ppWhere whereBinds
 
@@ -608,9 +607,6 @@ ppWhere :: Maybe (Binds l) -> Doc
 ppWhere Nothing            = empty
 ppWhere (Just (BDecls _ l))  = nest 2 (text "where" $$$ ppBody whereIndent (ppDecls False l))
 ppWhere (Just (IPBinds _ b)) = nest 2 (text "where" $$$ ppBody whereIndent (ppDecls False b))
-
-ppSig :: Type l -> Doc
-ppSig t = text "::" <+> pretty t
 
 instance  PrettyDeclLike (ClassDecl l) where
     wantsBlankline (ClsDecl _ d) = wantsBlankline d
@@ -653,16 +649,16 @@ instance  PrettyDeclLike (InstDecl l) where
 instance  Pretty (InstDecl l) where
         pretty (InsDecl _ decl) = pretty decl
 
-        pretty (InsType loc ntype htype) =
+        pretty (InsType _ ntype htype) =
                 mySep [text "type", pretty ntype, equals, pretty htype]
 
-        pretty (InsData loc don ntype constrList derives) =
+        pretty (InsData _ don ntype constrList derives) =
                 mySep [pretty don, pretty ntype]
                         <+> (myVcat (zipWith (<+>) (equals : repeat (char '|'))
                                                    (map pretty constrList))
                               $$$ maybePP pretty derives)
 
-        pretty (InsGData loc don ntype optkind gadtList derives) =
+        pretty (InsGData _ don ntype optkind gadtList derives) =
                 mySep ( [pretty don, pretty ntype]
                         ++ ppOptKind optkind ++ [text "where"])
                         $$$ ppBody classIndent (map pretty gadtList)
@@ -731,8 +727,8 @@ instance  Pretty (ModulePragma l) where
         ppOptionsPragma (text "{-# OPTIONS_" <> pretty tool) s
     pretty (OptionsPragma _ _ s) =
         ppOptionsPragma (text "{-# OPTIONS") s
-    pretty (AnnModulePragma _ ann) =
-        myFsep [text "{-# ANN", pretty ann, text "#-}"]
+    pretty (AnnModulePragma _ mann) =
+        myFsep [text "{-# ANN", pretty mann, text "#-}"]
 
 
 instance Pretty Tool where
@@ -1327,7 +1323,7 @@ instance Pretty SrcSpan where
 
 -------------------------  Pretty-Print a Module --------------------
 instance Pretty (Module pos) where
-        pretty (Module l mbHead os imp decls) =
+        pretty (Module _ mbHead os imp decls) =
                 myVcat $ map pretty os ++
                     (case mbHead of
                         Nothing -> id
@@ -1453,20 +1449,6 @@ layoutChoice a b dl = do e <- getPPEnv
                          if layout e == PPOffsideRule ||
                             layout e == PPSemiColon
                           then a dl else b dl
-
--- Prefix something with a LINE pragma, if requested.
--- GHC's LINE pragma actually sets the current line number to n-1, so
--- that the following line is line n.  But if there's no newline before
--- the line we're talking about, we need to compensate by adding 1.
-
-markLine :: SrcInfo s => s -> Doc -> Doc
-markLine loc doc = do
-        e <- getPPEnv
-        let y = startLine loc
-        let line l =
-              text ("{-# LINE " ++ show l ++ " \"" ++ fileName loc ++ "\" #-}")
-        if linePragmas e then layoutChoice (line y $$) (line (y+1) <+>) doc
-              else doc
 
 --------------------------------------------------------------------------------
 -- Pretty-printing of internal constructs, for error messages while parsing

@@ -71,7 +71,6 @@ module Language.Haskell.Exts.Build (
   ) where
 
 import Language.Haskell.Exts.Syntax
-import Language.Haskell.Exts.SrcLoc
 
 -----------------------------------------------------------------------------
 -- Help functions for Abstract syntax
