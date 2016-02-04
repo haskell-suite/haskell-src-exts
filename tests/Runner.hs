@@ -2,8 +2,7 @@
 -- | Use "runhaskell Setup.hs test" or "cabal test" to run these tests.
 module Main where
 
-import Language.Haskell.Exts.Annotated
-import qualified Language.Haskell.Exts as S -- S for "Simple", i.e. not annotated
+import Language.Haskell.Exts
 
 import Test.Tasty hiding (defaultMain)
 import Test.Tasty.Golden
@@ -12,7 +11,6 @@ import System.FilePath
 import System.IO
 import Control.Monad.Trans
 import Control.Applicative
-import Data.Generics
 import Extensions
 import Text.Show.Pretty
 
@@ -94,7 +92,7 @@ prettyPrinterTests sources = testGroup "Pretty printer tests" $ do
       let
         -- parse
         mbAst =
-          S.parseFileContentsWithMode
+          parseFileContentsWithMode
             (defaultParseMode { parseFilename = file })
             contents
         -- try to pretty-print; summarize the test result

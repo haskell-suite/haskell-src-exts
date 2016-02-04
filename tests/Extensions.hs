@@ -5,7 +5,7 @@ module Extensions (extensionProperties) where
 import Test.Tasty
 import Test.Tasty.SmallCheck
 import Test.SmallCheck.Series
-import Language.Haskell.Exts.Annotated
+import Language.Haskell.Exts
 import Data.Function
 import Data.List
 

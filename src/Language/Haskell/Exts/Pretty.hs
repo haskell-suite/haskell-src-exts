@@ -596,7 +596,7 @@ instance  Pretty (Match l) where
                         let hd = [prettyPrec 2 l, ppNameInfix op, prettyPrec 2 r]
                         in if null rs'
                             then hd
-                            else parens (myFsep hd) : map (prettyPrec 3) rs
+                            else parens (myFsep hd) : map (prettyPrec 3) rs'
 
           in myFsep (lhs ++ [pretty rhs]) $$$ ppWhere wbinds
         pretty (Match _ f ps rhs whereBinds) =

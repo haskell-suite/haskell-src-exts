@@ -99,5 +99,4 @@ Test-Suite test
                        tasty-golden >= 2.2.2,
                        filepath,
                        directory,
-                       syb,
                        pretty-show
