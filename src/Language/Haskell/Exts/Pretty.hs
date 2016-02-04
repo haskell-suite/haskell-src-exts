@@ -36,7 +36,7 @@ import qualified Text.PrettyPrint as P
 import Data.List (intersperse)
 import Data.Maybe (isJust , fromMaybe)
 #if __GLASGOW_HASKELL__ < 710
-import Control.Applicative (Applicative(..))
+import Control.Applicative (Applicative(..), (<$>))
 #endif
 import qualified Control.Monad as M (ap)
 
