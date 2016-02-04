@@ -1,1 +1,10 @@
-Match
+Roundtrip test failed
+
+AST 1:
+
+Module () Nothing [LanguagePragma () [Ident () "MagicHash"]] [] [PatBind () (PVar () (Ident () "minInt")) (UnGuardedRhs () (App () (Con () (UnQual () (Ident () "I#"))) (Paren () (Lit () (PrimInt () 9223372036854775808 "0x8000000000000000"))))) Nothing]
+
+AST 2:
+
+Module () Nothing [LanguagePragma () [Ident () "MagicHash"]] [] [PatBind () (PVar () (Ident () "minInt")) (UnGuardedRhs () (App () (Con () (UnQual () (Ident () "I#"))) (Paren () (Lit () (PrimInt () 9223372036854775808 "9223372036854775808"))))) Nothing]
+

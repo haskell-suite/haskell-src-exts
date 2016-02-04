@@ -21,12 +21,12 @@ main :: IO ()
 main = do
   sources <- getTestFiles examplesDir
   defaultMain $ testGroup "Tests" $
-    [-- parserTests sources
---    , exactPrinterTests sources
-     prettyPrinterTests sources
---    , prettyParserTests sources
---    , extensionProperties
---    , commentsTests examplesDir
+    [ parserTests sources
+    , exactPrinterTests sources
+    , prettyPrinterTests sources
+    , prettyParserTests sources
+    , extensionProperties
+    , commentsTests examplesDir
     ]
 
 -- | Where all the tests are to be found

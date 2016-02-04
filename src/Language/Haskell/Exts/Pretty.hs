@@ -595,12 +595,11 @@ instance  Pretty (Match l) where
               lhs = case rs of
                       []  -> [] -- Should never reach
                       (r:rs) ->
-                        let hd = [prettyPrec 2 l, addBackticks op, prettyPrec 2 r]
+                        let hd = [prettyPrec 2 l, ppNameInfix op, prettyPrec 2 r]
                         in if null rs
                             then hd
                             else parens (myFsep hd) : map (prettyPrec 3) rs
-              addBackticks op =
-                if isSymbolName op then ppName op else text "`" <> ppName op <> text "`"
+
           in myFsep (lhs ++ [pretty rhs]) $$$ ppWhere wbinds
         pretty (Match pos f ps rhs whereBinds) =
                 myFsep (pretty f : map (prettyPrec 3) ps ++ [pretty rhs])
@@ -642,7 +641,7 @@ instance  Pretty (ClassDecl l) where
 
 instance Pretty (DeclHead l) where
   pretty (DHead _ n) = pretty n
-  pretty (DHInfix _ tv n) =  pretty tv <+> pretty n
+  pretty (DHInfix _ tv n) =  pretty tv <+> ppNameInfix n
   pretty (DHParen _ d) = parens (pretty d)
   pretty (DHApp _ dh tv) = pretty dh <+> pretty tv
 
