@@ -88,6 +88,7 @@ data Token
         | LeftArrow
         | RightArrow
         | At
+        | TApp -- '@' but have to check for preceeding whitespace
         | Tilde
         | DoubleArrow
         | Minus
@@ -734,6 +735,14 @@ lexStdToken = do
 
         ':':']':_ | ParallelArrays `elem` exts -> discard 2 >> return ParArrayRightSquare
 
+        -- Lexed seperately to deal with visible type applciation
+
+        '@':_ | TypeApplications `elem` exts -> do
+                                                c <- getLastChar
+                                                if isIdent c
+                                                  then discard 1 >> return At
+                                                  else discard 1 >> return TApp
+
         c:_ | isDigit c -> lexDecimalOrFloat
 
             | isUpper c -> lexConIdOrQual ""
@@ -1293,6 +1302,7 @@ showToken t = case t of
   LeftArrow         -> "<-"
   RightArrow        -> "->"
   At                -> "@"
+  TApp              -> "@"
   Tilde             -> "~"
   DoubleArrow       -> "=>"
   Minus             -> "-"

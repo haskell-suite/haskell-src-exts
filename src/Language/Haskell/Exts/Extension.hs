@@ -524,6 +524,8 @@ data KnownExtension =
   -- start with an underscore as wildcards. For example, `foo :: _x` is
   -- equivalent to `foo :: _`.
   | NamedWildCards
+
+  | TypeApplications
   deriving (Show, Read, Eq, Ord, Enum, Bounded, Data, Typeable)
 
 -- | Certain extensions imply other extensions, and this function

@@ -1026,6 +1026,7 @@ instance  Pretty (Exp l) where
         prettyPrec p (LCase _ altList) = parensIf (p > 1) $
                 text "\\case" $$$ ppBody caseIndent (map pretty altList)
         prettyPrec _ ExprHole{}       = char '_'
+        prettyPrec _ (TypeApp _ ty)   = char '@' <> pretty ty
 
 
 instance  Pretty (XAttr l) where
@@ -1569,6 +1570,7 @@ instance SrcInfo loc => Pretty (P.PExp loc) where
                 myFsep $ text "<[" : map pretty ps ++ [text "%>"]
         pretty (P.BangPat _ e) = text "!" <> pretty e
         pretty (P.LCase _ altList) = text "\\case" $$$ ppBody caseIndent (map pretty altList)
+        pretty (P.TypeApp _ ty) = char '@' <> pretty ty
 
 instance SrcInfo loc => Pretty (P.PFieldUpdate loc) where
         pretty (P.FieldUpdate _ name e) =

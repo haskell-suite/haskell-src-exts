@@ -740,6 +740,7 @@ checkExpr e' = case e' of
 
     -- Hole
     WildCard l     -> return $ S.ExprHole l
+    TypeApp l ty   -> return $ S.TypeApp l ty
 
     _             -> fail $ "Parse error in expression: " ++ prettyPrint e'
 

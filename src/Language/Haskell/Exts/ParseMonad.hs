@@ -24,7 +24,8 @@ module Language.Haskell.Exts.ParseMonad(
         getSrcLoc, pushCurrentContext, popContext,
         getExtensions, getIgnoreFunctionArity,
         -- * Lexing
-        Lex(runL), getInput, discard, lexNewline, lexTab, lexWhile, lexWhile_,
+        Lex(runL), getInput, discard, getLastChar, lexNewline,
+        lexTab, lexWhile, lexWhile_,
         alternative, checkBOL, setBOL, startToken, getOffside,
         pushContextL, popContextL, getExtensionsL, addExtensionL,
         saveExtensionsL, restoreExtensionsL, pushComment,
@@ -191,6 +192,7 @@ newtype P a = P { runP ::
              -> Int                 -- current column
              -> Int                 -- current line
              -> SrcLoc              -- location of last token read
+             -> Char                -- Last token read used for lexing TypeApplication UGH
              -> ParseState          -- layout info.
              -> InternalParseMode   -- parse parameters
              -> ParseStatus a
@@ -213,7 +215,7 @@ runParser = runParserWithMode defaultParseMode
 
 runParserWithModeComments :: ParseMode -> P a -> String -> ParseResult (a, [Comment])
 runParserWithModeComments mode = let mode2 = toInternalParseMode mode in \(P m) s ->
-  case m s 0 1 start ([],[],[],(False,False),[]) mode2 of
+  case m s 0 1 start '\n' ([],[],[],(False,False),[]) mode2 of
     Ok (_,_,_,_,cs) a -> ParseOk (a, reverse cs)
     Failed loc msg    -> ParseFailed loc msg
     where start = SrcLoc {
@@ -233,21 +235,21 @@ instance Applicative P where
   (<*>) = ap
 
 instance Monad P where
-    return a = P $ \_i _x _y _l s _m -> Ok s a
-    P m >>= k = P $ \i x y l s mode ->
-        case m i x y l s mode of
+    return a = P $ \_i _x _y _l _ch s _m -> Ok s a
+    P m >>= k = P $ \i x y l ch s mode ->
+        case m i x y l ch s mode of
             Failed loc msg -> Failed loc msg
-            Ok s' a -> runP (k a) i x y l s' mode
-    fail s = P $ \_r _col _line loc _stk _m -> Failed loc s
+            Ok s' a -> runP (k a) i x y l ch s' mode
+    fail s = P $ \_r _col _line loc _ _stk _m -> Failed loc s
 
 atSrcLoc :: P a -> SrcLoc -> P a
-P m `atSrcLoc` loc = P $ \i x y _l -> m i x y loc
+P m `atSrcLoc` loc = P $ \i x y _l ch -> m i x y loc ch
 
 getSrcLoc :: P SrcLoc
-getSrcLoc = P $ \_i _x _y l s _m -> Ok s l
+getSrcLoc = P $ \_i _x _y l _ s _m -> Ok s l
 
 getModuleName :: P String
-getModuleName = P $ \_i _x _y _l s m ->
+getModuleName = P $ \_i _x _y _l _ch s m ->
     let fn = iParseFilename m
         mn = intercalate "." $ splitPath fn
 
@@ -278,15 +280,15 @@ pushCurrentContext = do
     pushContext (Layout loc)
 
 currentIndent :: P Int
-currentIndent = P $ \_r _x _y _ stk _mode -> Ok stk (indentOfParseState stk)
+currentIndent = P $ \_r _x _y _ _ stk _mode -> Ok stk (indentOfParseState stk)
 
 pushContext :: LexContext -> P ()
 pushContext ctxt =
 --trace ("pushing lexical scope: " ++ show ctxt ++"\n") $
-    P $ \_i _x _y _l (s, exts, e, p, c) _m -> Ok (ctxt:s, exts, e, p, c) ()
+    P $ \_i _x _y _l _ (s, exts, e, p, c) _m -> Ok (ctxt:s, exts, e, p, c) ()
 
 popContext :: P ()
-popContext = P $ \_i _x _y loc stk _m ->
+popContext = P $ \_i _x _y loc _ stk _m ->
       case stk of
         (_:s, exts, e, p, c) -> --trace ("popping lexical scope, context now "++show s ++ "\n") $
                           Ok (s, exts, e, p, c) ()
@@ -307,20 +309,20 @@ popExtContext = P $ \_i _x _y _l (s, e, p, c) _m ->
 
 -- Extension-aware lexing/parsing
 getExtensions :: P [KnownExtension]
-getExtensions = P $ \_i _x _y _l s m ->
+getExtensions = P $ \_i _x _y _l _ s m ->
     Ok s $ iExtensions m
 
 pushCtxtFlag :: P ()
 pushCtxtFlag =
-    P $ \_i _x _y _l (s, exts, e, (d,c), cs) _m -> case c of
+    P $ \_i _x _y _l _ (s, exts, e, (d,c), cs) _m -> case c of
         False -> Ok (s, exts, e, (d,True), cs) ()
         _     -> error "Internal error: context flag already pushed"
 
 pullDoStatus :: P Bool
-pullDoStatus = P $ \_i _x _y _l (s, exts, e, (d,c), cs) _m -> Ok (s,exts,e,(False,c),cs) d
+pullDoStatus = P $ \_i _x _y _l _ (s, exts, e, (d,c), cs) _m -> Ok (s,exts,e,(False,c),cs) d
 
 getIgnoreFunctionArity :: P Bool
-getIgnoreFunctionArity = P $ \_i _x _y _l s m ->
+getIgnoreFunctionArity = P $ \_i _x _y _l _ s m ->
   Ok s $ iIgnoreFunctionArity m
 
 
@@ -353,15 +355,24 @@ getInput = Lex $ \cont -> P $ \r -> runP (cont r) r
 -- | Discard some input characters (these must not include tabs or newlines).
 
 discard :: Int -> Lex r ()
-discard n = Lex $ \cont -> P $ \r x -> runP (cont ()) (drop n r) (x+n)
+discard n = Lex $ \cont -> P $ \r x y loc ch
+                        -> let (newCh:rest)= if n > 0 then drop (n-1) r else (ch:r)
+                           in runP (cont ()) rest (x+n) y loc newCh
+
+-- | Get the last discarded character.
+-- This is only used for type application.
+
+getLastChar :: Lex r Char
+getLastChar = Lex $ \cont -> P $ \r x y loc ch -> runP (cont ch) r x y loc ch
+
 
 -- | Discard the next character, which must be a newline.
 
 lexNewline :: Lex a ()
-lexNewline = Lex $ \cont -> P $ \rs _x y loc ->
+lexNewline = Lex $ \cont -> P $ \rs _x y loc  ->
   case rs of
     (_:r) -> runP (cont ()) r 1 (y+1) loc
-    []    -> \_ _ -> Failed loc "Lexer: expected newline."
+    []    -> \_ _ _ -> Failed loc "Lexer: expected newline."
 
 -- | Discard the next character, which must be a tab.
 
@@ -431,13 +442,13 @@ setBOL = Lex $ \cont -> P $ \r _ -> runP (cont ()) r 0
 -- Set the loc to the current position
 
 startToken :: Lex a ()
-startToken = Lex $ \cont -> P $ \s x y _ stk mode ->
+startToken = Lex $ \cont -> P $ \s x y _ c stk mode ->
     let loc = SrcLoc {
         srcFilename = iParseFilename mode,
         srcLine = y,
         srcColumn = x
     } in
-    runP (cont ()) s x y loc stk mode
+    runP (cont ()) s x y loc c stk mode
 
 -- Current status with respect to the offside (layout) rule:
 -- LT: we are to the left of the current indent (if any)
@@ -445,8 +456,8 @@ startToken = Lex $ \cont -> P $ \s x y _ stk mode ->
 -- GT: we are to the right of the current indent, or not subject to layout
 
 getOffside :: Lex a Ordering
-getOffside = Lex $ \cont -> P $ \r x y loc stk ->
-        runP (cont (compare x (indentOfParseState stk))) r x y loc stk
+getOffside = Lex $ \cont -> P $ \r x y loc ch stk ->
+        runP (cont (compare x (indentOfParseState stk))) r x y loc ch stk
 
 getSrcLocL :: Lex a SrcLoc
 getSrcLocL = Lex $ \cont -> P $ \i x y l ->
@@ -457,79 +468,79 @@ setSrcLineL y = Lex $ \cont -> P $ \i x _ ->
         runP (cont ()) i x y
 
 pushContextL :: LexContext -> Lex a ()
-pushContextL ctxt = Lex $ \cont -> P $ \r x y loc (stk, exts, e, pst, cs) ->
-        runP (cont ()) r x y loc (ctxt:stk, exts, e, pst, cs)
+pushContextL ctxt = Lex $ \cont -> P $ \r x y loc ch (stk, exts, e, pst, cs) ->
+        runP (cont ()) r x y loc ch (ctxt:stk, exts, e, pst, cs)
 
 popContextL :: String -> Lex a ()
-popContextL _ = Lex $ \cont -> P $ \r x y loc stk m -> case stk of
-        (_:ctxt, exts, e, pst, cs) -> runP (cont ()) r x y loc (ctxt, exts, e, pst, cs) m
+popContextL _ = Lex $ \cont -> P $ \r x y loc ch stk m -> case stk of
+        (_:ctxt, exts, e, pst, cs) -> runP (cont ()) r x y loc ch (ctxt, exts, e, pst, cs) m
         ([], _, _, _, _)           -> Failed loc "Unexpected }"
 
 pullCtxtFlag :: Lex a Bool
-pullCtxtFlag = Lex $ \cont -> P $ \r x y loc (ct, exts, e, (d,c), cs) ->
-        runP (cont c) r x y loc (ct, exts, e, (d,False), cs)
+pullCtxtFlag = Lex $ \cont -> P $ \r x y loc ch (ct, exts, e, (d,c), cs) ->
+        runP (cont c) r x y loc ch (ct, exts, e, (d,False), cs)
 
 
 flagDo :: Lex a ()
-flagDo = Lex $ \cont -> P $ \r x y loc (ct, exts, e, (_,c), cs) ->
-        runP (cont ()) r x y loc (ct, exts, e, (True,c), cs)
+flagDo = Lex $ \cont -> P $ \r x y loc ch (ct, exts, e, (_,c), cs) ->
+        runP (cont ()) r x y loc ch (ct, exts, e, (True,c), cs)
 
 
 -- Harp/Hsx
 
 getExtContext :: Lex a (Maybe ExtContext)
-getExtContext = Lex $ \cont -> P $ \r x y loc stk@(_, _, e, _, _) ->
+getExtContext = Lex $ \cont -> P $ \r x y loc ch stk@(_, _, e, _, _) ->
         let me = case e of
               [] -> Nothing
               (c:_) -> Just c
-        in runP (cont me) r x y loc stk
+        in runP (cont me) r x y loc ch stk
 
 pushExtContextL :: ExtContext -> Lex a ()
-pushExtContextL ec = Lex $ \cont -> P $ \r x y loc (s, exts, e, p, c) ->
-        runP (cont ()) r x y loc (s, exts, ec:e, p, c)
+pushExtContextL ec = Lex $ \cont -> P $ \r x y loc ch (s, exts, e, p, c) ->
+        runP (cont ()) r x y loc ch (s, exts, ec:e, p, c)
 
 popExtContextL :: String -> Lex a ()
-popExtContextL fn = Lex $ \cont -> P $ \r x y loc (s,exts,e,p,c) m -> case e of
-            (_:ec)   -> runP (cont ()) r x y loc (s,exts,ec,p,c) m
+popExtContextL fn = Lex $ \cont -> P $ \r x y loc ch (s,exts,e,p,c) m -> case e of
+            (_:ec)   -> runP (cont ()) r x y loc ch (s,exts,ec,p,c) m
             []       -> Failed loc ("Internal error: empty tag context in " ++ fn)
 
 
 -- Extension-aware lexing
 
 getExtensionsL :: Lex a [KnownExtension]
-getExtensionsL = Lex $ \cont -> P $ \r x y loc s m ->
-        runP (cont $ iExtensions m) r x y loc s m
+getExtensionsL = Lex $ \cont -> P $ \r x y loc ch s m ->
+        runP (cont $ iExtensions m) r x y loc ch s m
 
 -- | Add an extension to the current configuration.
 addExtensionL :: KnownExtension -> Lex a ()
-addExtensionL ext = Lex $ \cont -> P $ \r x y loc (s, oldExts, e, p, c) m ->
+addExtensionL ext = Lex $ \cont -> P $ \r x y loc ch (s, oldExts, e, p, c) m ->
         let newExts = impliesExts [ext] ++ iExtensions m
-        in runP (cont ()) r x y loc (s, oldExts, e, p, c) (m {iExtensions = newExts})
+        in runP (cont ()) r x y loc ch (s, oldExts, e, p, c) (m {iExtensions = newExts})
 
 -- | Save the current configuration of extensions.
 saveExtensionsL :: Lex a ()
-saveExtensionsL = Lex $ \cont -> P $ \r x y loc (s, oldExts, e, p, c) m ->
-        runP (cont ()) r x y loc (s, iExtensions m:oldExts, e, p, c) m
+saveExtensionsL = Lex $ \cont -> P $ \r x y loc ch (s, oldExts, e, p, c) m ->
+        runP (cont ()) r x y loc ch (s, iExtensions m:oldExts, e, p, c) m
 
 -- | Return to the previous saved extensions configuration.
 restoreExtensionsL :: Lex a ()
-restoreExtensionsL = Lex $ \cont -> P $ \r x y loc (s,exts,e,p,c) m -> case exts of
-            (_:prev) -> runP (cont ()) r x y loc (s,prev,e,p,c) m
+restoreExtensionsL = Lex $ \cont -> P $ \r x y loc ch (s,exts,e,p,c) m -> case exts of
+            (_:prev) -> runP (cont ()) r x y loc ch (s,prev,e,p,c) m
             _        -> Failed loc "Internal error: empty extension stack"
 
 -- LINE-aware lexing
 
 ignoreLinePragmasL :: Lex a Bool
-ignoreLinePragmasL = Lex $ \cont -> P $ \r x y loc s m ->
-        runP (cont $ iIgnoreLinePragmas m) r x y loc s m
+ignoreLinePragmasL = Lex $ \cont -> P $ \r x y loc c s m ->
+        runP (cont $ iIgnoreLinePragmas m) r x y loc c s m
 
 -- If we read a file name in a LINE pragma, we should update the state.
 setLineFilenameL :: String -> Lex a ()
-setLineFilenameL name = Lex $ \cont -> P $ \r x y loc s m ->
-        runP (cont ()) r x y loc s (m {iParseFilename = name})
+setLineFilenameL name = Lex $ \cont -> P $ \r x y loc ch s m ->
+        runP (cont ()) r x y loc ch s (m {iParseFilename = name})
 
 -- Comments
 
 pushComment :: Comment -> Lex a ()
-pushComment c = Lex $ \cont -> P $ \r x y loc (s, exts, e, p, cs) ->
-        runP (cont ()) r x y loc (s, exts, e, p, c:cs)
+pushComment c = Lex $ \cont -> P $ \r x y loc ch (s, exts, e, p, cs) ->
+        runP (cont ()) r x y loc ch (s, exts, e, p, c:cs)

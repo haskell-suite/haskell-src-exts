@@ -102,6 +102,7 @@ data PExp l
 
 -- LambdaCase
     | LCase l [Alt l]                       -- ^ @\case@ /alts/
+    | TypeApp l (S.Type l)
    deriving (Eq,Show,Functor)
 
 data PFieldUpdate l
@@ -181,6 +182,7 @@ instance Annotated PExp where
 
         LCase l _               -> l
         MultiIf l _             -> l
+        TypeApp l _             -> l
 
     amap f e' = case e' of
         Var l qn                -> Var   (f l) qn
@@ -249,6 +251,7 @@ instance Annotated PExp where
 
         LCase l alts -> LCase (f l) alts
         MultiIf l alts -> MultiIf (f l) alts
+        TypeApp l ty -> TypeApp (f l) ty
 
 instance Annotated PFieldUpdate where
     ann (FieldUpdate l _  _) = l

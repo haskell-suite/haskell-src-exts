@@ -154,6 +154,7 @@ Reserved operators
 >       '<-'    { Loc $$ LeftArrow }
 >       '->'    { Loc $$ RightArrow }
 >       '@'     { Loc $$ At }
+>       TYPEAPP { Loc $$ TApp }
 >       '~'     { Loc $$ Tilde }
 >       '=>'    { Loc $$ DoubleArrow }
 >       '-'     { Loc $$ Minus }
@@ -896,6 +897,9 @@ Implicit parameters can occur in normal types, as well as in contexts.
 > truebtype :: { Type L }
 >       : btype                         {% checkType $1 }
 
+> trueatype :: { Type L }
+>       : atype                         {% checkType $1 }
+
 > btype :: { PType L }
 >       : btype atype                   { TyApp ($1 <> $2) $1 $2 }
 >       | atype                         { $1 }
@@ -1380,6 +1384,7 @@ Non-linear name binding, @:, requires RegularPatterns, but the lexer handles tha
 >       | qvar '@:' aexp                {% do { n <- checkUnQual $1;
 >                                               return (CAsRP ($1 <> $3 <** [$2]) n $3) } }
 >       | '~' aexp                      { IrrPat (nIS $1 <++> ann $2 <** [$1]) $2 }
+>       | TYPEAPP trueatype             { TypeApp (nIS $1 <++> ann $2 <** [$1]) $2 }
 >       | aexp1                         { $1 }
 
 Note: The first two alternatives of aexp1 are not necessarily record

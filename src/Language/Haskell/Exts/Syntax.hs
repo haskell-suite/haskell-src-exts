@@ -742,6 +742,7 @@ data Exp l
     | BracketExp l (Bracket l)              -- ^ template haskell bracket expression
     | SpliceExp l (Splice l)                -- ^ template haskell splice expression
     | QuasiQuote l String String            -- ^ quasi-quotaion: @[$/name/| /string/ |]@
+    | TypeApp l (Type l)                    -- ^ Visible type application
 
 -- Hsx
     | XTag l (XName l) [XAttr l] (Maybe (Exp l)) [Exp l]
@@ -1551,6 +1552,7 @@ instance Annotated Exp where
         BracketExp l _         -> l
         SpliceExp l _          -> l
         QuasiQuote l _ _       -> l
+        TypeApp l _            -> l
 
         XTag  l _ _ _ _        -> l
         XETag l _ _ _          -> l
@@ -1609,6 +1611,7 @@ instance Annotated Exp where
         BracketExp l br         -> BracketExp (f l) br
         SpliceExp l sp          -> SpliceExp (f l) sp
         QuasiQuote l sn se      -> QuasiQuote (f l) sn se
+        TypeApp l t             -> TypeApp (f l) t
 
         XTag  l xn xas me es     -> XTag  (f l) xn xas me es
         XETag l xn xas me        -> XETag (f l) xn xas me

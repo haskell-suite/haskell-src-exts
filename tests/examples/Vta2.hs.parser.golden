@@ -1,0 +1,992 @@
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 1 1 15 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/Vta2.hs" 1 1 1 1
+            , SrcSpan "tests/examples/Vta2.hs" 4 1 4 1
+            , SrcSpan "tests/examples/Vta2.hs" 4 1 4 1
+            , SrcSpan "tests/examples/Vta2.hs" 6 1 6 1
+            , SrcSpan "tests/examples/Vta2.hs" 7 1 7 1
+            , SrcSpan "tests/examples/Vta2.hs" 11 1 11 1
+            , SrcSpan "tests/examples/Vta2.hs" 12 1 12 1
+            , SrcSpan "tests/examples/Vta2.hs" 15 1 15 1
+            , SrcSpan "tests/examples/Vta2.hs" 15 1 15 1
+            ]
+        }
+      (Just
+         (ModuleHead
+            SrcSpanInfo
+              { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 4 1 4 18
+              , srcInfoPoints =
+                  [ SrcSpan "tests/examples/Vta2.hs" 4 1 4 7
+                  , SrcSpan "tests/examples/Vta2.hs" 4 13 4 18
+                  ]
+              }
+            (ModuleName
+               SrcSpanInfo
+                 { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 4 8 4 12
+                 , srcInfoPoints = []
+                 }
+               "Vta2")
+            Nothing
+            Nothing))
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 1 1 1 46
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/Vta2.hs" 1 1 1 13
+                , SrcSpan "tests/examples/Vta2.hs" 1 24 1 25
+                , SrcSpan "tests/examples/Vta2.hs" 1 43 1 46
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 1 14 1 24
+                , srcInfoPoints = []
+                }
+              "RankNTypes"
+          , Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 1 26 1 42
+                , srcInfoPoints = []
+                }
+              "TypeApplications"
+          ]
+      ]
+      []
+      [ TypeSig
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 6 1 6 53
+            , srcInfoPoints = [ SrcSpan "tests/examples/Vta2.hs" 6 9 6 11 ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 6 1 6 8
+                , srcInfoPoints = []
+                }
+              "checkIf"
+          ]
+          (TyFun
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 6 12 6 53
+               , srcInfoPoints = [ SrcSpan "tests/examples/Vta2.hs" 6 17 6 19 ]
+               }
+             (TyCon
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 6 12 6 16
+                  , srcInfoPoints = []
+                  }
+                (UnQual
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 6 12 6 16
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 6 12 6 16
+                        , srcInfoPoints = []
+                        }
+                      "Bool")))
+             (TyFun
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 6 20 6 53
+                  , srcInfoPoints = [ SrcSpan "tests/examples/Vta2.hs" 6 39 6 41 ]
+                  }
+                (TyParen
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 6 20 6 38
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/Vta2.hs" 6 20 6 21
+                         , SrcSpan "tests/examples/Vta2.hs" 6 37 6 38
+                         ]
+                     }
+                   (TyForall
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 6 21 6 37
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/Vta2.hs" 6 21 6 27
+                            , SrcSpan "tests/examples/Vta2.hs" 6 29 6 30
+                            ]
+                        }
+                      (Just
+                         [ UnkindedVar
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 6 28 6 29
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 6 28 6 29
+                                  , srcInfoPoints = []
+                                  }
+                                "a")
+                         ])
+                      Nothing
+                      (TyFun
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 6 31 6 37
+                           , srcInfoPoints = [ SrcSpan "tests/examples/Vta2.hs" 6 33 6 35 ]
+                           }
+                         (TyVar
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 6 31 6 32
+                              , srcInfoPoints = []
+                              }
+                            (Ident
+                               SrcSpanInfo
+                                 { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 6 31 6 32
+                                 , srcInfoPoints = []
+                                 }
+                               "a"))
+                         (TyVar
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 6 36 6 37
+                              , srcInfoPoints = []
+                              }
+                            (Ident
+                               SrcSpanInfo
+                                 { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 6 36 6 37
+                                 , srcInfoPoints = []
+                                 }
+                               "a")))))
+                (TyTuple
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 6 42 6 53
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/Vta2.hs" 6 42 6 43
+                         , SrcSpan "tests/examples/Vta2.hs" 6 47 6 48
+                         , SrcSpan "tests/examples/Vta2.hs" 6 52 6 53
+                         ]
+                     }
+                   Boxed
+                   [ TyCon
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 6 43 6 47
+                         , srcInfoPoints = []
+                         }
+                       (UnQual
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 6 43 6 47
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 6 43 6 47
+                               , srcInfoPoints = []
+                               }
+                             "Bool"))
+                   , TyCon
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 6 49 6 52
+                         , srcInfoPoints = []
+                         }
+                       (UnQual
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 6 49 6 52
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 6 49 6 52
+                               , srcInfoPoints = []
+                               }
+                             "Int"))
+                   ])))
+      , FunBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 7 1 9 43
+            , srcInfoPoints = []
+            }
+          [ Match
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 7 1 9 43
+                , srcInfoPoints = []
+                }
+              (Ident
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 7 1 7 8
+                   , srcInfoPoints = []
+                   }
+                 "checkIf")
+              [ PWildCard
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 7 9 7 10
+                    , srcInfoPoints = []
+                    }
+              ]
+              (UnGuardedRhs
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 7 11 9 43
+                   , srcInfoPoints = [ SrcSpan "tests/examples/Vta2.hs" 7 11 7 12 ]
+                   }
+                 (If
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 7 13 9 43
+                      , srcInfoPoints =
+                          [ SrcSpan "tests/examples/Vta2.hs" 7 13 7 15
+                          , SrcSpan "tests/examples/Vta2.hs" 8 13 8 17
+                          , SrcSpan "tests/examples/Vta2.hs" 9 13 9 17
+                          ]
+                      }
+                    (Con
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 7 16 7 20
+                         , srcInfoPoints = []
+                         }
+                       (UnQual
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 7 16 7 20
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 7 16 7 20
+                               , srcInfoPoints = []
+                               }
+                             "True")))
+                    (Lambda
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 8 18 8 37
+                         , srcInfoPoints =
+                             [ SrcSpan "tests/examples/Vta2.hs" 8 18 8 19
+                             , SrcSpan "tests/examples/Vta2.hs" 8 21 8 23
+                             ]
+                         }
+                       [ PVar
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 8 19 8 20
+                             , srcInfoPoints = []
+                             }
+                           (Ident
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 8 19 8 20
+                                , srcInfoPoints = []
+                                }
+                              "f")
+                       ]
+                       (Tuple
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 8 24 8 37
+                            , srcInfoPoints =
+                                [ SrcSpan "tests/examples/Vta2.hs" 8 24 8 25
+                                , SrcSpan "tests/examples/Vta2.hs" 8 31 8 32
+                                , SrcSpan "tests/examples/Vta2.hs" 8 36 8 37
+                                ]
+                            }
+                          Boxed
+                          [ App
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 8 25 8 31
+                                , srcInfoPoints = []
+                                }
+                              (Var
+                                 SrcSpanInfo
+                                   { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 8 25 8 26
+                                   , srcInfoPoints = []
+                                   }
+                                 (UnQual
+                                    SrcSpanInfo
+                                      { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 8 25 8 26
+                                      , srcInfoPoints = []
+                                      }
+                                    (Ident
+                                       SrcSpanInfo
+                                         { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 8 25 8 26
+                                         , srcInfoPoints = []
+                                         }
+                                       "f")))
+                              (Con
+                                 SrcSpanInfo
+                                   { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 8 27 8 31
+                                   , srcInfoPoints = []
+                                   }
+                                 (UnQual
+                                    SrcSpanInfo
+                                      { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 8 27 8 31
+                                      , srcInfoPoints = []
+                                      }
+                                    (Ident
+                                       SrcSpanInfo
+                                         { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 8 27 8 31
+                                         , srcInfoPoints = []
+                                         }
+                                       "True")))
+                          , App
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 8 33 8 36
+                                , srcInfoPoints = []
+                                }
+                              (Var
+                                 SrcSpanInfo
+                                   { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 8 33 8 34
+                                   , srcInfoPoints = []
+                                   }
+                                 (UnQual
+                                    SrcSpanInfo
+                                      { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 8 33 8 34
+                                      , srcInfoPoints = []
+                                      }
+                                    (Ident
+                                       SrcSpanInfo
+                                         { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 8 33 8 34
+                                         , srcInfoPoints = []
+                                         }
+                                       "f")))
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 8 35 8 36
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 8 35 8 36
+                                      , srcInfoPoints = []
+                                      }
+                                    5
+                                    "5"))
+                          ]))
+                    (Lambda
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 9 18 9 43
+                         , srcInfoPoints =
+                             [ SrcSpan "tests/examples/Vta2.hs" 9 18 9 19
+                             , SrcSpan "tests/examples/Vta2.hs" 9 21 9 23
+                             ]
+                         }
+                       [ PVar
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 9 19 9 20
+                             , srcInfoPoints = []
+                             }
+                           (Ident
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 9 19 9 20
+                                , srcInfoPoints = []
+                                }
+                              "f")
+                       ]
+                       (Tuple
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 9 24 9 43
+                            , srcInfoPoints =
+                                [ SrcSpan "tests/examples/Vta2.hs" 9 24 9 25
+                                , SrcSpan "tests/examples/Vta2.hs" 9 32 9 33
+                                , SrcSpan "tests/examples/Vta2.hs" 9 42 9 43
+                                ]
+                            }
+                          Boxed
+                          [ App
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 9 25 9 32
+                                , srcInfoPoints = []
+                                }
+                              (Var
+                                 SrcSpanInfo
+                                   { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 9 25 9 26
+                                   , srcInfoPoints = []
+                                   }
+                                 (UnQual
+                                    SrcSpanInfo
+                                      { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 9 25 9 26
+                                      , srcInfoPoints = []
+                                      }
+                                    (Ident
+                                       SrcSpanInfo
+                                         { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 9 25 9 26
+                                         , srcInfoPoints = []
+                                         }
+                                       "f")))
+                              (Con
+                                 SrcSpanInfo
+                                   { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 9 27 9 32
+                                   , srcInfoPoints = []
+                                   }
+                                 (UnQual
+                                    SrcSpanInfo
+                                      { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 9 27 9 32
+                                      , srcInfoPoints = []
+                                      }
+                                    (Ident
+                                       SrcSpanInfo
+                                         { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 9 27 9 32
+                                         , srcInfoPoints = []
+                                         }
+                                       "False")))
+                          , App
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 9 34 9 42
+                                , srcInfoPoints = []
+                                }
+                              (App
+                                 SrcSpanInfo
+                                   { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 9 34 9 40
+                                   , srcInfoPoints = []
+                                   }
+                                 (Var
+                                    SrcSpanInfo
+                                      { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 9 34 9 35
+                                      , srcInfoPoints = []
+                                      }
+                                    (UnQual
+                                       SrcSpanInfo
+                                         { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 9 34 9 35
+                                         , srcInfoPoints = []
+                                         }
+                                       (Ident
+                                          SrcSpanInfo
+                                            { srcInfoSpan =
+                                                SrcSpan "tests/examples/Vta2.hs" 9 34 9 35
+                                            , srcInfoPoints = []
+                                            }
+                                          "f")))
+                                 (TypeApp
+                                    SrcSpanInfo
+                                      { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 9 36 9 40
+                                      , srcInfoPoints =
+                                          [ SrcSpan "tests/examples/Vta2.hs" 9 36 9 37 ]
+                                      }
+                                    (TyCon
+                                       SrcSpanInfo
+                                         { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 9 37 9 40
+                                         , srcInfoPoints = []
+                                         }
+                                       (UnQual
+                                          SrcSpanInfo
+                                            { srcInfoSpan =
+                                                SrcSpan "tests/examples/Vta2.hs" 9 37 9 40
+                                            , srcInfoPoints = []
+                                            }
+                                          (Ident
+                                             SrcSpanInfo
+                                               { srcInfoSpan =
+                                                   SrcSpan "tests/examples/Vta2.hs" 9 37 9 40
+                                               , srcInfoPoints = []
+                                               }
+                                             "Int")))))
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 9 41 9 42
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 9 41 9 42
+                                      , srcInfoPoints = []
+                                      }
+                                    3
+                                    "3"))
+                          ]))))
+              Nothing
+          ]
+      , TypeSig
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 11 1 11 55
+            , srcInfoPoints = [ SrcSpan "tests/examples/Vta2.hs" 11 11 11 13 ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 11 1 11 10
+                , srcInfoPoints = []
+                }
+              "checkCase"
+          ]
+          (TyFun
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 11 14 11 55
+               , srcInfoPoints = [ SrcSpan "tests/examples/Vta2.hs" 11 19 11 21 ]
+               }
+             (TyCon
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 11 14 11 18
+                  , srcInfoPoints = []
+                  }
+                (UnQual
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 11 14 11 18
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 11 14 11 18
+                        , srcInfoPoints = []
+                        }
+                      "Bool")))
+             (TyFun
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 11 22 11 55
+                  , srcInfoPoints = [ SrcSpan "tests/examples/Vta2.hs" 11 41 11 43 ]
+                  }
+                (TyParen
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 11 22 11 40
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/Vta2.hs" 11 22 11 23
+                         , SrcSpan "tests/examples/Vta2.hs" 11 39 11 40
+                         ]
+                     }
+                   (TyForall
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 11 23 11 39
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/Vta2.hs" 11 23 11 29
+                            , SrcSpan "tests/examples/Vta2.hs" 11 31 11 32
+                            ]
+                        }
+                      (Just
+                         [ UnkindedVar
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 11 30 11 31
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 11 30 11 31
+                                  , srcInfoPoints = []
+                                  }
+                                "a")
+                         ])
+                      Nothing
+                      (TyFun
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 11 33 11 39
+                           , srcInfoPoints = [ SrcSpan "tests/examples/Vta2.hs" 11 35 11 37 ]
+                           }
+                         (TyVar
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 11 33 11 34
+                              , srcInfoPoints = []
+                              }
+                            (Ident
+                               SrcSpanInfo
+                                 { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 11 33 11 34
+                                 , srcInfoPoints = []
+                                 }
+                               "a"))
+                         (TyVar
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 11 38 11 39
+                              , srcInfoPoints = []
+                              }
+                            (Ident
+                               SrcSpanInfo
+                                 { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 11 38 11 39
+                                 , srcInfoPoints = []
+                                 }
+                               "a")))))
+                (TyTuple
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 11 44 11 55
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/Vta2.hs" 11 44 11 45
+                         , SrcSpan "tests/examples/Vta2.hs" 11 49 11 50
+                         , SrcSpan "tests/examples/Vta2.hs" 11 54 11 55
+                         ]
+                     }
+                   Boxed
+                   [ TyCon
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 11 45 11 49
+                         , srcInfoPoints = []
+                         }
+                       (UnQual
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 11 45 11 49
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 11 45 11 49
+                               , srcInfoPoints = []
+                               }
+                             "Bool"))
+                   , TyCon
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 11 51 11 54
+                         , srcInfoPoints = []
+                         }
+                       (UnQual
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 11 51 11 54
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 11 51 11 54
+                               , srcInfoPoints = []
+                               }
+                             "Int"))
+                   ])))
+      , FunBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 12 1 14 51
+            , srcInfoPoints = []
+            }
+          [ Match
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 12 1 14 51
+                , srcInfoPoints = []
+                }
+              (Ident
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 12 1 12 10
+                   , srcInfoPoints = []
+                   }
+                 "checkCase")
+              [ PWildCard
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 12 11 12 12
+                    , srcInfoPoints = []
+                    }
+              ]
+              (UnGuardedRhs
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 12 13 14 51
+                   , srcInfoPoints = [ SrcSpan "tests/examples/Vta2.hs" 12 13 12 14 ]
+                   }
+                 (Case
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 12 15 14 51
+                      , srcInfoPoints =
+                          [ SrcSpan "tests/examples/Vta2.hs" 12 15 12 19
+                          , SrcSpan "tests/examples/Vta2.hs" 12 25 12 27
+                          , SrcSpan "tests/examples/Vta2.hs" 13 17 13 17
+                          , SrcSpan "tests/examples/Vta2.hs" 14 17 14 17
+                          , SrcSpan "tests/examples/Vta2.hs" 15 1 15 0
+                          ]
+                      }
+                    (Con
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 12 20 12 24
+                         , srcInfoPoints = []
+                         }
+                       (UnQual
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 12 20 12 24
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 12 20 12 24
+                               , srcInfoPoints = []
+                               }
+                             "True")))
+                    [ Alt
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 13 17 13 44
+                          , srcInfoPoints = []
+                          }
+                        (PApp
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 13 17 13 21
+                             , srcInfoPoints = []
+                             }
+                           (UnQual
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 13 17 13 21
+                                , srcInfoPoints = []
+                                }
+                              (Ident
+                                 SrcSpanInfo
+                                   { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 13 17 13 21
+                                   , srcInfoPoints = []
+                                   }
+                                 "True"))
+                           [])
+                        (UnGuardedRhs
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 13 22 13 44
+                             , srcInfoPoints = [ SrcSpan "tests/examples/Vta2.hs" 13 22 13 24 ]
+                             }
+                           (Lambda
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 13 25 13 44
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/Vta2.hs" 13 25 13 26
+                                    , SrcSpan "tests/examples/Vta2.hs" 13 28 13 30
+                                    ]
+                                }
+                              [ PVar
+                                  SrcSpanInfo
+                                    { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 13 26 13 27
+                                    , srcInfoPoints = []
+                                    }
+                                  (Ident
+                                     SrcSpanInfo
+                                       { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 13 26 13 27
+                                       , srcInfoPoints = []
+                                       }
+                                     "f")
+                              ]
+                              (Tuple
+                                 SrcSpanInfo
+                                   { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 13 31 13 44
+                                   , srcInfoPoints =
+                                       [ SrcSpan "tests/examples/Vta2.hs" 13 31 13 32
+                                       , SrcSpan "tests/examples/Vta2.hs" 13 38 13 39
+                                       , SrcSpan "tests/examples/Vta2.hs" 13 43 13 44
+                                       ]
+                                   }
+                                 Boxed
+                                 [ App
+                                     SrcSpanInfo
+                                       { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 13 32 13 38
+                                       , srcInfoPoints = []
+                                       }
+                                     (Var
+                                        SrcSpanInfo
+                                          { srcInfoSpan =
+                                              SrcSpan "tests/examples/Vta2.hs" 13 32 13 33
+                                          , srcInfoPoints = []
+                                          }
+                                        (UnQual
+                                           SrcSpanInfo
+                                             { srcInfoSpan =
+                                                 SrcSpan "tests/examples/Vta2.hs" 13 32 13 33
+                                             , srcInfoPoints = []
+                                             }
+                                           (Ident
+                                              SrcSpanInfo
+                                                { srcInfoSpan =
+                                                    SrcSpan "tests/examples/Vta2.hs" 13 32 13 33
+                                                , srcInfoPoints = []
+                                                }
+                                              "f")))
+                                     (Con
+                                        SrcSpanInfo
+                                          { srcInfoSpan =
+                                              SrcSpan "tests/examples/Vta2.hs" 13 34 13 38
+                                          , srcInfoPoints = []
+                                          }
+                                        (UnQual
+                                           SrcSpanInfo
+                                             { srcInfoSpan =
+                                                 SrcSpan "tests/examples/Vta2.hs" 13 34 13 38
+                                             , srcInfoPoints = []
+                                             }
+                                           (Ident
+                                              SrcSpanInfo
+                                                { srcInfoSpan =
+                                                    SrcSpan "tests/examples/Vta2.hs" 13 34 13 38
+                                                , srcInfoPoints = []
+                                                }
+                                              "True")))
+                                 , App
+                                     SrcSpanInfo
+                                       { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 13 40 13 43
+                                       , srcInfoPoints = []
+                                       }
+                                     (Var
+                                        SrcSpanInfo
+                                          { srcInfoSpan =
+                                              SrcSpan "tests/examples/Vta2.hs" 13 40 13 41
+                                          , srcInfoPoints = []
+                                          }
+                                        (UnQual
+                                           SrcSpanInfo
+                                             { srcInfoSpan =
+                                                 SrcSpan "tests/examples/Vta2.hs" 13 40 13 41
+                                             , srcInfoPoints = []
+                                             }
+                                           (Ident
+                                              SrcSpanInfo
+                                                { srcInfoSpan =
+                                                    SrcSpan "tests/examples/Vta2.hs" 13 40 13 41
+                                                , srcInfoPoints = []
+                                                }
+                                              "f")))
+                                     (Lit
+                                        SrcSpanInfo
+                                          { srcInfoSpan =
+                                              SrcSpan "tests/examples/Vta2.hs" 13 42 13 43
+                                          , srcInfoPoints = []
+                                          }
+                                        (Int
+                                           SrcSpanInfo
+                                             { srcInfoSpan =
+                                                 SrcSpan "tests/examples/Vta2.hs" 13 42 13 43
+                                             , srcInfoPoints = []
+                                             }
+                                           5
+                                           "5"))
+                                 ])))
+                        Nothing
+                    , Alt
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 14 17 14 51
+                          , srcInfoPoints = []
+                          }
+                        (PApp
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 14 17 14 22
+                             , srcInfoPoints = []
+                             }
+                           (UnQual
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 14 17 14 22
+                                , srcInfoPoints = []
+                                }
+                              (Ident
+                                 SrcSpanInfo
+                                   { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 14 17 14 22
+                                   , srcInfoPoints = []
+                                   }
+                                 "False"))
+                           [])
+                        (UnGuardedRhs
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 14 23 14 51
+                             , srcInfoPoints = [ SrcSpan "tests/examples/Vta2.hs" 14 23 14 25 ]
+                             }
+                           (Lambda
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 14 26 14 51
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/Vta2.hs" 14 26 14 27
+                                    , SrcSpan "tests/examples/Vta2.hs" 14 29 14 31
+                                    ]
+                                }
+                              [ PVar
+                                  SrcSpanInfo
+                                    { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 14 27 14 28
+                                    , srcInfoPoints = []
+                                    }
+                                  (Ident
+                                     SrcSpanInfo
+                                       { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 14 27 14 28
+                                       , srcInfoPoints = []
+                                       }
+                                     "f")
+                              ]
+                              (Tuple
+                                 SrcSpanInfo
+                                   { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 14 32 14 51
+                                   , srcInfoPoints =
+                                       [ SrcSpan "tests/examples/Vta2.hs" 14 32 14 33
+                                       , SrcSpan "tests/examples/Vta2.hs" 14 40 14 41
+                                       , SrcSpan "tests/examples/Vta2.hs" 14 50 14 51
+                                       ]
+                                   }
+                                 Boxed
+                                 [ App
+                                     SrcSpanInfo
+                                       { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 14 33 14 40
+                                       , srcInfoPoints = []
+                                       }
+                                     (Var
+                                        SrcSpanInfo
+                                          { srcInfoSpan =
+                                              SrcSpan "tests/examples/Vta2.hs" 14 33 14 34
+                                          , srcInfoPoints = []
+                                          }
+                                        (UnQual
+                                           SrcSpanInfo
+                                             { srcInfoSpan =
+                                                 SrcSpan "tests/examples/Vta2.hs" 14 33 14 34
+                                             , srcInfoPoints = []
+                                             }
+                                           (Ident
+                                              SrcSpanInfo
+                                                { srcInfoSpan =
+                                                    SrcSpan "tests/examples/Vta2.hs" 14 33 14 34
+                                                , srcInfoPoints = []
+                                                }
+                                              "f")))
+                                     (Con
+                                        SrcSpanInfo
+                                          { srcInfoSpan =
+                                              SrcSpan "tests/examples/Vta2.hs" 14 35 14 40
+                                          , srcInfoPoints = []
+                                          }
+                                        (UnQual
+                                           SrcSpanInfo
+                                             { srcInfoSpan =
+                                                 SrcSpan "tests/examples/Vta2.hs" 14 35 14 40
+                                             , srcInfoPoints = []
+                                             }
+                                           (Ident
+                                              SrcSpanInfo
+                                                { srcInfoSpan =
+                                                    SrcSpan "tests/examples/Vta2.hs" 14 35 14 40
+                                                , srcInfoPoints = []
+                                                }
+                                              "False")))
+                                 , App
+                                     SrcSpanInfo
+                                       { srcInfoSpan = SrcSpan "tests/examples/Vta2.hs" 14 42 14 50
+                                       , srcInfoPoints = []
+                                       }
+                                     (App
+                                        SrcSpanInfo
+                                          { srcInfoSpan =
+                                              SrcSpan "tests/examples/Vta2.hs" 14 42 14 48
+                                          , srcInfoPoints = []
+                                          }
+                                        (Var
+                                           SrcSpanInfo
+                                             { srcInfoSpan =
+                                                 SrcSpan "tests/examples/Vta2.hs" 14 42 14 43
+                                             , srcInfoPoints = []
+                                             }
+                                           (UnQual
+                                              SrcSpanInfo
+                                                { srcInfoSpan =
+                                                    SrcSpan "tests/examples/Vta2.hs" 14 42 14 43
+                                                , srcInfoPoints = []
+                                                }
+                                              (Ident
+                                                 SrcSpanInfo
+                                                   { srcInfoSpan =
+                                                       SrcSpan "tests/examples/Vta2.hs" 14 42 14 43
+                                                   , srcInfoPoints = []
+                                                   }
+                                                 "f")))
+                                        (TypeApp
+                                           SrcSpanInfo
+                                             { srcInfoSpan =
+                                                 SrcSpan "tests/examples/Vta2.hs" 14 44 14 48
+                                             , srcInfoPoints =
+                                                 [ SrcSpan "tests/examples/Vta2.hs" 14 44 14 45 ]
+                                             }
+                                           (TyCon
+                                              SrcSpanInfo
+                                                { srcInfoSpan =
+                                                    SrcSpan "tests/examples/Vta2.hs" 14 45 14 48
+                                                , srcInfoPoints = []
+                                                }
+                                              (UnQual
+                                                 SrcSpanInfo
+                                                   { srcInfoSpan =
+                                                       SrcSpan "tests/examples/Vta2.hs" 14 45 14 48
+                                                   , srcInfoPoints = []
+                                                   }
+                                                 (Ident
+                                                    SrcSpanInfo
+                                                      { srcInfoSpan =
+                                                          SrcSpan
+                                                            "tests/examples/Vta2.hs" 14 45 14 48
+                                                      , srcInfoPoints = []
+                                                      }
+                                                    "Int")))))
+                                     (Lit
+                                        SrcSpanInfo
+                                          { srcInfoSpan =
+                                              SrcSpan "tests/examples/Vta2.hs" 14 49 14 50
+                                          , srcInfoPoints = []
+                                          }
+                                        (Int
+                                           SrcSpanInfo
+                                             { srcInfoSpan =
+                                                 SrcSpan "tests/examples/Vta2.hs" 14 49 14 50
+                                             , srcInfoPoints = []
+                                             }
+                                           3
+                                           "3"))
+                                 ])))
+                        Nothing
+                    ]))
+              Nothing
+          ]
+      ]
+  , []
+  )

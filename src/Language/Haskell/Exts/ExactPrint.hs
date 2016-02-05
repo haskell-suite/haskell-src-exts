@@ -1694,6 +1694,7 @@ instance ExactP Exp where
             layoutList pts alts
          _ -> errorEP "ExactP: Exp: LCase is given wrong number of srcInfoPoints"
     ExprHole _ -> printString "_"
+    TypeApp _ ty -> printString "@" >> exactP ty
 
 instance ExactP FieldUpdate where
   exactP fup = case fup of
