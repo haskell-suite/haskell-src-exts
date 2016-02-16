@@ -53,6 +53,7 @@ module Language.Haskell.Exts.Syntax (
     ImportDecl(..), ImportSpecList(..), ImportSpec(..), Assoc(..), Namespace(..),
     -- * Declarations
     Decl(..), DeclHead(..), InstRule(..), InstHead(..), Binds(..), IPBind(..), PatternSynDirection(..),
+    InjectivityInfo(..), ResultSig(..),
     -- ** Type classes and instances
     ClassDecl(..), InstDecl(..), Deriving(..),
     -- ** Data type declarations
@@ -264,15 +265,15 @@ data Assoc l
 data Decl l
      = TypeDecl     l (DeclHead l) (Type l)
      -- ^ A type declaration
-     | TypeFamDecl  l (DeclHead l) (Maybe (Kind l))
+     | TypeFamDecl  l (DeclHead l) (Maybe (ResultSig l)) (Maybe (InjectivityInfo l))
      -- ^ A type family declaration
-     | ClosedTypeFamDecl  l (DeclHead l) (Maybe (Kind l))  [TypeEqn l]
+     | ClosedTypeFamDecl  l (DeclHead l) (Maybe (ResultSig l)) (Maybe (InjectivityInfo l)) [TypeEqn l]
      -- ^ A closed type family declaration
      | DataDecl     l (DataOrNew l) (Maybe (Context l)) (DeclHead l)                  [QualConDecl l] (Maybe (Deriving l))
      -- ^ A data OR newtype declaration
      | GDataDecl    l (DataOrNew l) (Maybe (Context l)) (DeclHead l) (Maybe (Kind l)) [GadtDecl l]    (Maybe (Deriving l))
      -- ^ A data OR newtype declaration, GADT style
-     | DataFamDecl  l {-data-}      (Maybe (Context l)) (DeclHead l) (Maybe (Kind l))
+     | DataFamDecl  l {-data-}      (Maybe (Context l)) (DeclHead l) (Maybe (ResultSig l))
      -- ^ A data family declaration
      | TypeInsDecl  l (Type l) (Type l)
      -- ^ A type family instance declaration
@@ -367,6 +368,14 @@ data Role l
 -- | A flag stating whether a declaration is a data or newtype declaration.
 data DataOrNew l = DataType l | NewType l
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
+
+
+-- | Injectivity info for injective type families
+data InjectivityInfo l = InjectivityInfo l (Name l) [Name l]
+  deriving (Eq, Ord, Show, Typeable, Data, Foldable, Traversable, Functor, Generic)
+
+data ResultSig l = KindSig l (Kind l) | TyVarSig l (TyVarBind l)
+  deriving (Eq, Ord, Show, Typeable, Data, Foldable, Traversable, Functor, Generic)
 
 -- | The head of a type or class declaration, which consists of the type
 -- or class name applied to some type variables
@@ -538,11 +547,11 @@ data GadtDecl l
 data ClassDecl l
     = ClsDecl    l (Decl l)
             -- ^ ordinary declaration
-    | ClsDataFam l (Maybe (Context l)) (DeclHead l) (Maybe (Kind l))
+    | ClsDataFam l (Maybe (Context l)) (DeclHead l) (Maybe (ResultSig l))
             -- ^ declaration of an associated data type
-    | ClsTyFam   l                     (DeclHead l) (Maybe (Kind l))
+    | ClsTyFam   l                     (DeclHead l) (Maybe (ResultSig l)) (Maybe (InjectivityInfo l))
             -- ^ declaration of an associated type synonym
-    | ClsTyDef   l (Type l) (Type l)
+    | ClsTyDef   l (TypeEqn l)
             -- ^ default choice for an associated type synonym
     | ClsDefSig  l (Name l) (Type l)
             -- ^ default signature
@@ -1191,11 +1200,22 @@ instance Annotated TypeEqn where
     ann (TypeEqn l _ _) = l
     amap f (TypeEqn l a b) = TypeEqn (f l) a b
 
+instance Annotated InjectivityInfo where
+  ann (InjectivityInfo l _ _) = l
+  amap f (InjectivityInfo l to from) = InjectivityInfo (f l) to from
+
+instance Annotated ResultSig where
+  ann (KindSig l _) = l
+  ann (TyVarSig l _) = l
+
+  amap f (KindSig l k) = KindSig (f l) k
+  amap f (TyVarSig l tv) = TyVarSig (f l) tv
+
 instance Annotated Decl where
     ann decl = case decl of
         TypeDecl     l _ _              -> l
-        TypeFamDecl  l _ _              -> l
-        ClosedTypeFamDecl  l _ _ _      -> l
+        TypeFamDecl  l _ _ _            -> l
+        ClosedTypeFamDecl  l _ _ _ _    -> l
         DataDecl     l _ _ _ _ _        -> l
         GDataDecl    l _ _ _ _ _ _      -> l
         DataFamDecl  l    _ _ _         -> l
@@ -1228,8 +1248,8 @@ instance Annotated Decl where
         PatSyn           l _ _ _        -> l
     amap f decl = case decl of
         TypeDecl     l dh t      -> TypeDecl    (f l) dh t
-        TypeFamDecl  l dh mk     -> TypeFamDecl (f l) dh mk
-        ClosedTypeFamDecl  l dh mk eqns  -> ClosedTypeFamDecl (f l) dh mk eqns
+        TypeFamDecl  l dh mk mi  -> TypeFamDecl (f l) dh mk mi
+        ClosedTypeFamDecl  l dh mk mi eqns  -> ClosedTypeFamDecl (f l) dh mk mi eqns
         DataDecl     l dn mcx dh cds ders ->
             DataDecl (f l) dn mcx dh cds ders
         GDataDecl    l dn mcx dh mk gds ders ->
@@ -1363,13 +1383,13 @@ instance Annotated GadtDecl where
 instance Annotated ClassDecl where
     ann (ClsDecl    l _)      = l
     ann (ClsDataFam l _ _ _)  = l
-    ann (ClsTyFam   l    _ _) = l
-    ann (ClsTyDef   l _ _)    = l
+    ann (ClsTyFam   l _ _ _) = l
+    ann (ClsTyDef   l _)    = l
     ann (ClsDefSig  l _ _)    = l
     amap f (ClsDecl    l d) = ClsDecl (f l) d
     amap f (ClsDataFam l mcx dh mk) = ClsDataFam (f l) mcx dh mk
-    amap f (ClsTyFam   l     dh mk) = ClsTyFam   (f l)     dh mk
-    amap f (ClsTyDef   l t1 t2) = ClsTyDef (f l) t1 t2
+    amap f (ClsTyFam   l dh mk mi) = ClsTyFam (f l) dh mk mi
+    amap f (ClsTyDef   l t ) = ClsTyDef (f l) t
     amap f (ClsDefSig  l n t) = ClsDefSig (f l) n t
 
 instance Annotated InstDecl where

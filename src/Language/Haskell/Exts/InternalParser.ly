@@ -524,6 +524,20 @@ Fixity Declarations
 >       : ops ',' op                            { let (ops,ss,l) = $1 in ($3 : ops, $2 : ss, l <++> ann $3) }
 >       | op                                    { ([$1],[],ann $1) }
 
+
+> opt_injectivity_info :: { Maybe (InjectivityInfo L) }
+>        : {- empty -}                  { Nothing }
+>        | injectivity_info             { Just $1 }
+
+> injectivity_info :: { InjectivityInfo L }
+>        : '|' tyvarid '->' inj_varids
+>              { InjectivityInfo (nIS $1 <++> ann (last $4) <** [$1,$3]) $2 (reverse $4) }
+>
+>
+> inj_varids :: { [Name L] }
+>        : inj_varids tyvarid  { $2 : $1 }
+>        | tyvarid             { [$1]     }
+
 -----------------------------------------------------------------------------
 Top-Level Declarations
 
@@ -546,12 +560,12 @@ shift/reduce-conflict, so we don't handle this case here, but in bodyaux.
 
 Requires the TypeFamilies extension enabled, but the lexer will handle
 that through the 'family' keyword.
->       | 'type' 'family' type optkind where_type_family
+>       | 'type' 'family' type opt_tyfam_kind_sig opt_injectivity_info where_type_family
 >                {% do { dh <- checkSimpleType $3;
->                        let {l = nIS $1 <++> ann $3 <+?> (fmap ann) (fst $4) <** ($1:$2:snd $4)};
->                        case $5 of {
->                          Nothing    -> return (TypeFamDecl l dh (fst $4));
->                          Just (x,a) -> return (ClosedTypeFamDecl (l <** [a]) dh (fst $4) x); }}}
+>                        let {l = nIS $1 <++> ann $3 <** [$1,$2]};
+>                        case $6 of {
+>                          Nothing    -> return (TypeFamDecl l dh $4 $5);
+>                          Just (x,a) -> return (ClosedTypeFamDecl (l <** [a]) dh $4 $5 x); }}}
 
 Here there is no special keyword so we must do the check.
 >       | 'type' 'instance' truedtype '=' truectype
@@ -577,10 +591,10 @@ Requires the GADTs extension enabled, handled in gadtlist.
 >                         _ -> checkEnabled GADTs >> return (GDataDecl l $1 cs dh (fst $3) (reverse gs) $5) } }
 
 Same as above, lexer will handle it through the 'family' keyword.
->       | 'data' 'family' ctype optkind
+>       | 'data' 'family' ctype opt_datafam_kind_sig
 >                {% do { (cs,dh) <- checkDataHeader $3;
->                        let {l = nIS $1 <++> ann $3 <+?> (fmap ann) (fst $4) <** ($1:$2:snd $4)};
->                        return (DataFamDecl l cs dh (fst $4)) } }
+>                        let {l = nIS $1 <++> ann $3 <+?> (fmap ann) $4 <** [$1,$2]};
+>                        return (DataFamDecl l cs dh $4) } }
 
 Here we must check for TypeFamilies.
 >       | data_or_newtype 'instance' truectype constrs0 deriving
@@ -641,6 +655,29 @@ lexer through the 'foreign' (and 'export') keyword.
 >       | '{-# ANN'        annotation '#-}'     { AnnPragma      ($1 <^^> $3 <** [$1,$3]) $2 }
 >       | decl          { $1 }
 
+> -- Family result/return kind signatures
+>
+> opt_datafam_kind_sig :: { Maybe (ResultSig L) }
+>        :               { Nothing     }
+>        | '::' kind     { (Just $ KindSig (nIS $1 <++> ann $2 <** [$1]) $2) }
+>
+> opt_tyfam_kind_sig :: { Maybe (ResultSig L) }
+>        :              { Nothing       }
+>        | '::' kind    { (Just $ KindSig  (nIS $1 <++> ann $2 <** [$1]) $2) }
+>        | '='  ktyvar  { (Just $ TyVarSig (nIS $1 <++> ann $2 <** [$1]) $2) }
+>
+> opt_at_kind_inj_sig :: { (Maybe (ResultSig L), Maybe (InjectivityInfo L))}
+>        :            { (Nothing, Nothing) }
+>        | '::' kind  { (Just (KindSig (nIS $1 <++> ann $2 <** [$1]) $2), Nothing) }
+>        | '='  ktyvar injectivity_info
+>                { (Just (TyVarSig (nIS $1 <++> ann $2 <** [$1]) $2), Just $3) }
+
+> opt_at_kind_inj_sig2 :: { (Maybe (ResultSig L), Maybe (S, Type L), Maybe (InjectivityInfo L))}
+>        :            { (Nothing, Nothing, Nothing) }
+>        | '::' kind  { (Just (KindSig (nIS $1 <++> ann $2 <** [$1]) $2), Nothing, Nothing) }
+>        | '='  truectype opt_injectivity_info { (Nothing, Just ($1, $2), $3) }
+
+
 Role annotations
 
 > role_annot :: { Decl L }
@@ -680,7 +717,7 @@ Parsing the body of a closed type family, partially stolen from the source of GH
 >         | ty_fam_inst_eqn                        { [$1] }
 
 > ty_fam_inst_eqn :: { TypeEqn L }
->         : truedtype '=' truectype
+>         : truectype '=' truectype
 >                 {% do { checkEnabled TypeFamilies ;
 >                         return (TypeEqn (ann $1 <++> ann $3 <** [$2]) $1 $3) } }
 
@@ -896,7 +933,6 @@ Implicit parameters can occur in normal types, as well as in contexts.
 
 > truebtype :: { Type L }
 >       : btype                         {% checkType $1 }
-
 > trueatype :: { Type L }
 >       : atype                         {% checkType $1 }
 
@@ -1180,17 +1216,23 @@ Associated types require the TypeFamilies extension.
 >       | atdecl                        {% checkEnabled TypeFamilies >> return $1 }
 >       | 'default' signdecl            {% checkEnabled DefaultSignatures >> checkDefSigDef $2 >>= \(n,t,l) -> return (ClsDefSig (nIS $1 <++> ann $2 <** [$1,l]) n t) }
 
+> opt_family   :: { [S] }
+>              : {- empty -}   { [] }
+>              | 'family'      { [$1] }
+
 > atdecl :: { ClassDecl L }
->       : 'type' type optkind
->             {% do { dh <- checkSimpleType $2;
->                     return (ClsTyFam  (nIS $1 <++> ann $2 <+?> (fmap ann) (fst $3) <** $1:snd $3) dh (fst $3)) } }
->       | 'type' truedtype '=' truectype
->                     { ClsTyDef (nIS $1 <++> ann $4 <** [$1,$3]) $2 $4 }
->       | 'type' 'instance' truedtype '=' truectype
->                     { ClsTyDef (nIS $1 <++> ann $5 <** [$1,$2,$4]) $3 $5 }
->       | 'data' ctype optkind
->             {% do { (cs,dh) <- checkDataHeader $2;
->                     return (ClsDataFam (nIS $1 <++> ann $2 <+?> (fmap ann) (fst $3) <** $1:snd $3) cs dh (fst $3)) } }
+>       : 'data' opt_family type opt_datafam_kind_sig
+>             {% do { (cs,dh) <- checkDataHeader $3;
+>                     return (ClsDataFam (nIS $1 <++> ann $3 <+?> (fmap ann) $4 <** [$1]) cs dh $4) } }
+>       | 'type' type opt_at_kind_inj_sig2
+>             {% mkAssocType $1 $2 $3 }
+>       | 'type' 'family' type opt_at_kind_inj_sig
+>             {% do { dh <- checkSimpleType $3;
+>                     return (ClsTyFam  (nIS $1 <++> ann $3 <+?> (fmap ann) (fst $4)
+>                                                           <+?> (fmap ann) (snd $4)
+>                                                           <** [$1]) dh (fst $4) (snd $4)) } }
+>       | 'type' 'instance' ty_fam_inst_eqn
+>                     { ClsTyDef (nIS $1 <++> ann $3 <** [$1,$2]) $3 }
 
 -----------------------------------------------------------------------------
 Instance declarations

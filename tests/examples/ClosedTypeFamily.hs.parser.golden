@@ -120,6 +120,7 @@ ParseOk
                      }
                    "y")))
           Nothing
+          Nothing
           [ TypeEqn
               SrcSpanInfo
                 { srcInfoSpan =

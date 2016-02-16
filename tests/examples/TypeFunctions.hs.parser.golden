@@ -84,11 +84,10 @@ ParseOk
           Nothing
       , TypeFamDecl
           SrcSpanInfo
-            { srcInfoSpan = SrcSpan "tests/examples/TypeFunctions.hs" 5 1 5 37
+            { srcInfoSpan = SrcSpan "tests/examples/TypeFunctions.hs" 5 1 5 32
             , srcInfoPoints =
                 [ SrcSpan "tests/examples/TypeFunctions.hs" 5 1 5 5
                 , SrcSpan "tests/examples/TypeFunctions.hs" 5 6 5 12
-                , SrcSpan "tests/examples/TypeFunctions.hs" 5 33 5 35
                 ]
             }
           (DHApp
@@ -155,11 +154,18 @@ ParseOk
                      }
                    "x")))
           (Just
-             (KindStar
+             (KindSig
                 SrcSpanInfo
-                  { srcInfoSpan = SrcSpan "tests/examples/TypeFunctions.hs" 5 36 5 37
-                  , srcInfoPoints = []
-                  }))
+                  { srcInfoSpan = SrcSpan "tests/examples/TypeFunctions.hs" 5 33 5 37
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/TypeFunctions.hs" 5 33 5 35 ]
+                  }
+                (KindStar
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TypeFunctions.hs" 5 36 5 37
+                     , srcInfoPoints = []
+                     })))
+          Nothing
       , TypeInsDecl
           SrcSpanInfo
             { srcInfoSpan = SrcSpan "tests/examples/TypeFunctions.hs" 7 1 7 27

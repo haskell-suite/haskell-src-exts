@@ -218,9 +218,7 @@ ParseOk
                  SrcSpanInfo
                    { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 15 3 15 43
                    , srcInfoPoints =
-                       [ SrcSpan "tests/examples/RCategory.hs" 15 3 15 7
-                       , SrcSpan "tests/examples/RCategory.hs" 15 30 15 32
-                       ]
+                       [ SrcSpan "tests/examples/RCategory.hs" 15 3 15 7 ]
                    }
                  (DHApp
                     SrcSpanInfo
@@ -282,22 +280,29 @@ ParseOk
                             }
                           "b")))
                  (Just
-                    (KindVar
+                    (KindSig
                        SrcSpanInfo
-                         { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 15 33 15 43
-                         , srcInfoPoints = []
+                         { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 15 30 15 43
+                         , srcInfoPoints =
+                             [ SrcSpan "tests/examples/RCategory.hs" 15 30 15 32 ]
                          }
-                       (UnQual
+                       (KindVar
                           SrcSpanInfo
                             { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 15 33 15 43
                             , srcInfoPoints = []
                             }
-                          (Ident
+                          (UnQual
                              SrcSpanInfo
                                { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 15 33 15 43
                                , srcInfoPoints = []
                                }
-                             "Constraint"))))
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 15 33 15 43
+                                  , srcInfoPoints = []
+                                  }
+                                "Constraint")))))
+                 Nothing
              , ClsDecl
                  SrcSpanInfo
                    { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 18 3 19 16

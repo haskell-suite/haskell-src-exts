@@ -102,9 +102,7 @@ ParseOk
                  SrcSpanInfo
                    { srcInfoSpan = SrcSpan "tests/examples/RCategory2.hs" 6 3 6 43
                    , srcInfoPoints =
-                       [ SrcSpan "tests/examples/RCategory2.hs" 6 3 6 7
-                       , SrcSpan "tests/examples/RCategory2.hs" 6 30 6 32
-                       ]
+                       [ SrcSpan "tests/examples/RCategory2.hs" 6 3 6 7 ]
                    }
                  (DHApp
                     SrcSpanInfo
@@ -166,22 +164,29 @@ ParseOk
                             }
                           "b")))
                  (Just
-                    (KindVar
+                    (KindSig
                        SrcSpanInfo
-                         { srcInfoSpan = SrcSpan "tests/examples/RCategory2.hs" 6 33 6 43
-                         , srcInfoPoints = []
+                         { srcInfoSpan = SrcSpan "tests/examples/RCategory2.hs" 6 30 6 43
+                         , srcInfoPoints =
+                             [ SrcSpan "tests/examples/RCategory2.hs" 6 30 6 32 ]
                          }
-                       (UnQual
+                       (KindVar
                           SrcSpanInfo
                             { srcInfoSpan = SrcSpan "tests/examples/RCategory2.hs" 6 33 6 43
                             , srcInfoPoints = []
                             }
-                          (Ident
+                          (UnQual
                              SrcSpanInfo
                                { srcInfoSpan = SrcSpan "tests/examples/RCategory2.hs" 6 33 6 43
                                , srcInfoPoints = []
                                }
-                             "Constraint"))))
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/RCategory2.hs" 6 33 6 43
+                                  , srcInfoPoints = []
+                                  }
+                                "Constraint")))))
+                 Nothing
              ])
       ]
   , []

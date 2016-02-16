@@ -1786,6 +1786,7 @@ ParseOk
                      }
                    "a")))
           Nothing
+          Nothing
       , TypeInsDecl
           SrcSpanInfo
             { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 34 1 34 28

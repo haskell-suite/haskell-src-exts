@@ -526,6 +526,8 @@ data KnownExtension =
   | NamedWildCards
 
   | TypeApplications
+
+  | TypeFamilyDependencies
   deriving (Show, Read, Eq, Ord, Enum, Bounded, Data, Typeable)
 
 -- | Certain extensions imply other extensions, and this function
@@ -560,6 +562,7 @@ impliesExts = go
                     ExistentialQuantification -> [ExplicitForAll]
                     ImpredicativeTypes   -> [ExplicitForAll]
                     PolyKinds           -> [KindSignatures]
+                    TypeFamilyDependencies -> [TypeFamilies]
                     -- Deprecations
                     RecordPuns          -> [NamedFieldPuns]
                     PatternSignatures   -> [ScopedTypeVariables]

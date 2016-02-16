@@ -54,6 +54,7 @@ module Language.Haskell.Exts.ParseUtils (
     , getGConName           -- S.Exp -> P QName
     , mkTyForall            -- Maybe [TyVarBind] -> PContext -> PType -> PType
     , mkRoleAnnotDecl       --
+    , mkAssocType
     -- HaRP
     , checkRPattern         -- PExp -> P RPat
     -- Hsx
@@ -1212,4 +1213,38 @@ mkRoleAnnotDecl l1 l2 tycon roles
           Just found_role -> return $ found_role loc_role
           Nothing         ->
             fail ("Illegal role name " ++ role)
+
+
+
+
+mkAssocType :: S -> PType L -> (Maybe (ResultSig L), Maybe (S, S.Type L), Maybe (InjectivityInfo L)) -> P (ClassDecl L)
+mkAssocType tyloc ty (mres, mty, minj)  =
+  case (mres,mty, minj) of
+    -- No additional information
+    (Nothing, Nothing, Nothing) -> do
+      dh <- checkSimpleType ty
+      return $ ClsTyFam (noInfoSpan tyloc <++> ann ty) dh Nothing Nothing
+    -- Type default
+    (_, Just (eqloc, rhsty), Nothing) -> do
+      ty' <- checkType ty
+      let tyeq = TypeEqn (ann ty <++> ann rhsty <** [eqloc]) ty' rhsty
+      return $ ClsTyDef (noInfoSpan tyloc <++> ann ty <** [tyloc]) tyeq
+    -- Declaration with kind sig
+    (Just ressig, _, _) -> do
+      dh <- checkSimpleType ty
+      return $ ClsTyFam (noInfoSpan tyloc <++> ann ressig <** [tyloc]) dh (Just ressig) Nothing
+    -- Decl with inj info
+    (Nothing, Just (eqloc, rhsty), Just injinfo) -> do
+      ressig <- checkKTyVar eqloc rhsty
+      dh <- checkSimpleType ty
+      return $ ClsTyFam (noInfoSpan tyloc <++> ann injinfo <** [tyloc]) dh (Just ressig) minj
+    _ -> error "mkAssocType"
+
+  where
+    checkKTyVar :: S -> S.Type L -> P (ResultSig L)
+    checkKTyVar eqloc rhsty =
+      case rhsty of
+       S.TyVar l n -> return $ TyVarSig (noInfoSpan eqloc <++> l <** [eqloc]) (UnkindedVar l n)
+       S.TyKind l (S.TyVar _ n) k -> return $ TyVarSig (noInfoSpan eqloc <++> l <** [eqloc]) (KindedVar l n k)
+       _ -> fail ("Result of type family must be a type variable")
 

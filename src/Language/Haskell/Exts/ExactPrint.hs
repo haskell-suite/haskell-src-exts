@@ -537,6 +537,31 @@ instance ExactP TypeEqn where
          exactPC t2
       _ -> errorEP "ExactP: TypeEqn is given wrong number of srcInfoPoints"
 
+instance ExactP InjectivityInfo where
+  exactP (InjectivityInfo l to from) =
+    case srcInfoPoints l of
+      a:b:_ -> do
+        printStringAt (pos a) "|"
+        exactPC to
+        printStringAt (pos b) "->"
+        mapM_ exactPC from
+      _ -> errorEP "ExactP: InjectivityInfo given wrong number of srcInfoPoints"
+
+instance ExactP ResultSig where
+  exactP (KindSig l k) =
+    case srcInfoPoints l of
+      a:_ -> do
+        printStringAt (pos a) "::"
+        exactPC k
+      _ -> errorEP "ExactP: ResultSig given wrong number of srcInfoPoints"
+  exactP (TyVarSig l tv) =
+    case srcInfoPoints l of
+      a:_ -> do
+        printStringAt (pos a) "="
+        exactPC tv
+      _ -> errorEP "ExactP: ResultSig given wrong number of srcInfoPoints"
+
+
 instance ExactP Decl where
   exactP decl = case decl of
     TypeDecl     l dh t      ->
@@ -547,21 +572,23 @@ instance ExactP Decl where
             printStringAt (pos b) "="
             exactPC t
          _ -> errorEP "ExactP: Decl: TypeDecl is given wrong number of srcInfoPoints"
-    TypeFamDecl  l dh mk     ->
+    TypeFamDecl  l dh mk mi   ->
         case srcInfoPoints l of
-         a:b:ps -> do
+         a:b:_ -> do
             printStringAt (pos a) "type"
             printStringAt (pos b) "family"
             exactPC dh
-            maybeEP (\k -> printStringAt (pos (head ps)) "::" >> exactPC k) mk
+            maybeEP exactPC mk
+            maybeEP exactPC mi
          _ -> errorEP "ExactP: Decl: TypeFamDecl is given wrong number of srcInfoPoints"
-    ClosedTypeFamDecl  l dh mk eqns ->
+    ClosedTypeFamDecl  l dh mk mi eqns ->
         case srcInfoPoints l of
-         a:b:c:ps -> do
+         a:b:c:_ -> do
             printStringAt (pos a) "type"
             printStringAt (pos b) "family"
             exactPC dh
-            maybeEP (\k -> printStringAt (pos (head ps)) "::" >> exactPC k) mk
+            maybeEP exactPC mk
+            maybeEP exactPC mi
             printStringAt (pos c) "where"
             mapM_ exactP eqns
          _ -> errorEP "ExactP: Decl: ClosedTypeFamDecl is given wrong number of srcInfoPoints"
@@ -1194,26 +1221,23 @@ instance ExactP ClassDecl where
             exactPC dh
             maybeEP (\kd -> printStringAt (pos (head pts)) "::" >> exactPC kd) mk
          _ -> errorEP "ExactP: ClassDecl: ClsDataFam is given too few srcInfoPoints"
-    ClsTyFam   l dh mk  ->
+    ClsTyFam   l dh mk mi ->
         case srcInfoPoints l of
-         _:pts -> do
+         _:_ -> do
             printString "type"
             exactPC dh
-            maybeEP (\kd -> printStringAt (pos (head pts)) "::" >> exactPC kd) mk
+            maybeEP exactPC mk
+            maybeEP exactPC mi
          _ -> errorEP "ExactP: ClassDecl: ClsTyFam is given too few srcInfoPoints"
-    ClsTyDef   l t1 t2  ->
+    ClsTyDef   l t1 ->
         case srcInfoPoints l of
-         _:b:c:_ -> do -- 3 sourceInfoPoints implies parsed as "type instance"
+         _:b:_ -> do -- 3 sourceInfoPoints implies parsed as "type instance"
             printString "type"
             printStringAt (pos b) "instance"
             exactPC t1
-            printStringAt (pos c) "="
-            exactPC t2
-         _:b:_ -> do
+         _:_ -> do
             printString "type"
             exactPC t1
-            printStringAt (pos b) "="
-            exactPC t2
          _ -> errorEP "ExactP: ClassDecl: ClsTyDef is given too few srcInfoPoints"
     ClsDefSig  l n t    ->
         case srcInfoPoints l of

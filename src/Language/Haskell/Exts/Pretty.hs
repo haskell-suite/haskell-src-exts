@@ -386,6 +386,14 @@ ppDecls False (d:ds) = pretty d : map condBlankline ds
 ppDecls _ _ = []
 --ppDecls = map condBlankline
 
+instance Pretty (InjectivityInfo l) where
+  pretty (InjectivityInfo _ from to) =
+    char '|' <+> pretty from <+> text "->" <+> hsep (map pretty to)
+
+instance Pretty (ResultSig l) where
+  pretty (KindSig _ kind) = text "::" <+> pretty kind
+  pretty (TyVarSig _ tv)  = char '='  <+> pretty tv
+
 instance  Pretty (Decl l) where
         pretty (TypeDecl _ dHead htype) =
                 mySep ( [text "type", pretty dHead]
@@ -404,17 +412,18 @@ instance  Pretty (Decl l) where
                         $$$ ppBody classIndent (map pretty gadtList)
                         $$$ ppIndent letIndent [maybePP pretty derives]
 
-        pretty (TypeFamDecl _ dHead optkind) =
-                mySep ([text "type", text "family", pretty dHead]
-                        ++ ppOptKind optkind)
+        pretty (TypeFamDecl _ dHead optkind optinj) =
+                mySep ([text "type", text "family", pretty dHead
+                       , maybePP pretty optkind, maybePP pretty optinj])
 
-        pretty (ClosedTypeFamDecl _ dHead optkind eqns) =
-                mySep ([text "type", text "family", pretty dHead]
-                        ++ ppOptKind optkind ++ [text "where"]) $$$ ppBody classIndent (map pretty eqns)
+        pretty (ClosedTypeFamDecl _ dHead optkind optinj eqns) =
+                mySep ([text "type", text "family", pretty dHead
+                       , maybePP pretty optkind ,maybePP pretty optinj
+                       , text "where"]) $$$ ppBody classIndent (map pretty eqns)
 
         pretty (DataFamDecl _ context dHead optkind) =
-                mySep ( [text "data", text "family", maybePP pretty context, pretty dHead]
-                        ++ ppOptKind optkind)
+                mySep ( [text "data", text "family", maybePP pretty context, pretty dHead
+                        , maybePP pretty optkind])
 
         pretty (TypeInsDecl _ ntype htype) =
                 mySep [text "type", text "instance", pretty ntype, equals, pretty htype]
@@ -617,15 +626,15 @@ instance  Pretty (ClassDecl l) where
     pretty (ClsDecl _ decl) = pretty decl
 
     pretty (ClsDataFam _ context declHead optkind) =
-                mySep ( [text "data", maybePP pretty context, pretty declHead]
-                        ++ ppOptKind optkind)
+                mySep ( [text "data", maybePP pretty context, pretty declHead
+                        , maybePP pretty optkind])
 
-    pretty (ClsTyFam _ declHead optkind) =
-                mySep ( [text "type", pretty declHead]
-                        ++ ppOptKind optkind)
+    pretty (ClsTyFam _ declHead optkind optinj) =
+                mySep ( [text "type", pretty declHead
+                        , maybePP pretty optkind, maybePP pretty optinj])
 
-    pretty (ClsTyDef _ ntype htype) =
-                mySep [text "type", pretty ntype, equals, pretty htype]
+    pretty (ClsTyDef _ ntype) =
+                mySep [text "type", pretty ntype]
 
     pretty (ClsDefSig _ name typ) =
                 mySep [

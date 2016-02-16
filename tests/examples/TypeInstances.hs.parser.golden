@@ -75,9 +75,7 @@ ParseOk
                  SrcSpanInfo
                    { srcInfoSpan = SrcSpan "tests/examples/TypeInstances.hs" 4 3 4 18
                    , srcInfoPoints =
-                       [ SrcSpan "tests/examples/TypeInstances.hs" 4 3 4 7
-                       , SrcSpan "tests/examples/TypeInstances.hs" 4 14 4 16
-                       ]
+                       [ SrcSpan "tests/examples/TypeInstances.hs" 4 3 4 7 ]
                    }
                  (DHApp
                     SrcSpanInfo
@@ -107,91 +105,103 @@ ParseOk
                             }
                           "v")))
                  (Just
-                    (KindStar
+                    (KindSig
                        SrcSpanInfo
-                         { srcInfoSpan = SrcSpan "tests/examples/TypeInstances.hs" 4 17 4 18
-                         , srcInfoPoints = []
-                         }))
+                         { srcInfoSpan = SrcSpan "tests/examples/TypeInstances.hs" 4 14 4 18
+                         , srcInfoPoints =
+                             [ SrcSpan "tests/examples/TypeInstances.hs" 4 14 4 16 ]
+                         }
+                       (KindStar
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/TypeInstances.hs" 4 17 4 18
+                            , srcInfoPoints = []
+                            })))
+                 Nothing
              , ClsTyDef
                  SrcSpanInfo
                    { srcInfoSpan = SrcSpan "tests/examples/TypeInstances.hs" 5 3 5 34
                    , srcInfoPoints =
                        [ SrcSpan "tests/examples/TypeInstances.hs" 5 3 5 7
                        , SrcSpan "tests/examples/TypeInstances.hs" 5 8 5 16
-                       , SrcSpan "tests/examples/TypeInstances.hs" 5 23 5 24
                        ]
                    }
-                 (TyApp
+                 (TypeEqn
                     SrcSpanInfo
-                      { srcInfoSpan = SrcSpan "tests/examples/TypeInstances.hs" 5 17 5 22
-                      , srcInfoPoints = []
+                      { srcInfoSpan = SrcSpan "tests/examples/TypeInstances.hs" 5 17 5 34
+                      , srcInfoPoints =
+                          [ SrcSpan "tests/examples/TypeInstances.hs" 5 23 5 24 ]
                       }
-                    (TyCon
+                    (TyApp
                        SrcSpanInfo
-                         { srcInfoSpan = SrcSpan "tests/examples/TypeInstances.hs" 5 17 5 20
+                         { srcInfoSpan = SrcSpan "tests/examples/TypeInstances.hs" 5 17 5 22
                          , srcInfoPoints = []
                          }
-                       (UnQual
+                       (TyCon
                           SrcSpanInfo
                             { srcInfoSpan = SrcSpan "tests/examples/TypeInstances.hs" 5 17 5 20
                             , srcInfoPoints = []
                             }
-                          (Ident
+                          (UnQual
                              SrcSpanInfo
                                { srcInfoSpan = SrcSpan "tests/examples/TypeInstances.hs" 5 17 5 20
                                , srcInfoPoints = []
                                }
-                             "Key")))
-                    (TyVar
-                       SrcSpanInfo
-                         { srcInfoSpan = SrcSpan "tests/examples/TypeInstances.hs" 5 21 5 22
-                         , srcInfoPoints = []
-                         }
-                       (Ident
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/TypeInstances.hs" 5 17 5 20
+                                  , srcInfoPoints = []
+                                  }
+                                "Key")))
+                       (TyVar
                           SrcSpanInfo
                             { srcInfoSpan = SrcSpan "tests/examples/TypeInstances.hs" 5 21 5 22
                             , srcInfoPoints = []
                             }
-                          "v")))
-                 (TyApp
-                    SrcSpanInfo
-                      { srcInfoSpan = SrcSpan "tests/examples/TypeInstances.hs" 5 25 5 34
-                      , srcInfoPoints = []
-                      }
-                    (TyCon
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/TypeInstances.hs" 5 21 5 22
+                               , srcInfoPoints = []
+                               }
+                             "v")))
+                    (TyApp
                        SrcSpanInfo
-                         { srcInfoSpan = SrcSpan "tests/examples/TypeInstances.hs" 5 25 5 32
+                         { srcInfoSpan = SrcSpan "tests/examples/TypeInstances.hs" 5 25 5 34
                          , srcInfoPoints = []
                          }
-                       (UnQual
+                       (TyCon
                           SrcSpanInfo
                             { srcInfoSpan = SrcSpan "tests/examples/TypeInstances.hs" 5 25 5 32
                             , srcInfoPoints = []
                             }
-                          (Ident
+                          (UnQual
                              SrcSpanInfo
                                { srcInfoSpan = SrcSpan "tests/examples/TypeInstances.hs" 5 25 5 32
                                , srcInfoPoints = []
                                }
-                             "TileKey")))
-                    (TyVar
-                       SrcSpanInfo
-                         { srcInfoSpan = SrcSpan "tests/examples/TypeInstances.hs" 5 33 5 34
-                         , srcInfoPoints = []
-                         }
-                       (Ident
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/TypeInstances.hs" 5 25 5 32
+                                  , srcInfoPoints = []
+                                  }
+                                "TileKey")))
+                       (TyVar
                           SrcSpanInfo
                             { srcInfoSpan = SrcSpan "tests/examples/TypeInstances.hs" 5 33 5 34
                             , srcInfoPoints = []
                             }
-                          "v")))
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/TypeInstances.hs" 5 33 5 34
+                               , srcInfoPoints = []
+                               }
+                             "v"))))
              , ClsTyFam
                  SrcSpanInfo
                    { srcInfoSpan = SrcSpan "tests/examples/TypeInstances.hs" 7 3 7 21
                    , srcInfoPoints =
-                       [ SrcSpan "tests/examples/TypeInstances.hs" 7 3 7 7
-                       , SrcSpan "tests/examples/TypeInstances.hs" 7 17 7 19
-                       ]
+                       [ SrcSpan "tests/examples/TypeInstances.hs" 7 3 7 7 ]
                    }
                  (DHApp
                     SrcSpanInfo
@@ -221,11 +231,18 @@ ParseOk
                             }
                           "v")))
                  (Just
-                    (KindStar
+                    (KindSig
                        SrcSpanInfo
-                         { srcInfoSpan = SrcSpan "tests/examples/TypeInstances.hs" 7 20 7 21
-                         , srcInfoPoints = []
-                         }))
+                         { srcInfoSpan = SrcSpan "tests/examples/TypeInstances.hs" 7 17 7 21
+                         , srcInfoPoints =
+                             [ SrcSpan "tests/examples/TypeInstances.hs" 7 17 7 19 ]
+                         }
+                       (KindStar
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/TypeInstances.hs" 7 20 7 21
+                            , srcInfoPoints = []
+                            })))
+                 Nothing
              ])
       ]
   , []
