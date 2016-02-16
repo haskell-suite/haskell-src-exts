@@ -1,0 +1,122 @@
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/WildcardTyFam.hs" 1 1 5 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/WildcardTyFam.hs" 1 1 1 1
+            , SrcSpan "tests/examples/WildcardTyFam.hs" 3 1 3 1
+            , SrcSpan "tests/examples/WildcardTyFam.hs" 3 1 3 1
+            , SrcSpan "tests/examples/WildcardTyFam.hs" 3 1 3 1
+            , SrcSpan "tests/examples/WildcardTyFam.hs" 5 1 5 1
+            , SrcSpan "tests/examples/WildcardTyFam.hs" 5 1 5 1
+            ]
+        }
+      Nothing
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/WildcardTyFam.hs" 1 1 1 30
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/WildcardTyFam.hs" 1 1 1 13
+                , SrcSpan "tests/examples/WildcardTyFam.hs" 1 27 1 30
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/WildcardTyFam.hs" 1 14 1 26
+                , srcInfoPoints = []
+                }
+              "TypeFamilies"
+          ]
+      ]
+      []
+      [ ClosedTypeFamDecl
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/WildcardTyFam.hs" 3 1 3 18
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/WildcardTyFam.hs" 3 1 3 5
+                , SrcSpan "tests/examples/WildcardTyFam.hs" 3 6 3 12
+                , SrcSpan "tests/examples/WildcardTyFam.hs" 3 19 3 24
+                ]
+            }
+          (DHApp
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/WildcardTyFam.hs" 3 13 3 18
+               , srcInfoPoints = []
+               }
+             (DHead
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/WildcardTyFam.hs" 3 13 3 16
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/WildcardTyFam.hs" 3 13 3 16
+                     , srcInfoPoints = []
+                     }
+                   "Foo"))
+             (UnkindedVar
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/WildcardTyFam.hs" 3 17 3 18
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/WildcardTyFam.hs" 3 17 3 18
+                     , srcInfoPoints = []
+                     }
+                   "a")))
+          Nothing
+          Nothing
+          [ TypeEqn
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/WildcardTyFam.hs" 4 3 4 14
+                , srcInfoPoints =
+                    [ SrcSpan "tests/examples/WildcardTyFam.hs" 4 9 4 10 ]
+                }
+              (TyApp
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/WildcardTyFam.hs" 4 3 4 8
+                   , srcInfoPoints = []
+                   }
+                 (TyCon
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/WildcardTyFam.hs" 4 3 4 6
+                      , srcInfoPoints = []
+                      }
+                    (UnQual
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/WildcardTyFam.hs" 4 3 4 6
+                         , srcInfoPoints = []
+                         }
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/WildcardTyFam.hs" 4 3 4 6
+                            , srcInfoPoints = []
+                            }
+                          "Foo")))
+                 (TyWildCard
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/WildcardTyFam.hs" 4 7 4 8
+                      , srcInfoPoints = []
+                      }
+                    Nothing))
+              (TyCon
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/WildcardTyFam.hs" 4 11 4 14
+                   , srcInfoPoints = []
+                   }
+                 (UnQual
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/WildcardTyFam.hs" 4 11 4 14
+                      , srcInfoPoints = []
+                      }
+                    (Ident
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/WildcardTyFam.hs" 4 11 4 14
+                         , srcInfoPoints = []
+                         }
+                       "Int")))
+          ]
+      ]
+  , []
+  )
