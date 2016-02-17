@@ -1120,7 +1120,7 @@ instance ExactP Type where
                           _   -> errorEP "ExactP: Type: TyEquals is given wrong number of srcInfoPoints"
 
     TySplice _ sp  -> exactP sp
-    TyBang _ b t -> exactPC b >> exactPC t
+    TyBang _ b u t -> exactPC u >> exactPC b >> exactPC t
     TyWildCard _ mn      -> printString "_" >> maybeEP exactPC mn
     TyQuasiQuote _ name qt    -> do
         let qtLines = lines qt
@@ -1347,17 +1347,25 @@ instance ExactP GadtDecl where
 
 instance ExactP BangType where
   exactP bt = case bt of
-    BangedTy   l  ->
-        case srcInfoPoints l of
-            [a] -> printStringAt (pos a) "!"
-            _   -> errorEP "ExactP: BangType: BangedTy is given wrong number of srcInfoPoints"
-    UnpackedTy l  ->
+    BangedTy   l  -> printStringAt (pos l) "!"
+    LazyTy l -> printStringAt (pos l) "~"
+    _ -> return ()
+
+instance ExactP Unpackedness where
+  exactP bt = case bt of
+    Unpack l  ->
       case srcInfoPoints l of
-       [a,b,c] -> do
+       [a,b] -> do
           printStringAt (pos a) "{-# UNPACK"
           printStringAt (pos b) "#-}"
-          printStringAt (pos c) "!"
-       _ -> errorEP "ExactP: BangType: UnpackedTy is given wrong number of srcInfoPoints"
+       _ -> errorEP "ExactP: Unpackedness: Unpack is given wrong number of srcInfoPoints"
+    NoUnpack l  ->
+      case srcInfoPoints l of
+       [a,b] -> do
+          printStringAt (pos a) "{-# NOUNPACK"
+          printStringAt (pos b) "#-}"
+       _ -> errorEP "ExactP: Unpackedness: NoUnpack is given wrong number of srcInfoPoints"
+    NoUnpackPragma {} -> return ()
 
 instance ExactP Splice where
   exactP (IdSplice _ str) = printString $ '$':str

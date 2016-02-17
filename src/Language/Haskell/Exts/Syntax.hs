@@ -58,6 +58,7 @@ module Language.Haskell.Exts.Syntax (
     ClassDecl(..), InstDecl(..), Deriving(..),
     -- ** Data type declarations
     DataOrNew(..), ConDecl(..), FieldDecl(..), QualConDecl(..), GadtDecl(..), BangType(..),
+    Unpackedness(..),
     -- ** Function bindings
     Match(..), Rhs(..), GuardedRhs(..),
     -- * Class Assertions and Contexts
@@ -573,7 +574,14 @@ data InstDecl l
 --   a strictness annotation.
 data BangType l
      = BangedTy   l -- ^ strict component, marked with \"@!@\"
-     | UnpackedTy l -- ^ unboxed component, marked with an UNPACK pragma
+     | LazyTy     l -- ^ lazy component, marked with \"@~@\"
+     | NoStrictAnnot l -- ^ No strictness information
+  deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
+
+data Unpackedness l
+    = Unpack l -- {-# UNPACK #-}
+    | NoUnpack l -- {-# NOUNPACK #-}
+    | NoUnpackPragma l -- No pragma
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | The right hand side of a function binding, pattern binding, or a case
@@ -612,7 +620,7 @@ data Type l
      | TyPromoted l (Promoted l)                -- ^ @'K@, a promoted data type (-XDataKinds).
      | TyEquals l (Type l) (Type l)             -- ^ type equality predicate enabled by ConstraintKinds
      | TySplice l (Splice l)                    -- ^ template haskell splice type
-     | TyBang l (BangType l) (Type l)           -- ^ Strict type marked with \"@!@\" or type marked with UNPACK pragma.
+     | TyBang l (BangType l) (Unpackedness l) (Type l)           -- ^ Strict type marked with \"@!@\" or type marked with UNPACK pragma.
      | TyWildCard l (Maybe (Name l))            -- ^ Either an anonymous of named type wildcard
      | TyQuasiQuote l String String             -- ^ @[$/name/| /string/ |]@
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
@@ -1407,10 +1415,22 @@ instance Annotated InstDecl where
 --        InsInline l b act qn    -> InsInline (f l) b act qn
 
 instance Annotated BangType where
-     ann (BangedTy   l)    = l
-     ann (UnpackedTy l)    = l
+     ann (BangedTy   l)       = l
+     ann (LazyTy   l)         = l
+     ann (NoStrictAnnot l)    = l
+
      amap f (BangedTy   l) = BangedTy (f l)
-     amap f (UnpackedTy l) = UnpackedTy (f l)
+     amap f (LazyTy   l)   = LazyTy (f l)
+     amap f (NoStrictAnnot l) = NoStrictAnnot (f l)
+
+instance Annotated Unpackedness where
+    ann (Unpack l) = l
+    ann (NoUnpack l) = l
+    ann (NoUnpackPragma l) = l
+
+    amap f (Unpack l) = Unpack (f l)
+    amap f (NoUnpack l) = Unpack (f l)
+    amap f (NoUnpackPragma l) = Unpack (f l)
 
 instance Annotated Rhs where
      ann (UnGuardedRhs l _) = l
@@ -1438,7 +1458,7 @@ instance Annotated Type where
       TyPromoted l   _              -> l
       TyEquals l _ _                -> l
       TySplice l _                  -> l
-      TyBang l _ _                  -> l
+      TyBang l _ _ _                  -> l
       TyWildCard l _                -> l
       TyQuasiQuote l _ _            -> l
     amap f t1 = case t1 of
@@ -1456,7 +1476,7 @@ instance Annotated Type where
       TyPromoted l   p              -> TyPromoted (f l)   p
       TyEquals l a b                -> TyEquals (f l) a b
       TySplice l s                  -> TySplice (f l) s
-      TyBang l b t                  -> TyBang (f l) b t
+      TyBang l b u t                  -> TyBang (f l) b u t
       TyWildCard l n                -> TyWildCard (f l) n
       TyQuasiQuote l n s            -> TyQuasiQuote (f l) n s
 

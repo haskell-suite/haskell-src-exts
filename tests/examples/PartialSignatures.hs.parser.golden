@@ -4438,7 +4438,7 @@ ParseOk
                 (CxSingle
                    SrcSpanInfo
                      { srcInfoSpan =
-                         SrcSpan "tests/examples/PartialSignatures.hs" 61 8 61 16
+                         SrcSpan "tests/examples/PartialSignatures.hs" 61 8 61 19
                      , srcInfoPoints =
                          [ SrcSpan "tests/examples/PartialSignatures.hs" 61 17 61 19 ]
                      }

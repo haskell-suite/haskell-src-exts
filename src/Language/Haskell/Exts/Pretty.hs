@@ -779,7 +779,13 @@ instance Pretty (FieldDecl l) where
 
 instance  Pretty (BangType l) where
         pretty BangedTy {}  = char '!'
-        pretty UnpackedTy {}  = text "{-# UNPACK #-}" <+> char '!'
+        pretty LazyTy {}    = char '~'
+        pretty NoStrictAnnot {} = empty
+
+instance Pretty (Unpackedness l) where
+        pretty Unpack {}  = text "{-# UNPACK #-} "
+        pretty NoUnpack {} = text "{-# NOUNPACK #-} "
+        pretty NoUnpackPragma {} = empty
 
 instance Pretty (Deriving l) where
   pretty (Deriving _ [])  = empty
@@ -825,7 +831,7 @@ instance  Pretty (Type l) where
         prettyPrec _ (TyPromoted _ p) = pretty p
         prettyPrec p (TyEquals _ a b) = parensIf (p > 0) (myFsep [pretty a, text "~", pretty b])
         prettyPrec _ (TySplice _ s) = pretty s
-        prettyPrec _ (TyBang _ b t) = pretty b <> prettyPrec prec_atype t
+        prettyPrec _ (TyBang _ b u t) = pretty u <> pretty b <> prettyPrec prec_atype t
         prettyPrec _ (TyWildCard _ mn) = char '_' <> maybePP pretty mn
         prettyPrec _ (TyQuasiQuote _ n qt) = text ("[" ++ n ++ "|" ++ qt ++ "|]")
 
@@ -1630,6 +1636,6 @@ instance SrcInfo loc => Pretty (P.PType loc) where
         prettyPrec _ (P.TyKind _ t k) = parens (myFsep [pretty t, text "::", pretty k])
         prettyPrec _ (P.TyPromoted _ p) = pretty p
         prettyPrec _ (P.TySplice _ s) = pretty s
-        prettyPrec _ (P.TyBang _ b t) = pretty b <> prettyPrec prec_atype t
+        prettyPrec _ (P.TyBang _ b u t) = pretty u <+> pretty b <> prettyPrec prec_atype t
         prettyPrec _ (P.TyWildCard _ mn) = char '_' <> maybePP pretty mn
         prettyPrec _ (P.TyQuasiQuote _ n qt) = text ("[$" ++ n ++ "|" ++ qt ++ "|]")

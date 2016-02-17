@@ -1,5 +1,6 @@
 {-# OPTIONS_HADDOCK hide #-}
 {-# LANGUAGE CPP #-}
+{-# LANGUAGE PatternGuards #-}
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Language.Haskell.Exts.ParseUtils
@@ -55,6 +56,7 @@ module Language.Haskell.Exts.ParseUtils (
     , mkTyForall            -- Maybe [TyVarBind] -> PContext -> PType -> PType
     , mkRoleAnnotDecl       --
     , mkAssocType
+    , splitTilde
     -- HaRP
     , checkRPattern         -- PExp -> P RPat
     -- Hsx
@@ -89,11 +91,10 @@ import Prelude hiding (mod)
 import Data.List (intercalate, intersperse)
 import Data.Maybe (fromJust, fromMaybe)
 import Control.Monad (when,unless)
+
 #if __GLASGOW_HASKELL__ < 710
 import Control.Applicative (Applicative (..), (<$>))
 #endif
-
---- import Debug.Trace (trace)
 
 type L = SrcSpanInfo
 type S = SrcSpan
@@ -166,23 +167,9 @@ checkPContext (TyCon l (Special _ (UnitCon _))) =
 checkPContext (TyParen l t) = do
     c <- checkAssertion t
     return $ CxSingle l (ParenA l c)
-checkPContext (TyPred _ p@(EqualP l _ _)) =
-  -- Depending on where EqualP is found, it may contain either 1 or 2 info
-  -- points.
-  --
-  -- If it's by itself, it contains two: one for the tilde, another for =>.
-  -- The => position is important to have in CxSingle, but for EqualP
-  -- itself it's not needed.
-  --
-  -- If it's parsed as an element of a tuple (a ~ b, ...), then it only
-  -- contains one info point. (But that case is handled in a different
-  -- branch.)
-  let
-    withInfoPoints f info = info {srcInfoPoints = f (srcInfoPoints info)}
-  in
-    return $
-      CxSingle (withInfoPoints (drop 1) l) $
-        amap (withInfoPoints $ take 1) p
+checkPContext (TyPred tp p@(EqualP {})) = do
+  checkEnabledOneOf [TypeFamilies, GADTs]
+  return $ CxSingle tp p
 
 checkPContext t = do
     c <- checkAssertion t
@@ -1067,8 +1054,15 @@ checkSimpleType = checkSimple "test"
 -- Check actual types
 
 -- | Add a strictness/unpack annotation on a type.
-bangType :: L -> BangType L -> PType L -> PType L
-bangType = TyBang
+bangType :: Maybe (L -> BangType L, S) -> Maybe (Unpackedness L) -> PType L -> PType L
+bangType mstrict munpack ty =
+  case (mstrict,munpack) of
+    (Nothing, Just upack) -> TyBang (ann upack <++> ann ty) (NoStrictAnnot noSrcSpan) upack ty
+    (Just (strict, pos), _)  ->
+      TyBang (fmap ann munpack <?+> noInfoSpan pos <++> ann ty) (strict (noInfoSpan pos))
+        (fromMaybe (NoUnpackPragma noSrcSpan) munpack) ty
+    (Nothing, Nothing) -> ty
+
 
 checkType :: PType L -> P (S.Type L)
 checkType t = checkT t False
@@ -1101,13 +1095,15 @@ checkT t simple = case t of
      -- TyPred can be a valid type if ConstraintKinds is enabled, unless it is an implicit parameter, which is not a valid type
     TyPred _ (ClassA l className cvars) -> mapM checkType cvars >>= \vars -> return (foldl1 (S.TyApp l) (S.TyCon l className:vars))
     TyPred _ (InfixA l t0 op t1)        -> S.TyInfix l <$> checkType t0 <*> pure op <*> checkType t1
-    TyPred _ (EqualP l t0    t1)        -> S.TyEquals l <$> checkType t0 <*> checkType t1 where
+    TyPred _ (EqualP l t0    t1)        -> do
+      checkEnabledOneOf [TypeFamilies, GADTs]
+      S.TyEquals l <$> checkType t0 <*> checkType t1
 
     TyPromoted l p -> return $ S.TyPromoted l p -- ??
     TySplice l s        -> do
                               checkEnabled TemplateHaskell
                               return $ S.TySplice l s
-    TyBang l b t' -> check1Type t' (S.TyBang l b)
+    TyBang l b u t' -> check1Type t' (S.TyBang l b u)
     TyWildCard l mn -> return $ S.TyWildCard l mn
     TyQuasiQuote l n s -> do
                               checkEnabled QuasiQuotes
@@ -1248,3 +1244,17 @@ mkAssocType tyloc ty (mres, mty, minj)  =
        S.TyKind l (S.TyVar _ n) k -> return $ TyVarSig (noInfoSpan eqloc <++> l <** [eqloc]) (KindedVar l n k)
        _ -> fail ("Result of type family must be a type variable")
 
+-- | Transform btype with strict_mark's into HsEqTy's
+-- (((~a) ~b) c) ~d ==> ((~a) ~ (b c)) ~ d
+splitTilde :: PType L -> PType L
+splitTilde t = go t
+  where go (TyApp loc t1 t2)
+          | TyBang _ (LazyTy eqloc) (NoUnpackPragma _) t2' <- t2
+          = TyPred loc (EqualP (loc <** [srcInfoSpan eqloc]) (go t1) t2')
+          | otherwise
+          = case go t1 of
+              (TyPred _ (EqualP eqloc tl tr)) ->
+                TyPred loc (EqualP (eqloc <++> ann t2 <** srcInfoPoints eqloc) tl (TyApp (ann tr <++> ann t2) tr t2))
+              t' -> TyApp loc t' t2
+
+        go t' = t'

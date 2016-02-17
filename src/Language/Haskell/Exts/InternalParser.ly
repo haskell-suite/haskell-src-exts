@@ -268,6 +268,7 @@ Pragmas
 >       '{-# DEPRECATED'        { Loc $$ DEPRECATED }
 >       '{-# WARNING'           { Loc $$ WARNING }
 >       '{-# UNPACK'            { Loc $$ UNPACK }
+>       '{-# NOUNPACK'          { Loc $$ NOUNPACK }
 >       '{-# OPTIONS'           { Loc _ (OPTIONS _) }
        '{-# CFILES'            { Loc _ (CFILES  _) }
        '{-# INCLUDE'           { Loc _ (INCLUDE _) }
@@ -295,7 +296,7 @@ Pragmas
 > %partial ngparsePragmasAndModuleHead moduletophead
 > %partial ngparsePragmasAndModuleName moduletopname
 > %tokentype { Loc Token }
-> %expect 8
+> %expect 10
 > %%
 
 -----------------------------------------------------------------------------
@@ -914,13 +915,13 @@ Type equality contraints need the TypeFamilies extension.
 >       : dtype                         {% checkType $1 }
 
 > dtype :: { PType L }
->       : btype                         { $1 }
+>       : btype                         { splitTilde $1 }
 >       | btype qtyconop dtype          { TyInfix ($1 <> $3) $1 $2 $3 }
 >       | btype qtyvarop dtype          { TyInfix ($1 <> $3) $1 $2 $3 } -- FIXME
->       | btype '->' ctype              { TyFun ($1 <> $3 <** [$2]) $1 $3 }
->       | btype '~' btype               {% do { checkEnabledOneOf [TypeFamilies, GADTs] ;
->                                               let {l = $1 <> $3 <** [$2]};
->                                               return $ TyPred l $ EqualP l $1 $3 } }
+>       | btype '->' ctype              { TyFun ($1 <> $3 <** [$2]) (splitTilde $1) $3 }
+       | btype '~' btype               {% do { checkEnabledOneOf [TypeFamilies, GADTs] ;
+                                               let {l = $1 <> $3 <** [$2]};
+                                               return $ TyPred l $ EqualP l $1 $3 } }
 
 Implicit parameters can occur in normal types, as well as in contexts.
 
@@ -932,7 +933,7 @@ Implicit parameters can occur in normal types, as well as in contexts.
 >       | dtype                         { $1 }
 
 > truebtype :: { Type L }
->       : btype                         {% checkType $1 }
+>       : btype                         {% checkType (splitTilde $1) }
 > trueatype :: { Type L }
 >       : atype                         {% checkType $1 }
 
@@ -946,9 +947,8 @@ the (# and #) lexemes. Kinds will be handled at the kind rule.
 > atype :: { PType L }
 >       : gtycon                        { TyCon   (ann $1) $1 }
 >       | tyvar                         {% checkTyVar $1 }
->       | strict_mark atype             { let (bangOrPack, locs) = $1
->                                           in let annot = if bangOrPack then (BangedTy (nIS (last locs) <** locs)) else UnpackedTy (nIS (head locs) <++> nIS (last locs) <** locs)
->                                            in bangType (nIS (head locs) <++> ann $2) annot $2 }
+>       | strict_mark atype             { let (mstrict, mupack) = $1
+>                                         in bangType mstrict mupack $2 }
 >       | '(' types ')'                 { TyTuple ($1 <^^> $3 <** ($1:reverse ($3:snd $2))) Boxed   (reverse (fst $2)) }
 >       | '(#' types1 '#)'              { TyTuple ($1 <^^> $3 <** ($1:reverse ($3:snd $2))) Unboxed (reverse (fst $2)) }
 >       | '[' type ']'                  { TyList  ($1 <^^> $3 <** [$1,$3]) $2 }
@@ -972,9 +972,18 @@ the (# and #) lexemes. Kinds will be handled at the kind rule.
 >       | INT                           { let Loc l (IntTok  (i,raw)) = $1 in PromotedInteger (nIS l) i raw }
 >       | STRING                        { let Loc l (StringTok (s,raw)) = $1 in PromotedString (nIS l) s raw }
 
-> strict_mark :: { (Bool, [S]) }
->        : '!'                           { (True, [$1]) }
->        | '{-# UNPACK' '#-}' '!'        { (False, [$1,$2,$3]) }
+> strict_mark :: { (Maybe (L -> BangType L,S), Maybe (Unpackedness L)) }
+>        : strictness              { (Just $1, Nothing) }
+>        | unpackedness            { (Nothing, Just $1) }
+>        | unpackedness strictness { (Just $2, Just $1) }
+
+> strictness :: { (L -> BangType L, S) }
+>        : '!'                           { (BangedTy, $1) }
+>        | '~'                           { (LazyTy, $1) }
+
+> unpackedness :: { Unpackedness L }
+>        : '{-# UNPACK' '#-}'           { (Unpack ((nIS $1 <++> nIS $2) <** [$1,$2])) }
+>        | '{-# NOUNPACK' '#-}'         { (NoUnpack ((nIS $1 <++> nIS $2) <** [$1,$2])) }
 
 
 > gtycon :: { QName L }
@@ -1021,10 +1030,7 @@ is any of the keyword-enabling ones, except ExistentialQuantification.
 Equality constraints require the TypeFamilies extension.
 
 > context :: { PContext L }
->       : btype '=>'                    {% checkPContext $ (amap (\l -> l <++> nIS $2 <** (srcInfoPoints l ++ [$2]))) $1 }
->       | btype '~' btype '=>'          {% do { checkEnabledOneOf [TypeFamilies, GADTs];
->                                               let {l = $1 <> $3 <** [$2,$4]};
->                                               checkPContext (TyPred l $ EqualP l $1 $3) } }
+>       : btype '=>'                    {% checkPContext $ (amap (\l -> l <++> nIS $2 <** (srcInfoPoints l ++ [$2]))) (splitTilde $1) }
 
 > types :: { ([PType L],[S]) }
 >       : types1 ',' ctype              { ($3 : fst $1, $2 : snd $1)  }
