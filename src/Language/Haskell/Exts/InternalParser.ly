@@ -1988,10 +1988,18 @@ Pattern Synonyms
 >                                  (_:_) -> ann $1 <++> (ann $ last $2)
 >                         in PApp l (UnQual (ann $1) $1) $2 }
 >       | varid qconsym varid  { PInfixApp (ann $1 <++> ann $3) (PVar (ann $1) $1) $2 (PVar (ann $3) $3) }
+>       | con '{' commavars '}' {  let { (ss, ns) = $3 ;
+>                                        qnames = (map (\n -> UnQual (ann n) n) ns) }
+>                                  in PRec (ann $1 <++> nIS $4 <** ($2 : ss ++ [$4]))
+>                                          (UnQual (ann $1) $1) (map (\q -> PFieldPun (ann q) q) qnames) }
 >
 > vars0 :: { [Pat L] }
 >       :  {- empty -}        { [] }
 >       |  varid vars0        { PVar (ann $1) $1 : $2 }
+
+> commavars :: { ([S], [Name L]) }
+>       : varid                 { ([], [$1] ) }
+>       | varid ',' commavars   { let (ss, ns) = $3 in ($2 : ss, $1 : ns) }
 
 > where_decls :: { PatternSynDirection L }
 >       : 'where' '{' decls '}'       {%  checkExplicitPatSyn $1 $2 $3 $4 }
