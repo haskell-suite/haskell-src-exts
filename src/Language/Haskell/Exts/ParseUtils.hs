@@ -56,6 +56,7 @@ module Language.Haskell.Exts.ParseUtils (
     , mkTyForall            -- Maybe [TyVarBind] -> PContext -> PType -> PType
     , mkRoleAnnotDecl       --
     , mkAssocType
+    , mkEThingWith
     , splitTilde
     -- HaRP
     , checkRPattern         -- PExp -> P RPat
@@ -90,6 +91,7 @@ import Language.Haskell.Exts.ExtScheme
 import Prelude hiding (mod)
 import Data.List (intercalate, intersperse)
 import Data.Maybe (fromJust, fromMaybe)
+import Data.Either
 import Control.Monad (when,unless)
 
 #if __GLASGOW_HASKELL__ < 710
@@ -1258,3 +1260,25 @@ splitTilde t = go t
               t' -> TyApp loc t' t2
 
         go t' = t'
+
+-- Expects the arguments in the right order
+mkEThingWith :: L -> QName L -> [Either S (CName L)] -> P (ExportSpec L)
+mkEThingWith loc qn mcns = do
+  when (isWc wc && not (null cnames)) (checkEnabled PatternSynonyms)
+  return $ EThingWith loc wc qn cnames
+  where
+    isWc (NoWildcard {}) = False
+    isWc _ = True
+
+    wc :: EWildcard L
+    wc = maybe (NoWildcard noSrcSpan)
+               (\(n,Left s) -> EWildcard (noInfoSpan s) n)
+               (findWithIndex 0 isLeft mcns)
+
+    cnames = rights mcns
+
+    findWithIndex :: Int -> (a -> Bool) -> [a] -> Maybe (Int, a)
+    findWithIndex _ _ [] = Nothing
+    findWithIndex n p (x:xs)
+      | p x = Just (n, x)
+      | otherwise = findWithIndex (n + 1) p xs

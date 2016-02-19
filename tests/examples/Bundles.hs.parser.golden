@@ -1,0 +1,252 @@
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 1 1 5 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/Bundles.hs" 1 1 1 1
+            , SrcSpan "tests/examples/Bundles.hs" 2 1 2 1
+            , SrcSpan "tests/examples/Bundles.hs" 2 1 2 1
+            , SrcSpan "tests/examples/Bundles.hs" 4 1 4 1
+            , SrcSpan "tests/examples/Bundles.hs" 5 1 5 1
+            , SrcSpan "tests/examples/Bundles.hs" 5 1 5 1
+            ]
+        }
+      (Just
+         (ModuleHead
+            SrcSpanInfo
+              { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 2 1 2 65
+              , srcInfoPoints =
+                  [ SrcSpan "tests/examples/Bundles.hs" 2 1 2 7
+                  , SrcSpan "tests/examples/Bundles.hs" 2 60 2 65
+                  ]
+              }
+            (ModuleName
+               SrcSpanInfo
+                 { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 2 8 2 15
+                 , srcInfoPoints = []
+                 }
+               "Bundles")
+            Nothing
+            (Just
+               (ExportSpecList
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 2 15 2 59
+                    , srcInfoPoints =
+                        [ SrcSpan "tests/examples/Bundles.hs" 2 15 2 16
+                        , SrcSpan "tests/examples/Bundles.hs" 2 23 2 24
+                        , SrcSpan "tests/examples/Bundles.hs" 2 34 2 35
+                        , SrcSpan "tests/examples/Bundles.hs" 2 45 2 46
+                        , SrcSpan "tests/examples/Bundles.hs" 2 58 2 59
+                        ]
+                    }
+                  [ EThingWith
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 2 16 2 23
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/Bundles.hs" 2 19 2 20
+                            , SrcSpan "tests/examples/Bundles.hs" 2 22 2 23
+                            ]
+                        }
+                      (EWildcard
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 2 20 2 22
+                           , srcInfoPoints = []
+                           }
+                         0)
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 2 16 2 19
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 2 16 2 19
+                              , srcInfoPoints = []
+                              }
+                            "Foo"))
+                      []
+                  , EThingWith
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 2 25 2 34
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/Bundles.hs" 2 28 2 29
+                            , SrcSpan "tests/examples/Bundles.hs" 2 31 2 32
+                            , SrcSpan "tests/examples/Bundles.hs" 2 33 2 34
+                            ]
+                        }
+                      (EWildcard
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 2 29 2 31
+                           , srcInfoPoints = []
+                           }
+                         0)
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 2 25 2 28
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 2 25 2 28
+                              , srcInfoPoints = []
+                              }
+                            "Baz"))
+                      [ ConName
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 2 32 2 33
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 2 32 2 33
+                               , srcInfoPoints = []
+                               }
+                             "Q")
+                      ]
+                  , EThingWith
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 2 36 2 45
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/Bundles.hs" 2 39 2 40
+                            , SrcSpan "tests/examples/Bundles.hs" 2 41 2 42
+                            , SrcSpan "tests/examples/Bundles.hs" 2 44 2 45
+                            ]
+                        }
+                      (EWildcard
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 2 42 2 44
+                           , srcInfoPoints = []
+                           }
+                         1)
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 2 36 2 39
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 2 36 2 39
+                              , srcInfoPoints = []
+                              }
+                            "Qux"))
+                      [ ConName
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 2 40 2 41
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 2 40 2 41
+                               , srcInfoPoints = []
+                               }
+                             "F")
+                      ]
+                  , EThingWith
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 2 47 2 58
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/Bundles.hs" 2 50 2 51
+                            , SrcSpan "tests/examples/Bundles.hs" 2 52 2 53
+                            , SrcSpan "tests/examples/Bundles.hs" 2 55 2 56
+                            , SrcSpan "tests/examples/Bundles.hs" 2 57 2 58
+                            ]
+                        }
+                      (EWildcard
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 2 53 2 55
+                           , srcInfoPoints = []
+                           }
+                         1)
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 2 47 2 50
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 2 47 2 50
+                              , srcInfoPoints = []
+                              }
+                            "Tux"))
+                      [ ConName
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 2 51 2 52
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 2 51 2 52
+                               , srcInfoPoints = []
+                               }
+                             "Q")
+                      , ConName
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 2 56 2 57
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 2 56 2 57
+                               , srcInfoPoints = []
+                               }
+                             "F")
+                      ]
+                  ]))))
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 1 1 1 33
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/Bundles.hs" 1 1 1 13
+                , SrcSpan "tests/examples/Bundles.hs" 1 30 1 33
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 1 14 1 29
+                , srcInfoPoints = []
+                }
+              "PatternSynonyms"
+          ]
+      ]
+      []
+      [ PatBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 4 1 4 12
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 4 1 4 5
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 4 1 4 5
+                  , srcInfoPoints = []
+                  }
+                "main"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 4 6 4 12
+               , srcInfoPoints = [ SrcSpan "tests/examples/Bundles.hs" 4 6 4 7 ]
+               }
+             (Var
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 4 8 4 12
+                  , srcInfoPoints = []
+                  }
+                (UnQual
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 4 8 4 12
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 4 8 4 12
+                        , srcInfoPoints = []
+                        }
+                      "main"))))
+          Nothing
+      ]
+  , []
+  )

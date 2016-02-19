@@ -353,10 +353,15 @@ instance ExactP ExportSpec where
   exactP espec = case espec of
      EVar _ qn    -> exactPC qn
      EAbs _ ns qn -> exactP ns >> exactPC qn
-     EThingAll l qn -> exactP qn >> printPoints l ["(","..",")"]
-     EThingWith l qn cns    ->
-        let k = length (srcInfoPoints l)
-         in exactP qn >> printInterleaved (zip (srcInfoPoints l) $ "(":replicate (k-2) "," ++ [")"]) cns
+     EThingWith l wc qn cns    ->
+         let names = case wc of
+                        NoWildcard {} -> cns
+                        EWildcard wcl n  ->
+                          let (before,after) = splitAt n cns
+                              wildcardName = VarName wcl (Ident wcl "..")
+                          in before ++ [wildcardName] ++ after
+             k = length (srcInfoPoints l)
+         in exactP qn >> printInterleaved (zip (srcInfoPoints l) $ "(":replicate (k-2) "," ++ [")"]) names
      EModuleContents _ mn -> printString "module" >> exactPC mn
 
 instance ExactP ExportSpecList where

@@ -416,13 +416,20 @@ The Export List
 >       |  'type' qcname                          {% do { checkEnabled ExplicitNamespaces;
 >                                                       return (EAbs (nIS $1 <++> ann $2 <** [$1, srcInfoSpan (ann $2)]) (TypeNamespace (nIS $1 <** [$1])) $2) } }
 >       |  qtyconorcls                          { EAbs (ann $1) (NoNamespace (ann $1)) $1 }
->       |  qtyconorcls '(' '..' ')'             { EThingAll  (ann $1 <++> nIS $4 <** [$2,$3,$4]) $1 }
->       |  qtyconorcls '(' ')'                  { EThingWith (ann $1 <++> nIS $3 <** [$2,$3])    $1 [] }
->       |  qtyconorcls '(' cnames ')'           { EThingWith (ann $1 <++> nIS $4 <** ($2:reverse (snd $3) ++ [$4])) $1 (reverse (fst $3)) }
+>       |  qtyconorcls '(' ')'                  { EThingWith (ann $1 <++> nIS $3 <** [$2,$3])    (NoWildcard noSrcSpan) $1 [] }
+>       |  qtyconorcls '(' export_names ')'     {% mkEThingWith (ann $1 <++> nIS $4 <** ($2:reverse (snd $3) ++ [$4])) $1 (reverse $ fst $3) }
 >       |  'module' modid                       { EModuleContents (nIS $1 <++> ann $2 <** [$1]) $2 }
 >       |  'pattern' qcon                       {%  do { checkEnabled PatternSynonyms;
 >                                                       return $ EAbs (nIS $1 <++> (ann $2) <** [$1])
 >                                                                  (PatternNamespace (nIS $1)) $2 }}
+
+> export_names :: { ([Either S (CName L)],[S]) }
+>       :  export_names ',' cname_w_wildcard          { ($3 : fst $1, $2 : snd $1) }
+>       |  cname_w_wildcard                     { ([$1],[])  }
+
+> cname_w_wildcard :: { Either S (CName L) }
+>       :  '..'                                 { Left $1 }
+>       |  cname                                { Right $1 }
 
 >
 > qcname :: { QName L }
@@ -495,10 +502,10 @@ Requires the PackageImports extension enabled.
 >       |  tyconorcls                           { IAbs (ann $1) (NoNamespace (ann $1)) $1 }
 >       |  tyconorcls '(' '..' ')'              { IThingAll  (ann $1 <++> nIS $4 <** [$2,$3,$4]) $1 }
 >       |  tyconorcls '(' ')'                   { IThingWith (ann $1 <++> nIS $3 <** [$2,$3])    $1 [] }
->       |  tyconorcls '(' cnames ')'            { IThingWith (ann $1 <++> nIS $4 <** ($2:reverse (snd $3) ++ [$4])) $1 (reverse (fst $3)) }
+>       |  tyconorcls '(' import_names ')'            { IThingWith (ann $1 <++> nIS $4 <** ($2:reverse (snd $3) ++ [$4])) $1 (reverse (fst $3)) }
 
-> cnames :: { ([CName L],[S]) }
->       :  cnames ',' cname                     { ($3 : fst $1, $2 : snd $1) }
+> import_names :: { ([CName L],[S]) }
+>       :  import_names ',' cname               { ($3 : fst $1, $2 : snd $1) }
 >       |  cname                                { ([$1],[])  }
 
 > cname :: { CName L }

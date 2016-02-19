@@ -50,6 +50,7 @@
 module Language.Haskell.Exts.Syntax (
     -- * Modules
     Module(..), ModuleHead(..), WarningText(..), ExportSpecList(..), ExportSpec(..),
+    EWildcard(..),
     ImportDecl(..), ImportSpecList(..), ImportSpec(..), Assoc(..), Namespace(..),
     -- * Declarations
     Decl(..), DeclHead(..), InstRule(..), InstHead(..), Binds(..), IPBind(..), PatternSynDirection(..),
@@ -205,14 +206,15 @@ data ExportSpec l
      | EAbs l (Namespace l) (QName l)   -- ^ @T@:
                                         --   a class or datatype exported abstractly,
                                         --   or a type synonym.
-     | EThingAll l (QName l)            -- ^ @T(..)@:
-                                        --   a class exported with all of its methods, or
-                                        --   a datatype exported with all of its constructors.
-     | EThingWith l (QName l) [CName l] -- ^ @T(C_1,...,C_n)@:
+     | EThingWith l (EWildcard l) (QName l) [CName l] -- ^ @T(C_1,...,C_n)@:
                                         --   a class exported with some of its methods, or
                                         --   a datatype exported with some of its constructors.
      | EModuleContents l (ModuleName l) -- ^ @module M@:
                                         --   re-export a module.
+  deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
+
+-- | Indicates the position of the wildcard in an export list
+data EWildcard l = NoWildcard l | EWildcard l Int
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | Namespaces for imports/exports.
@@ -1153,15 +1155,23 @@ instance Annotated ExportSpec where
     ann es = case es of
         EVar l _            -> l
         EAbs l _ _          -> l
-        EThingAll l _       -> l
-        EThingWith l _ _    -> l
+        EThingWith l _ _ _    -> l
         EModuleContents l _ -> l
     amap f es = case es of
         EVar l qn     -> EVar (f l) qn
         EAbs l n qn       -> EAbs (f l) n qn
-        EThingAll l qn  -> EThingAll (f l) qn
-        EThingWith l qn cns -> EThingWith (f l) qn cns
+        EThingWith l wc qn cns -> EThingWith (f l) wc qn cns
         EModuleContents l mn    -> EModuleContents (f l) mn
+
+instance Annotated EWildcard where
+  ann ewc = case ewc of
+      NoWildcard l  -> l
+      EWildcard l _ -> l
+  amap f ewc = case ewc of
+      NoWildcard l  -> NoWildcard (f l)
+      EWildcard l n -> EWildcard (f l) n
+
+
 
 instance Annotated Namespace where
     ann es = case es of
