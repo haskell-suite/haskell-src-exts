@@ -102,6 +102,7 @@ Conflicts: 7 shift/reduce
 
 > %token
 >       VARID    { Loc _ (VarId _) }       -- 1
+>       LABELVARID { Loc _ (LabelVarId _) }
 >       QVARID   { Loc _ (QVarId _) }
 >       IDUPID   { Loc _ (IDupVarId _) }       -- duplicable implicit parameter ?x
 >       ILINID   { Loc _ (ILinVarId _) }       -- linear implicit parameter %x
@@ -1459,6 +1460,7 @@ thing we need to look at here is the erpats that use no non-standard lexemes.
 
 > aexp2 :: { PExp L }
 >       : ivar                          { IPVar (ann $1) $1 }
+>       | overloaded_label              { $1 }
 >       | qvar                          { Var (ann $1) $1 }
 >       | gcon                          { $1 }
 >       | literal                       { Lit (ann $1) $1 }
@@ -1871,6 +1873,10 @@ Implicit parameter
 > gconsym :: { QName L }
 >       : ':'                   { list_cons_name (nIS $1) }
 >       | qconsym               { $1 }
+
+> overloaded_label :: { PExp L }
+>       : LABELVARID            { let Loc l (LabelVarId v) = $1 in OverloadedLabel
+>                                                                      (nIS l) v }
 
 -----------------------------------------------------------------------------
 Identifiers and Symbols

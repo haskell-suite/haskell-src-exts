@@ -1,0 +1,891 @@
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan =
+            SrcSpan "tests/examples/OverloadedLabels.hs" 3 1 30 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/OverloadedLabels.hs" 3 1 3 1
+            , SrcSpan "tests/examples/OverloadedLabels.hs" 11 1 11 1
+            , SrcSpan "tests/examples/OverloadedLabels.hs" 11 1 11 1
+            , SrcSpan "tests/examples/OverloadedLabels.hs" 11 1 11 1
+            , SrcSpan "tests/examples/OverloadedLabels.hs" 13 1 13 1
+            , SrcSpan "tests/examples/OverloadedLabels.hs" 16 1 16 1
+            , SrcSpan "tests/examples/OverloadedLabels.hs" 19 1 19 1
+            , SrcSpan "tests/examples/OverloadedLabels.hs" 20 1 20 1
+            , SrcSpan "tests/examples/OverloadedLabels.hs" 22 1 22 1
+            , SrcSpan "tests/examples/OverloadedLabels.hs" 24 1 24 1
+            , SrcSpan "tests/examples/OverloadedLabels.hs" 25 1 25 1
+            , SrcSpan "tests/examples/OverloadedLabels.hs" 27 1 27 1
+            , SrcSpan "tests/examples/OverloadedLabels.hs" 30 1 30 1
+            , SrcSpan "tests/examples/OverloadedLabels.hs" 30 1 30 1
+            ]
+        }
+      Nothing
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/OverloadedLabels.hs" 3 1 9 6
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/OverloadedLabels.hs" 3 1 3 13
+                , SrcSpan "tests/examples/OverloadedLabels.hs" 4 12 4 13
+                , SrcSpan "tests/examples/OverloadedLabels.hs" 5 12 5 13
+                , SrcSpan "tests/examples/OverloadedLabels.hs" 6 12 6 13
+                , SrcSpan "tests/examples/OverloadedLabels.hs" 7 12 7 13
+                , SrcSpan "tests/examples/OverloadedLabels.hs" 8 12 8 13
+                , SrcSpan "tests/examples/OverloadedLabels.hs" 9 3 9 6
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/OverloadedLabels.hs" 3 14 3 30
+                , srcInfoPoints = []
+                }
+              "OverloadedLabels"
+          , Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/OverloadedLabels.hs" 4 14 4 23
+                , srcInfoPoints = []
+                }
+              "DataKinds"
+          , Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/OverloadedLabels.hs" 5 14 5 30
+                , srcInfoPoints = []
+                }
+              "FlexibleContexts"
+          , Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/OverloadedLabels.hs" 6 14 6 31
+                , srcInfoPoints = []
+                }
+              "FlexibleInstances"
+          , Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/OverloadedLabels.hs" 7 14 7 35
+                , srcInfoPoints = []
+                }
+              "MultiParamTypeClasses"
+          , Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/OverloadedLabels.hs" 8 14 8 39
+                , srcInfoPoints = []
+                }
+              "NoMonomorphismRestriction"
+          ]
+      ]
+      [ ImportDecl
+          { importAnn =
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/OverloadedLabels.hs" 11 1 11 28
+                , srcInfoPoints =
+                    [ SrcSpan "tests/examples/OverloadedLabels.hs" 11 1 11 7 ]
+                }
+          , importModule =
+              ModuleName
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/OverloadedLabels.hs" 11 8 11 28
+                  , srcInfoPoints = []
+                  }
+                "GHC.OverloadedLabels"
+          , importQualified = False
+          , importSrc = False
+          , importSafe = False
+          , importPkg = Nothing
+          , importAs = Nothing
+          , importSpecs = Nothing
+          }
+      ]
+      [ InstDecl
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/OverloadedLabels.hs" 13 1 16 0
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/OverloadedLabels.hs" 13 1 13 9
+                , SrcSpan "tests/examples/OverloadedLabels.hs" 13 30 13 35
+                , SrcSpan "tests/examples/OverloadedLabels.hs" 14 3 14 3
+                , SrcSpan "tests/examples/OverloadedLabels.hs" 16 1 16 0
+                ]
+            }
+          Nothing
+          (IRule
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/OverloadedLabels.hs" 13 10 13 29
+               , srcInfoPoints = []
+               }
+             Nothing
+             Nothing
+             (IHApp
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/OverloadedLabels.hs" 13 10 13 29
+                  , srcInfoPoints = []
+                  }
+                (IHApp
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/OverloadedLabels.hs" 13 10 13 24
+                     , srcInfoPoints = []
+                     }
+                   (IHCon
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/OverloadedLabels.hs" 13 10 13 17
+                        , srcInfoPoints = []
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/OverloadedLabels.hs" 13 10 13 17
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/OverloadedLabels.hs" 13 10 13 17
+                              , srcInfoPoints = []
+                              }
+                            "IsLabel")))
+                   (TyPromoted
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/OverloadedLabels.hs" 13 18 13 24
+                        , srcInfoPoints = []
+                        }
+                      (PromotedString
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/OverloadedLabels.hs" 13 18 13 24
+                           , srcInfoPoints = []
+                           }
+                         "true"
+                         "true")))
+                (TyCon
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/OverloadedLabels.hs" 13 25 13 29
+                     , srcInfoPoints = []
+                     }
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/OverloadedLabels.hs" 13 25 13 29
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/OverloadedLabels.hs" 13 25 13 29
+                           , srcInfoPoints = []
+                           }
+                         "Bool")))))
+          (Just
+             [ InsDecl
+                 SrcSpanInfo
+                   { srcInfoSpan =
+                       SrcSpan "tests/examples/OverloadedLabels.hs" 14 3 14 21
+                   , srcInfoPoints = []
+                   }
+                 (FunBind
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/OverloadedLabels.hs" 14 3 14 21
+                      , srcInfoPoints = []
+                      }
+                    [ Match
+                        SrcSpanInfo
+                          { srcInfoSpan =
+                              SrcSpan "tests/examples/OverloadedLabels.hs" 14 3 14 21
+                          , srcInfoPoints = []
+                          }
+                        (Ident
+                           SrcSpanInfo
+                             { srcInfoSpan =
+                                 SrcSpan "tests/examples/OverloadedLabels.hs" 14 3 14 12
+                             , srcInfoPoints = []
+                             }
+                           "fromLabel")
+                        [ PWildCard
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/OverloadedLabels.hs" 14 13 14 14
+                              , srcInfoPoints = []
+                              }
+                        ]
+                        (UnGuardedRhs
+                           SrcSpanInfo
+                             { srcInfoSpan =
+                                 SrcSpan "tests/examples/OverloadedLabels.hs" 14 15 14 21
+                             , srcInfoPoints =
+                                 [ SrcSpan "tests/examples/OverloadedLabels.hs" 14 15 14 16 ]
+                             }
+                           (Con
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/OverloadedLabels.hs" 14 17 14 21
+                                , srcInfoPoints = []
+                                }
+                              (UnQual
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/OverloadedLabels.hs" 14 17 14 21
+                                   , srcInfoPoints = []
+                                   }
+                                 (Ident
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan "tests/examples/OverloadedLabels.hs" 14 17 14 21
+                                      , srcInfoPoints = []
+                                      }
+                                    "True"))))
+                        Nothing
+                    ])
+             ])
+      , InstDecl
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/OverloadedLabels.hs" 16 1 19 0
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/OverloadedLabels.hs" 16 1 16 9
+                , SrcSpan "tests/examples/OverloadedLabels.hs" 16 31 16 36
+                , SrcSpan "tests/examples/OverloadedLabels.hs" 17 3 17 3
+                , SrcSpan "tests/examples/OverloadedLabels.hs" 19 1 19 0
+                ]
+            }
+          Nothing
+          (IRule
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/OverloadedLabels.hs" 16 10 16 30
+               , srcInfoPoints = []
+               }
+             Nothing
+             Nothing
+             (IHApp
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/OverloadedLabels.hs" 16 10 16 30
+                  , srcInfoPoints = []
+                  }
+                (IHApp
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/OverloadedLabels.hs" 16 10 16 25
+                     , srcInfoPoints = []
+                     }
+                   (IHCon
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/OverloadedLabels.hs" 16 10 16 17
+                        , srcInfoPoints = []
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/OverloadedLabels.hs" 16 10 16 17
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/OverloadedLabels.hs" 16 10 16 17
+                              , srcInfoPoints = []
+                              }
+                            "IsLabel")))
+                   (TyPromoted
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/OverloadedLabels.hs" 16 18 16 25
+                        , srcInfoPoints = []
+                        }
+                      (PromotedString
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/OverloadedLabels.hs" 16 18 16 25
+                           , srcInfoPoints = []
+                           }
+                         "false"
+                         "false")))
+                (TyCon
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/OverloadedLabels.hs" 16 26 16 30
+                     , srcInfoPoints = []
+                     }
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/OverloadedLabels.hs" 16 26 16 30
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/OverloadedLabels.hs" 16 26 16 30
+                           , srcInfoPoints = []
+                           }
+                         "Bool")))))
+          (Just
+             [ InsDecl
+                 SrcSpanInfo
+                   { srcInfoSpan =
+                       SrcSpan "tests/examples/OverloadedLabels.hs" 17 3 17 22
+                   , srcInfoPoints = []
+                   }
+                 (FunBind
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/OverloadedLabels.hs" 17 3 17 22
+                      , srcInfoPoints = []
+                      }
+                    [ Match
+                        SrcSpanInfo
+                          { srcInfoSpan =
+                              SrcSpan "tests/examples/OverloadedLabels.hs" 17 3 17 22
+                          , srcInfoPoints = []
+                          }
+                        (Ident
+                           SrcSpanInfo
+                             { srcInfoSpan =
+                                 SrcSpan "tests/examples/OverloadedLabels.hs" 17 3 17 12
+                             , srcInfoPoints = []
+                             }
+                           "fromLabel")
+                        [ PWildCard
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/OverloadedLabels.hs" 17 13 17 14
+                              , srcInfoPoints = []
+                              }
+                        ]
+                        (UnGuardedRhs
+                           SrcSpanInfo
+                             { srcInfoSpan =
+                                 SrcSpan "tests/examples/OverloadedLabels.hs" 17 15 17 22
+                             , srcInfoPoints =
+                                 [ SrcSpan "tests/examples/OverloadedLabels.hs" 17 15 17 16 ]
+                             }
+                           (Con
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/OverloadedLabels.hs" 17 17 17 22
+                                , srcInfoPoints = []
+                                }
+                              (UnQual
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/OverloadedLabels.hs" 17 17 17 22
+                                   , srcInfoPoints = []
+                                   }
+                                 (Ident
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan "tests/examples/OverloadedLabels.hs" 17 17 17 22
+                                      , srcInfoPoints = []
+                                      }
+                                    "False"))))
+                        Nothing
+                    ])
+             ])
+      , TypeSig
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/OverloadedLabels.hs" 19 1 19 27
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/OverloadedLabels.hs" 19 3 19 5 ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/OverloadedLabels.hs" 19 1 19 2
+                , srcInfoPoints = []
+                }
+              "a"
+          ]
+          (TyForall
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/OverloadedLabels.hs" 19 6 19 27
+               , srcInfoPoints = []
+               }
+             Nothing
+             (Just
+                (CxSingle
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/OverloadedLabels.hs" 19 6 19 25
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/OverloadedLabels.hs" 19 23 19 25 ]
+                     }
+                   (ClassA
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/OverloadedLabels.hs" 19 6 19 25
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/OverloadedLabels.hs" 19 23 19 25 ]
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/OverloadedLabels.hs" 19 6 19 13
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/OverloadedLabels.hs" 19 6 19 13
+                              , srcInfoPoints = []
+                              }
+                            "IsLabel"))
+                      [ TyPromoted
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/OverloadedLabels.hs" 19 14 19 20
+                            , srcInfoPoints = []
+                            }
+                          (PromotedString
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/OverloadedLabels.hs" 19 14 19 20
+                               , srcInfoPoints = []
+                               }
+                             "true"
+                             "true")
+                      , TyVar
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/OverloadedLabels.hs" 19 21 19 22
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/OverloadedLabels.hs" 19 21 19 22
+                               , srcInfoPoints = []
+                               }
+                             "t")
+                      ])))
+             (TyVar
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/OverloadedLabels.hs" 19 26 19 27
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/OverloadedLabels.hs" 19 26 19 27
+                     , srcInfoPoints = []
+                     }
+                   "t")))
+      , PatBind
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/OverloadedLabels.hs" 20 1 20 10
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/OverloadedLabels.hs" 20 1 20 2
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/OverloadedLabels.hs" 20 1 20 2
+                  , srcInfoPoints = []
+                  }
+                "a"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/OverloadedLabels.hs" 20 3 20 10
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/OverloadedLabels.hs" 20 3 20 4 ]
+               }
+             (OverloadedLabel
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/OverloadedLabels.hs" 20 5 20 10
+                  , srcInfoPoints = []
+                  }
+                "true"))
+          Nothing
+      , PatBind
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/OverloadedLabels.hs" 22 1 22 11
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/OverloadedLabels.hs" 22 1 22 2
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/OverloadedLabels.hs" 22 1 22 2
+                  , srcInfoPoints = []
+                  }
+                "b"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/OverloadedLabels.hs" 22 3 22 11
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/OverloadedLabels.hs" 22 3 22 4 ]
+               }
+             (OverloadedLabel
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/OverloadedLabels.hs" 22 5 22 11
+                  , srcInfoPoints = []
+                  }
+                "false"))
+          Nothing
+      , TypeSig
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/OverloadedLabels.hs" 24 1 24 10
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/OverloadedLabels.hs" 24 3 24 5 ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/OverloadedLabels.hs" 24 1 24 2
+                , srcInfoPoints = []
+                }
+              "c"
+          ]
+          (TyCon
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/OverloadedLabels.hs" 24 6 24 10
+               , srcInfoPoints = []
+               }
+             (UnQual
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/OverloadedLabels.hs" 24 6 24 10
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/OverloadedLabels.hs" 24 6 24 10
+                     , srcInfoPoints = []
+                     }
+                   "Bool")))
+      , PatBind
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/OverloadedLabels.hs" 25 1 25 10
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/OverloadedLabels.hs" 25 1 25 2
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/OverloadedLabels.hs" 25 1 25 2
+                  , srcInfoPoints = []
+                  }
+                "c"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/OverloadedLabels.hs" 25 3 25 10
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/OverloadedLabels.hs" 25 3 25 4 ]
+               }
+             (OverloadedLabel
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/OverloadedLabels.hs" 25 5 25 10
+                  , srcInfoPoints = []
+                  }
+                "true"))
+          Nothing
+      , PatBind
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/OverloadedLabels.hs" 27 1 29 18
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/OverloadedLabels.hs" 27 1 27 5
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/OverloadedLabels.hs" 27 1 27 5
+                  , srcInfoPoints = []
+                  }
+                "main"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/OverloadedLabels.hs" 27 6 29 18
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/OverloadedLabels.hs" 27 6 27 7 ]
+               }
+             (Do
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/OverloadedLabels.hs" 27 8 29 18
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/OverloadedLabels.hs" 27 8 27 10
+                      , SrcSpan "tests/examples/OverloadedLabels.hs" 27 11 27 11
+                      , SrcSpan "tests/examples/OverloadedLabels.hs" 28 11 28 11
+                      , SrcSpan "tests/examples/OverloadedLabels.hs" 29 11 29 11
+                      , SrcSpan "tests/examples/OverloadedLabels.hs" 30 1 30 0
+                      ]
+                  }
+                [ Qualifier
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/OverloadedLabels.hs" 27 11 27 28
+                      , srcInfoPoints = []
+                      }
+                    (App
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/OverloadedLabels.hs" 27 11 27 28
+                         , srcInfoPoints = []
+                         }
+                       (Var
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/OverloadedLabels.hs" 27 11 27 16
+                            , srcInfoPoints = []
+                            }
+                          (UnQual
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/OverloadedLabels.hs" 27 11 27 16
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/OverloadedLabels.hs" 27 11 27 16
+                                  , srcInfoPoints = []
+                                  }
+                                "print")))
+                       (Paren
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/OverloadedLabels.hs" 27 17 27 28
+                            , srcInfoPoints =
+                                [ SrcSpan "tests/examples/OverloadedLabels.hs" 27 17 27 18
+                                , SrcSpan "tests/examples/OverloadedLabels.hs" 27 27 27 28
+                                ]
+                            }
+                          (ExpTypeSig
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/OverloadedLabels.hs" 27 18 27 27
+                               , srcInfoPoints =
+                                   [ SrcSpan "tests/examples/OverloadedLabels.hs" 27 20 27 22 ]
+                               }
+                             (Var
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/OverloadedLabels.hs" 27 18 27 19
+                                  , srcInfoPoints = []
+                                  }
+                                (UnQual
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/OverloadedLabels.hs" 27 18 27 19
+                                     , srcInfoPoints = []
+                                     }
+                                   (Ident
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/OverloadedLabels.hs" 27 18 27 19
+                                        , srcInfoPoints = []
+                                        }
+                                      "a")))
+                             (TyCon
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/OverloadedLabels.hs" 27 23 27 27
+                                  , srcInfoPoints = []
+                                  }
+                                (UnQual
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/OverloadedLabels.hs" 27 23 27 27
+                                     , srcInfoPoints = []
+                                     }
+                                   (Ident
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/OverloadedLabels.hs" 27 23 27 27
+                                        , srcInfoPoints = []
+                                        }
+                                      "Bool"))))))
+                , Qualifier
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/OverloadedLabels.hs" 28 11 28 28
+                      , srcInfoPoints = []
+                      }
+                    (App
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/OverloadedLabels.hs" 28 11 28 28
+                         , srcInfoPoints = []
+                         }
+                       (Var
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/OverloadedLabels.hs" 28 11 28 16
+                            , srcInfoPoints = []
+                            }
+                          (UnQual
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/OverloadedLabels.hs" 28 11 28 16
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/OverloadedLabels.hs" 28 11 28 16
+                                  , srcInfoPoints = []
+                                  }
+                                "print")))
+                       (Paren
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/OverloadedLabels.hs" 28 17 28 28
+                            , srcInfoPoints =
+                                [ SrcSpan "tests/examples/OverloadedLabels.hs" 28 17 28 18
+                                , SrcSpan "tests/examples/OverloadedLabels.hs" 28 27 28 28
+                                ]
+                            }
+                          (ExpTypeSig
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/OverloadedLabels.hs" 28 18 28 27
+                               , srcInfoPoints =
+                                   [ SrcSpan "tests/examples/OverloadedLabels.hs" 28 20 28 22 ]
+                               }
+                             (Var
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/OverloadedLabels.hs" 28 18 28 19
+                                  , srcInfoPoints = []
+                                  }
+                                (UnQual
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/OverloadedLabels.hs" 28 18 28 19
+                                     , srcInfoPoints = []
+                                     }
+                                   (Ident
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/OverloadedLabels.hs" 28 18 28 19
+                                        , srcInfoPoints = []
+                                        }
+                                      "b")))
+                             (TyCon
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/OverloadedLabels.hs" 28 23 28 27
+                                  , srcInfoPoints = []
+                                  }
+                                (UnQual
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/OverloadedLabels.hs" 28 23 28 27
+                                     , srcInfoPoints = []
+                                     }
+                                   (Ident
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/OverloadedLabels.hs" 28 23 28 27
+                                        , srcInfoPoints = []
+                                        }
+                                      "Bool"))))))
+                , Qualifier
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/OverloadedLabels.hs" 29 11 29 18
+                      , srcInfoPoints = []
+                      }
+                    (App
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/OverloadedLabels.hs" 29 11 29 18
+                         , srcInfoPoints = []
+                         }
+                       (Var
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/OverloadedLabels.hs" 29 11 29 16
+                            , srcInfoPoints = []
+                            }
+                          (UnQual
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/OverloadedLabels.hs" 29 11 29 16
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/OverloadedLabels.hs" 29 11 29 16
+                                  , srcInfoPoints = []
+                                  }
+                                "print")))
+                       (Var
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/OverloadedLabels.hs" 29 17 29 18
+                            , srcInfoPoints = []
+                            }
+                          (UnQual
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/OverloadedLabels.hs" 29 17 29 18
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/OverloadedLabels.hs" 29 17 29 18
+                                  , srcInfoPoints = []
+                                  }
+                                "c"))))
+                ]))
+          Nothing
+      ]
+  , [ Comment
+        False
+        (SrcSpan "tests/examples/OverloadedLabels.hs" 1 1 1 36)
+        " Basic tests of overloaded labels"
+    ]
+  )

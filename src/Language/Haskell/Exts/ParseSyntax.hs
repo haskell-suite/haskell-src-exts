@@ -10,6 +10,7 @@ import qualified Language.Haskell.Exts.Syntax as S ( Type(..), Promoted(..) )
 
 data PExp l
     = Var l (QName l)                       -- ^ variable
+    | OverloadedLabel l String              -- ^ overloaded label #foo
     | IPVar l (IPName l)                    -- ^ implicit parameter variable
     | Con l (QName l)                       -- ^ data constructor
     | Lit l (Literal l)                     -- ^ literal constant
@@ -117,6 +118,7 @@ data ParseXAttr l = XAttr l (XName l) (PExp l)
 instance Annotated PExp where
     ann e = case e of
         Var l _                 -> l
+        OverloadedLabel l _     -> l
         IPVar l _               -> l
         Con l _                 -> l
         Lit l _                 -> l
@@ -186,6 +188,7 @@ instance Annotated PExp where
 
     amap f e' = case e' of
         Var l qn                -> Var   (f l) qn
+        OverloadedLabel l qn    -> OverloadedLabel (f l) qn
         IPVar l ipn             -> IPVar (f l) ipn
         Con l qn                -> Con   (f l) qn
         Lit l lit               -> Lit   (f l) lit

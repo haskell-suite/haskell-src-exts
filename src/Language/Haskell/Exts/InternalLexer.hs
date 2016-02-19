@@ -36,6 +36,7 @@ import Control.Monad (when)
 
 data Token
         = VarId String
+        | LabelVarId String
         | QVarId (String,String)
         | IDupVarId (String)        -- duplicable implicit parameter
         | ILinVarId (String)        -- linear implicit parameter
@@ -745,6 +746,12 @@ lexStdToken = do
                                                   then discard 1 >> return At
                                                   else discard 1 >> return TApp
 
+        '#':_ | OverloadedLabels `elem` exts -> do
+                                                  discard 1
+                                                  [ident] <- lexIdents
+                                                  return $ LabelVarId ident
+
+
         c:_ | isDigit c -> lexDecimalOrFloat
 
             | isUpper c -> lexConIdOrQual ""
@@ -1258,6 +1265,7 @@ isBinDigit c =  c >= '0' && c <= '1'
 showToken :: Token -> String
 showToken t = case t of
   VarId s           -> s
+  LabelVarId s      -> '#':s
   QVarId (q,s)      -> q ++ '.':s
   IDupVarId s       -> '?':s
   ILinVarId s       -> '%':s

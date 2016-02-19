@@ -957,6 +957,7 @@ instance  Pretty (Exp l) where
                 text "mdo" $$$ ppBody doIndent (map pretty stmtList)
         -- Constructors & Vars
         prettyPrec _ (Var _ name) = pretty name
+        prettyPrec _ (OverloadedLabel _ name) = text ('#':name)
         prettyPrec _ (IPVar _ ipname) = pretty ipname
         prettyPrec _ (Con _ name) = pretty name
         prettyPrec _ (Tuple _ bxd expList) =
@@ -1500,6 +1501,7 @@ instance SrcInfo loc => Pretty (P.PExp loc) where
         pretty (P.MDo _ stmtList) =
                 text "mdo" $$$ ppBody doIndent (map pretty stmtList)
         pretty (P.Var _ name) = pretty name
+        pretty (P.OverloadedLabel _ name) = text name
         pretty (P.IPVar _ ipname) = pretty ipname
         pretty (P.Con _ name) = pretty name
         pretty (P.TupleSection _ bxd mExpList) =

@@ -630,6 +630,7 @@ mkChildrenPat ps' = mkCPAux ps' []
 checkExpr :: PExp L -> P (S.Exp L)
 checkExpr e' = case e' of
     Var l v               -> return $ S.Var l v
+    OverloadedLabel l v   -> return $ S.OverloadedLabel l v
     IPVar l v             -> return $ S.IPVar l v
     Con l c               -> return $ S.Con l c
     Lit l lit             -> return $ S.Lit l lit

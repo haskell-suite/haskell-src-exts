@@ -1385,6 +1385,7 @@ instance ExactP Splice where
 instance ExactP Exp where
   exactP exp = case exp of
     Var _ qn        -> exactP qn
+    OverloadedLabel _ qn -> printString ('#':qn)
     IPVar _ ipn     -> exactP ipn
     Con _ qn        -> exactP qn
     Lit _ lit       -> exactP lit
