@@ -388,9 +388,9 @@ tAB_LENGTH = 8
 -- Consume and return the largest string of characters satisfying p
 
 lexWhile :: (Char -> Bool) -> Lex a String
-lexWhile p = Lex $ \cont -> P $ \rss c l ->
+lexWhile p = Lex $ \cont -> P $ \rss c l loc char ->
   case rss of
-    [] -> runP (cont []) [] c l
+    [] -> runP (cont []) [] c l loc char
     (r:rs) ->
       let
         l' = case r of
@@ -400,8 +400,8 @@ lexWhile p = Lex $ \cont -> P $ \rss c l ->
               '\n' -> 1
               _    -> c + 1
        in if p r
-            then runP (runL ((r:) <$> lexWhile p) cont) rs c' l'
-            else runP (cont []) (r:rs) c l
+            then runP (runL ((r:) <$> lexWhile p) cont) rs c' l' loc r
+            else runP (cont []) (r:rs) c l loc char
 
 -- | lexWhile without the return value.
 lexWhile_ :: (Char -> Bool) -> Lex a ()

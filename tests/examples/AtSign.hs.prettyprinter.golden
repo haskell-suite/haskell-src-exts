@@ -1,0 +1,9 @@
+{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE TypeOperators #-}
+{-# LANGUAGE TypeApplications #-}
+module Data.Array.Accelerate.CUFFT.Private where
+transform hndl@(Handle fallback mode width _)
+  = wrap mode (A.constant width) $
+      A.foreignAcc
+        (AF.CUDAForeignAcc "transformForeign" $ transformForeign hndl)
+        (unwrap mode (A.constant width) fallback)
