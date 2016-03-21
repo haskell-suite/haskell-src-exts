@@ -1,0 +1,262 @@
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 1 1 8 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/MagicHashN.hs" 1 1 1 1
+            , SrcSpan "tests/examples/MagicHashN.hs" 2 1 2 1
+            , SrcSpan "tests/examples/MagicHashN.hs" 2 1 2 1
+            , SrcSpan "tests/examples/MagicHashN.hs" 4 1 4 1
+            , SrcSpan "tests/examples/MagicHashN.hs" 5 1 5 1
+            , SrcSpan "tests/examples/MagicHashN.hs" 6 1 6 1
+            , SrcSpan "tests/examples/MagicHashN.hs" 7 1 7 1
+            , SrcSpan "tests/examples/MagicHashN.hs" 8 1 8 1
+            , SrcSpan "tests/examples/MagicHashN.hs" 8 1 8 1
+            ]
+        }
+      (Just
+         (ModuleHead
+            SrcSpanInfo
+              { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 2 1 2 24
+              , srcInfoPoints =
+                  [ SrcSpan "tests/examples/MagicHashN.hs" 2 1 2 7
+                  , SrcSpan "tests/examples/MagicHashN.hs" 2 19 2 24
+                  ]
+              }
+            (ModuleName
+               SrcSpanInfo
+                 { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 2 8 2 18
+                 , srcInfoPoints = []
+                 }
+               "MagicHashN")
+            Nothing
+            Nothing))
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 1 1 1 27
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/MagicHashN.hs" 1 1 1 13
+                , SrcSpan "tests/examples/MagicHashN.hs" 1 24 1 27
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 1 14 1 23
+                , srcInfoPoints = []
+                }
+              "MagicHash"
+          ]
+      ]
+      []
+      [ PatBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 4 1 4 7
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 4 1 4 3
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 4 1 4 3
+                  , srcInfoPoints = []
+                  }
+                "a#"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 4 4 4 7
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/MagicHashN.hs" 4 4 4 5 ]
+               }
+             (Lit
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 4 6 4 7
+                  , srcInfoPoints = []
+                  }
+                (Int
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 4 6 4 7
+                     , srcInfoPoints = []
+                     }
+                   1
+                   "1")))
+          Nothing
+      , PatBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 5 1 5 8
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 5 1 5 4
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 5 1 5 4
+                  , srcInfoPoints = []
+                  }
+                "b##"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 5 5 5 8
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/MagicHashN.hs" 5 5 5 6 ]
+               }
+             (Lit
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 5 7 5 8
+                  , srcInfoPoints = []
+                  }
+                (Int
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 5 7 5 8
+                     , srcInfoPoints = []
+                     }
+                   2
+                   "2")))
+          Nothing
+      , PatBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 6 1 6 9
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 6 1 6 5
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 6 1 6 5
+                  , srcInfoPoints = []
+                  }
+                "c###"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 6 6 6 9
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/MagicHashN.hs" 6 6 6 7 ]
+               }
+             (Lit
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 6 8 6 9
+                  , srcInfoPoints = []
+                  }
+                (Int
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 6 8 6 9
+                     , srcInfoPoints = []
+                     }
+                   3
+                   "3")))
+          Nothing
+      , PatBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 7 1 7 29
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 7 1 7 5
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 7 1 7 5
+                  , srcInfoPoints = []
+                  }
+                "main"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 7 6 7 29
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/MagicHashN.hs" 7 6 7 7 ]
+               }
+             (App
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 7 8 7 29
+                  , srcInfoPoints = []
+                  }
+                (Var
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 7 8 7 13
+                     , srcInfoPoints = []
+                     }
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 7 8 7 13
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 7 8 7 13
+                           , srcInfoPoints = []
+                           }
+                         "print")))
+                (Tuple
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 7 14 7 29
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/MagicHashN.hs" 7 14 7 15
+                         , SrcSpan "tests/examples/MagicHashN.hs" 7 17 7 18
+                         , SrcSpan "tests/examples/MagicHashN.hs" 7 22 7 23
+                         , SrcSpan "tests/examples/MagicHashN.hs" 7 28 7 29
+                         ]
+                     }
+                   Boxed
+                   [ Var
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 7 15 7 17
+                         , srcInfoPoints = []
+                         }
+                       (UnQual
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 7 15 7 17
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 7 15 7 17
+                               , srcInfoPoints = []
+                               }
+                             "a#"))
+                   , Var
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 7 19 7 22
+                         , srcInfoPoints = []
+                         }
+                       (UnQual
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 7 19 7 22
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 7 19 7 22
+                               , srcInfoPoints = []
+                               }
+                             "b##"))
+                   , Var
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 7 24 7 28
+                         , srcInfoPoints = []
+                         }
+                       (UnQual
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 7 24 7 28
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/MagicHashN.hs" 7 24 7 28
+                               , srcInfoPoints = []
+                               }
+                             "c###"))
+                   ])))
+          Nothing
+      ]
+  , []
+  )
