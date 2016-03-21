@@ -801,8 +801,8 @@ lexStdToken = do
                         idents <- lexIdents
                         return $ ident : idents
                  '#':_ | MagicHash `elem` exts -> do
-                        discard 1
-                        return [ident ++ "#"]
+                        hashes <- lexWhile (== '#')
+                        return [ident ++ hashes]
                  _ -> return [ident]
 
             lexQuasiQuote :: Char -> Lex a Token
