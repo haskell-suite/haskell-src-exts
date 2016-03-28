@@ -300,15 +300,15 @@ prettyPrimWithMode pphs doc = unDocM (pretty doc) pphs
 -------------------------  Pretty-Print a Module --------------------
 instance Pretty Module where
         pretty (Module pos m os mbWarn mbExports imp decls) =
-                markLine pos $
-                myVcat $ map pretty os ++
+                markLine pos $ (myVcat $ map pretty os) $$
+                myVcat (
                     (if m == ModuleName "" then id
                      else \x -> [topLevel (ppModuleHeader m mbWarn mbExports) x])
                     (map pretty imp ++
                       ppDecls (m /= ModuleName "" ||
                                not (null imp) ||
                                not (null os))
-                              decls)
+                              decls))
 
 --------------------------  Module Header ------------------------------
 ppModuleHeader :: ModuleName -> Maybe WarningText -> Maybe [ExportSpec] -> Doc
