@@ -1313,7 +1313,13 @@ instance Pretty CName where
         pretty (ConName n) = pretty n
 
 instance Pretty SpecialCon where
-        pretty sc = text $ specialName sc
+        pretty UnitCon          = text "()"
+        pretty ListCon          = text "[]"
+        pretty FunCon           = text "->"
+        pretty (TupleCon b n)   = listFun $ replicate (n-1) comma
+          where listFun = if b == Unboxed then hashParenList else parenList
+        pretty Cons             = text ":"
+        pretty UnboxedSingleCon = text "(# #)"
 
 isSymbolName :: Name -> Bool
 isSymbolName (Symbol _) = True
@@ -1329,15 +1335,6 @@ isSymbolQName _                = False
 getSpecialName :: QName -> Maybe SpecialCon
 getSpecialName (Special n) = Just n
 getSpecialName _           = Nothing
-
-specialName :: SpecialCon -> String
-specialName UnitCon = "()"
-specialName ListCon = "[]"
-specialName FunCon = "->"
-specialName (TupleCon b n) = "(" ++ hash ++ replicate (n-1) ',' ++ hash ++ ")"
-    where hash = if b == Unboxed then "#" else ""
-specialName Cons = ":"
-specialName UnboxedSingleCon = "(# #)"
 
 -- Contexts are "sets" of assertions. Several members really means it's a
 -- CxTuple, but we can't represent that in our list of assertions.
