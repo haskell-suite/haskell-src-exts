@@ -1,0 +1,91 @@
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/NoUnpack.hs" 1 1 2 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/NoUnpack.hs" 1 1 1 1
+            , SrcSpan "tests/examples/NoUnpack.hs" 1 1 1 1
+            , SrcSpan "tests/examples/NoUnpack.hs" 1 1 1 1
+            , SrcSpan "tests/examples/NoUnpack.hs" 2 1 2 1
+            , SrcSpan "tests/examples/NoUnpack.hs" 2 1 2 1
+            ]
+        }
+      Nothing
+      []
+      []
+      [ DataDecl
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/NoUnpack.hs" 1 1 1 35
+            , srcInfoPoints = [ SrcSpan "tests/examples/NoUnpack.hs" 1 9 1 10 ]
+            }
+          (DataType
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/NoUnpack.hs" 1 1 1 5
+               , srcInfoPoints = []
+               })
+          Nothing
+          (DHead
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/NoUnpack.hs" 1 6 1 8
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/NoUnpack.hs" 1 6 1 8
+                  , srcInfoPoints = []
+                  }
+                "UI"))
+          [ QualConDecl
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/NoUnpack.hs" 1 11 1 35
+                , srcInfoPoints = []
+                }
+              Nothing
+              Nothing
+              (ConDecl
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/NoUnpack.hs" 1 11 1 35
+                   , srcInfoPoints = []
+                   }
+                 (Ident
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/NoUnpack.hs" 1 11 1 13
+                      , srcInfoPoints = []
+                      }
+                    "UI")
+                 [ TyBang
+                     SrcSpanInfo
+                       { srcInfoSpan = SrcSpan "tests/examples/NoUnpack.hs" 1 14 1 35
+                       , srcInfoPoints = []
+                       }
+                     (NoUnpackedTy
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/NoUnpack.hs" 1 14 1 32
+                          , srcInfoPoints =
+                              [ SrcSpan "tests/examples/NoUnpack.hs" 1 14 1 26
+                              , SrcSpan "tests/examples/NoUnpack.hs" 1 27 1 30
+                              , SrcSpan "tests/examples/NoUnpack.hs" 1 31 1 32
+                              ]
+                          })
+                     (TyCon
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/NoUnpack.hs" 1 32 1 35
+                          , srcInfoPoints = []
+                          }
+                        (UnQual
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/NoUnpack.hs" 1 32 1 35
+                             , srcInfoPoints = []
+                             }
+                           (Ident
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/NoUnpack.hs" 1 32 1 35
+                                , srcInfoPoints = []
+                                }
+                              "Int")))
+                 ])
+          ]
+          Nothing
+      ]
+  , []
+  )
