@@ -280,8 +280,8 @@ instance ExactP QName where
 
 epQName :: QName SrcSpanInfo -> EP ()
 epQName qn = case qn of
-    Qual    _ mn n  -> exactP mn >> printString "." >> epName n
-    UnQual  _    n  -> epName n
+    Qual    _ mn n  -> exactP mn >> printString "." >> exactP n
+    UnQual  _    n  -> exactP n
     Special _ sc    -> exactP sc
 
 epInfixQName :: QName SrcSpanInfo -> EP ()
@@ -309,19 +309,15 @@ instance ExactP Name where
          [] -> printString str
          _ -> errorEP "ExactP: Name is given wrong number of srcInfoPoints"
 
-epName :: Name SrcSpanInfo -> EP ()
-epName (Ident  _ str) = printString str
-epName (Symbol _ str) = printString str
-
 epInfixName :: Name SrcSpanInfo -> EP ()
 epInfixName n
-    | isSymbolName n = printWhitespace (pos (ann n)) >> epName n
+    | isSymbolName n = printWhitespace (pos (ann n)) >> exactP n
     | otherwise =
         case srcInfoPoints (ann n) of
          [a,b,c] -> do
             printStringAt (pos a) "`"
             printWhitespace (pos b)
-            epName n
+            exactP n
             printStringAt (pos c) "`"
          _ -> errorEP "ExactP: Name (epInfixName) is given wrong number of srcInfoPoints"
 
