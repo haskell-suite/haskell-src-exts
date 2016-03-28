@@ -255,31 +255,20 @@ instance ExactP SpecialCon where
     Cons _      -> printString ":"
     UnboxedSingleCon l -> printPoints l ["(#","#)"]
 
-isSymbol :: Name l -> Bool
-isSymbol (Symbol _ _) = True
-isSymbol _ = False
+isSymbolName :: Name l -> Bool
+isSymbolName (Symbol _ _) = True
+isSymbolName _            = False
 
-getName :: QName l -> Name l
-getName (UnQual _ s) = s
-getName (Qual _ _ s) = s
-getName (Special l (Cons _)) = Symbol l ":"
-getName (Special l (FunCon _)) = Symbol l "->"
-getName (Special l s) = Ident l (specialName s)
-
-specialName :: SpecialCon l -> String
-specialName (UnitCon _) = "()"
-specialName (ListCon _) = "[]"
-specialName (FunCon  _) = "->"
-specialName (TupleCon _ b n) = "(" ++ hash ++ replicate (n-1) ',' ++ hash ++ ")"
-    where hash = case b of
-                   Unboxed -> "#"
-                   _       -> ""
-specialName (Cons _) = ":"
-specialName (UnboxedSingleCon _) = "(# #)"
+isSymbolQName :: QName l -> Bool
+isSymbolQName (UnQual _ n)         = isSymbolName n
+isSymbolQName (Qual _ _ n)         = isSymbolName n
+isSymbolQName (Special _ Cons{})   = True
+isSymbolQName (Special _ FunCon{}) = True
+isSymbolQName _                    = False
 
 instance ExactP QName where
   exactP qn
-    | isSymbol (getName qn) =
+    | isSymbolQName qn =
         case srcInfoPoints (ann qn) of
          [_,b,c] -> do
             printString "("
@@ -297,7 +286,7 @@ epQName qn = case qn of
 
 epInfixQName :: QName SrcSpanInfo -> EP ()
 epInfixQName qn
-    | isSymbol (getName qn) = printWhitespace (pos (ann qn)) >> epQName qn
+    | isSymbolQName qn = printWhitespace (pos (ann qn)) >> epQName qn
     | otherwise =
         case srcInfoPoints (ann qn) of
          [a,b,c] -> do
@@ -326,7 +315,7 @@ epName (Symbol _ str) = printString str
 
 epInfixName :: Name SrcSpanInfo -> EP ()
 epInfixName n
-    | isSymbol n = printWhitespace (pos (ann n)) >> epName n
+    | isSymbolName n = printWhitespace (pos (ann n)) >> epName n
     | otherwise =
         case srcInfoPoints (ann n) of
          [a,b,c] -> do
