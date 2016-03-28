@@ -1432,6 +1432,9 @@ Template Haskell - all this is enabled in the lexer.
 >       | '[t|' truectype '|]'              { let l = $1 <^^> $3 <** [$1,$3] in BracketExp l $ TypeBracket l $2 }
 >       | '[d|' open topdecls close '|]'    { let l = $1 <^^> $5 <** ($1:snd $3 ++ [$5])
 >                                             in BracketExp l $ DeclBracket ($1 <^^> $5 <** ($2:snd $3 ++ [$4,$5])) (fst $3) }
+>       | VARQUOTE '(' ')'              { let {l1 = $1 <^^> $3 <** [$1];
+>                                              l2 = $2 <^^> $3 <** [$2,$3];}
+>                                          in VarQuote l1 (unit_con_name l2) }
 >       | VARQUOTE qvar                 { VarQuote (nIS $1 <++> ann $2 <** [$1]) $2 }
 >       | VARQUOTE qcon                 { VarQuote (nIS $1 <++> ann $2 <** [$1]) $2 }
 >       | TYPQUOTE tyvar                { TypQuote (nIS $1 <++> ann $2 <** [$1]) (UnQual (ann $2) $2) }
