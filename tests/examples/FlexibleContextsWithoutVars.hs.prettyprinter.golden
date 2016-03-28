@@ -1,0 +1,5 @@
+{-# LANGUAGE FlexibleContexts #-}
+module Main (main) where
+
+f :: Log.Stack => a -> a
+f = id

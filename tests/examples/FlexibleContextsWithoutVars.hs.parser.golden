@@ -1,0 +1,178 @@
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan =
+            SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 1 1 4 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 1 1 1 1
+            , SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 2 1 2 1
+            , SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 2 1 2 1
+            , SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 2 1 2 1
+            , SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 3 1 3 1
+            , SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 4 1 4 1
+            , SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 4 1 4 1
+            ]
+        }
+      Nothing
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 1 1 1 34
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 1 1 1 13
+                , SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 1 31 1 34
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 1 14 1 30
+                , srcInfoPoints = []
+                }
+              "FlexibleContexts"
+          ]
+      ]
+      []
+      [ TypeSig
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 2 1 2 25
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 2 3 2 5 ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 2 1 2 2
+                , srcInfoPoints = []
+                }
+              "f"
+          ]
+          (TyForall
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 2 6 2 25
+               , srcInfoPoints = []
+               }
+             Nothing
+             (Just
+                (CxSingle
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 2 6 2 18
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 2 16 2 18
+                         ]
+                     }
+                   (ClassA
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 2 6 2 18
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 2 16 2 18
+                            ]
+                        }
+                      (Qual
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 2 6 2 15
+                           , srcInfoPoints = []
+                           }
+                         (ModuleName
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 2 6 2 15
+                              , srcInfoPoints = []
+                              }
+                            "Log")
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 2 6 2 15
+                              , srcInfoPoints = []
+                              }
+                            "Stack"))
+                      [])))
+             (TyFun
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 2 19 2 25
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 2 21 2 23
+                      ]
+                  }
+                (TyVar
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 2 19 2 20
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 2 19 2 20
+                        , srcInfoPoints = []
+                        }
+                      "a"))
+                (TyVar
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 2 24 2 25
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 2 24 2 25
+                        , srcInfoPoints = []
+                        }
+                      "a"))))
+      , PatBind
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 3 1 3 7
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 3 1 3 2
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 3 1 3 2
+                  , srcInfoPoints = []
+                  }
+                "f"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 3 3 3 7
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 3 3 3 4 ]
+               }
+             (Var
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 3 5 3 7
+                  , srcInfoPoints = []
+                  }
+                (UnQual
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 3 5 3 7
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 3 5 3 7
+                        , srcInfoPoints = []
+                        }
+                      "id"))))
+          Nothing
+      ]
+  , []
+  )
