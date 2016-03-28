@@ -1,0 +1,4 @@
+{-# LANGUAGE QuasiQuotes #-}
+{-# LANGUAGE TemplateHaskell #-}
+module Main (main) where
+unNest n = conP '()

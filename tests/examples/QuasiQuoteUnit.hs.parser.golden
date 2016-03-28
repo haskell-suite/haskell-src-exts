@@ -1,0 +1,139 @@
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteUnit.hs" 1 1 6 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/QuasiQuoteUnit.hs" 1 1 1 1
+            , SrcSpan "tests/examples/QuasiQuoteUnit.hs" 2 1 2 1
+            , SrcSpan "tests/examples/QuasiQuoteUnit.hs" 4 1 4 1
+            , SrcSpan "tests/examples/QuasiQuoteUnit.hs" 4 1 4 1
+            , SrcSpan "tests/examples/QuasiQuoteUnit.hs" 4 1 4 1
+            , SrcSpan "tests/examples/QuasiQuoteUnit.hs" 6 1 6 1
+            , SrcSpan "tests/examples/QuasiQuoteUnit.hs" 6 1 6 1
+            ]
+        }
+      Nothing
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteUnit.hs" 1 1 1 29
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/QuasiQuoteUnit.hs" 1 1 1 13
+                , SrcSpan "tests/examples/QuasiQuoteUnit.hs" 1 26 1 29
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/QuasiQuoteUnit.hs" 1 14 1 25
+                , srcInfoPoints = []
+                }
+              "QuasiQuotes"
+          ]
+      , LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteUnit.hs" 2 1 2 33
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/QuasiQuoteUnit.hs" 2 1 2 13
+                , SrcSpan "tests/examples/QuasiQuoteUnit.hs" 2 30 2 33
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/QuasiQuoteUnit.hs" 2 14 2 29
+                , srcInfoPoints = []
+                }
+              "TemplateHaskell"
+          ]
+      ]
+      []
+      [ FunBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteUnit.hs" 4 1 4 20
+            , srcInfoPoints = []
+            }
+          [ Match
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteUnit.hs" 4 1 4 20
+                , srcInfoPoints = []
+                }
+              (Ident
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteUnit.hs" 4 1 4 7
+                   , srcInfoPoints = []
+                   }
+                 "unNest")
+              [ PVar
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteUnit.hs" 4 8 4 9
+                    , srcInfoPoints = []
+                    }
+                  (Ident
+                     SrcSpanInfo
+                       { srcInfoSpan = SrcSpan "tests/examples/QuasiQuoteUnit.hs" 4 8 4 9
+                       , srcInfoPoints = []
+                       }
+                     "n")
+              ]
+              (UnGuardedRhs
+                 SrcSpanInfo
+                   { srcInfoSpan =
+                       SrcSpan "tests/examples/QuasiQuoteUnit.hs" 4 10 4 20
+                   , srcInfoPoints =
+                       [ SrcSpan "tests/examples/QuasiQuoteUnit.hs" 4 10 4 11 ]
+                   }
+                 (App
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/QuasiQuoteUnit.hs" 4 12 4 20
+                      , srcInfoPoints = []
+                      }
+                    (Var
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/QuasiQuoteUnit.hs" 4 12 4 16
+                         , srcInfoPoints = []
+                         }
+                       (UnQual
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/QuasiQuoteUnit.hs" 4 12 4 16
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/QuasiQuoteUnit.hs" 4 12 4 16
+                               , srcInfoPoints = []
+                               }
+                             "conP")))
+                    (VarQuote
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/QuasiQuoteUnit.hs" 4 17 4 20
+                         , srcInfoPoints =
+                             [ SrcSpan "tests/examples/QuasiQuoteUnit.hs" 4 17 4 18 ]
+                         }
+                       (Special
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/QuasiQuoteUnit.hs" 4 18 4 20
+                            , srcInfoPoints =
+                                [ SrcSpan "tests/examples/QuasiQuoteUnit.hs" 4 18 4 19
+                                , SrcSpan "tests/examples/QuasiQuoteUnit.hs" 4 19 4 20
+                                ]
+                            }
+                          (UnitCon
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/QuasiQuoteUnit.hs" 4 18 4 20
+                               , srcInfoPoints =
+                                   [ SrcSpan "tests/examples/QuasiQuoteUnit.hs" 4 18 4 19
+                                   , SrcSpan "tests/examples/QuasiQuoteUnit.hs" 4 19 4 20
+                                   ]
+                               })))))
+              Nothing
+          ]
+      ]
+  , []
+  )
