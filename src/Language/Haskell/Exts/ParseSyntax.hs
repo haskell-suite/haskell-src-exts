@@ -375,13 +375,3 @@ instance Annotated PAsst where
         EqualP l t1 t2      -> EqualP (f l) t1 t2
         ParenA l a          -> ParenA (f l) a
         WildCardA l mn      -> WildCardA (f l) mn
-
-
-unit_tycon, fun_tycon, list_tycon, unboxed_singleton_tycon :: l -> PType l
-unit_tycon              l = TyCon l (unit_tycon_name l)
-fun_tycon               l = TyCon l (fun_tycon_name l)
-list_tycon              l = TyCon l (list_tycon_name l)
-unboxed_singleton_tycon l = TyCon l (unboxed_singleton_tycon_name l)
-
-tuple_tycon :: l -> Boxed -> Int -> PType l
-tuple_tycon l b i         = TyCon l (tuple_tycon_name l b i)
