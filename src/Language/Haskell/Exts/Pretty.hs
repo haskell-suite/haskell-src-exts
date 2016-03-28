@@ -1266,13 +1266,13 @@ instance Pretty QOp where
 
 ppQNameInfix :: QName -> Doc
 ppQNameInfix name
-        | isSymbolName (getName name) = ppQName name
+        | isSymbolQName name = ppQName name
         | otherwise = char '`' <> ppQName name <> char '`'
 
 instance Pretty QName where
         pretty name = case name of
                 UnQual (Symbol ('#':_)) -> char '(' <+> ppQName name <+> char ')'
-                _ -> parensIf (isSymbolName (getName name)) (ppQName name)
+                _ -> parensIf (isSymbolQName name) (ppQName name)
 
 ppQName :: QName -> Doc
 ppQName (UnQual name) = ppName name
@@ -1319,16 +1319,16 @@ isSymbolName :: Name -> Bool
 isSymbolName (Symbol _) = True
 isSymbolName _ = False
 
+isSymbolQName :: QName -> Bool
+isSymbolQName (UnQual n)       = isSymbolName n
+isSymbolQName (Qual _ n)       = isSymbolName n
+isSymbolQName (Special Cons)   = True
+isSymbolQName (Special FunCon) = True
+isSymbolQName _                = False
+
 getSpecialName :: QName -> Maybe SpecialCon
 getSpecialName (Special n) = Just n
 getSpecialName _           = Nothing
-
-getName :: QName -> Name
-getName (UnQual s) = s
-getName (Qual _ s) = s
-getName (Special Cons) = Symbol ":"
-getName (Special FunCon) = Symbol "->"
-getName (Special s) = Ident (specialName s)
 
 specialName :: SpecialCon -> String
 specialName UnitCon = "()"
