@@ -1277,7 +1277,7 @@ instance Pretty QName where
 ppQName :: QName -> Doc
 ppQName (UnQual name) = ppName name
 ppQName (Qual m name) = pretty m <> char '.' <> ppName name
-ppQName (Special sym) = text (specialName sym)
+ppQName (Special sym) = pretty sym
 
 instance Pretty Op where
         pretty (VarOp n) = ppNameInfix n
