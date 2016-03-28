@@ -204,7 +204,8 @@ checkAssertion (TyPred _ p@(EqualP _ _ _)) = return p
 checkAssertion t' = checkAssertion' id [] t'
     where   -- class assertions must have at least one argument
             checkAssertion' fl ts (TyCon l c) = do
-                when (length ts /= 1) $ checkEnabled MultiParamTypeClasses
+                when (length ts > 1) $ checkEnabled MultiParamTypeClasses
+                when (length ts < 1) $ checkEnabled FlexibleContexts
                 checkAndWarnTypeOperators c
                 return $ ClassA (fl l) c ts
             checkAssertion' fl ts (TyApp l a t) =
