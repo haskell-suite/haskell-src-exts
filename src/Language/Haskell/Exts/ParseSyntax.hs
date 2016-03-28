@@ -25,12 +25,10 @@ data PExp l
                                             --   the last statement in the list
                                             --   should be an expression.
     | MDo l [Stmt l]                        -- ^ @mdo@-expression
---    | Tuple [PExp]                        -- ^ tuple expression
     | TupleSection l Boxed [Maybe (PExp l)] -- ^ tuple section expression, e.g. @(,,3)@
     | List l [PExp l]                       -- ^ list expression
     | ParArray l [PExp l]                   -- ^ parallel array expression
     | Paren l (PExp l)                      -- ^ parenthesized expression
---     RightSection QOp PExp                -- ^ right section @(@/qop/ /exp/@)@
     | RecConstr l (QName l) [PFieldUpdate l]
                                             -- ^ record construction expression
     | RecUpdate l (PExp l) [PFieldUpdate l]
