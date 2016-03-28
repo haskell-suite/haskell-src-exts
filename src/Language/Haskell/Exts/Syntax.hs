@@ -404,6 +404,7 @@ data InstDecl
 data BangType
      = BangedTy    -- ^ strict component, marked with \"@!@\"
      | UnpackedTy  -- ^ unboxed component, marked with an UNPACK pragma
+     | NoUnpackedTy -- ^ boxed component, marked with a NOUNPACK pragma
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 -- | The right hand side of a function binding, pattern binding, or a case

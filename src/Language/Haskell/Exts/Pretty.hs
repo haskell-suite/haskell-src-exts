@@ -832,6 +832,7 @@ ppField (names, ty) =
 instance Pretty BangType where
         pretty BangedTy   = char '!'
         pretty UnpackedTy = text "{-# UNPACK #-}" <+> char '!'
+        pretty NoUnpackedTy = text "{-# NOUNPACK #-}" <+> char '!'
 
 ppDeriving :: [Deriving] -> Doc
 ppDeriving []  = empty
