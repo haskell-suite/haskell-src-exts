@@ -153,7 +153,7 @@ printStrs = printSeq . map (pos *** printString)
 printPoints :: SrcSpanInfo -> [String] -> EP ()
 printPoints l = printStrs . zip (srcInfoPoints l)
 
-printInterleaved, printInterleaved' :: (Annotated ast, ExactP ast, SrcInfo loc) => [(loc, String)] -> [ast SrcSpanInfo] -> EP ()
+printInterleaved, printInterleaved' :: (ExactP ast, SrcInfo loc) => [(loc, String)] -> [ast SrcSpanInfo] -> EP ()
 printInterleaved sistrs asts = printSeq $
     interleave (map (pos *** printString ) sistrs)
                (map (pos . ann &&& exactP) asts)
@@ -177,7 +177,7 @@ interleave (x:xs) (y:ys) = x:y: interleave xs ys
 maybeEP :: (a -> EP ()) -> Maybe a -> EP ()
 maybeEP = maybe (return ())
 
-bracketList :: (Annotated ast, ExactP ast) => (String, String, String) -> [SrcSpan] -> [ast SrcSpanInfo] -> EP ()
+bracketList :: (ExactP ast) => (String, String, String) -> [SrcSpan] -> [ast SrcSpanInfo] -> EP ()
 bracketList (a,b,c) poss asts = printInterleaved (pList poss (a,b,c)) asts
 
 pList :: [a] -> (b, b, b) -> [(a, b)]
@@ -188,14 +188,14 @@ pList' [] _ = []
 pList' [p] (_,c) = [(p,c)]
 pList' (p:ps) (b,c) = (p, b) : pList' ps (b,c)
 
-parenList, squareList, squareColonList, curlyList, parenHashList :: (Annotated ast, ExactP ast) => [SrcSpan] -> [ast SrcSpanInfo] -> EP ()
+parenList, squareList, squareColonList, curlyList, parenHashList :: (ExactP ast) => [SrcSpan] -> [ast SrcSpanInfo] -> EP ()
 parenList = bracketList ("(",",",")")
 squareList = bracketList ("[",",","]")
 squareColonList = bracketList ("[:",",",":]")
 curlyList = bracketList ("{",",","}")
 parenHashList = bracketList ("(#",",","#)")
 
-layoutList :: (Functor ast, Show (ast ()), Annotated ast, ExactP ast) => [SrcSpan] -> [ast SrcSpanInfo] -> EP ()
+layoutList :: (ExactP ast) => [SrcSpan] -> [ast SrcSpanInfo] -> EP ()
 layoutList poss asts = printStreams
         (map (pos *** printString) $ lList poss)
         (map (pos . ann &&& exactP) asts)

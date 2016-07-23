@@ -1142,7 +1142,7 @@ checkTyVar n = do
 
 -- ConstraintKinds allow the kind "Constraint", but not "Nat", etc. Specifically
 -- test for that.
-checkKind :: Show l => Kind l -> P ()
+checkKind :: Kind l -> P ()
 checkKind k = case k of
         KindVar _ q | constrKind q -> checkEnabledOneOf [ConstraintKinds, DataKinds]
             where constrKind name = case name of
@@ -1274,7 +1274,11 @@ mkEThingWith loc qn mcns = do
     wc :: EWildcard L
     wc = maybe (NoWildcard noSrcSpan)
                (\(n,Left s) -> EWildcard (noInfoSpan s) n)
-               (findWithIndex 0 isLeft mcns)
+               (findWithIndex 0 checkLeft mcns)
+
+    checkLeft :: Either a b -> Bool
+    checkLeft (Left _) = True
+    checkLeft _ = False
 
     cnames = rights mcns
 
