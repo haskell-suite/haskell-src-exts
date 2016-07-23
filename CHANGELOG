@@ -1,6 +1,10 @@
 1.17.1 --> 1.18.0
 ===================
 
+* Remove simplified AST
+* GHC 8.0 update: Overloaded labels, type applications, pattern synonym
+extensions, StrictData, injective type families
+
 AST changes:
 
 * Add TyQuasiQuote (#279).
@@ -10,6 +14,8 @@ Other changes:
 * Only treat 'role' as a keyword in certain contexts (#286).
 * Prettyprint '!' in patterns correctly when BangPatterns are enabled (#287).
 * Parse magic hash with multiple trailing hashes (#300).
+* Apply fixities inside pattern synonym builders
+* Fix lexing of idents with multiple trailing #
 
 ** 1.17.x
 
@@ -177,16 +183,16 @@ with GHC 7.8.
 
 * Modernize the Extension datatype in L.H.E.Extension, following the lead
   of Cabal, to allow negative and positive extension modifiers (turning
-  features on and off). You need to worry about backwards-incompatible 
+  features on and off). You need to worry about backwards-incompatible
   changes if any of the following pertains to you:
   1) If you use the Extension datatype programmatically - it has changed
      significantly (see documentation).
   2) The ParseMode record now has one more field
      (baseLanguage :: Language), which might give you a type error.
   3) The behavior of the (extensions :: [Extension]) field has changed,
-     which could bite you if you pass custom extensions in the ParseMode. 
-     Previously, the ParseMode defaulted to the list of extensions accepted 
-     by Haskell2010, and if you set the list explicitly you would override 
+     which could bite you if you pass custom extensions in the ParseMode.
+     Previously, the ParseMode defaulted to the list of extensions accepted
+     by Haskell2010, and if you set the list explicitly you would override
      this. Now, the defaults are { baseLanguage = Haskell2010, extensions = [] },
      and explicitly setting a list of extensions will be interpreted on top of
      Haskell2010. See further the documentation for L.H.E.Extension.
@@ -231,7 +237,7 @@ with GHC 7.8.
 
 * Expose Language.Haskell.Exts.Lexer, which implements
   a standalone token stream lexer. The module is
-  re-exported both by Language.Haskell.Exts and by 
+  re-exported both by Language.Haskell.Exts and by
   Language.Haskell.Exts.Annotated.
 
 
@@ -239,12 +245,12 @@ with GHC 7.8.
 ===============
 
 * Fix bug where operators starting with # written in
-  parentheses would not be parsed when UnboxedTuples is 
+  parentheses would not be parsed when UnboxedTuples is
   turned on. Now works.
 
-* Allow 'family' and 'forall' as (non-type) varid's. This 
-  adds one more shift/reduce conflict to the parser, and 
-  its resolution means that '{-# RULES "name" forall = ... #-}' 
+* Allow 'family' and 'forall' as (non-type) varid's. This
+  adds one more shift/reduce conflict to the parser, and
+  its resolution means that '{-# RULES "name" forall = ... #-}'
   is not allowed.
 
 * Complete the set of FFI calling conventions from the Haskell
@@ -405,12 +411,12 @@ with GHC 7.8.
 1.9.3 --> 1.9.4
 ===============
 
-* Pretty-printer now inserts parentheses in clever places when 
+* Pretty-printer now inserts parentheses in clever places when
   printing kinds.
 
 * Pretty-printing expressions is now far more accurate in inserting
   (and not inserting) parentheses when needed.
-  
+
 * Pretty-printing negative expressions no longer inserts a superfluous
   space between the - and the expression.
 
@@ -476,11 +482,11 @@ with GHC 7.8.
 
 * Export knownExtensions from .Extension.
 
-* Remove support for CFILES and INCLUDE pragmas. The support wasn't 
-  correct anyway, as it assumed the pragmas appeared at the top of 
-  files. As CFILES/INCLUDE pragmas can (and do) appear anywhere, 
-  there's no hope to support them in the AST. Better to remove the 
-  support altogether. Files with CFILES/INCLUDE pragmas can still 
+* Remove support for CFILES and INCLUDE pragmas. The support wasn't
+  correct anyway, as it assumed the pragmas appeared at the top of
+  files. As CFILES/INCLUDE pragmas can (and do) appear anywhere,
+  there's no hope to support them in the AST. Better to remove the
+  support altogether. Files with CFILES/INCLUDE pragmas can still
   be parsed of course, but those pragmas will be handled as comments.
 
 * Parsing with ignoreLinePragmas = False now correctly updates the
@@ -490,7 +496,7 @@ with GHC 7.8.
   declarations. The InsInline constructor is removed, and is now
   represented by InsDecl (InlineSig ...).
 
-* Fix a bug with line numbering and quasi quotes, and a similar one 
+* Fix a bug with line numbering and quasi quotes, and a similar one
   with line numbering and CDATA.
 
 * Fix a few minor bugs in the exactPrinter.
@@ -514,21 +520,21 @@ with GHC 7.8.
 ===============
 
 * Operators defined on the form
-  
+
      (a `op` b) c = ...
-  
-  could not be handled by the (annotated) AST, nor the parser. I had to 
+
+  could not be handled by the (annotated) AST, nor the parser. I had to
   change the definition of the AST node for InfixMatch to allow a list
   of right-hand subpatterns, i.e.
-  
+
      InfixMatch l (Pat l) (Name l) (Pat l) ...
-  
+
   has become
-  
+
      InfixMatch l (Pat l) (Name l) [Pat l] ...
 
   I also had an epiphany and fixed the issue that would arise with
-  exact printing of prefix definitions including parentheses, so 
+  exact printing of prefix definitions including parentheses, so
   that now works too!
 
 ** 1.6.x
