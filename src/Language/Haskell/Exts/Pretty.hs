@@ -1270,8 +1270,8 @@ instance Pretty (SpecialCon l) where
         pretty (UnitCon {})         = text "()"
         pretty (ListCon {})         = text "[]"
         pretty (FunCon  {})         = text "->"
-        pretty (TupleCon _ b n)   = listFun $ replicate (n-1) comma
-          where listFun = if b == Unboxed then hashParenList else parenList
+        pretty (TupleCon _ b n)   = listFun $ foldr (<>) empty (replicate (n-1) comma)
+          where listFun = if b == Unboxed then hashParens else parens
         pretty (Cons {})             = text ":"
         pretty (UnboxedSingleCon {}) = text "(# #)"
 
@@ -1385,8 +1385,11 @@ parenList = parens . myFsepSimple . punctuate comma
 
 hashParenList :: [Doc] -> Doc
 hashParenList = hashParens . myFsepSimple . punctuate comma
-  where hashParens = parens . hashes
-        hashes doc = char '#' <+> doc <+> char '#'
+
+hashParens :: Doc -> Doc
+hashParens = parens . hashes
+  where
+    hashes doc = char '#' <+> doc <+> char '#'
 
 braceList :: [Doc] -> Doc
 braceList = braces . myFsepSimple . punctuate comma
