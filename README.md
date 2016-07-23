@@ -16,38 +16,18 @@ Package structure
 -----------------
 
 The modules that comprise haskell-src-exts all reside in the hierarchic
-namespace Language.Haskell.Exts, or its more feature-rich sibling
-Language.Haskell.Exts.Annotated. Notable exposed modules include:
+namespace Language.Haskell.Exts. Notable exposed modules include:
 
-* `Language.Haskell.Exts[.Annotated]` - Imports and re-exports all the below,
+* `Language.Haskell.Exts` - Imports and re-exports all the below,
   and also defines some functions that combine functionality from several
   modules.
-* `Language.Haskell.Exts[.Annotated].Syntax` - The abstract syntax tree
+* `Language.Haskell.Exts.Syntax` - The abstract syntax tree
   that the other modules work on.
-* `Language.Haskell.Exts[.Annotated].Build` - Combinators for building
+* `Language.Haskell.Exts.Build` - Combinators for building
   abstract syntax.
-* `Language.Haskell.Exts[.Annotated].Parser` - Functions for parsing Haskell
+* `Language.Haskell.Exts.Parser` - Functions for parsing Haskell
   source code into an abstract syntax representation.
 
-Non-comprehensive list of supported extensions
-----------------------------------------------
-
-* Multi-parameter type classes (MPTCs)
-* Functional dependencies
-* Associated types, type families
-* Liberal class and instance heads
-* Implicit parameters (ghc and hugs)
-* Explicit kind signatures
-* Pattern guards
-* Generalized algebraic data types (GADTs)
-* Template Haskell (TH)
-* Universal and existential quantification (forall)
-* Empty data type declarations
-* Unboxed tuples `(# #)`
-* Standalone deriving
-* Regular patterns
-* Haskell XML, HSX style
-* Pragmas
 
 License
 -------
