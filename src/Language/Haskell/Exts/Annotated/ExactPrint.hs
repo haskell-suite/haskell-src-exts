@@ -1334,13 +1334,6 @@ instance ExactP BangType where
           printStringAt (pos b) "#-}"
           printStringAt (pos c) "!"
        _ -> errorEP "ExactP: BangType: UnpackedTy is given wrong number of srcInfoPoints"
-    NoUnpackedTy l  ->
-      case srcInfoPoints l of
-       [a,b,c] -> do
-          printStringAt (pos a) "{-# NOUNPACK"
-          printStringAt (pos b) "#-}"
-          printStringAt (pos c) "!"
-       _ -> errorEP "ExactP: BangType: NoUnpackedTy is given wrong number of srcInfoPoints"
 
 instance ExactP Splice where
   exactP (IdSplice _ str) = printString $ '$':str

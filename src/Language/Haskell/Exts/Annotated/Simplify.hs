@@ -327,7 +327,6 @@ sBangType :: SrcInfo l => BangType l -> S.BangType
 sBangType bt = case bt of
     BangedTy   _  -> S.BangedTy
     UnpackedTy _  -> S.UnpackedTy
-    NoUnpackedTy _ -> S.NoUnpackedTy
 
 sRhs :: SrcInfo loc => Rhs loc -> S.Rhs
 sRhs (UnGuardedRhs _ e) = S.UnGuardedRhs (sExp e)

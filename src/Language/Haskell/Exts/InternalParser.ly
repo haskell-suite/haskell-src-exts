@@ -267,7 +267,6 @@ Pragmas
 >       '{-# DEPRECATED'        { Loc $$ DEPRECATED }
 >       '{-# WARNING'           { Loc $$ WARNING }
 >       '{-# UNPACK'            { Loc $$ UNPACK }
->       '{-# NOUNPACK'          { Loc $$ NOUNPACK }
 >       '{-# OPTIONS'           { Loc _ (OPTIONS _) }
        '{-# CFILES'            { Loc _ (CFILES  _) }
        '{-# INCLUDE'           { Loc _ (INCLUDE _) }
@@ -907,8 +906,9 @@ the (# and #) lexemes. Kinds will be handled at the kind rule.
 > atype :: { PType L }
 >       : gtycon                        { TyCon   (ann $1) $1 }
 >       | tyvar                         {% checkTyVar $1 }
->       | strict_mark atype             { let (annot, locs) = $1
->                                          in bangType (nIS (head locs) <++> ann $2) annot $2 }
+>       | strict_mark atype             { let (bangOrPack, locs) = $1
+>                                           in let annot = if bangOrPack then (BangedTy (nIS (last locs) <** locs)) else UnpackedTy (nIS (head locs) <++> nIS (last locs) <** locs)
+>                                            in bangType (nIS (head locs) <++> ann $2) annot $2 }
 >       | '(' types ')'                 { TyTuple ($1 <^^> $3 <** ($1:reverse ($3:snd $2))) Boxed   (reverse (fst $2)) }
 >       | '(#' types1 '#)'              { TyTuple ($1 <^^> $3 <** ($1:reverse ($3:snd $2))) Unboxed (reverse (fst $2)) }
 >       | '[' type ']'                  { TyList  ($1 <^^> $3 <** [$1,$3]) $2 }
@@ -932,10 +932,9 @@ the (# and #) lexemes. Kinds will be handled at the kind rule.
 >       | INT                           { let Loc l (IntTok  (i,raw)) = $1 in PromotedInteger (nIS l) i raw }
 >       | STRING                        { let Loc l (StringTok (s,raw)) = $1 in PromotedString (nIS l) s raw }
 
-> strict_mark :: { (BangType L, [S]) }
->        : '!'                           { (BangedTy ((nIS $1) <** [$1]), [$1]) }
->        | '{-# UNPACK' '#-}' '!'        { let l = [$1,$2,$3] in (UnpackedTy (nIS $1 <++> nIS $3 <** l), l) }
->        | '{-# NOUNPACK' '#-}' '!'      { let l = [$1,$2,$3] in (NoUnpackedTy (nIS $1 <++> nIS $3 <** l), l) }
+> strict_mark :: { (Bool, [S]) }
+>        : '!'                           { (True, [$1]) }
+>        | '{-# UNPACK' '#-}' '!'        { (False, [$1,$2,$3]) }
 
 
 > gtycon :: { QName L }

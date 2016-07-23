@@ -565,7 +565,6 @@ data InstDecl l
 data BangType l
      = BangedTy   l -- ^ strict component, marked with \"@!@\"
      | UnpackedTy l -- ^ unboxed component, marked with an UNPACK pragma
-     | NoUnpackedTy l -- ^ boxed component, marked with a NOUNPACK pragma
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | The right hand side of a function binding, pattern binding, or a case
@@ -1389,10 +1388,8 @@ instance Annotated InstDecl where
 instance Annotated BangType where
      ann (BangedTy   l)    = l
      ann (UnpackedTy l)    = l
-     ann (NoUnpackedTy l)  = l
      amap f (BangedTy   l) = BangedTy (f l)
      amap f (UnpackedTy l) = UnpackedTy (f l)
-     amap f (NoUnpackedTy l) = NoUnpackedTy (f l)
 
 instance Annotated Rhs where
      ann (UnGuardedRhs l _) = l
