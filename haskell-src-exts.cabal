@@ -8,22 +8,9 @@ Maintainer:             Niklas Broberg <niklas.broberg@chalmers.se>, Roman Chepl
 Category:               Language
 Synopsis:               Manipulating Haskell source: abstract syntax, lexer, parser, and pretty-printer
 Description:            Haskell-Source with Extensions (HSE, haskell-src-exts)
-                        is an extension of the standard haskell-src package,
-                        and handles most registered syntactic extensions to Haskell, including:
+                        is a standalone parser for Haskell. In addition to
+                        standard Haskell, all extensions implemented in GHC are supported.
                         .
-                        * Multi-parameter type classes with functional dependencies
-                        .
-                        * Indexed type families (including associated types)
-                        .
-                        * Empty data declarations
-                        .
-                        * GADTs
-                        .
-                        * Implicit parameters
-                        .
-                        * Template Haskell
-                        .
-                        and a few more. All extensions implemented in GHC are supported.
                         Apart from these standard extensions,
                         it also handles regular patterns as per the HaRP extension
                         as well as HSX-style embedded XML syntax.
@@ -34,7 +21,7 @@ Tested-With:              GHC == 7.4.2
                         , GHC == 7.6.3
                         , GHC == 7.8.2
                         , GHC == 7.10.3
-                        , GHC == 8.1
+                        , GHC == 8.0.1
 
 Extra-Source-Files:
                         README.md
