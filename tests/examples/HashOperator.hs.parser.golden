@@ -1,0 +1,237 @@
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 1 1 7 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/HashOperator.hs" 1 1 1 1
+            , SrcSpan "tests/examples/HashOperator.hs" 3 1 3 1
+            , SrcSpan "tests/examples/HashOperator.hs" 3 1 3 1
+            , SrcSpan "tests/examples/HashOperator.hs" 3 1 3 1
+            , SrcSpan "tests/examples/HashOperator.hs" 4 1 4 1
+            , SrcSpan "tests/examples/HashOperator.hs" 6 1 6 1
+            , SrcSpan "tests/examples/HashOperator.hs" 7 1 7 1
+            , SrcSpan "tests/examples/HashOperator.hs" 7 1 7 1
+            ]
+        }
+      Nothing
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 1 1 1 34
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/HashOperator.hs" 1 1 1 13
+                , SrcSpan "tests/examples/HashOperator.hs" 1 31 1 34
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 1 14 1 30
+                , srcInfoPoints = []
+                }
+              "OverloadedLabels"
+          ]
+      ]
+      []
+      [ TypeSig
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 3 1 3 26
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/HashOperator.hs" 3 6 3 8 ]
+            }
+          [ Symbol
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 3 1 3 5
+                , srcInfoPoints =
+                    [ SrcSpan "tests/examples/HashOperator.hs" 3 1 3 2
+                    , SrcSpan "tests/examples/HashOperator.hs" 3 2 3 4
+                    , SrcSpan "tests/examples/HashOperator.hs" 3 4 3 5
+                    ]
+                }
+              "#."
+          ]
+          (TyFun
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 3 9 3 26
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/HashOperator.hs" 3 13 3 15 ]
+               }
+             (TyCon
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 3 9 3 12
+                  , srcInfoPoints = []
+                  }
+                (UnQual
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 3 9 3 12
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 3 9 3 12
+                        , srcInfoPoints = []
+                        }
+                      "Int")))
+             (TyFun
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 3 16 3 26
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/HashOperator.hs" 3 20 3 22 ]
+                  }
+                (TyCon
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 3 16 3 19
+                     , srcInfoPoints = []
+                     }
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 3 16 3 19
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 3 16 3 19
+                           , srcInfoPoints = []
+                           }
+                         "Int")))
+                (TyCon
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 3 23 3 26
+                     , srcInfoPoints = []
+                     }
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 3 23 3 26
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 3 23 3 26
+                           , srcInfoPoints = []
+                           }
+                         "Int")))))
+      , FunBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 4 1 4 15
+            , srcInfoPoints = []
+            }
+          [ InfixMatch
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 4 1 4 15
+                , srcInfoPoints = []
+                }
+              (PVar
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 4 1 4 2
+                   , srcInfoPoints = []
+                   }
+                 (Ident
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 4 1 4 2
+                      , srcInfoPoints = []
+                      }
+                    "x"))
+              (Symbol
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 4 3 4 5
+                   , srcInfoPoints = []
+                   }
+                 "#.")
+              [ PVar
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 4 6 4 7
+                    , srcInfoPoints = []
+                    }
+                  (Ident
+                     SrcSpanInfo
+                       { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 4 6 4 7
+                       , srcInfoPoints = []
+                       }
+                     "y")
+              ]
+              (UnGuardedRhs
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 4 8 4 15
+                   , srcInfoPoints =
+                       [ SrcSpan "tests/examples/HashOperator.hs" 4 8 4 9 ]
+                   }
+                 (InfixApp
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 4 10 4 15
+                      , srcInfoPoints = []
+                      }
+                    (Var
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 4 10 4 11
+                         , srcInfoPoints = []
+                         }
+                       (UnQual
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 4 10 4 11
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 4 10 4 11
+                               , srcInfoPoints = []
+                               }
+                             "x")))
+                    (QVarOp
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 4 12 4 13
+                         , srcInfoPoints = []
+                         }
+                       (UnQual
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 4 12 4 13
+                            , srcInfoPoints = []
+                            }
+                          (Symbol
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 4 12 4 13
+                               , srcInfoPoints = []
+                               }
+                             "+")))
+                    (Var
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 4 14 4 15
+                         , srcInfoPoints = []
+                         }
+                       (UnQual
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 4 14 4 15
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 4 14 4 15
+                               , srcInfoPoints = []
+                               }
+                             "y")))))
+              Nothing
+          ]
+      , InfixDecl
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 6 1 6 12
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/HashOperator.hs" 6 8 6 9 ]
+            }
+          (AssocRight
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 6 1 6 7
+               , srcInfoPoints = []
+               })
+          (Just 9)
+          [ VarOp
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 6 10 6 12
+                , srcInfoPoints = []
+                }
+              (Symbol
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/HashOperator.hs" 6 10 6 12
+                   , srcInfoPoints = []
+                   }
+                 "#.")
+          ]
+      ]
+  , []
+  )

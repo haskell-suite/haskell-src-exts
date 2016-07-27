@@ -746,7 +746,8 @@ lexStdToken = do
                                                   then discard 1 >> return At
                                                   else discard 1 >> return TApp
 
-        '#':_ | OverloadedLabels `elem` exts -> do
+        '#':c:_ | OverloadedLabels `elem` exts
+                   && isLower c              -> do
                                                   discard 1
                                                   [ident] <- lexIdents
                                                   return $ LabelVarId ident
