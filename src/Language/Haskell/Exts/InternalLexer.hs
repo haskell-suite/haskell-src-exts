@@ -351,6 +351,12 @@ isHSymbol c = c `elem` ":!#%&*./?@\\-" || ((isSymbol c || isPunctuation c) && no
 
 isPragmaChar c = isAlphaNum c || c == '_'
 
+-- Used in the lexing of type applications
+-- Why is it like this? I don't know exactly but this is how it is in
+-- GHC's parser.
+isOpSymbol :: Char -> Bool
+isOpSymbol c = c `elem` "!#$%&*+./<=>?@\\^|-~"
+
 -- | Checks whether the character would be legal in some position of a qvar.
 --   Means that '..' and "AAA" will pass the test.
 isPossiblyQvar :: Char -> Bool
@@ -740,9 +746,11 @@ lexStdToken = do
 
         -- Lexed seperately to deal with visible type applciation
 
-        '@':_ | TypeApplications `elem` exts -> do
-                                                c <- getLastChar
-                                                if isIdent c
+        '@':c:_ | TypeApplications `elem` exts
+                   -- Operator starting with an '@'
+                   && not (isOpSymbol c) -> do
+                                                lc <- getLastChar
+                                                if isIdent lc
                                                   then discard 1 >> return At
                                                   else discard 1 >> return TApp
 
