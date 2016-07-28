@@ -1312,7 +1312,7 @@ instance  Pretty (Asst l) where
 -- Pretty print a source location, useful for printing out error messages
 instance Pretty SrcLoc where
   pretty srcLoc =
-    return $ P.hsep [ colonFollow (P.text $ srcFilename srcLoc)
+    return $ P.hcat [ colonFollow (P.text $ srcFilename srcLoc)
                     , colonFollow (P.int  $ srcLine     srcLoc)
                     , P.int $ srcColumn srcLoc
                     ]
