@@ -90,4 +90,4 @@ Test-Suite test
                        tasty-golden >= 2.2.2,
                        filepath,
                        directory,
-                       pretty-show
+                       pretty-show >= 1.6.10
