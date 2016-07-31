@@ -581,9 +581,9 @@ data BangType l
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 data Unpackedness l
-    = Unpack l -- {-# UNPACK #-}
-    | NoUnpack l -- {-# NOUNPACK #-}
-    | NoUnpackPragma l -- No pragma
+    = Unpack l -- ^ \"@{-\# UNPACK \#-}@\"
+    | NoUnpack l -- ^ \"@{-\# NOUNPACK \#-}@\"
+    | NoUnpackPragma l -- ^ No unpack pragma
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | The right hand side of a function binding, pattern binding, or a case
