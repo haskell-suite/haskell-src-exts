@@ -20,9 +20,9 @@ import GHC.Generics (Generic)
 
 -- | A single position in the source.
 data SrcLoc = SrcLoc
-    { srcFilename :: String
-    , srcLine :: Int
-    , srcColumn :: Int
+    { srcFilename :: !String
+    , srcLine :: !Int
+    , srcColumn :: !Int
     }
   deriving (Eq,Ord,Typeable,Data,Generic)
 
@@ -36,11 +36,11 @@ noLoc = SrcLoc "" (-1) (-1)
 
 -- | A portion of the source, spanning one or more lines and zero or more columns.
 data SrcSpan = SrcSpan
-    { srcSpanFilename    :: String
-    , srcSpanStartLine   :: Int
-    , srcSpanStartColumn :: Int
-    , srcSpanEndLine     :: Int
-    , srcSpanEndColumn   :: Int
+    { srcSpanFilename    :: !String
+    , srcSpanStartLine   :: !Int
+    , srcSpanStartColumn :: !Int
+    , srcSpanEndLine     :: !Int
+    , srcSpanEndColumn   :: !Int
     }
   deriving (Eq,Ord,Typeable,Data)
 
