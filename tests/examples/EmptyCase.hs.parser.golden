@@ -1,0 +1,159 @@
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/EmptyCase.hs" 1 1 7 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/EmptyCase.hs" 1 1 1 1
+            , SrcSpan "tests/examples/EmptyCase.hs" 2 1 2 1
+            , SrcSpan "tests/examples/EmptyCase.hs" 4 1 4 1
+            , SrcSpan "tests/examples/EmptyCase.hs" 4 1 4 1
+            , SrcSpan "tests/examples/EmptyCase.hs" 4 1 4 1
+            , SrcSpan "tests/examples/EmptyCase.hs" 6 1 6 1
+            , SrcSpan "tests/examples/EmptyCase.hs" 7 1 7 1
+            , SrcSpan "tests/examples/EmptyCase.hs" 7 1 7 1
+            ]
+        }
+      Nothing
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/EmptyCase.hs" 1 1 1 27
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/EmptyCase.hs" 1 1 1 13
+                , SrcSpan "tests/examples/EmptyCase.hs" 1 24 1 27
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/EmptyCase.hs" 1 14 1 23
+                , srcInfoPoints = []
+                }
+              "EmptyCase"
+          ]
+      , LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/EmptyCase.hs" 2 1 2 28
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/EmptyCase.hs" 2 1 2 13
+                , SrcSpan "tests/examples/EmptyCase.hs" 2 25 2 28
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/EmptyCase.hs" 2 14 2 24
+                , srcInfoPoints = []
+                }
+              "LambdaCase"
+          ]
+      ]
+      []
+      [ FunBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/EmptyCase.hs" 4 1 4 19
+            , srcInfoPoints = []
+            }
+          [ Match
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/EmptyCase.hs" 4 1 4 19
+                , srcInfoPoints = []
+                }
+              (Ident
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/EmptyCase.hs" 4 1 4 2
+                   , srcInfoPoints = []
+                   }
+                 "f")
+              [ PVar
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/EmptyCase.hs" 4 3 4 4
+                    , srcInfoPoints = []
+                    }
+                  (Ident
+                     SrcSpanInfo
+                       { srcInfoSpan = SrcSpan "tests/examples/EmptyCase.hs" 4 3 4 4
+                       , srcInfoPoints = []
+                       }
+                     "x")
+              ]
+              (UnGuardedRhs
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/EmptyCase.hs" 4 5 4 19
+                   , srcInfoPoints = [ SrcSpan "tests/examples/EmptyCase.hs" 4 5 4 6 ]
+                   }
+                 (Case
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/EmptyCase.hs" 4 7 4 19
+                      , srcInfoPoints =
+                          [ SrcSpan "tests/examples/EmptyCase.hs" 4 7 4 11
+                          , SrcSpan "tests/examples/EmptyCase.hs" 4 14 4 16
+                          , SrcSpan "tests/examples/EmptyCase.hs" 4 17 4 18
+                          , SrcSpan "tests/examples/EmptyCase.hs" 4 18 4 19
+                          ]
+                      }
+                    (Var
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/EmptyCase.hs" 4 12 4 13
+                         , srcInfoPoints = []
+                         }
+                       (UnQual
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/EmptyCase.hs" 4 12 4 13
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/EmptyCase.hs" 4 12 4 13
+                               , srcInfoPoints = []
+                               }
+                             "x")))
+                    []))
+              Nothing
+          ]
+      , FunBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/EmptyCase.hs" 6 1 6 15
+            , srcInfoPoints = []
+            }
+          [ Match
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/EmptyCase.hs" 6 1 6 15
+                , srcInfoPoints = []
+                }
+              (Ident
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/EmptyCase.hs" 6 1 6 2
+                   , srcInfoPoints = []
+                   }
+                 "g")
+              [ PVar
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/EmptyCase.hs" 6 3 6 4
+                    , srcInfoPoints = []
+                    }
+                  (Ident
+                     SrcSpanInfo
+                       { srcInfoSpan = SrcSpan "tests/examples/EmptyCase.hs" 6 3 6 4
+                       , srcInfoPoints = []
+                       }
+                     "x")
+              ]
+              (UnGuardedRhs
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/EmptyCase.hs" 6 5 6 15
+                   , srcInfoPoints = [ SrcSpan "tests/examples/EmptyCase.hs" 6 5 6 6 ]
+                   }
+                 (LCase
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/EmptyCase.hs" 6 7 6 15
+                      , srcInfoPoints =
+                          [ SrcSpan "tests/examples/EmptyCase.hs" 6 7 6 8
+                          , SrcSpan "tests/examples/EmptyCase.hs" 6 8 6 12
+                          , SrcSpan "tests/examples/EmptyCase.hs" 6 13 6 14
+                          , SrcSpan "tests/examples/EmptyCase.hs" 6 14 6 15
+                          ]
+                      }
+                    []))
+              Nothing
+          ]
+      ]
+  , []
+  )
