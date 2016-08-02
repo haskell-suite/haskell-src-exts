@@ -949,7 +949,8 @@ instance  Pretty (Exp l) where
                 text "if"
                 $$$ ppBody multiIfIndent (map (pretty . GuardedAlt) alts)
         prettyPrec p (Case _ cond altList) = parensIf (p > 1) $
-                myFsep [text "case", pretty cond, text "of"]
+                myFsep ([text "case", pretty cond, text "of"] ++
+                       if null altList then [text "{", text "}"] else [])
                 $$$ ppBody caseIndent (map pretty altList)
         prettyPrec p (Do _ stmtList) = parensIf (p > 1) $
                 text "do" $$$ ppBody doIndent (map pretty stmtList)
@@ -1045,7 +1046,9 @@ instance  Pretty (Exp l) where
 
         -- LamdaCase
         prettyPrec p (LCase _ altList) = parensIf (p > 1) $
-                text "\\case" $$$ ppBody caseIndent (map pretty altList)
+                myFsep (text "\\case":
+                       if null altList then [text "{", text "}"] else [])
+                $$$ ppBody caseIndent (map pretty altList)
         prettyPrec _ ExprHole{}       = char '_'
         prettyPrec _ (TypeApp _ ty)   = char '@' <> pretty ty
 

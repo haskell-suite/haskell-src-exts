@@ -1704,6 +1704,9 @@ Case alternatives
 >       : '{'  alts '}'                 { (fst $2, $1 <^^> $3, $1:snd $2 ++ [$3])  }
 >       | open alts close               { let l' =  ann . last $ fst $2
 >                                          in (fst $2, nIS $1 <++> l', $1:snd $2 ++ [$3]) }
+>       | '{' '}'                       {% do { checkEnabled EmptyCase;
+>                                               return ([], $1 <^^> $2, [$1, $2]) } }
+
 
 > alts :: { ([Alt L],[S]) }
 >       : optsemis alts1 optsemis       { (reverse $ fst $2, $1 ++ snd $2 ++ $3) }

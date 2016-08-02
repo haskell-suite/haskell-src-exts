@@ -375,6 +375,9 @@ data KnownExtension =
 
   | LambdaCase
 
+  -- | [GHC &#xa7; 7.3.20] Allow case expressions with no alternatives.
+  | EmptyCase
+
   -- | [GHC &#xa7; 7.8.6] Deprecated in GHC 6.12 and will be removed in
   -- GHC 7.  Allow a type variable to be instantiated at a
   -- polymorphic type.
