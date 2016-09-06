@@ -1,0 +1,191 @@
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/ContextOrdering.hs" 1 1 6 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/ContextOrdering.hs" 1 1 1 1
+            , SrcSpan "tests/examples/ContextOrdering.hs" 2 1 2 1
+            , SrcSpan "tests/examples/ContextOrdering.hs" 2 1 2 1
+            , SrcSpan "tests/examples/ContextOrdering.hs" 4 1 4 1
+            , SrcSpan "tests/examples/ContextOrdering.hs" 5 1 5 1
+            , SrcSpan "tests/examples/ContextOrdering.hs" 6 1 6 1
+            , SrcSpan "tests/examples/ContextOrdering.hs" 6 1 6 1
+            ]
+        }
+      (Just
+         (ModuleHead
+            SrcSpanInfo
+              { srcInfoSpan =
+                  SrcSpan "tests/examples/ContextOrdering.hs" 2 1 2 29
+              , srcInfoPoints =
+                  [ SrcSpan "tests/examples/ContextOrdering.hs" 2 1 2 7
+                  , SrcSpan "tests/examples/ContextOrdering.hs" 2 24 2 29
+                  ]
+              }
+            (ModuleName
+               SrcSpanInfo
+                 { srcInfoSpan =
+                     SrcSpan "tests/examples/ContextOrdering.hs" 2 8 2 23
+                 , srcInfoPoints = []
+                 }
+               "ContextOrdering")
+            Nothing
+            Nothing))
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/ContextOrdering.hs" 1 1 1 33
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/ContextOrdering.hs" 1 1 1 13
+                , SrcSpan "tests/examples/ContextOrdering.hs" 1 30 1 33
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/ContextOrdering.hs" 1 14 1 29
+                , srcInfoPoints = []
+                }
+              "ConstraintKinds"
+          ]
+      ]
+      []
+      [ TypeSig
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/ContextOrdering.hs" 4 1 4 22
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/ContextOrdering.hs" 4 5 4 7 ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/ContextOrdering.hs" 4 1 4 4
+                , srcInfoPoints = []
+                }
+              "foo"
+          ]
+          (TyForall
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/ContextOrdering.hs" 4 8 4 22
+               , srcInfoPoints = []
+               }
+             Nothing
+             (Just
+                (CxSingle
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/ContextOrdering.hs" 4 8 4 18
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/ContextOrdering.hs" 4 8 4 9
+                         , SrcSpan "tests/examples/ContextOrdering.hs" 4 14 4 15
+                         , SrcSpan "tests/examples/ContextOrdering.hs" 4 16 4 18
+                         ]
+                     }
+                   (ParenA
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/ContextOrdering.hs" 4 8 4 18
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/ContextOrdering.hs" 4 8 4 9
+                            , SrcSpan "tests/examples/ContextOrdering.hs" 4 14 4 15
+                            , SrcSpan "tests/examples/ContextOrdering.hs" 4 16 4 18
+                            ]
+                        }
+                      (AppA
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/ContextOrdering.hs" 4 9 4 14
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/ContextOrdering.hs" 4 9 4 10
+                              , srcInfoPoints = []
+                              }
+                            "x")
+                         [ TyVar
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/ContextOrdering.hs" 4 11 4 12
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/ContextOrdering.hs" 4 11 4 12
+                                  , srcInfoPoints = []
+                                  }
+                                "m")
+                         , TyVar
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/ContextOrdering.hs" 4 13 4 14
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/ContextOrdering.hs" 4 13 4 14
+                                  , srcInfoPoints = []
+                                  }
+                                "a")
+                         ]))))
+             (TyCon
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/ContextOrdering.hs" 4 19 4 22
+                  , srcInfoPoints = []
+                  }
+                (UnQual
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/ContextOrdering.hs" 4 19 4 22
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/ContextOrdering.hs" 4 19 4 22
+                        , srcInfoPoints = []
+                        }
+                      "Int"))))
+      , PatBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/ContextOrdering.hs" 5 1 5 8
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/ContextOrdering.hs" 5 1 5 4
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/ContextOrdering.hs" 5 1 5 4
+                  , srcInfoPoints = []
+                  }
+                "foo"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/ContextOrdering.hs" 5 5 5 8
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/ContextOrdering.hs" 5 5 5 6 ]
+               }
+             (Lit
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/ContextOrdering.hs" 5 7 5 8
+                  , srcInfoPoints = []
+                  }
+                (Int
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/ContextOrdering.hs" 5 7 5 8
+                     , srcInfoPoints = []
+                     }
+                   5
+                   "5")))
+          Nothing
+      ]
+  , []
+  )

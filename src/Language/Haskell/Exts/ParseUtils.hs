@@ -209,7 +209,7 @@ checkAssertion t' = checkAssertion' id [] t'
                 checkAssertion' (const (fl l)) ts t
             checkAssertion' fl ts (TyVar l t) = do -- Dict :: cxt => Dict cxt
                 checkEnabled ConstraintKinds
-                return $ AppA (fl l) t (reverse ts)
+                return $ AppA (fl l) t ts
             checkAssertion' _ _ (TyWildCard l wc) =
                 return $ WildCardA l wc
             checkAssertion' _ _ _ = fail "Illegal class assertion"
