@@ -368,14 +368,14 @@ checkInstHeader :: PType L -> P (InstRule L)
 checkInstHeader (TyParen l t) = checkInstHeader t >>= return . IParen l
 checkInstHeader (TyForall l mtvs cs t) = do
     cs' <- checkSContext cs
+    checkMultiParam t
     checkInsts (Just l) mtvs cs' t
-checkInstHeader t = checkInsts Nothing Nothing Nothing t
+checkInstHeader t = checkMultiParam t >> checkInsts Nothing Nothing Nothing t
 
 
 checkInsts :: Maybe L -> Maybe [TyVarBind L] -> Maybe (S.Context L) -> PType L -> P (InstRule L)
 checkInsts _ mtvs mctxt (TyParen l t) = checkInsts Nothing mtvs mctxt t >>= return . IParen l
 checkInsts l1 mtvs mctxt t = do
-    checkMultiParam t
     t' <- checkInstsGuts t
     return $ IRule (fromMaybe (fmap ann mctxt <?+> ann t') l1) mtvs mctxt t'
 
