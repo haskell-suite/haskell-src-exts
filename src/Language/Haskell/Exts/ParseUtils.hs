@@ -217,10 +217,10 @@ checkAssertion t' = checkAssertion' id [] t'
 checkMultiParam :: PType L -> P ()
 checkMultiParam = checkMultiParam' []
     where
-        checkMultiParam' ts (TyCon l c) =
+        checkMultiParam' ts (TyCon _ _) =
             when (length ts /= 1) $ checkEnabled MultiParamTypeClasses
         checkMultiParam' ts (TyApp _ a t) = checkMultiParam' (t:ts) a
-        checkMultiParam' ts (TyInfix _ _ _ _) = checkEnabled MultiParamTypeClasses
+        checkMultiParam' _ (TyInfix _ _ _ _) = checkEnabled MultiParamTypeClasses
         checkMultiParam' ts (TyParen _ t) = checkMultiParam' ts t
         checkMultiParam' _ _ = return ()
 
