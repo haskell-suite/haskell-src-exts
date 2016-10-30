@@ -468,6 +468,10 @@ data KnownExtension =
   -- foreign function interface.
   | CApiFFI
 
+  -- | GHCJS FFI extension with convenient import patterns,
+  -- asynchronous FFI and a JSVal FFI type
+  | JavaScriptFFI
+
   -- | [GHC &#xa7; 7.3.27] Enable explicit namespaces in import/export.
   | ExplicitNamespaces
 
