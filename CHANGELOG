@@ -1,3 +1,7 @@
+1.18.2 --> 1.18.3
+===================
+
+* JavaScriptFFI to known extensions
 * Remove space when pretty printing `SrcLoc`. (#307)
 * Don't reverse arguments in a context. (#328)
 
