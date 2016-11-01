@@ -1,4 +1,4 @@
-1.18.2 --> 1.19
+1.18.2 --> 1.19.0
 ===================
 
 * Add JavaScriptFFI to known extensions (#335)
