@@ -269,7 +269,10 @@ data KnownExtension =
   -- | [GHC &#xa7; 7.5.4] Allow a type declared with @newtype@ to use
   -- @deriving@ for any class with an instance for the underlying type.
   | GeneralizedNewtypeDeriving
-
+  
+  -- | [GHC &#xa7; 9.6.10] Allow use of any typeclass in deriving clauses.
+  | DeriveAnyClass
+  
   -- | [Hugs &#xa7; 7.1] Enable the \"Trex\" extensible records system.
   | ExtensibleRecords
 
