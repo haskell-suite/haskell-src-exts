@@ -490,8 +490,10 @@ instance  Pretty (Decl l) where
 
         pretty (FunBind _ matches) = do
                 e <- fmap layout getPPEnv
-                case e of PPOffsideRule -> foldr ($$$) empty (map pretty matches)
-                          _ -> foldr (\x y -> x <> semi <> y) empty (map pretty matches)
+                case e of
+                    PPOffsideRule -> foldr ($$$) empty (map pretty matches)
+                    PPInLine -> foldr ($$$) empty (map pretty matches)
+                    _ -> foldr (\x y -> x <> semi <> y) empty (map pretty matches)
 
         pretty (PatBind _ pat rhs whereBinds) =
                 myFsep [pretty pat, pretty rhs] $$$ ppWhere whereBinds

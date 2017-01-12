@@ -12,6 +12,7 @@ import System.IO
 import Control.Monad.Trans
 import Control.Applicative
 import Extensions
+import Invariants
 import Text.Show.Pretty
 
 
@@ -25,6 +26,7 @@ main = do
     , prettyParserTests sources
     , extensionProperties
     , commentsTests examplesDir
+    , invariantTests
     ]
 
 -- | Where all the tests are to be found
