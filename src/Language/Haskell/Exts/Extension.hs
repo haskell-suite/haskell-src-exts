@@ -153,13 +153,12 @@ data KnownExtension =
   -- | [GHC &#xa7; 7.6.3.5] Allow type signatures in instances.
   | InstanceSigs
 
-  -- | [GHC &#xa7; 7.3.8] Allows recursive bindings in @do@ blocks,
-  -- using the @rec@ keyword.
+  -- | [GHC &#xa7; 7.3.8] Deprecated in GHC.  Allows recursive
+  -- bindings in @do@ blocks, using the @rec@ keyword.
   | DoRec
 
-  -- | [GHC &#xa7; 7.3.8.2] Deprecated in GHC.  Allows recursive bindings
-  -- using @mdo@, a variant of @do@.  @DoRec@ provides a different,
-  -- preferred syntax.
+  -- | [GHC &#xa7; 7.3.8.2] Allows recursive bindings using @mdo@, a
+  -- variant of @do@, and @rec@.
   | RecursiveDo
 
   -- | [GHC &#xa7; 7.3.9] Provide syntax for writing list
@@ -720,4 +719,3 @@ toExtensionList lang exts' =
           go acc (EnableExtension  x : exts) = go (x : acc)           exts
           -- We just throw away UnknownExtensions
           go acc (_ : exts) = go acc exts
-
