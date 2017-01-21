@@ -194,7 +194,6 @@ checkAssertion (TyPred _ p@(EqualP _ _ _)) = return p
 checkAssertion t' = checkAssertion' id [] t'
     where   -- class assertions must have at least one argument
             checkAssertion' fl ts (TyCon l c) = do
-                when (length ts > 1) $ checkEnabled MultiParamTypeClasses
                 when (length ts < 1) $ checkEnabled FlexibleContexts
                 checkAndWarnTypeOperators c
                 return $ ClassA (fl l) c ts
@@ -213,6 +212,17 @@ checkAssertion t' = checkAssertion' id [] t'
             checkAssertion' _ _ (TyWildCard l wc) =
                 return $ WildCardA l wc
             checkAssertion' _ _ _ = fail "Illegal class assertion"
+
+-- Check class/instance declaration for multiparams
+checkMultiParam :: PType L -> P ()
+checkMultiParam = checkMultiParam' []
+    where
+        checkMultiParam' ts (TyCon _ _) =
+            when (length ts /= 1) $ checkEnabled MultiParamTypeClasses
+        checkMultiParam' ts (TyApp _ a t) = checkMultiParam' (t:ts) a
+        checkMultiParam' _ (TyInfix _ _ _ _) = checkEnabled MultiParamTypeClasses
+        checkMultiParam' ts (TyParen _ t) = checkMultiParam' ts t
+        checkMultiParam' _ _ = return ()
 
 getSymbol :: QName L -> Maybe String
 getSymbol (UnQual _ (Symbol _ s)) = Just s
@@ -306,10 +316,12 @@ checkDataHeader t = do
 
 checkClassHeader :: PType L -> P (Maybe (S.Context L), DeclHead L)
 checkClassHeader (TyForall _ Nothing cs t) = do
+    checkMultiParam t
     dh <- checkSimple "class" t
     cs' <- checkSContext cs
     return (cs',dh)
 checkClassHeader t = do
+    checkMultiParam t
     dh <- checkSimple "class" t
     return (Nothing,dh)
 
@@ -356,8 +368,9 @@ checkInstHeader :: PType L -> P (InstRule L)
 checkInstHeader (TyParen l t) = checkInstHeader t >>= return . IParen l
 checkInstHeader (TyForall l mtvs cs t) = do
     cs' <- checkSContext cs
+    checkMultiParam t
     checkInsts (Just l) mtvs cs' t
-checkInstHeader t = checkInsts Nothing Nothing Nothing t
+checkInstHeader t = checkMultiParam t >> checkInsts Nothing Nothing Nothing t
 
 
 checkInsts :: Maybe L -> Maybe [TyVarBind L] -> Maybe (S.Context L) -> PType L -> P (InstRule L)
