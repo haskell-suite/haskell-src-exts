@@ -1,0 +1,197 @@
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 1 1 5 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/MultiParam.hs" 1 1 1 1
+            , SrcSpan "tests/examples/MultiParam.hs" 1 1 1 1
+            , SrcSpan "tests/examples/MultiParam.hs" 3 1 3 1
+            , SrcSpan "tests/examples/MultiParam.hs" 4 1 4 1
+            , SrcSpan "tests/examples/MultiParam.hs" 5 1 5 1
+            , SrcSpan "tests/examples/MultiParam.hs" 5 1 5 1
+            ]
+        }
+      (Just
+         (ModuleHead
+            SrcSpanInfo
+              { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 1 1 1 24
+              , srcInfoPoints =
+                  [ SrcSpan "tests/examples/MultiParam.hs" 1 1 1 7
+                  , SrcSpan "tests/examples/MultiParam.hs" 1 19 1 24
+                  ]
+              }
+            (ModuleName
+               SrcSpanInfo
+                 { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 1 8 1 18
+                 , srcInfoPoints = []
+                 }
+               "MultiParam")
+            Nothing
+            Nothing))
+      []
+      []
+      [ TypeSig
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 3 1 3 35
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/MultiParam.hs" 3 5 3 7 ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 3 1 3 4
+                , srcInfoPoints = []
+                }
+              "foo"
+          ]
+          (TyForall
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 3 8 3 35
+               , srcInfoPoints = []
+               }
+             Nothing
+             (Just
+                (CxSingle
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 3 8 3 25
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/MultiParam.hs" 3 23 3 25 ]
+                     }
+                   (ClassA
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 3 8 3 25
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/MultiParam.hs" 3 23 3 25 ]
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 3 8 3 18
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 3 8 3 18
+                              , srcInfoPoints = []
+                              }
+                            "MonadError"))
+                      [ TyVar
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 3 19 3 20
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 3 19 3 20
+                               , srcInfoPoints = []
+                               }
+                             "e")
+                      , TyVar
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 3 21 3 22
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 3 21 3 22
+                               , srcInfoPoints = []
+                               }
+                             "m")
+                      ])))
+             (TyFun
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 3 26 3 35
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/MultiParam.hs" 3 28 3 30 ]
+                  }
+                (TyVar
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 3 26 3 27
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 3 26 3 27
+                        , srcInfoPoints = []
+                        }
+                      "e"))
+                (TyApp
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 3 31 3 35
+                     , srcInfoPoints = []
+                     }
+                   (TyVar
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 3 31 3 32
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 3 31 3 32
+                           , srcInfoPoints = []
+                           }
+                         "m"))
+                   (TyCon
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 3 33 3 35
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/MultiParam.hs" 3 33 3 34
+                            , SrcSpan "tests/examples/MultiParam.hs" 3 34 3 35
+                            ]
+                        }
+                      (Special
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 3 33 3 35
+                           , srcInfoPoints =
+                               [ SrcSpan "tests/examples/MultiParam.hs" 3 33 3 34
+                               , SrcSpan "tests/examples/MultiParam.hs" 3 34 3 35
+                               ]
+                           }
+                         (UnitCon
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 3 33 3 35
+                              , srcInfoPoints =
+                                  [ SrcSpan "tests/examples/MultiParam.hs" 3 33 3 34
+                                  , SrcSpan "tests/examples/MultiParam.hs" 3 34 3 35
+                                  ]
+                              }))))))
+      , PatBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 4 1 4 16
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 4 1 4 4
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 4 1 4 4
+                  , srcInfoPoints = []
+                  }
+                "foo"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 4 5 4 16
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/MultiParam.hs" 4 5 4 6 ]
+               }
+             (Var
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 4 7 4 16
+                  , srcInfoPoints = []
+                  }
+                (UnQual
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 4 7 4 16
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 4 7 4 16
+                        , srcInfoPoints = []
+                        }
+                      "undefined"))))
+          Nothing
+      ]
+  , []
+  )
