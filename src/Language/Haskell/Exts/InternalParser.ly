@@ -860,8 +860,8 @@ so no need to check for extensions.
 >        | {- empty -}                  { Nothing }
 
 > fspec :: { (Maybe String, Name L, Type L, [S]) }
->       : STRING var_no_safety '::' truedtype               { let Loc l (StringTok (s,_)) = $1 in (Just s, $2, $4, [l,$3]) }
->       |        var_no_safety '::' truedtype               { (Nothing, $1, $3, [$2]) }
+>       : STRING var_no_safety '::' truectype               { let Loc l (StringTok (s,_)) = $1 in (Just s, $2, $4, [l,$3]) }
+>       |        var_no_safety '::' truectype               { (Nothing, $1, $3, [$2]) }
 
 -----------------------------------------------------------------------------
 Pragmas
