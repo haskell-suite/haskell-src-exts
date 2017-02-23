@@ -2078,6 +2078,7 @@ instance ExactP CallConv where
   exactP (CPlusPlus  _) = printString "cplusplus"
   exactP (DotNet     _) = printString "dotnet"
   exactP (Jvm        _) = printString "jvm"
+  exactP (Java       _) = printString "java"
   exactP (Js         _) = printString "js"
   exactP (JavaScript _) = printString "javascript"
   exactP (CApi       _) = printString "capi"

@@ -214,6 +214,7 @@ FFI
 >       'cplusplus'     { Loc $$ KW_CPlusPlus }
 >       'dotnet'        { Loc $$ KW_DotNet }
 >       'jvm'           { Loc $$ KW_Jvm }
+>       'java'          { Loc $$ KW_Java }
 >       'js'            { Loc $$ KW_Js }          -- 90
 >       'javascript'    { Loc $$ KW_JavaScript }
 >       'capi'          { Loc $$ KW_CApi }
@@ -845,6 +846,7 @@ so no need to check for extensions.
 >          | 'cplusplus'                { CPlusPlus  (nIS $1) }
 >          | 'dotnet'                   { DotNet     (nIS $1) }
 >          | 'jvm'                      { Jvm        (nIS $1) }
+>          | 'java'                     { Java       (nIS $1) }
 >          | 'js'                       { Js         (nIS $1) }
 >          | 'javascript'               { JavaScript (nIS $1) }
 >          | 'capi'                     { CApi       (nIS $1) }
