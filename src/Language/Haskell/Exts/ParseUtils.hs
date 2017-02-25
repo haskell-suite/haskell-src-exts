@@ -515,7 +515,8 @@ checkPat e' [] = case e' of
             rps <- mapM checkRPattern es
             return (PXRPats l $ map fixRPOpPrec rps)
 
-    -- QuasiQuotation
+    -- Template Haskell
+    SpliceExp l e -> return $ PSplice l e
     QuasiQuote l n q -> return $ PQuasiQuote l n q
 
     -- BangPatterns

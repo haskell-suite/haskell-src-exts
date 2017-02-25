@@ -1,0 +1,235 @@
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/PatternSplice.hs" 1 1 7 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/PatternSplice.hs" 1 1 1 1
+            , SrcSpan "tests/examples/PatternSplice.hs" 2 1 2 1
+            , SrcSpan "tests/examples/PatternSplice.hs" 2 1 2 1
+            , SrcSpan "tests/examples/PatternSplice.hs" 4 1 4 1
+            , SrcSpan "tests/examples/PatternSplice.hs" 5 1 5 1
+            , SrcSpan "tests/examples/PatternSplice.hs" 6 1 6 1
+            , SrcSpan "tests/examples/PatternSplice.hs" 7 1 7 1
+            , SrcSpan "tests/examples/PatternSplice.hs" 7 1 7 1
+            ]
+        }
+      (Just
+         (ModuleHead
+            SrcSpanInfo
+              { srcInfoSpan = SrcSpan "tests/examples/PatternSplice.hs" 2 1 2 31
+              , srcInfoPoints =
+                  [ SrcSpan "tests/examples/PatternSplice.hs" 2 1 2 7
+                  , SrcSpan "tests/examples/PatternSplice.hs" 2 26 2 31
+                  ]
+              }
+            (ModuleName
+               SrcSpanInfo
+                 { srcInfoSpan = SrcSpan "tests/examples/PatternSplice.hs" 2 8 2 25
+                 , srcInfoPoints = []
+                 }
+               "PatternSpliceTest")
+            Nothing
+            Nothing))
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/PatternSplice.hs" 1 1 1 33
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/PatternSplice.hs" 1 1 1 13
+                , SrcSpan "tests/examples/PatternSplice.hs" 1 30 1 33
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/PatternSplice.hs" 1 14 1 29
+                , srcInfoPoints = []
+                }
+              "TemplateHaskell"
+          ]
+      ]
+      []
+      [ TypeSig
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/PatternSplice.hs" 4 1 4 19
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/PatternSplice.hs" 4 5 4 7 ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/PatternSplice.hs" 4 1 4 4
+                , srcInfoPoints = []
+                }
+              "foo"
+          ]
+          (TyFun
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/PatternSplice.hs" 4 8 4 19
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/PatternSplice.hs" 4 12 4 14 ]
+               }
+             (TyCon
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/PatternSplice.hs" 4 8 4 11
+                  , srcInfoPoints = []
+                  }
+                (UnQual
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/PatternSplice.hs" 4 8 4 11
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/PatternSplice.hs" 4 8 4 11
+                        , srcInfoPoints = []
+                        }
+                      "Int")))
+             (TyCon
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/PatternSplice.hs" 4 15 4 19
+                  , srcInfoPoints = []
+                  }
+                (UnQual
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/PatternSplice.hs" 4 15 4 19
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/PatternSplice.hs" 4 15 4 19
+                        , srcInfoPoints = []
+                        }
+                      "Bool"))))
+      , FunBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/PatternSplice.hs" 5 1 6 27
+            , srcInfoPoints = []
+            }
+          [ Match
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/PatternSplice.hs" 5 1 5 26
+                , srcInfoPoints = []
+                }
+              (Ident
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/PatternSplice.hs" 5 1 5 4
+                   , srcInfoPoints = []
+                   }
+                 "foo")
+              [ PSplice
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/PatternSplice.hs" 5 5 5 19
+                    , srcInfoPoints =
+                        [ SrcSpan "tests/examples/PatternSplice.hs" 5 5 5 7
+                        , SrcSpan "tests/examples/PatternSplice.hs" 5 18 5 19
+                        ]
+                    }
+                  (ParenSplice
+                     SrcSpanInfo
+                       { srcInfoSpan = SrcSpan "tests/examples/PatternSplice.hs" 5 5 5 19
+                       , srcInfoPoints =
+                           [ SrcSpan "tests/examples/PatternSplice.hs" 5 5 5 7
+                           , SrcSpan "tests/examples/PatternSplice.hs" 5 18 5 19
+                           ]
+                       }
+                     (BracketExp
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/PatternSplice.hs" 5 8 5 17
+                          , srcInfoPoints =
+                              [ SrcSpan "tests/examples/PatternSplice.hs" 5 8 5 11
+                              , SrcSpan "tests/examples/PatternSplice.hs" 5 15 5 17
+                              ]
+                          }
+                        (PatBracket
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/PatternSplice.hs" 5 8 5 17
+                             , srcInfoPoints =
+                                 [ SrcSpan "tests/examples/PatternSplice.hs" 5 8 5 11
+                                 , SrcSpan "tests/examples/PatternSplice.hs" 5 15 5 17
+                                 ]
+                             }
+                           (PLit
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/PatternSplice.hs" 5 12 5 14
+                                , srcInfoPoints = []
+                                }
+                              (Signless
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/PatternSplice.hs" 5 12 5 14
+                                   , srcInfoPoints = []
+                                   })
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/PatternSplice.hs" 5 12 5 14
+                                   , srcInfoPoints = []
+                                   }
+                                 42
+                                 "42")))))
+              ]
+              (UnGuardedRhs
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/PatternSplice.hs" 5 20 5 26
+                   , srcInfoPoints =
+                       [ SrcSpan "tests/examples/PatternSplice.hs" 5 20 5 21 ]
+                   }
+                 (Con
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/PatternSplice.hs" 5 22 5 26
+                      , srcInfoPoints = []
+                      }
+                    (UnQual
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/PatternSplice.hs" 5 22 5 26
+                         , srcInfoPoints = []
+                         }
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/PatternSplice.hs" 5 22 5 26
+                            , srcInfoPoints = []
+                            }
+                          "True"))))
+              Nothing
+          , Match
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/PatternSplice.hs" 6 1 6 27
+                , srcInfoPoints = []
+                }
+              (Ident
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/PatternSplice.hs" 6 1 6 4
+                   , srcInfoPoints = []
+                   }
+                 "foo")
+              [ PWildCard
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/PatternSplice.hs" 6 5 6 6
+                    , srcInfoPoints = []
+                    }
+              ]
+              (UnGuardedRhs
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/PatternSplice.hs" 6 20 6 27
+                   , srcInfoPoints =
+                       [ SrcSpan "tests/examples/PatternSplice.hs" 6 20 6 21 ]
+                   }
+                 (Con
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/PatternSplice.hs" 6 22 6 27
+                      , srcInfoPoints = []
+                      }
+                    (UnQual
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/PatternSplice.hs" 6 22 6 27
+                         , srcInfoPoints = []
+                         }
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/PatternSplice.hs" 6 22 6 27
+                            , srcInfoPoints = []
+                            }
+                          "False"))))
+              Nothing
+          ]
+      ]
+  , []
+  )

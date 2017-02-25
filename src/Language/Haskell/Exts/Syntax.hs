@@ -907,6 +907,7 @@ data Pat l
     | PXPcdata l String                     -- ^ XML PCDATA pattern
     | PXPatTag l (Pat l)                    -- ^ XML embedded pattern
     | PXRPats  l [RPat l]                   -- ^ XML regular list pattern
+    | PSplice l (Splice l)                  -- ^ template haskell splice pattern
     | PQuasiQuote l String String           -- ^ quasi quote pattern: @[$/name/| /string/ |]@
     | PBangPat l (Pat l)                    -- ^ strict (bang) pattern: @f !x = ...@
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
@@ -1785,6 +1786,7 @@ instance Annotated Pat where
       PXPcdata l _      -> l
       PXPatTag l _      -> l
       PXRPats  l _      -> l
+      PSplice l _       -> l
       PQuasiQuote l _ _ -> l
       PBangPat l _      -> l
     amap f p1 = case p1 of
@@ -1808,6 +1810,7 @@ instance Annotated Pat where
       PXPcdata l s      -> PXPcdata (f l) s
       PXPatTag l p      -> PXPatTag (f l) p
       PXRPats  l rps    -> PXRPats  (f l) rps
+      PSplice l sp      -> PSplice (f l) sp
       PQuasiQuote l sn st   -> PQuasiQuote (f l) sn st
       PBangPat l p          -> PBangPat (f l) p
 

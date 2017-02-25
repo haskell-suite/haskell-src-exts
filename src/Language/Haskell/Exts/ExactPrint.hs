@@ -1989,6 +1989,7 @@ instance ExactP Pat where
             printString "%>"
          _ -> errorEP "ExactP: Pat: PXPatTag is given wrong number of srcInfoPoints"
     PXRPats  l rps  -> bracketList ("<[",",","]>") (srcInfoPoints l) rps
+    PSplice _ sp  -> exactP sp
     PQuasiQuote _ name qt   -> printString $ "[$" ++ name ++ "|" ++ qt ++ "]"
     PBangPat _ p    -> printString "!" >> exactPC p
 
