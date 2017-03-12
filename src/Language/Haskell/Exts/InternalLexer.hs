@@ -180,6 +180,7 @@ data Token
         | KW_Instance
         | KW_Let
         | KW_Module
+        | KW_Signature
         | KW_NewType
         | KW_Of
         | KW_Proc       -- arrows
@@ -300,6 +301,7 @@ special_varids = [
  ( "as",        (KW_As,         Nothing) ),
  ( "qualified", (KW_Qualified,  Nothing) ),
  ( "hiding",    (KW_Hiding,     Nothing) ),
+ ( "signature", (KW_Signature,  Nothing) ),
 
 -- FFI
  ( "export",        (KW_Export,        Just (Any [ForeignFunctionInterface])) ),
@@ -1399,6 +1401,7 @@ showToken t = case t of
   KW_Instance   -> "instance"
   KW_Let        -> "let"
   KW_Module     -> "module"
+  KW_Signature  -> "signature"
   KW_NewType    -> "newtype"
   KW_Of         -> "of"
   KW_Proc       -> "proc"
