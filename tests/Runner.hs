@@ -158,7 +158,7 @@ prettyParserTests sources = testGroup "Pretty-parser tests" $ do
 
 commentsTests :: FilePath -> TestTree  -- {{{
 commentsTests dir = testGroup "Comments tests" $ do
-    let file = dir </> "HaddockComments.hs"
+    let file = dir ++ "/HaddockComments.hs"
         out = file <.> "comments" <.> "out"
         golden = file <.> "comments" <.> "golden"
         run = do
