@@ -255,7 +255,7 @@ ParseOk
                 SrcSpan "tests/examples/OverloadedLabels.hs" 16 1 19 0
             , srcInfoPoints =
                 [ SrcSpan "tests/examples/OverloadedLabels.hs" 16 1 16 9
-                , SrcSpan "tests/examples/OverloadedLabels.hs" 16 31 16 36
+                , SrcSpan "tests/examples/OverloadedLabels.hs" 16 34 16 39
                 , SrcSpan "tests/examples/OverloadedLabels.hs" 17 3 17 3
                 , SrcSpan "tests/examples/OverloadedLabels.hs" 19 1 19 0
                 ]
@@ -264,7 +264,7 @@ ParseOk
           (IRule
              SrcSpanInfo
                { srcInfoSpan =
-                   SrcSpan "tests/examples/OverloadedLabels.hs" 16 10 16 30
+                   SrcSpan "tests/examples/OverloadedLabels.hs" 16 10 16 33
                , srcInfoPoints = []
                }
              Nothing
@@ -272,13 +272,13 @@ ParseOk
              (IHApp
                 SrcSpanInfo
                   { srcInfoSpan =
-                      SrcSpan "tests/examples/OverloadedLabels.hs" 16 10 16 30
+                      SrcSpan "tests/examples/OverloadedLabels.hs" 16 10 16 33
                   , srcInfoPoints = []
                   }
                 (IHApp
                    SrcSpanInfo
                      { srcInfoSpan =
-                         SrcSpan "tests/examples/OverloadedLabels.hs" 16 10 16 25
+                         SrcSpan "tests/examples/OverloadedLabels.hs" 16 10 16 28
                      , srcInfoPoints = []
                      }
                    (IHCon
@@ -303,33 +303,33 @@ ParseOk
                    (TyPromoted
                       SrcSpanInfo
                         { srcInfoSpan =
-                            SrcSpan "tests/examples/OverloadedLabels.hs" 16 18 16 25
+                            SrcSpan "tests/examples/OverloadedLabels.hs" 16 18 16 28
                         , srcInfoPoints = []
                         }
                       (PromotedString
                          SrcSpanInfo
                            { srcInfoSpan =
-                               SrcSpan "tests/examples/OverloadedLabels.hs" 16 18 16 25
+                               SrcSpan "tests/examples/OverloadedLabels.hs" 16 18 16 28
                            , srcInfoPoints = []
                            }
-                         "false"
-                         "false")))
+                         "_False1'"
+                         "_False1'")))
                 (TyCon
                    SrcSpanInfo
                      { srcInfoSpan =
-                         SrcSpan "tests/examples/OverloadedLabels.hs" 16 26 16 30
+                         SrcSpan "tests/examples/OverloadedLabels.hs" 16 29 16 33
                      , srcInfoPoints = []
                      }
                    (UnQual
                       SrcSpanInfo
                         { srcInfoSpan =
-                            SrcSpan "tests/examples/OverloadedLabels.hs" 16 26 16 30
+                            SrcSpan "tests/examples/OverloadedLabels.hs" 16 29 16 33
                         , srcInfoPoints = []
                         }
                       (Ident
                          SrcSpanInfo
                            { srcInfoSpan =
-                               SrcSpan "tests/examples/OverloadedLabels.hs" 16 26 16 30
+                               SrcSpan "tests/examples/OverloadedLabels.hs" 16 29 16 33
                            , srcInfoPoints = []
                            }
                          "Bool")))))
@@ -523,7 +523,7 @@ ParseOk
       , PatBind
           SrcSpanInfo
             { srcInfoSpan =
-                SrcSpan "tests/examples/OverloadedLabels.hs" 22 1 22 11
+                SrcSpan "tests/examples/OverloadedLabels.hs" 22 1 22 14
             , srcInfoPoints = []
             }
           (PVar
@@ -542,17 +542,17 @@ ParseOk
           (UnGuardedRhs
              SrcSpanInfo
                { srcInfoSpan =
-                   SrcSpan "tests/examples/OverloadedLabels.hs" 22 3 22 11
+                   SrcSpan "tests/examples/OverloadedLabels.hs" 22 3 22 14
                , srcInfoPoints =
                    [ SrcSpan "tests/examples/OverloadedLabels.hs" 22 3 22 4 ]
                }
              (OverloadedLabel
                 SrcSpanInfo
                   { srcInfoSpan =
-                      SrcSpan "tests/examples/OverloadedLabels.hs" 22 5 22 11
+                      SrcSpan "tests/examples/OverloadedLabels.hs" 22 5 22 14
                   , srcInfoPoints = []
                   }
-                "false"))
+                "_False1'"))
           Nothing
       , TypeSig
           SrcSpanInfo

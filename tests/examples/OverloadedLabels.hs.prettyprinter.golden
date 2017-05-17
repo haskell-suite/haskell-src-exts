@@ -6,12 +6,12 @@ import GHC.OverloadedLabels
 instance IsLabel "true" Bool where
         fromLabel _ = True
 
-instance IsLabel "false" Bool where
+instance IsLabel "_False1'" Bool where
         fromLabel _ = False
 
 a :: IsLabel "true" t => t
 a = #true
-b = #false
+b = #_False1'
 
 c :: Bool
 c = #true
