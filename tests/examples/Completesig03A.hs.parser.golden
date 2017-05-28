@@ -1,0 +1,123 @@
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/Completesig03A.hs" 1 1 7 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/Completesig03A.hs" 1 1 1 1
+            , SrcSpan "tests/examples/Completesig03A.hs" 1 1 1 1
+            , SrcSpan "tests/examples/Completesig03A.hs" 3 1 3 1
+            , SrcSpan "tests/examples/Completesig03A.hs" 5 1 5 1
+            , SrcSpan "tests/examples/Completesig03A.hs" 7 1 7 1
+            , SrcSpan "tests/examples/Completesig03A.hs" 7 1 7 1
+            ]
+        }
+      (Just
+         (ModuleHead
+            SrcSpanInfo
+              { srcInfoSpan = SrcSpan "tests/examples/Completesig03A.hs" 1 1 1 28
+              , srcInfoPoints =
+                  [ SrcSpan "tests/examples/Completesig03A.hs" 1 1 1 7
+                  , SrcSpan "tests/examples/Completesig03A.hs" 1 23 1 28
+                  ]
+              }
+            (ModuleName
+               SrcSpanInfo
+                 { srcInfoSpan = SrcSpan "tests/examples/Completesig03A.hs" 1 8 1 22
+                 , srcInfoPoints = []
+                 }
+               "Completesig03A")
+            Nothing
+            Nothing))
+      []
+      []
+      [ DataDecl
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/Completesig03A.hs" 3 1 3 15
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/Completesig03A.hs" 3 8 3 9
+                , SrcSpan "tests/examples/Completesig03A.hs" 3 12 3 13
+                ]
+            }
+          (DataType
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/Completesig03A.hs" 3 1 3 5
+               , srcInfoPoints = []
+               })
+          Nothing
+          (DHead
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/Completesig03A.hs" 3 6 3 7
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/Completesig03A.hs" 3 6 3 7
+                  , srcInfoPoints = []
+                  }
+                "A"))
+          [ QualConDecl
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/Completesig03A.hs" 3 10 3 11
+                , srcInfoPoints = []
+                }
+              Nothing
+              Nothing
+              (ConDecl
+                 SrcSpanInfo
+                   { srcInfoSpan =
+                       SrcSpan "tests/examples/Completesig03A.hs" 3 10 3 11
+                   , srcInfoPoints = []
+                   }
+                 (Ident
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/Completesig03A.hs" 3 10 3 11
+                      , srcInfoPoints = []
+                      }
+                    "A")
+                 [])
+          , QualConDecl
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/Completesig03A.hs" 3 14 3 15
+                , srcInfoPoints = []
+                }
+              Nothing
+              Nothing
+              (ConDecl
+                 SrcSpanInfo
+                   { srcInfoSpan =
+                       SrcSpan "tests/examples/Completesig03A.hs" 3 14 3 15
+                   , srcInfoPoints = []
+                   }
+                 (Ident
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/Completesig03A.hs" 3 14 3 15
+                      , srcInfoPoints = []
+                      }
+                    "B")
+                 [])
+          ]
+          Nothing
+      , CompletePragma
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/Completesig03A.hs" 5 1 5 19
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/Completesig03A.hs" 5 1 5 13
+                , SrcSpan "tests/examples/Completesig03A.hs" 5 16 5 19
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/Completesig03A.hs" 5 14 5 15
+                , srcInfoPoints = []
+                }
+              "A"
+          ]
+          Nothing
+      ]
+  , []
+  )

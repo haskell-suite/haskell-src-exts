@@ -332,6 +332,8 @@ data Decl l
      -- ^ A MINIMAL pragma
      | RoleAnnotDecl    l (QName l) [Role l]
      -- ^ A role annotation
+     | CompletePragma l [Name l] (Maybe (QName l))
+     -- ^ A COMPLETE pragma
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 data  PatternSynDirection l =
@@ -1265,6 +1267,7 @@ instance Annotated Decl where
         MinimalPragma    l _            -> l
         RoleAnnotDecl    l _ _          -> l
         PatSyn           l _ _ _        -> l
+        CompletePragma l _ _            -> l
     amap f decl = case decl of
         TypeDecl     l dh t      -> TypeDecl    (f l) dh t
         TypeFamDecl  l dh mk mi  -> TypeFamDecl (f l) dh mk mi
@@ -1301,6 +1304,7 @@ instance Annotated Decl where
         MinimalPragma    l b             -> MinimalPragma (f l) b
         RoleAnnotDecl    l t rs          -> RoleAnnotDecl (f l) t rs
         PatSyn           l p r d         -> PatSyn (f l) p r d
+        CompletePragma   l cs ty         -> CompletePragma (f l) cs ty
 
 instance Annotated Role where
     ann r = case r of

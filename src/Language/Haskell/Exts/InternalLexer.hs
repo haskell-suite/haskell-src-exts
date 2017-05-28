@@ -154,6 +154,7 @@ data Token
         | NO_OVERLAP
         | OVERLAP
         | INCOHERENT
+        | COMPLETE
 
 -- Reserved Ids
 
@@ -339,6 +340,7 @@ pragmas = [
  ( "no_overlap",        NO_OVERLAP      ),
  ( "overlap",           OVERLAP         ),
  ( "incoherent",        INCOHERENT      ),
+ ( "complete",          COMPLETE      ),
  ( "options",           OPTIONS undefined ) -- we'll tweak it before use - promise!
 -- ( "cfiles",            CFILES  undefined ), -- same here...
 -- ( "include",           INCLUDE undefined )  -- ...and here!

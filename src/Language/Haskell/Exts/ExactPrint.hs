@@ -32,8 +32,6 @@ import Control.Arrow ((***), (&&&))
 import Prelude hiding (exp)
 import Data.List (intersperse)
 
--- import Debug.Trace (trace)
-
 ------------------------------------------------------
 -- The EP monad and basic combinators
 
@@ -900,6 +898,21 @@ instance ExactP Decl where
             exactPC ty
             mapM_ exactPC roles
          _ -> errorEP "ExactP: Decl: RoleAnnotDecl is given wrong number of srcInfoPoints"
+    CompletePragma l cls opt_ts ->
+      case srcInfoPoints l of
+        (t:rs) -> do
+          let (cls_s, rs') = splitAt (length cls - 1) rs
+          printStringAt (pos t)"{-# COMPLETE"
+          printInterleaved' (zip cls_s (repeat ",")) cls
+          case (rs', opt_ts) of
+             ((opt_dcolon: end:_), Just tc) -> do
+                printStringAt (pos opt_dcolon) "::"
+                exactPC tc
+                printStringAt (pos end) "#-}"
+             ([end], Nothing) -> printStringAt (pos end) "#-}"
+             _ -> errorEP "ExactP: Decl: CompletePragma is given wrong number of srcInfoPoints"
+        _ -> errorEP "ExactP: Decl: CompletePragma is given wrong number of srcInfoPoints"
+
 
 instance ExactP Role where
   exactP r =

@@ -279,6 +279,7 @@ Pragmas
 >       '{-# NO_OVERLAP'        { Loc $$ NO_OVERLAP }
 >       '{-# OVERLAP'           { Loc $$ OVERLAP }
 >       '{-# INCOHERENT'        { Loc $$ INCOHERENT }
+>       '{-# COMPLETE'          { Loc $$ COMPLETE }
 >       '#-}'                   { Loc $$ PragmaEnd }      -- 139
 
 
@@ -662,6 +663,9 @@ lexer through the 'foreign' (and 'export') keyword.
 >       | '{-# DEPRECATED' warndeprs  '#-}'     { DeprPragmaDecl ($1 <^^> $3 <** ($1:snd $2++[$3])) $ reverse (fst $2) }
 >       | '{-# WARNING'    warndeprs  '#-}'     { WarnPragmaDecl ($1 <^^> $3 <** ($1:snd $2++[$3])) $ reverse (fst $2) }
 >       | '{-# ANN'        annotation '#-}'     { AnnPragma      ($1 <^^> $3 <** [$1,$3]) $2 }
+>       | '{-# COMPLETE' con_list opt_tyconsig '#-}'
+>           { let com = maybe [] ((:[]) . fst) $3; ts = fmap snd $3 in
+> (CompletePragma ($1 <^^> $4 <** ([$1] ++ fst $2 ++ com ++ [$4])) (snd $2) ts) }
 >       | decl          { $1 }
 
 > -- Family result/return kind signatures
@@ -1202,6 +1206,10 @@ KindParen covers 1-tuples, KindVar l  while KindTuple is for pairs
 > optkind :: { (Maybe (Kind L), [S]) }
 >       : {-empty-}             { (Nothing,[]) }
 >       | '::' kind             { (Just $2,[$1]) }
+
+> opt_tyconsig :: { Maybe ( S, QName L ) }
+>              : {- empty -}    { Nothing }
+>              | '::' gtycon    { Just ($1, $2) }
 -----------------------------------------------------------------------------
 Class declarations
 
@@ -1836,6 +1844,11 @@ Implicit parameter
 > con   :: { Name L }
 >       : conid                 { $1 }
 >       | '(' consym ')'        { fmap (const ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3])) $2 }
+
+> con_list :: { ([S], [Name L]) }
+>          : con                { ([], [$1]) }
+>          | con ',' con_list   { let (ss, cs) = $3
+>                                 in ($2 : ss, $1 :cs) }
 
 > qcon  :: { QName L }
 >       : qconid                { $1 }

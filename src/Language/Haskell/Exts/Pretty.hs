@@ -561,6 +561,10 @@ instance  Pretty (Decl l) where
         pretty (RoleAnnotDecl _ qn rs) =
                 mySep ( [text "type", text "role", pretty qn]
                         ++ map pretty rs )
+        pretty (CompletePragma _ cls opt_ts) =
+                let cls_p = punctuate comma $ map pretty cls
+                    ts_p  = maybe empty (\tc -> text "::" <+> pretty tc) opt_ts
+                in myFsep $ [text "{-# COMPLETE"] ++ cls_p ++ [ts_p, text "#-}"]
 
 instance Pretty (InstRule l) where
     pretty (IRule _ tvs mctxt qn)  =
