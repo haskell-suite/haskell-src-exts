@@ -76,6 +76,7 @@ module Language.Haskell.Exts.ParseUtils (
     , p_unit_con            -- PExp
     , p_tuple_con           -- Boxed -> Int -> PExp
     , p_unboxed_singleton_con   -- PExp
+    , pexprToQName
     ) where
 
 import Language.Haskell.Exts.Syntax hiding ( Type(..), Asst(..), Exp(..), FieldUpdate(..), XAttr(..), Context(..) )
@@ -100,6 +101,11 @@ import Control.Applicative (Applicative (..), (<$>))
 
 type L = SrcSpanInfo
 type S = SrcSpan
+
+pexprToQName :: PExp l -> P (QName l)
+pexprToQName (Con _ qn) = return qn
+pexprToQName (List l []) = return $ Special l (ListCon l)
+pexprToQName _ = fail "pexprToQName"
 
 splitTyConApp :: PType L -> P (Name L, [S.Type L])
 splitTyConApp t0 = do

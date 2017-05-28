@@ -974,15 +974,17 @@ the (# and #) lexemes. Kinds will be handled at the kind rule.
 >       | ptype                         { % checkEnabled DataKinds >> return (TyPromoted (ann $1) $1) }
 
 > ptype :: { Promoted L }
->       : VARQUOTE '[' types1 ']'       {% PromotedList  ($1 <^^> $4 <** ($1:reverse($4:snd $3))) True . reverse <\$> mapM checkType (fst $3) }
->       | VARQUOTE '['        ']'       { PromotedList   ($1 <^^> $3 <** [$1, $3]) True  [] }
+>       : VARQUOTE gcon_nolist                 {% fmap (PromotedCon (nIS $1 <++> ann $2  <** [$1]) True) (pexprToQName $2) }
+>       | VARQUOTE '[' types1 ']'       {% PromotedList  ($1 <^^> $4 <** ($1:reverse($4:snd $3))) True . reverse <\$> mapM checkType (fst $3) }
 >       |          '[' types  ']'       {% PromotedList  ($1 <^^> $3 <** ($1:reverse($3:snd $2))) False . reverse <\$> mapM checkType (fst $2) }
+>       | VARQUOTE '[' ']'              { PromotedList  ($1 <^^> $3 <** [$1, $3]) True [] }
+       | '[' ']'                       {% PromotedList  ($1 <^^> $2 <** [$1, $2]) False [] }
 >       | VARQUOTE '(' types1 ')'       {% PromotedTuple ($1 <^^> $4 <** ($1:reverse($4:snd $3))) . reverse <\$> mapM checkType (fst $3) }
->       | VARQUOTE '('        ')'       { PromotedUnit  ($1 <^^> $3 ) }
->       | VARQUOTE gconsym              { PromotedCon ((noInfoSpan $1 <++> ann $2) <** [$1]) True  $2 }
->       | VARQUOTE qtyconorcls          { PromotedCon ((noInfoSpan $1 <++> ann $2) <** [$1]) True  $2 }
+>       | VARQUOTE gconsym              { (PromotedCon (nIS $1 <++> ann $2 <** [$1]) True) $2 }
+>       | VARQUOTE var           { undefined }
 >       | INT                           { let Loc l (IntTok  (i,raw)) = $1 in PromotedInteger (nIS l) i raw }
 >       | STRING                        { let Loc l (StringTok (s,raw)) = $1 in PromotedString (nIS l) s raw }
+
 
 > strict_mark :: { (Maybe (L -> BangType L,S), Maybe (Unpackedness L)) }
 >        : strictness              { (Just $1, Nothing) }
@@ -1818,12 +1820,23 @@ Implicit parameter bindings - need the ImplicitParameter extension enabled, but 
 Variables, Constructors and Operators.
 
 > gcon :: { PExp L }
+>       : sysdcon               { $1 }
+>       | qcon                  { Con (ann $1) $1 }
+
+> gcon_nolist :: { PExp L }
+>       : sysdcon_nolist        { $1 }
+>       | qcon                  { Con (ann $1) $1 }
+
+> sysdcon_nolist :: { PExp L }
 >       : '(' ')'               { p_unit_con              ($1 <^^> $2 <** [$1,$2]) }
->       | '[' ']'               { List                    ($1 <^^> $2 <** [$1,$2]) [] }
->       | '(' commas ')'        { p_tuple_con             ($1 <^^> $3 <** $1:reverse ($3:$2)) Boxed (length $2) }
 >       | '(#' '#)'             { p_unboxed_singleton_con ($1 <^^> $2 <** [$1,$2]) }
 >       | '(#' commas '#)'      { p_tuple_con             ($1 <^^> $3 <** $1:reverse ($3:$2)) Unboxed (length $2) }
->       | qcon                  { Con (ann $1) $1 }
+>       | '(' commas ')'        { p_tuple_con             ($1 <^^> $3 <** $1:reverse ($3:$2)) Boxed (length $2) }
+
+
+> sysdcon :: { PExp L }
+>       : '[' ']'               { List                    ($1 <^^> $2 <** [$1,$2]) [] }
+>       | sysdcon_nolist        { $1 }
 
 > var   :: { Name L }
 >       : varid                 { $1 }
