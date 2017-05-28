@@ -1,0 +1,679 @@
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 1 1 24 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/completesig01.hs" 1 1 1 1
+            , SrcSpan "tests/examples/completesig01.hs" 2 1 2 1
+            , SrcSpan "tests/examples/completesig01.hs" 3 1 3 1
+            , SrcSpan "tests/examples/completesig01.hs" 4 1 4 1
+            , SrcSpan "tests/examples/completesig01.hs" 4 1 4 1
+            , SrcSpan "tests/examples/completesig01.hs" 6 1 6 1
+            , SrcSpan "tests/examples/completesig01.hs" 7 1 7 1
+            , SrcSpan "tests/examples/completesig01.hs" 9 1 9 1
+            , SrcSpan "tests/examples/completesig01.hs" 10 1 10 1
+            , SrcSpan "tests/examples/completesig01.hs" 12 1 12 1
+            , SrcSpan "tests/examples/completesig01.hs" 14 1 14 1
+            , SrcSpan "tests/examples/completesig01.hs" 15 1 15 1
+            , SrcSpan "tests/examples/completesig01.hs" 16 1 16 1
+            , SrcSpan "tests/examples/completesig01.hs" 18 1 18 1
+            , SrcSpan "tests/examples/completesig01.hs" 19 1 19 1
+            , SrcSpan "tests/examples/completesig01.hs" 20 1 20 1
+            , SrcSpan "tests/examples/completesig01.hs" 22 1 22 1
+            , SrcSpan "tests/examples/completesig01.hs" 24 1 24 1
+            , SrcSpan "tests/examples/completesig01.hs" 24 1 24 1
+            ]
+        }
+      (Just
+         (ModuleHead
+            SrcSpanInfo
+              { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 4 1 4 20
+              , srcInfoPoints =
+                  [ SrcSpan "tests/examples/completesig01.hs" 4 1 4 7
+                  , SrcSpan "tests/examples/completesig01.hs" 4 15 4 20
+                  ]
+              }
+            (ModuleName
+               SrcSpanInfo
+                 { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 4 8 4 14
+                 , srcInfoPoints = []
+                 }
+               "Simple")
+            Nothing
+            Nothing))
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 1 1 1 33
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/completesig01.hs" 1 1 1 13
+                , SrcSpan "tests/examples/completesig01.hs" 1 30 1 33
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 1 14 1 29
+                , srcInfoPoints = []
+                }
+              "PatternSynonyms"
+          ]
+      , LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 2 1 2 35
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/completesig01.hs" 2 1 2 13
+                , SrcSpan "tests/examples/completesig01.hs" 2 32 2 35
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 2 14 2 31
+                , srcInfoPoints = []
+                }
+              "NoImplicitPrelude"
+          ]
+      , OptionsPragma
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 3 1 3 26
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/completesig01.hs" 3 1 3 23
+                , SrcSpan "tests/examples/completesig01.hs" 3 23 3 26
+                ]
+            }
+          (Just GHC)
+          "-Wall "
+      ]
+      []
+      [ PatSynSig
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 6 1 6 18
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/completesig01.hs" 6 1 6 8
+                , SrcSpan "tests/examples/completesig01.hs" 6 13 6 15
+                ]
+            }
+          (Ident
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 6 9 6 12
+               , srcInfoPoints = []
+               }
+             "Foo")
+          Nothing
+          Nothing
+          Nothing
+          (TyCon
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 6 16 6 18
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/completesig01.hs" 6 16 6 17
+                   , SrcSpan "tests/examples/completesig01.hs" 6 17 6 18
+                   ]
+               }
+             (Special
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 6 16 6 18
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/completesig01.hs" 6 16 6 17
+                      , SrcSpan "tests/examples/completesig01.hs" 6 17 6 18
+                      ]
+                  }
+                (UnitCon
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 6 16 6 18
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/completesig01.hs" 6 16 6 17
+                         , SrcSpan "tests/examples/completesig01.hs" 6 17 6 18
+                         ]
+                     })))
+      , PatSyn
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 7 1 7 17
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/completesig01.hs" 7 1 7 8
+                , SrcSpan "tests/examples/completesig01.hs" 7 13 7 14
+                ]
+            }
+          (PApp
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 7 9 7 12
+               , srcInfoPoints = []
+               }
+             (UnQual
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 7 9 7 12
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 7 9 7 12
+                     , srcInfoPoints = []
+                     }
+                   "Foo"))
+             [])
+          (PApp
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 7 15 7 17
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/completesig01.hs" 7 15 7 16
+                   , SrcSpan "tests/examples/completesig01.hs" 7 16 7 17
+                   ]
+               }
+             (Special
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 7 15 7 17
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/completesig01.hs" 7 15 7 16
+                      , SrcSpan "tests/examples/completesig01.hs" 7 16 7 17
+                      ]
+                  }
+                (UnitCon
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 7 15 7 17
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/completesig01.hs" 7 15 7 16
+                         , SrcSpan "tests/examples/completesig01.hs" 7 16 7 17
+                         ]
+                     }))
+             [])
+          ImplicitBidirectional
+      , TypeSig
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 9 1 9 14
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/completesig01.hs" 9 3 9 5 ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 9 1 9 2
+                , srcInfoPoints = []
+                }
+              "a"
+          ]
+          (TyFun
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 9 6 9 14
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/completesig01.hs" 9 9 9 11 ]
+               }
+             (TyCon
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 9 6 9 8
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/completesig01.hs" 9 6 9 7
+                      , SrcSpan "tests/examples/completesig01.hs" 9 7 9 8
+                      ]
+                  }
+                (Special
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 9 6 9 8
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/completesig01.hs" 9 6 9 7
+                         , SrcSpan "tests/examples/completesig01.hs" 9 7 9 8
+                         ]
+                     }
+                   (UnitCon
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 9 6 9 8
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/completesig01.hs" 9 6 9 7
+                            , SrcSpan "tests/examples/completesig01.hs" 9 7 9 8
+                            ]
+                        })))
+             (TyCon
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 9 12 9 14
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/completesig01.hs" 9 12 9 13
+                      , SrcSpan "tests/examples/completesig01.hs" 9 13 9 14
+                      ]
+                  }
+                (Special
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 9 12 9 14
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/completesig01.hs" 9 12 9 13
+                         , SrcSpan "tests/examples/completesig01.hs" 9 13 9 14
+                         ]
+                     }
+                   (UnitCon
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 9 12 9 14
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/completesig01.hs" 9 12 9 13
+                            , SrcSpan "tests/examples/completesig01.hs" 9 13 9 14
+                            ]
+                        }))))
+      , FunBind
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/completesig01.hs" 10 1 10 11
+            , srcInfoPoints = []
+            }
+          [ Match
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/completesig01.hs" 10 1 10 11
+                , srcInfoPoints = []
+                }
+              (Ident
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 10 1 10 2
+                   , srcInfoPoints = []
+                   }
+                 "a")
+              [ PApp
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 10 3 10 6
+                    , srcInfoPoints = []
+                    }
+                  (UnQual
+                     SrcSpanInfo
+                       { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 10 3 10 6
+                       , srcInfoPoints = []
+                       }
+                     (Ident
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 10 3 10 6
+                          , srcInfoPoints = []
+                          }
+                        "Foo"))
+                  []
+              ]
+              (UnGuardedRhs
+                 SrcSpanInfo
+                   { srcInfoSpan =
+                       SrcSpan "tests/examples/completesig01.hs" 10 7 10 11
+                   , srcInfoPoints =
+                       [ SrcSpan "tests/examples/completesig01.hs" 10 7 10 8 ]
+                   }
+                 (Con
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/completesig01.hs" 10 9 10 11
+                      , srcInfoPoints =
+                          [ SrcSpan "tests/examples/completesig01.hs" 10 9 10 10
+                          , SrcSpan "tests/examples/completesig01.hs" 10 10 10 11
+                          ]
+                      }
+                    (Special
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/completesig01.hs" 10 9 10 11
+                         , srcInfoPoints =
+                             [ SrcSpan "tests/examples/completesig01.hs" 10 9 10 10
+                             , SrcSpan "tests/examples/completesig01.hs" 10 10 10 11
+                             ]
+                         }
+                       (UnitCon
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/completesig01.hs" 10 9 10 11
+                            , srcInfoPoints =
+                                [ SrcSpan "tests/examples/completesig01.hs" 10 9 10 10
+                                , SrcSpan "tests/examples/completesig01.hs" 10 10 10 11
+                                ]
+                            }))))
+              Nothing
+          ]
+      , DataDecl
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/completesig01.hs" 12 1 12 19
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/completesig01.hs" 12 8 12 9
+                , SrcSpan "tests/examples/completesig01.hs" 12 12 12 13
+                , SrcSpan "tests/examples/completesig01.hs" 12 16 12 17
+                ]
+            }
+          (DataType
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 12 1 12 5
+               , srcInfoPoints = []
+               })
+          Nothing
+          (DHead
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 12 6 12 7
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 12 6 12 7
+                  , srcInfoPoints = []
+                  }
+                "A"))
+          [ QualConDecl
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/completesig01.hs" 12 10 12 11
+                , srcInfoPoints = []
+                }
+              Nothing
+              Nothing
+              (ConDecl
+                 SrcSpanInfo
+                   { srcInfoSpan =
+                       SrcSpan "tests/examples/completesig01.hs" 12 10 12 11
+                   , srcInfoPoints = []
+                   }
+                 (Ident
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/completesig01.hs" 12 10 12 11
+                      , srcInfoPoints = []
+                      }
+                    "B")
+                 [])
+          , QualConDecl
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/completesig01.hs" 12 14 12 15
+                , srcInfoPoints = []
+                }
+              Nothing
+              Nothing
+              (ConDecl
+                 SrcSpanInfo
+                   { srcInfoSpan =
+                       SrcSpan "tests/examples/completesig01.hs" 12 14 12 15
+                   , srcInfoPoints = []
+                   }
+                 (Ident
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/completesig01.hs" 12 14 12 15
+                      , srcInfoPoints = []
+                      }
+                    "C")
+                 [])
+          , QualConDecl
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/completesig01.hs" 12 18 12 19
+                , srcInfoPoints = []
+                }
+              Nothing
+              Nothing
+              (ConDecl
+                 SrcSpanInfo
+                   { srcInfoSpan =
+                       SrcSpan "tests/examples/completesig01.hs" 12 18 12 19
+                   , srcInfoPoints = []
+                   }
+                 (Ident
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/completesig01.hs" 12 18 12 19
+                      , srcInfoPoints = []
+                      }
+                    "D")
+                 [])
+          ]
+          Nothing
+      , CompletePragma
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/completesig01.hs" 14 1 14 21
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/completesig01.hs" 14 1 14 13
+                , SrcSpan "tests/examples/completesig01.hs" 14 18 14 21
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/completesig01.hs" 14 14 14 17
+                , srcInfoPoints = []
+                }
+              "Foo"
+          ]
+          Nothing
+      , CompletePragma
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/completesig01.hs" 15 1 15 21
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/completesig01.hs" 15 1 15 13
+                , SrcSpan "tests/examples/completesig01.hs" 15 15 15 16
+                , SrcSpan "tests/examples/completesig01.hs" 15 18 15 21
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/completesig01.hs" 15 14 15 15
+                , srcInfoPoints = []
+                }
+              "B"
+          , Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/completesig01.hs" 15 16 15 17
+                , srcInfoPoints = []
+                }
+              "C"
+          ]
+          Nothing
+      , CompletePragma
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/completesig01.hs" 16 1 16 19
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/completesig01.hs" 16 1 16 13
+                , SrcSpan "tests/examples/completesig01.hs" 16 16 16 19
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/completesig01.hs" 16 14 16 15
+                , srcInfoPoints = []
+                }
+              "B"
+          ]
+          Nothing
+      , TypeSig
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/completesig01.hs" 18 1 18 12
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/completesig01.hs" 18 3 18 5 ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 18 1 18 2
+                , srcInfoPoints = []
+                }
+              "b"
+          ]
+          (TyFun
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/completesig01.hs" 18 6 18 12
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/completesig01.hs" 18 8 18 10 ]
+               }
+             (TyCon
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 18 6 18 7
+                  , srcInfoPoints = []
+                  }
+                (UnQual
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 18 6 18 7
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 18 6 18 7
+                        , srcInfoPoints = []
+                        }
+                      "A")))
+             (TyCon
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/completesig01.hs" 18 11 18 12
+                  , srcInfoPoints = []
+                  }
+                (UnQual
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/completesig01.hs" 18 11 18 12
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/completesig01.hs" 18 11 18 12
+                        , srcInfoPoints = []
+                        }
+                      "A"))))
+      , FunBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 19 1 20 8
+            , srcInfoPoints = []
+            }
+          [ Match
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 19 1 19 8
+                , srcInfoPoints = []
+                }
+              (Ident
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 19 1 19 2
+                   , srcInfoPoints = []
+                   }
+                 "b")
+              [ PApp
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 19 3 19 4
+                    , srcInfoPoints = []
+                    }
+                  (UnQual
+                     SrcSpanInfo
+                       { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 19 3 19 4
+                       , srcInfoPoints = []
+                       }
+                     (Ident
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 19 3 19 4
+                          , srcInfoPoints = []
+                          }
+                        "B"))
+                  []
+              ]
+              (UnGuardedRhs
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 19 5 19 8
+                   , srcInfoPoints =
+                       [ SrcSpan "tests/examples/completesig01.hs" 19 5 19 6 ]
+                   }
+                 (Con
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 19 7 19 8
+                      , srcInfoPoints = []
+                      }
+                    (UnQual
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 19 7 19 8
+                         , srcInfoPoints = []
+                         }
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 19 7 19 8
+                            , srcInfoPoints = []
+                            }
+                          "B"))))
+              Nothing
+          , Match
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 20 1 20 8
+                , srcInfoPoints = []
+                }
+              (Ident
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 20 1 20 2
+                   , srcInfoPoints = []
+                   }
+                 "b")
+              [ PApp
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 20 3 20 4
+                    , srcInfoPoints = []
+                    }
+                  (UnQual
+                     SrcSpanInfo
+                       { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 20 3 20 4
+                       , srcInfoPoints = []
+                       }
+                     (Ident
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 20 3 20 4
+                          , srcInfoPoints = []
+                          }
+                        "C"))
+                  []
+              ]
+              (UnGuardedRhs
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 20 5 20 8
+                   , srcInfoPoints =
+                       [ SrcSpan "tests/examples/completesig01.hs" 20 5 20 6 ]
+                   }
+                 (Con
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 20 7 20 8
+                      , srcInfoPoints = []
+                      }
+                    (UnQual
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 20 7 20 8
+                         , srcInfoPoints = []
+                         }
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 20 7 20 8
+                            , srcInfoPoints = []
+                            }
+                          "C"))))
+              Nothing
+          ]
+      , CompletePragma
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/completesig01.hs" 22 1 22 27
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/completesig01.hs" 22 1 22 13
+                , SrcSpan "tests/examples/completesig01.hs" 22 18 22 20
+                , SrcSpan "tests/examples/completesig01.hs" 22 24 22 27
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/completesig01.hs" 22 14 22 17
+                , srcInfoPoints = []
+                }
+              "Foo"
+          ]
+          (Just
+             (Special
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/completesig01.hs" 22 21 22 23
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/completesig01.hs" 22 21 22 22
+                      , SrcSpan "tests/examples/completesig01.hs" 22 22 22 23
+                      ]
+                  }
+                (UnitCon
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/completesig01.hs" 22 21 22 23
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/completesig01.hs" 22 21 22 22
+                         , SrcSpan "tests/examples/completesig01.hs" 22 22 22 23
+                         ]
+                     })))
+      ]
+  , []
+  )
