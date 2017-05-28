@@ -1,0 +1,930 @@
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 1 1 21 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/TensorTests.hs" 1 1 1 1
+            , SrcSpan "tests/examples/TensorTests.hs" 5 1 5 1
+            , SrcSpan "tests/examples/TensorTests.hs" 5 1 5 1
+            , SrcSpan "tests/examples/TensorTests.hs" 7 1 7 1
+            , SrcSpan "tests/examples/TensorTests.hs" 8 1 8 1
+            , SrcSpan "tests/examples/TensorTests.hs" 9 1 9 1
+            , SrcSpan "tests/examples/TensorTests.hs" 12 1 12 1
+            , SrcSpan "tests/examples/TensorTests.hs" 13 1 13 1
+            , SrcSpan "tests/examples/TensorTests.hs" 14 1 14 1
+            , SrcSpan "tests/examples/TensorTests.hs" 16 1 16 1
+            , SrcSpan "tests/examples/TensorTests.hs" 19 1 19 1
+            , SrcSpan "tests/examples/TensorTests.hs" 21 1 21 1
+            , SrcSpan "tests/examples/TensorTests.hs" 21 1 21 1
+            ]
+        }
+      (Just
+         (ModuleHead
+            SrcSpanInfo
+              { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 5 1 5 39
+              , srcInfoPoints =
+                  [ SrcSpan "tests/examples/TensorTests.hs" 5 1 5 7
+                  , SrcSpan "tests/examples/TensorTests.hs" 5 34 5 39
+                  ]
+              }
+            (ModuleName
+               SrcSpanInfo
+                 { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 5 8 5 19
+                 , srcInfoPoints = []
+                 }
+               "TensorTests")
+            Nothing
+            (Just
+               (ExportSpecList
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 5 20 5 33
+                    , srcInfoPoints =
+                        [ SrcSpan "tests/examples/TensorTests.hs" 5 20 5 21
+                        , SrcSpan "tests/examples/TensorTests.hs" 5 32 5 33
+                        ]
+                    }
+                  [ EVar
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 5 21 5 32
+                        , srcInfoPoints = []
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 5 21 5 32
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 5 21 5 32
+                              , srcInfoPoints = []
+                              }
+                            "tensorTests"))
+                  ]))))
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 1 1 3 38
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/TensorTests.hs" 1 1 1 13
+                , SrcSpan "tests/examples/TensorTests.hs" 1 29 1 30
+                , SrcSpan "tests/examples/TensorTests.hs" 1 47 1 48
+                , SrcSpan "tests/examples/TensorTests.hs" 1 58 1 59
+                , SrcSpan "tests/examples/TensorTests.hs" 1 77 1 78
+                , SrcSpan "tests/examples/TensorTests.hs" 2 30 2 31
+                , SrcSpan "tests/examples/TensorTests.hs" 2 51 2 52
+                , SrcSpan "tests/examples/TensorTests.hs" 2 65 2 66
+                , SrcSpan "tests/examples/TensorTests.hs" 2 80 2 81
+                , SrcSpan "tests/examples/TensorTests.hs" 3 35 3 38
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 1 14 1 29
+                , srcInfoPoints = []
+                }
+              "ConstraintKinds"
+          , Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 1 31 1 47
+                , srcInfoPoints = []
+                }
+              "FlexibleContexts"
+          , Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 1 49 1 58
+                , srcInfoPoints = []
+                }
+              "DataKinds"
+          , Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 1 60 1 77
+                , srcInfoPoints = []
+                }
+              "NoImplicitPrelude"
+          , Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 2 14 2 30
+                , srcInfoPoints = []
+                }
+              "RebindableSyntax"
+          , Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 2 32 2 51
+                , srcInfoPoints = []
+                }
+              "ScopedTypeVariables"
+          , Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 2 53 2 65
+                , srcInfoPoints = []
+                }
+              "TypeFamilies"
+          , Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 2 67 2 80
+                , srcInfoPoints = []
+                }
+              "TypeOperators"
+          , Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 3 14 3 34
+                , srcInfoPoints = []
+                }
+              "UndecidableInstances"
+          ]
+      ]
+      []
+      [ TypeDecl
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 7 1 7 50
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/TensorTests.hs" 7 1 7 5
+                , SrcSpan "tests/examples/TensorTests.hs" 7 16 7 17
+                ]
+            }
+          (DHead
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 7 6 7 15
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 7 6 7 15
+                  , srcInfoPoints = []
+                  }
+                "TMRParams"))
+          (TyInfix
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 7 18 7 50
+               , srcInfoPoints = []
+               }
+             (TyParen
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 7 18 7 37
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/TensorTests.hs" 7 18 7 19
+                      , SrcSpan "tests/examples/TensorTests.hs" 7 36 7 37
+                      ]
+                  }
+                (TyInfix
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 7 20 7 36
+                     , srcInfoPoints = []
+                     }
+                   (TyPromoted
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 7 20 7 24
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/TensorTests.hs" 7 20 7 21 ]
+                        }
+                      (PromotedCon
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 7 20 7 24
+                           , srcInfoPoints =
+                               [ SrcSpan "tests/examples/TensorTests.hs" 7 20 7 21 ]
+                           }
+                         True
+                         (Special
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 7 21 7 24
+                              , srcInfoPoints =
+                                  [ SrcSpan "tests/examples/TensorTests.hs" 7 21 7 22
+                                  , SrcSpan "tests/examples/TensorTests.hs" 7 22 7 23
+                                  , SrcSpan "tests/examples/TensorTests.hs" 7 23 7 24
+                                  ]
+                              }
+                            (TupleCon
+                               SrcSpanInfo
+                                 { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 7 21 7 24
+                                 , srcInfoPoints =
+                                     [ SrcSpan "tests/examples/TensorTests.hs" 7 21 7 22
+                                     , SrcSpan "tests/examples/TensorTests.hs" 7 22 7 23
+                                     , SrcSpan "tests/examples/TensorTests.hs" 7 23 7 24
+                                     ]
+                                 }
+                               Boxed
+                               2))))
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 7 25 7 28
+                        , srcInfoPoints = []
+                        }
+                      (Symbol
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 7 25 7 28
+                           , srcInfoPoints = []
+                           }
+                         "<$>"))
+                   (TyCon
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 7 29 7 36
+                        , srcInfoPoints = []
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 7 29 7 36
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 7 29 7 36
+                              , srcInfoPoints = []
+                              }
+                            "Tensors")))))
+             (UnQual
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 7 38 7 41
+                  , srcInfoPoints = []
+                  }
+                (Symbol
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 7 38 7 41
+                     , srcInfoPoints = []
+                     }
+                   "<*>"))
+             (TyCon
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 7 42 7 50
+                  , srcInfoPoints = []
+                  }
+                (UnQual
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 7 42 7 50
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 7 42 7 50
+                        , srcInfoPoints = []
+                        }
+                      "MRCombos"))))
+      , TypeSig
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 8 1 8 29
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/TensorTests.hs" 8 11 8 13 ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 8 1 8 10
+                , srcInfoPoints = []
+                }
+              "tmrParams"
+          ]
+          (TyApp
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 8 14 8 29
+               , srcInfoPoints = []
+               }
+             (TyCon
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 8 14 8 19
+                  , srcInfoPoints = []
+                  }
+                (UnQual
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 8 14 8 19
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 8 14 8 19
+                        , srcInfoPoints = []
+                        }
+                      "Proxy")))
+             (TyCon
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 8 20 8 29
+                  , srcInfoPoints = []
+                  }
+                (UnQual
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 8 20 8 29
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 8 20 8 29
+                        , srcInfoPoints = []
+                        }
+                      "TMRParams"))))
+      , PatBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 9 1 9 18
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 9 1 9 10
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 9 1 9 10
+                  , srcInfoPoints = []
+                  }
+                "tmrParams"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 9 11 9 18
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/TensorTests.hs" 9 11 9 12 ]
+               }
+             (Con
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 9 13 9 18
+                  , srcInfoPoints = []
+                  }
+                (UnQual
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 9 13 9 18
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 9 13 9 18
+                        , srcInfoPoints = []
+                        }
+                      "Proxy"))))
+          Nothing
+      , TypeDecl
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 12 1 12 53
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/TensorTests.hs" 12 1 12 5
+                , SrcSpan "tests/examples/TensorTests.hs" 12 17 12 18
+                ]
+            }
+          (DHead
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 12 6 12 16
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 12 6 12 16
+                  , srcInfoPoints = []
+                  }
+                "TrEmParams"))
+          (TyInfix
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 12 19 12 53
+               , srcInfoPoints = []
+               }
+             (TyParen
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 12 19 12 38
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/TensorTests.hs" 12 19 12 20
+                      , SrcSpan "tests/examples/TensorTests.hs" 12 37 12 38
+                      ]
+                  }
+                (TyInfix
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 12 21 12 37
+                     , srcInfoPoints = []
+                     }
+                   (TyPromoted
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 12 21 12 25
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/TensorTests.hs" 12 21 12 22 ]
+                        }
+                      (PromotedCon
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 12 21 12 25
+                           , srcInfoPoints =
+                               [ SrcSpan "tests/examples/TensorTests.hs" 12 21 12 22 ]
+                           }
+                         True
+                         (Special
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 12 22 12 25
+                              , srcInfoPoints =
+                                  [ SrcSpan "tests/examples/TensorTests.hs" 12 22 12 23
+                                  , SrcSpan "tests/examples/TensorTests.hs" 12 23 12 24
+                                  , SrcSpan "tests/examples/TensorTests.hs" 12 24 12 25
+                                  ]
+                              }
+                            (TupleCon
+                               SrcSpanInfo
+                                 { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 12 22 12 25
+                                 , srcInfoPoints =
+                                     [ SrcSpan "tests/examples/TensorTests.hs" 12 22 12 23
+                                     , SrcSpan "tests/examples/TensorTests.hs" 12 23 12 24
+                                     , SrcSpan "tests/examples/TensorTests.hs" 12 24 12 25
+                                     ]
+                                 }
+                               Boxed
+                               2))))
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 12 26 12 29
+                        , srcInfoPoints = []
+                        }
+                      (Symbol
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 12 26 12 29
+                           , srcInfoPoints = []
+                           }
+                         "<$>"))
+                   (TyCon
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 12 30 12 37
+                        , srcInfoPoints = []
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 12 30 12 37
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 12 30 12 37
+                              , srcInfoPoints = []
+                              }
+                            "Tensors")))))
+             (UnQual
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 12 39 12 42
+                  , srcInfoPoints = []
+                  }
+                (Symbol
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 12 39 12 42
+                     , srcInfoPoints = []
+                     }
+                   "<*>"))
+             (TyCon
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 12 43 12 53
+                  , srcInfoPoints = []
+                  }
+                (UnQual
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 12 43 12 53
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 12 43 12 53
+                        , srcInfoPoints = []
+                        }
+                      "MM'RCombos"))))
+      , TypeSig
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 13 1 13 31
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/TensorTests.hs" 13 12 13 14 ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 13 1 13 11
+                , srcInfoPoints = []
+                }
+              "tremParams"
+          ]
+          (TyApp
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 13 15 13 31
+               , srcInfoPoints = []
+               }
+             (TyCon
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 13 15 13 20
+                  , srcInfoPoints = []
+                  }
+                (UnQual
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 13 15 13 20
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 13 15 13 20
+                        , srcInfoPoints = []
+                        }
+                      "Proxy")))
+             (TyCon
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 13 21 13 31
+                  , srcInfoPoints = []
+                  }
+                (UnQual
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 13 21 13 31
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 13 21 13 31
+                        , srcInfoPoints = []
+                        }
+                      "TrEmParams"))))
+      , PatBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 14 1 14 19
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 14 1 14 11
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 14 1 14 11
+                  , srcInfoPoints = []
+                  }
+                "tremParams"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 14 12 14 19
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/TensorTests.hs" 14 12 14 13 ]
+               }
+             (Con
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 14 14 14 19
+                  , srcInfoPoints = []
+                  }
+                (UnQual
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 14 14 14 19
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 14 14 14 19
+                        , srcInfoPoints = []
+                        }
+                      "Proxy"))))
+          Nothing
+      , TypeDecl
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 16 1 16 67
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/TensorTests.hs" 16 1 16 5
+                , SrcSpan "tests/examples/TensorTests.hs" 16 17 16 18
+                ]
+            }
+          (DHead
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 16 6 16 16
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 16 6 16 16
+                  , srcInfoPoints = []
+                  }
+                "NormParams"))
+          (TyInfix
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 16 19 16 67
+               , srcInfoPoints = []
+               }
+             (TyParen
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 16 19 16 36
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/TensorTests.hs" 16 19 16 20
+                      , SrcSpan "tests/examples/TensorTests.hs" 16 35 16 36
+                      ]
+                  }
+                (TyInfix
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 16 21 16 35
+                     , srcInfoPoints = []
+                     }
+                   (TyPromoted
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 16 21 16 25
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/TensorTests.hs" 16 21 16 22 ]
+                        }
+                      (PromotedCon
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 16 21 16 25
+                           , srcInfoPoints =
+                               [ SrcSpan "tests/examples/TensorTests.hs" 16 21 16 22 ]
+                           }
+                         True
+                         (Special
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 16 22 16 25
+                              , srcInfoPoints =
+                                  [ SrcSpan "tests/examples/TensorTests.hs" 16 22 16 23
+                                  , SrcSpan "tests/examples/TensorTests.hs" 16 23 16 24
+                                  , SrcSpan "tests/examples/TensorTests.hs" 16 24 16 25
+                                  ]
+                              }
+                            (TupleCon
+                               SrcSpanInfo
+                                 { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 16 22 16 25
+                                 , srcInfoPoints =
+                                     [ SrcSpan "tests/examples/TensorTests.hs" 16 22 16 23
+                                     , SrcSpan "tests/examples/TensorTests.hs" 16 23 16 24
+                                     , SrcSpan "tests/examples/TensorTests.hs" 16 24 16 25
+                                     ]
+                                 }
+                               Boxed
+                               2))))
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 16 26 16 29
+                        , srcInfoPoints = []
+                        }
+                      (Symbol
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 16 26 16 29
+                           , srcInfoPoints = []
+                           }
+                         "<$>"))
+                   (TyPromoted
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 16 30 16 35
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/TensorTests.hs" 16 30 16 31
+                            , SrcSpan "tests/examples/TensorTests.hs" 16 34 16 35
+                            ]
+                        }
+                      (PromotedList
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 16 30 16 35
+                           , srcInfoPoints =
+                               [ SrcSpan "tests/examples/TensorTests.hs" 16 30 16 31
+                               , SrcSpan "tests/examples/TensorTests.hs" 16 34 16 35
+                               ]
+                           }
+                         True
+                         [ TyCon
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 16 32 16 34
+                               , srcInfoPoints = []
+                               }
+                             (UnQual
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/TensorTests.hs" 16 32 16 34
+                                  , srcInfoPoints = []
+                                  }
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/TensorTests.hs" 16 32 16 34
+                                     , srcInfoPoints = []
+                                     }
+                                   "RT"))
+                         ]))))
+             (UnQual
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 16 37 16 40
+                  , srcInfoPoints = []
+                  }
+                (Symbol
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 16 37 16 40
+                     , srcInfoPoints = []
+                     }
+                   "<*>"))
+             (TyParen
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 16 41 16 67
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/TensorTests.hs" 16 41 16 42
+                      , SrcSpan "tests/examples/TensorTests.hs" 16 66 16 67
+                      ]
+                  }
+                (TyApp
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 16 42 16 66
+                     , srcInfoPoints = []
+                     }
+                   (TyApp
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 16 42 16 57
+                        , srcInfoPoints = []
+                        }
+                      (TyCon
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 16 42 16 48
+                           , srcInfoPoints = []
+                           }
+                         (UnQual
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 16 42 16 48
+                              , srcInfoPoints = []
+                              }
+                            (Ident
+                               SrcSpanInfo
+                                 { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 16 42 16 48
+                                 , srcInfoPoints = []
+                                 }
+                               "Filter")))
+                      (TyCon
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 16 49 16 57
+                           , srcInfoPoints = []
+                           }
+                         (UnQual
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 16 49 16 57
+                              , srcInfoPoints = []
+                              }
+                            (Ident
+                               SrcSpanInfo
+                                 { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 16 49 16 57
+                                 , srcInfoPoints = []
+                                 }
+                               "Liftable"))))
+                   (TyCon
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 16 58 16 66
+                        , srcInfoPoints = []
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 16 58 16 66
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 16 58 16 66
+                              , srcInfoPoints = []
+                              }
+                            "MRCombos"))))))
+      , TypeInsDecl
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 19 1 19 61
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/TensorTests.hs" 19 1 19 5
+                , SrcSpan "tests/examples/TensorTests.hs" 19 6 19 14
+                , SrcSpan "tests/examples/TensorTests.hs" 19 38 19 39
+                ]
+            }
+          (TyApp
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 19 15 19 37
+               , srcInfoPoints = []
+               }
+             (TyApp
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 19 15 19 29
+                  , srcInfoPoints = []
+                  }
+                (TyCon
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 19 15 19 20
+                     , srcInfoPoints = []
+                     }
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 19 15 19 20
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 19 15 19 20
+                           , srcInfoPoints = []
+                           }
+                         "Apply")))
+                (TyCon
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 19 21 19 29
+                     , srcInfoPoints = []
+                     }
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 19 21 19 29
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 19 21 19 29
+                           , srcInfoPoints = []
+                           }
+                         "Liftable"))))
+             (TyPromoted
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 19 30 19 37
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/TensorTests.hs" 19 30 19 31
+                      , SrcSpan "tests/examples/TensorTests.hs" 19 33 19 34
+                      , SrcSpan "tests/examples/TensorTests.hs" 19 36 19 37
+                      ]
+                  }
+                (PromotedTuple
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 19 30 19 37
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/TensorTests.hs" 19 30 19 31
+                         , SrcSpan "tests/examples/TensorTests.hs" 19 33 19 34
+                         , SrcSpan "tests/examples/TensorTests.hs" 19 36 19 37
+                         ]
+                     }
+                   [ TyVar
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 19 32 19 33
+                         , srcInfoPoints = []
+                         }
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 19 32 19 33
+                            , srcInfoPoints = []
+                            }
+                          "m")
+                   , TyVar
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 19 34 19 36
+                         , srcInfoPoints = []
+                         }
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 19 34 19 36
+                            , srcInfoPoints = []
+                            }
+                          "zq")
+                   ])))
+          (TyInfix
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 19 40 19 61
+               , srcInfoPoints = []
+               }
+             (TyCon
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 19 40 19 45
+                  , srcInfoPoints = []
+                  }
+                (UnQual
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 19 40 19 45
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 19 40 19 45
+                        , srcInfoPoints = []
+                        }
+                      "Int64")))
+             (UnQual
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 19 46 19 49
+                  , srcInfoPoints = []
+                  }
+                (Symbol
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 19 46 19 49
+                     , srcInfoPoints = []
+                     }
+                   ":=="))
+             (TyParen
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 19 50 19 61
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/TensorTests.hs" 19 50 19 51
+                      , SrcSpan "tests/examples/TensorTests.hs" 19 60 19 61
+                      ]
+                  }
+                (TyApp
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 19 51 19 60
+                     , srcInfoPoints = []
+                     }
+                   (TyCon
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 19 51 19 57
+                        , srcInfoPoints = []
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 19 51 19 57
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 19 51 19 57
+                              , srcInfoPoints = []
+                              }
+                            "LiftOf")))
+                   (TyVar
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 19 58 19 60
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 19 58 19 60
+                           , srcInfoPoints = []
+                           }
+                         "zq")))))
+      ]
+  , [ Comment
+        False
+        (SrcSpan "tests/examples/TensorTests.hs" 11 1 11 55)
+        "type ExtParams = ( '(,) <$> Tensors) <*> MRExtCombos"
+    , Comment
+        False
+        (SrcSpan "tests/examples/TensorTests.hs" 18 1 18 49)
+        "data Liftable :: TyFun (Factored, *) Bool -> *"
+    ]
+  )
