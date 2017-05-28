@@ -1,0 +1,2 @@
+ParseFailed
+  (SrcLoc "tests/examples/brackets.hs" 17 3) "Parse error: \10631"
