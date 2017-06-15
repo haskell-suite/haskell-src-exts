@@ -435,7 +435,7 @@ The Export List
 >
 > qcname :: { QName L }
 >        : qvar                                 { $1 }
->        | qconid                               { $1 }
+>        | qcon                                 { $1 }
 
 -----------------------------------------------------------------------------
 Import Declarations
