@@ -1,0 +1,1 @@
+ParseFailed (SrcLoc "tests/examples/List2.hs" 34 44) "ExplicitNamespaces language extension is not enabled. Please add {-# LANGUAGE ExplicitNamespaces #-} pragma at the top of your module."
