@@ -169,7 +169,7 @@ data Attribute = Damping Double
                | Weight Double
                | Width Double
                | Z Double
-               deriving (Eq, Ord, Show, Read)
+                   deriving (Eq, Ord, Show, Read)
 
 type Attributes = [Attribute]
 
@@ -675,7 +675,7 @@ usedByEdges _ = False
 type EscString = String
 
 newtype URL = UStr{urlString :: EscString}
-            deriving (Eq, Ord, Show, Read)
+                deriving (Eq, Ord, Show, Read)
 
 instance PrintDot URL where
         unqtDot = wrap (char '<') (char '>') . text . urlString
@@ -690,7 +690,7 @@ instance ParseDot URL where
         parse = parseUnqt
 
 newtype ArrowType = AType [(ArrowModifier, ArrowShape)]
-                  deriving (Eq, Ord, Show, Read)
+                      deriving (Eq, Ord, Show, Read)
 
 box, crow, diamond, dotArrow, inv, noArrow, normal, tee, vee ::
      ArrowType
@@ -747,7 +747,7 @@ data ArrowShape = Box
                 | Normal
                 | Tee
                 | Vee
-                deriving (Eq, Ord, Bounded, Enum, Show, Read)
+                    deriving (Eq, Ord, Bounded, Enum, Show, Read)
 
 instance PrintDot ArrowShape where
         unqtDot Box = unqtDot "box"
@@ -771,7 +771,7 @@ instance ParseDot ArrowShape where
 
 data ArrowModifier = ArrMod{arrowFill :: ArrowFill,
                             arrowSide :: ArrowSide}
-                   deriving (Eq, Ord, Show, Read)
+                       deriving (Eq, Ord, Show, Read)
 
 noMods :: ArrowModifier
 noMods = ArrMod FilledArrow BothSides
@@ -790,7 +790,7 @@ instance ParseDot ArrowModifier where
 
 data ArrowFill = OpenArrow
                | FilledArrow
-               deriving (Eq, Ord, Bounded, Enum, Show, Read)
+                   deriving (Eq, Ord, Bounded, Enum, Show, Read)
 
 instance PrintDot ArrowFill where
         unqtDot OpenArrow = char 'o'
@@ -805,7 +805,7 @@ instance ParseDot ArrowFill where
 data ArrowSide = LeftSide
                | RightSide
                | BothSides
-               deriving (Eq, Ord, Bounded, Enum, Show, Read)
+                   deriving (Eq, Ord, Bounded, Enum, Show, Read)
 
 instance PrintDot ArrowSide where
         unqtDot LeftSide = char 'l'
@@ -821,7 +821,7 @@ instance ParseDot ArrowSide where
 
 data AspectType = RatioOnly Double
                 | RatioPassCount Double Int
-                deriving (Eq, Ord, Show, Read)
+                    deriving (Eq, Ord, Show, Read)
 
 instance PrintDot AspectType where
         unqtDot (RatioOnly r) = unqtDot r
@@ -838,7 +838,7 @@ instance ParseDot AspectType where
               `onFail` liftM RatioOnly parse
 
 data Rect = Rect Point Point
-          deriving (Eq, Ord, Show, Read)
+              deriving (Eq, Ord, Show, Read)
 
 instance PrintDot Rect where
         unqtDot (Rect p1 p2) = commaDel p1 p2
@@ -851,7 +851,7 @@ instance ParseDot Rect where
 data ClusterMode = Local
                  | Global
                  | NoCluster
-                 deriving (Eq, Ord, Bounded, Enum, Show, Read)
+                     deriving (Eq, Ord, Bounded, Enum, Show, Read)
 
 instance PrintDot ClusterMode where
         unqtDot Local = unqtDot "local"
@@ -868,7 +868,7 @@ data DirType = Forward
              | Back
              | Both
              | NoDir
-             deriving (Eq, Ord, Bounded, Enum, Show, Read)
+                 deriving (Eq, Ord, Bounded, Enum, Show, Read)
 
 instance PrintDot DirType where
         unqtDot Forward = unqtDot "forward"
@@ -885,7 +885,7 @@ instance ParseDot DirType where
 data DEConstraints = EdgeConstraints
                    | NoConstraints
                    | HierConstraints
-                   deriving (Eq, Ord, Bounded, Enum, Show, Read)
+                       deriving (Eq, Ord, Bounded, Enum, Show, Read)
 
 instance PrintDot DEConstraints where
         unqtDot EdgeConstraints = unqtDot True
@@ -899,7 +899,7 @@ instance ParseDot DEConstraints where
 
 data DPoint = DVal Double
             | PVal Point
-            deriving (Eq, Ord, Show, Read)
+                deriving (Eq, Ord, Show, Read)
 
 instance PrintDot DPoint where
         unqtDot (DVal d) = unqtDot d
@@ -915,7 +915,7 @@ data ModeType = Major
               | KK
               | Hier
               | IpSep
-              deriving (Eq, Ord, Bounded, Enum, Show, Read)
+                  deriving (Eq, Ord, Bounded, Enum, Show, Read)
 
 instance PrintDot ModeType where
         unqtDot Major = text "major"
@@ -932,7 +932,7 @@ instance ParseDot ModeType where
 data Model = ShortPath
            | SubSet
            | Circuit
-           deriving (Eq, Ord, Bounded, Enum, Show, Read)
+               deriving (Eq, Ord, Bounded, Enum, Show, Read)
 
 instance PrintDot Model where
         unqtDot ShortPath = text "shortpath"
@@ -947,7 +947,7 @@ instance ParseDot Model where
 
 data Label = StrLabel EscString
            | URLLabel URL
-           deriving (Eq, Ord, Show, Read)
+               deriving (Eq, Ord, Show, Read)
 
 instance PrintDot Label where
         unqtDot (StrLabel s) = unqtDot s
@@ -962,7 +962,7 @@ instance ParseDot Label where
 
 data Point = Point Int Int
            | PointD Double Double
-           deriving (Eq, Ord, Show, Read)
+               deriving (Eq, Ord, Show, Read)
 
 instance PrintDot Point where
         unqtDot (Point x y) = commaDel x y
@@ -992,7 +992,7 @@ data Overlap = KeepOverlaps
              | CompressOverlap
              | VpscOverlap
              | IpsepOverlap
-             deriving (Eq, Ord, Show, Read)
+                 deriving (Eq, Ord, Show, Read)
 
 instance PrintDot Overlap where
         unqtDot KeepOverlaps = unqtDot True
@@ -1017,7 +1017,7 @@ instance ParseDot Overlap where
 
 data LayerRange = LRID LayerID
                 | LRS LayerID String LayerID
-                deriving (Eq, Ord, Show, Read)
+                    deriving (Eq, Ord, Show, Read)
 
 instance PrintDot LayerRange where
         unqtDot (LRID lid) = unqtDot lid
@@ -1060,7 +1060,7 @@ notLayerSep = flip notElem defLayerSep
 data LayerID = AllLayers
              | LRInt Int
              | LRName String
-             deriving (Eq, Ord, Show, Read)
+                 deriving (Eq, Ord, Show, Read)
 
 instance PrintDot LayerID where
         unqtDot AllLayers = text "all"
@@ -1080,7 +1080,7 @@ checkLayerName str = maybe checkAll LRInt $ stringToInt str
           = if map toLower str == "all" then AllLayers else LRName str
 
 data LayerList = LL String [(String, String)]
-               deriving (Eq, Ord, Show, Read)
+                   deriving (Eq, Ord, Show, Read)
 
 instance PrintDot LayerList where
         unqtDot (LL l1 ols) = unqtDot l1 <> hcat (map subLL ols)
@@ -1103,7 +1103,7 @@ instance ParseDot LayerList where
 data OutputMode = BreadthFirst
                 | NodesFirst
                 | EdgesFirst
-                deriving (Eq, Ord, Bounded, Enum, Show, Read)
+                    deriving (Eq, Ord, Bounded, Enum, Show, Read)
 
 instance PrintDot OutputMode where
         unqtDot BreadthFirst = text "breadthfirst"
@@ -1120,7 +1120,7 @@ instance ParseDot OutputMode where
 data Pack = DoPack
           | DontPack
           | PackMargin Int
-          deriving (Eq, Ord, Show, Read)
+              deriving (Eq, Ord, Show, Read)
 
 instance PrintDot Pack where
         unqtDot DoPack = unqtDot True
@@ -1136,7 +1136,7 @@ data PackMode = PackNode
               | PackClust
               | PackGraph
               | PackArray Bool Bool (Maybe Int)
-              deriving (Eq, Ord, Show, Read)
+                  deriving (Eq, Ord, Show, Read)
 
 instance PrintDot PackMode where
         unqtDot PackNode = text "node"
@@ -1167,7 +1167,7 @@ instance ParseDot PackMode where
 
 data Pos = PointPos Point
          | SplinePos [Spline]
-         deriving (Eq, Ord, Show, Read)
+             deriving (Eq, Ord, Show, Read)
 
 instance PrintDot Pos where
         unqtDot (PointPos p) = unqtDot p
@@ -1188,7 +1188,7 @@ data EdgeType = SplineEdges
               | NoEdges
               | PolyLine
               | CompoundEdge
-              deriving (Eq, Ord, Bounded, Enum, Show, Read)
+                  deriving (Eq, Ord, Bounded, Enum, Show, Read)
 
 instance PrintDot EdgeType where
         unqtDot SplineEdges = toDot True
@@ -1215,7 +1215,7 @@ data PageDir = Bl
              | Rt
              | Lb
              | Lt
-             deriving (Eq, Ord, Bounded, Enum, Show, Read)
+                 deriving (Eq, Ord, Bounded, Enum, Show, Read)
 
 instance PrintDot PageDir where
         unqtDot Bl = text "BL"
@@ -1235,7 +1235,7 @@ instance ParseDot PageDir where
                stringRep Lb "LB", stringRep Lt "LT"]
 
 data Spline = Spline (Maybe Point) (Maybe Point) [Point]
-            deriving (Eq, Ord, Show, Read)
+                deriving (Eq, Ord, Show, Read)
 
 instance PrintDot Spline where
         unqtDot (Spline ms me ps) = addS . addE . hsep $ map unqtDot ps
@@ -1263,7 +1263,7 @@ instance ParseDot Spline where
 data QuadType = NormalQT
               | FastQT
               | NoQT
-              deriving (Eq, Ord, Bounded, Enum, Show, Read)
+                  deriving (Eq, Ord, Bounded, Enum, Show, Read)
 
 instance PrintDot QuadType where
         unqtDot NormalQT = text "normal"
@@ -1280,7 +1280,7 @@ instance ParseDot QuadType where
 data Root = IsCentral
           | NotCentral
           | NodeName String
-          deriving (Eq, Ord, Show, Read)
+              deriving (Eq, Ord, Show, Read)
 
 instance PrintDot Root where
         unqtDot IsCentral = unqtDot True
@@ -1302,7 +1302,7 @@ data RankType = SameRank
               | SourceRank
               | MaxRank
               | SinkRank
-              deriving (Eq, Ord, Bounded, Enum, Show, Read)
+                  deriving (Eq, Ord, Bounded, Enum, Show, Read)
 
 instance PrintDot RankType where
         unqtDot SameRank = text "same"
@@ -1322,7 +1322,7 @@ data RankDir = FromTop
              | FromLeft
              | FromBottom
              | FromRight
-             deriving (Eq, Ord, Bounded, Enum, Show, Read)
+                 deriving (Eq, Ord, Bounded, Enum, Show, Read)
 
 instance PrintDot RankDir where
         unqtDot FromTop = text "TB"
@@ -1366,7 +1366,7 @@ data Shape = BoxShape
            | Folder
            | Box3D
            | Component
-           deriving (Eq, Ord, Bounded, Enum, Show, Read)
+               deriving (Eq, Ord, Bounded, Enum, Show, Read)
 
 instance PrintDot Shape where
         unqtDot BoxShape = text "box"
@@ -1430,7 +1430,7 @@ data SmoothType = NoSmooth
                 | RNG
                 | Spring
                 | TriangleSmooth
-                deriving (Eq, Ord, Bounded, Enum, Show, Read)
+                    deriving (Eq, Ord, Bounded, Enum, Show, Read)
 
 instance PrintDot SmoothType where
         unqtDot NoSmooth = text "none"
@@ -1452,7 +1452,7 @@ instance ParseDot SmoothType where
 data StartType = StartStyle STStyle
                | StartSeed Int
                | StartStyleSeed STStyle Int
-               deriving (Eq, Ord, Show, Read)
+                   deriving (Eq, Ord, Show, Read)
 
 instance PrintDot StartType where
         unqtDot (StartStyle ss) = unqtDot ss
@@ -1470,7 +1470,7 @@ instance ParseDot StartType where
 data STStyle = RegularStyle
              | SelfStyle
              | RandomStyle
-             deriving (Eq, Ord, Bounded, Enum, Show, Read)
+                 deriving (Eq, Ord, Bounded, Enum, Show, Read)
 
 instance PrintDot STStyle where
         unqtDot RegularStyle = text "regular"
@@ -1484,7 +1484,7 @@ instance ParseDot STStyle where
                stringRep RandomStyle "random"]
 
 data StyleItem = SItem StyleName [String]
-               deriving (Eq, Ord, Show, Read)
+                   deriving (Eq, Ord, Show, Read)
 
 instance PrintDot StyleItem where
         unqtDot (SItem nm args)
@@ -1524,7 +1524,7 @@ data StyleName = Dashed
                | Diagonals
                | Rounded
                | DD String
-               deriving (Eq, Ord, Show, Read)
+                   deriving (Eq, Ord, Show, Read)
 
 instance PrintDot StyleName where
         unqtDot Dashed = text "dashed"
@@ -1568,7 +1568,7 @@ parseStyleName
        return $ f : r
 
 newtype PortPos = PP CompassPoint
-                deriving (Eq, Ord, Show, Read)
+                    deriving (Eq, Ord, Show, Read)
 
 instance PrintDot PortPos where
         unqtDot (PP cp) = unqtDot cp
@@ -1587,7 +1587,7 @@ data CompassPoint = North
                   | NorthWest
                   | CenterPoint
                   | NoCP
-                  deriving (Eq, Ord, Bounded, Enum, Show, Read)
+                      deriving (Eq, Ord, Bounded, Enum, Show, Read)
 
 instance PrintDot CompassPoint where
         unqtDot NorthEast = text "ne"
@@ -1611,7 +1611,7 @@ instance ParseDot CompassPoint where
 
 data ViewPort = VP{wVal :: Double, hVal :: Double, zVal :: Double,
                    focus :: Maybe FocusType}
-              deriving (Eq, Ord, Show, Read)
+                  deriving (Eq, Ord, Show, Read)
 
 instance PrintDot ViewPort where
         unqtDot vp = maybe vs ((<>) (vs <> comma) . unqtDot) $ focus vp
@@ -1633,7 +1633,7 @@ instance ParseDot ViewPort where
 
 data FocusType = XY Point
                | NodeFocus String
-               deriving (Eq, Ord, Show, Read)
+                   deriving (Eq, Ord, Show, Read)
 
 instance PrintDot FocusType where
         unqtDot (XY p) = unqtDot p
@@ -1648,7 +1648,7 @@ instance ParseDot FocusType where
 data VerticalPlacement = VTop
                        | VCenter
                        | VBottom
-                       deriving (Eq, Ord, Bounded, Enum, Show, Read)
+                           deriving (Eq, Ord, Bounded, Enum, Show, Read)
 
 instance PrintDot VerticalPlacement where
         unqtDot VTop = char 't'
@@ -1665,7 +1665,7 @@ data ScaleType = UniformScale
                | FillWidth
                | FillHeight
                | FillBoth
-               deriving (Eq, Ord, Bounded, Enum, Show, Read)
+                   deriving (Eq, Ord, Bounded, Enum, Show, Read)
 
 instance PrintDot ScaleType where
         unqtDot UniformScale = unqtDot True
@@ -1684,7 +1684,7 @@ instance ParseDot ScaleType where
 data Justification = JLeft
                    | JRight
                    | JCenter
-                   deriving (Eq, Ord, Bounded, Enum, Show, Read)
+                       deriving (Eq, Ord, Bounded, Enum, Show, Read)
 
 instance PrintDot Justification where
         unqtDot JLeft = char 'l'
@@ -1701,7 +1701,7 @@ data Ratios = AspectRatio Double
             | CompressRatio
             | ExpandRatio
             | AutoRatio
-            deriving (Eq, Ord, Show, Read)
+                deriving (Eq, Ord, Show, Read)
 
 instance PrintDot Ratios where
         unqtDot (AspectRatio r) = unqtDot r

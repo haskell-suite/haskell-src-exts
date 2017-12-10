@@ -298,7 +298,7 @@ ParseOk
                     "Baz")
                  [])
           ]
-          Nothing
+          []
       , DataDecl
           SrcSpanInfo
             { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 11 1 11 15
@@ -342,7 +342,7 @@ ParseOk
                     "Foo")
                  [])
           ]
-          Nothing
+          []
       , ClassDecl
           SrcSpanInfo
             { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 13 1 13 29
@@ -704,7 +704,7 @@ ParseOk
                         , srcInfoPoints = []
                         }))))
           []
-          Nothing
+          []
       , PatBind
           SrcSpanInfo
             { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 24 1 24 27
@@ -1000,7 +1000,7 @@ ParseOk
                              "Bool"))
                    ])))
           []
-          Nothing
+          []
       , PatBind
           SrcSpanInfo
             { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 29 1 29 36

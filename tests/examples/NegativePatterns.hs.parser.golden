@@ -490,7 +490,7 @@ ParseOk
                         "a")
                  ])
           ]
-          Nothing
+          []
       , InfixDecl
           SrcSpanInfo
             { srcInfoSpan =

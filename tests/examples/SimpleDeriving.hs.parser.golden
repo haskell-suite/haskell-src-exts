@@ -59,42 +59,43 @@ ParseOk
                     "T")
                  [])
           ]
-          (Just
-             (Deriving
-                SrcSpanInfo
-                  { srcInfoSpan =
-                      SrcSpan "tests/examples/SimpleDeriving.hs" 1 12 1 23
-                  , srcInfoPoints =
-                      [ SrcSpan "tests/examples/SimpleDeriving.hs" 1 12 1 20 ]
-                  }
-                [ IRule
-                    SrcSpanInfo
-                      { srcInfoSpan =
-                          SrcSpan "tests/examples/SimpleDeriving.hs" 1 21 1 23
-                      , srcInfoPoints = []
-                      }
-                    Nothing
-                    Nothing
-                    (IHCon
-                       SrcSpanInfo
-                         { srcInfoSpan =
-                             SrcSpan "tests/examples/SimpleDeriving.hs" 1 21 1 23
-                         , srcInfoPoints = []
-                         }
-                       (UnQual
-                          SrcSpanInfo
-                            { srcInfoSpan =
-                                SrcSpan "tests/examples/SimpleDeriving.hs" 1 21 1 23
-                            , srcInfoPoints = []
-                            }
-                          (Ident
-                             SrcSpanInfo
-                               { srcInfoSpan =
-                                   SrcSpan "tests/examples/SimpleDeriving.hs" 1 21 1 23
-                               , srcInfoPoints = []
-                               }
-                             "Eq")))
-                ]))
+          [ Deriving
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/SimpleDeriving.hs" 1 12 1 23
+                , srcInfoPoints =
+                    [ SrcSpan "tests/examples/SimpleDeriving.hs" 1 12 1 20 ]
+                }
+              Nothing
+              [ IRule
+                  SrcSpanInfo
+                    { srcInfoSpan =
+                        SrcSpan "tests/examples/SimpleDeriving.hs" 1 21 1 23
+                    , srcInfoPoints = []
+                    }
+                  Nothing
+                  Nothing
+                  (IHCon
+                     SrcSpanInfo
+                       { srcInfoSpan =
+                           SrcSpan "tests/examples/SimpleDeriving.hs" 1 21 1 23
+                       , srcInfoPoints = []
+                       }
+                     (UnQual
+                        SrcSpanInfo
+                          { srcInfoSpan =
+                              SrcSpan "tests/examples/SimpleDeriving.hs" 1 21 1 23
+                          , srcInfoPoints = []
+                          }
+                        (Ident
+                           SrcSpanInfo
+                             { srcInfoSpan =
+                                 SrcSpan "tests/examples/SimpleDeriving.hs" 1 21 1 23
+                             , srcInfoPoints = []
+                             }
+                           "Eq")))
+              ]
+          ]
       ]
   , []
   )

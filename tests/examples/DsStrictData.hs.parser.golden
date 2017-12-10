@@ -216,7 +216,7 @@ ParseOk
                         "a")
                  ])
           ]
-          Nothing
+          []
       , DataDecl
           SrcSpanInfo
             { srcInfoSpan = SrcSpan "tests/examples/DsStrictData.hs" 10 1 10 23
@@ -311,7 +311,7 @@ ParseOk
                            "b"))
                  ])
           ]
-          Nothing
+          []
       , GDataDecl
           SrcSpanInfo
             { srcInfoSpan = SrcSpan "tests/examples/DsStrictData.hs" 11 1 14 0
@@ -426,7 +426,7 @@ ParseOk
                             }
                           "c"))))
           ]
-          Nothing
+          []
       , DataDecl
           SrcSpanInfo
             { srcInfoSpan = SrcSpan "tests/examples/DsStrictData.hs" 14 1 14 37
@@ -512,7 +512,7 @@ ParseOk
                               "Int")))
                  ])
           ]
-          Nothing
+          []
       , DataDecl
           SrcSpanInfo
             { srcInfoSpan = SrcSpan "tests/examples/DsStrictData.hs" 16 1 16 19
@@ -607,7 +607,7 @@ ParseOk
                            "d"))
                  ])
           ]
-          Nothing
+          []
       , GDataDecl
           SrcSpanInfo
             { srcInfoSpan = SrcSpan "tests/examples/DsStrictData.hs" 17 1 20 0
@@ -739,7 +739,7 @@ ParseOk
                             }
                           "e"))))
           ]
-          Nothing
+          []
       , TypeSig
           SrcSpanInfo
             { srcInfoSpan = SrcSpan "tests/examples/DsStrictData.hs" 20 1 20 14

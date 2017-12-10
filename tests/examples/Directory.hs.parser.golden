@@ -1299,112 +1299,113 @@ ParseOk
                               "Bool")))
                  ])
           ]
-          (Just
-             (Deriving
-                SrcSpanInfo
-                  { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 138 6 138 36
-                  , srcInfoPoints =
-                      [ SrcSpan "tests/examples/Directory.hs" 138 6 138 14
-                      , SrcSpan "tests/examples/Directory.hs" 138 15 138 16
-                      , SrcSpan "tests/examples/Directory.hs" 138 18 138 19
-                      , SrcSpan "tests/examples/Directory.hs" 138 23 138 24
-                      , SrcSpan "tests/examples/Directory.hs" 138 29 138 30
-                      , SrcSpan "tests/examples/Directory.hs" 138 35 138 36
-                      ]
-                  }
-                [ IRule
-                    SrcSpanInfo
-                      { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 138 16 138 18
-                      , srcInfoPoints = []
-                      }
-                    Nothing
-                    Nothing
-                    (IHCon
-                       SrcSpanInfo
-                         { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 138 16 138 18
-                         , srcInfoPoints = []
-                         }
-                       (UnQual
-                          SrcSpanInfo
-                            { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 138 16 138 18
-                            , srcInfoPoints = []
-                            }
-                          (Ident
-                             SrcSpanInfo
-                               { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 138 16 138 18
-                               , srcInfoPoints = []
-                               }
-                             "Eq")))
-                , IRule
-                    SrcSpanInfo
-                      { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 138 20 138 23
-                      , srcInfoPoints = []
-                      }
-                    Nothing
-                    Nothing
-                    (IHCon
-                       SrcSpanInfo
-                         { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 138 20 138 23
-                         , srcInfoPoints = []
-                         }
-                       (UnQual
-                          SrcSpanInfo
-                            { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 138 20 138 23
-                            , srcInfoPoints = []
-                            }
-                          (Ident
-                             SrcSpanInfo
-                               { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 138 20 138 23
-                               , srcInfoPoints = []
-                               }
-                             "Ord")))
-                , IRule
-                    SrcSpanInfo
-                      { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 138 25 138 29
-                      , srcInfoPoints = []
-                      }
-                    Nothing
-                    Nothing
-                    (IHCon
-                       SrcSpanInfo
-                         { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 138 25 138 29
-                         , srcInfoPoints = []
-                         }
-                       (UnQual
-                          SrcSpanInfo
-                            { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 138 25 138 29
-                            , srcInfoPoints = []
-                            }
-                          (Ident
-                             SrcSpanInfo
-                               { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 138 25 138 29
-                               , srcInfoPoints = []
-                               }
-                             "Read")))
-                , IRule
-                    SrcSpanInfo
-                      { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 138 31 138 35
-                      , srcInfoPoints = []
-                      }
-                    Nothing
-                    Nothing
-                    (IHCon
-                       SrcSpanInfo
-                         { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 138 31 138 35
-                         , srcInfoPoints = []
-                         }
-                       (UnQual
-                          SrcSpanInfo
-                            { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 138 31 138 35
-                            , srcInfoPoints = []
-                            }
-                          (Ident
-                             SrcSpanInfo
-                               { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 138 31 138 35
-                               , srcInfoPoints = []
-                               }
-                             "Show")))
-                ]))
+          [ Deriving
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 138 6 138 36
+                , srcInfoPoints =
+                    [ SrcSpan "tests/examples/Directory.hs" 138 6 138 14
+                    , SrcSpan "tests/examples/Directory.hs" 138 15 138 16
+                    , SrcSpan "tests/examples/Directory.hs" 138 18 138 19
+                    , SrcSpan "tests/examples/Directory.hs" 138 23 138 24
+                    , SrcSpan "tests/examples/Directory.hs" 138 29 138 30
+                    , SrcSpan "tests/examples/Directory.hs" 138 35 138 36
+                    ]
+                }
+              Nothing
+              [ IRule
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 138 16 138 18
+                    , srcInfoPoints = []
+                    }
+                  Nothing
+                  Nothing
+                  (IHCon
+                     SrcSpanInfo
+                       { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 138 16 138 18
+                       , srcInfoPoints = []
+                       }
+                     (UnQual
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 138 16 138 18
+                          , srcInfoPoints = []
+                          }
+                        (Ident
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 138 16 138 18
+                             , srcInfoPoints = []
+                             }
+                           "Eq")))
+              , IRule
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 138 20 138 23
+                    , srcInfoPoints = []
+                    }
+                  Nothing
+                  Nothing
+                  (IHCon
+                     SrcSpanInfo
+                       { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 138 20 138 23
+                       , srcInfoPoints = []
+                       }
+                     (UnQual
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 138 20 138 23
+                          , srcInfoPoints = []
+                          }
+                        (Ident
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 138 20 138 23
+                             , srcInfoPoints = []
+                             }
+                           "Ord")))
+              , IRule
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 138 25 138 29
+                    , srcInfoPoints = []
+                    }
+                  Nothing
+                  Nothing
+                  (IHCon
+                     SrcSpanInfo
+                       { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 138 25 138 29
+                       , srcInfoPoints = []
+                       }
+                     (UnQual
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 138 25 138 29
+                          , srcInfoPoints = []
+                          }
+                        (Ident
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 138 25 138 29
+                             , srcInfoPoints = []
+                             }
+                           "Read")))
+              , IRule
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 138 31 138 35
+                    , srcInfoPoints = []
+                    }
+                  Nothing
+                  Nothing
+                  (IHCon
+                     SrcSpanInfo
+                       { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 138 31 138 35
+                       , srcInfoPoints = []
+                       }
+                     (UnQual
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 138 31 138 35
+                          , srcInfoPoints = []
+                          }
+                        (Ident
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 138 31 138 35
+                             , srcInfoPoints = []
+                             }
+                           "Show")))
+              ]
+          ]
       , TypeSig
           SrcSpanInfo
             { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 152 1 152 45

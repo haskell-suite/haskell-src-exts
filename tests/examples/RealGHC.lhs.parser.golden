@@ -30137,7 +30137,7 @@ ParseOk
                               "RuleBase")))
                  ])
           ]
-          Nothing
+          []
       , TypeSig
           SrcSpanInfo
             { srcInfoSpan = SrcSpan "tests/examples/RealGHC.lhs" 836 1 836 54
