@@ -1487,7 +1487,6 @@ thing we need to look at here is the erpats that use no non-standard lexemes.
 >                                                       (replicate (length $2) Nothing ++ Just $3 : fst $4) }
 >       | '[' list ']'                  { amap (\l -> l <** [$3]) $ $2 ($1 <^^> $3 <** [$1]) }
 >       | '[:' parr ':]'                { amap (\l -> l <** [$3]) $ $2 ($1 <^^> $3 <** [$1]) }
->       | '_'                           { WildCard (nIS $1) }
 >       | '(' erpats ')'                {% checkEnabled RegularPatterns >> return (Paren ($1 <^^> $3 <** [$1,$3]) $2) }
 >       | '(|' sexps '|)'               { SeqRP ($1 <^^> $3 <** ($1:reverse (snd $2) ++ [$3])) $ reverse (fst $2) }
 >       | '(|' exp '|' quals '|)'       { GuardRP ($1 <^^> $5 <** ($1:$3 : snd $4 ++ [$5])) $2 $ (reverse $ fst $4) }
@@ -1913,6 +1912,7 @@ Identifiers and Symbols
 >       : varid                 { UnQual (ann $1) $1 }
 >       | QVARID                { let {Loc l (QVarId q) = $1; nis = nIS l}
 >                                  in Qual nis (ModuleName nis (fst q)) (Ident nis (snd q)) }
+>       | '_'                   { hole_name       (nIS $1) }
 
 > varid_no_safety :: { Name L }
 >       : VARID                 { let Loc l (VarId v) = $1 in Ident (nIS l) v }

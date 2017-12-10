@@ -1060,7 +1060,6 @@ instance  Pretty (Exp l) where
                 myFsep (text "\\case":
                        if null altList then [text "{", text "}"] else [])
                 $$$ ppBody caseIndent (map pretty altList)
-        prettyPrec _ ExprHole{}       = char '_'
         prettyPrec _ (TypeApp _ ty)   = char '@' <> pretty ty
 
 
@@ -1288,6 +1287,7 @@ instance Pretty (SpecialCon l) where
           where listFun = if b == Unboxed then hashParens else parens
         pretty (Cons {})             = text ":"
         pretty (UnboxedSingleCon {}) = text "(# #)"
+        pretty (ExprHole {}) = text "_"
 
 isSymbolName :: Name l -> Bool
 isSymbolName (Symbol {}) = True

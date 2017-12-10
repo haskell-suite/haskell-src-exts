@@ -1,1 +1,6 @@
-ParseFailed (SrcLoc "tests/examples/T13050.hs" 5 12) "Parse error: _"
+module HolesInfix where
+
+f, g, q :: Int -> Int -> Int
+f x y = _ x y
+g x y = x `_` y
+q x y = x `_a` y

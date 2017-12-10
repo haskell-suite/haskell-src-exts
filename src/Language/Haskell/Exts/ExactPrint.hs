@@ -252,6 +252,7 @@ instance ExactP SpecialCon where
          _       -> "(" : replicate (n-1) "," ++ [")"]
     Cons _      -> printString ":"
     UnboxedSingleCon l -> printPoints l ["(#","#)"]
+    ExprHole l -> printStringAt (pos l) "_"
 
 isSymbolName :: Name l -> Bool
 isSymbolName (Symbol _ _) = True
@@ -1747,7 +1748,6 @@ instance ExactP Exp where
             printStringAt (pos b) "case"
             layoutList pts alts
          _ -> errorEP "ExactP: Exp: LCase is given wrong number of srcInfoPoints"
-    ExprHole _ -> printString "_"
     TypeApp _ ty -> printString "@" >> exactP ty
 
 instance ExactP FieldUpdate where
