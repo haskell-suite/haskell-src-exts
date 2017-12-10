@@ -1,0 +1,1 @@
+ParseFailed (SrcLoc "tests/examples/Overlapping.hs" 12 10) "Parse error: {-# OVERLAPPING"

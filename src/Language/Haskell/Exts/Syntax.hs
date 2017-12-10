@@ -863,6 +863,9 @@ data Tool = GHC | HUGS | NHC98 | YHC | HADDOCK | UnknownTool String
 data Overlap l
     = NoOverlap l   -- ^ NO_OVERLAP pragma
     | Overlap l     -- ^ OVERLAP pragma
+    | Overlapping l
+    | Overlaps l
+    | Overlappable l
     | Incoherent l  -- ^ INCOHERENT pragma
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
@@ -1765,6 +1768,9 @@ instance Annotated ModulePragma where
 instance Annotated Overlap where
     ann (NoOverlap l)  = l
     ann (Overlap l)    = l
+    ann (Overlaps l)   = l
+    ann (Overlappable l) = l
+    ann (Overlapping l)  = l
     ann (Incoherent l) = l
     amap = fmap
 

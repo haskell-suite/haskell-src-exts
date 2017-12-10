@@ -153,6 +153,9 @@ data Token
         | MINIMAL
         | NO_OVERLAP
         | OVERLAP
+        | OVERLAPPING
+        | OVERLAPPABLE
+        | OVERLAPS
         | INCOHERENT
         | COMPLETE
 
@@ -339,6 +342,9 @@ pragmas = [
  ( "minimal",           MINIMAL         ),
  ( "no_overlap",        NO_OVERLAP      ),
  ( "overlap",           OVERLAP         ),
+ ( "overlaps",          OVERLAPS        ),
+ ( "overlapping",       OVERLAPPING     ),
+ ( "overlappable",      OVERLAPPABLE    ),
  ( "incoherent",        INCOHERENT      ),
  ( "complete",          COMPLETE      ),
  ( "options",           OPTIONS undefined ) -- we'll tweak it before use - promise!
@@ -1380,6 +1386,9 @@ showToken t = case t of
   MINIMAL           -> "{-# MINIMAL"
   NO_OVERLAP        -> "{-# NO_OVERLAP"
   OVERLAP           -> "{-# OVERLAP"
+  OVERLAPPING       -> "{-# OVERLAPPING"
+  OVERLAPPABLE      -> "{-# OVERLAPPABLE"
+  OVERLAPS          -> "{-# OVERLAPS"
   INCOHERENT        -> "{-# INCOHERENT"
   COMPLETE          -> "{-# COMPLETE"
   KW_As         -> "as"
