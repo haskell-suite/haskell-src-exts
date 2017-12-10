@@ -826,6 +826,8 @@ instance  Pretty (Type l) where
                  in case bxd of
                         Boxed   -> parenList ds
                         Unboxed -> hashParenList ds
+        prettyPrec _ (TyUnboxedSum _ es) = unboxedSumType (map pretty es)
+
         prettyPrec _ (TyList _ t)  = brackets $ pretty t
         prettyPrec _ (TyParArray _ t) = bracketColonList [pretty t]
         prettyPrec p (TyApp _ a b) =
@@ -977,6 +979,8 @@ instance  Pretty (Exp l) where
                 in case bxd of
                        Boxed   -> parenList ds
                        Unboxed -> hashParenList ds
+        prettyPrec _ (UnboxedSum _ before after exp) =
+          printUnboxedSum before after exp
         prettyPrec _ (TupleSection _ bxd mExpList) =
                 let ds = map (maybePP pretty) mExpList
                 in case bxd of
@@ -1062,6 +1066,12 @@ instance  Pretty (Exp l) where
                 $$$ ppBody caseIndent (map pretty altList)
         prettyPrec _ (TypeApp _ ty)   = char '@' <> pretty ty
 
+printUnboxedSum :: Pretty e => Int -> Int -> e -> Doc
+printUnboxedSum before after exp =
+          hashParens . myFsep $ (replicate before (text "|")
+                                ++ [pretty exp]
+                                ++ (replicate after (text "|")))
+
 
 instance  Pretty (XAttr l) where
         pretty (XAttr _ n v) =
@@ -1107,6 +1117,8 @@ instance  Pretty (Pat l) where
                 in case bxd of
                        Boxed   -> parenList ds
                        Unboxed -> hashParenList ds
+        prettyPrec _ (PUnboxedSum _ before after exp) =
+          printUnboxedSum before after exp
         prettyPrec _ (PList _ ps) =
                 bracketList . punctuate comma . map pretty $ ps
         prettyPrec _ (PParen _ pat) = parens . pretty $ pat
@@ -1400,6 +1412,9 @@ parenList = parens . myFsepSimple . punctuate comma
 hashParenList :: [Doc] -> Doc
 hashParenList = hashParens . myFsepSimple . punctuate comma
 
+unboxedSumType :: [Doc] -> Doc
+unboxedSumType = hashParens . myFsepSimple . punctuate (text " |")
+
 hashParens :: Doc -> Doc
 hashParens = parens . hashes
   where
@@ -1526,6 +1541,8 @@ instance SrcInfo loc => Pretty (P.PExp loc) where
                 in case bxd of
                        Boxed   -> parenList ds
                        Unboxed -> hashParenList ds
+        pretty (P.UnboxedSum _ before after exp) =
+          printUnboxedSum before after exp
         pretty (P.Paren _ e) = parens . pretty $ e
         pretty (P.RecConstr _ c fieldList) =
                 pretty c <> (braceList . map pretty $ fieldList)
@@ -1645,6 +1662,8 @@ instance SrcInfo loc => Pretty (P.PType loc) where
                  in case bxd of
                         Boxed   -> parenList ds
                         Unboxed -> hashParenList ds
+        prettyPrec _ (P.TyUnboxedSum _ es) =
+          unboxedSumType (map pretty es)
         prettyPrec _ (P.TyList _ t)  = brackets $ pretty t
         prettyPrec _ (P.TyParArray _ t) = bracketColonList [pretty t]
         prettyPrec p (P.TyApp _ a b) =

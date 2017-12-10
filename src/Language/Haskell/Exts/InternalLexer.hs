@@ -730,9 +730,9 @@ lexStdToken = do
                         return XStdTagOpen
         -- end hsx
 
-        '(':'#':c:_ | UnboxedTuples `elem` exts && not (isHSymbol c) -> discard 2 >> return LeftHashParen
+        '(':'#':c:_ | unboxed exts && not (isHSymbol c) -> discard 2 >> return LeftHashParen
 
-        '#':')':_ | UnboxedTuples `elem` exts -> discard 2 >> return RightHashParen
+        '#':')':_   | unboxed exts -> discard 2 >> return RightHashParen
 
         -- pragmas
 
@@ -877,6 +877,9 @@ lexStdToken = do
                   _ -> do str <- lexWhile (not . (`elem` "\\|\n"))
                           rest <- lexQQBody
                           return (str++rest)
+
+unboxed :: [KnownExtension] -> Bool
+unboxed exts = UnboxedSums `elem` exts || UnboxedTuples `elem` exts
 
 -- Underscores are used in some pragmas. Options pragmas are a special case
 -- with our representation: the thing after the underscore is a parameter.
