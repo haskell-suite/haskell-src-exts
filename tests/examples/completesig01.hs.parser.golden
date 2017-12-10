@@ -409,7 +409,7 @@ ParseOk
                     "D")
                  [])
           ]
-          Nothing
+          []
       , CompletePragma
           SrcSpanInfo
             { srcInfoSpan =

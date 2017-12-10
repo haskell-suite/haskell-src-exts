@@ -376,7 +376,7 @@ ParseOk
                                   }
                                 "n"))))))
           ]
-          Nothing
+          []
       , GDataDecl
           SrcSpanInfo
             { srcInfoSpan = SrcSpan "tests/examples/InfixTypeMinus.hs" 6 1 6 79
@@ -680,7 +680,7 @@ ParseOk
                                   }
                                 "n"))))))
           ]
-          Nothing
+          []
       , GDataDecl
           SrcSpanInfo
             { srcInfoSpan = SrcSpan "tests/examples/InfixTypeMinus.hs" 7 1 7 79
@@ -984,7 +984,7 @@ ParseOk
                                   }
                                 "n"))))))
           ]
-          Nothing
+          []
       , GDataDecl
           SrcSpanInfo
             { srcInfoSpan = SrcSpan "tests/examples/InfixTypeMinus.hs" 8 1 8 79
@@ -1288,7 +1288,7 @@ ParseOk
                                   }
                                 "n"))))))
           ]
-          Nothing
+          []
       ]
   , [ Comment
         False

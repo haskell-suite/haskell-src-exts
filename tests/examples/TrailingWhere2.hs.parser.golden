@@ -59,7 +59,7 @@ ParseOk
                     "Baz")
                  [])
           ]
-          Nothing
+          []
       , InstDecl
           SrcSpanInfo
             { srcInfoSpan = SrcSpan "tests/examples/TrailingWhere2.hs" 3 1 7 0

@@ -135,7 +135,7 @@ ParseOk
                                  "Int"))))
                  ])
           ]
-          Nothing
+          []
       , PatBind
           SrcSpanInfo
             { srcInfoSpan =

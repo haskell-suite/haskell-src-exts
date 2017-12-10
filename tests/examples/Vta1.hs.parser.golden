@@ -3780,7 +3780,7 @@ ParseOk
                     "F")
                  [])
           ]
-          Nothing
+          []
       , DataDecl
           SrcSpanInfo
             { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 62 1 62 24
@@ -3859,7 +3859,7 @@ ParseOk
                     "P")
                  [])
           ]
-          Nothing
+          []
       , DataDecl
           SrcSpanInfo
             { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 63 1 63 34
@@ -3958,7 +3958,7 @@ ParseOk
                     "T")
                  [])
           ]
-          Nothing
+          []
       , TypeSig
           SrcSpanInfo
             { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 65 1 65 22
@@ -4923,7 +4923,7 @@ ParseOk
                                     "String")))))
                  ])
           ]
-          Nothing
+          []
       , PatBind
           SrcSpanInfo
             { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 87 1 87 13

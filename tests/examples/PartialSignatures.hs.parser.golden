@@ -8716,7 +8716,7 @@ ParseOk
                      }
                    "c")))
           []
-          Nothing
+          []
       , InstDecl
           SrcSpanInfo
             { srcInfoSpan =
@@ -12758,7 +12758,7 @@ ParseOk
                         "a")
                  ])
           ]
-          Nothing
+          []
       , TypeSig
           SrcSpanInfo
             { srcInfoSpan =
@@ -13403,7 +13403,7 @@ ParseOk
                         "a")
                  ])
           ]
-          Nothing
+          []
       , InstDecl
           SrcSpanInfo
             { srcInfoSpan =
@@ -13766,7 +13766,7 @@ ParseOk
                         "a")
                  ])
           ]
-          Nothing
+          []
       , InstDecl
           SrcSpanInfo
             { srcInfoSpan =
@@ -14180,7 +14180,7 @@ ParseOk
                                    }))))
                  ])
           ]
-          Nothing
+          []
       , TypeSig
           SrcSpanInfo
             { srcInfoSpan =

@@ -202,37 +202,38 @@ ParseOk
                     "Leaf")
                  [])
           ]
-          (Just
-             (Deriving
-                SrcSpanInfo
-                  { srcInfoSpan = SrcSpan "tests/examples/DeriveGeneric.hs" 4 3 4 19
-                  , srcInfoPoints =
-                      [ SrcSpan "tests/examples/DeriveGeneric.hs" 4 3 4 11 ]
-                  }
-                [ IRule
-                    SrcSpanInfo
-                      { srcInfoSpan = SrcSpan "tests/examples/DeriveGeneric.hs" 4 12 4 19
-                      , srcInfoPoints = []
-                      }
-                    Nothing
-                    Nothing
-                    (IHCon
-                       SrcSpanInfo
-                         { srcInfoSpan = SrcSpan "tests/examples/DeriveGeneric.hs" 4 12 4 19
-                         , srcInfoPoints = []
-                         }
-                       (UnQual
-                          SrcSpanInfo
-                            { srcInfoSpan = SrcSpan "tests/examples/DeriveGeneric.hs" 4 12 4 19
-                            , srcInfoPoints = []
-                            }
-                          (Ident
-                             SrcSpanInfo
-                               { srcInfoSpan = SrcSpan "tests/examples/DeriveGeneric.hs" 4 12 4 19
-                               , srcInfoPoints = []
-                               }
-                             "Generic")))
-                ]))
+          [ Deriving
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/DeriveGeneric.hs" 4 3 4 19
+                , srcInfoPoints =
+                    [ SrcSpan "tests/examples/DeriveGeneric.hs" 4 3 4 11 ]
+                }
+              Nothing
+              [ IRule
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/DeriveGeneric.hs" 4 12 4 19
+                    , srcInfoPoints = []
+                    }
+                  Nothing
+                  Nothing
+                  (IHCon
+                     SrcSpanInfo
+                       { srcInfoSpan = SrcSpan "tests/examples/DeriveGeneric.hs" 4 12 4 19
+                       , srcInfoPoints = []
+                       }
+                     (UnQual
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/DeriveGeneric.hs" 4 12 4 19
+                          , srcInfoPoints = []
+                          }
+                        (Ident
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/DeriveGeneric.hs" 4 12 4 19
+                             , srcInfoPoints = []
+                             }
+                           "Generic")))
+              ]
+          ]
       ]
   , []
   )

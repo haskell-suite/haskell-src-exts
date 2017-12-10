@@ -189,7 +189,7 @@ ParseOk
                             }
                           "x"))))
           ]
-          Nothing
+          []
       , DataDecl
           SrcSpanInfo
             { srcInfoSpan = SrcSpan "tests/examples/Unpack.hs" 6 1 6 33
@@ -266,7 +266,7 @@ ParseOk
                               "Int")))
                  ])
           ]
-          Nothing
+          []
       ]
   , []
   )

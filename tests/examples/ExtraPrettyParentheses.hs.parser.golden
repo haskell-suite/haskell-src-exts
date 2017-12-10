@@ -112,7 +112,7 @@ ParseOk
                         "a")
                  ])
           ]
-          Nothing
+          []
       , FunBind
           SrcSpanInfo
             { srcInfoSpan =

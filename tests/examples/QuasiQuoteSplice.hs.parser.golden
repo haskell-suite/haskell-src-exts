@@ -165,7 +165,7 @@ ParseOk
                     "PF")
                  [])
           ]
-          Nothing
+          []
       , PatBind
           SrcSpanInfo
             { srcInfoSpan =

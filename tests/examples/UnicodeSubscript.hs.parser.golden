@@ -187,51 +187,52 @@ ParseOk
                               "String")))
                  ])
           ]
-          (Just
-             (Deriving
-                SrcSpanInfo
-                  { srcInfoSpan =
-                      SrcSpan "tests/examples/UnicodeSubscript.hs" 7 7 7 22
-                  , srcInfoPoints =
-                      [ SrcSpan "tests/examples/UnicodeSubscript.hs" 7 7 7 15 ]
-                  }
-                [ IParen
-                    SrcSpanInfo
-                      { srcInfoSpan =
-                          SrcSpan "tests/examples/UnicodeSubscript.hs" 7 16 7 22
-                      , srcInfoPoints =
-                          [ SrcSpan "tests/examples/UnicodeSubscript.hs" 7 16 7 17
-                          , SrcSpan "tests/examples/UnicodeSubscript.hs" 7 21 7 22
-                          ]
-                      }
-                    (IRule
-                       SrcSpanInfo
-                         { srcInfoSpan =
-                             SrcSpan "tests/examples/UnicodeSubscript.hs" 7 17 7 21
-                         , srcInfoPoints = []
-                         }
-                       Nothing
-                       Nothing
-                       (IHCon
-                          SrcSpanInfo
-                            { srcInfoSpan =
-                                SrcSpan "tests/examples/UnicodeSubscript.hs" 7 17 7 21
-                            , srcInfoPoints = []
-                            }
-                          (UnQual
-                             SrcSpanInfo
-                               { srcInfoSpan =
-                                   SrcSpan "tests/examples/UnicodeSubscript.hs" 7 17 7 21
-                               , srcInfoPoints = []
-                               }
-                             (Ident
-                                SrcSpanInfo
-                                  { srcInfoSpan =
-                                      SrcSpan "tests/examples/UnicodeSubscript.hs" 7 17 7 21
-                                  , srcInfoPoints = []
-                                  }
-                                "Show"))))
-                ]))
+          [ Deriving
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/UnicodeSubscript.hs" 7 7 7 22
+                , srcInfoPoints =
+                    [ SrcSpan "tests/examples/UnicodeSubscript.hs" 7 7 7 15 ]
+                }
+              Nothing
+              [ IParen
+                  SrcSpanInfo
+                    { srcInfoSpan =
+                        SrcSpan "tests/examples/UnicodeSubscript.hs" 7 16 7 22
+                    , srcInfoPoints =
+                        [ SrcSpan "tests/examples/UnicodeSubscript.hs" 7 16 7 17
+                        , SrcSpan "tests/examples/UnicodeSubscript.hs" 7 21 7 22
+                        ]
+                    }
+                  (IRule
+                     SrcSpanInfo
+                       { srcInfoSpan =
+                           SrcSpan "tests/examples/UnicodeSubscript.hs" 7 17 7 21
+                       , srcInfoPoints = []
+                       }
+                     Nothing
+                     Nothing
+                     (IHCon
+                        SrcSpanInfo
+                          { srcInfoSpan =
+                              SrcSpan "tests/examples/UnicodeSubscript.hs" 7 17 7 21
+                          , srcInfoPoints = []
+                          }
+                        (UnQual
+                           SrcSpanInfo
+                             { srcInfoSpan =
+                                 SrcSpan "tests/examples/UnicodeSubscript.hs" 7 17 7 21
+                             , srcInfoPoints = []
+                             }
+                           (Ident
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/UnicodeSubscript.hs" 7 17 7 21
+                                , srcInfoPoints = []
+                                }
+                              "Show"))))
+              ]
+          ]
       , TypeSig
           SrcSpanInfo
             { srcInfoSpan =

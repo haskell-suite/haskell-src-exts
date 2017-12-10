@@ -159,112 +159,113 @@ ParseOk
                               "a")))
                  ])
           ]
-          (Just
-             (Deriving
-                SrcSpanInfo
-                  { srcInfoSpan = SrcSpan "tests/examples/GhcDeriving.hs" 4 4 4 45
-                  , srcInfoPoints =
-                      [ SrcSpan "tests/examples/GhcDeriving.hs" 4 4 4 12
-                      , SrcSpan "tests/examples/GhcDeriving.hs" 4 13 4 14
-                      , SrcSpan "tests/examples/GhcDeriving.hs" 4 19 4 20
-                      , SrcSpan "tests/examples/GhcDeriving.hs" 4 35 4 36
-                      , SrcSpan "tests/examples/GhcDeriving.hs" 4 44 4 45
-                      ]
-                  }
-                [ IRule
-                    SrcSpanInfo
-                      { srcInfoSpan = SrcSpan "tests/examples/GhcDeriving.hs" 4 14 4 19
-                      , srcInfoPoints = []
-                      }
-                    Nothing
-                    Nothing
-                    (IHCon
-                       SrcSpanInfo
-                         { srcInfoSpan = SrcSpan "tests/examples/GhcDeriving.hs" 4 14 4 19
-                         , srcInfoPoints = []
-                         }
-                       (UnQual
-                          SrcSpanInfo
-                            { srcInfoSpan = SrcSpan "tests/examples/GhcDeriving.hs" 4 14 4 19
-                            , srcInfoPoints = []
-                            }
-                          (Ident
-                             SrcSpanInfo
-                               { srcInfoSpan = SrcSpan "tests/examples/GhcDeriving.hs" 4 14 4 19
-                               , srcInfoPoints = []
-                               }
-                             "Monad")))
-                , IRule
-                    SrcSpanInfo
-                      { srcInfoSpan = SrcSpan "tests/examples/GhcDeriving.hs" 4 21 4 35
-                      , srcInfoPoints = []
-                      }
-                    Nothing
-                    Nothing
-                    (IHApp
-                       SrcSpanInfo
-                         { srcInfoSpan = SrcSpan "tests/examples/GhcDeriving.hs" 4 21 4 35
-                         , srcInfoPoints = []
-                         }
-                       (IHCon
-                          SrcSpanInfo
-                            { srcInfoSpan = SrcSpan "tests/examples/GhcDeriving.hs" 4 21 4 31
-                            , srcInfoPoints = []
-                            }
-                          (UnQual
-                             SrcSpanInfo
-                               { srcInfoSpan = SrcSpan "tests/examples/GhcDeriving.hs" 4 21 4 31
-                               , srcInfoPoints = []
-                               }
-                             (Ident
-                                SrcSpanInfo
-                                  { srcInfoSpan = SrcSpan "tests/examples/GhcDeriving.hs" 4 21 4 31
-                                  , srcInfoPoints = []
-                                  }
-                                "MonadState")))
-                       (TyList
-                          SrcSpanInfo
-                            { srcInfoSpan = SrcSpan "tests/examples/GhcDeriving.hs" 4 32 4 35
-                            , srcInfoPoints =
-                                [ SrcSpan "tests/examples/GhcDeriving.hs" 4 32 4 33
-                                , SrcSpan "tests/examples/GhcDeriving.hs" 4 34 4 35
-                                ]
-                            }
-                          (TyVar
-                             SrcSpanInfo
-                               { srcInfoSpan = SrcSpan "tests/examples/GhcDeriving.hs" 4 33 4 34
-                               , srcInfoPoints = []
-                               }
-                             (Ident
-                                SrcSpanInfo
-                                  { srcInfoSpan = SrcSpan "tests/examples/GhcDeriving.hs" 4 33 4 34
-                                  , srcInfoPoints = []
-                                  }
-                                "s"))))
-                , IRule
-                    SrcSpanInfo
-                      { srcInfoSpan = SrcSpan "tests/examples/GhcDeriving.hs" 4 37 4 44
-                      , srcInfoPoints = []
-                      }
-                    Nothing
-                    Nothing
-                    (IHCon
-                       SrcSpanInfo
-                         { srcInfoSpan = SrcSpan "tests/examples/GhcDeriving.hs" 4 37 4 44
-                         , srcInfoPoints = []
-                         }
-                       (UnQual
-                          SrcSpanInfo
-                            { srcInfoSpan = SrcSpan "tests/examples/GhcDeriving.hs" 4 37 4 44
-                            , srcInfoPoints = []
-                            }
-                          (Ident
-                             SrcSpanInfo
-                               { srcInfoSpan = SrcSpan "tests/examples/GhcDeriving.hs" 4 37 4 44
-                               , srcInfoPoints = []
-                               }
-                             "MonadIO")))
-                ]))
+          [ Deriving
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/GhcDeriving.hs" 4 4 4 45
+                , srcInfoPoints =
+                    [ SrcSpan "tests/examples/GhcDeriving.hs" 4 4 4 12
+                    , SrcSpan "tests/examples/GhcDeriving.hs" 4 13 4 14
+                    , SrcSpan "tests/examples/GhcDeriving.hs" 4 19 4 20
+                    , SrcSpan "tests/examples/GhcDeriving.hs" 4 35 4 36
+                    , SrcSpan "tests/examples/GhcDeriving.hs" 4 44 4 45
+                    ]
+                }
+              Nothing
+              [ IRule
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/GhcDeriving.hs" 4 14 4 19
+                    , srcInfoPoints = []
+                    }
+                  Nothing
+                  Nothing
+                  (IHCon
+                     SrcSpanInfo
+                       { srcInfoSpan = SrcSpan "tests/examples/GhcDeriving.hs" 4 14 4 19
+                       , srcInfoPoints = []
+                       }
+                     (UnQual
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/GhcDeriving.hs" 4 14 4 19
+                          , srcInfoPoints = []
+                          }
+                        (Ident
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/GhcDeriving.hs" 4 14 4 19
+                             , srcInfoPoints = []
+                             }
+                           "Monad")))
+              , IRule
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/GhcDeriving.hs" 4 21 4 35
+                    , srcInfoPoints = []
+                    }
+                  Nothing
+                  Nothing
+                  (IHApp
+                     SrcSpanInfo
+                       { srcInfoSpan = SrcSpan "tests/examples/GhcDeriving.hs" 4 21 4 35
+                       , srcInfoPoints = []
+                       }
+                     (IHCon
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/GhcDeriving.hs" 4 21 4 31
+                          , srcInfoPoints = []
+                          }
+                        (UnQual
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/GhcDeriving.hs" 4 21 4 31
+                             , srcInfoPoints = []
+                             }
+                           (Ident
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/GhcDeriving.hs" 4 21 4 31
+                                , srcInfoPoints = []
+                                }
+                              "MonadState")))
+                     (TyList
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/GhcDeriving.hs" 4 32 4 35
+                          , srcInfoPoints =
+                              [ SrcSpan "tests/examples/GhcDeriving.hs" 4 32 4 33
+                              , SrcSpan "tests/examples/GhcDeriving.hs" 4 34 4 35
+                              ]
+                          }
+                        (TyVar
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/GhcDeriving.hs" 4 33 4 34
+                             , srcInfoPoints = []
+                             }
+                           (Ident
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/GhcDeriving.hs" 4 33 4 34
+                                , srcInfoPoints = []
+                                }
+                              "s"))))
+              , IRule
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/GhcDeriving.hs" 4 37 4 44
+                    , srcInfoPoints = []
+                    }
+                  Nothing
+                  Nothing
+                  (IHCon
+                     SrcSpanInfo
+                       { srcInfoSpan = SrcSpan "tests/examples/GhcDeriving.hs" 4 37 4 44
+                       , srcInfoPoints = []
+                       }
+                     (UnQual
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/GhcDeriving.hs" 4 37 4 44
+                          , srcInfoPoints = []
+                          }
+                        (Ident
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/GhcDeriving.hs" 4 37 4 44
+                             , srcInfoPoints = []
+                             }
+                           "MonadIO")))
+              ]
+          ]
       ]
   , []
   )

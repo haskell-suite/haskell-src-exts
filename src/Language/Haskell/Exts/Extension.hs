@@ -539,7 +539,13 @@ data KnownExtension =
   | TypeFamilyDependencies
 
   | OverloadedLabels
+
+  -- | Allow multiple @deriving@ clauses, each optionally qualified with a
+  -- /strategy/.
+  | DerivingStrategies
+
   | UnboxedSums
+
   deriving (Show, Read, Eq, Ord, Enum, Bounded, Data, Typeable)
 
 -- | Certain extensions imply other extensions, and this function

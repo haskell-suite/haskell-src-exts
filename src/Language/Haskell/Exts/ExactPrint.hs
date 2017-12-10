@@ -604,7 +604,7 @@ instance ExactP Decl where
         exactPC dh
         -- the next line works for empty data types since the srcInfoPoints will be empty then
         printInterleaved (zip (srcInfoPoints l) ("=": repeat "|")) constrs
-        maybeEP exactPC mder
+        errorEP "TODO" -- mder
     GDataDecl    l dn mctxt dh mk gds mder -> do
         let pts = srcInfoPoints l
         exactP dn
@@ -622,7 +622,7 @@ instance ExactP Decl where
          x:pts' -> do
             printStringAt (pos x) "where"
             layoutList pts' gds
-            maybeEP exactPC mder
+            errorEP "TODO" -- mder
          _ -> errorEP "ExactP: Decl: GDataDecl is given too few srcInfoPoints"
     DataFamDecl  l mctxt dh mk -> do
         printString "data"
@@ -645,7 +645,7 @@ instance ExactP Decl where
             printStringAt (pos p) "instance"
             exactPC t
             printInterleaved (zip pts ("=": repeat "|")) constrs
-            maybeEP exactPC mder
+            errorEP "TODO" -- mder
          _ -> errorEP "ExactP: Decl: DataInsDecl is given too few srcInfoPoints"
     GDataInsDecl l dn t mk gds mder     ->
         case srcInfoPoints l of
@@ -665,7 +665,7 @@ instance ExactP Decl where
              x:pts' -> do
                 printStringAt (pos x) "where"
                 layoutList pts' gds
-                maybeEP exactPC mder
+                errorEP "TODO" -- mder
              _ -> errorEP "ExactP: Decl: GDataInsDecl is given too few srcInfoPoints"
          _ -> errorEP "ExactP: Decl: GDataInsDecl is given too few srcInfoPoints"
     ClassDecl    l mctxt dh fds mcds    ->
@@ -700,10 +700,11 @@ instance ExactP Decl where
                 layoutList pts' $ sepInstFunBinds ids
                 ) mids
          _ -> errorEP "ExactP: Decl: InstDecl is given too few srcInfoPoints"
-    DerivDecl    l movlp ih             ->
+    DerivDecl    l mds movlp ih             ->
         case srcInfoPoints l of
          [_,b] -> do
             printString "deriving"
+            maybeEP exactPC mds
             printStringAt (pos b) "instance"
             maybeEP exactPC movlp
             exactPC ih
@@ -1228,14 +1229,23 @@ instance ExactP Asst where
     WildCardA _ mn -> printString "_" >> maybeEP exactPC mn
 
 instance ExactP Deriving where
-  exactP (Deriving l ihs) =
+  exactP (Deriving l mds ihs) =
     case srcInfoPoints l of
      _:pts -> do
         printString "deriving"
+        maybeEP exactPC mds
         case pts of
          [] -> exactPC $ head ihs
          _  -> parenList pts ihs
      _ -> errorEP "ExactP: Deriving is given too few srcInfoPoints"
+
+instance ExactP DerivStrategy where
+  exactP (DerivStock _) =
+    printString "stock"
+  exactP (DerivAnyclass _) =
+    printString "anyclass"
+  exactP (DerivNewtype _) =
+    printString "newtype"
 
 instance ExactP ClassDecl where
   exactP cdecl = case cdecl of
@@ -1291,7 +1301,7 @@ instance ExactP InstDecl where
         exactP dn
         exactPC t
         printInterleaved (zip (srcInfoPoints l) ("=": repeat "|")) constrs
-        maybeEP exactPC mder
+        errorEP "TODO" -- mder
     InsGData  l dn t mk gds mder  -> do
         let pts = srcInfoPoints l
         exactP dn
@@ -1308,7 +1318,7 @@ instance ExactP InstDecl where
          x:_ -> do
             printStringAt (pos x) "where"
             mapM_ exactPC gds
-            maybeEP exactPC mder
+            errorEP "TODO" -- mder
          _ -> errorEP "ExactP: InstDecl: InsGData is given too few srcInfoPoints"
 --  InsInline l inl mact qn   -> do
 --        case srcInfoPoints l of

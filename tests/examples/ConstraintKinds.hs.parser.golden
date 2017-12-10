@@ -160,7 +160,7 @@ ParseOk
                      }
                    "a")))
           []
-          Nothing
+          []
       , TypeDecl
           SrcSpanInfo
             { srcInfoSpan =
