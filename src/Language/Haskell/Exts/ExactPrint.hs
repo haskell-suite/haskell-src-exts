@@ -1152,6 +1152,7 @@ instance ExactP Type where
 instance ExactP MaybePromotedName where
   exactP (PromotedName l qn)  = case srcInfoPoints l of
     [a] -> printStringAt (pos a) "'" >> epInfixQName qn
+    _ -> errorEP "ExactP: MaybePromotedName: PromotedName given wrong number of args"
   exactP (UnpromotedName _ qn) = epInfixQName qn
 
 instance ExactP Promoted where
