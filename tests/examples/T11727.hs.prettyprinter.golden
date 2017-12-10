@@ -1,1 +1,8 @@
-ParseFailed (SrcLoc "tests/examples/T11727.hs" 5 10) "Parse error: ,"
+{-# LANGUAGE PatternSynonyms #-}
+module T11727 where
+
+pattern A, B :: Int
+
+pattern A = 5
+
+pattern B = 5

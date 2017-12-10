@@ -453,13 +453,14 @@ ParseOk
                 , SrcSpan "tests/examples/PatternSynonyms3.hs" 12 16 12 18
                 ]
             }
-          (Ident
-             SrcSpanInfo
-               { srcInfoSpan =
-                   SrcSpan "tests/examples/PatternSynonyms3.hs" 12 9 12 15
-               , srcInfoPoints = []
-               }
-             "Single")
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/PatternSynonyms3.hs" 12 9 12 15
+                , srcInfoPoints = []
+                }
+              "Single"
+          ]
           Nothing
           Nothing
           Nothing
@@ -580,13 +581,14 @@ ParseOk
                 , SrcSpan "tests/examples/PatternSynonyms3.hs" 16 16 16 18
                 ]
             }
-          (Ident
-             SrcSpanInfo
-               { srcInfoSpan =
-                   SrcSpan "tests/examples/PatternSynonyms3.hs" 16 9 16 15
-               , srcInfoPoints = []
-               }
-             "Single")
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/PatternSynonyms3.hs" 16 9 16 15
+                , srcInfoPoints = []
+                }
+              "Single"
+          ]
           Nothing
           (Just
              (CxEmpty
@@ -978,13 +980,14 @@ ParseOk
                 , SrcSpan "tests/examples/PatternSynonyms3.hs" 22 20 22 22
                 ]
             }
-          (Ident
-             SrcSpanInfo
-               { srcInfoSpan =
-                   SrcSpan "tests/examples/PatternSynonyms3.hs" 22 9 22 19
-               , srcInfoPoints = []
-               }
-             "SinglePair")
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/PatternSynonyms3.hs" 22 9 22 19
+                , srcInfoPoints = []
+                }
+              "SinglePair"
+          ]
           Nothing
           Nothing
           Nothing
@@ -1469,13 +1472,14 @@ ParseOk
                 , SrcSpan "tests/examples/PatternSynonyms3.hs" 30 11 30 13
                 ]
             }
-          (Ident
-             SrcSpanInfo
-               { srcInfoSpan =
-                   SrcSpan "tests/examples/PatternSynonyms3.hs" 30 9 30 10
-               , srcInfoPoints = []
-               }
-             "C")
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/PatternSynonyms3.hs" 30 9 30 10
+                , srcInfoPoints = []
+                }
+              "C"
+          ]
           Nothing
           Nothing
           Nothing
@@ -1712,13 +1716,14 @@ ParseOk
                 , SrcSpan "tests/examples/PatternSynonyms3.hs" 34 32 34 33
                 ]
             }
-          (Ident
-             SrcSpanInfo
-               { srcInfoSpan =
-                   SrcSpan "tests/examples/PatternSynonyms3.hs" 34 9 34 12
-               , srcInfoPoints = []
-               }
-             "Syn")
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/PatternSynonyms3.hs" 34 9 34 12
+                , srcInfoPoints = []
+                }
+              "Syn"
+          ]
           (Just
              [ UnkindedVar
                  SrcSpanInfo
@@ -1810,13 +1815,14 @@ ParseOk
                 , SrcSpan "tests/examples/PatternSynonyms3.hs" 36 11 36 13
                 ]
             }
-          (Ident
-             SrcSpanInfo
-               { srcInfoSpan =
-                   SrcSpan "tests/examples/PatternSynonyms3.hs" 36 9 36 10
-               , srcInfoPoints = []
-               }
-             "C")
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/PatternSynonyms3.hs" 36 9 36 10
+                , srcInfoPoints = []
+                }
+              "C"
+          ]
           Nothing
           (Just
              (CxSingle
@@ -2198,13 +2204,14 @@ ParseOk
                 , SrcSpan "tests/examples/PatternSynonyms3.hs" 39 11 39 13
                 ]
             }
-          (Ident
-             SrcSpanInfo
-               { srcInfoSpan =
-                   SrcSpan "tests/examples/PatternSynonyms3.hs" 39 9 39 10
-               , srcInfoPoints = []
-               }
-             "P")
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/PatternSynonyms3.hs" 39 9 39 10
+                , srcInfoPoints = []
+                }
+              "P"
+          ]
           Nothing
           Nothing
           Nothing
@@ -2350,13 +2357,14 @@ ParseOk
                 , SrcSpan "tests/examples/PatternSynonyms3.hs" 42 11 42 13
                 ]
             }
-          (Ident
-             SrcSpanInfo
-               { srcInfoSpan =
-                   SrcSpan "tests/examples/PatternSynonyms3.hs" 42 9 42 10
-               , srcInfoPoints = []
-               }
-             "D")
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/PatternSynonyms3.hs" 42 9 42 10
+                , srcInfoPoints = []
+                }
+              "D"
+          ]
           Nothing
           Nothing
           Nothing
