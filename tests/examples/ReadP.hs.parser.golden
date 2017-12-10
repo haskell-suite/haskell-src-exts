@@ -125,17 +125,22 @@ ParseOk
                                    , srcInfoPoints = []
                                    }
                                  "b")))
-                        (UnQual
+                        (UnpromotedName
                            SrcSpanInfo
                              { srcInfoSpan = SrcSpan "tests/examples/ReadP.hs" 2 31 2 32
                              , srcInfoPoints = []
                              }
-                           (Symbol
+                           (UnQual
                               SrcSpanInfo
                                 { srcInfoSpan = SrcSpan "tests/examples/ReadP.hs" 2 31 2 32
                                 , srcInfoPoints = []
                                 }
-                              "."))
+                              (Symbol
+                                 SrcSpanInfo
+                                   { srcInfoSpan = SrcSpan "tests/examples/ReadP.hs" 2 31 2 32
+                                   , srcInfoPoints = []
+                                   }
+                                 ".")))
                         (TyFun
                            SrcSpanInfo
                              { srcInfoSpan = SrcSpan "tests/examples/ReadP.hs" 2 33 2 50

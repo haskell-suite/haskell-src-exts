@@ -196,17 +196,22 @@ ParseOk
                                     , srcInfoPoints = []
                                     }
                                   "Int")))
-                         (UnQual
+                         (UnpromotedName
                             SrcSpanInfo
                               { srcInfoSpan = SrcSpan "tests/examples/AtOperator.hs" 6 16 6 19
                               , srcInfoPoints = []
                               }
-                            (Symbol
+                            (UnQual
                                SrcSpanInfo
                                  { srcInfoSpan = SrcSpan "tests/examples/AtOperator.hs" 6 16 6 19
                                  , srcInfoPoints = []
                                  }
-                               ":+:"))
+                               (Symbol
+                                  SrcSpanInfo
+                                    { srcInfoSpan = SrcSpan "tests/examples/AtOperator.hs" 6 16 6 19
+                                    , srcInfoPoints = []
+                                    }
+                                  ":+:")))
                          (TyCon
                             SrcSpanInfo
                               { srcInfoSpan = SrcSpan "tests/examples/AtOperator.hs" 6 20 6 23

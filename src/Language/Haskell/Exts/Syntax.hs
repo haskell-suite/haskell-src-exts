@@ -77,6 +77,7 @@ module Language.Haskell.Exts.Syntax (
     -- * Variables, Constructors and Operators
     ModuleName(..), QName(..), Name(..), QOp(..), Op(..),
     SpecialCon(..), CName(..), IPName(..), XName(..), Role(..),
+    MaybePromotedName(..),
 
     -- * Template Haskell
     Bracket(..), Splice(..),
@@ -619,7 +620,8 @@ data Type l
      | TyVar   l (Name l)                       -- ^ type variable
      | TyCon   l (QName l)                      -- ^ named type or type constructor
      | TyParen l (Type l)                       -- ^ type surrounded by parentheses
-     | TyInfix l (Type l) (QName l) (Type l)    -- ^ infix type constructor
+     | TyInfix l (Type l) (MaybePromotedName l)
+                          (Type l)              -- ^ infix type constructor
      | TyKind  l (Type l) (Kind l)              -- ^ type with explicit kind signature
      | TyPromoted l (Promoted l)                -- ^ @'K@, a promoted data type (-XDataKinds).
      | TyEquals l (Type l) (Type l)             -- ^ type equality predicate enabled by ConstraintKinds
@@ -627,6 +629,9 @@ data Type l
      | TyBang l (BangType l) (Unpackedness l) (Type l)           -- ^ Strict type marked with \"@!@\" or type marked with UNPACK pragma.
      | TyWildCard l (Maybe (Name l))            -- ^ Either an anonymous of named type wildcard
      | TyQuasiQuote l String String             -- ^ @[$/name/| /string/ |]@
+  deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
+
+data MaybePromotedName l = PromotedName l (QName l) | UnpromotedName l (QName l)
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | Bools here are True if there was a leading quote which may be
@@ -1494,6 +1499,14 @@ instance Annotated Type where
       TyBang l b u t                  -> TyBang (f l) b u t
       TyWildCard l n                -> TyWildCard (f l) n
       TyQuasiQuote l n s            -> TyQuasiQuote (f l) n s
+
+instance Annotated MaybePromotedName where
+  ann t = case t of
+    PromotedName l _ -> l
+    UnpromotedName l _ -> l
+  amap f tl =  case tl of
+    PromotedName l q -> PromotedName (f l)     q
+    UnpromotedName l q -> UnpromotedName (f l) q
 
 instance Annotated TyVarBind where
     ann (KindedVar   l _ _) = l
