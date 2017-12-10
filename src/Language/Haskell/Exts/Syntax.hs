@@ -626,6 +626,7 @@ data Type l
         (Type l)                                -- ^ qualified type
      | TyFun   l (Type l) (Type l)              -- ^ function type
      | TyTuple l Boxed [Type l]                 -- ^ tuple type, possibly boxed
+     | TyUnboxedSum l [Type l]                  -- ^ unboxed tuple type
      | TyList  l (Type l)                       -- ^ list syntax, e.g. [a], as opposed to [] a
      | TyParArray  l (Type l)                   -- ^ parallel array syntax, e.g. [:a:]
      | TyApp   l (Type l) (Type l)              -- ^ application of a type constructor
@@ -749,6 +750,7 @@ data Exp l
                                             --   should be an expression.
     | MDo l [Stmt l]                        -- ^ @mdo@-expression
     | Tuple l Boxed [Exp l]                 -- ^ tuple expression
+    | UnboxedSum l Int Int (Exp l)          -- ^ unboxed sum
     | TupleSection l Boxed [Maybe (Exp l)]  -- ^ tuple section expression, e.g. @(,,3)@
     | List l [Exp l]                        -- ^ list expression
     | ParArray l [Exp l]                    -- ^ parallel array expression
@@ -872,6 +874,9 @@ data Tool = GHC | HUGS | NHC98 | YHC | HADDOCK | UnknownTool String
 data Overlap l
     = NoOverlap l   -- ^ NO_OVERLAP pragma
     | Overlap l     -- ^ OVERLAP pragma
+    | Overlapping l
+    | Overlaps l
+    | Overlappable l
     | Incoherent l  -- ^ INCOHERENT pragma
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
@@ -908,6 +913,7 @@ data Pat l
     | PInfixApp l (Pat l) (QName l) (Pat l) -- ^ pattern with an infix data constructor
     | PApp l (QName l) [Pat l]              -- ^ data constructor and argument patterns
     | PTuple l Boxed [Pat l]                -- ^ tuple pattern
+    | PUnboxedSum l Int Int (Pat l)         -- ^ unboxed sum
     | PList l [Pat l]                       -- ^ list pattern
     | PParen l (Pat l)                      -- ^ parenthesized pattern
     | PRec l (QName l) [PatField l]         -- ^ labelled pattern, record style
@@ -1489,6 +1495,7 @@ instance Annotated Type where
       TyForall l _ _ _              -> l
       TyFun   l _ _                 -> l
       TyTuple l _ _                 -> l
+      TyUnboxedSum l _              -> l
       TyList  l _                   -> l
       TyParArray  l _               -> l
       TyApp   l _ _                 -> l
@@ -1507,6 +1514,7 @@ instance Annotated Type where
       TyForall l mtvs mcx t         -> TyForall (f l) mtvs mcx t
       TyFun   l t1' t2              -> TyFun (f l) t1' t2
       TyTuple l b ts                -> TyTuple (f l) b ts
+      TyUnboxedSum l s              -> TyUnboxedSum (f l) s
       TyList  l t                   -> TyList (f l) t
       TyParArray  l t               -> TyParArray (f l) t
       TyApp   l t1' t2              -> TyApp (f l) t1' t2
@@ -1620,6 +1628,7 @@ instance Annotated Exp where
         Do l _                 -> l
         MDo l _                -> l
         Tuple l _ _            -> l
+        UnboxedSum l _ _ _     -> l
         TupleSection l _ _     -> l
         List l _               -> l
         ParArray l _           -> l
@@ -1679,6 +1688,7 @@ instance Annotated Exp where
         Do l ss         -> Do (f l) ss
         MDo l ss        -> MDo (f l) ss
         Tuple l bx es   -> Tuple (f l) bx es
+        UnboxedSum l b a es -> UnboxedSum (f l) b a es
         TupleSection l bx mes -> TupleSection (f l) bx mes
         List l es       -> List (f l) es
         ParArray l es   -> ParArray (f l) es
@@ -1777,6 +1787,9 @@ instance Annotated ModulePragma where
 instance Annotated Overlap where
     ann (NoOverlap l)  = l
     ann (Overlap l)    = l
+    ann (Overlaps l)   = l
+    ann (Overlappable l) = l
+    ann (Overlapping l)  = l
     ann (Incoherent l) = l
     amap = fmap
 
@@ -1808,6 +1821,7 @@ instance Annotated Pat where
       PInfixApp l _ _ _ -> l
       PApp l _ _        -> l
       PTuple l _ _      -> l
+      PUnboxedSum l _ _ _ -> l
       PList l _         -> l
       PParen l _        -> l
       PRec l _ _        -> l
@@ -1831,6 +1845,7 @@ instance Annotated Pat where
       PInfixApp l pa qn pb  -> PInfixApp (f l) pa qn pb
       PApp l qn ps      -> PApp (f l) qn ps
       PTuple l bx ps    -> PTuple (f l) bx ps
+      PUnboxedSum l b a ps -> PUnboxedSum (f l) b a ps
       PList l ps        -> PList (f l) ps
       PParen l p        -> PParen (f l) p
       PRec l qn pfs     -> PRec (f l) qn pfs

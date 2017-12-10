@@ -153,6 +153,9 @@ data Token
         | MINIMAL
         | NO_OVERLAP
         | OVERLAP
+        | OVERLAPPING
+        | OVERLAPPABLE
+        | OVERLAPS
         | INCOHERENT
         | COMPLETE
 
@@ -343,6 +346,9 @@ pragmas = [
  ( "minimal",           MINIMAL         ),
  ( "no_overlap",        NO_OVERLAP      ),
  ( "overlap",           OVERLAP         ),
+ ( "overlaps",          OVERLAPS        ),
+ ( "overlapping",       OVERLAPPING     ),
+ ( "overlappable",      OVERLAPPABLE    ),
  ( "incoherent",        INCOHERENT      ),
  ( "complete",          COMPLETE      ),
  ( "options",           OPTIONS undefined ) -- we'll tweak it before use - promise!
@@ -734,9 +740,9 @@ lexStdToken = do
                         return XStdTagOpen
         -- end hsx
 
-        '(':'#':c:_ | UnboxedTuples `elem` exts && not (isHSymbol c) -> discard 2 >> return LeftHashParen
+        '(':'#':c:_ | unboxed exts && not (isHSymbol c) -> discard 2 >> return LeftHashParen
 
-        '#':')':_ | UnboxedTuples `elem` exts -> discard 2 >> return RightHashParen
+        '#':')':_   | unboxed exts -> discard 2 >> return RightHashParen
 
         -- pragmas
 
@@ -881,6 +887,9 @@ lexStdToken = do
                   _ -> do str <- lexWhile (not . (`elem` "\\|\n"))
                           rest <- lexQQBody
                           return (str++rest)
+
+unboxed :: [KnownExtension] -> Bool
+unboxed exts = UnboxedSums `elem` exts || UnboxedTuples `elem` exts
 
 -- Underscores are used in some pragmas. Options pragmas are a special case
 -- with our representation: the thing after the underscore is a parameter.
@@ -1381,6 +1390,9 @@ showToken t = case t of
   MINIMAL           -> "{-# MINIMAL"
   NO_OVERLAP        -> "{-# NO_OVERLAP"
   OVERLAP           -> "{-# OVERLAP"
+  OVERLAPPING       -> "{-# OVERLAPPING"
+  OVERLAPPABLE      -> "{-# OVERLAPPABLE"
+  OVERLAPS          -> "{-# OVERLAPS"
   INCOHERENT        -> "{-# INCOHERENT"
   COMPLETE          -> "{-# COMPLETE"
   KW_As         -> "as"

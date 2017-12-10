@@ -280,6 +280,9 @@ Pragmas
 >       '{-# MINIMAL'           { Loc $$ MINIMAL }
 >       '{-# NO_OVERLAP'        { Loc $$ NO_OVERLAP }
 >       '{-# OVERLAP'           { Loc $$ OVERLAP }
+>       '{-# OVERLAPS'          { Loc $$ OVERLAPS }
+>       '{-# OVERLAPPING'       { Loc $$ OVERLAPPING }
+>       '{-# OVERLAPPABLE'      { Loc $$ OVERLAPPABLE }
 >       '{-# INCOHERENT'        { Loc $$ INCOHERENT }
 >       '{-# COMPLETE'          { Loc $$ COMPLETE }
 >       '#-}'                   { Loc $$ PragmaEnd }      -- 139
@@ -300,7 +303,7 @@ Pragmas
 > %partial ngparsePragmasAndModuleHead moduletophead
 > %partial ngparsePragmasAndModuleName moduletopname
 > %tokentype { Loc Token }
-> %expect 10
+> %expect 13
 > %%
 
 -----------------------------------------------------------------------------
@@ -714,7 +717,10 @@ Role annotations
 
 
 > optoverlap :: { Maybe (Overlap L) }
->  : '{-# OVERLAP'    '#-}'    { Just (Overlap (nIS $1)) }
+>  : '{-# OVERLAP'      '#-}'    { Just (Overlap (nIS $1)) }
+>  | '{-# OVERLAPS'     '#-}'    { Just (Overlaps (nIS $1)) }
+>  | '{-# OVERLAPPING'  '#-}'    { Just (Overlapping (nIS $1)) }
+>  | '{-# OVERLAPPABLE' '#-}'    { Just (Overlappable (nIS $1)) }
 >  | '{-# INCOHERENT' '#-}'    { Just (Incoherent (nIS $1)) }
 >  | '{-# NO_OVERLAP' '#-}'    { Just (NoOverlap (nIS $1))  }
 >  | {- empty -}               { Nothing }
@@ -966,6 +972,7 @@ the (# and #) lexemes. Kinds will be handled at the kind rule.
 >       | strict_mark atype             { let (mstrict, mupack) = $1
 >                                         in bangType mstrict mupack $2 }
 >       | '(' types ')'                 { TyTuple ($1 <^^> $3 <** ($1:reverse ($3:snd $2))) Boxed   (reverse (fst $2)) }
+>       | '(#' types_bars2 '#)'         { TyUnboxedSum ($1 <^^> $3 <** ($1: reverse ($3: snd $2))) (reverse (fst $2))  }
 >       | '(#' types1 '#)'              { TyTuple ($1 <^^> $3 <** ($1:reverse ($3:snd $2))) Unboxed (reverse (fst $2)) }
 >       | '[' type ']'                  { TyList  ($1 <^^> $3 <** [$1,$3]) $2 }
 >       | '[:' type ':]'                { TyParArray  ($1 <^^> $3 <** [$1,$3]) $2 }
@@ -1055,6 +1062,10 @@ Equality constraints require the TypeFamilies extension.
 > types1 :: { ([PType L],[S]) }
 >       : ctype                         { ([$1],[]) }
 >       | types1 ',' ctype              { ($3 : fst $1, $2 : snd $1) }
+
+> types_bars2 :: { ([PType L],[S]) }
+>   : ctype '|' ctype                   { ([$3, $1], [$2]) }
+>   | types_bars2 '|' ctype             { ($3 : fst $1, $2 : snd $1) }
 
 > ktyvars :: { ([TyVarBind L],Maybe L) }
 >       : ktyvars ktyvar                { ($2 : fst $1, Just (snd $1 <?+> ann $2)) }
@@ -1488,23 +1499,18 @@ thing we need to look at here is the erpats that use no non-standard lexemes.
 >       | gcon                          { $1 }
 >       | literal                       { Lit (ann $1) $1 }
 >       | '(' texp ')'                  { Paren ($1 <^^> $3 <** [$1,$3]) $2 }
->       | '(' texp tsectend             { TupleSection ($1 <^^> head (snd $3) <** $1:reverse (snd $3)) Boxed (Just $2 : fst $3) }
->       | '(' commas texp ')'           { TupleSection ($1 <^^> $4 <** $1:reverse ($4:$2)) Boxed
->                                                       (replicate (length $2) Nothing ++ [Just $3]) }
->       | '(' commas texp tsectend      { TupleSection ($1 <^^> head (snd $4) <** $1:reverse (snd $4 ++ $2)) Boxed
->                                                       (replicate (length $2) Nothing ++ Just $3 : fst $4) }
->       | '(#' texp thashsectend        { TupleSection ($1 <^^> head (snd $3) <** $1:reverse (snd $3)) Unboxed (Just $2 : fst $3) }
+>       | '(' tup_exprs ')'             {% do { e <- mkSumOrTuple Boxed ($1 <^^> $3) (snd $2)
+>                                             ; return $ amap (\l -> l <** [$1] ++ fst $2 ++ [$3]) e } }
 >       | '(#' texp '#)'                { TupleSection ($1 <^^> $3 <** [$1,$3]) Unboxed [Just $2] }
->       | '(#' commas texp '#)'         { TupleSection ($1 <^^> $4 <** $1:reverse ($4:$2)) Unboxed
->                                                       (replicate (length $2) Nothing ++ [Just $3]) }
->       | '(#' commas texp thashsectend { TupleSection ($1 <^^> head (snd $4) <** $1:reverse (snd $4 ++ $2)) Unboxed
->                                                       (replicate (length $2) Nothing ++ Just $3 : fst $4) }
+>       | '(#' tup_exprs '#)'         {% do { e <- mkSumOrTuple Unboxed ($1 <^^> $3) (snd $2)
+>                                           ; return $ amap (\l -> l <** [$1] ++ fst $2 ++ [$3]) e } }
 >       | '[' list ']'                  { amap (\l -> l <** [$3]) $ $2 ($1 <^^> $3 <** [$1]) }
 >       | '[:' parr ':]'                { amap (\l -> l <** [$3]) $ $2 ($1 <^^> $3 <** [$1]) }
 >       | '(' erpats ')'                {% checkEnabled RegularPatterns >> return (Paren ($1 <^^> $3 <** [$1,$3]) $2) }
 >       | '(|' sexps '|)'               { SeqRP ($1 <^^> $3 <** ($1:reverse (snd $2) ++ [$3])) $ reverse (fst $2) }
 >       | '(|' exp '|' quals '|)'       { GuardRP ($1 <^^> $5 <** ($1:$3 : snd $4 ++ [$5])) $2 $ (reverse $ fst $4) }
 >       | xml                           { $1 }
+
 
 Template Haskell - all this is enabled in the lexer.
 >       | IDSPLICE                      { let Loc l (THIdEscape s) = $1 in SpliceExp (nIS l) $ IdSplice (nIS l) s }
@@ -1526,9 +1532,31 @@ Template Haskell - all this is enabled in the lexer.
 >       | QUASIQUOTE                    { let Loc l (THQuasiQuote (n,q)) = $1 in QuasiQuote (nIS l) n q }
 End Template Haskell
 
+> tup_exprs :: { ([S], SumOrTuple L) }
+>       : texp commas_tup_tail          { (fst $2, STuple (Just $1 : snd $2)) }
+>       | texp bars                     { ($2, SSum 0 (length $2) $1) }
+>       | commas tup_tail               { ($1 ++ (fst $2), STuple ((map (const Nothing) $1) ++ snd $2)) }
+>       | bars texp bars0               { ($1 ++ $3, SSum (length $1) (length $3) $2) }
+
+> commas_tup_tail :: { ([S], [Maybe (PExp L)]) }
+>       : commas tup_tail               { (reverse $1 ++ fst $2, map (const Nothing) (tail $1) ++ snd $2) }
+
+> tup_tail :: { ([S], [Maybe (PExp L)]) }
+>           : texp commas_tup_tail { (fst $2, Just $1 : snd $2) }
+>           | texp                 { ([], [Just $1]) }
+>           | {- empty -}          { ([], [Nothing]) }
+
 > commas :: { [S] }
 >       : commas ','                    { $2 : $1 }
 >       | ','                           { [$1] }
+
+> bars :: { [S] }
+>   : bars '|'  { $2 : $1 }
+>   | '|'       { [$1] }
+
+> bars0 :: { [S] }
+>        : bars { $1 }
+>        |      { [] }
 
 > texp :: { PExp L }
 >       : exp                           { $1 }

@@ -1,2 +1,672 @@
-ParseFailed
-  (SrcLoc "tests/examples/Lib.hs" 9 12) "Parse error: Int"
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 1 1 18 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/Lib.hs" 1 1 1 1
+            , SrcSpan "tests/examples/Lib.hs" 3 1 3 1
+            , SrcSpan "tests/examples/Lib.hs" 3 1 3 1
+            , SrcSpan "tests/examples/Lib.hs" 5 1 5 1
+            , SrcSpan "tests/examples/Lib.hs" 6 1 6 1
+            , SrcSpan "tests/examples/Lib.hs" 8 1 8 1
+            , SrcSpan "tests/examples/Lib.hs" 9 1 9 1
+            , SrcSpan "tests/examples/Lib.hs" 10 1 10 1
+            , SrcSpan "tests/examples/Lib.hs" 11 1 11 1
+            , SrcSpan "tests/examples/Lib.hs" 13 1 13 1
+            , SrcSpan "tests/examples/Lib.hs" 14 1 14 1
+            , SrcSpan "tests/examples/Lib.hs" 15 1 15 1
+            , SrcSpan "tests/examples/Lib.hs" 16 1 16 1
+            , SrcSpan "tests/examples/Lib.hs" 18 1 18 1
+            , SrcSpan "tests/examples/Lib.hs" 18 1 18 1
+            ]
+        }
+      (Just
+         (ModuleHead
+            SrcSpanInfo
+              { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 3 1 3 32
+              , srcInfoPoints =
+                  [ SrcSpan "tests/examples/Lib.hs" 3 1 3 7
+                  , SrcSpan "tests/examples/Lib.hs" 3 27 3 32
+                  ]
+              }
+            (ModuleName
+               SrcSpanInfo
+                 { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 3 8 3 11
+                 , srcInfoPoints = []
+                 }
+               "Lib")
+            Nothing
+            (Just
+               (ExportSpecList
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 3 12 3 26
+                    , srcInfoPoints =
+                        [ SrcSpan "tests/examples/Lib.hs" 3 12 3 13
+                        , SrcSpan "tests/examples/Lib.hs" 3 17 3 18
+                        , SrcSpan "tests/examples/Lib.hs" 3 25 3 26
+                        ]
+                    }
+                  [ EVar
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 3 13 3 17
+                        , srcInfoPoints = []
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 3 13 3 17
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 3 13 3 17
+                              , srcInfoPoints = []
+                              }
+                            "flip"))
+                  , EVar
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 3 19 3 25
+                        , srcInfoPoints = []
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 3 19 3 25
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 3 19 3 25
+                              , srcInfoPoints = []
+                              }
+                            "getInt"))
+                  ]))))
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 1 1 1 40
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/Lib.hs" 1 1 1 13
+                , SrcSpan "tests/examples/Lib.hs" 1 25 1 26
+                , SrcSpan "tests/examples/Lib.hs" 1 37 1 40
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 1 14 1 25
+                , srcInfoPoints = []
+                }
+              "UnboxedSums"
+          , Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 1 27 1 36
+                , srcInfoPoints = []
+                }
+              "MagicHash"
+          ]
+      ]
+      [ ImportDecl
+          { importAnn =
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 5 1 5 16
+                , srcInfoPoints = [ SrcSpan "tests/examples/Lib.hs" 5 1 5 7 ]
+                }
+          , importModule =
+              ModuleName
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 5 8 5 16
+                  , srcInfoPoints = []
+                  }
+                "GHC.Exts"
+          , importQualified = False
+          , importSrc = False
+          , importSafe = False
+          , importPkg = Nothing
+          , importAs = Nothing
+          , importSpecs = Nothing
+          }
+      , ImportDecl
+          { importAnn =
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 6 1 6 21
+                , srcInfoPoints = [ SrcSpan "tests/examples/Lib.hs" 6 1 6 7 ]
+                }
+          , importModule =
+              ModuleName
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 6 8 6 15
+                  , srcInfoPoints = []
+                  }
+                "Prelude"
+          , importQualified = False
+          , importSrc = False
+          , importSafe = False
+          , importPkg = Nothing
+          , importAs = Nothing
+          , importSpecs =
+              Just
+                (ImportSpecList
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 6 16 6 21
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/Lib.hs" 6 16 6 17
+                         , SrcSpan "tests/examples/Lib.hs" 6 20 6 21
+                         ]
+                     }
+                   False
+                   [ IAbs
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 6 17 6 20
+                         , srcInfoPoints = []
+                         }
+                       (NoNamespace
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 6 17 6 20
+                            , srcInfoPoints = []
+                            })
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 6 17 6 20
+                            , srcInfoPoints = []
+                            }
+                          "Int")
+                   ])
+          }
+      ]
+      [ InlineSig
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 8 1 8 22
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/Lib.hs" 8 1 8 13
+                , SrcSpan "tests/examples/Lib.hs" 8 19 8 22
+                ]
+            }
+          False
+          Nothing
+          (UnQual
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 8 14 8 18
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 8 14 8 18
+                  , srcInfoPoints = []
+                  }
+                "flip"))
+      , TypeSig
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 9 1 9 45
+            , srcInfoPoints = [ SrcSpan "tests/examples/Lib.hs" 9 6 9 8 ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 9 1 9 5
+                , srcInfoPoints = []
+                }
+              "flip"
+          ]
+          (TyFun
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 9 9 9 45
+               , srcInfoPoints = [ SrcSpan "tests/examples/Lib.hs" 9 26 9 28 ]
+               }
+             (TyUnboxedSum
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 9 9 9 25
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/Lib.hs" 9 9 9 11
+                      , SrcSpan "tests/examples/Lib.hs" 9 16 9 17
+                      , SrcSpan "tests/examples/Lib.hs" 9 23 9 25
+                      ]
+                  }
+                [ TyCon
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 9 12 9 15
+                      , srcInfoPoints = []
+                      }
+                    (UnQual
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 9 12 9 15
+                         , srcInfoPoints = []
+                         }
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 9 12 9 15
+                            , srcInfoPoints = []
+                            }
+                          "Int"))
+                , TyCon
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 9 18 9 22
+                      , srcInfoPoints = []
+                      }
+                    (UnQual
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 9 18 9 22
+                         , srcInfoPoints = []
+                         }
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 9 18 9 22
+                            , srcInfoPoints = []
+                            }
+                          "Int#"))
+                ])
+             (TyUnboxedSum
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 9 29 9 45
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/Lib.hs" 9 29 9 31
+                      , SrcSpan "tests/examples/Lib.hs" 9 37 9 38
+                      , SrcSpan "tests/examples/Lib.hs" 9 43 9 45
+                      ]
+                  }
+                [ TyCon
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 9 32 9 36
+                      , srcInfoPoints = []
+                      }
+                    (UnQual
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 9 32 9 36
+                         , srcInfoPoints = []
+                         }
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 9 32 9 36
+                            , srcInfoPoints = []
+                            }
+                          "Int#"))
+                , TyCon
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 9 39 9 42
+                      , srcInfoPoints = []
+                      }
+                    (UnQual
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 9 39 9 42
+                         , srcInfoPoints = []
+                         }
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 9 39 9 42
+                            , srcInfoPoints = []
+                            }
+                          "Int"))
+                ]))
+      , FunBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 10 1 11 27
+            , srcInfoPoints = []
+            }
+          [ Match
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 10 1 10 27
+                , srcInfoPoints = []
+                }
+              (Ident
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 10 1 10 5
+                   , srcInfoPoints = []
+                   }
+                 "flip")
+              [ PUnboxedSum
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 10 6 10 15
+                    , srcInfoPoints =
+                        [ SrcSpan "tests/examples/Lib.hs" 10 6 10 8
+                        , SrcSpan "tests/examples/Lib.hs" 10 11 10 12
+                        , SrcSpan "tests/examples/Lib.hs" 10 13 10 15
+                        ]
+                    }
+                  0
+                  1
+                  (PVar
+                     SrcSpanInfo
+                       { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 10 9 10 10
+                       , srcInfoPoints = []
+                       }
+                     (Ident
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 10 9 10 10
+                          , srcInfoPoints = []
+                          }
+                        "i"))
+              ]
+              (UnGuardedRhs
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 10 16 10 27
+                   , srcInfoPoints = [ SrcSpan "tests/examples/Lib.hs" 10 16 10 17 ]
+                   }
+                 (UnboxedSum
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 10 18 10 27
+                      , srcInfoPoints =
+                          [ SrcSpan "tests/examples/Lib.hs" 10 18 10 20
+                          , SrcSpan "tests/examples/Lib.hs" 10 21 10 22
+                          , SrcSpan "tests/examples/Lib.hs" 10 25 10 27
+                          ]
+                      }
+                    1
+                    0
+                    (Var
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 10 23 10 24
+                         , srcInfoPoints = []
+                         }
+                       (UnQual
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 10 23 10 24
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 10 23 10 24
+                               , srcInfoPoints = []
+                               }
+                             "i")))))
+              Nothing
+          , Match
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 11 1 11 27
+                , srcInfoPoints = []
+                }
+              (Ident
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 11 1 11 5
+                   , srcInfoPoints = []
+                   }
+                 "flip")
+              [ PUnboxedSum
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 11 6 11 15
+                    , srcInfoPoints =
+                        [ SrcSpan "tests/examples/Lib.hs" 11 6 11 8
+                        , SrcSpan "tests/examples/Lib.hs" 11 9 11 10
+                        , SrcSpan "tests/examples/Lib.hs" 11 13 11 15
+                        ]
+                    }
+                  1
+                  0
+                  (PVar
+                     SrcSpanInfo
+                       { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 11 11 11 12
+                       , srcInfoPoints = []
+                       }
+                     (Ident
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 11 11 11 12
+                          , srcInfoPoints = []
+                          }
+                        "i"))
+              ]
+              (UnGuardedRhs
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 11 16 11 27
+                   , srcInfoPoints = [ SrcSpan "tests/examples/Lib.hs" 11 16 11 17 ]
+                   }
+                 (UnboxedSum
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 11 18 11 27
+                      , srcInfoPoints =
+                          [ SrcSpan "tests/examples/Lib.hs" 11 18 11 20
+                          , SrcSpan "tests/examples/Lib.hs" 11 23 11 24
+                          , SrcSpan "tests/examples/Lib.hs" 11 25 11 27
+                          ]
+                      }
+                    0
+                    1
+                    (Var
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 11 21 11 22
+                         , srcInfoPoints = []
+                         }
+                       (UnQual
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 11 21 11 22
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 11 21 11 22
+                               , srcInfoPoints = []
+                               }
+                             "i")))))
+              Nothing
+          ]
+      , InlineSig
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 13 1 13 24
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/Lib.hs" 13 1 13 13
+                , SrcSpan "tests/examples/Lib.hs" 13 21 13 24
+                ]
+            }
+          False
+          Nothing
+          (UnQual
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 13 14 13 20
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 13 14 13 20
+                  , srcInfoPoints = []
+                  }
+                "getInt"))
+      , TypeSig
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 14 1 14 34
+            , srcInfoPoints = [ SrcSpan "tests/examples/Lib.hs" 14 8 14 10 ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 14 1 14 7
+                , srcInfoPoints = []
+                }
+              "getInt"
+          ]
+          (TyFun
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 14 11 14 34
+               , srcInfoPoints = [ SrcSpan "tests/examples/Lib.hs" 14 28 14 30 ]
+               }
+             (TyUnboxedSum
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 14 11 14 27
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/Lib.hs" 14 11 14 13
+                      , SrcSpan "tests/examples/Lib.hs" 14 19 14 20
+                      , SrcSpan "tests/examples/Lib.hs" 14 25 14 27
+                      ]
+                  }
+                [ TyCon
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 14 14 14 18
+                      , srcInfoPoints = []
+                      }
+                    (UnQual
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 14 14 14 18
+                         , srcInfoPoints = []
+                         }
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 14 14 14 18
+                            , srcInfoPoints = []
+                            }
+                          "Int#"))
+                , TyCon
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 14 21 14 24
+                      , srcInfoPoints = []
+                      }
+                    (UnQual
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 14 21 14 24
+                         , srcInfoPoints = []
+                         }
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 14 21 14 24
+                            , srcInfoPoints = []
+                            }
+                          "Int"))
+                ])
+             (TyCon
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 14 31 14 34
+                  , srcInfoPoints = []
+                  }
+                (UnQual
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 14 31 14 34
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 14 31 14 34
+                        , srcInfoPoints = []
+                        }
+                      "Int"))))
+      , FunBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 15 1 16 21
+            , srcInfoPoints = []
+            }
+          [ Match
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 15 1 15 24
+                , srcInfoPoints = []
+                }
+              (Ident
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 15 1 15 7
+                   , srcInfoPoints = []
+                   }
+                 "getInt")
+              [ PUnboxedSum
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 15 8 15 17
+                    , srcInfoPoints =
+                        [ SrcSpan "tests/examples/Lib.hs" 15 8 15 10
+                        , SrcSpan "tests/examples/Lib.hs" 15 13 15 14
+                        , SrcSpan "tests/examples/Lib.hs" 15 15 15 17
+                        ]
+                    }
+                  0
+                  1
+                  (PVar
+                     SrcSpanInfo
+                       { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 15 11 15 12
+                       , srcInfoPoints = []
+                       }
+                     (Ident
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 15 11 15 12
+                          , srcInfoPoints = []
+                          }
+                        "i"))
+              ]
+              (UnGuardedRhs
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 15 18 15 24
+                   , srcInfoPoints = [ SrcSpan "tests/examples/Lib.hs" 15 18 15 19 ]
+                   }
+                 (App
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 15 20 15 24
+                      , srcInfoPoints = []
+                      }
+                    (Con
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 15 20 15 22
+                         , srcInfoPoints = []
+                         }
+                       (UnQual
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 15 20 15 22
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 15 20 15 22
+                               , srcInfoPoints = []
+                               }
+                             "I#")))
+                    (Var
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 15 23 15 24
+                         , srcInfoPoints = []
+                         }
+                       (UnQual
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 15 23 15 24
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 15 23 15 24
+                               , srcInfoPoints = []
+                               }
+                             "i")))))
+              Nothing
+          , Match
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 16 1 16 21
+                , srcInfoPoints = []
+                }
+              (Ident
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 16 1 16 7
+                   , srcInfoPoints = []
+                   }
+                 "getInt")
+              [ PUnboxedSum
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 16 8 16 17
+                    , srcInfoPoints =
+                        [ SrcSpan "tests/examples/Lib.hs" 16 8 16 10
+                        , SrcSpan "tests/examples/Lib.hs" 16 11 16 12
+                        , SrcSpan "tests/examples/Lib.hs" 16 15 16 17
+                        ]
+                    }
+                  1
+                  0
+                  (PVar
+                     SrcSpanInfo
+                       { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 16 13 16 14
+                       , srcInfoPoints = []
+                       }
+                     (Ident
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 16 13 16 14
+                          , srcInfoPoints = []
+                          }
+                        "i"))
+              ]
+              (UnGuardedRhs
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 16 18 16 21
+                   , srcInfoPoints = [ SrcSpan "tests/examples/Lib.hs" 16 18 16 19 ]
+                   }
+                 (Var
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 16 20 16 21
+                      , srcInfoPoints = []
+                      }
+                    (UnQual
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 16 20 16 21
+                         , srcInfoPoints = []
+                         }
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/Lib.hs" 16 20 16 21
+                            , srcInfoPoints = []
+                            }
+                          "i"))))
+              Nothing
+          ]
+      ]
+  , []
+  )
