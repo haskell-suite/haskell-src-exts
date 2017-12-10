@@ -254,6 +254,8 @@ Reserved Ids
 >       'qualified'     { Loc $$ KW_Qualified }
 >       'role'          { Loc $$ KW_Role }
 >       'pattern'       { Loc $$ KW_Pattern }
+>       'stock'         { Loc $$ KW_Stock }    -- for DerivingStrategies extension
+>       'anyclass'      { Loc $$ KW_Anyclass } -- for DerivingStrategies extension
 
 Pragmas
 
@@ -583,22 +585,23 @@ Here there is no special keyword so we must do the check.
 >                        checkEnabled TypeFamilies ;
 >                        let {l = nIS $1 <++> ann $5 <** [$1,$2,$4]};
 >                        return (TypeInsDecl l $3 $5) } }
->       | data_or_newtype ctype constrs0 deriving
+>       | data_or_newtype ctype constrs0 maybe_derivings
 >                {% do { (cs,dh) <- checkDataHeader $2;
 >                        let { (qds,ss,minf) = $3;
->                              l = $1 <> $2 <+?> minf <+?> fmap ann $4 <** ss};
+>                              l = $1 <> $2 <+?> minf <+?> fmap ann (listToMaybe $4) <** ss};
 >                        checkDataOrNew $1 qds;
->                        return (DataDecl l $1 cs dh (reverse qds) $4) } }
+>                        return (DataDecl l $1 cs dh (reverse qds) (reverse $4)) } }
 
 Requires the GADTs extension enabled, handled in gadtlist.
->       | data_or_newtype ctype optkind gadtlist deriving
+>       | data_or_newtype ctype optkind gadtlist maybe_derivings
 >                {% do { (cs,dh) <- checkDataHeader $2;
 >                        let { (gs,ss,minf) = $4;
->                              l = ann $1 <+?> minf <+?> fmap ann $5 <** (snd $3 ++ ss)};
+>                              derivs' = reverse $5;
+>                              l = ann $1 <+?> minf <+?> fmap ann (listToMaybe $5) <** (snd $3 ++ ss)};
 >                        checkDataOrNewG $1 gs;
 >                        case (gs, fst $3) of
->                         ([], Nothing) -> return (DataDecl l $1 cs dh [] $5)
->                         _ -> checkEnabled GADTs >> return (GDataDecl l $1 cs dh (fst $3) (reverse gs) $5) } }
+>                         ([], Nothing) -> return (DataDecl l $1 cs dh [] derivs')
+>                         _ -> checkEnabled GADTs >> return (GDataDecl l $1 cs dh (fst $3) (reverse gs) derivs') } }
 
 Same as above, lexer will handle it through the 'family' keyword.
 >       | 'data' 'family' ctype opt_datafam_kind_sig
@@ -607,22 +610,23 @@ Same as above, lexer will handle it through the 'family' keyword.
 >                        return (DataFamDecl l cs dh $4) } }
 
 Here we must check for TypeFamilies.
->       | data_or_newtype 'instance' truectype constrs0 deriving
+>       | data_or_newtype 'instance' truectype constrs0 maybe_derivings
 >                {% do { -- (cs,c,t) <- checkDataHeader $4;
 >                        checkEnabled TypeFamilies ;
 >                        let { (qds,ss,minf) = $4 ;
->                              l = $1 <> $3 <+?> minf <+?> fmap ann $5 <** $2:ss };
+>                              l = $1 <> $3 <+?> minf <+?> fmap ann (listToMaybe $5) <** $2:ss };
 >                        checkDataOrNew $1 qds;
->                        return (DataInsDecl l $1 $3 (reverse qds) $5) } }
+>                        return (DataInsDecl l $1 $3 (reverse qds) (reverse $5)) } }
 
 This style requires both TypeFamilies and GADTs, the latter is handled in gadtlist.
->       | data_or_newtype 'instance' truectype optkind gadtlist deriving
+>       | data_or_newtype 'instance' truectype optkind gadtlist maybe_derivings
 >                {% do { -- (cs,c,t) <- checkDataHeader $4;
 >                        checkEnabled TypeFamilies ;
 >                        let {(gs,ss,minf) = $5;
->                             l = ann $1 <+?> minf <+?> fmap ann $6 <** ($2:snd $4 ++ ss)};
+>                             derivs' = reverse $6;
+>                             l = ann $1 <+?> minf <+?> fmap ann (listToMaybe derivs') <** ($2:snd $4 ++ ss)};
 >                        checkDataOrNewG $1 gs;
->                        return (GDataInsDecl l $1 $3 (fst $4) (reverse gs) $6) } }
+>                        return (GDataInsDecl l $1 $3 (fst $4) (reverse gs) derivs') } }
 >       | 'class' ctype fds optcbody
 >                {% do { (cs,dh) <- checkClassHeader $2;
 >                        let {(fds,ss1,minf1) = $3;(mcs,ss2,minf2) = $4} ;
@@ -634,11 +638,11 @@ This style requires both TypeFamilies and GADTs, the latter is handled in gadtli
 >                        return (InstDecl (nIS $1 <++> ann $3 <+?> minf <** ($1:ss)) $2 ih mis) } }
 
 Requires the StandaloneDeriving extension enabled.
->       | 'deriving' 'instance' optoverlap ctype
+>       | 'deriving' deriv_strategy 'instance' optoverlap ctype
 >                {% do { checkEnabled StandaloneDeriving ;
->                        ih <- checkInstHeader $4;
->                        let {l = nIS $1 <++> ann $4 <** [$1,$2]};
->                        return (DerivDecl l $3 ih) } }
+>                        ih <- checkInstHeader $5;
+>                        let {l = nIS $1 <++> ann $5 <** [$1,$3]};
+>                        return (DerivDecl l $2 $4 ih) } }
 >       | 'default' '(' typelist ')'
 >                { DefaultDecl ($1 <^^> $4 <** ($1:$2 : snd $3 ++ [$4])) (fst $3) }
 
@@ -1154,14 +1158,24 @@ as qcon and then check separately that they are truly unqualified.
 > fielddecl :: { FieldDecl L }
 >       : vars '::' truectype               { let (ns,ss,l) = $1 in FieldDecl (l <++> ann $3 <** (reverse ss ++ [$2])) (reverse ns) $3 }
 
-> deriving :: { Maybe (Deriving L) }
->       : {- empty -}                   { Nothing }
->       | 'deriving' qtycls1            { let l = nIS $1 <++> ann $2 <** [$1] in Just $ Deriving l [IRule (ann $2) Nothing Nothing $2] }
->       | 'deriving' '('          ')'   { Just $ Deriving ($1 <^^> $3 <** [$1,$2,$3]) [] }
->       | 'deriving' '(' dclasses ')'   { -- Distinguish deriving (Show) from deriving Show (#189)
->                                         case fst $3 of
->                                           [ts] -> Just $ Deriving ($1 <^^> $4 <** [$1]) [IParen ($2 <^^> $4 <** [$2,$4]) ts]
->                                           tss  -> Just $ Deriving ($1 <^^> $4 <** $1:$2: reverse (snd $3) ++ [$4]) (reverse tss)}
+> maybe_derivings :: { [Deriving L] }
+>       : {- empty -}                   { [] }
+>       | derivings                     { $1 }
+
+> derivings :: { [Deriving L] }
+>       : derivings deriving            { $2 : $1 }
+>       | deriving                      { [$1] }
+
+> deriving :: { Deriving L }
+>       : 'deriving' deriv_strategy qtycls1
+>                                       { let l = nIS $1 <++> ann $3 <** [$1] in Deriving l $2 [IRule (ann $3) Nothing Nothing $3] }
+>       | 'deriving' deriv_strategy '(' ')'
+>                                       { Deriving ($1 <^^> $4 <** [$1,$3,$4]) $2 [] }
+>       | 'deriving' deriv_strategy '(' dclasses ')'
+>                                       { -- Distinguish deriving (Show) from deriving Show (#189)
+>                                         case fst $4 of
+>                                           [ts] -> Deriving ($1 <^^> $5 <** [$1]) $2 [IParen ($3 <^^> $5 <** [$3,$5]) ts]
+>                                           tss  -> Deriving ($1 <^^> $5 <** $1:$3: reverse (snd $4) ++ [$5]) $2 (reverse tss)}
 
 > dclasses :: { ([InstRule L],[S]) }
 >       : types1                        {% checkDeriving (fst $1) >>= \ds -> return (ds, snd $1) }
@@ -1288,16 +1302,16 @@ Associated types require the TypeFamilies extension enabled.
 >       : 'type' truedtype '=' truectype
 >                {% do { -- no checkSimpleType $4 since dtype may contain type patterns
 >                        return (InsType (nIS $1 <++> ann $4 <** [$1,$3]) $2 $4) } }
->       | data_or_newtype truectype constrs0 deriving
+>       | data_or_newtype truectype constrs0 maybe_derivings
 >                {% do { -- (cs,c,t) <- checkDataHeader $4;
 >                        let {(ds,ss,minf) = $3};
 >                        checkDataOrNew $1 ds;
->                        return (InsData ($1 <> $2 <+?> minf <+?> fmap ann $4 <** ss ) $1 $2 (reverse ds) $4) } }
->       | data_or_newtype truectype optkind gadtlist deriving
+>                        return (InsData ($1 <> $2 <+?> minf <+?> fmap ann (listToMaybe $4) <** ss ) $1 $2 (reverse ds) (reverse $4)) } }
+>       | data_or_newtype truectype optkind gadtlist maybe_derivings
 >                {% do { -- (cs,c,t) <- checkDataHeader $4;
 >                        let { (gs,ss,minf) = $4 } ;
 >                        checkDataOrNewG $1 gs;
->                        return $ InsGData (ann $1 <+?> minf <+?> fmap ann $5 <** (snd $3 ++ ss)) $1 $2 (fst $3) (reverse gs) $5 } }
+>                        return $ InsGData (ann $1 <+?> minf <+?> fmap ann (listToMaybe $5) <** (snd $3 ++ ss)) $1 $2 (fst $3) (reverse gs) (reverse $5) } }
 
 -----------------------------------------------------------------------------
 Value definitions
@@ -1928,6 +1942,8 @@ Identifiers and Symbols
 >       | 'js'                  { js_name         (nIS $1) }
 >       | 'javascript'          { javascript_name (nIS $1) }
 >       | 'capi'                { capi_name       (nIS $1) }
+>       | 'stock'               { stock_name      (nIS $1) }
+>       | 'anyclass'            { anyclass_name   (nIS $1) }
 
 > varid :: { Name L }
 >       : varid_no_safety       { $1 }
@@ -2068,6 +2084,20 @@ Pattern Synonyms
 >                      return (Nothing, [], c1, Nothing, t) } }
 >       | type
 >              {% checkType $1 >>= \t -> return (Nothing, [], Nothing, Nothing, t) }
+
+-----------------------------------------------------------------------------
+Deriving strategies
+
+> deriv_strategy :: { Maybe (DerivStrategy L) }
+>       : 'stock'               {% do { checkEnabled DerivingStrategies
+>                                     ; return (Just (DerivStock (nIS $1))) } }
+>       | 'anyclass'            {% do { checkEnabled DerivingStrategies
+>                                     ; checkEnabled DeriveAnyClass
+>                                     ; return (Just (DerivAnyclass (nIS $1))) } }
+>       | 'newtype'             {% do { checkEnabled DerivingStrategies
+>                                     ; checkEnabled GeneralizedNewtypeDeriving
+>                                     ; return (Just (DerivNewtype (nIS $1))) } }
+>       | {- empty -}           { Nothing }
 
 -----------------------------------------------------------------------------
 Miscellaneous (mostly renamings)

@@ -56,7 +56,7 @@ module Language.Haskell.Exts.Syntax (
     Decl(..), DeclHead(..), InstRule(..), InstHead(..), Binds(..), IPBind(..), PatternSynDirection(..),
     InjectivityInfo(..), ResultSig(..),
     -- ** Type classes and instances
-    ClassDecl(..), InstDecl(..), Deriving(..),
+    ClassDecl(..), InstDecl(..), Deriving(..), DerivStrategy(..),
     -- ** Data type declarations
     DataOrNew(..), ConDecl(..), FieldDecl(..), QualConDecl(..), GadtDecl(..), BangType(..),
     Unpackedness(..),
@@ -104,6 +104,7 @@ module Language.Haskell.Exts.Syntax (
     export_name, safe_name, unsafe_name, interruptible_name, threadsafe_name,
     stdcall_name, ccall_name, cplusplus_name, dotnet_name, jvm_name, js_name,
     javascript_name, capi_name, forall_name, family_name, role_name, hole_name,
+    stock_name, anyclass_name,
     -- ** Type constructors
     unit_tycon_name, fun_tycon_name, list_tycon_name, tuple_tycon_name, unboxed_singleton_tycon_name,
     unit_tycon, fun_tycon, list_tycon, tuple_tycon, unboxed_singleton_tycon,
@@ -274,23 +275,23 @@ data Decl l
      -- ^ A type family declaration
      | ClosedTypeFamDecl  l (DeclHead l) (Maybe (ResultSig l)) (Maybe (InjectivityInfo l)) [TypeEqn l]
      -- ^ A closed type family declaration
-     | DataDecl     l (DataOrNew l) (Maybe (Context l)) (DeclHead l)                  [QualConDecl l] (Maybe (Deriving l))
+     | DataDecl     l (DataOrNew l) (Maybe (Context l)) (DeclHead l)                  [QualConDecl l] [Deriving l]
      -- ^ A data OR newtype declaration
-     | GDataDecl    l (DataOrNew l) (Maybe (Context l)) (DeclHead l) (Maybe (Kind l)) [GadtDecl l]    (Maybe (Deriving l))
+     | GDataDecl    l (DataOrNew l) (Maybe (Context l)) (DeclHead l) (Maybe (Kind l)) [GadtDecl l]    [Deriving l]
      -- ^ A data OR newtype declaration, GADT style
      | DataFamDecl  l {-data-}      (Maybe (Context l)) (DeclHead l) (Maybe (ResultSig l))
      -- ^ A data family declaration
      | TypeInsDecl  l (Type l) (Type l)
      -- ^ A type family instance declaration
-     | DataInsDecl  l (DataOrNew l) (Type l)                  [QualConDecl l] (Maybe (Deriving l))
+     | DataInsDecl  l (DataOrNew l) (Type l)                  [QualConDecl l] [Deriving l]
      -- ^ A data family instance declaration
-     | GDataInsDecl l (DataOrNew l) (Type l) (Maybe (Kind l)) [GadtDecl l]    (Maybe (Deriving l))
+     | GDataInsDecl l (DataOrNew l) (Type l) (Maybe (Kind l)) [GadtDecl l]    [Deriving l]
      -- ^ A data family instance declaration, GADT style
      | ClassDecl    l (Maybe (Context l)) (DeclHead l) [FunDep l] (Maybe [ClassDecl l])
      -- ^ A declaration of a type class
      | InstDecl     l (Maybe (Overlap l)) (InstRule l) (Maybe [InstDecl l])
      -- ^ An declaration of a type class instance
-     | DerivDecl    l (Maybe (Overlap l)) (InstRule l)
+     | DerivDecl    l (Maybe (DerivStrategy l)) (Maybe (Overlap l)) (InstRule l)
      -- ^ A standalone deriving declaration
      | InfixDecl    l (Assoc l) (Maybe Int) [Op l]
      -- ^ A declaration of operator fixity
@@ -479,7 +480,17 @@ data InstHead l
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | A deriving clause following a data type declaration.
-data Deriving l = Deriving l [InstRule l]
+data Deriving l = Deriving l (Maybe (DerivStrategy l)) [InstRule l]
+  deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
+
+-- | Which technique the user explicitly requested when deriving an instance.
+data DerivStrategy l
+  = DerivStock l    -- ^ GHC's \"standard\" strategy, which is to implement a
+                    --   custom instance for the data type. This only works for
+                    --   certain types that GHC knows about (e.g., 'Eq', 'Show',
+                    --   'Functor' when @-XDeriveFunctor@ is enabled, etc.)
+  | DerivAnyclass l -- ^ @-XDeriveAnyClass@
+  | DerivNewtype l  -- ^ @-XGeneralizedNewtypeDeriving@
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | A binding group inside a @let@ or @where@ clause.
@@ -570,9 +581,9 @@ data InstDecl l
             -- ^ ordinary declaration
     | InsType   l (Type l) (Type l)
             -- ^ an associated type definition
-    | InsData   l (DataOrNew l) (Type l) [QualConDecl l] (Maybe (Deriving l))
+    | InsData   l (DataOrNew l) (Type l) [QualConDecl l] [Deriving l]
             -- ^ an associated data type implementation
-    | InsGData  l (DataOrNew l) (Type l) (Maybe (Kind l)) [GadtDecl l] (Maybe (Deriving l))
+    | InsGData  l (DataOrNew l) (Type l) (Maybe (Kind l)) [GadtDecl l] [Deriving l]
             -- ^ an associated data type implemented using GADT style
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
@@ -1034,7 +1045,7 @@ hole_name      l = Special l (ExprHole l)
 export_name, safe_name, unsafe_name, interruptible_name, threadsafe_name,
   stdcall_name, ccall_name, cplusplus_name, dotnet_name,
   jvm_name, js_name, javascript_name, capi_name, forall_name,
-  family_name, role_name :: l -> Name l
+  family_name, role_name, stock_name, anyclass_name :: l -> Name l
 export_name     l = Ident l "export"
 safe_name       l = Ident l "safe"
 unsafe_name     l = Ident l "unsafe"
@@ -1051,6 +1062,8 @@ capi_name       l = Ident l "capi"
 forall_name     l = Ident l "forall"
 family_name     l = Ident l "family"
 role_name       l = Ident l "role"
+stock_name      l = Ident l "stock"
+anyclass_name   l = Ident l "anyclass"
 
 unit_tycon_name, fun_tycon_name, list_tycon_name, unboxed_singleton_tycon_name :: l -> QName l
 unit_tycon_name l = unit_con_name l
@@ -1222,8 +1235,14 @@ instance Annotated Assoc where
     amap = fmap
 
 instance Annotated Deriving where
-    ann (Deriving l _)      = l
-    amap f (Deriving l ihs) = Deriving (f l) ihs
+    ann (Deriving l _ _)        = l
+    amap f (Deriving l mds ihs) = Deriving (f l) mds ihs
+
+instance Annotated DerivStrategy where
+    ann (DerivStock l)    = l
+    ann (DerivAnyclass l) = l
+    ann (DerivNewtype l)  = l
+    amap = fmap
 
 instance Annotated TypeEqn where
     ann (TypeEqn l _ _) = l
@@ -1253,7 +1272,7 @@ instance Annotated Decl where
         GDataInsDecl l _ _ _ _ _        -> l
         ClassDecl    l _ _ _ _          -> l
         InstDecl     l _ _ _            -> l
-        DerivDecl    l _ _              -> l
+        DerivDecl    l _ _ _            -> l
         InfixDecl    l _ _ _            -> l
         DefaultDecl  l _                -> l
         SpliceDecl   l _                -> l
@@ -1290,7 +1309,7 @@ instance Annotated Decl where
         GDataInsDecl l dn t mk gds ders  -> GDataInsDecl (f l) dn t mk gds ders
         ClassDecl    l mcx dh fds cds    -> ClassDecl (f l) mcx dh fds cds
         InstDecl     l mo ih ids         -> InstDecl (f l) mo ih ids
-        DerivDecl    l mo ih             -> DerivDecl (f l) mo ih
+        DerivDecl    l mds mo ih         -> DerivDecl (f l) mds mo ih
         InfixDecl    l a k ops           -> InfixDecl (f l) a k ops
         DefaultDecl  l ts                -> DefaultDecl (f l) ts
         SpliceDecl   l sp                -> SpliceDecl (f l) sp

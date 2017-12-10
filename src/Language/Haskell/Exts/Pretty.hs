@@ -409,13 +409,13 @@ instance  Pretty (Decl l) where
 
                   <+> (myVcat (zipWith (<+>) (equals : repeat (char '|'))
                                              (map pretty constrList))
-                        $$$ maybePP pretty derives)
+                        $$$ ppIndent letIndent (map pretty derives))
 
         pretty (GDataDecl _ don context dHead optkind gadtList derives) =
                 mySep ( [pretty don, maybePP pretty context, pretty dHead]
                         ++ ppOptKind optkind ++ [text "where"])
                         $$$ ppBody classIndent (map pretty gadtList)
-                        $$$ ppIndent letIndent [maybePP pretty derives]
+                        $$$ ppIndent letIndent (map pretty derives)
 
         pretty (TypeFamDecl _ dHead optkind optinj) =
                 mySep ([text "type", text "family", pretty dHead
@@ -437,13 +437,13 @@ instance  Pretty (Decl l) where
                 mySep [pretty don, text "instance ", pretty ntype]
                         <+> (myVcat (zipWith (<+>) (equals : repeat (char '|'))
                                                    (map pretty constrList))
-                              $$$ maybePP pretty derives)
+                              $$$ ppIndent letIndent (map pretty derives))
 
         pretty (GDataInsDecl _ don ntype optkind gadtList derives) =
                 mySep ( [pretty don, text "instance ", pretty ntype]
                         ++ ppOptKind optkind ++ [text "where"])
                         $$$ ppBody classIndent (map pretty gadtList)
-                        $$$ maybePP pretty derives
+                        $$$ ppIndent letIndent (map pretty derives)
 
         --m{spacing=False}
         -- special case for empty class declaration
@@ -464,8 +464,9 @@ instance  Pretty (Decl l) where
                            , pretty iHead, text "where"])
                 $$$ ppBody classIndent (fromMaybe [] ((ppDecls False) <$> declList))
 
-        pretty (DerivDecl _ overlap irule) =
-                  mySep ( [text "deriving"
+        pretty (DerivDecl _ mds overlap irule) =
+                  mySep ( [ text "deriving"
+                          , maybePP pretty mds
                           , text "instance"
                           , maybePP pretty overlap
                           , pretty irule])
@@ -676,13 +677,13 @@ instance  Pretty (InstDecl l) where
                 mySep [pretty don, pretty ntype]
                         <+> (myVcat (zipWith (<+>) (equals : repeat (char '|'))
                                                    (map pretty constrList))
-                              $$$ maybePP pretty derives)
+                              $$$ ppIndent letIndent (map pretty derives))
 
         pretty (InsGData _ don ntype optkind gadtList derives) =
                 mySep ( [pretty don, pretty ntype]
                         ++ ppOptKind optkind ++ [text "where"])
                         $$$ ppBody classIndent (map pretty gadtList)
-                        $$$ maybePP pretty derives
+                        $$$ ppIndent letIndent (map pretty derives)
 
 --        pretty (InsInline loc inl activ name) =
 --                markLine loc $
@@ -799,9 +800,15 @@ instance Pretty (Unpackedness l) where
         pretty NoUnpackPragma {} = empty
 
 instance Pretty (Deriving l) where
-  pretty (Deriving _ [])  = empty
-  pretty (Deriving _ [d]) = text "deriving" <+> pretty d
-  pretty (Deriving _ d)   = text "deriving" <+> parenList (map pretty d)
+  pretty (Deriving _ mds [d]) = text "deriving" <+> maybePP pretty mds <+> pretty d
+  pretty (Deriving _ mds d)   = text "deriving" <+> maybePP pretty mds <+> parenList (map pretty d)
+
+instance Pretty (DerivStrategy l) where
+  pretty ds = text $
+    case ds of
+      DerivStock _    -> "stock"
+      DerivAnyclass _ -> "anyclass"
+      DerivNewtype _  -> "newtype"
 
 ------------------------- Types -------------------------
 ppBType :: Type l -> Doc
