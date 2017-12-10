@@ -42,7 +42,7 @@ data SrcSpan = SrcSpan
     , srcSpanEndLine     :: Int
     , srcSpanEndColumn   :: Int
     }
-  deriving (Eq,Ord,Typeable,Data)
+  deriving (Eq,Ord,Typeable,Data,Generic)
 
 instance Show SrcSpan where
   showsPrec n (SrcSpan fn sl sc el ec) =
@@ -87,7 +87,7 @@ data Loc a = Loc
     { loc :: SrcSpan
     , unLoc :: a
     }
-  deriving (Eq,Ord,Show)
+  deriving (Eq,Ord,Show,Generic)
 
 
 -- | A portion of the source, extended with information on the position of entities within the span.
@@ -96,7 +96,7 @@ data SrcSpanInfo = SrcSpanInfo
 --    , explLayout     :: Bool
     , srcInfoPoints  :: [SrcSpan]    -- Marks the location of specific entities inside the span
     }
-  deriving (Eq,Ord,Typeable,Data)
+  deriving (Eq,Ord,Typeable,Data,Generic)
 
 -- Identical output to the derived show instance for GHC 7.10 and earlier.
 instance Show SrcSpanInfo where
