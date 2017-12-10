@@ -299,7 +299,7 @@ data Decl l
      -- ^ A Template Haskell splicing declaration
      | TypeSig      l [Name l] (Type l)
      -- ^ A type signature declaration
-     | PatSynSig    l (Name l) (Maybe [TyVarBind l]) (Maybe (Context l)) (Maybe (Context l)) (Type l)
+     | PatSynSig    l [Name l] (Maybe [TyVarBind l]) (Maybe (Context l)) (Maybe (Context l)) (Type l)
      -- ^ A pattern synonym signature declation
      | FunBind      l [Match l]
      -- ^ A set of function binding clauses

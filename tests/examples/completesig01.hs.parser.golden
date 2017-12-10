@@ -91,12 +91,13 @@ ParseOk
                 , SrcSpan "tests/examples/completesig01.hs" 6 13 6 15
                 ]
             }
-          (Ident
-             SrcSpanInfo
-               { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 6 9 6 12
-               , srcInfoPoints = []
-               }
-             "Foo")
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/completesig01.hs" 6 9 6 12
+                , srcInfoPoints = []
+                }
+              "Foo"
+          ]
           Nothing
           Nothing
           Nothing

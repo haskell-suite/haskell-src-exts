@@ -729,25 +729,23 @@ instance ExactP Decl where
         let pts = srcInfoPoints l
         printInterleaved' (zip pts (replicate (length pts - 1) "," ++ ["::"])) ns
         exactPC t
-    PatSynSig l n dh c1 c2 t -> do
-      case srcInfoPoints l of
-        (pat:dc:pts1) -> do
-          printStringAt (pos pat) "pattern"
-          exactPC n
-          printStringAt (pos dc) "::"
-          case dh of
-            Nothing -> return ()
-            Just tvs ->
-              case pts1 of
-                (a:b:_) -> do
-                      printStringAt (pos a) "forall"
-                      mapM_ exactPC tvs
-                      printStringAt (pos b) "."
-                _ -> errorEP "ExactP: Decl: PatSynSig: Forall: is given too few srcInfoPoints"
-          maybeEP exactPC c1
-          maybeEP exactPC c2
-          exactPC t
-        _ -> errorEP "ExactP: Decl: PatSynSig: is given too few srcInfoPoints"
+    PatSynSig l ns dh c1 c2 t -> do
+        let (pat:pts) = srcInfoPoints l
+        printStringAt (pos pat) "pattern"
+        printInterleaved' (zip pts (replicate (length ns - 1) "," ++ ["::"])) ns
+        case dh of
+          Nothing -> return ()
+          Just tvs ->
+            -- (length ns - 1) commas + 1 for "::"
+            case drop (length ns) pts of
+              (a:b:_) -> do
+                    printStringAt (pos a) "forall"
+                    mapM_ exactPC tvs
+                    printStringAt (pos b) "."
+              _ -> errorEP ("ExactP: Decl: PatSynSig: Forall: is given too few srcInfoPoints" ++ show pts ++ show (drop (length ns + 1) pts))
+        maybeEP exactPC c1
+        maybeEP exactPC c2
+        exactPC t
     FunBind      _ ms   -> mapM_ exactPC ms
     PatBind      l p rhs mbs -> do
         let pts = srcInfoPoints l

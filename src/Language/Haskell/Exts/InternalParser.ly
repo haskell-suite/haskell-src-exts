@@ -2047,10 +2047,10 @@ Pattern Synonyms
 >       | 'where' open decls close    {%  checkExplicitPatSyn $1 $2 $3 $4 }
 
 > pattern_synonym_sig :: { Decl L }
->       : 'pattern' con '::' pstype
+>       : 'pattern' con_list '::' pstype
 >             {% do { checkEnabled PatternSynonyms ;
 >                     let {(qtvs, ps, prov, req, ty) = $4} ;
->                     let {sig = PatSynSig (nIS $1 <++> ann ty <** [$1, $3] ++ ps)  $2 qtvs prov req ty} ;
+>                     let {sig = PatSynSig (nIS $1 <++> ann ty <** [$1] ++ fst $2 ++ [$3] ++ ps)  (snd $2) qtvs prov req ty} ;
 >                     return sig } }
 
 > pstype :: { (Maybe [TyVarBind L], [S], Maybe (Context L), Maybe (Context L), Type L )}

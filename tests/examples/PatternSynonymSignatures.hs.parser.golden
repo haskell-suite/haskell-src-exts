@@ -46,13 +46,14 @@ ParseOk
                 , SrcSpan "tests/examples/PatternSynonymSignatures.hs" 4 13 4 15
                 ]
             }
-          (Ident
-             SrcSpanInfo
-               { srcInfoSpan =
-                   SrcSpan "tests/examples/PatternSynonymSignatures.hs" 4 9 4 12
-               , srcInfoPoints = []
-               }
-             "Syn")
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/PatternSynonymSignatures.hs" 4 9 4 12
+                , srcInfoPoints = []
+                }
+              "Syn"
+          ]
           Nothing
           Nothing
           Nothing
@@ -84,13 +85,14 @@ ParseOk
                 , SrcSpan "tests/examples/PatternSynonymSignatures.hs" 6 13 6 15
                 ]
             }
-          (Ident
-             SrcSpanInfo
-               { srcInfoSpan =
-                   SrcSpan "tests/examples/PatternSynonymSignatures.hs" 6 9 6 12
-               , srcInfoPoints = []
-               }
-             "Syn")
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/PatternSynonymSignatures.hs" 6 9 6 12
+                , srcInfoPoints = []
+                }
+              "Syn"
+          ]
           Nothing
           (Just
              (CxEmpty
@@ -142,13 +144,14 @@ ParseOk
                 , SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 13 8 15
                 ]
             }
-          (Ident
-             SrcSpanInfo
-               { srcInfoSpan =
-                   SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 9 8 12
-               , srcInfoPoints = []
-               }
-             "Syn")
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/PatternSynonymSignatures.hs" 8 9 8 12
+                , srcInfoPoints = []
+                }
+              "Syn"
+          ]
           Nothing
           (Just
              (CxSingle
@@ -262,13 +265,14 @@ ParseOk
                 , SrcSpan "tests/examples/PatternSynonymSignatures.hs" 10 13 10 15
                 ]
             }
-          (Ident
-             SrcSpanInfo
-               { srcInfoSpan =
-                   SrcSpan "tests/examples/PatternSynonymSignatures.hs" 10 9 10 12
-               , srcInfoPoints = []
-               }
-             "Syn")
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/PatternSynonymSignatures.hs" 10 9 10 12
+                , srcInfoPoints = []
+                }
+              "Syn"
+          ]
           Nothing
           (Just
              (CxSingle
@@ -343,13 +347,14 @@ ParseOk
                 , SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 13 12 15
                 ]
             }
-          (Ident
-             SrcSpanInfo
-               { srcInfoSpan =
-                   SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 9 12 12
-               , srcInfoPoints = []
-               }
-             "Syn")
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/PatternSynonymSignatures.hs" 12 9 12 12
+                , srcInfoPoints = []
+                }
+              "Syn"
+          ]
           Nothing
           (Just
              (CxSingle
@@ -434,13 +439,14 @@ ParseOk
                 , SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 13 14 15
                 ]
             }
-          (Ident
-             SrcSpanInfo
-               { srcInfoSpan =
-                   SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 9 14 12
-               , srcInfoPoints = []
-               }
-             "Syn")
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 9 14 12
+                , srcInfoPoints = []
+                }
+              "Syn"
+          ]
           Nothing
           (Just
              (CxEmpty
