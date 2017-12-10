@@ -27,6 +27,7 @@ data PExp l
                                             --   should be an expression.
     | MDo l [Stmt l]                        -- ^ @mdo@-expression
     | TupleSection l Boxed [Maybe (PExp l)] -- ^ tuple section expression, e.g. @(,,3)@
+    | UnboxedSum l Int Int (PExp l)         -- ^ Unboxed sum
     | List l [PExp l]                       -- ^ list expression
     | ParArray l [PExp l]                   -- ^ parallel array expression
     | Paren l (PExp l)                      -- ^ parenthesized expression
@@ -132,6 +133,7 @@ instance Annotated PExp where
         Do l _                  -> l
         MDo l _                 -> l
         TupleSection l _ _      -> l
+        UnboxedSum l _ _ _      -> l
         List l _                -> l
         ParArray l _            -> l
         Paren l _               -> l
@@ -186,6 +188,7 @@ instance Annotated PExp where
         MultiIf l _             -> l
         TypeApp l _             -> l
 
+
     amap f e' = case e' of
         Var l qn                -> Var   (f l) qn
         OverloadedLabel l qn    -> OverloadedLabel (f l) qn
@@ -202,6 +205,7 @@ instance Annotated PExp where
         Do l ss                 -> Do (f l) ss
         MDo l ss                -> MDo (f l) ss
         TupleSection l bx mes   -> TupleSection (f l) bx mes
+        UnboxedSum l b a e     -> UnboxedSum (f l) b a e
         List l es               -> List (f l) es
         ParArray l es           -> ParArray (f l) es
         Paren l e               -> Paren (f l) e
@@ -298,6 +302,7 @@ data PType l
         (PType l)
      | TyFun   l (PType l) (PType l)            -- ^ function type
      | TyTuple l Boxed     [PType l]            -- ^ tuple type, possibly boxed
+     | TyUnboxedSum l [PType l]                 -- ^ unboxed sum
      | TyList  l (PType l)                      -- ^ list syntax, e.g. [a], as opposed to [] a
      | TyParArray l (PType l)                   -- ^ parallel array syntax, e.g. [:a:]
      | TyApp   l (PType l) (PType l)            -- ^ application of a type constructor
@@ -319,6 +324,7 @@ instance Annotated PType where
       TyForall l _ _ _              -> l
       TyFun   l _ _                 -> l
       TyTuple l _ _                 -> l
+      TyUnboxedSum l _              -> l
       TyList  l _                   -> l
       TyParArray  l _               -> l
       TyApp   l _ _                 -> l
@@ -337,6 +343,7 @@ instance Annotated PType where
       TyForall l mtvs mcx t         -> TyForall (f l) mtvs mcx t
       TyFun   l t1 t2               -> TyFun (f l) t1 t2
       TyTuple l b ts                -> TyTuple (f l) b ts
+      TyUnboxedSum l ts             -> TyUnboxedSum (f l) ts
       TyList  l t                   -> TyList (f l) t
       TyParArray  l t               -> TyParArray (f l) t
       TyApp   l t1 t2               -> TyApp (f l) t1 t2

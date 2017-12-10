@@ -71,6 +71,8 @@ module Language.Haskell.Exts.ParseUtils (
     -- Helpers
     , updateQNameLoc        -- l -> QName l -> QName l
 
+    , SumOrTuple(..), mkSumOrTuple
+
     -- Parsed expressions and types
     , PExp(..), PFieldUpdate(..), ParseXAttr(..), PType(..), PContext, PAsst(..)
     , p_unit_con            -- PExp
@@ -453,6 +455,8 @@ checkPat e' [] = case e' of
              then do ps <- mapM (\e -> checkPat e []) (map fromJust mes)
                      return (PTuple l bx ps)
              else fail "Illegal tuple section in pattern"
+    UnboxedSum l b a e ->
+      PUnboxedSum l b a <$> checkPattern e
 
     List l es      -> do
                   ps <- mapM checkRPattern es
@@ -676,6 +680,7 @@ checkExpr e' = case e' of
                              else do checkEnabled TupleSections
                                      mes' <- mapM mCheckExpr mes
                                      return $ S.TupleSection l bx mes'
+    UnboxedSum l before after e -> S.UnboxedSum l before after <$> checkExpr e
 
 
     List l es         -> checkManyExprs es (S.List l)
@@ -1104,6 +1109,7 @@ checkT t simple = case t of
             check1Type pt (S.TyForall l tvs ctxt)
     TyFun   l at rt   -> check2Types at rt (S.TyFun l)
     TyTuple l b pts   -> checkTypes pts >>= return . S.TyTuple l b
+    TyUnboxedSum l es -> checkTypes es >>= return . S.TyUnboxedSum l
     TyList  l pt      -> check1Type pt (S.TyList l)
     TyParArray l pt   -> check1Type pt (S.TyParArray l)
     TyApp   l ft at   -> check2Types ft at (S.TyApp l)
@@ -1314,3 +1320,12 @@ mkEThingWith loc qn mcns = do
     findWithIndex n p (x:xs)
       | p x = Just (n, x)
       | otherwise = findWithIndex (n + 1) p xs
+
+data SumOrTuple l = SSum Int Int (PExp l)
+                  | STuple [Maybe (PExp l)]
+
+mkSumOrTuple :: Boxed -> L -> SumOrTuple L -> P (PExp L)
+mkSumOrTuple Unboxed s (SSum before after e) = return (UnboxedSum s before after e)
+mkSumOrTuple boxity s (STuple ms) =
+    return $ TupleSection s boxity ms
+mkSumOrTuple Boxed s (SSum {}) = fail "Boxed sums are not implemented"

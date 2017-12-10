@@ -186,12 +186,14 @@ pList' [] _ = []
 pList' [p] (_,c) = [(p,c)]
 pList' (p:ps) (b,c) = (p, b) : pList' ps (b,c)
 
-parenList, squareList, squareColonList, curlyList, parenHashList :: (ExactP ast) => [SrcSpan] -> [ast SrcSpanInfo] -> EP ()
+parenList, squareList, squareColonList, curlyList, parenHashList,
+  unboxedSumTypeList :: (ExactP ast) => [SrcSpan] -> [ast SrcSpanInfo] -> EP ()
 parenList = bracketList ("(",",",")")
 squareList = bracketList ("[",",","]")
 squareColonList = bracketList ("[:",",",":]")
 curlyList = bracketList ("{",",","}")
 parenHashList = bracketList ("(#",",","#)")
+unboxedSumTypeList = bracketList ("(#", "|", "#)")
 
 layoutList :: (ExactP ast) => [SrcSpan] -> [ast SrcSpanInfo] -> EP ()
 layoutList poss asts = printStreams
@@ -1097,6 +1099,8 @@ instance ExactP Type where
         case bx of
           Boxed   -> parenList (srcInfoPoints l) ts
           Unboxed -> parenHashList (srcInfoPoints l) ts
+    TyUnboxedSum l es ->
+      unboxedSumTypeList (srcInfoPoints l) es
     TyList  l t     ->
         case srcInfoPoints l of
          [_,b] -> do
@@ -1485,6 +1489,8 @@ instance ExactP Exp where
         case bx of
           Boxed   -> parenList (srcInfoPoints l) es
           Unboxed -> parenHashList (srcInfoPoints l) es
+    UnboxedSum l b a es -> do
+        unboxedSumEP l b a es
     TupleSection l bx mexps -> do
         let pts = srcInfoPoints l
             (o, e) = case bx of Boxed -> ("(", ")"); Unboxed -> ("(#", "#)")
@@ -1750,6 +1756,17 @@ instance ExactP Exp where
          _ -> errorEP "ExactP: Exp: LCase is given wrong number of srcInfoPoints"
     TypeApp _ ty -> printString "@" >> exactP ty
 
+unboxedSumEP :: ExactP e => SrcSpanInfo -> Int -> Int -> e SrcSpanInfo -> EP ()
+unboxedSumEP l b _a es = do
+        let (opt:pts) = srcInfoPoints l
+            (o, e) = ("(#", "#)")
+            bars = zip (map pos (init pts)) (map printString (repeat "|"))
+            open = (pos opt, printString o)
+            close = (pos (last pts), printString e)
+            fs = take b bars
+            as = drop b bars
+        printSeq $ open : fs ++ [((0, 0), exactPC es)] ++ as ++ [close]
+
 instance ExactP FieldUpdate where
   exactP fup = case fup of
     FieldUpdate l qn e  ->
@@ -1933,6 +1950,8 @@ instance ExactP Pat where
         case bx of
           Boxed   -> parenList (srcInfoPoints l) ps
           Unboxed -> parenHashList (srcInfoPoints l) ps
+    PUnboxedSum l before after e ->
+      unboxedSumEP l before after e
     PList l ps  -> squareList (srcInfoPoints l) ps
     PParen l p  -> parenList (srcInfoPoints l) [p]
     PRec l qn pfs   -> exactP qn >> curlyList (srcInfoPoints l) pfs
