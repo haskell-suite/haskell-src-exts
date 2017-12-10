@@ -2075,6 +2075,7 @@ Miscellaneous (mostly renamings)
 > tyvarsym :: { Name L }
 > tyvarsym : VARSYM              { let Loc l (VarSym x) = $1 in Symbol (nIS l) x }
 >          | '-'                 { Symbol (nIS $1) "-" }
+>          | '*'                 { Symbol (nIS $1) "*" }
 
 > impdeclsblock :: { ([ImportDecl L],[S],L) }
 >               : '{'  optsemis impdecls optsemis '}'         { let (ids, ss) = $3 in (ids, $1 : reverse $2 ++ ss ++ reverse $4 ++ [$5], $1 <^^> $5) }
