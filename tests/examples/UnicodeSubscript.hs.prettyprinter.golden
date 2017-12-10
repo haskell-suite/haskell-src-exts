@@ -2,7 +2,7 @@
 module Main where
 
 data Point = Point{pointX, pointY :: Double, name :: String}
-           deriving (Show)
+               deriving (Show)
 
 distance :: Point -> Point -> Double
 distance x y

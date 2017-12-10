@@ -91,7 +91,7 @@ ParseOk
                     "Foo")
                  [])
           ]
-          Nothing
+          []
       , TypeDecl
           SrcSpanInfo
             { srcInfoSpan = SrcSpan "tests/examples/DataKinds2.hs" 5 1 5 20

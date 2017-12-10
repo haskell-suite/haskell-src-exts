@@ -1928,7 +1928,7 @@ ParseOk
                               "a")))
                  ])
           ]
-          Nothing
+          []
       , TypeFamDecl
           SrcSpanInfo
             { srcInfoSpan =
@@ -9249,7 +9249,7 @@ ParseOk
                     "KProxy")
                  [])
           ]
-          Nothing
+          []
       , TypeFamDecl
           SrcSpanInfo
             { srcInfoSpan =

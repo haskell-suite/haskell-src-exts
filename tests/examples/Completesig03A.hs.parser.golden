@@ -100,7 +100,7 @@ ParseOk
                     "B")
                  [])
           ]
-          Nothing
+          []
       , CompletePragma
           SrcSpanInfo
             { srcInfoSpan = SrcSpan "tests/examples/Completesig03A.hs" 5 1 5 19

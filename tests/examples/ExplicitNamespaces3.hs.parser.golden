@@ -139,7 +139,7 @@ ParseOk
                     "Str")
                  [])
           ]
-          Nothing
+          []
       ]
   , []
   )

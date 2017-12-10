@@ -117,7 +117,7 @@ ParseOk
                     "Proxy")
                  [])
           ]
-          Nothing
+          []
       , PatBind
           SrcSpanInfo
             { srcInfoSpan = SrcSpan "tests/examples/AtOperator.hs" 6 1 6 24

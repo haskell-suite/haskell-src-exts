@@ -195,6 +195,8 @@ data Token
         | KW_Where
         | KW_Qualified
         | KW_Pattern
+        | KW_Stock
+        | KW_Anyclass
 
                 -- FFI
         | KW_Foreign
@@ -293,6 +295,8 @@ reserved_ids = [
  ( "where",     (KW_Where,      Nothing) ),
  ( "role",      (KW_Role,       Just (Any [RoleAnnotations]))),
  ( "pattern",   (KW_Pattern,    Just (Any [PatternSynonyms]))),
+ ( "stock",     (KW_Stock,      Nothing)),
+ ( "anyclass",  (KW_Anyclass,   Nothing)),
 
 -- FFI
  ( "foreign",   (KW_Foreign,    Just (Any [ForeignFunctionInterface])) )
@@ -1440,5 +1444,7 @@ showToken t = case t of
   KW_CApi       -> "capi"
   KW_Role       -> "role"
   KW_Pattern    -> "pattern"
+  KW_Stock      -> "stock"
+  KW_Anyclass   -> "anyclass"
 
   EOF           -> "EOF"

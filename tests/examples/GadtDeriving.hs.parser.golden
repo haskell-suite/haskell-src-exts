@@ -109,88 +109,89 @@ ParseOk
                             }
                           "Foo"))))
           ]
-          (Just
-             (Deriving
-                SrcSpanInfo
-                  { srcInfoSpan = SrcSpan "tests/examples/GadtDeriving.hs" 5 5 5 31
-                  , srcInfoPoints =
-                      [ SrcSpan "tests/examples/GadtDeriving.hs" 5 5 5 13
-                      , SrcSpan "tests/examples/GadtDeriving.hs" 5 14 5 15
-                      , SrcSpan "tests/examples/GadtDeriving.hs" 5 17 5 18
-                      , SrcSpan "tests/examples/GadtDeriving.hs" 5 21 5 22
-                      , SrcSpan "tests/examples/GadtDeriving.hs" 5 30 5 31
-                      ]
-                  }
-                [ IRule
-                    SrcSpanInfo
-                      { srcInfoSpan = SrcSpan "tests/examples/GadtDeriving.hs" 5 15 5 17
-                      , srcInfoPoints = []
-                      }
-                    Nothing
-                    Nothing
-                    (IHCon
-                       SrcSpanInfo
-                         { srcInfoSpan = SrcSpan "tests/examples/GadtDeriving.hs" 5 15 5 17
-                         , srcInfoPoints = []
-                         }
-                       (UnQual
-                          SrcSpanInfo
-                            { srcInfoSpan = SrcSpan "tests/examples/GadtDeriving.hs" 5 15 5 17
-                            , srcInfoPoints = []
-                            }
-                          (Ident
-                             SrcSpanInfo
-                               { srcInfoSpan = SrcSpan "tests/examples/GadtDeriving.hs" 5 15 5 17
-                               , srcInfoPoints = []
-                               }
-                             "Eq")))
-                , IRule
-                    SrcSpanInfo
-                      { srcInfoSpan = SrcSpan "tests/examples/GadtDeriving.hs" 5 18 5 21
-                      , srcInfoPoints = []
-                      }
-                    Nothing
-                    Nothing
-                    (IHCon
-                       SrcSpanInfo
-                         { srcInfoSpan = SrcSpan "tests/examples/GadtDeriving.hs" 5 18 5 21
-                         , srcInfoPoints = []
-                         }
-                       (UnQual
-                          SrcSpanInfo
-                            { srcInfoSpan = SrcSpan "tests/examples/GadtDeriving.hs" 5 18 5 21
-                            , srcInfoPoints = []
-                            }
-                          (Ident
-                             SrcSpanInfo
-                               { srcInfoSpan = SrcSpan "tests/examples/GadtDeriving.hs" 5 18 5 21
-                               , srcInfoPoints = []
-                               }
-                             "Ord")))
-                , IRule
-                    SrcSpanInfo
-                      { srcInfoSpan = SrcSpan "tests/examples/GadtDeriving.hs" 5 22 5 30
-                      , srcInfoPoints = []
-                      }
-                    Nothing
-                    Nothing
-                    (IHCon
-                       SrcSpanInfo
-                         { srcInfoSpan = SrcSpan "tests/examples/GadtDeriving.hs" 5 22 5 30
-                         , srcInfoPoints = []
-                         }
-                       (UnQual
-                          SrcSpanInfo
-                            { srcInfoSpan = SrcSpan "tests/examples/GadtDeriving.hs" 5 22 5 30
-                            , srcInfoPoints = []
-                            }
-                          (Ident
-                             SrcSpanInfo
-                               { srcInfoSpan = SrcSpan "tests/examples/GadtDeriving.hs" 5 22 5 30
-                               , srcInfoPoints = []
-                               }
-                             "Typeable")))
-                ]))
+          [ Deriving
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/GadtDeriving.hs" 5 5 5 31
+                , srcInfoPoints =
+                    [ SrcSpan "tests/examples/GadtDeriving.hs" 5 5 5 13
+                    , SrcSpan "tests/examples/GadtDeriving.hs" 5 14 5 15
+                    , SrcSpan "tests/examples/GadtDeriving.hs" 5 17 5 18
+                    , SrcSpan "tests/examples/GadtDeriving.hs" 5 21 5 22
+                    , SrcSpan "tests/examples/GadtDeriving.hs" 5 30 5 31
+                    ]
+                }
+              Nothing
+              [ IRule
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/GadtDeriving.hs" 5 15 5 17
+                    , srcInfoPoints = []
+                    }
+                  Nothing
+                  Nothing
+                  (IHCon
+                     SrcSpanInfo
+                       { srcInfoSpan = SrcSpan "tests/examples/GadtDeriving.hs" 5 15 5 17
+                       , srcInfoPoints = []
+                       }
+                     (UnQual
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/GadtDeriving.hs" 5 15 5 17
+                          , srcInfoPoints = []
+                          }
+                        (Ident
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/GadtDeriving.hs" 5 15 5 17
+                             , srcInfoPoints = []
+                             }
+                           "Eq")))
+              , IRule
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/GadtDeriving.hs" 5 18 5 21
+                    , srcInfoPoints = []
+                    }
+                  Nothing
+                  Nothing
+                  (IHCon
+                     SrcSpanInfo
+                       { srcInfoSpan = SrcSpan "tests/examples/GadtDeriving.hs" 5 18 5 21
+                       , srcInfoPoints = []
+                       }
+                     (UnQual
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/GadtDeriving.hs" 5 18 5 21
+                          , srcInfoPoints = []
+                          }
+                        (Ident
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/GadtDeriving.hs" 5 18 5 21
+                             , srcInfoPoints = []
+                             }
+                           "Ord")))
+              , IRule
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/GadtDeriving.hs" 5 22 5 30
+                    , srcInfoPoints = []
+                    }
+                  Nothing
+                  Nothing
+                  (IHCon
+                     SrcSpanInfo
+                       { srcInfoSpan = SrcSpan "tests/examples/GadtDeriving.hs" 5 22 5 30
+                       , srcInfoPoints = []
+                       }
+                     (UnQual
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/GadtDeriving.hs" 5 22 5 30
+                          , srcInfoPoints = []
+                          }
+                        (Ident
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/GadtDeriving.hs" 5 22 5 30
+                             , srcInfoPoints = []
+                             }
+                           "Typeable")))
+              ]
+          ]
       ]
   , []
   )

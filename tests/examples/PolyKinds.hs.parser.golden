@@ -91,7 +91,7 @@ ParseOk
                     "Proxy")
                  [])
           ]
-          Nothing
+          []
       , ClassDecl
           SrcSpanInfo
             { srcInfoSpan = SrcSpan "tests/examples/PolyKinds.hs" 4 1 5 31

@@ -3333,7 +3333,7 @@ ParseOk
                                }
                              "T")))))
           ]
-          Nothing
+          []
       , PatSyn
           SrcSpanInfo
             { srcInfoSpan =

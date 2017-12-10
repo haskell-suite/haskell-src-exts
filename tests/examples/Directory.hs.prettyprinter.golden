@@ -32,7 +32,7 @@ import qualified System.Win32 as Win32
 
 data Permissions = Permissions{readable, writable, executable,
                                searchable :: Bool}
-                 deriving (Eq, Ord, Read, Show)
+                     deriving (Eq, Ord, Read, Show)
 
 getPermissions :: FilePath -> IO Permissions
 getPermissions name

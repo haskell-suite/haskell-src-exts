@@ -1,0 +1,18 @@
+{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE StandaloneDeriving #-}
+module DerivingStrategies where
+
+class C a
+class D a
+
+newtype Foo a = MkFoo a
+  deriving ()
+  deriving stock (Eq, Ord)
+  deriving newtype Show
+  deriving anyclass C
+
+deriving stock instance Read a => Read (Foo a)
+deriving newtype instance Num a => Num (Foo a)
+deriving anyclass instance D (Foo a)

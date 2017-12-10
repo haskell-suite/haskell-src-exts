@@ -81,7 +81,7 @@ ParseOk
                     "Id")
                  [])
           ]
-          Nothing
+          []
       , TypeFamDecl
           SrcSpanInfo
             { srcInfoSpan = SrcSpan "tests/examples/TypeFunctions.hs" 5 1 5 32

@@ -1,0 +1,823 @@
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan =
+            SrcSpan "tests/examples/DerivingStrategies.hs" 1 1 19 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/DerivingStrategies.hs" 1 1 1 1
+            , SrcSpan "tests/examples/DerivingStrategies.hs" 2 1 2 1
+            , SrcSpan "tests/examples/DerivingStrategies.hs" 3 1 3 1
+            , SrcSpan "tests/examples/DerivingStrategies.hs" 4 1 4 1
+            , SrcSpan "tests/examples/DerivingStrategies.hs" 5 1 5 1
+            , SrcSpan "tests/examples/DerivingStrategies.hs" 5 1 5 1
+            , SrcSpan "tests/examples/DerivingStrategies.hs" 7 1 7 1
+            , SrcSpan "tests/examples/DerivingStrategies.hs" 8 1 8 1
+            , SrcSpan "tests/examples/DerivingStrategies.hs" 10 1 10 1
+            , SrcSpan "tests/examples/DerivingStrategies.hs" 16 1 16 1
+            , SrcSpan "tests/examples/DerivingStrategies.hs" 17 1 17 1
+            , SrcSpan "tests/examples/DerivingStrategies.hs" 18 1 18 1
+            , SrcSpan "tests/examples/DerivingStrategies.hs" 19 1 19 1
+            , SrcSpan "tests/examples/DerivingStrategies.hs" 19 1 19 1
+            ]
+        }
+      (Just
+         (ModuleHead
+            SrcSpanInfo
+              { srcInfoSpan =
+                  SrcSpan "tests/examples/DerivingStrategies.hs" 5 1 5 32
+              , srcInfoPoints =
+                  [ SrcSpan "tests/examples/DerivingStrategies.hs" 5 1 5 7
+                  , SrcSpan "tests/examples/DerivingStrategies.hs" 5 27 5 32
+                  ]
+              }
+            (ModuleName
+               SrcSpanInfo
+                 { srcInfoSpan =
+                     SrcSpan "tests/examples/DerivingStrategies.hs" 5 8 5 26
+                 , srcInfoPoints = []
+                 }
+               "DerivingStrategies")
+            Nothing
+            Nothing))
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/DerivingStrategies.hs" 1 1 1 32
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/DerivingStrategies.hs" 1 1 1 13
+                , SrcSpan "tests/examples/DerivingStrategies.hs" 1 29 1 32
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/DerivingStrategies.hs" 1 14 1 28
+                , srcInfoPoints = []
+                }
+              "DeriveAnyClass"
+          ]
+      , LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/DerivingStrategies.hs" 2 1 2 36
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/DerivingStrategies.hs" 2 1 2 13
+                , SrcSpan "tests/examples/DerivingStrategies.hs" 2 33 2 36
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/DerivingStrategies.hs" 2 14 2 32
+                , srcInfoPoints = []
+                }
+              "DerivingStrategies"
+          ]
+      , LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/DerivingStrategies.hs" 3 1 3 44
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/DerivingStrategies.hs" 3 1 3 13
+                , SrcSpan "tests/examples/DerivingStrategies.hs" 3 41 3 44
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/DerivingStrategies.hs" 3 14 3 40
+                , srcInfoPoints = []
+                }
+              "GeneralizedNewtypeDeriving"
+          ]
+      , LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/DerivingStrategies.hs" 4 1 4 36
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/DerivingStrategies.hs" 4 1 4 13
+                , SrcSpan "tests/examples/DerivingStrategies.hs" 4 33 4 36
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/DerivingStrategies.hs" 4 14 4 32
+                , srcInfoPoints = []
+                }
+              "StandaloneDeriving"
+          ]
+      ]
+      []
+      [ ClassDecl
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/DerivingStrategies.hs" 7 1 7 10
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/DerivingStrategies.hs" 7 1 7 6 ]
+            }
+          Nothing
+          (DHApp
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/DerivingStrategies.hs" 7 7 7 10
+               , srcInfoPoints = []
+               }
+             (DHead
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/DerivingStrategies.hs" 7 7 7 8
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/DerivingStrategies.hs" 7 7 7 8
+                     , srcInfoPoints = []
+                     }
+                   "C"))
+             (UnkindedVar
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/DerivingStrategies.hs" 7 9 7 10
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/DerivingStrategies.hs" 7 9 7 10
+                     , srcInfoPoints = []
+                     }
+                   "a")))
+          []
+          Nothing
+      , ClassDecl
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/DerivingStrategies.hs" 8 1 8 10
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/DerivingStrategies.hs" 8 1 8 6 ]
+            }
+          Nothing
+          (DHApp
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/DerivingStrategies.hs" 8 7 8 10
+               , srcInfoPoints = []
+               }
+             (DHead
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/DerivingStrategies.hs" 8 7 8 8
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/DerivingStrategies.hs" 8 7 8 8
+                     , srcInfoPoints = []
+                     }
+                   "D"))
+             (UnkindedVar
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/DerivingStrategies.hs" 8 9 8 10
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/DerivingStrategies.hs" 8 9 8 10
+                     , srcInfoPoints = []
+                     }
+                   "a")))
+          []
+          Nothing
+      , DataDecl
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/DerivingStrategies.hs" 10 1 14 22
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/DerivingStrategies.hs" 10 15 10 16 ]
+            }
+          (NewType
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/DerivingStrategies.hs" 10 1 10 8
+               , srcInfoPoints = []
+               })
+          Nothing
+          (DHApp
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/DerivingStrategies.hs" 10 9 10 14
+               , srcInfoPoints = []
+               }
+             (DHead
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/DerivingStrategies.hs" 10 9 10 12
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/DerivingStrategies.hs" 10 9 10 12
+                     , srcInfoPoints = []
+                     }
+                   "Foo"))
+             (UnkindedVar
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/DerivingStrategies.hs" 10 13 10 14
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/DerivingStrategies.hs" 10 13 10 14
+                     , srcInfoPoints = []
+                     }
+                   "a")))
+          [ QualConDecl
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/DerivingStrategies.hs" 10 17 10 24
+                , srcInfoPoints = []
+                }
+              Nothing
+              Nothing
+              (ConDecl
+                 SrcSpanInfo
+                   { srcInfoSpan =
+                       SrcSpan "tests/examples/DerivingStrategies.hs" 10 17 10 24
+                   , srcInfoPoints = []
+                   }
+                 (Ident
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/DerivingStrategies.hs" 10 17 10 22
+                      , srcInfoPoints = []
+                      }
+                    "MkFoo")
+                 [ TyVar
+                     SrcSpanInfo
+                       { srcInfoSpan =
+                           SrcSpan "tests/examples/DerivingStrategies.hs" 10 23 10 24
+                       , srcInfoPoints = []
+                       }
+                     (Ident
+                        SrcSpanInfo
+                          { srcInfoSpan =
+                              SrcSpan "tests/examples/DerivingStrategies.hs" 10 23 10 24
+                          , srcInfoPoints = []
+                          }
+                        "a")
+                 ])
+          ]
+          [ Deriving
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/DerivingStrategies.hs" 11 3 11 14
+                , srcInfoPoints =
+                    [ SrcSpan "tests/examples/DerivingStrategies.hs" 11 3 11 11
+                    , SrcSpan "tests/examples/DerivingStrategies.hs" 11 12 11 13
+                    , SrcSpan "tests/examples/DerivingStrategies.hs" 11 13 11 14
+                    ]
+                }
+              Nothing
+              []
+          , Deriving
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/DerivingStrategies.hs" 12 3 12 27
+                , srcInfoPoints =
+                    [ SrcSpan "tests/examples/DerivingStrategies.hs" 12 3 12 11
+                    , SrcSpan "tests/examples/DerivingStrategies.hs" 12 18 12 19
+                    , SrcSpan "tests/examples/DerivingStrategies.hs" 12 21 12 22
+                    , SrcSpan "tests/examples/DerivingStrategies.hs" 12 26 12 27
+                    ]
+                }
+              (Just
+                 (DerivStock
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/DerivingStrategies.hs" 12 12 12 17
+                      , srcInfoPoints = []
+                      }))
+              [ IRule
+                  SrcSpanInfo
+                    { srcInfoSpan =
+                        SrcSpan "tests/examples/DerivingStrategies.hs" 12 19 12 21
+                    , srcInfoPoints = []
+                    }
+                  Nothing
+                  Nothing
+                  (IHCon
+                     SrcSpanInfo
+                       { srcInfoSpan =
+                           SrcSpan "tests/examples/DerivingStrategies.hs" 12 19 12 21
+                       , srcInfoPoints = []
+                       }
+                     (UnQual
+                        SrcSpanInfo
+                          { srcInfoSpan =
+                              SrcSpan "tests/examples/DerivingStrategies.hs" 12 19 12 21
+                          , srcInfoPoints = []
+                          }
+                        (Ident
+                           SrcSpanInfo
+                             { srcInfoSpan =
+                                 SrcSpan "tests/examples/DerivingStrategies.hs" 12 19 12 21
+                             , srcInfoPoints = []
+                             }
+                           "Eq")))
+              , IRule
+                  SrcSpanInfo
+                    { srcInfoSpan =
+                        SrcSpan "tests/examples/DerivingStrategies.hs" 12 23 12 26
+                    , srcInfoPoints = []
+                    }
+                  Nothing
+                  Nothing
+                  (IHCon
+                     SrcSpanInfo
+                       { srcInfoSpan =
+                           SrcSpan "tests/examples/DerivingStrategies.hs" 12 23 12 26
+                       , srcInfoPoints = []
+                       }
+                     (UnQual
+                        SrcSpanInfo
+                          { srcInfoSpan =
+                              SrcSpan "tests/examples/DerivingStrategies.hs" 12 23 12 26
+                          , srcInfoPoints = []
+                          }
+                        (Ident
+                           SrcSpanInfo
+                             { srcInfoSpan =
+                                 SrcSpan "tests/examples/DerivingStrategies.hs" 12 23 12 26
+                             , srcInfoPoints = []
+                             }
+                           "Ord")))
+              ]
+          , Deriving
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/DerivingStrategies.hs" 13 3 13 24
+                , srcInfoPoints =
+                    [ SrcSpan "tests/examples/DerivingStrategies.hs" 13 3 13 11 ]
+                }
+              (Just
+                 (DerivNewtype
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/DerivingStrategies.hs" 13 12 13 19
+                      , srcInfoPoints = []
+                      }))
+              [ IRule
+                  SrcSpanInfo
+                    { srcInfoSpan =
+                        SrcSpan "tests/examples/DerivingStrategies.hs" 13 20 13 24
+                    , srcInfoPoints = []
+                    }
+                  Nothing
+                  Nothing
+                  (IHCon
+                     SrcSpanInfo
+                       { srcInfoSpan =
+                           SrcSpan "tests/examples/DerivingStrategies.hs" 13 20 13 24
+                       , srcInfoPoints = []
+                       }
+                     (UnQual
+                        SrcSpanInfo
+                          { srcInfoSpan =
+                              SrcSpan "tests/examples/DerivingStrategies.hs" 13 20 13 24
+                          , srcInfoPoints = []
+                          }
+                        (Ident
+                           SrcSpanInfo
+                             { srcInfoSpan =
+                                 SrcSpan "tests/examples/DerivingStrategies.hs" 13 20 13 24
+                             , srcInfoPoints = []
+                             }
+                           "Show")))
+              ]
+          , Deriving
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/DerivingStrategies.hs" 14 3 14 22
+                , srcInfoPoints =
+                    [ SrcSpan "tests/examples/DerivingStrategies.hs" 14 3 14 11 ]
+                }
+              (Just
+                 (DerivAnyclass
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/DerivingStrategies.hs" 14 12 14 20
+                      , srcInfoPoints = []
+                      }))
+              [ IRule
+                  SrcSpanInfo
+                    { srcInfoSpan =
+                        SrcSpan "tests/examples/DerivingStrategies.hs" 14 21 14 22
+                    , srcInfoPoints = []
+                    }
+                  Nothing
+                  Nothing
+                  (IHCon
+                     SrcSpanInfo
+                       { srcInfoSpan =
+                           SrcSpan "tests/examples/DerivingStrategies.hs" 14 21 14 22
+                       , srcInfoPoints = []
+                       }
+                     (UnQual
+                        SrcSpanInfo
+                          { srcInfoSpan =
+                              SrcSpan "tests/examples/DerivingStrategies.hs" 14 21 14 22
+                          , srcInfoPoints = []
+                          }
+                        (Ident
+                           SrcSpanInfo
+                             { srcInfoSpan =
+                                 SrcSpan "tests/examples/DerivingStrategies.hs" 14 21 14 22
+                             , srcInfoPoints = []
+                             }
+                           "C")))
+              ]
+          ]
+      , DerivDecl
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/DerivingStrategies.hs" 16 1 16 47
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/DerivingStrategies.hs" 16 1 16 9
+                , SrcSpan "tests/examples/DerivingStrategies.hs" 16 16 16 24
+                ]
+            }
+          (Just
+             (DerivStock
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/DerivingStrategies.hs" 16 10 16 15
+                  , srcInfoPoints = []
+                  }))
+          Nothing
+          (IRule
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/DerivingStrategies.hs" 16 25 16 47
+               , srcInfoPoints = []
+               }
+             Nothing
+             (Just
+                (CxSingle
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/DerivingStrategies.hs" 16 25 16 34
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/DerivingStrategies.hs" 16 32 16 34 ]
+                     }
+                   (ClassA
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/DerivingStrategies.hs" 16 25 16 34
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/DerivingStrategies.hs" 16 32 16 34 ]
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/DerivingStrategies.hs" 16 25 16 29
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/DerivingStrategies.hs" 16 25 16 29
+                              , srcInfoPoints = []
+                              }
+                            "Read"))
+                      [ TyVar
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/DerivingStrategies.hs" 16 30 16 31
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/DerivingStrategies.hs" 16 30 16 31
+                               , srcInfoPoints = []
+                               }
+                             "a")
+                      ])))
+             (IHApp
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/DerivingStrategies.hs" 16 35 16 47
+                  , srcInfoPoints = []
+                  }
+                (IHCon
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/DerivingStrategies.hs" 16 35 16 39
+                     , srcInfoPoints = []
+                     }
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/DerivingStrategies.hs" 16 35 16 39
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/DerivingStrategies.hs" 16 35 16 39
+                           , srcInfoPoints = []
+                           }
+                         "Read")))
+                (TyParen
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/DerivingStrategies.hs" 16 40 16 47
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/DerivingStrategies.hs" 16 40 16 41
+                         , SrcSpan "tests/examples/DerivingStrategies.hs" 16 46 16 47
+                         ]
+                     }
+                   (TyApp
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/DerivingStrategies.hs" 16 41 16 46
+                        , srcInfoPoints = []
+                        }
+                      (TyCon
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/DerivingStrategies.hs" 16 41 16 44
+                           , srcInfoPoints = []
+                           }
+                         (UnQual
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/DerivingStrategies.hs" 16 41 16 44
+                              , srcInfoPoints = []
+                              }
+                            (Ident
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/DerivingStrategies.hs" 16 41 16 44
+                                 , srcInfoPoints = []
+                                 }
+                               "Foo")))
+                      (TyVar
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/DerivingStrategies.hs" 16 45 16 46
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/DerivingStrategies.hs" 16 45 16 46
+                              , srcInfoPoints = []
+                              }
+                            "a"))))))
+      , DerivDecl
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/DerivingStrategies.hs" 17 1 17 47
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/DerivingStrategies.hs" 17 1 17 9
+                , SrcSpan "tests/examples/DerivingStrategies.hs" 17 18 17 26
+                ]
+            }
+          (Just
+             (DerivNewtype
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/DerivingStrategies.hs" 17 10 17 17
+                  , srcInfoPoints = []
+                  }))
+          Nothing
+          (IRule
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/DerivingStrategies.hs" 17 27 17 47
+               , srcInfoPoints = []
+               }
+             Nothing
+             (Just
+                (CxSingle
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/DerivingStrategies.hs" 17 27 17 35
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/DerivingStrategies.hs" 17 33 17 35 ]
+                     }
+                   (ClassA
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/DerivingStrategies.hs" 17 27 17 35
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/DerivingStrategies.hs" 17 33 17 35 ]
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/DerivingStrategies.hs" 17 27 17 30
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/DerivingStrategies.hs" 17 27 17 30
+                              , srcInfoPoints = []
+                              }
+                            "Num"))
+                      [ TyVar
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/DerivingStrategies.hs" 17 31 17 32
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/DerivingStrategies.hs" 17 31 17 32
+                               , srcInfoPoints = []
+                               }
+                             "a")
+                      ])))
+             (IHApp
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/DerivingStrategies.hs" 17 36 17 47
+                  , srcInfoPoints = []
+                  }
+                (IHCon
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/DerivingStrategies.hs" 17 36 17 39
+                     , srcInfoPoints = []
+                     }
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/DerivingStrategies.hs" 17 36 17 39
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/DerivingStrategies.hs" 17 36 17 39
+                           , srcInfoPoints = []
+                           }
+                         "Num")))
+                (TyParen
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/DerivingStrategies.hs" 17 40 17 47
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/DerivingStrategies.hs" 17 40 17 41
+                         , SrcSpan "tests/examples/DerivingStrategies.hs" 17 46 17 47
+                         ]
+                     }
+                   (TyApp
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/DerivingStrategies.hs" 17 41 17 46
+                        , srcInfoPoints = []
+                        }
+                      (TyCon
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/DerivingStrategies.hs" 17 41 17 44
+                           , srcInfoPoints = []
+                           }
+                         (UnQual
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/DerivingStrategies.hs" 17 41 17 44
+                              , srcInfoPoints = []
+                              }
+                            (Ident
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/DerivingStrategies.hs" 17 41 17 44
+                                 , srcInfoPoints = []
+                                 }
+                               "Foo")))
+                      (TyVar
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/DerivingStrategies.hs" 17 45 17 46
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/DerivingStrategies.hs" 17 45 17 46
+                              , srcInfoPoints = []
+                              }
+                            "a"))))))
+      , DerivDecl
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/DerivingStrategies.hs" 18 1 18 37
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/DerivingStrategies.hs" 18 1 18 9
+                , SrcSpan "tests/examples/DerivingStrategies.hs" 18 19 18 27
+                ]
+            }
+          (Just
+             (DerivAnyclass
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/DerivingStrategies.hs" 18 10 18 18
+                  , srcInfoPoints = []
+                  }))
+          Nothing
+          (IRule
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/DerivingStrategies.hs" 18 28 18 37
+               , srcInfoPoints = []
+               }
+             Nothing
+             Nothing
+             (IHApp
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/DerivingStrategies.hs" 18 28 18 37
+                  , srcInfoPoints = []
+                  }
+                (IHCon
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/DerivingStrategies.hs" 18 28 18 29
+                     , srcInfoPoints = []
+                     }
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/DerivingStrategies.hs" 18 28 18 29
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/DerivingStrategies.hs" 18 28 18 29
+                           , srcInfoPoints = []
+                           }
+                         "D")))
+                (TyParen
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/DerivingStrategies.hs" 18 30 18 37
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/DerivingStrategies.hs" 18 30 18 31
+                         , SrcSpan "tests/examples/DerivingStrategies.hs" 18 36 18 37
+                         ]
+                     }
+                   (TyApp
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/DerivingStrategies.hs" 18 31 18 36
+                        , srcInfoPoints = []
+                        }
+                      (TyCon
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/DerivingStrategies.hs" 18 31 18 34
+                           , srcInfoPoints = []
+                           }
+                         (UnQual
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/DerivingStrategies.hs" 18 31 18 34
+                              , srcInfoPoints = []
+                              }
+                            (Ident
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/DerivingStrategies.hs" 18 31 18 34
+                                 , srcInfoPoints = []
+                                 }
+                               "Foo")))
+                      (TyVar
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/DerivingStrategies.hs" 18 35 18 36
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/DerivingStrategies.hs" 18 35 18 36
+                              , srcInfoPoints = []
+                              }
+                            "a"))))))
+      ]
+  , []
+  )

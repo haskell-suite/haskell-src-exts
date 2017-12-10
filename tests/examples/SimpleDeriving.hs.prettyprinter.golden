@@ -1,2 +1,1 @@
-data T = T
-       deriving Eq
+data T = T deriving Eq
