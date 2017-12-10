@@ -103,7 +103,7 @@ module Language.Haskell.Exts.Syntax (
     as_name, qualified_name, hiding_name, minus_name, bang_name, dot_name, star_name,
     export_name, safe_name, unsafe_name, interruptible_name, threadsafe_name,
     stdcall_name, ccall_name, cplusplus_name, dotnet_name, jvm_name, js_name,
-    javascript_name, capi_name, forall_name, family_name, role_name,
+    javascript_name, capi_name, forall_name, family_name, role_name, hole_name,
     -- ** Type constructors
     unit_tycon_name, fun_tycon_name, list_tycon_name, tuple_tycon_name, unboxed_singleton_tycon_name,
     unit_tycon, fun_tycon, list_tycon, tuple_tycon, unboxed_singleton_tycon,
@@ -139,6 +139,7 @@ data SpecialCon l
                             --   constructors @(,)@ etc, possibly boxed @(\#,\#)@
     | Cons l                -- ^ list data constructor @(:)@
     | UnboxedSingleCon l    -- ^ unboxed singleton tuple constructor @(\# \#)@
+    | ExprHole l            -- ^ An expression hole _
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | This type is used to represent qualified variables, and also
@@ -797,8 +798,6 @@ data Exp l
 -- LambdaCase
     | LCase l [Alt l]                       -- ^ @\case@ /alts/
 
--- Holes
-    | ExprHole l                            -- ^ Expression hole
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | The name of an xml element or attribute,
@@ -1030,6 +1029,9 @@ bang_name      l = Symbol l "!"
 dot_name       l = Symbol l "."
 star_name      l = Symbol l "*"
 
+hole_name :: l -> QName l
+hole_name      l = Special l (ExprHole l)
+
 export_name, safe_name, unsafe_name, interruptible_name, threadsafe_name,
   stdcall_name, ccall_name, cplusplus_name, dotnet_name,
   jvm_name, js_name, javascript_name, capi_name, forall_name,
@@ -1100,6 +1102,7 @@ instance Annotated SpecialCon where
         TupleCon l _ _  -> l
         Cons l      -> l
         UnboxedSingleCon l  -> l
+        ExprHole l  -> l
     amap = fmap
 
 instance Annotated QName where
@@ -1641,7 +1644,6 @@ instance Annotated Exp where
         RightArrHighApp l _ _  -> l
 
         LCase l _              -> l
-        ExprHole l             -> l
 
     amap f e1 = case e1 of
         Var l qn        -> Var (f l) qn
@@ -1702,7 +1704,6 @@ instance Annotated Exp where
 
         LCase l alts -> LCase (f l) alts
         MultiIf l alts -> MultiIf (f l) alts
-        ExprHole l      -> ExprHole (f l)
 
 
 instance Annotated XName where

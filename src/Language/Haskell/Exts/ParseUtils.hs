@@ -430,6 +430,7 @@ checkPat (InfixApp _ l op r) args
         checkPat l (ps++args)
 checkPat e' [] = case e' of
     Var _ (UnQual l x)   -> return (PVar l x)
+    Var _ (Special l (ExprHole _)) -> return (PWildCard l)
     Lit l lit            -> return (PLit l (Signless l2) lit)
             where l2 = noInfoSpan . srcInfoSpan $ l
     InfixApp loc l op r  ->
@@ -752,7 +753,6 @@ checkExpr e' = case e' of
     LCase l alts -> return $ S.LCase l alts
 
     -- Hole
-    WildCard l     -> return $ S.ExprHole l
     TypeApp l ty   -> return $ S.TypeApp l ty
 
     _             -> fail $ "Parse error in expression: " ++ prettyPrint e'

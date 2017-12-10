@@ -37,11 +37,21 @@ ParseOk
                { srcInfoSpan = SrcSpan "tests/examples/ExprHole.hs" 2 5 2 8
                , srcInfoPoints = [ SrcSpan "tests/examples/ExprHole.hs" 2 5 2 6 ]
                }
-             (ExprHole
+             (Var
                 SrcSpanInfo
                   { srcInfoSpan = SrcSpan "tests/examples/ExprHole.hs" 2 7 2 8
                   , srcInfoPoints = []
-                  }))
+                  }
+                (Special
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/ExprHole.hs" 2 7 2 8
+                     , srcInfoPoints = []
+                     }
+                   (ExprHole
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/ExprHole.hs" 2 7 2 8
+                        , srcInfoPoints = []
+                        }))))
           Nothing
       , PatBind
           SrcSpanInfo
@@ -69,11 +79,21 @@ ParseOk
                   { srcInfoSpan = SrcSpan "tests/examples/ExprHole.hs" 4 7 4 10
                   , srcInfoPoints = []
                   }
-                (ExprHole
+                (Var
                    SrcSpanInfo
                      { srcInfoSpan = SrcSpan "tests/examples/ExprHole.hs" 4 7 4 8
                      , srcInfoPoints = []
-                     })
+                     }
+                   (Special
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/ExprHole.hs" 4 7 4 8
+                        , srcInfoPoints = []
+                        }
+                      (ExprHole
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/ExprHole.hs" 4 7 4 8
+                           , srcInfoPoints = []
+                           })))
                 (Var
                    SrcSpanInfo
                      { srcInfoSpan = SrcSpan "tests/examples/ExprHole.hs" 4 9 4 10
@@ -112,11 +132,21 @@ ParseOk
                { srcInfoSpan = SrcSpan "tests/examples/ExprHole.hs" 6 5 6 11
                , srcInfoPoints = [ SrcSpan "tests/examples/ExprHole.hs" 6 5 6 6 ]
                }
-             (ExprHole
+             (Var
                 SrcSpanInfo
                   { srcInfoSpan = SrcSpan "tests/examples/ExprHole.hs" 6 10 6 11
                   , srcInfoPoints = []
-                  }))
+                  }
+                (Special
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/ExprHole.hs" 6 10 6 11
+                     , srcInfoPoints = []
+                     }
+                   (ExprHole
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/ExprHole.hs" 6 10 6 11
+                        , srcInfoPoints = []
+                        }))))
           Nothing
       , FunBind
           SrcSpanInfo
@@ -204,11 +234,23 @@ ParseOk
                                  , srcInfoPoints =
                                      [ SrcSpan "tests/examples/ExprHole.hs" 10 11 10 12 ]
                                  }
-                               (ExprHole
+                               (Var
                                   SrcSpanInfo
                                     { srcInfoSpan = SrcSpan "tests/examples/ExprHole.hs" 10 13 10 14
                                     , srcInfoPoints = []
-                                    }))
+                                    }
+                                  (Special
+                                     SrcSpanInfo
+                                       { srcInfoSpan =
+                                           SrcSpan "tests/examples/ExprHole.hs" 10 13 10 14
+                                       , srcInfoPoints = []
+                                       }
+                                     (ExprHole
+                                        SrcSpanInfo
+                                          { srcInfoSpan =
+                                              SrcSpan "tests/examples/ExprHole.hs" 10 13 10 14
+                                          , srcInfoPoints = []
+                                          }))))
                             Nothing
                         ]
                     ]))
