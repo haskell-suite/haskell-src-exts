@@ -1378,6 +1378,7 @@ showToken t = case t of
   NO_OVERLAP        -> "{-# NO_OVERLAP"
   OVERLAP           -> "{-# OVERLAP"
   INCOHERENT        -> "{-# INCOHERENT"
+  COMPLETE          -> "{-# COMPLETE"
   KW_As         -> "as"
   KW_By         -> "by"
   KW_Case       -> "case"
