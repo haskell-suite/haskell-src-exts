@@ -2164,6 +2164,12 @@ instance ExactP Overlap where
     printString "{-# NO_OVERLAP #-}"
   exactP (Overlap _) =
     printString "{-# OVERLAP #-}"
+  exactP (Overlaps _) =
+    printString "{-# OVERLAPS #-}"
+  exactP (Overlapping _) =
+    printString "{-# OVERLAPPING #-}"
+  exactP (Overlappable _) =
+    printString "{-# OVERLAPPABLE #-}"
   exactP (Incoherent _) =
     printString "{-# INCOHERENT #-}"
 

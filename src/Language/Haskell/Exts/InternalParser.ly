@@ -278,6 +278,9 @@ Pragmas
 >       '{-# MINIMAL'           { Loc $$ MINIMAL }
 >       '{-# NO_OVERLAP'        { Loc $$ NO_OVERLAP }
 >       '{-# OVERLAP'           { Loc $$ OVERLAP }
+>       '{-# OVERLAPS'          { Loc $$ OVERLAPS }
+>       '{-# OVERLAPPING'       { Loc $$ OVERLAPPING }
+>       '{-# OVERLAPPABLE'      { Loc $$ OVERLAPPABLE }
 >       '{-# INCOHERENT'        { Loc $$ INCOHERENT }
 >       '{-# COMPLETE'          { Loc $$ COMPLETE }
 >       '#-}'                   { Loc $$ PragmaEnd }      -- 139
@@ -710,7 +713,10 @@ Role annotations
 
 
 > optoverlap :: { Maybe (Overlap L) }
->  : '{-# OVERLAP'    '#-}'    { Just (Overlap (nIS $1)) }
+>  : '{-# OVERLAP'      '#-}'    { Just (Overlap (nIS $1)) }
+>  | '{-# OVERLAPS'     '#-}'    { Just (Overlaps (nIS $1)) }
+>  | '{-# OVERLAPPING'  '#-}'    { Just (Overlapping (nIS $1)) }
+>  | '{-# OVERLAPPABLE' '#-}'    { Just (Overlappable (nIS $1)) }
 >  | '{-# INCOHERENT' '#-}'    { Just (Incoherent (nIS $1)) }
 >  | '{-# NO_OVERLAP' '#-}'    { Just (NoOverlap (nIS $1))  }
 >  | {- empty -}               { Nothing }

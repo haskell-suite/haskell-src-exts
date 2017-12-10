@@ -725,6 +725,9 @@ instance  Pretty (Activation l) where
 
 instance  Pretty (Overlap l) where
     pretty Overlap {}   = text "{-# OVERLAP #-}"
+    pretty Overlaps {}   = text "{-# OVERLAPS #-}"
+    pretty Overlapping {}   = text "{-# OVERLAPPING #-}"
+    pretty Overlappable {}   = text "{-# OVERLAPPABLE #-}"
     pretty NoOverlap {}  = text "{-# NO_OVERLAP #-}"
     pretty Incoherent {} = text "{-# INCOHERENT #-}"
 
