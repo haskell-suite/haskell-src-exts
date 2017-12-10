@@ -99,7 +99,7 @@ module Language.Haskell.Exts.Syntax (
     unit_con_name, tuple_con_name, list_cons_name, unboxed_singleton_con_name,
     unit_con, tuple_con, unboxed_singleton_con,
     -- ** Special identifiers
-    as_name, qualified_name, hiding_name, minus_name, bang_name, dot_name, star_name,
+    as_name, qualified_name, signature_name, hiding_name, minus_name, bang_name, dot_name, star_name,
     export_name, safe_name, unsafe_name, interruptible_name, threadsafe_name,
     stdcall_name, ccall_name, cplusplus_name, dotnet_name, jvm_name, js_name,
     javascript_name, capi_name, forall_name, family_name, role_name,
@@ -1014,9 +1014,10 @@ tuple_con l b i = Con l (tuple_con_name l b i)
 unboxed_singleton_con :: l -> Exp l
 unboxed_singleton_con l = Con l (unboxed_singleton_con_name l)
 
-as_name, qualified_name, hiding_name, minus_name, bang_name, dot_name, star_name :: l -> Name l
+as_name, qualified_name, signature_name, hiding_name, minus_name, bang_name, dot_name, star_name :: l -> Name l
 as_name        l = Ident  l "as"
 qualified_name l = Ident  l "qualified"
+signature_name l = Ident  l "signature"
 hiding_name    l = Ident  l "hiding"
 minus_name     l = Symbol l "-"
 bang_name      l = Symbol l "!"

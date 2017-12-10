@@ -243,6 +243,7 @@ Reserved Ids
 >       'let'           { Loc $$ KW_Let }
 >       'mdo'           { Loc $$ KW_MDo }
 >       'module'        { Loc $$ KW_Module }         -- 114
+>       'signature'     { Loc $$ KW_Signature }
 >       'newtype'       { Loc $$ KW_NewType }
 >       'of'            { Loc $$ KW_Of }
 >       'proc'          { Loc $$ KW_Proc }     -- arrows
@@ -297,7 +298,7 @@ Pragmas
 > %partial ngparsePragmasAndModuleHead moduletophead
 > %partial ngparsePragmasAndModuleName moduletopname
 > %tokentype { Loc Token }
-> %expect 10
+> %expect 12
 > %%
 
 -----------------------------------------------------------------------------
@@ -365,6 +366,7 @@ Module Header
 
 > optmodulehead :: { Maybe (ModuleHead L) }
 >       : 'module' modid maybemodwarning maybeexports 'where'   { Just $ ModuleHead ($1 <^^> $5 <** [$1,$5]) $2 $3 $4 }
+>       | 'signature' modid maybemodwarning maybeexports 'where'   { Just $ ModuleHead ($1 <^^> $5 <** [$1,$5]) $2 $3 $4 }
 >       | {- empty -}                                           { Nothing }
 
 > maybemodwarning ::  { Maybe (WarningText L) }
@@ -1609,6 +1611,7 @@ Hsx Extensions - requires XmlSyntax, but the lexer handles all that.
 >       | 'let'                         { Loc $1 "let" }
 >       | 'mdo'                         { Loc $1 "mdo" }
 >       | 'module'                      { Loc $1 "module" }
+>       | 'signature'                   { Loc $1 "signature" }
 >       | 'newtype'                     { Loc $1 "newtype" }
 >       | 'of'                          { Loc $1 "of" }
 >       | 'proc'                        { Loc $1 "proc" }
@@ -1893,6 +1896,7 @@ Identifiers and Symbols
 >       : VARID                 { let Loc l (VarId v) = $1 in Ident (nIS l) v }
 >       | 'as'                  { as_name         (nIS $1) }
 >       | 'qualified'           { qualified_name  (nIS $1) }
+>       | 'signature'           { signature_name  (nIS $1) }
 >       | 'hiding'              { hiding_name     (nIS $1) }
 >       | 'export'              { export_name     (nIS $1) }
 >       | 'stdcall'             { stdcall_name    (nIS $1) }
@@ -2085,6 +2089,7 @@ Exported as partial parsers:
 
 > moduletopname :: { (([ModulePragma L], [S], L), Maybe (ModuleName L)) }
 >               : toppragmas 'module' modid     { ($1, Just $3) }
+>               | toppragmas 'signature' modid  { ($1, Just $3) }
 >               | toppragmas {- empty -}        { ($1, Nothing) }
 
 > moduletophead :: { (([ModulePragma L], [S], L), Maybe (ModuleHead L)) }
