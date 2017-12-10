@@ -232,19 +232,26 @@ ParseOk
                                            , srcInfoPoints = []
                                            }
                                          "n"))
-                                   (UnQual
+                                   (UnpromotedName
                                       SrcSpanInfo
                                         { srcInfoSpan =
                                             SrcSpan "tests/examples/InfixTypeMinus.hs" 5 45 5 46
                                         , srcInfoPoints = []
                                         }
-                                      (Symbol
+                                      (UnQual
                                          SrcSpanInfo
                                            { srcInfoSpan =
                                                SrcSpan "tests/examples/InfixTypeMinus.hs" 5 45 5 46
                                            , srcInfoPoints = []
                                            }
-                                         "-"))
+                                         (Symbol
+                                            SrcSpanInfo
+                                              { srcInfoSpan =
+                                                  SrcSpan
+                                                    "tests/examples/InfixTypeMinus.hs" 5 45 5 46
+                                              , srcInfoPoints = []
+                                              }
+                                            "-")))
                                    (TyPromoted
                                       SrcSpanInfo
                                         { srcInfoSpan =
@@ -516,19 +523,26 @@ ParseOk
                                            , srcInfoPoints = []
                                            }
                                          "n"))
-                                   (UnQual
+                                   (UnpromotedName
                                       SrcSpanInfo
                                         { srcInfoSpan =
                                             SrcSpan "tests/examples/InfixTypeMinus.hs" 6 41 6 42
                                         , srcInfoPoints = []
                                         }
-                                      (Symbol
+                                      (UnQual
                                          SrcSpanInfo
                                            { srcInfoSpan =
                                                SrcSpan "tests/examples/InfixTypeMinus.hs" 6 41 6 42
                                            , srcInfoPoints = []
                                            }
-                                         "-"))
+                                         (Symbol
+                                            SrcSpanInfo
+                                              { srcInfoSpan =
+                                                  SrcSpan
+                                                    "tests/examples/InfixTypeMinus.hs" 6 41 6 42
+                                              , srcInfoPoints = []
+                                              }
+                                            "-")))
                                    (TyPromoted
                                       SrcSpanInfo
                                         { srcInfoSpan =
@@ -813,19 +827,26 @@ ParseOk
                                            , srcInfoPoints = []
                                            }
                                          "m"))
-                                   (UnQual
+                                   (UnpromotedName
                                       SrcSpanInfo
                                         { srcInfoSpan =
                                             SrcSpan "tests/examples/InfixTypeMinus.hs" 7 41 7 42
                                         , srcInfoPoints = []
                                         }
-                                      (Symbol
+                                      (UnQual
                                          SrcSpanInfo
                                            { srcInfoSpan =
                                                SrcSpan "tests/examples/InfixTypeMinus.hs" 7 41 7 42
                                            , srcInfoPoints = []
                                            }
-                                         "+"))
+                                         (Symbol
+                                            SrcSpanInfo
+                                              { srcInfoSpan =
+                                                  SrcSpan
+                                                    "tests/examples/InfixTypeMinus.hs" 7 41 7 42
+                                              , srcInfoPoints = []
+                                              }
+                                            "+")))
                                    (TyPromoted
                                       SrcSpanInfo
                                         { srcInfoSpan =
@@ -1123,19 +1144,26 @@ ParseOk
                                            , srcInfoPoints = []
                                            }
                                          "m"))
-                                   (UnQual
+                                   (UnpromotedName
                                       SrcSpanInfo
                                         { srcInfoSpan =
                                             SrcSpan "tests/examples/InfixTypeMinus.hs" 8 45 8 46
                                         , srcInfoPoints = []
                                         }
-                                      (Symbol
+                                      (UnQual
                                          SrcSpanInfo
                                            { srcInfoSpan =
                                                SrcSpan "tests/examples/InfixTypeMinus.hs" 8 45 8 46
                                            , srcInfoPoints = []
                                            }
-                                         "+"))
+                                         (Symbol
+                                            SrcSpanInfo
+                                              { srcInfoSpan =
+                                                  SrcSpan
+                                                    "tests/examples/InfixTypeMinus.hs" 8 45 8 46
+                                              , srcInfoPoints = []
+                                              }
+                                            "+")))
                                    (TyPromoted
                                       SrcSpanInfo
                                         { srcInfoSpan =

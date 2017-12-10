@@ -203,17 +203,22 @@ ParseOk
                                  }
                                Boxed
                                2))))
-                   (UnQual
+                   (UnpromotedName
                       SrcSpanInfo
                         { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 7 25 7 28
                         , srcInfoPoints = []
                         }
-                      (Symbol
+                      (UnQual
                          SrcSpanInfo
                            { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 7 25 7 28
                            , srcInfoPoints = []
                            }
-                         "<$>"))
+                         (Symbol
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 7 25 7 28
+                              , srcInfoPoints = []
+                              }
+                            "<$>")))
                    (TyCon
                       SrcSpanInfo
                         { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 7 29 7 36
@@ -230,17 +235,22 @@ ParseOk
                               , srcInfoPoints = []
                               }
                             "Tensors")))))
-             (UnQual
+             (UnpromotedName
                 SrcSpanInfo
                   { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 7 38 7 41
                   , srcInfoPoints = []
                   }
-                (Symbol
+                (UnQual
                    SrcSpanInfo
                      { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 7 38 7 41
                      , srcInfoPoints = []
                      }
-                   "<*>"))
+                   (Symbol
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 7 38 7 41
+                        , srcInfoPoints = []
+                        }
+                      "<*>")))
              (TyCon
                 SrcSpanInfo
                   { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 7 42 7 50
@@ -416,17 +426,22 @@ ParseOk
                                  }
                                Boxed
                                2))))
-                   (UnQual
+                   (UnpromotedName
                       SrcSpanInfo
                         { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 12 26 12 29
                         , srcInfoPoints = []
                         }
-                      (Symbol
+                      (UnQual
                          SrcSpanInfo
                            { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 12 26 12 29
                            , srcInfoPoints = []
                            }
-                         "<$>"))
+                         (Symbol
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 12 26 12 29
+                              , srcInfoPoints = []
+                              }
+                            "<$>")))
                    (TyCon
                       SrcSpanInfo
                         { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 12 30 12 37
@@ -443,17 +458,22 @@ ParseOk
                               , srcInfoPoints = []
                               }
                             "Tensors")))))
-             (UnQual
+             (UnpromotedName
                 SrcSpanInfo
                   { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 12 39 12 42
                   , srcInfoPoints = []
                   }
-                (Symbol
+                (UnQual
                    SrcSpanInfo
                      { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 12 39 12 42
                      , srcInfoPoints = []
                      }
-                   "<*>"))
+                   (Symbol
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 12 39 12 42
+                        , srcInfoPoints = []
+                        }
+                      "<*>")))
              (TyCon
                 SrcSpanInfo
                   { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 12 43 12 53
@@ -629,17 +649,22 @@ ParseOk
                                  }
                                Boxed
                                2))))
-                   (UnQual
+                   (UnpromotedName
                       SrcSpanInfo
                         { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 16 26 16 29
                         , srcInfoPoints = []
                         }
-                      (Symbol
+                      (UnQual
                          SrcSpanInfo
                            { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 16 26 16 29
                            , srcInfoPoints = []
                            }
-                         "<$>"))
+                         (Symbol
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 16 26 16 29
+                              , srcInfoPoints = []
+                              }
+                            "<$>")))
                    (TyPromoted
                       SrcSpanInfo
                         { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 16 30 16 35
@@ -676,17 +701,22 @@ ParseOk
                                      }
                                    "RT"))
                          ]))))
-             (UnQual
+             (UnpromotedName
                 SrcSpanInfo
                   { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 16 37 16 40
                   , srcInfoPoints = []
                   }
-                (Symbol
+                (UnQual
                    SrcSpanInfo
                      { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 16 37 16 40
                      , srcInfoPoints = []
                      }
-                   "<*>"))
+                   (Symbol
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 16 37 16 40
+                        , srcInfoPoints = []
+                        }
+                      "<*>")))
              (TyParen
                 SrcSpanInfo
                   { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 16 41 16 67
@@ -866,17 +896,22 @@ ParseOk
                         , srcInfoPoints = []
                         }
                       "Int64")))
-             (UnQual
+             (UnpromotedName
                 SrcSpanInfo
                   { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 19 46 19 49
                   , srcInfoPoints = []
                   }
-                (Symbol
+                (UnQual
                    SrcSpanInfo
                      { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 19 46 19 49
                      , srcInfoPoints = []
                      }
-                   ":=="))
+                   (Symbol
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 19 46 19 49
+                        , srcInfoPoints = []
+                        }
+                      ":==")))
              (TyParen
                 SrcSpanInfo
                   { srcInfoSpan = SrcSpan "tests/examples/TensorTests.hs" 19 50 19 61

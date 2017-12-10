@@ -116,7 +116,7 @@ splitTyConApp t0 = do
     split :: PType L -> [PType L] -> P (Name L, [PType L])
     split (TyApp _ t u) ts = split t (u:ts)
     split (TyCon _ (UnQual _ t)) ts = return (t,ts)
-    split (TyInfix l a op b) ts = split (TyCon l op) (a:b:ts)
+    split (TyInfix l a op b) ts = split (TyCon l (getMaybePromotedQName op)) (a:b:ts)
     split _ _ = fail "Illegal data/newtype declaration"
 
 -----------------------------------------------------------------------------
@@ -208,8 +208,8 @@ checkAssertion t' = checkAssertion' id [] t'
                 checkAssertion' (const (fl l)) (t:ts) a
             checkAssertion' fl _ (TyInfix l a op b) = do
                 -- infix operators require TypeOperators
-                checkAndWarnTypeOperators op
-                return $ InfixA (fl l) a op b
+                checkAndWarnTypeOperators (getMaybePromotedQName op)
+                return $ InfixA (fl l) a (getMaybePromotedQName op) b
             checkAssertion' fl ts (TyParen l t) =
                 checkAssertion' (const (fl l)) ts t
             checkAssertion' fl ts (TyVar l t) = do -- Dict :: cxt => Dict cxt
@@ -338,7 +338,9 @@ checkSimple kw (TyApp l h t) = do
   tvb <- mkTyVarBind kw t
   h' <- checkSimple kw h
   return $ DHApp l h' tvb
-checkSimple kw (TyInfix l t1 c@(UnQual _ t) t2) = do
+checkSimple kw (TyInfix l t1 mq t2)
+  | c@(UnQual _ t) <- getMaybePromotedQName mq
+  = do
        checkAndWarnTypeOperators c
        tv1 <- mkTyVarBind kw t1
        tv2 <- mkTyVarBind kw t2
@@ -394,9 +396,9 @@ checkInstsGuts (TyCon l c) = do
     checkAndWarnTypeOperators c
     return $ IHCon l c
 checkInstsGuts (TyInfix l a op b) = do
-    checkAndWarnTypeOperators op
+    checkAndWarnTypeOperators (getMaybePromotedQName op)
     [ta,tb] <- checkTypes [a,b]
-    return $ IHApp l (IHInfix l ta op) tb
+    return $ IHApp l (IHInfix l ta (getMaybePromotedQName op)) tb
 checkInstsGuts (TyParen l t) = checkInstsGuts t >>= return . IHParen l
 checkInstsGuts _ = fail "Illegal instance declaration"
 
@@ -1112,12 +1114,13 @@ checkT t simple = case t of
     TyParen l pt      -> check1Type pt (S.TyParen l)
     -- Here we know that t will be used as an actual type (and not a data constructor)
     -- so we can check that TypeOperators are enabled.
-    TyInfix l at op bt -> checkAndWarnTypeOperators op >> check2Types at bt (flip (S.TyInfix l) op)
+    TyInfix l at op bt -> checkAndWarnTypeOperators (getMaybePromotedQName op)
+                           >> check2Types at bt (flip (S.TyInfix l) op)
     TyKind  l pt k    -> check1Type pt (flip (S.TyKind l) k)
 
      -- TyPred can be a valid type if ConstraintKinds is enabled, unless it is an implicit parameter, which is not a valid type
     TyPred _ (ClassA l className cvars) -> mapM checkType cvars >>= \vars -> return (foldl1 (S.TyApp l) (S.TyCon l className:vars))
-    TyPred _ (InfixA l t0 op t1)        -> S.TyInfix l <$> checkType t0 <*> pure op <*> checkType t1
+    TyPred _ (InfixA l t0 op t1)        -> S.TyInfix l <$> checkType t0 <*> pure (UnpromotedName (ann op) op) <*> checkType t1
     TyPred _ (EqualP l t0    t1)        -> do
       checkEnabledOneOf [TypeFamilies, GADTs]
       S.TyEquals l <$> checkType t0 <*> checkType t1
@@ -1132,6 +1135,10 @@ checkT t simple = case t of
                               checkEnabled QuasiQuotes
                               return $ S.TyQuasiQuote l n s
     _   -> fail $ "Parse error in type: " ++ prettyPrint t
+
+getMaybePromotedQName :: MaybePromotedName l -> QName l
+getMaybePromotedQName (PromotedName _ q) = q
+getMaybePromotedQName (UnpromotedName _ q) = q
 
 check1Type :: PType L -> (S.Type L -> S.Type L) -> P (S.Type L)
 check1Type pt f = checkT pt True >>= return . f

@@ -835,7 +835,7 @@ instance  Pretty (Type l) where
         prettyPrec _ (TyCon _ name) = pretty name
         prettyPrec _ (TyParen _ t) = parens (pretty t)
 --        prettyPrec _ (TyPred asst) = pretty asst
-        prettyPrec _ (TyInfix _ a op b) = myFsep [pretty a, ppQNameInfix op, pretty b]
+        prettyPrec _ (TyInfix _ a op b) = myFsep [pretty a, pretty op, pretty b]
         prettyPrec _ (TyKind _ t k) = parens (myFsep [pretty t, text "::", pretty k])
         prettyPrec _ (TyPromoted _ p) = pretty p
         prettyPrec p (TyEquals _ a b) = parensIf (p > 0) (myFsep [pretty a, text "~", pretty b])
@@ -844,13 +844,18 @@ instance  Pretty (Type l) where
         prettyPrec _ (TyWildCard _ mn) = char '_' <> maybePP pretty mn
         prettyPrec _ (TyQuasiQuote _ n qt) = text ("[" ++ n ++ "|" ++ qt ++ "|]")
 
+instance Pretty (MaybePromotedName l) where
+  pretty (PromotedName _ q) = char '\'' <> ppQNameInfix q
+  pretty (UnpromotedName _ q) = ppQNameInfix q
+
+
 instance  Pretty (Promoted l) where
   pretty p =
     case p of
       PromotedInteger _ n _ -> integer n
       PromotedString _ s _ -> doubleQuotes $ text s
       PromotedCon _ hasQuote qn ->
-        addQuote hasQuote $ maybe (pretty qn) pretty (getSpecialName qn)
+        addQuote hasQuote (pretty qn)
       PromotedList _ hasQuote list ->
         addQuote hasQuote $ bracketList . punctuate comma . map pretty $ list
       PromotedTuple _ list ->
@@ -1294,9 +1299,9 @@ isSymbolQName (Special _ (Cons {}))   = True
 isSymbolQName (Special _ (FunCon {})) = True
 isSymbolQName _                  = False
 
-getSpecialName :: QName l -> Maybe (SpecialCon l)
-getSpecialName (Special _ n) = Just n
-getSpecialName _           = Nothing
+--getSpecialName :: QName l -> Maybe (SpecialCon l)
+--getSpecialName (Special _ n) = Just n
+--getSpecialName _           = Nothing
 
 -- Contexts are "sets" of assertions. Several members really means it's a
 -- CxTuple, but we can't represent that in our list of assertions.
@@ -1650,7 +1655,7 @@ instance SrcInfo loc => Pretty (P.PType loc) where
         prettyPrec _ (P.TyCon _ name) = pretty name
         prettyPrec _ (P.TyParen _ t) = parens (pretty t)
         prettyPrec _ (P.TyPred _ asst) = pretty asst
-        prettyPrec _ (P.TyInfix _ a op b) = myFsep [pretty a, ppQNameInfix op, pretty b]
+        prettyPrec _ (P.TyInfix _ a op b) = myFsep [pretty a, pretty op, pretty b]
         prettyPrec _ (P.TyKind _ t k) = parens (myFsep [pretty t, text "::", pretty k])
         prettyPrec _ (P.TyPromoted _ p) = pretty p
         prettyPrec _ (P.TySplice _ s) = pretty s

@@ -29,10 +29,6 @@
 
 module Type.Family.List where
 
-import Type.Family.Constraint
-import Type.Family.Monoid
-import Type.Class.Witness
-
 type Ø    = '[]
 type (:<) = '(:)
 infixr 5 :<

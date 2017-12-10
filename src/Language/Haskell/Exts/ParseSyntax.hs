@@ -305,7 +305,7 @@ data PType l
      | TyCon   l (QName l)                      -- ^ named type or type constructor
      | TyParen l (PType l)                      -- ^ type surrounded by parentheses
      | TyPred  l (PAsst l)                      -- ^ assertion of an implicit parameter
-     | TyInfix l (PType l) (QName l) (PType l)  -- ^ infix type constructor
+     | TyInfix l (PType l) (MaybePromotedName l) (PType l)  -- ^ infix type constructor
      | TyKind  l (PType l) (Kind l)             -- ^ type with explicit kind signature
      | TyPromoted l (S.Promoted l)              -- ^ promoted data type
      | TySplice l (Splice l)                    -- ^ template haskell splice type

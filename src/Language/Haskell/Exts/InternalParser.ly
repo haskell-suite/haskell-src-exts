@@ -929,7 +929,7 @@ Type equality contraints need the TypeFamilies extension.
 > dtype :: { PType L }
 >       : btype                         { splitTilde $1 }
 >       | btype qtyconop dtype          { TyInfix ($1 <> $3) $1 $2 $3 }
->       | btype qtyvarop dtype          { TyInfix ($1 <> $3) $1 $2 $3 } -- FIXME
+>       | btype qtyvarop dtype          { TyInfix ($1 <> $3) $1 (UnpromotedName (ann $2) $2) $3 } -- FIXME
 >       | btype '->' ctype              { TyFun ($1 <> $3 <** [$2]) (splitTilde $1) $3 }
        | btype '~' btype               {% do { checkEnabledOneOf [TypeFamilies, GADTs] ;
                                                let {l = $1 <> $3 <** [$2]};
@@ -980,8 +980,6 @@ the (# and #) lexemes. Kinds will be handled at the kind rule.
 >       | VARQUOTE '[' ']'              { PromotedList  ($1 <^^> $3 <** [$1, $3]) True [] }
        | '[' ']'                       {% PromotedList  ($1 <^^> $2 <** [$1, $2]) False [] }
 >       | VARQUOTE '(' types1 ')'       {% PromotedTuple ($1 <^^> $4 <** ($1:reverse($4:snd $3))) . reverse <\$> mapM checkType (fst $3) }
->       | VARQUOTE gconsym              { (PromotedCon (nIS $1 <++> ann $2 <** [$1]) True) $2 }
->       | VARQUOTE var           { undefined }
 >       | INT                           { let Loc l (IntTok  (i,raw)) = $1 in PromotedInteger (nIS l) i raw }
 >       | STRING                        { let Loc l (StringTok (s,raw)) = $1 in PromotedString (nIS l) s raw }
 
@@ -1016,8 +1014,9 @@ the (# and #) lexemes. Kinds will be handled at the kind rule.
 
 These are for infix types
 
-> qtyconop :: { QName L }
->       : qconop                        { $1 }
+> qtyconop :: { MaybePromotedName L }
+>       : qconop                        { UnpromotedName (ann $1) $1 }
+>       | VARQUOTE gconsym              { PromotedName (nIS $1 <++> ann $2 <** [$1]) $2 }
 
 
 (Slightly edited) Comment from GHC's hsparser.y:

@@ -1122,7 +1122,7 @@ instance ExactP Type where
             exactPC t
             printStringAt (pos b) ")"
          _ -> errorEP "ExactP: Type: TyParen is given wrong number of srcInfoPoints"
-    TyInfix _ t1 qn t2 -> exactP t1 >> epInfixQName qn >> exactPC t2
+    TyInfix _ t1 qn t2 -> exactP t1 >> exactP qn >> exactPC t2
     TyKind  l t kd ->
         case srcInfoPoints l of
          [_,b,c] -> do
@@ -1145,6 +1145,11 @@ instance ExactP Type where
         printString $ "[" ++ name ++ "|"
         sequence_ (intersperse newLine $ map printString qtLines)
         printString "|]"
+
+instance ExactP MaybePromotedName where
+  exactP (PromotedName l qn)  = case srcInfoPoints l of
+    [a] -> printStringAt (pos a) "'" >> epInfixQName qn
+  exactP (UnpromotedName _ qn) = epInfixQName qn
 
 instance ExactP Promoted where
   exactP (PromotedInteger _ _ rw) = printString rw
