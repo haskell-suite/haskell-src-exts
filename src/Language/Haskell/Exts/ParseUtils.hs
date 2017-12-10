@@ -1328,4 +1328,4 @@ mkSumOrTuple :: Boxed -> L -> SumOrTuple L -> P (PExp L)
 mkSumOrTuple Unboxed s (SSum before after e) = return (UnboxedSum s before after e)
 mkSumOrTuple boxity s (STuple ms) =
     return $ TupleSection s boxity ms
-mkSumOrTuple Boxed s (SSum {}) = fail "Boxed sums are not implemented"
+mkSumOrTuple Boxed _s (SSum {}) = fail "Boxed sums are not implemented"
