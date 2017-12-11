@@ -1564,16 +1564,6 @@ End Template Haskell
 >       | exp '->' pat                  {% do {checkEnabled ViewPatterns;
 >                                              return $ ViewPat ($1 <> $3 <** [$2]) $1 $3} }
 
-> tsectend :: { ([Maybe (PExp L)],[S]) }
->       : commas texp tsectend          { let (mes, ss) = $3 in (replicate (length $1 - 1) Nothing ++ Just $2 : mes, ss ++ $1) }
->       | commas texp ')'               { (replicate (length $1 - 1) Nothing ++ [Just $2], $3 : $1) }
->       | commas ')'                    { (replicate (length $1) Nothing, $2 : $1) }
-
-> thashsectend :: { ([Maybe (PExp L)],[S]) }
->       : commas texp thashsectend      { let (mes, ss) = $3 in (replicate (length $1 - 1) Nothing ++ Just $2 : mes, ss ++ $1) }
->       | commas texp '#)'              { (replicate (length $1 - 1) Nothing ++ [Just $2], $3 : $1) }
->       | commas '#)'                   { (replicate (length $1) Nothing, $2 : $1) }
-
 -----------------------------------------------------------------------------
 Harp Extensions
 
