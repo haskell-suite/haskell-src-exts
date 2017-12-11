@@ -88,6 +88,7 @@ Test-Suite test
                        tasty >= 0.3,
                        tasty-smallcheck,
                        tasty-golden >= 2.2.2,
+                       tasty-hunit,
                        filepath,
                        directory,
                        pretty-show >= 1.6.10

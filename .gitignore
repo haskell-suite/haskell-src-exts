@@ -1,2 +1,6 @@
 /dist/
 *.out
+.cabal-sandbox/
+.idea/
+cabal.sandbox.config
+*.iml
