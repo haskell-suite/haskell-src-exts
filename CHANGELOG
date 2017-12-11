@@ -13,6 +13,8 @@
 * Expression holes in infix expressions
 * Support multiple pattern synonyms per pattern synonym signature
 * COMPLETE pragmas
+* Fix #309, remove unnecessary semi-colon from pretty printer
+* Refine ExplicitNamespaces to properly export type operators
 
 1.19.0 --> 1.19.1
 ===================
