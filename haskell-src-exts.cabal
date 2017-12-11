@@ -1,10 +1,10 @@
 Name:                   haskell-src-exts
-Version:                1.19.1
+Version:                1.20.0
 License:                BSD3
 License-File:           LICENSE
 Build-Type:             Simple
 Author:                 Niklas Broberg
-Maintainer:             Niklas Broberg <niklas.broberg@chalmers.se>, Roman Cheplyaka <roma@ro-che.info>
+Maintainer:             Matthew Pickering <matthewtpickering@gmail.com>
 Category:               Language
 Synopsis:               Manipulating Haskell source: abstract syntax, lexer, parser, and pretty-printer
 Description:            Haskell-Source with Extensions (HSE, haskell-src-exts)
@@ -21,7 +21,8 @@ Tested-With:              GHC == 7.4.2
                         , GHC == 7.6.3
                         , GHC == 7.8.2
                         , GHC == 7.10.3
-                        , GHC == 8.0.1
+                        , GHC == 8.0.2
+                        , GHC == 8.2.2
 
 Extra-Source-Files:
                         README.md

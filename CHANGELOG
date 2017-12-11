@@ -1,3 +1,19 @@
+1.19.1 --> 1.20.0
+===================
+
+* GHC 8.2 updates
+* Add some missing Generics instances (#380)
+* Support Template Haskell pattern splices (#352)
+* Fix overloaded labels starting with _ (#362)
+* Relax MultiParamTypeClass check (#333)
+* DeriveAnyClass (#337)
+* Deriving Strategies (#387)
+* OVERLAPS/OVERLAPPING/OVERLAPPABLE pragmas
+* Unboxed Sums
+* Expression holes in infix expressions
+* Support multiple pattern synonyms per pattern synonym signature
+* COMPLETE pragmas
+
 1.19.0 --> 1.19.1
 ===================
 
