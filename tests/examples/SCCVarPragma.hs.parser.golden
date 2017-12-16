@@ -1,0 +1,83 @@
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/SCCVarPragma.hs" 1 1 4 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/SCCVarPragma.hs" 1 1 1 1
+            , SrcSpan "tests/examples/SCCVarPragma.hs" 1 1 1 1
+            , SrcSpan "tests/examples/SCCVarPragma.hs" 3 1 3 1
+            , SrcSpan "tests/examples/SCCVarPragma.hs" 4 1 4 1
+            , SrcSpan "tests/examples/SCCVarPragma.hs" 4 1 4 1
+            ]
+        }
+      (Just
+         (ModuleHead
+            SrcSpanInfo
+              { srcInfoSpan = SrcSpan "tests/examples/SCCVarPragma.hs" 1 1 1 18
+              , srcInfoPoints =
+                  [ SrcSpan "tests/examples/SCCVarPragma.hs" 1 1 1 7
+                  , SrcSpan "tests/examples/SCCVarPragma.hs" 1 13 1 18
+                  ]
+              }
+            (ModuleName
+               SrcSpanInfo
+                 { srcInfoSpan = SrcSpan "tests/examples/SCCVarPragma.hs" 1 8 1 12
+                 , srcInfoPoints = []
+                 }
+               "Main")
+            Nothing
+            Nothing))
+      []
+      []
+      [ PatBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/SCCVarPragma.hs" 3 1 3 27
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/SCCVarPragma.hs" 3 1 3 5
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/SCCVarPragma.hs" 3 1 3 5
+                  , srcInfoPoints = []
+                  }
+                "foo1"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/SCCVarPragma.hs" 3 6 3 27
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/SCCVarPragma.hs" 3 6 3 7 ]
+               }
+             (SCCPragma
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/SCCVarPragma.hs" 3 8 3 27
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/SCCVarPragma.hs" 3 16 3 19
+                      , SrcSpan "tests/examples/SCCVarPragma.hs" 3 20 3 23
+                      ]
+                  }
+                False
+                "foo"
+                (Var
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/SCCVarPragma.hs" 3 24 3 27
+                     , srcInfoPoints = []
+                     }
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/SCCVarPragma.hs" 3 24 3 27
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/SCCVarPragma.hs" 3 24 3 27
+                           , srcInfoPoints = []
+                           }
+                         "foo")))))
+          Nothing
+      ]
+  , []
+  )

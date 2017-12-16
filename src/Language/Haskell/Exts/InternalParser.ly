@@ -1435,7 +1435,8 @@ mdo blocks require the RecursiveDo extension enabled, but the lexer handles that
 
 > exppragma :: { PExp L }
 >       : '{-# CORE' STRING '#-}' exp   { let Loc l (StringTok (s,_)) = $2 in CorePragma (nIS $1 <++> ann $4 <** [l,$3]) s $4 }
->       | '{-# SCC'  STRING '#-}' exp   { let Loc l (StringTok (s,_)) = $2 in SCCPragma  (nIS $1 <++> ann $4 <** [l,$3]) s $4 }
+>       | '{-# SCC'  STRING '#-}' exp   { let Loc l (StringTok (s,_)) = $2 in SCCPragma  (nIS $1 <++> ann $4 <** [l,$3]) True s $4 }
+>       | '{-# SCC'  VARID '#-}' exp   { let Loc l (VarId s) = $2 in SCCPragma  (nIS $1 <++> ann $4 <** [l,$3]) False s $4 }
 >       | '{-# GENERATED' STRING INT ':' INT '-' INT ':' INT '#-}' exp
 >                                           { let { Loc l0 (StringTok (s,_)) = $2;
 >                                                   Loc l1 (IntTok (i1,_))   = $3;

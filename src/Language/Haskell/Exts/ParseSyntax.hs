@@ -88,7 +88,9 @@ data PExp l
 
 -- Pragmas
     | CorePragma l      String  (PExp l)    -- ^ {-# CORE #-} pragma
-    | SCCPragma  l      String  (PExp l)    -- ^ {-# SCC #-} pragma
+    | SCCPragma  l Bool String  (PExp l)    -- ^ {-# SCC #-} pragma
+                                            -- true if name should be
+                                            -- quoted
     | GenPragma  l      String (Int, Int) (Int, Int) (PExp l)
                                             -- ^ {-# GENERATED ... #-} pragma
 
@@ -173,7 +175,7 @@ instance Annotated PExp where
         XRPats l _              -> l
 
         CorePragma l _ _        -> l
-        SCCPragma  l _ _        -> l
+        SCCPragma  l _ _ _        -> l
         GenPragma  l _ _ _ _    -> l
 
         BangPat l _             -> l
@@ -247,7 +249,7 @@ instance Annotated PExp where
         XRPats l es             -> XRPats (f l) es
 
         CorePragma l s e        -> CorePragma (f l) s e
-        SCCPragma  l s e        -> SCCPragma  (f l) s e
+        SCCPragma  l q s e        -> SCCPragma  (f l) q s e
         GenPragma  l s n12 n34 e -> GenPragma  (f l) s n12 n34 e
 
         Proc            l p e   -> Proc            (f l) p e

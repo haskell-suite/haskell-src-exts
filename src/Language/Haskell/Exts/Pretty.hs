@@ -1057,7 +1057,9 @@ instance  Pretty (Exp l) where
 
         -- Pragmas
         prettyPrec _ (CorePragma _ s e) = myFsep $ map text ["{-# CORE", show s, "#-}"] ++ [pretty e]
-        prettyPrec _ (SCCPragma  _ s e) = myFsep $ map text ["{-# SCC",  show s, "#-}"] ++ [pretty e]
+        prettyPrec _ (SCCPragma  _ quoted s e) =
+          let name = if quoted then show s else s
+          in myFsep $ map text ["{-# SCC",  name, "#-}"] ++ [pretty e]
         prettyPrec _ (GenPragma  _ s (a,b) (c,d) e) =
                 myFsep [text "{-# GENERATED", text $ show s,
                             int a, char ':', int b, char '-',
@@ -1604,7 +1606,7 @@ instance SrcInfo loc => Pretty (P.PExp loc) where
         pretty (P.XChildTag _ es) =
                 myFsep $ text "<%>" : map pretty es ++ [text "</%>"]
         pretty (P.CorePragma _ s e) = myFsep $ map text ["{-# CORE", show s, "#-}"] ++ [pretty e]
-        pretty (P.SCCPragma  _ s e) = myFsep $ map text ["{-# SCC",  show s, "#-}"] ++ [pretty e]
+        pretty (P.SCCPragma  _ _q s e) = myFsep $ map text ["{-# SCC",  show s, "#-}"] ++ [pretty e]
         pretty (P.GenPragma  _ s (a,b) (c,d) e) =
                 myFsep [text "{-# GENERATED", text $ show s,
                             int a, char ':', int b, char '-',

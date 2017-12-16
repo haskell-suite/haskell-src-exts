@@ -1711,10 +1711,11 @@ instance ExactP Exp where
             printStringAt (pos b) "#-}"
             exactPC e
          _ -> errorEP "ExactP: Exp: CorePragma is given wrong number of srcInfoPoints"
-    SCCPragma  l      str e         ->
+    SCCPragma  l  quoted str e         ->
         case srcInfoPoints l of
          [_,b] -> do
-            printString $ "{-# SCC " ++ show str
+            let name = if quoted then show str else str
+            printString $ "{-# SCC " ++ name
             printStringAt (pos b) "#-}"
             exactPC e
          _ -> errorEP "ExactP: Exp: SCCPragma is given wrong number of srcInfoPoints"

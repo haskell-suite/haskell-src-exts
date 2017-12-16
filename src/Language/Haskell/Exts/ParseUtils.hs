@@ -742,7 +742,7 @@ checkExpr e' = case e' of
                             return $ S.XChildTag l es1
     -- Pragmas
     CorePragma l s e  -> check1Expr e (S.CorePragma l s)
-    SCCPragma  l s e  -> check1Expr e (S.SCCPragma l s)
+    SCCPragma  l q s e  -> check1Expr e (S.SCCPragma l q s)
     GenPragma l s xx yy e -> check1Expr e (S.GenPragma l s xx yy)
 --    UnknownExpPragma n s -> return $ S.UnknownExpPragma n s
 

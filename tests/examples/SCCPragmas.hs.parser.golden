@@ -59,6 +59,7 @@ ParseOk
                       , SrcSpan "tests/examples/SCCPragmas.hs" 3 22 3 25
                       ]
                   }
+                True
                 "wibble"
                 (Lit
                    SrcSpanInfo

@@ -1,2 +1,2 @@
 ParseFailed
-  (SrcLoc "tests/examples/Ppr048.hs" 3 9) "Parse error: foo"
+  (SrcLoc "tests/examples/Ppr048.hs" 4 1) "Parse error: ;"

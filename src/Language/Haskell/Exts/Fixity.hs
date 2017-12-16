@@ -416,7 +416,7 @@ leafFix fixs e' = case e' of
     LeftArrHighApp l e1 e2    -> liftM2 (LeftArrHighApp l) (fix e1) (fix e2)
     RightArrHighApp l e1 e2   -> liftM2 (RightArrHighApp l) (fix e1) (fix e2)
     CorePragma l s e          -> liftM (CorePragma l s) (fix e)
-    SCCPragma l s e           -> liftM (SCCPragma l s) (fix e)
+    SCCPragma l q s e         -> liftM (SCCPragma l q s) (fix e)
     GenPragma l s ab cd e     -> liftM (GenPragma l s ab cd) (fix e)
     LCase l alts              -> liftM (LCase l) $ mapM fix alts
 

@@ -797,7 +797,8 @@ data Exp l
 
 -- Pragmas
     | CorePragma l      String (Exp l)      -- ^ CORE pragma
-    | SCCPragma  l      String (Exp l)      -- ^ SCC pragma
+    | SCCPragma  l Bool String (Exp l)      -- ^ SCC pragma, true if we should
+                                            -- quote the output
     | GenPragma  l      String (Int, Int) (Int, Int) (Exp l)
                                             -- ^ GENERATED pragma
 
@@ -1662,7 +1663,7 @@ instance Annotated Exp where
         XChildTag l _          -> l
 
         CorePragma l _ _       -> l
-        SCCPragma  l _ _       -> l
+        SCCPragma  l _ _ _       -> l
         GenPragma  l _ _ _ _   -> l
 
         Proc            l _ _  -> l
@@ -1722,7 +1723,7 @@ instance Annotated Exp where
         XChildTag l es           -> XChildTag (f l) es
 
         CorePragma l s e   -> CorePragma (f l) s e
-        SCCPragma  l s e   -> SCCPragma (f l) s e
+        SCCPragma  l q s e   -> SCCPragma (f l) q s e
         GenPragma  l s n12 n34 e -> GenPragma (f l) s n12 n34 e
 
         Proc            l p e  -> Proc (f l) p e
