@@ -36,7 +36,6 @@ module Language.Haskell.Exts.ParseUtils (
     , checkType             -- PType -> P Type
     , checkTyVar            -- Name  -> P PType
     , bangType              -- L -> BangType -> Type -> Type
-    , checkKind             -- Kind -> P ()
     , checkValDef           -- SrcLoc -> PExp -> Maybe Type -> Rhs -> Binds -> P Decl
     , checkExplicitPatSyn   --
     , checkClassBody        -- [ClassDecl] -> P [ClassDecl]
@@ -58,6 +57,7 @@ module Language.Haskell.Exts.ParseUtils (
     , mkAssocType
     , mkEThingWith
     , splitTilde
+    , splitTildeApps
     -- HaRP
     , checkRPattern         -- PExp -> P RPat
     -- Hsx
@@ -75,6 +75,7 @@ module Language.Haskell.Exts.ParseUtils (
 
     -- Parsed expressions and types
     , PExp(..), PFieldUpdate(..), ParseXAttr(..), PType(..), PContext, PAsst(..)
+    , AppType(..)
     , p_unit_con            -- PExp
     , p_tuple_con           -- Boxed -> Int -> PExp
     , p_unboxed_singleton_con   -- PExp
@@ -1113,6 +1114,9 @@ checkT t simple = case t of
     TyList  l pt      -> check1Type pt (S.TyList l)
     TyParArray l pt   -> check1Type pt (S.TyParArray l)
     TyApp   l ft at   -> check2Types ft at (S.TyApp l)
+    TyApps  l ps      ->
+      case ps of
+        [PrefixApp p] -> checkT p
     TyVar   l n       -> return $ S.TyVar l n
     TyCon   l n       -> do
             checkAndWarnTypeOperators n
@@ -1170,19 +1174,6 @@ checkTyVar n = do
       let ss = srcInfoSpan spaninfo
           ss' = ss { srcSpanStartColumn = srcSpanStartColumn ss + 1 }
       in  spaninfo { srcInfoSpan = ss' }
----------------------------------------
--- Check kinds
-
--- ConstraintKinds allow the kind "Constraint", but not "Nat", etc. Specifically
--- test for that.
-checkKind :: Kind l -> P ()
-checkKind k = case k of
-        KindVar _ q | constrKind q -> checkEnabledOneOf [ConstraintKinds, DataKinds]
-            where constrKind name = case name of
-                    (UnQual _ (Ident _ n)) -> n == "Constraint"
-                    _                      -> False
-
-        _ -> checkEnabled DataKinds
 
 ---------------------------------------
 -- Converting a complete page
@@ -1294,6 +1285,16 @@ splitTilde t = go t
               t' -> TyApp loc t' t2
 
         go t' = t'
+
+-- | Transform tyapps with strict_marks into uses of twiddle
+-- [~a, ~b, c, ~d] ==> (~a) ~ b c ~ d
+splitTildeApps :: [AppType L] -> [AppType L]
+splitTildeApps []         = []
+splitTildeApps (t : rest) = t : concatMap go rest
+  where go (AppPrefix (TyBang _ (LazyTy eqloc) (NoUnpackPragma _) ty))
+          = [AppInfix (eq_con_name eqloc), AppPrefix ty]
+
+        go t = [t]
 
 -- Expects the arguments in the right order
 mkEThingWith :: L -> QName L -> [Either S (CName L)] -> P (ExportSpec L)

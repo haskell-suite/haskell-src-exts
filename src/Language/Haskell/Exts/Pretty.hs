@@ -890,16 +890,6 @@ ppForall (Just vs) =    myFsep (text "forall" : map pretty vs ++ [char '.'])
 
 ---------------------------- Kinds ----------------------------
 
-instance  Pretty (Kind l) where
-        prettyPrec _ KindStar{}      = text "*"
-        prettyPrec n (KindFn _ a b)  = parensIf (n > 0) $ myFsep [prettyPrec 1 a, text "->", pretty b]
-        prettyPrec _ (KindParen _ k) = parens $ pretty k
-        prettyPrec _ (KindVar _ n)   = pretty n
-        prettyPrec _ (KindTuple _ t) = parenList . map pretty $ t
-        prettyPrec _ (KindList _ l)  = brackets .  pretty $ l
-        prettyPrec n (KindApp _ a b) =
-          parensIf (n > 3) $ myFsep [prettyPrec 3 a, prettyPrec 4 b]
-
 ppOptKind :: Maybe (Kind l) -> [Doc]
 ppOptKind Nothing  = []
 ppOptKind (Just k) = [text "::", pretty k]
@@ -1678,9 +1668,7 @@ instance SrcInfo loc => Pretty (P.PType loc) where
         prettyPrec _ (P.TyList _ t)  = brackets $ pretty t
         prettyPrec _ (P.TyParArray _ t) = bracketColonList [pretty t]
         prettyPrec p (P.TyApp _ a b) =
-                {-
-                | a == list_tycon = brackets $ pretty b         -- special case
-                | otherwise = -} parensIf (p > prec_btype) $
+                 parensIf (p > prec_btype) $
                                     myFsep [pretty a, prettyPrec prec_atype b]
         prettyPrec _ (P.TyVar _ name) = pretty name
         prettyPrec _ (P.TyCon _ name) = pretty name

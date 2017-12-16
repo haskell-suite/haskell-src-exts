@@ -1037,42 +1037,6 @@ instance ExactP TyVarBind where
                  [] -> exactPC n
                  _ -> errorEP "ExactP: TyVarBind: UnkindedVar is given wrong number of srcInfoPoints"
 
-instance ExactP Kind where
-  exactP kd' = case kd' of
-    KindStar  _     -> printString "*"
-    KindFn    l k1 k2 ->
-        case srcInfoPoints l of
-         [a] -> do
-            exactP k1
-            printStringAt (pos a) "->"
-            exactPC k2
-         _ -> errorEP "ExactP: Kind: KindFn is given wrong number of srcInfoPoints"
-    KindParen l kd  ->
-        case srcInfoPoints l of
-         [_,b] -> do
-            printString "("
-            exactPC kd
-            printStringAt (pos b) ")"
-         _ -> errorEP "ExactP: Kind: KindParen is given wrong number of srcInfoPoints"
-    KindVar _ n     -> epQName n
-    KindApp _ k1 k2 -> do
-        exactP k1
-        exactPC k2
-    KindTuple l ks ->
-        let o = "("
-            e = ")"
-            pts = srcInfoPoints l
-        in printInterleaved (zip pts (o: replicate (length pts - 2) "," ++ [e])) ks
-    KindList  l k ->
-      case srcInfoPoints l of
-        [_, close] -> do
-          printString "["
-          exactPC k
-          printStringAt (pos close) "]"
-        _ -> errorEP "ExactP: Kind: KindList is given wrong number of srcInfoPoints"
-
-
-
 instance ExactP Type where
   exactP t' = case t' of
     TyForall l mtvs mctxt t -> do

@@ -65,7 +65,7 @@ module Language.Haskell.Exts.Syntax (
     -- * Class Assertions and Contexts
     Context(..), FunDep(..), Asst(..),
     -- * Types
-    Type(..), Boxed(..), Kind(..), TyVarBind(..), Promoted(..),
+    Type(..), Boxed(..), Kind, TyVarBind(..), Promoted(..),
     TypeEqn (..),
     -- * Expressions
     Exp(..), Stmt(..), QualStmt(..), FieldUpdate(..),
@@ -104,7 +104,7 @@ module Language.Haskell.Exts.Syntax (
     export_name, safe_name, unsafe_name, interruptible_name, threadsafe_name,
     stdcall_name, ccall_name, cplusplus_name, dotnet_name, jvm_name, js_name,
     javascript_name, capi_name, forall_name, family_name, role_name, hole_name,
-    stock_name, anyclass_name,
+    stock_name, anyclass_name, eq_con_name,
     -- ** Type constructors
     unit_tycon_name, fun_tycon_name, list_tycon_name, tuple_tycon_name, unboxed_singleton_tycon_name,
     unit_tycon, fun_tycon, list_tycon, tuple_tycon, unboxed_singleton_tycon,
@@ -669,15 +669,7 @@ data TyVarBind l
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | An explicit kind annotation.
-data Kind l
-    = KindStar  l                    -- ^ @*@, the kind of types
-    | KindFn    l (Kind l) (Kind l)  -- ^ @->@, the kind of a type constructor
-    | KindParen l (Kind l)           -- ^ a parenthesised kind
-    | KindVar   l (QName l)          -- ^ @k@, a kind variable (-XPolyKinds)
-    | KindApp   l (Kind l) (Kind l)  -- ^ @k1 k2@
-    | KindTuple l [Kind l]           -- ^ @'(k1,k2,k3)@, a promoted tuple
-    | KindList  l (Kind l)           -- ^ @'[k1]@, a promoted list literal
-  deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
+type Kind l = Type l
 
 
 -- | A functional dependency, given on the form
@@ -1033,6 +1025,9 @@ unit_con l = Con l $ unit_con_name l
 
 tuple_con :: l -> Boxed -> Int -> Exp l
 tuple_con l b i = Con l (tuple_con_name l b i)
+
+eq_con_name :: l -> QName l
+eq_con_name l = UnQual l (Symbol l "~")
 
 unboxed_singleton_con :: l -> Exp l
 unboxed_singleton_con l = Con l (unboxed_singleton_con_name l)
@@ -1544,22 +1539,6 @@ instance Annotated TyVarBind where
     ann (UnkindedVar l _)   = l
     amap f (KindedVar   l n k) = KindedVar   (f l) n k
     amap f (UnkindedVar l n)   = UnkindedVar (f l) n
-
-instance Annotated Kind where
-    ann (KindStar l) = l
-    ann (KindFn   l _ _) = l
-    ann (KindParen l _)  = l
-    ann (KindVar l _)    = l
-    ann (KindApp l _ _)  = l
-    ann (KindTuple l _)  = l
-    ann (KindList  l _)  = l
-    amap f (KindStar l) = KindStar (f l)
-    amap f (KindFn   l k1 k2) = KindFn (f l) k1 k2
-    amap f (KindParen l k) = KindParen (f l) k
-    amap f (KindVar l n) = KindVar (f l) n
-    amap f (KindApp l k1 k2) = KindApp (f l) k1 k2
-    amap f (KindTuple l ks) = KindTuple (f l) ks
-    amap f (KindList  l ks) = KindList  (f l) ks
 
 instance Annotated FunDep where
     ann (FunDep l _ _) = l

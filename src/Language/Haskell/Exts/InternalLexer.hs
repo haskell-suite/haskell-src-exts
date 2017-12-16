@@ -94,7 +94,6 @@ data Token
         | DoubleArrow
         | Minus
         | Exclamation
-        | Star
         | LeftArrowTail         -- -<
         | RightArrowTail        -- >-
         | LeftDblArrowTail      -- -<<
@@ -231,7 +230,6 @@ reserved_ops = [
  ( "@:", (RPCAt,        Just (Any [RegularPatterns])) ),
  ( "~",  (Tilde,        Nothing) ),
  ( "=>", (DoubleArrow,  Nothing) ),
- ( "*",  (Star,         Just (Any [KindSignatures])) ),
  -- Parallel arrays
  ( "[:", (ParArrayLeftSquare,   Just (Any [ParallelArrays])) ),
  ( ":]", (ParArrayRightSquare,  Just (Any [ParallelArrays])) ),
@@ -249,7 +247,6 @@ reserved_ops = [
  ( "\x291a",    (RightArrowTail,    Just (All [UnicodeSyntax, Arrows])) ),
  ( "\x291b",    (LeftDblArrowTail,  Just (All [UnicodeSyntax, Arrows])) ),
  ( "\x291c",    (RightDblArrowTail, Just (All [UnicodeSyntax, Arrows])) ),
- ( "\x2605",    (Star,              Just (All [UnicodeSyntax, KindSignatures])) ),
  ( "\x2200",    (KW_Forall,         Just (All [UnicodeSyntax, ExplicitForAll])) )
  ]
 
@@ -1341,7 +1338,6 @@ showToken t = case t of
   DoubleArrow       -> "=>"
   Minus             -> "-"
   Exclamation       -> "!"
-  Star              -> "*"
   LeftArrowTail     -> "-<"
   RightArrowTail    -> ">-"
   LeftDblArrowTail  -> "-<<"

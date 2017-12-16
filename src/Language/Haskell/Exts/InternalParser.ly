@@ -160,7 +160,6 @@ Reserved operators
 >       '=>'    { Loc $$ DoubleArrow }
 >       '-'     { Loc $$ Minus }
 >       '!'     { Loc $$ Exclamation }  -- 50
->       '*'     { Loc $$ Star }
 
 Arrows
 
@@ -303,7 +302,6 @@ Pragmas
 > %partial ngparsePragmasAndModuleHead moduletophead
 > %partial ngparsePragmasAndModuleName moduletopname
 > %tokentype { Loc Token }
-> %expect 13
 > %%
 
 -----------------------------------------------------------------------------
@@ -938,12 +936,7 @@ Type equality contraints need the TypeFamilies extension.
 
 > dtype :: { PType L }
 >       : btype                         { splitTilde $1 }
->       | btype qtyconop dtype          { TyInfix ($1 <> $3) $1 $2 $3 }
->       | btype qtyvarop dtype          { TyInfix ($1 <> $3) $1 (UnpromotedName (ann $2) $2) $3 } -- FIXME
 >       | btype '->' ctype              { TyFun ($1 <> $3 <** [$2]) (splitTilde $1) $3 }
-       | btype '~' btype               {% do { checkEnabledOneOf [TypeFamilies, GADTs] ;
-                                               let {l = $1 <> $3 <** [$2]};
-                                               return $ TyPred l $ EqualP l $1 $3 } }
 
 Implicit parameters can occur in normal types, as well as in contexts.
 
@@ -958,10 +951,28 @@ Implicit parameters can occur in normal types, as well as in contexts.
 >       : btype                         {% checkType (splitTilde $1) }
 > trueatype :: { Type L }
 >       : atype                         {% checkType $1 }
+> truebtype_no_ops :: { Type L }
+>       : btype_no_ops                  {% checkType (splitTilde $1) }
 
-> btype :: { PType L }
->       : btype atype                   { TyApp ($1 <> $2) $1 $2 }
+> btype_no_ops :: { PType L }
+>       : btype_no_ops atype            { TyApp ($1 <> $2) $1 $2 }
 >       | atype                         { $1 }
+
+
+> btype :: {PType L}
+>       : tyapps                        { TyApps noSrcSpan (splitTildeApps (reverse $1)) }
+
+>
+> tyapps :: { [AppType L]  }   -- NB: This list is reversed
+>        : tyapp                         { [$1] }
+>        | tyapps tyapp                  { ($2 : $1) }
+
+> tyapp :: { AppType L }
+>        : atype                         { AppPrefix $1 }
+>        | qconop                        { AppInfix $1 }
+>        |  '`' tyvar '`'                { AppInfix (UnQual ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3]) $2) }
+>       | VARQUOTE gconsym              { AppInfix $2 }
+>        | VARQUOTE qvarop                { AppInfix $2 }
 
 UnboxedTuples requires the extension, but that will be handled through
 the (# and #) lexemes. Kinds will be handled at the kind rule.
@@ -1056,6 +1067,9 @@ Equality constraints require the TypeFamilies extension.
 > context :: { PContext L }
 >       : btype '=>'                    {% checkPContext $ (amap (\l -> l <++> nIS $2 <** (srcInfoPoints l ++ [$2]))) (splitTilde $1) }
 
+> context_no_ops :: { PContext L }
+>       : btype_no_ops '=>'             {% checkPContext $ (amap (\l -> l <++> nIS $2 <** (srcInfoPoints l ++ [$2]))) (splitTilde $1) }
+
 > types :: { ([PType L],[S]) }
 >       : types1 ',' ctype              { ($3 : fst $1, $2 : snd $1)  }
 
@@ -1138,7 +1152,7 @@ To allow the empty case we need the EmptyDataDecls extension.
 >       | constr                        { ([$1],[],ann $1) }
 
 > constr :: { QualConDecl L }
->       : forall context constr1        {% do { checkEnabled ExistentialQuantification ;
+>       : forall context_no_ops constr1        {% do { checkEnabled ExistentialQuantification ;
 >                                                ctxt <- checkContext (Just $2) ;
 >                                                let {(mtvs,ss,ml) = $1} ;
 >                                                return $ QualConDecl (ml <?+> ann $3 <** ss) mtvs ctxt $3 } }
@@ -1153,14 +1167,14 @@ as qcon and then check separately that they are truly unqualified.
 
 > constr1 :: { ConDecl L }
 >       : scontype                      { let (n,ts,l) = $1 in ConDecl l n ts }
->       | truebtype conop truebtype     { InfixConDecl ($1 <> $3) $1 $2 $3 }
+>       | truebtype_no_ops conop truebtype_no_ops  { InfixConDecl ($1 <> $3) $1 $2 $3 }
 >       | qcon '{' '}'                  {% do { c <- checkUnQual $1; return $ RecDecl (ann $1 <++> nIS $3 <** [$2,$3]) c [] } }
 >       | qcon '{' fielddecls '}'       {% do { c <- checkUnQual $1;
 >                                               return $ RecDecl (ann $1 <++> nIS $4 <** ($2:reverse (snd $3) ++ [$4])) c (reverse (fst $3)) } }
 
 > scontype :: { (Name L, [Type L], L) }
->       : btype                         {% do { (c,ts) <- splitTyConApp $1;
->                                               return (c, ts, ann $1) } }
+>       : btype_no_ops                      {% do { (c,ts) <- splitTyConApp $1;
+>                                            return (c, ts, ann $1) } }
 
 > fielddecls :: { ([FieldDecl L],[S]) }
 >       : fielddecls ',' fielddecl      { ($3 : fst $1, $2 : snd $1) }
@@ -1199,35 +1213,7 @@ as qcon and then check separately that they are truly unqualified.
 Kinds
 
 > kind :: { Kind L }
->       : kind1                 {% checkEnabled KindSignatures >> return $1 }
-
-> kind1 :: { Kind L }
->       : bkind                 { $1 }
->       | bkind '->' kind1      { KindFn ($1 <> $3 <** [$2]) $1 $3 }
-
-> bkind :: { Kind L }
->       : akind                 { $1 }
->       | bkind akind           { KindApp ($1 <> $2) $1 $2 }
-
-> akind :: { Kind L }
->       : '*'                   { KindStar  (nIS $1) }
->       | '(' kind1 ')'         { KindParen ($1 <^^> $3 <** [$1,$3]) $2 }
->       | pkind                 {% checkKind $1 >> return $1 }
->       | qvarid                {% checkEnabled PolyKinds >> return (KindVar (ann $1) $1) }
-
-KindParen covers 1-tuples, KindVar l  while KindTuple is for pairs
-
-> pkind :: { Kind L }
->         : qtyconorcls         { KindVar (ann $1) $1 }
->         | '(' ')'             { let l = $1 <^^> $2 in KindVar l (unit_tycon_name l) }
->         | '(' kind ',' comma_kinds1  ')'
->             { KindTuple ($1 <^^> $5 <** ($1:$3:reverse ($5:snd $4))) ($2:reverse (fst $4)) }
->         | '[' kind ']'      { KindList  (($1 <^^> $3) <** [$1, $3]) $2 }
-
-> comma_kinds1 :: { ([Kind L], [S]) }
->      : kind1                   { ([$1], []) }
->      | kind1 ',' comma_kinds1  { ($1 : (fst $3), $2 : (snd $3)) }
-
+>       : truectype                 {% checkEnabled KindSignatures >> return $1 }
 
 > optkind :: { (Maybe (Kind L), [S]) }
 >       : {-empty-}             { (Nothing,[]) }
@@ -2009,7 +1995,6 @@ Implicit parameter
 >       : VARSYM                { let Loc l (VarSym v) = $1 in Symbol (nIS l) v }
 >       | '!'                   { bang_name (nIS $1) }
 >       | '.'                   { dot_name  (nIS $1) }
->       | '*'                   { star_name (nIS $1) }
 
 > qvarsym1 :: { QName L }
 >       : QVARSYM               { let {Loc l (QVarSym q) = $1; nis = nIS l} in Qual nis (ModuleName nis (fst q)) (Symbol nis (snd q)) }
@@ -2148,7 +2133,6 @@ Miscellaneous (mostly renamings)
 > tyvarsym :: { Name L }
 > tyvarsym : VARSYM              { let Loc l (VarSym x) = $1 in Symbol (nIS l) x }
 >          | '-'                 { Symbol (nIS $1) "-" }
->          | '*'                 { Symbol (nIS $1) "*" }
 
 > impdeclsblock :: { ([ImportDecl L],[S],L) }
 >               : '{'  optsemis impdecls optsemis '}'         { let (ids, ss) = $3 in (ids, $1 : reverse $2 ++ ss ++ reverse $4 ++ [$5], $1 <^^> $5) }

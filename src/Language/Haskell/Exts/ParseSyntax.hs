@@ -306,6 +306,7 @@ data PType l
      | TyList  l (PType l)                      -- ^ list syntax, e.g. [a], as opposed to [] a
      | TyParArray l (PType l)                   -- ^ parallel array syntax, e.g. [:a:]
      | TyApp   l (PType l) (PType l)            -- ^ application of a type constructor
+     | TyApps l [(AppType l)]
      | TyVar   l (Name l)                       -- ^ type variable
      | TyCon   l (QName l)                      -- ^ named type or type constructor
      | TyParen l (PType l)                      -- ^ type surrounded by parentheses
@@ -317,6 +318,9 @@ data PType l
      | TyBang l (BangType l) (Unpackedness l) (PType l) -- ^ Strict type marked with \"@!@\" or type marked with UNPACK pragma.
      | TyWildCard l (Maybe (Name l))            -- ^ Type wildcard
      | TyQuasiQuote l String String             -- ^ @[qq| |]@
+  deriving (Eq, Show, Functor)
+
+data AppType l = AppInfix (QName l) | AppPrefix (PType l)
   deriving (Eq, Show, Functor)
 
 instance Annotated PType where
