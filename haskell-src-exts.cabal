@@ -41,6 +41,11 @@ Extra-Source-Files:
                         tests/Runner.hs
                         tests/Extensions.hs
 
+Flag roundtrip {
+  Description: Build roundtripping executables
+  Default:     False
+}
+
 Library
   Default-language:     Haskell98
   Build-Tools:          happy >= 1.19
@@ -93,3 +98,71 @@ Test-Suite test
                        filepath,
                        directory,
                        pretty-show == 1.6.10
+
+executable roundtrip
+  main-is: Roundtrip.hs
+  hs-source-dirs: tests
+  default-language:    Haskell2010
+  if impl (ghc >= 7.10.2) && flag (roundtrip)
+    build-depends:
+                 HUnit
+               , base
+               , containers
+               , directory
+               , filemanip
+               , filepath
+               , ghc
+               , ghc-exactprint
+               , ghc-paths
+               , syb
+               , temporary
+               , time
+               , haskell-src-exts
+    if impl (ghc >= 7.11)
+        build-depends: ghc-boot
+    buildable: True
+  else
+    buildable: False
+  ghc-options:
+    -threaded -Wall
+
+executable static
+  main-is: Static.hs
+  hs-source-dirs: tests
+  default-language:    Haskell2010
+  if flag (roundtrip)
+    build-depends: base
+                 , directory
+                 , filemanip
+                 , filepath
+                 , ghc
+                 , Diff
+    buildable: True
+    if impl (ghc >= 7.11)
+        build-depends: ghc-boot
+  else
+    buildable: False
+  ghc-options:
+    -threaded -Wall
+
+executable prepare-hackage
+  main-is: PrepareHackage.hs
+  hs-source-dirs: tests
+  default-language:    Haskell2010
+  if flag (roundtrip)
+    build-depends: base
+                 , containers
+                 , directory
+                 , filemanip
+                 , filepath
+                 , ghc       >= 7.10.2
+                 , ghc-paths >= 0.1
+                 , HUnit
+                 , text   >= 1.2.2
+                 , turtle >= 1.3.0
+    buildable: True
+    if impl (ghc >= 7.11)
+        build-depends: ghc-boot
+  else
+    buildable: False
+  GHC-Options:         -threaded
