@@ -174,6 +174,7 @@ baseFixities = preludeFixities ++ concat
     ,infixr_ 3 ["&&&","***"]
     ,infixr_ 2 ["+++","|||"]
     ,infixr_ 1 ["<=<",">=>",">>>","<<<","^<<","<<^","^>>",">>^"]
+    ,infixl_ 1 ["&"]
     ,infixl_ 0 ["`on`"]
     ,infixr_ 0 ["`par`","`pseq`"]
     ]
