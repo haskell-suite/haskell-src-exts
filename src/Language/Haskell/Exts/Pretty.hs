@@ -31,7 +31,11 @@ import qualified Language.Haskell.Exts.ParseSyntax as P
 
 import Language.Haskell.Exts.SrcLoc hiding (loc)
 
-import Prelude hiding (exp)
+import Prelude hiding ( exp
+#if MIN_VERSION_base(4,11,0)
+                      , (<>)
+#endif
+                      )
 import qualified Text.PrettyPrint as P
 import Data.List (intersperse)
 import Data.Maybe (isJust , fromMaybe)
