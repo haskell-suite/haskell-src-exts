@@ -46,11 +46,9 @@ import Language.Haskell.Exts.Extension -- (Extension, impliesExts, haskell2010)
 import Data.List (intercalate)
 import Control.Applicative
 import Control.Monad (when, liftM, ap)
-import Data.Monoid hiding ((<>))
-#if MIN_VERSION_base(4,9,0)
-import Data.Semigroup
-#endif
--- To avoid import warnings for Control.Applicative and Data.Monoid
+import Data.Monoid (Monoid(..))
+import Data.Semigroup (Semigroup(..))
+-- To avoid import warnings for Control.Applicative, Data.Monoid, and Data.Semigroup
 import Prelude
 
 -- | Class providing function for parsing at many different types.
@@ -102,23 +100,19 @@ instance Monad ParseResult where
   ParseOk x           >>= f = f x
   ParseFailed loc msg >>= _ = ParseFailed loc msg
 
-#if MIN_VERSION_base(4,9,0)
 instance Semigroup m => Semigroup (ParseResult m) where
  ParseOk x <> ParseOk y = ParseOk $ x <> y
  ParseOk _ <> err       = err
  err       <> _         = err -- left-biased
-#endif
 
 instance ( Monoid m
-#if MIN_VERSION_base(4,9,0) && !(MIN_VERSION_base(4,11,0))
+#if !(MIN_VERSION_base(4,11,0))
          , Semigroup m
 #endif
          ) => Monoid (ParseResult m) where
   mempty = ParseOk mempty
 #if !(MIN_VERSION_base(4,11,0))
-  ParseOk x `mappend` ParseOk y = ParseOk $ x `mappend` y
-  ParseOk _ `mappend` err       = err
-  err       `mappend` _         = err -- left-biased
+  mappend = (<>)
 #endif
 
 -- internal version
