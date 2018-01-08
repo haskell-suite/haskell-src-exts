@@ -1,4 +1,5 @@
 > {
+> {-# LANGUAGE CPP #-}
 > {-# OPTIONS_HADDOCK hide #-}
 > -----------------------------------------------------------------------------
 > -- |
@@ -40,6 +41,9 @@
 > import Control.Monad ( liftM, (<=<), when )
 > import Control.Applicative ( (<$>) )
 > import Data.Maybe
+> #if MIN_VERSION_base(4,11,0)
+> import Prelude hiding ((<>))
+> #endif
 import Debug.Trace (trace)
 
 > }
