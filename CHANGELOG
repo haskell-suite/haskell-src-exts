@@ -1,3 +1,8 @@
+1.20.1 --> 1.20.2
+=================
+* Add fixity of (&)
+* GHC 8.4.1 compatability
+
 1.20.0 --> 1.20.1
 ===================
 * Fix two test failures
