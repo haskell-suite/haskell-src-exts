@@ -1,4 +1,3 @@
-{-# LANGUAGE CPP #-}
 {-# OPTIONS_HADDOCK hide #-}
 -----------------------------------------------------------------------------
 -- |
@@ -105,15 +104,9 @@ instance Semigroup m => Semigroup (ParseResult m) where
  ParseOk _ <> err       = err
  err       <> _         = err -- left-biased
 
-instance ( Monoid m
-#if !(MIN_VERSION_base(4,11,0))
-         , Semigroup m
-#endif
-         ) => Monoid (ParseResult m) where
+instance ( Monoid m , Semigroup m) => Monoid (ParseResult m) where
   mempty = ParseOk mempty
-#if !(MIN_VERSION_base(4,11,0))
   mappend = (<>)
-#endif
 
 -- internal version
 data ParseStatus a = Ok ParseState a | Failed SrcLoc String
