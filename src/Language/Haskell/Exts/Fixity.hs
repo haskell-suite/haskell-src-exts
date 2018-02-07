@@ -161,6 +161,7 @@ preludeFixities = concat
 baseFixities :: [Fixity]
 baseFixities = preludeFixities ++ concat
     [infixl_ 9 ["!","//","!:"]
+    ,infixr_ 9 ["`Compose`"]
     ,infixl_ 8 ["`shift`","`rotate`","`shiftL`","`shiftR`","`rotateL`","`rotateR`"]
     ,infixl_ 7 [".&.","%"]
     ,infixr_ 6 ["<>"]
@@ -169,8 +170,8 @@ baseFixities = preludeFixities ++ concat
     ,infixl_ 5 [".|."]
     ,infixr_ 5 ["+:+","<++","<+>","<|"] -- fixity conflict for +++ between ReadP and Arrow
     ,infix_  5 ["\\\\"]
-    ,infixl_ 4 ["<**>","$>","<$!>"]
-    ,infix_  4 ["`elemP`","`notElemP`"]
+    ,infixl_ 4 ["<**>","$>","<$","<$!>"]
+    ,infix_  4 ["`elemP`","`notElemP`",":~:",":~~:"]
     ,infixl_ 3 ["<|>"]
     ,infixr_ 3 ["&&&","***"]
     ,infixr_ 2 ["+++","|||"]
