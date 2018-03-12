@@ -101,6 +101,8 @@ ParseOk
                    }
                  "CmmEntry")
               Nothing
+              Nothing
+              Nothing
               (TyFun
                  SrcSpanInfo
                    { srcInfoSpan = SrcSpan "tests/examples/Unpack.hs" 4 21 4 55
