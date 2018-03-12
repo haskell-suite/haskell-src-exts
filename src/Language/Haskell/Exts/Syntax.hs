@@ -558,7 +558,9 @@ data FieldDecl l = FieldDecl l [Name l] (Type l)
 -- then @'Maybe' ['FieldDecl' l]@ is 'Nothing', and the whole constructor's
 -- type (such as @Int -> Bool -> Ty@) is stored in the last 'Type' field.
 data GadtDecl l
-    = GadtDecl l (Name l) (Maybe [FieldDecl l]) (Type l)
+    = GadtDecl l (Name l)
+        {-forall-} (Maybe [TyVarBind l]) {- . -} (Maybe (Context l))
+        {- => -} (Maybe [FieldDecl l]) (Type l)
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | Declarations inside a class declaration.
@@ -1434,8 +1436,8 @@ instance Annotated FieldDecl where
     amap f (FieldDecl l ns t) = FieldDecl (f l) ns t
 
 instance Annotated GadtDecl where
-    ann (GadtDecl l _  _ _) = l
-    amap f (GadtDecl l n t1 t2) = GadtDecl (f l) n t1 t2
+    ann (GadtDecl l _ _ _ _ _) = l
+    amap f (GadtDecl l n t1 t2 t3 t4) = GadtDecl (f l) n t1 t2 t3 t4
 
 instance Annotated ClassDecl where
     ann (ClsDecl    l _)      = l

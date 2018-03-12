@@ -769,12 +769,12 @@ instance  Pretty (QualConDecl l) where
                 myFsep [ppForall tvs, maybePP pretty ctxt, pretty con]
 
 instance  Pretty (GadtDecl l) where
-        pretty (GadtDecl _pos name names ty) =
+        pretty (GadtDecl _pos name tvs ctxt names ty) =
             case names of
                 Nothing ->
                     myFsep [pretty name, text "::", pretty ty]
                 Just ts' ->
-                    myFsep [pretty name, text "::" ,
+                    myFsep [pretty name, text "::" , ppForall tvs, maybePP pretty ctxt,
                          braceList . map pretty $ ts', text "->", pretty ty]
 
 instance  Pretty (ConDecl l) where

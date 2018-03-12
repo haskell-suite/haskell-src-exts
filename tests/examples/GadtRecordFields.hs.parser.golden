@@ -83,6 +83,8 @@ ParseOk
                    , srcInfoPoints = []
                    }
                  "TCon")
+              Nothing
+              Nothing
               (Just
                  [ FieldDecl
                      SrcSpanInfo
@@ -186,6 +188,8 @@ ParseOk
                    , srcInfoPoints = []
                    }
                  "TCon2")
+              Nothing
+              Nothing
               Nothing
               (TyCon
                  SrcSpanInfo
