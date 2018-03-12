@@ -370,6 +370,8 @@ ParseOk
                    }
                  "S3")
               Nothing
+              Nothing
+              Nothing
               (TyFun
                  SrcSpanInfo
                    { srcInfoSpan = SrcSpan "tests/examples/DsStrictData.hs" 12 9 12 23
@@ -665,6 +667,8 @@ ParseOk
                    , srcInfoPoints = []
                    }
                  "L2")
+              Nothing
+              Nothing
               Nothing
               (TyFun
                  SrcSpanInfo

@@ -3238,6 +3238,8 @@ ParseOk
                    }
                  "MkT")
               Nothing
+              Nothing
+              Nothing
               (TyFun
                  SrcSpanInfo
                    { srcInfoSpan =

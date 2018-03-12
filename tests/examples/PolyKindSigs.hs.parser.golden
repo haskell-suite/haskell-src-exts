@@ -118,6 +118,8 @@ ParseOk
                    }
                  "Foo")
               Nothing
+              Nothing
+              Nothing
               (TyApp
                  SrcSpanInfo
                    { srcInfoSpan = SrcSpan "tests/examples/PolyKindSigs.hs" 8 10 8 15

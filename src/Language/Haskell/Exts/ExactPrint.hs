@@ -1361,7 +1361,7 @@ instance ExactP ConDecl where
     RecDecl l n fds -> exactP n >> curlyList (srcInfoPoints l) fds
 
 instance ExactP GadtDecl where
-  exactP (GadtDecl l n ns' t) =
+  exactP (GadtDecl l n _mtvs mctxt ns' t) =
     case ns' of
         Nothing ->
             case srcInfoPoints l of
@@ -1375,6 +1375,7 @@ instance ExactP GadtDecl where
                 (a:b:c:d:rest) -> do
                     exactPC n
                     printStringAt (pos a) "::"
+                    maybeEP exactPC mctxt
                     printStringAt (pos b) "{"
                     printInterleaved' (zip rest (repeat ",")) ts
                     printStringAt (pos c) "}"

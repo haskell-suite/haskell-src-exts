@@ -156,6 +156,8 @@ ParseOk
                    }
                  "VCons")
               Nothing
+              Nothing
+              Nothing
               (TyForall
                  SrcSpanInfo
                    { srcInfoSpan =
@@ -459,6 +461,8 @@ ParseOk
                    , srcInfoPoints = []
                    }
                  "VCons")
+              Nothing
+              Nothing
               Nothing
               (TyForall
                  SrcSpanInfo
@@ -764,6 +768,8 @@ ParseOk
                    }
                  "VCons")
               Nothing
+              Nothing
+              Nothing
               (TyForall
                  SrcSpanInfo
                    { srcInfoSpan =
@@ -1067,6 +1073,8 @@ ParseOk
                    , srcInfoPoints = []
                    }
                  "VCons")
+              Nothing
+              Nothing
               Nothing
               (TyForall
                  SrcSpanInfo

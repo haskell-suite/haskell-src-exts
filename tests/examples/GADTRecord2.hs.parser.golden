@@ -1,0 +1,137 @@
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/GADTRecord2.hs" 1 1 5 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/GADTRecord2.hs" 1 1 1 1
+            , SrcSpan "tests/examples/GADTRecord2.hs" 3 1 3 1
+            , SrcSpan "tests/examples/GADTRecord2.hs" 3 1 3 1
+            , SrcSpan "tests/examples/GADTRecord2.hs" 3 1 3 1
+            , SrcSpan "tests/examples/GADTRecord2.hs" 5 1 5 1
+            , SrcSpan "tests/examples/GADTRecord2.hs" 5 1 5 1
+            ]
+        }
+      Nothing
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/GADTRecord2.hs" 1 1 1 23
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/GADTRecord2.hs" 1 1 1 13
+                , SrcSpan "tests/examples/GADTRecord2.hs" 1 20 1 23
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/GADTRecord2.hs" 1 14 1 19
+                , srcInfoPoints = []
+                }
+              "GADTs"
+          ]
+      ]
+      []
+      [ GDataDecl
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/GADTRecord2.hs" 3 1 5 0
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/GADTRecord2.hs" 3 8 3 13
+                , SrcSpan "tests/examples/GADTRecord2.hs" 4 3 4 3
+                , SrcSpan "tests/examples/GADTRecord2.hs" 5 1 5 0
+                ]
+            }
+          (DataType
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/GADTRecord2.hs" 3 1 3 5
+               , srcInfoPoints = []
+               })
+          Nothing
+          (DHead
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/GADTRecord2.hs" 3 6 3 7
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/GADTRecord2.hs" 3 6 3 7
+                  , srcInfoPoints = []
+                  }
+                "T"))
+          Nothing
+          [ GadtDecl
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/GADTRecord2.hs" 4 3 4 35
+                , srcInfoPoints =
+                    [ SrcSpan "tests/examples/GADTRecord2.hs" 4 5 4 7
+                    , SrcSpan "tests/examples/GADTRecord2.hs" 4 14 4 15
+                    , SrcSpan "tests/examples/GADTRecord2.hs" 4 29 4 30
+                    , SrcSpan "tests/examples/GADTRecord2.hs" 4 31 4 33
+                    ]
+                }
+              (Ident
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/GADTRecord2.hs" 4 3 4 4
+                   , srcInfoPoints = []
+                   }
+                 "T")
+              Nothing
+              (Just
+                 (CxEmpty
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/GADTRecord2.hs" 4 8 4 13
+                      , srcInfoPoints =
+                          [ SrcSpan "tests/examples/GADTRecord2.hs" 4 8 4 9
+                          , SrcSpan "tests/examples/GADTRecord2.hs" 4 9 4 10
+                          , SrcSpan "tests/examples/GADTRecord2.hs" 4 11 4 13
+                          ]
+                      }))
+              (Just
+                 [ FieldDecl
+                     SrcSpanInfo
+                       { srcInfoSpan = SrcSpan "tests/examples/GADTRecord2.hs" 4 16 4 28
+                       , srcInfoPoints =
+                           [ SrcSpan "tests/examples/GADTRecord2.hs" 4 22 4 24 ]
+                       }
+                     [ Ident
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/GADTRecord2.hs" 4 16 4 21
+                           , srcInfoPoints = []
+                           }
+                         "field"
+                     ]
+                     (TyCon
+                        SrcSpanInfo
+                          { srcInfoSpan = SrcSpan "tests/examples/GADTRecord2.hs" 4 25 4 28
+                          , srcInfoPoints = []
+                          }
+                        (UnQual
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/GADTRecord2.hs" 4 25 4 28
+                             , srcInfoPoints = []
+                             }
+                           (Ident
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/GADTRecord2.hs" 4 25 4 28
+                                , srcInfoPoints = []
+                                }
+                              "Int")))
+                 ])
+              (TyCon
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/GADTRecord2.hs" 4 34 4 35
+                   , srcInfoPoints = []
+                   }
+                 (UnQual
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/GADTRecord2.hs" 4 34 4 35
+                      , srcInfoPoints = []
+                      }
+                    (Ident
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/GADTRecord2.hs" 4 34 4 35
+                         , srcInfoPoints = []
+                         }
+                       "T")))
+          ]
+          []
+      ]
+  , []
+  )

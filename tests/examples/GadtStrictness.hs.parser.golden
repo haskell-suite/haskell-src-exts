@@ -70,6 +70,8 @@ ParseOk
                    }
                  "X")
               Nothing
+              Nothing
+              Nothing
               (TyFun
                  SrcSpanInfo
                    { srcInfoSpan = SrcSpan "tests/examples/GadtStrictness.hs" 4 8 4 17

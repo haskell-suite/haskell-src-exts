@@ -1127,10 +1127,14 @@ GADTs - require the GADTs extension enabled, but we handle that at the calling s
 
 > gadtconstr :: { [GadtDecl L] }
 >       : qcon '::' truectype            {% do { c <- checkUnQual $1;
->                                                return [GadtDecl ($1 <> $3 <** [$2]) c Nothing $3] } }
+>                                                return [GadtDecl ($1 <> $3 <** [$2]) c Nothing Nothing Nothing $3] } }
+>       | qcon '::' context '{' fielddecls '}' '->' truectype
+>                                       {% do { c <- checkUnQual $1;
+>                                               ctxt <- checkContext (Just $3) ;
+>                                               return [GadtDecl ($1 <> $8 <** [$2,$4,$6,$7] ++ snd $5) c Nothing ctxt (Just (reverse $ fst $5)) $8] } }
 >       | qcon '::' '{' fielddecls '}' '->' truectype
 >                                       {% do { c <- checkUnQual $1;
->                                               return [GadtDecl ($1 <> $7 <** [$2,$3,$5,$6] ++ snd $4) c (Just (reverse $ fst $4)) $7] } }
+>                                               return [GadtDecl ($1 <> $7 <** [$2,$3,$5,$6] ++ snd $4) c Nothing Nothing (Just (reverse $ fst $4)) $7] } }
 
 To allow the empty case we need the EmptyDataDecls extension.
 > constrs0 :: { ([QualConDecl L],[S],Maybe L) }
