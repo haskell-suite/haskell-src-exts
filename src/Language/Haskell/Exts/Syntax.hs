@@ -241,7 +241,7 @@ data ImportDecl l = ImportDecl
 -- | An explicit import specification list.
 data ImportSpecList l
     = ImportSpecList l Bool [ImportSpec l]
-            -- A list of import specifications.
+            -- ^ A list of import specifications.
             -- The 'Bool' is 'True' if the names are excluded
             -- by @hiding@.
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
