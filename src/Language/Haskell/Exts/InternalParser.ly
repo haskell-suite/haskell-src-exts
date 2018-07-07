@@ -183,6 +183,7 @@ Template Haskell
 
 >       IDSPLICE        { Loc _ (THIdEscape _) }   -- $x
 >       '$('            { Loc $$ THParenEscape } -- 60
+>       '$$('           { Loc $$ THTypedParenEscape } -- 60
 >       '[|'            { Loc $$ THExpQuote }
 >       '[p|'           { Loc $$ THPatQuote }
 >       '[t|'           { Loc $$ THTypQuote }
@@ -662,6 +663,7 @@ CHANGE: Arbitrary top-level expressions are considered implicit splices
 >                  }
 
        | '$(' trueexp ')'  { let l = $1 <^^> $3 <** [$1,$3] in SpliceDecl l $ ParenSplice l $2 }
+       | '$$(' trueexp ')' { let l = $1 <^^> $3 <** [$1,$3] in SpliceDecl l $ ParenSplice l $2 }
 
 These require the ForeignFunctionInterface extension, handled by the
 lexer through the 'foreign' (and 'export') keyword.
@@ -983,6 +985,7 @@ the (# and #) lexemes. Kinds will be handled at the kind rule.
 >       | '(' ctype ')'                 { TyParen ($1 <^^> $3 <** [$1,$3]) $2 }
 >       | '(' ctype '::' kind ')'       { TyKind  ($1 <^^> $5 <** [$1,$3,$5]) $2 $4 }
 >       | '$(' trueexp ')'              { let l = ($1 <^^> $3 <** [$1,$3]) in TySplice l $ ParenSplice l $2 }
+>       | '$$(' trueexp ')'             { let l = ($1 <^^> $3 <** [$1,$3]) in TySplice l $ ParenSplice l $2 }
 >       | IDSPLICE                      { let Loc l (THIdEscape s) = $1 in TySplice (nIS l) $ IdSplice (nIS l) s }
 >       | '_'                           { TyWildCard (nIS $1) Nothing }
 >       | QUASIQUOTE                    { let Loc l (THQuasiQuote (n,q)) = $1 in TyQuasiQuote (nIS l) n q }
@@ -1519,6 +1522,7 @@ thing we need to look at here is the erpats that use no non-standard lexemes.
 Template Haskell - all this is enabled in the lexer.
 >       | IDSPLICE                      { let Loc l (THIdEscape s) = $1 in SpliceExp (nIS l) $ IdSplice (nIS l) s }
 >       | '$(' trueexp ')'              { let l = ($1 <^^> $3 <** [$1,$3]) in SpliceExp l $ ParenSplice l $2 }
+>       | '$$(' trueexp ')'             { let l = ($1 <^^> $3 <** [$1,$3]) in SpliceExp l $ ParenSplice l $2 }
 >       | '[|' trueexp '|]'             { let l = ($1 <^^> $3 <** [$1,$3]) in BracketExp l $ ExpBracket l $2 }
 >       | '[p|' exp0 '|]'               {% do { p <- checkPattern $2;
 >                                               let {l = ($1 <^^> $3 <** [$1,$3]) };

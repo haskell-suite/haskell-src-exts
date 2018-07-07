@@ -108,6 +108,7 @@ data Token
         | THCloseQuote          -- |]
         | THIdEscape (String)   -- dollar x
         | THParenEscape         -- dollar (
+        | THTypedParenEscape    -- dollar dollar (
         | THVarQuote            -- 'x (but without the x)
         | THTyQuote             -- ''T (but without the T)
         | THQuasiQuote (String,String)  -- [$...|...]
@@ -716,6 +717,10 @@ lexStdToken = do
                         discard 2
                         return THCloseQuote
 
+        '$':'$':c:_
+                | c == '(' && TemplateHaskell `elem` exts -> do
+                        discard 3
+                        return THTypedParenEscape
         '$':c:_ | isLower c && TemplateHaskell `elem` exts -> do
                         discard 1
                         id <- lexWhile isIdent
@@ -1353,6 +1358,7 @@ showToken t = case t of
   THCloseQuote      -> "|]"
   THIdEscape s      -> '$':s
   THParenEscape     -> "$("
+  THTypedParenEscape -> "$$("
   THVarQuote        -> "'"
   THTyQuote         -> "''"
   THQuasiQuote (n,q) -> "[$" ++ n ++ "|" ++ q ++ "]"
