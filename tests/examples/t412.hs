@@ -1,0 +1,8 @@
+{-# LANGUAGE TypeInType #-}
+
+module Typeintype
+       ( App ) where
+
+import Data.Kind
+
+data App (f :: k -> *)
