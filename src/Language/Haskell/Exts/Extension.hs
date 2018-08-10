@@ -546,6 +546,8 @@ data KnownExtension =
 
   | UnboxedSums
 
+  | TypeInType
+
   deriving (Show, Read, Eq, Ord, Enum, Bounded, Data, Typeable)
 
 -- | Certain extensions imply other extensions, and this function
@@ -581,6 +583,8 @@ impliesExts = go
                     ImpredicativeTypes   -> [ExplicitForAll]
                     PolyKinds           -> [KindSignatures]
                     TypeFamilyDependencies -> [TypeFamilies]
+                    TypeInType          -> [PolyKinds, DataKinds, KindSignatures]
+                    TypeOperators       -> [ExplicitNamespaces]
                     -- Deprecations
                     RecordPuns          -> [NamedFieldPuns]
                     PatternSignatures   -> [ScopedTypeVariables]
