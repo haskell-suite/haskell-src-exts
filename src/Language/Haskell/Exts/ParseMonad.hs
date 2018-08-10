@@ -76,7 +76,7 @@ data ParseResult a
     | ParseFailed SrcLoc String
                 -- ^ The parse failed at the specified
                 -- source location, with an error message.
-    deriving Show
+    deriving (Show, Ord, Eq)
 
 -- | Retrieve the result of a successful parse, throwing an
 --   error if the parse is actually not successful.
