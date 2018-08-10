@@ -464,6 +464,7 @@ ParseOk
           Nothing
           Nothing
           Nothing
+          Nothing
           (TyFun
              SrcSpanInfo
                { srcInfoSpan =
@@ -601,6 +602,7 @@ ParseOk
                       , SrcSpan "tests/examples/PatternSynonyms3.hs" 16 22 16 24
                       ]
                   }))
+          Nothing
           (Just
              (CxSingle
                 SrcSpanInfo
@@ -988,6 +990,7 @@ ParseOk
                 }
               "SinglePair"
           ]
+          Nothing
           Nothing
           Nothing
           Nothing
@@ -1483,6 +1486,7 @@ ParseOk
           Nothing
           Nothing
           Nothing
+          Nothing
           (TyFun
              SrcSpanInfo
                { srcInfoSpan =
@@ -1776,6 +1780,7 @@ ParseOk
                       , SrcSpan "tests/examples/PatternSynonyms3.hs" 34 37 34 39
                       ]
                   }))
+          Nothing
           (Just
              (CxEmpty
                 SrcSpanInfo
@@ -1909,6 +1914,7 @@ ParseOk
                                     "Bool"))
                           ]
                       ]))))
+          Nothing
           Nothing
           (TyFun
              SrcSpanInfo
@@ -2215,6 +2221,7 @@ ParseOk
           Nothing
           Nothing
           Nothing
+          Nothing
           (TyApp
              SrcSpanInfo
                { srcInfoSpan =
@@ -2365,6 +2372,7 @@ ParseOk
                 }
               "D"
           ]
+          Nothing
           Nothing
           Nothing
           Nothing

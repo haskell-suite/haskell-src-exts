@@ -72,6 +72,7 @@ ParseOk
           Nothing
           Nothing
           Nothing
+          Nothing
           (TyCon
              SrcSpanInfo
                { srcInfoSpan = SrcSpan "tests/examples/T11727.hs" 5 16 5 19
