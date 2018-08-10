@@ -733,7 +733,7 @@ instance ExactP Decl where
         let pts = srcInfoPoints l
         printInterleaved' (zip pts (replicate (length pts - 1) "," ++ ["::"])) ns
         exactPC t
-    PatSynSig l ns dh c1 c2 t -> do
+    PatSynSig l ns dh c1 _ c2 t -> do
         let (pat:pts) = srcInfoPoints l
         printStringAt (pos pat) "pattern"
         printInterleaved' (zip pts (replicate (length ns - 1) "," ++ ["::"])) ns

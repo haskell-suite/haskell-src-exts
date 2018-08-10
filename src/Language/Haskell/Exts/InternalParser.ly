@@ -2091,25 +2091,31 @@ Pattern Synonyms
 > pattern_synonym_sig :: { Decl L }
 >       : 'pattern' con_list '::' pstype
 >             {% do { checkEnabled PatternSynonyms ;
->                     let {(qtvs, ps, prov, req, ty) = $4} ;
->                     let {sig = PatSynSig (nIS $1 <++> ann ty <** [$1] ++ fst $2 ++ [$3] ++ ps)  (snd $2) qtvs prov req ty} ;
+>                     let {(qtvs, ps, prov, req_vars, req, ty) = $4} ;
+>                     let {sig = PatSynSig (nIS $1 <++> ann ty <** [$1] ++ fst $2 ++ [$3] ++ ps)  (snd $2) qtvs prov req_vars req ty} ;
 >                     return sig } }
 
-> pstype :: { (Maybe [TyVarBind L], [S], Maybe (Context L), Maybe (Context L), Type L )}
+> pstype :: { (Maybe [TyVarBind L], [S], Maybe (Context L), Maybe [TyVarBind L]
+>                                       , Maybe (Context L), Type L )}
 >       :  'forall' ktyvars '.' pstype
->             { let (qtvs, ps, prov, req, ty) = $4
->                in (Just (reverse (fst $2) ++ fromMaybe [] qtvs), ($1 : $3 : ps), prov, req, ty) }
+>             { let (qtvs, ps, prov, req_vars, req, ty) = $4
+>                in (Just (reverse (fst $2) ++ fromMaybe [] qtvs), ($1 : $3 : ps), prov, req_vars, req, ty) }
 >       | context context type
 >             {% do { c1 <- checkContext (Just $1) ;
 >                     c2 <- checkContext (Just $2) ;
 >                     t  <- checkType $3 ;
->                     return $ (Nothing, [], c1, c2, t) }}
+>                     return $ (Nothing, [], c1, Nothing, c2, t) }}
+>       | context 'forall' ktyvars '.' context type
+>             {% do { c1 <- checkContext (Just $1) ;
+>                     c2 <- checkContext (Just $5) ;
+>                     t  <- checkType $6 ;
+>                     return $ (Nothing, [], c1, Just (reverse (fst $3)), c2, t) }}
 >       | context type
 >              {% do { c1 <- checkContext (Just $1);
 >                      t <- checkType $2;
->                      return (Nothing, [], c1, Nothing, t) } }
+>                      return (Nothing, [], c1, Nothing, Nothing, t) } }
 >       | type
->              {% checkType $1 >>= \t -> return (Nothing, [], Nothing, Nothing, t) }
+>              {% checkType $1 >>= \t -> return (Nothing, [], Nothing, Nothing, Nothing, t) }
 
 -----------------------------------------------------------------------------
 Deriving strategies

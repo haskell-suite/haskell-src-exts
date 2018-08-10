@@ -57,6 +57,7 @@ ParseOk
           Nothing
           Nothing
           Nothing
+          Nothing
           (TyCon
              SrcSpanInfo
                { srcInfoSpan =
@@ -105,6 +106,7 @@ ParseOk
                       , SrcSpan "tests/examples/PatternSynonymSignatures.hs" 6 19 6 21
                       ]
                   }))
+          Nothing
           (Just
              (CxEmpty
                 SrcSpanInfo
@@ -195,6 +197,7 @@ ParseOk
                             }
                           "a")
                    ])))
+          Nothing
           (Just
              (CxSingle
                 SrcSpanInfo
@@ -319,6 +322,7 @@ ParseOk
                           "b")
                    ])))
           Nothing
+          Nothing
           (TyCon
              SrcSpanInfo
                { srcInfoSpan =
@@ -400,6 +404,7 @@ ParseOk
                             }
                           "b")
                    ])))
+          Nothing
           (Just
              (CxEmpty
                 SrcSpanInfo
@@ -459,6 +464,7 @@ ParseOk
                       , SrcSpan "tests/examples/PatternSynonymSignatures.hs" 14 19 14 21
                       ]
                   }))
+          Nothing
           (Just
              (CxSingle
                 SrcSpanInfo

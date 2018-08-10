@@ -301,7 +301,9 @@ data Decl l
      -- ^ A Template Haskell splicing declaration
      | TypeSig      l [Name l] (Type l)
      -- ^ A type signature declaration
-     | PatSynSig    l [Name l] (Maybe [TyVarBind l]) (Maybe (Context l)) (Maybe (Context l)) (Type l)
+     | PatSynSig    l [Name l] (Maybe [TyVarBind l]) (Maybe (Context l))
+                               (Maybe [TyVarBind l]) (Maybe (Context l))
+                                                     (Type l)
      -- ^ A pattern synonym signature declation
      | FunBind      l [Match l]
      -- ^ A set of function binding clauses
@@ -1286,7 +1288,7 @@ instance Annotated Decl where
         DefaultDecl  l _                -> l
         SpliceDecl   l _                -> l
         TypeSig      l _ _              -> l
-        PatSynSig    l _ _ _ _ _        -> l
+        PatSynSig    l _ _ _ _ _ _      -> l
         FunBind      l _                -> l
         PatBind      l _ _ _            -> l
         ForImp       l _ _ _ _ _        -> l
@@ -1323,7 +1325,7 @@ instance Annotated Decl where
         DefaultDecl  l ts                -> DefaultDecl (f l) ts
         SpliceDecl   l sp                -> SpliceDecl (f l) sp
         TypeSig      l ns t              -> TypeSig (f l) ns t
-        PatSynSig    l n dh c1 c2 t      -> PatSynSig (f l) n dh c1 c2 t
+        PatSynSig    l n dh c1 dh2 c2 t      -> PatSynSig (f l) n dh c1 dh2 c2 t
         FunBind      l ms                -> FunBind (f l) ms
         PatBind      l p rhs bs          -> PatBind (f l) p rhs bs
         ForImp       l cc msf s n t      -> ForImp (f l) cc msf s n t
