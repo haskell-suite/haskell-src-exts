@@ -45,6 +45,7 @@ import Language.Haskell.Exts.Extension -- (Extension, impliesExts, haskell2010)
 import Data.List (intercalate)
 import Control.Applicative
 import Control.Monad (when, liftM, ap)
+import qualified Control.Monad.Fail as Fail
 import Data.Monoid hiding ((<>))
 import Data.Semigroup (Semigroup(..))
 -- To avoid import warnings for Control.Applicative, Data.Monoid, and Data.Semigroup
@@ -95,9 +96,11 @@ instance Applicative ParseResult where
 
 instance Monad ParseResult where
   return = ParseOk
-  fail = ParseFailed noLoc
+  fail = Fail.fail
   ParseOk x           >>= f = f x
   ParseFailed loc msg >>= _ = ParseFailed loc msg
+instance Fail.MonadFail ParseResult where
+  fail = ParseFailed noLoc
 
 instance Semigroup m => Semigroup (ParseResult m) where
  ParseOk x <> ParseOk y = ParseOk $ x <> y
@@ -243,6 +246,9 @@ instance Monad P where
         case m i x y l ch s mode of
             Failed loc msg -> Failed loc msg
             Ok s' a -> runP (k a) i x y l ch s' mode
+    fail   = Fail.fail
+
+instance Fail.MonadFail P where
     fail s = P $ \_r _col _line loc _ _stk _m -> Failed loc s
 
 atSrcLoc :: P a -> SrcLoc -> P a
@@ -348,6 +354,9 @@ instance Monad (Lex r) where
     return a = Lex $ \k -> k a
     Lex v >>= f = Lex $ \k -> v (\a -> runL (f a) k)
     Lex v >> Lex w = Lex $ \k -> v (\_ -> w k)
+    fail   = Fail.fail
+
+instance Fail.MonadFail (Lex r) where
     fail s = Lex $ \_ -> fail s
 
 -- Operations on this monad
