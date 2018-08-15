@@ -49,10 +49,12 @@ Library
                         base >= 4.5 && < 5,
                         -- this is needed to access GHC.Generics on GHC 7.4
                         ghc-prim
-  -- this is needed to access Data.Semigroup on GHCs before 8.0
+  -- this is needed to access Data.Semigroup and Control.Monad.Fail on GHCs
+  -- before 8.0
   if !impl(ghc >= 8.0)
     Build-Depends:
-                        semigroups >= 0.18.3
+                        semigroups >= 0.18.3,
+                        fail == 4.9.*
 
   Exposed-modules:      Language.Haskell.Exts,
                         Language.Haskell.Exts.Lexer,
