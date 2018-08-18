@@ -118,7 +118,7 @@ ParseOk
                      , srcInfoPoints = []
                      }
                    "a")
-                (KindVar
+                (TyCon
                    SrcSpanInfo
                      { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 5 16 5 20
                      , srcInfoPoints = []
@@ -240,7 +240,7 @@ ParseOk
                      , srcInfoPoints = []
                      }
                    "a")
-                (KindList
+                (TyList
                    SrcSpanInfo
                      { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 8 16 8 21
                      , srcInfoPoints =
@@ -248,7 +248,7 @@ ParseOk
                          , SrcSpan "tests/examples/DataKinds.hs" 8 20 8 21
                          ]
                      }
-                   (KindStar
+                   (TyStar
                       SrcSpanInfo
                         { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 8 18 8 19
                         , srcInfoPoints = []
@@ -381,7 +381,7 @@ ParseOk
                      , srcInfoPoints = []
                      }
                    "a")
-                (KindList
+                (TyList
                    SrcSpanInfo
                      { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 13 16 13 28
                      , srcInfoPoints =
@@ -389,7 +389,7 @@ ParseOk
                          , SrcSpan "tests/examples/DataKinds.hs" 13 27 13 28
                          ]
                      }
-                   (KindTuple
+                   (TyTuple
                       SrcSpanInfo
                         { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 13 17 13 27
                         , srcInfoPoints =
@@ -398,7 +398,8 @@ ParseOk
                             , SrcSpan "tests/examples/DataKinds.hs" 13 26 13 27
                             ]
                         }
-                      [ KindVar
+                      Boxed
+                      [ TyCon
                           SrcSpanInfo
                             { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 13 18 13 21
                             , srcInfoPoints = []
@@ -414,7 +415,7 @@ ParseOk
                                   , srcInfoPoints = []
                                   }
                                 "Baz"))
-                      , KindVar
+                      , TyCon
                           SrcSpanInfo
                             { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 13 23 13 26
                             , srcInfoPoints = []
@@ -471,7 +472,7 @@ ParseOk
                      , srcInfoPoints = []
                      }
                    "a")
-                (KindParen
+                (TyParen
                    SrcSpanInfo
                      { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 15 16 15 21
                      , srcInfoPoints =
@@ -479,7 +480,7 @@ ParseOk
                          , SrcSpan "tests/examples/DataKinds.hs" 15 20 15 21
                          ]
                      }
-                   (KindStar
+                   (TyStar
                       SrcSpanInfo
                         { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 15 18 15 19
                         , srcInfoPoints = []
@@ -524,17 +525,17 @@ ParseOk
                      , srcInfoPoints = []
                      }
                    "a")
-                (KindApp
+                (TyApp
                    SrcSpanInfo
                      { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 16 18 27
                      , srcInfoPoints = []
                      }
-                   (KindApp
+                   (TyApp
                       SrcSpanInfo
                         { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 16 18 23
                         , srcInfoPoints = []
                         }
-                      (KindVar
+                      (TyCon
                          SrcSpanInfo
                            { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 16 18 19
                            , srcInfoPoints = []
@@ -550,38 +551,28 @@ ParseOk
                                  , srcInfoPoints = []
                                  }
                                "App")))
-                      (KindVar
+                      (TyVar
                          SrcSpanInfo
                            { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 20 18 23
                            , srcInfoPoints = []
                            }
-                         (UnQual
+                         (Ident
                             SrcSpanInfo
                               { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 20 18 23
                               , srcInfoPoints = []
                               }
-                            (Ident
-                               SrcSpanInfo
-                                 { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 20 18 23
-                                 , srcInfoPoints = []
-                                 }
-                               "foo"))))
-                   (KindVar
+                            "foo")))
+                   (TyVar
                       SrcSpanInfo
                         { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 24 18 27
                         , srcInfoPoints = []
                         }
-                      (UnQual
+                      (Ident
                          SrcSpanInfo
                            { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 24 18 27
                            , srcInfoPoints = []
                            }
-                         (Ident
-                            SrcSpanInfo
-                              { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 18 24 18 27
-                              , srcInfoPoints = []
-                              }
-                            "baz"))))))
+                         "baz")))))
           []
           Nothing
       , ClassDecl
@@ -622,7 +613,7 @@ ParseOk
                      , srcInfoPoints = []
                      }
                    "a")
-                (KindParen
+                (TyParen
                    SrcSpanInfo
                      { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 20 16 20 24
                      , srcInfoPoints =
@@ -630,22 +621,17 @@ ParseOk
                          , SrcSpan "tests/examples/DataKinds.hs" 20 23 20 24
                          ]
                      }
-                   (KindVar
+                   (TyVar
                       SrcSpanInfo
                         { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 20 17 20 23
                         , srcInfoPoints = []
                         }
-                      (UnQual
+                      (Ident
                          SrcSpanInfo
                            { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 20 17 20 23
                            , srcInfoPoints = []
                            }
-                         (Ident
-                            SrcSpanInfo
-                              { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 20 17 20 23
-                              , srcInfoPoints = []
-                              }
-                            "parens"))))))
+                         "parens")))))
           []
           Nothing
       , DataDecl
@@ -690,7 +676,7 @@ ParseOk
                      , srcInfoPoints = []
                      }
                    "a")
-                (KindList
+                (TyList
                    SrcSpanInfo
                      { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 22 14 22 17
                      , srcInfoPoints =
@@ -698,7 +684,7 @@ ParseOk
                          , SrcSpan "tests/examples/DataKinds.hs" 22 16 22 17
                          ]
                      }
-                   (KindStar
+                   (TyStar
                       SrcSpanInfo
                         { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 22 15 22 16
                         , srcInfoPoints = []
@@ -968,7 +954,7 @@ ParseOk
                      , srcInfoPoints = []
                      }
                    "a")
-                (KindTuple
+                (TyTuple
                    SrcSpanInfo
                      { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 27 14 27 23
                      , srcInfoPoints =
@@ -977,12 +963,13 @@ ParseOk
                          , SrcSpan "tests/examples/DataKinds.hs" 27 22 27 23
                          ]
                      }
-                   [ KindStar
+                   Boxed
+                   [ TyStar
                        SrcSpanInfo
                          { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 27 15 27 16
                          , srcInfoPoints = []
                          }
-                   , KindVar
+                   , TyCon
                        SrcSpanInfo
                          { srcInfoSpan = SrcSpan "tests/examples/DataKinds.hs" 27 18 27 22
                          , srcInfoPoints = []

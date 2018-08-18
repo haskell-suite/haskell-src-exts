@@ -111,7 +111,7 @@ ParseOk
                          , srcInfoPoints =
                              [ SrcSpan "tests/examples/TypeInstances.hs" 4 14 4 16 ]
                          }
-                       (KindStar
+                       (TyStar
                           SrcSpanInfo
                             { srcInfoSpan = SrcSpan "tests/examples/TypeInstances.hs" 4 17 4 18
                             , srcInfoPoints = []
@@ -237,7 +237,7 @@ ParseOk
                          , srcInfoPoints =
                              [ SrcSpan "tests/examples/TypeInstances.hs" 7 17 7 19 ]
                          }
-                       (KindStar
+                       (TyStar
                           SrcSpanInfo
                             { srcInfoSpan = SrcSpan "tests/examples/TypeInstances.hs" 7 20 7 21
                             , srcInfoPoints = []

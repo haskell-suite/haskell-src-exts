@@ -286,7 +286,7 @@ ParseOk
                          , srcInfoPoints =
                              [ SrcSpan "tests/examples/RCategory.hs" 15 30 15 32 ]
                          }
-                       (KindVar
+                       (TyCon
                           SrcSpanInfo
                             { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 15 33 15 43
                             , srcInfoPoints = []

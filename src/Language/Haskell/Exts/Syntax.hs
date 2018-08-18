@@ -65,7 +65,7 @@ module Language.Haskell.Exts.Syntax (
     -- * Class Assertions and Contexts
     Context(..), FunDep(..), Asst(..),
     -- * Types
-    Type(..), Boxed(..), Kind(..), TyVarBind(..), Promoted(..),
+    Type(..), Boxed(..), Kind, TyVarBind(..), Promoted(..),
     TypeEqn (..),
     -- * Expressions
     Exp(..), Stmt(..), QualStmt(..), FieldUpdate(..),
@@ -628,6 +628,7 @@ data Type l
         (Maybe [TyVarBind l])
         (Maybe (Context l))
         (Type l)                                -- ^ qualified type
+     | TyStar  l                                -- ^ @*@, the type of types
      | TyFun   l (Type l) (Type l)              -- ^ function type
      | TyTuple l Boxed [Type l]                 -- ^ tuple type, possibly boxed
      | TyUnboxedSum l [Type l]                  -- ^ unboxed tuple type
@@ -673,15 +674,7 @@ data TyVarBind l
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | An explicit kind annotation.
-data Kind l
-    = KindStar  l                    -- ^ @*@, the kind of types
-    | KindFn    l (Kind l) (Kind l)  -- ^ @->@, the kind of a type constructor
-    | KindParen l (Kind l)           -- ^ a parenthesised kind
-    | KindVar   l (QName l)          -- ^ @k@, a kind variable (-XPolyKinds)
-    | KindApp   l (Kind l) (Kind l)  -- ^ @k1 k2@
-    | KindTuple l [Kind l]           -- ^ @'(k1,k2,k3)@, a promoted tuple
-    | KindList  l (Kind l)           -- ^ @'[k1]@, a promoted list literal
-  deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
+type Kind = Type
 
 
 -- | A functional dependency, given on the form
@@ -1498,6 +1491,7 @@ instance Annotated GuardedRhs where
 instance Annotated Type where
     ann t = case t of
       TyForall l _ _ _              -> l
+      TyStar  l                     -> l
       TyFun   l _ _                 -> l
       TyTuple l _ _                 -> l
       TyUnboxedSum l _              -> l
@@ -1517,6 +1511,7 @@ instance Annotated Type where
       TyQuasiQuote l _ _            -> l
     amap f t1 = case t1 of
       TyForall l mtvs mcx t         -> TyForall (f l) mtvs mcx t
+      TyStar  l                     -> TyStar (f l)
       TyFun   l t1' t2              -> TyFun (f l) t1' t2
       TyTuple l b ts                -> TyTuple (f l) b ts
       TyUnboxedSum l s              -> TyUnboxedSum (f l) s
@@ -1548,22 +1543,6 @@ instance Annotated TyVarBind where
     ann (UnkindedVar l _)   = l
     amap f (KindedVar   l n k) = KindedVar   (f l) n k
     amap f (UnkindedVar l n)   = UnkindedVar (f l) n
-
-instance Annotated Kind where
-    ann (KindStar l) = l
-    ann (KindFn   l _ _) = l
-    ann (KindParen l _)  = l
-    ann (KindVar l _)    = l
-    ann (KindApp l _ _)  = l
-    ann (KindTuple l _)  = l
-    ann (KindList  l _)  = l
-    amap f (KindStar l) = KindStar (f l)
-    amap f (KindFn   l k1 k2) = KindFn (f l) k1 k2
-    amap f (KindParen l k) = KindParen (f l) k
-    amap f (KindVar l n) = KindVar (f l) n
-    amap f (KindApp l k1 k2) = KindApp (f l) k1 k2
-    amap f (KindTuple l ks) = KindTuple (f l) ks
-    amap f (KindList  l ks) = KindList  (f l) ks
 
 instance Annotated FunDep where
     ann (FunDep l _ _) = l

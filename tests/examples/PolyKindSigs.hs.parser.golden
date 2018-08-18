@@ -89,18 +89,18 @@ ParseOk
                   }
                 "Foo"))
           (Just
-             (KindFn
+             (TyFun
                 SrcSpanInfo
                   { srcInfoSpan = SrcSpan "tests/examples/PolyKindSigs.hs" 7 13 7 19
                   , srcInfoPoints =
                       [ SrcSpan "tests/examples/PolyKindSigs.hs" 7 15 7 17 ]
                   }
-                (KindStar
+                (TyStar
                    SrcSpanInfo
                      { srcInfoSpan = SrcSpan "tests/examples/PolyKindSigs.hs" 7 13 7 14
                      , srcInfoPoints = []
                      })
-                (KindStar
+                (TyStar
                    SrcSpanInfo
                      { srcInfoSpan = SrcSpan "tests/examples/PolyKindSigs.hs" 7 18 7 19
                      , srcInfoPoints = []
