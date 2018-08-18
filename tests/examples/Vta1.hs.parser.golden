@@ -3745,17 +3745,17 @@ ParseOk
                      , srcInfoPoints = []
                      }
                    "a")
-                (KindFn
+                (TyFun
                    SrcSpanInfo
                      { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 61 18 61 24
                      , srcInfoPoints = [ SrcSpan "tests/examples/Vta1.hs" 61 20 61 22 ]
                      }
-                   (KindStar
+                   (TyStar
                       SrcSpanInfo
                         { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 61 18 61 19
                         , srcInfoPoints = []
                         })
-                   (KindStar
+                   (TyStar
                       SrcSpanInfo
                         { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 61 23 61 24
                         , srcInfoPoints = []
@@ -3823,22 +3823,17 @@ ParseOk
                      , srcInfoPoints = []
                      }
                    "a")
-                (KindVar
+                (TyVar
                    SrcSpanInfo
                      { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 62 18 62 19
                      , srcInfoPoints = []
                      }
-                   (UnQual
+                   (Ident
                       SrcSpanInfo
                         { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 62 18 62 19
                         , srcInfoPoints = []
                         }
-                      (Ident
-                         SrcSpanInfo
-                           { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 62 18 62 19
-                           , srcInfoPoints = []
-                           }
-                         "k")))))
+                      "k"))))
           [ QualConDecl
               SrcSpanInfo
                 { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 62 23 62 24
@@ -3902,38 +3897,33 @@ ParseOk
                      , srcInfoPoints = []
                      }
                    "a")
-                (KindFn
+                (TyFun
                    SrcSpanInfo
                      { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 63 18 63 29
                      , srcInfoPoints = [ SrcSpan "tests/examples/Vta1.hs" 63 20 63 22 ]
                      }
-                   (KindStar
+                   (TyStar
                       SrcSpanInfo
                         { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 63 18 63 19
                         , srcInfoPoints = []
                         })
-                   (KindFn
+                   (TyFun
                       SrcSpanInfo
                         { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 63 23 63 29
                         , srcInfoPoints = [ SrcSpan "tests/examples/Vta1.hs" 63 25 63 27 ]
                         }
-                      (KindVar
+                      (TyVar
                          SrcSpanInfo
                            { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 63 23 63 24
                            , srcInfoPoints = []
                            }
-                         (UnQual
+                         (Ident
                             SrcSpanInfo
                               { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 63 23 63 24
                               , srcInfoPoints = []
                               }
-                            (Ident
-                               SrcSpanInfo
-                                 { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 63 23 63 24
-                                 , srcInfoPoints = []
-                                 }
-                               "k")))
-                      (KindStar
+                            "k"))
+                      (TyStar
                          SrcSpanInfo
                            { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 63 28 63 29
                            , srcInfoPoints = []
@@ -5104,17 +5094,17 @@ ParseOk
                          , srcInfoPoints = []
                          }
                        "a")
-                    (KindFn
+                    (TyFun
                        SrcSpanInfo
                          { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 91 22 91 28
                          , srcInfoPoints = [ SrcSpan "tests/examples/Vta1.hs" 91 24 91 26 ]
                          }
-                       (KindStar
+                       (TyStar
                           SrcSpanInfo
                             { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 91 22 91 23
                             , srcInfoPoints = []
                             })
-                       (KindStar
+                       (TyStar
                           SrcSpanInfo
                             { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 91 27 91 28
                             , srcInfoPoints = []

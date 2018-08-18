@@ -415,25 +415,19 @@ ParseOk
                         , srcInfoPoints = []
                         }
                       "result")
-                   (KindVar
+                   (TyVar
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 14 34 14 35
                         , srcInfoPoints = []
                         }
-                      (UnQual
+                      (Ident
                          SrcSpanInfo
                            { srcInfoSpan =
                                SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 14 34 14 35
                            , srcInfoPoints = []
                            }
-                         (Ident
-                            SrcSpanInfo
-                              { srcInfoSpan =
-                                  SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 14 34 14 35
-                              , srcInfoPoints = []
-                              }
-                            "k"))))))
+                         "k")))))
           (Just
              (InjectivityInfo
                 SrcSpanInfo
@@ -1022,25 +1016,19 @@ ParseOk
                            , srcInfoPoints = []
                            }
                          "a")
-                      (KindVar
+                      (TyVar
                          SrcSpanInfo
                            { srcInfoSpan =
                                SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 22 21 22 22
                            , srcInfoPoints = []
                            }
-                         (UnQual
+                         (Ident
                             SrcSpanInfo
                               { srcInfoSpan =
                                   SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 22 21 22 22
                               , srcInfoPoints = []
                               }
-                            (Ident
-                               SrcSpanInfo
-                                 { srcInfoSpan =
-                                     SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 22 21 22 22
-                                 , srcInfoPoints = []
-                                 }
-                               "k")))))
+                            "k"))))
                 (UnkindedVar
                    SrcSpanInfo
                      { srcInfoSpan =
@@ -1071,25 +1059,19 @@ ParseOk
                      , srcInfoPoints = []
                      }
                    "c")
-                (KindVar
+                (TyVar
                    SrcSpanInfo
                      { srcInfoSpan =
                          SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 22 32 22 33
                      , srcInfoPoints = []
                      }
-                   (UnQual
+                   (Ident
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 22 32 22 33
                         , srcInfoPoints = []
                         }
-                      (Ident
-                         SrcSpanInfo
-                           { srcInfoSpan =
-                               SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 22 32 22 33
-                           , srcInfoPoints = []
-                           }
-                         "k")))))
+                      "k"))))
           (Just
              (TyVarSig
                 SrcSpanInfo
@@ -1576,25 +1558,19 @@ ParseOk
                      , srcInfoPoints = []
                      }
                    "b")
-                (KindVar
+                (TyVar
                    SrcSpanInfo
                      { srcInfoSpan =
                          SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 29 23 29 24
                      , srcInfoPoints = []
                      }
-                   (UnQual
+                   (Ident
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 29 23 29 24
                         , srcInfoPoints = []
                         }
-                      (Ident
-                         SrcSpanInfo
-                           { srcInfoSpan =
-                               SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 29 23 29 24
-                           , srcInfoPoints = []
-                           }
-                         "k")))))
+                      "k"))))
           (Just
              (TyVarSig
                 SrcSpanInfo
@@ -2988,7 +2964,7 @@ ParseOk
                            , srcInfoPoints = []
                            }
                          "a")
-                      (KindStar
+                      (TyStar
                          SrcSpanInfo
                            { srcInfoSpan =
                                SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 53 27 53 28
@@ -3011,7 +2987,7 @@ ParseOk
                         , srcInfoPoints = []
                         }
                       "b")
-                   (KindStar
+                   (TyStar
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 53 36 53 37
@@ -3034,7 +3010,7 @@ ParseOk
                      , srcInfoPoints = []
                      }
                    "c")
-                (KindStar
+                (TyStar
                    SrcSpanInfo
                      { srcInfoSpan =
                          SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 53 45 53 46
@@ -3519,25 +3495,19 @@ ParseOk
                      , srcInfoPoints = []
                      }
                    "b")
-                (KindVar
+                (TyVar
                    SrcSpanInfo
                      { srcInfoSpan =
                          SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 58 29 58 30
                      , srcInfoPoints = []
                      }
-                   (UnQual
+                   (Ident
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 58 29 58 30
                         , srcInfoPoints = []
                         }
-                      (Ident
-                         SrcSpanInfo
-                           { srcInfoSpan =
-                               SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 58 29 58 30
-                           , srcInfoPoints = []
-                           }
-                         "k")))))
+                      "k"))))
           (Just
              (TyVarSig
                 SrcSpanInfo
@@ -8793,25 +8763,19 @@ ParseOk
                      , srcInfoPoints = []
                      }
                    "a")
-                (KindVar
+                (TyVar
                    SrcSpanInfo
                      { srcInfoSpan =
                          SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 170 21 170 23
                      , srcInfoPoints = []
                      }
-                   (UnQual
+                   (Ident
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 170 21 170 23
                         , srcInfoPoints = []
                         }
-                      (Ident
-                         SrcSpanInfo
-                           { srcInfoSpan =
-                               SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 170 21 170 23
-                           , srcInfoPoints = []
-                           }
-                         "k1")))))
+                      "k1"))))
           (Just
              (TyVarSig
                 SrcSpanInfo
@@ -8837,25 +8801,19 @@ ParseOk
                         , srcInfoPoints = []
                         }
                       "r")
-                   (KindVar
+                   (TyVar
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 170 33 170 35
                         , srcInfoPoints = []
                         }
-                      (UnQual
+                      (Ident
                          SrcSpanInfo
                            { srcInfoSpan =
                                SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 170 33 170 35
                            , srcInfoPoints = []
                            }
-                         (Ident
-                            SrcSpanInfo
-                              { srcInfoSpan =
-                                  SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 170 33 170 35
-                              , srcInfoPoints = []
-                              }
-                            "k2"))))))
+                         "k2")))))
           (Just
              (InjectivityInfo
                 SrcSpanInfo
@@ -9220,7 +9178,7 @@ ParseOk
                      , srcInfoPoints = []
                      }
                    "a")
-                (KindStar
+                (TyStar
                    SrcSpanInfo
                      { srcInfoSpan =
                          SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 176 19 176 20
@@ -9295,13 +9253,13 @@ ParseOk
                      , srcInfoPoints = []
                      }
                    "kproxy")
-                (KindApp
+                (TyApp
                    SrcSpanInfo
                      { srcInfoSpan =
                          SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 177 27 177 35
                      , srcInfoPoints = []
                      }
-                   (KindVar
+                   (TyCon
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 177 27 177 33
@@ -9320,25 +9278,19 @@ ParseOk
                               , srcInfoPoints = []
                               }
                             "KProxy")))
-                   (KindVar
+                   (TyVar
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 177 34 177 35
                         , srcInfoPoints = []
                         }
-                      (UnQual
+                      (Ident
                          SrcSpanInfo
                            { srcInfoSpan =
                                SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 177 34 177 35
                            , srcInfoPoints = []
                            }
-                         (Ident
-                            SrcSpanInfo
-                              { srcInfoSpan =
-                                  SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 177 34 177 35
-                              , srcInfoPoints = []
-                              }
-                            "k"))))))
+                         "k")))))
           (Just
              (TyVarSig
                 SrcSpanInfo
@@ -9458,13 +9410,13 @@ ParseOk
                               , srcInfoPoints = []
                               }
                             "KProxy"))))
-                (KindApp
+                (TyApp
                    SrcSpanInfo
                      { srcInfoSpan =
                          SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 178 30 178 41
                      , srcInfoPoints = []
                      }
-                   (KindVar
+                   (TyCon
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 178 30 178 36
@@ -9483,7 +9435,7 @@ ParseOk
                               , srcInfoPoints = []
                               }
                             "KProxy")))
-                   (KindVar
+                   (TyCon
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 178 37 178 41
@@ -9594,13 +9546,13 @@ ParseOk
                               , srcInfoPoints = []
                               }
                             "KProxy"))))
-                (KindApp
+                (TyApp
                    SrcSpanInfo
                      { srcInfoSpan =
                          SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 179 30 179 38
                      , srcInfoPoints = []
                      }
-                   (KindVar
+                   (TyCon
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 179 30 179 36
@@ -9619,7 +9571,7 @@ ParseOk
                               , srcInfoPoints = []
                               }
                             "KProxy")))
-                   (KindStar
+                   (TyStar
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 179 37 179 38
@@ -9729,13 +9681,13 @@ ParseOk
                                  , srcInfoPoints = []
                                  }
                                "KProxy"))))
-                   (KindApp
+                   (TyApp
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 181 29 181 37
                         , srcInfoPoints = []
                         }
-                      (KindVar
+                      (TyCon
                          SrcSpanInfo
                            { srcInfoSpan =
                                SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 181 29 181 35
@@ -9754,25 +9706,19 @@ ParseOk
                                  , srcInfoPoints = []
                                  }
                                "KProxy")))
-                      (KindVar
+                      (TyVar
                          SrcSpanInfo
                            { srcInfoSpan =
                                SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 181 36 181 37
                            , srcInfoPoints = []
                            }
-                         (UnQual
+                         (Ident
                             SrcSpanInfo
                               { srcInfoSpan =
                                   SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 181 36 181 37
                               , srcInfoPoints = []
                               }
-                            (Ident
-                               SrcSpanInfo
-                                 { srcInfoSpan =
-                                     SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 181 36 181 37
-                                 , srcInfoPoints = []
-                                 }
-                               "k"))))))
+                            "k")))))
              (TyApp
                 SrcSpanInfo
                   { srcInfoSpan =
@@ -9836,13 +9782,13 @@ ParseOk
                                  , srcInfoPoints = []
                                  }
                                "KProxy"))))
-                   (KindApp
+                   (TyApp
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 181 57 181 65
                         , srcInfoPoints = []
                         }
-                      (KindVar
+                      (TyCon
                          SrcSpanInfo
                            { srcInfoSpan =
                                SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 181 57 181 63
@@ -9861,25 +9807,19 @@ ParseOk
                                  , srcInfoPoints = []
                                  }
                                "KProxy")))
-                      (KindVar
+                      (TyVar
                          SrcSpanInfo
                            { srcInfoSpan =
                                SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 181 64 181 65
                            , srcInfoPoints = []
                            }
-                         (UnQual
+                         (Ident
                             SrcSpanInfo
                               { srcInfoSpan =
                                   SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 181 64 181 65
                               , srcInfoPoints = []
                               }
-                            (Ident
-                               SrcSpanInfo
-                                 { srcInfoSpan =
-                                     SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 181 64 181 65
-                                 , srcInfoPoints = []
-                                 }
-                               "k")))))))
+                            "k"))))))
       , FunBind
           SrcSpanInfo
             { srcInfoSpan =
@@ -12015,25 +11955,19 @@ ParseOk
                      , srcInfoPoints = []
                      }
                    "a")
-                (KindVar
+                (TyVar
                    SrcSpanInfo
                      { srcInfoSpan =
                          SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 217 22 217 23
                      , srcInfoPoints = []
                      }
-                   (UnQual
+                   (Ident
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 217 22 217 23
                         , srcInfoPoints = []
                         }
-                      (Ident
-                         SrcSpanInfo
-                           { srcInfoSpan =
-                               SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 217 22 217 23
-                           , srcInfoPoints = []
-                           }
-                         "k")))))
+                      "k"))))
           (Just
              (TyVarSig
                 SrcSpanInfo
@@ -12059,25 +11993,19 @@ ParseOk
                         , srcInfoPoints = []
                         }
                       "result")
-                   (KindVar
+                   (TyVar
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 217 38 217 39
                         , srcInfoPoints = []
                         }
-                      (UnQual
+                      (Ident
                          SrcSpanInfo
                            { srcInfoSpan =
                                SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 217 38 217 39
                            , srcInfoPoints = []
                            }
-                         (Ident
-                            SrcSpanInfo
-                              { srcInfoSpan =
-                                  SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 217 38 217 39
-                              , srcInfoPoints = []
-                              }
-                            "k"))))))
+                         "k")))))
           (Just
              (InjectivityInfo
                 SrcSpanInfo
@@ -12215,25 +12143,19 @@ ParseOk
                         , srcInfoPoints = []
                         }
                       "a")
-                   (KindVar
+                   (TyVar
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 222 27 222 28
                         , srcInfoPoints = []
                         }
-                      (UnQual
+                      (Ident
                          SrcSpanInfo
                            { srcInfoSpan =
                                SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 222 27 222 28
                            , srcInfoPoints = []
                            }
-                         (Ident
-                            SrcSpanInfo
-                              { srcInfoSpan =
-                                  SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 222 27 222 28
-                              , srcInfoPoints = []
-                              }
-                            "k")))))
+                         "k"))))
              (UnkindedVar
                 SrcSpanInfo
                   { srcInfoSpan =
@@ -12556,25 +12478,19 @@ ParseOk
                         , srcInfoPoints = []
                         }
                       "a")
-                   (KindVar
+                   (TyVar
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 227 30 227 31
                         , srcInfoPoints = []
                         }
-                      (UnQual
+                      (Ident
                          SrcSpanInfo
                            { srcInfoSpan =
                                SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 227 30 227 31
                            , srcInfoPoints = []
                            }
-                         (Ident
-                            SrcSpanInfo
-                              { srcInfoSpan =
-                                  SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 227 30 227 31
-                              , srcInfoPoints = []
-                              }
-                            "k")))))
+                         "k"))))
              (UnkindedVar
                 SrcSpanInfo
                   { srcInfoSpan =
@@ -12818,25 +12734,19 @@ ParseOk
                         , srcInfoPoints = []
                         }
                       "a")
-                   (KindVar
+                   (TyVar
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 232 22 232 23
                         , srcInfoPoints = []
                         }
-                      (UnQual
+                      (Ident
                          SrcSpanInfo
                            { srcInfoSpan =
                                SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 232 22 232 23
                            , srcInfoPoints = []
                            }
-                         (Ident
-                            SrcSpanInfo
-                              { srcInfoSpan =
-                                  SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 232 22 232 23
-                              , srcInfoPoints = []
-                              }
-                            "k")))))
+                         "k"))))
              (KindedVar
                 SrcSpanInfo
                   { srcInfoSpan =
@@ -12854,25 +12764,19 @@ ParseOk
                      , srcInfoPoints = []
                      }
                    "b")
-                (KindVar
+                (TyVar
                    SrcSpanInfo
                      { srcInfoSpan =
                          SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 232 31 232 32
                      , srcInfoPoints = []
                      }
-                   (UnQual
+                   (Ident
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 232 31 232 32
                         , srcInfoPoints = []
                         }
-                      (Ident
-                         SrcSpanInfo
-                           { srcInfoSpan =
-                               SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 232 31 232 32
-                           , srcInfoPoints = []
-                           }
-                         "k")))))
+                      "k"))))
           (Just
              (TyVarSig
                 SrcSpanInfo
@@ -12898,25 +12802,19 @@ ParseOk
                         , srcInfoPoints = []
                         }
                       "r")
-                   (KindVar
+                   (TyVar
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 232 42 232 44
                         , srcInfoPoints = []
                         }
-                      (UnQual
+                      (Ident
                          SrcSpanInfo
                            { srcInfoSpan =
                                SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 232 42 232 44
                            , srcInfoPoints = []
                            }
-                         (Ident
-                            SrcSpanInfo
-                              { srcInfoSpan =
-                                  SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 232 42 232 44
-                              , srcInfoPoints = []
-                              }
-                            "k2"))))))
+                         "k2")))))
           (Just
              (InjectivityInfo
                 SrcSpanInfo
@@ -13079,20 +12977,20 @@ ParseOk
                            , srcInfoPoints = []
                            }
                          "repr")
-                      (KindFn
+                      (TyFun
                          SrcSpanInfo
                            { srcInfoSpan =
                                SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 236 26 236 32
                            , srcInfoPoints =
                                [ SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 236 28 236 30 ]
                            }
-                         (KindStar
+                         (TyStar
                             SrcSpanInfo
                               { srcInfoSpan =
                                   SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 236 26 236 27
                               , srcInfoPoints = []
                               })
-                         (KindStar
+                         (TyStar
                             SrcSpanInfo
                               { srcInfoSpan =
                                   SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 236 31 236 32
@@ -13115,7 +13013,7 @@ ParseOk
                         , srcInfoPoints = []
                         }
                       "a")
-                   (KindStar
+                   (TyStar
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 236 40 236 41
@@ -13138,7 +13036,7 @@ ParseOk
                      , srcInfoPoints = []
                      }
                    "b")
-                (KindStar
+                (TyStar
                    SrcSpanInfo
                      { srcInfoSpan =
                          SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 236 49 236 50
@@ -13169,7 +13067,7 @@ ParseOk
                         , srcInfoPoints = []
                         }
                       "r")
-                   (KindStar
+                   (TyStar
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 236 60 236 61

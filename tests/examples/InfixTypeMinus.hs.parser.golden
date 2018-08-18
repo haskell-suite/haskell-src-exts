@@ -121,7 +121,7 @@ ParseOk
                      , srcInfoPoints = []
                      }
                    "n")
-                (KindVar
+                (TyCon
                    SrcSpanInfo
                      { srcInfoSpan =
                          SrcSpan "tests/examples/InfixTypeMinus.hs" 5 16 5 19
@@ -427,7 +427,7 @@ ParseOk
                      , srcInfoPoints = []
                      }
                    "n")
-                (KindVar
+                (TyCon
                    SrcSpanInfo
                      { srcInfoSpan =
                          SrcSpan "tests/examples/InfixTypeMinus.hs" 6 16 6 19
@@ -733,7 +733,7 @@ ParseOk
                      , srcInfoPoints = []
                      }
                    "n")
-                (KindVar
+                (TyCon
                    SrcSpanInfo
                      { srcInfoSpan =
                          SrcSpan "tests/examples/InfixTypeMinus.hs" 7 16 7 19
@@ -1039,7 +1039,7 @@ ParseOk
                      , srcInfoPoints = []
                      }
                    "n")
-                (KindVar
+                (TyCon
                    SrcSpanInfo
                      { srcInfoSpan =
                          SrcSpan "tests/examples/InfixTypeMinus.hs" 8 16 8 19

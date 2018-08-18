@@ -84,18 +84,18 @@ ParseOk
                      , srcInfoPoints = []
                      }
                    "a")
-                (KindFn
+                (TyFun
                    SrcSpanInfo
                      { srcInfoSpan = SrcSpan "tests/examples/FamilyKindSig.hs" 4 31 4 37
                      , srcInfoPoints =
                          [ SrcSpan "tests/examples/FamilyKindSig.hs" 4 33 4 35 ]
                      }
-                   (KindStar
+                   (TyStar
                       SrcSpanInfo
                         { srcInfoSpan = SrcSpan "tests/examples/FamilyKindSig.hs" 4 31 4 32
                         , srcInfoPoints = []
                         })
-                   (KindStar
+                   (TyStar
                       SrcSpanInfo
                         { srcInfoSpan = SrcSpan "tests/examples/FamilyKindSig.hs" 4 36 4 37
                         , srcInfoPoints = []

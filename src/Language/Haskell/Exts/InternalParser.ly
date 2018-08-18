@@ -291,6 +291,9 @@ Pragmas
 >       '{-# COMPLETE'          { Loc $$ COMPLETE }
 >       '#-}'                   { Loc $$ PragmaEnd }      -- 139
 
+Utility
+
+>       NEVER                   { Loc $$@SrcSpan{srcSpanStartLine= -1} _ } -- never-matching terminal of type SrcSpan
 
 > %monad { P }
 > %lexer { lexer } { Loc _ EOF }
@@ -941,13 +944,16 @@ Type equality contraints need the TypeFamilies extension.
 >       : dtype                         {% checkType $1 }
 
 > dtype :: { PType L }
->       : btype                         { splitTilde $1 }
->       | btype qtyconop dtype          { TyInfix ($1 <> $3) $1 $2 $3 }
->       | btype qtyvarop dtype          { TyInfix ($1 <> $3) $1 (UnpromotedName (ann $2) $2) $3 } -- FIXME
->       | btype '->' ctype              { TyFun ($1 <> $3 <** [$2]) (splitTilde $1) $3 }
-       | btype '~' btype               {% do { checkEnabledOneOf [TypeFamilies, GADTs] ;
-                                               let {l = $1 <> $3 <** [$2]};
-                                               return $ TyPred l $ EqualP l $1 $3 } }
+>       : dtype_('*',NEVER)              { $1 }
+
+> dtype_(ostar,kstar) :: { PType L }
+>       : btype_(ostar,kstar)                                           { splitTilde $1 }
+>       | btype_(ostar,kstar) qtyconop dtype_(ostar,kstar)              { TyInfix ($1 <> $3) $1 $2 $3 }
+>       | btype_(ostar,kstar) qtyvarop_(ostar) dtype_(ostar,kstar)      { TyInfix ($1 <> $3) $1 (UnpromotedName (ann $2) $2) $3 } -- FIXME
+>       | btype_(ostar,kstar) '->' ctype_(ostar,kstar)                  { TyFun ($1 <> $3 <** [$2]) (splitTilde $1) $3 }
+       | btype_(ostar,kstar) '~' btype_(ostar,kstar)                    {% do { checkEnabledOneOf [TypeFamilies, GADTs] ;
+                                                                                let {l = $1 <> $3 <** [$2]};
+                                                                                return $ TyPred l $ EqualP l $1 $3 } }
 
 Implicit parameters can occur in normal types, as well as in contexts.
 
@@ -955,8 +961,11 @@ Implicit parameters can occur in normal types, as well as in contexts.
 >       : type                          {% checkType $1 }
 
 > type :: { PType L }
->       : ivar '::' dtype               { let l = ($1 <> $3 <** [$2]) in TyPred l $ IParam l $1 $3 }
->       | dtype                         { $1 }
+>       : type_('*',NEVER)              { $1 }
+
+> type_(ostar,kstar) :: { PType L }
+>       : ivar '::' dtype_(ostar,kstar) { let l = ($1 <> $3 <** [$2]) in TyPred l $ IParam l $1 $3 }
+>       | dtype_(ostar,kstar)           { $1 }
 
 > truebtype :: { Type L }
 >       : btype                         {% checkType (splitTilde $1) }
@@ -964,34 +973,41 @@ Implicit parameters can occur in normal types, as well as in contexts.
 >       : atype                         {% checkType $1 }
 
 > btype :: { PType L }
->       : btype atype                   { TyApp ($1 <> $2) $1 $2 }
->       | atype                         { $1 }
+>       : btype_('*',NEVER)             { $1 }
+
+> btype_(ostar,kstar) :: { PType L }
+>       : btype_(ostar,kstar) atype_(ostar,kstar) { TyApp ($1 <> $2) $1 $2 }
+>       | atype_(ostar,kstar)           { $1 }
 
 UnboxedTuples requires the extension, but that will be handled through
 the (# and #) lexemes. Kinds will be handled at the kind rule.
 
 > atype :: { PType L }
->       : gtycon                        { TyCon   (ann $1) $1 }
+>       : atype_('*',NEVER)             { $1 }
+
+> atype_(ostar,kstar) :: { PType L }
+>       : kstar                         { TyStar  (nIS $1) }
+>       | gtycon_(ostar)                { TyCon   (ann $1) $1 }
 >       | tyvar                         {% checkTyVar $1 }
 >       | strict_mark atype             { let (mstrict, mupack) = $1
 >                                         in bangType mstrict mupack $2 }
->       | '(' types ')'                 { TyTuple ($1 <^^> $3 <** ($1:reverse ($3:snd $2))) Boxed   (reverse (fst $2)) }
->       | '(#' types_bars2 '#)'         { TyUnboxedSum ($1 <^^> $3 <** ($1: reverse ($3: snd $2))) (reverse (fst $2))  }
->       | '(#' types1 '#)'              { TyTuple ($1 <^^> $3 <** ($1:reverse ($3:snd $2))) Unboxed (reverse (fst $2)) }
->       | '[' type ']'                  { TyList  ($1 <^^> $3 <** [$1,$3]) $2 }
->       | '[:' type ':]'                { TyParArray  ($1 <^^> $3 <** [$1,$3]) $2 }
->       | '(' ctype ')'                 { TyParen ($1 <^^> $3 <** [$1,$3]) $2 }
->       | '(' ctype '::' kind ')'       { TyKind  ($1 <^^> $5 <** [$1,$3,$5]) $2 $4 }
+>       | '(' types_(ostar,kstar) ')'                   { TyTuple ($1 <^^> $3 <** ($1:reverse ($3:snd $2))) Boxed   (reverse (fst $2)) }
+>       | '(#' types_bars2(ostar,kstar) '#)'            { TyUnboxedSum ($1 <^^> $3 <** ($1: reverse ($3: snd $2))) (reverse (fst $2))  }
+>       | '(#' types1_(ostar,kstar) '#)'                { TyTuple ($1 <^^> $3 <** ($1:reverse ($3:snd $2))) Unboxed (reverse (fst $2)) }
+>       | '[' type_(ostar,kstar) ']'                    { TyList  ($1 <^^> $3 <** [$1,$3]) $2 }
+>       | '[:' type_(ostar,kstar) ':]'                  { TyParArray  ($1 <^^> $3 <** [$1,$3]) $2 }
+>       | '(' ctype_(ostar,kstar) ')'                   { TyParen ($1 <^^> $3 <** [$1,$3]) $2 }
+>       | '(' ctype_(ostar,kstar) '::' kind ')'         { TyKind  ($1 <^^> $5 <** [$1,$3,$5]) $2 $4 }
 >       | '$(' trueexp ')'              { let l = ($1 <^^> $3 <** [$1,$3]) in TySplice l $ ParenSplice l $2 }
 >       | IDSPLICE                      { let Loc l (THIdEscape s) = $1 in TySplice (nIS l) $ IdSplice (nIS l) s }
 >       | '_'                           { TyWildCard (nIS $1) Nothing }
 >       | QUASIQUOTE                    { let Loc l (THQuasiQuote (n,q)) = $1 in TyQuasiQuote (nIS l) n q }
->       | ptype                         { % checkEnabled DataKinds >> return (TyPromoted (ann $1) $1) }
+>       | ptype_(ostar,kstar)           { % checkEnabled DataKinds >> return (TyPromoted (ann $1) $1) }
 
-> ptype :: { Promoted L }
->       : VARQUOTE gcon_nolist                 {% fmap (PromotedCon (nIS $1 <++> ann $2  <** [$1]) True) (pexprToQName $2) }
->       | VARQUOTE '[' types1 ']'       {% PromotedList  ($1 <^^> $4 <** ($1:reverse($4:snd $3))) True . reverse <\$> mapM checkType (fst $3) }
->       |          '[' types  ']'       {% PromotedList  ($1 <^^> $3 <** ($1:reverse($3:snd $2))) False . reverse <\$> mapM checkType (fst $2) }
+> ptype_(ostar,kstar) :: { Promoted L }
+>       : VARQUOTE gcon_nolist                  {% fmap (PromotedCon (nIS $1 <++> ann $2  <** [$1]) True) (pexprToQName $2) }
+>       | VARQUOTE '[' types1_(ostar,kstar) ']' {% PromotedList  ($1 <^^> $4 <** ($1:reverse($4:snd $3))) True . reverse <\$> mapM checkType (fst $3) }
+>       |          '[' types_(ostar,kstar)  ']' {% PromotedList  ($1 <^^> $3 <** ($1:reverse($3:snd $2))) False . reverse <\$> mapM checkType (fst $2) }
 >       | VARQUOTE '[' ']'              { PromotedList  ($1 <^^> $3 <** [$1, $3]) True [] }
        | '[' ']'                       {% PromotedList  ($1 <^^> $2 <** [$1, $2]) False [] }
 >       | VARQUOTE '(' types1 ')'       {% PromotedTuple ($1 <^^> $4 <** ($1:reverse($4:snd $3))) . reverse <\$> mapM checkType (fst $3) }
@@ -1014,7 +1030,10 @@ the (# and #) lexemes. Kinds will be handled at the kind rule.
 
 
 > gtycon :: { QName L }
->       : otycon                        { $1 }
+>       : gtycon_('*')                     { $1 }
+
+> gtycon_(ostar) :: { QName L }
+>       : otycon_(ostar)                     { $1 }
 >       | '(' ')'                       { unit_tycon_name              ($1 <^^> $2 <** [$1,$2]) }
 >       | '(' '->' ')'                  { fun_tycon_name               ($1 <^^> $3 <** [$1,$2,$3]) }
 >       | '[' ']'                       { list_tycon_name              ($1 <^^> $2 <** [$1,$2]) }
@@ -1023,9 +1042,12 @@ the (# and #) lexemes. Kinds will be handled at the kind rule.
 >       | '(#' commas '#)'              { tuple_tycon_name             ($1 <^^> $3 <** ($1:reverse $2 ++ [$3])) Unboxed (length $2) }
 
 > otycon :: { QName L }
+>       : otycon_('*')                     { $1 }
+
+> otycon_(ostar) :: { QName L }
 >       : qconid                        { $1 }
 >       | '(' gconsym ')'               { updateQNameLoc ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3]) $2 }
->       | '(' qvarsym ')'               { updateQNameLoc ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3]) $2 }
+>       | '(' qvarsym_(ostar) ')'       { updateQNameLoc ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3]) $2 }
 
 These are for infix types
 
@@ -1051,25 +1073,37 @@ is any of the keyword-enabling ones, except ExistentialQuantification.
 >       : ctype                         {% checkType $1 }
 
 > ctype :: { PType L }
->       : 'forall' ktyvars '.' ctype    { mkTyForall (nIS $1 <++> ann $4 <** [$1,$3]) (Just (reverse (fst $2))) Nothing $4 }
->       | context ctype                 { mkTyForall ($1 <> $2) Nothing (Just $1) $2 }
->       | type                          { $1 }
+>       : ctype_('*',NEVER)             { $1 }
+
+> ctype_(ostar,kstar) :: { PType L }
+>       : 'forall' ktyvars '.' ctype_(ostar,kstar)      { mkTyForall (nIS $1 <++> ann $4 <** [$1,$3]) (Just (reverse (fst $2))) Nothing $4 }
+>       | context_(ostar,kstar) ctype_(ostar,kstar)     { mkTyForall ($1 <> $2) Nothing (Just $1) $2 }
+>       | type_(ostar,kstar)                            { $1 }
 
 Equality constraints require the TypeFamilies extension.
 
 > context :: { PContext L }
->       : btype '=>'                    {% checkPContext $ (amap (\l -> l <++> nIS $2 <** (srcInfoPoints l ++ [$2]))) (splitTilde $1) }
+>       : context_('*',NEVER)           { $1 }
+
+> context_(ostar,kstar) :: { PContext L }
+>       : btype_(ostar,kstar) '=>'      {% checkPContext $ (amap (\l -> l <++> nIS $2 <** (srcInfoPoints l ++ [$2]))) (splitTilde $1) }
 
 > types :: { ([PType L],[S]) }
->       : types1 ',' ctype              { ($3 : fst $1, $2 : snd $1)  }
+>       : types_('*',NEVER)             { $1 }
+
+> types_(ostar,kstar) :: { ([PType L],[S]) }
+>       : types1_(ostar,kstar) ',' ctype_(ostar,kstar)  { ($3 : fst $1, $2 : snd $1)  }
 
 > types1 :: { ([PType L],[S]) }
->       : ctype                         { ([$1],[]) }
->       | types1 ',' ctype              { ($3 : fst $1, $2 : snd $1) }
+>       : types1_('*',NEVER)            { $1 }
 
-> types_bars2 :: { ([PType L],[S]) }
->   : ctype '|' ctype                   { ([$3, $1], [$2]) }
->   | types_bars2 '|' ctype             { ($3 : fst $1, $2 : snd $1) }
+> types1_(ostar,kstar) :: { ([PType L],[S]) }
+>       : ctype_(ostar,kstar)                           { ([$1],[]) }
+>       | types1_(ostar,kstar) ',' ctype_(ostar,kstar)  { ($3 : fst $1, $2 : snd $1) }
+
+> types_bars2(ostar,kstar) :: { ([PType L],[S]) }
+>   : ctype_(ostar,kstar) '|' ctype_(ostar,kstar)       { ([$3, $1], [$2]) }
+>   | types_bars2(ostar,kstar) '|' ctype_(ostar,kstar)  { ($3 : fst $1, $2 : snd $1) }
 
 > ktyvars :: { ([TyVarBind L],Maybe L) }
 >       : ktyvars ktyvar                { ($2 : fst $1, Just (snd $1 <?+> ann $2)) }
@@ -1210,32 +1244,7 @@ Kinds
 >       : kind1                 {% checkEnabled KindSignatures >> return $1 }
 
 > kind1 :: { Kind L }
->       : bkind                 { $1 }
->       | bkind '->' kind1      { KindFn ($1 <> $3 <** [$2]) $1 $3 }
-
-> bkind :: { Kind L }
->       : akind                 { $1 }
->       | bkind akind           { KindApp ($1 <> $2) $1 $2 }
-
-> akind :: { Kind L }
->       : '*'                   { KindStar  (nIS $1) }
->       | '(' kind1 ')'         { KindParen ($1 <^^> $3 <** [$1,$3]) $2 }
->       | pkind                 {% checkKind $1 >> return $1 }
->       | qvarid                {% checkEnabled PolyKinds >> return (KindVar (ann $1) $1) }
-
-KindParen covers 1-tuples, KindVar l  while KindTuple is for pairs
-
-> pkind :: { Kind L }
->         : qtyconorcls         { KindVar (ann $1) $1 }
->         | '(' ')'             { let l = $1 <^^> $2 in KindVar l (unit_tycon_name l) }
->         | '(' kind ',' comma_kinds1  ')'
->             { KindTuple ($1 <^^> $5 <** ($1:$3:reverse ($5:snd $4))) ($2:reverse (fst $4)) }
->         | '[' kind ']'      { KindList  (($1 <^^> $3) <** [$1, $3]) $2 }
-
-> comma_kinds1 :: { ([Kind L], [S]) }
->      : kind1                   { ([$1], []) }
->      | kind1 ',' comma_kinds1  { ($1 : (fst $3), $2 : (snd $3)) }
-
+>       : dtype_(NEVER,'*')     {% checkType $1 }
 
 > optkind :: { (Maybe (Kind L), [S]) }
 >       : {-empty-}             { (Nothing,[]) }
@@ -2002,7 +2011,10 @@ Implicit parameter
 >       : CONSYM                { let Loc l (ConSym c) = $1 in Symbol (nIS l) c }
 
 > qvarsym :: { QName L }
->       : varsym                { UnQual (ann $1) $1 }
+>       : qvarsym_('*')         { $1 }
+
+> qvarsym_(ostar) :: { QName L }
+>       : varsym_(ostar)        { UnQual (ann $1) $1 }
 >       | qvarsym1              { $1 }
 
 > qvarsymm :: { QName L }
@@ -2010,14 +2022,20 @@ Implicit parameter
 >       | qvarsym1              { $1 }
 
 > varsym :: { Name L }
->       : varsymm               { $1 }
+>       : varsym_('*')          { $1 }
+
+> varsym_(ostar) :: { Name L }
+>       : varsymm_(ostar)       { $1 }
 >       | '-'                   { minus_name (nIS $1) }
 
-> varsymm :: { Name L } -- varsym not including '-'
+> varsymm :: { Name L }
+>       : varsymm_('*')         { $1 }
+
+> varsymm_(ostar) :: { Name L } -- varsym not including '-'
 >       : VARSYM                { let Loc l (VarSym v) = $1 in Symbol (nIS l) v }
 >       | '!'                   { bang_name (nIS $1) }
 >       | '.'                   { dot_name  (nIS $1) }
->       | '*'                   { star_name (nIS $1) }
+>       | ostar                 { star_name (nIS $1) }
 
 > qvarsym1 :: { QName L }
 >       : QVARSYM               { let {Loc l (QVarSym q) = $1; nis = nIS l} in Qual nis (ModuleName nis (fst q)) (Symbol nis (snd q)) }
@@ -2155,14 +2173,14 @@ Miscellaneous (mostly renamings)
 	| 'forall'		{ forall_name	  (nIS $1) }
 	| 'family'		{ family_name     (nIS $1) }
 
-> qtyvarop :: { QName L }
-> qtyvarop : '`' tyvar '`'       { UnQual ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3]) $2 }
->          | tyvarsym            { UnQual (ann $1) $1 }
+> qtyvarop_(ostar) :: { QName L }
+> qtyvarop_ : '`' tyvar '`'     { UnQual ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3]) $2 }
+>          | tyvarsym_(ostar)   { UnQual (ann $1) $1 }
 
-> tyvarsym :: { Name L }
+> tyvarsym_(ostar) :: { Name L }
 > tyvarsym : VARSYM              { let Loc l (VarSym x) = $1 in Symbol (nIS l) x }
 >          | '-'                 { Symbol (nIS $1) "-" }
->          | '*'                 { Symbol (nIS $1) "*" }
+>          | ostar                   { Symbol (nIS $1) "*" }
 
 > impdeclsblock :: { ([ImportDecl L],[S],L) }
 >               : '{'  optsemis impdecls optsemis '}'         { let (ids, ss) = $3 in (ids, $1 : reverse $2 ++ ss ++ reverse $4 ++ [$5], $1 <^^> $5) }
