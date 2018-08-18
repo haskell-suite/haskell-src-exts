@@ -1107,6 +1107,7 @@ checkT t simple = case t of
             checkEnabled ExplicitForAll
             ctxt <- checkContext cs
             check1Type pt (S.TyForall l tvs ctxt)
+    TyStar  l         -> return $ S.TyStar l
     TyFun   l at rt   -> check2Types at rt (S.TyFun l)
     TyTuple l b pts   -> checkTypes pts >>= return . S.TyTuple l b
     TyUnboxedSum l es -> checkTypes es >>= return . S.TyUnboxedSum l
@@ -1177,9 +1178,9 @@ checkTyVar n = do
 -- test for that.
 checkKind :: Kind l -> P ()
 checkKind k = case k of
-        KindVar _ q | constrKind q -> checkEnabledOneOf [ConstraintKinds, DataKinds]
+        S.TyVar _ q | constrKind q -> checkEnabledOneOf [ConstraintKinds, DataKinds]
             where constrKind name = case name of
-                    (UnQual _ (Ident _ n)) -> n == "Constraint"
+                    Ident _ n -> n == "Constraint"
                     _                      -> False
 
         _ -> checkEnabled DataKinds

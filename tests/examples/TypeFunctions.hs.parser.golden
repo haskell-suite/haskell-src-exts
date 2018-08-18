@@ -126,18 +126,18 @@ ParseOk
                         , srcInfoPoints = []
                         }
                       "f")
-                   (KindFn
+                   (TyFun
                       SrcSpanInfo
                         { srcInfoSpan = SrcSpan "tests/examples/TypeFunctions.hs" 5 23 5 29
                         , srcInfoPoints =
                             [ SrcSpan "tests/examples/TypeFunctions.hs" 5 25 5 27 ]
                         }
-                      (KindStar
+                      (TyStar
                          SrcSpanInfo
                            { srcInfoSpan = SrcSpan "tests/examples/TypeFunctions.hs" 5 23 5 24
                            , srcInfoPoints = []
                            })
-                      (KindStar
+                      (TyStar
                          SrcSpanInfo
                            { srcInfoSpan = SrcSpan "tests/examples/TypeFunctions.hs" 5 28 5 29
                            , srcInfoPoints = []
@@ -160,7 +160,7 @@ ParseOk
                   , srcInfoPoints =
                       [ SrcSpan "tests/examples/TypeFunctions.hs" 5 33 5 35 ]
                   }
-                (KindStar
+                (TyStar
                    SrcSpanInfo
                      { srcInfoSpan = SrcSpan "tests/examples/TypeFunctions.hs" 5 36 5 37
                      , srcInfoPoints = []

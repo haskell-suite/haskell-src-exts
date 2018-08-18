@@ -833,6 +833,7 @@ prec_atype = 2  -- argument of type or data constructor, or of a class
 instance  Pretty (Type l) where
         prettyPrec p (TyForall _ mtvs ctxt htype) = parensIf (p > 0) $
                 myFsep [ppForall mtvs, maybePP pretty ctxt, pretty htype]
+        prettyPrec _ (TyStar _) = text "*"
         prettyPrec p (TyFun _ a b) = parensIf (p > 0) $
                 myFsep [ppBType a, text "->", pretty b]
         prettyPrec _ (TyTuple _ bxd l) =
@@ -893,16 +894,6 @@ ppForall (Just []) = empty
 ppForall (Just vs) =    myFsep (text "forall" : map pretty vs ++ [char '.'])
 
 ---------------------------- Kinds ----------------------------
-
-instance  Pretty (Kind l) where
-        prettyPrec _ KindStar{}      = text "*"
-        prettyPrec n (KindFn _ a b)  = parensIf (n > 0) $ myFsep [prettyPrec 1 a, text "->", pretty b]
-        prettyPrec _ (KindParen _ k) = parens $ pretty k
-        prettyPrec _ (KindVar _ n)   = pretty n
-        prettyPrec _ (KindTuple _ t) = parenList . map pretty $ t
-        prettyPrec _ (KindList _ l)  = brackets .  pretty $ l
-        prettyPrec n (KindApp _ a b) =
-          parensIf (n > 3) $ myFsep [prettyPrec 3 a, prettyPrec 4 b]
 
 ppOptKind :: Maybe (Kind l) -> [Doc]
 ppOptKind Nothing  = []
@@ -1670,6 +1661,7 @@ instance SrcInfo loc => Pretty (P.PAsst loc) where
 instance SrcInfo loc => Pretty (P.PType loc) where
         prettyPrec p (P.TyForall _ mtvs ctxt htype) = parensIf (p > 0) $
                 myFsep [ppForall mtvs, maybePP pretty ctxt, pretty htype]
+        prettyPrec _ (P.TyStar _) = text "*"
         prettyPrec p (P.TyFun _ a b) = parensIf (p > 0) $
                 myFsep [prettyPrec prec_btype a, text "->", pretty b]
         prettyPrec _ (P.TyTuple _ bxd l) =

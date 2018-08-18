@@ -138,28 +138,23 @@ ParseOk
                      , srcInfoPoints = []
                      }
                    "f")
-                (KindFn
+                (TyFun
                    SrcSpanInfo
                      { srcInfoSpan = SrcSpan "tests/examples/t412.hs" 8 16 8 22
                      , srcInfoPoints = [ SrcSpan "tests/examples/t412.hs" 8 18 8 20 ]
                      }
-                   (KindVar
+                   (TyVar
                       SrcSpanInfo
                         { srcInfoSpan = SrcSpan "tests/examples/t412.hs" 8 16 8 17
                         , srcInfoPoints = []
                         }
-                      (UnQual
+                      (Ident
                          SrcSpanInfo
                            { srcInfoSpan = SrcSpan "tests/examples/t412.hs" 8 16 8 17
                            , srcInfoPoints = []
                            }
-                         (Ident
-                            SrcSpanInfo
-                              { srcInfoSpan = SrcSpan "tests/examples/t412.hs" 8 16 8 17
-                              , srcInfoPoints = []
-                              }
-                            "k")))
-                   (KindStar
+                         "k"))
+                   (TyStar
                       SrcSpanInfo
                         { srcInfoSpan = SrcSpan "tests/examples/t412.hs" 8 21 8 22
                         , srcInfoPoints = []
