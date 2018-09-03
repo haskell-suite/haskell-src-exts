@@ -1533,6 +1533,9 @@ Template Haskell - all this is enabled in the lexer.
 >       | VARQUOTE '(' ')'              { let {l1 = $1 <^^> $3 <** [$1];
 >                                              l2 = $2 <^^> $3 <** [$2,$3];}
 >                                          in VarQuote l1 (unit_con_name l2) }
+>       | VARQUOTE '[' ']'              { let {l1 = $1 <^^> $3 <** [$1];
+>                                              l2 = $2 <^^> $3 <** [$2,$3];}
+>                                          in VarQuote l1 (list_con_name l2) }
 >       | VARQUOTE qvar                 { VarQuote (nIS $1 <++> ann $2 <** [$1]) $2 }
 >       | VARQUOTE qcon                 { VarQuote (nIS $1 <++> ann $2 <** [$1]) $2 }
 >       | TYPQUOTE tyvar                { TypQuote (nIS $1 <++> ann $2 <** [$1]) (UnQual (ann $2) $2) }

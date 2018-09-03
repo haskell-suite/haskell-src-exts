@@ -97,7 +97,7 @@ module Language.Haskell.Exts.Syntax (
     -- ** Main function of a program
     main_name,
     -- ** Constructors
-    unit_con_name, tuple_con_name, list_cons_name, unboxed_singleton_con_name,
+    unit_con_name, tuple_con_name, list_con_name, list_cons_name, unboxed_singleton_con_name,
     unit_con, tuple_con, unboxed_singleton_con,
     -- ** Special identifiers
     as_name, qualified_name, hiding_name, minus_name, bang_name, dot_name, star_name,
@@ -134,7 +134,7 @@ data ModuleName l = ModuleName l String
 -- data constructors.
 data SpecialCon l
     = UnitCon l             -- ^ unit type and data constructor @()@
-    | ListCon l             -- ^ list type constructor @[]@
+    | ListCon l             -- ^ list type and data constructor @[]@
     | FunCon  l             -- ^ function type constructor @->@
     | TupleCon l Boxed Int  -- ^ /n/-ary tuple type and data
                             --   constructors @(,)@ etc, possibly boxed @(\#,\#)@
@@ -1025,6 +1025,9 @@ unit_con_name l = Special l (UnitCon l)
 
 tuple_con_name :: l -> Boxed -> Int -> QName l
 tuple_con_name l b i = Special l (TupleCon l b (i+1))
+
+list_con_name :: l -> QName l
+list_con_name l = Special l (ListCon l)
 
 list_cons_name :: l -> QName l
 list_cons_name l = Special l (Cons l)

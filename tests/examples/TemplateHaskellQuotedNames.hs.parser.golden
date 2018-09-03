@@ -1,0 +1,246 @@
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan =
+            SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 1 1 4 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 1 1 1 1
+            , SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 2 1 2 1
+            , SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 2 1 2 1
+            , SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 2 1 2 1
+            , SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 3 1 3 1
+            , SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 4 1 4 1
+            , SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 4 1 4 1
+            ]
+        }
+      Nothing
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 1 1 1 33
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 1 1 1 13
+                , SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 1 30 1 33
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 1 14 1 29
+                , srcInfoPoints = []
+                }
+              "TemplateHaskell"
+          ]
+      ]
+      []
+      [ PatBind
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 2 1 2 29
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 2 1 2 2
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 2 1 2 2
+                  , srcInfoPoints = []
+                  }
+                "f"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 2 3 2 29
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 2 3 2 4 ]
+               }
+             (App
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 2 5 2 29
+                  , srcInfoPoints = []
+                  }
+                (App
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 2 5 2 19
+                     , srcInfoPoints = []
+                     }
+                   (Var
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 2 5 2 6
+                        , srcInfoPoints = []
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 2 5 2 6
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 2 5 2 6
+                              , srcInfoPoints = []
+                              }
+                            "g")))
+                   (VarQuote
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 2 7 2 19
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 2 7 2 8 ]
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 2 8 2 19
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 2 8 2 19
+                              , srcInfoPoints = []
+                              }
+                            "Constructor"))))
+                (VarQuote
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 2 20 2 29
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 2 20 2 21
+                         ]
+                     }
+                   (UnQual
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 2 21 2 29
+                        , srcInfoPoints = []
+                        }
+                      (Ident
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 2 21 2 29
+                           , srcInfoPoints = []
+                           }
+                         "function")))))
+          Nothing
+      , PatBind
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 3 1 3 14
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 3 1 3 2
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 3 1 3 2
+                  , srcInfoPoints = []
+                  }
+                "h"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 3 3 3 14
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 3 3 3 4 ]
+               }
+             (App
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 3 5 3 14
+                  , srcInfoPoints = []
+                  }
+                (App
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 3 5 3 10
+                     , srcInfoPoints = []
+                     }
+                   (Var
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 3 5 3 6
+                        , srcInfoPoints = []
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 3 5 3 6
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 3 5 3 6
+                              , srcInfoPoints = []
+                              }
+                            "g")))
+                   (VarQuote
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 3 7 3 10
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 3 7 3 8 ]
+                        }
+                      (Special
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 3 8 3 10
+                           , srcInfoPoints =
+                               [ SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 3 8 3 9
+                               , SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 3 9 3 10
+                               ]
+                           }
+                         (UnitCon
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 3 8 3 10
+                              , srcInfoPoints =
+                                  [ SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 3 8 3 9
+                                  , SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 3 9 3 10
+                                  ]
+                              }))))
+                (VarQuote
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 3 11 3 14
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 3 11 3 12
+                         ]
+                     }
+                   (Special
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 3 12 3 14
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 3 12 3 13
+                            , SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 3 13 3 14
+                            ]
+                        }
+                      (ListCon
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 3 12 3 14
+                           , srcInfoPoints =
+                               [ SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 3 12 3 13
+                               , SrcSpan "tests/examples/TemplateHaskellQuotedNames.hs" 3 13 3 14
+                               ]
+                           })))))
+          Nothing
+      ]
+  , []
+  )
