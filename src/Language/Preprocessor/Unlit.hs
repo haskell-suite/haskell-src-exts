@@ -1,5 +1,6 @@
 -- | Part of this code is from "Report on the Programming Language Haskell",
 --   version 1.2, appendix C.
+{-# OPTIONS_GHC -Wwarn #-}
 module Language.Preprocessor.Unlit (unlit) where
 
 import Data.Char
