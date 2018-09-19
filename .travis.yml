@@ -30,7 +30,7 @@ matrix:
       addons: {apt: {packages: [cabal-install-2.0,ghc-8.2.2,happy-1.19.5], sources: [hvr-ghc]}}
     - env: CABALVER=head GHCVER=8.4.3 HAPPYVER=1.19.5
       compiler: ": #GHC 8.4.3"
-      addons: {apt: {packages: [cabal-install-head,ghc-8.4.3,happy-1.19.5], sources: [hvr-ghc]}}
+      addons: {apt: {packages: [cabal-install-2.2,ghc-8.4.3,happy-1.19.5], sources: [hvr-ghc]}}
     - env: CABALVER=head GHCVER=8.6.1 HAPPYVER=1.19.5
       compiler: ": #GHC 8.6.1"
       addons: {apt: {packages: [cabal-install-head,ghc-8.6.1,happy-1.19.5], sources: [hvr-ghc]}}
