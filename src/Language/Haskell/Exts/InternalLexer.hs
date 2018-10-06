@@ -32,7 +32,7 @@ import Data.Char
 import Data.Ratio
 import Data.List (intercalate, isPrefixOf)
 import Control.Monad (when)
--- #define DEBUG 1
+
 #ifdef DEBUG
 import Debug.Trace (trace)
 #endif
@@ -400,6 +400,10 @@ topLexer = do
 #ifdef DEBUG
         trace ("By context flag: " ++ show VRightCurly) $ return ()
 #endif
+        pCtxtFlg <- checkParentContextL
+        when pCtxtFlg $
+            popContextL "lexBOL"
+
         -- the lex context state flags that we must do an empty {} - UGLY
         sl <- getSrcLocL
         setBOL

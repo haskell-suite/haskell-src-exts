@@ -34,7 +34,7 @@ module Language.Haskell.Exts.ParseMonad(
         -- * Harp/Hsx
         ExtContext(..),
         pushExtContextL, popExtContextL, getExtContext,
-        pullCtxtFlag, flagDo,
+        pullCtxtFlag, flagDo, checkParentContextL,
         getModuleName
     ) where
 
@@ -518,6 +518,13 @@ pullCtxtFlag = Lex $ \cont -> P $ \r x y loc ch (ct, exts, e, (d,c), cs) ->
 flagDo :: Lex a ()
 flagDo = Lex $ \cont -> P $ \r x y loc ch (ct, exts, e, (_,c), cs) ->
         runP (cont ()) r x y loc ch (ct, exts, e, (True,c), cs)
+
+checkParentContextL :: Lex a Bool
+checkParentContextL = do
+    l <- getSrcLocL
+    parserL $ P $ \_i _x _y _l _ s@(stk, _, _, _, _) _m -> case stk of
+        (_:Layout StmtLayout i:_) | srcColumn l == i -> Ok s True
+        _                                            -> Ok s False
 
 
 -- Harp/Hsx
