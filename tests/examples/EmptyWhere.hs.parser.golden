@@ -51,11 +51,11 @@ ParseOk
           (Just
              (BDecls
                 SrcSpanInfo
-                  { srcInfoSpan = SrcSpan "tests/examples/EmptyWhere.hs" 2 0 2 1
+                  { srcInfoSpan = SrcSpan "tests/examples/EmptyWhere.hs" 2 1 2 1
                   , srcInfoPoints =
                       [ SrcSpan "tests/examples/EmptyWhere.hs" 2 1 2 1
                       , SrcSpan "tests/examples/EmptyWhere.hs" 2 1 2 1
-                      , SrcSpan "tests/examples/EmptyWhere.hs" 2 0 2 0
+                      , SrcSpan "tests/examples/EmptyWhere.hs" 2 1 2 0
                       ]
                   }
                 []))

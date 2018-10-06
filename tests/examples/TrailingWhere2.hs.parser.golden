@@ -177,11 +177,11 @@ ParseOk
                         (Just
                            (BDecls
                               SrcSpanInfo
-                                { srcInfoSpan = SrcSpan "tests/examples/TrailingWhere2.hs" 6 0 6 3
+                                { srcInfoSpan = SrcSpan "tests/examples/TrailingWhere2.hs" 6 3 6 3
                                 , srcInfoPoints =
                                     [ SrcSpan "tests/examples/TrailingWhere2.hs" 6 3 6 3
                                     , SrcSpan "tests/examples/TrailingWhere2.hs" 6 3 6 3
-                                    , SrcSpan "tests/examples/TrailingWhere2.hs" 6 0 6 0
+                                    , SrcSpan "tests/examples/TrailingWhere2.hs" 6 3 6 0
                                     ]
                                 }
                               []))
