@@ -807,15 +807,31 @@ instance Pretty (Unpackedness l) where
         pretty NoUnpackPragma {} = empty
 
 instance Pretty (Deriving l) where
-  pretty (Deriving _ mds [d]) = text "deriving" <+> maybePP pretty mds <+> pretty d
-  pretty (Deriving _ mds d)   = text "deriving" <+> maybePP pretty mds <+> parenList (map pretty d)
+  pretty (Deriving _ mds d) =
+    hsep [ text "deriving"
+         , pp_strat_before
+         , pp_dct
+         , pp_strat_after ]
+    where
+      pp_dct =
+        case d of
+          [d'] -> pretty d'
+          _    -> parenList (map pretty d)
+
+      -- @via@ is unique in that in comes /after/ the class being derived,
+      -- so we must special-case it.
+      (pp_strat_before, pp_strat_after) =
+        case mds of
+          Just (via@DerivVia{}) -> (empty, pretty via)
+          _                     -> (maybePP pretty mds, empty)
 
 instance Pretty (DerivStrategy l) where
-  pretty ds = text $
+  pretty ds =
     case ds of
-      DerivStock _    -> "stock"
-      DerivAnyclass _ -> "anyclass"
-      DerivNewtype _  -> "newtype"
+      DerivStock _    -> text "stock"
+      DerivAnyclass _ -> text "anyclass"
+      DerivNewtype _  -> text "newtype"
+      DerivVia _ ty   -> text "via" <+> pretty ty
 
 ------------------------- Types -------------------------
 ppBType :: Type l -> Doc

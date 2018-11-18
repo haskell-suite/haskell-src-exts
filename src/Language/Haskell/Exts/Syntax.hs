@@ -104,7 +104,7 @@ module Language.Haskell.Exts.Syntax (
     export_name, safe_name, unsafe_name, interruptible_name, threadsafe_name,
     stdcall_name, ccall_name, cplusplus_name, dotnet_name, jvm_name, js_name,
     javascript_name, capi_name, forall_name, family_name, role_name, hole_name,
-    stock_name, anyclass_name,
+    stock_name, anyclass_name, via_name,
     -- ** Type constructors
     unit_tycon_name, fun_tycon_name, list_tycon_name, tuple_tycon_name, unboxed_singleton_tycon_name,
     unit_tycon, fun_tycon, list_tycon, tuple_tycon, unboxed_singleton_tycon,
@@ -487,12 +487,13 @@ data Deriving l = Deriving l (Maybe (DerivStrategy l)) [InstRule l]
 
 -- | Which technique the user explicitly requested when deriving an instance.
 data DerivStrategy l
-  = DerivStock l    -- ^ GHC's \"standard\" strategy, which is to implement a
-                    --   custom instance for the data type. This only works for
-                    --   certain types that GHC knows about (e.g., 'Eq', 'Show',
-                    --   'Functor' when @-XDeriveFunctor@ is enabled, etc.)
-  | DerivAnyclass l -- ^ @-XDeriveAnyClass@
-  | DerivNewtype l  -- ^ @-XGeneralizedNewtypeDeriving@
+  = DerivStock l        -- ^ GHC's \"standard\" strategy, which is to implement a
+                        --   custom instance for the data type. This only works for
+                        --   certain types that GHC knows about (e.g., 'Eq', 'Show',
+                        --   'Functor' when @-XDeriveFunctor@ is enabled, etc.)
+  | DerivAnyclass l     -- ^ @-XDeriveAnyClass@
+  | DerivNewtype l      -- ^ @-XGeneralizedNewtypeDeriving@
+  | DerivVia l (Type l) -- ^ @-XDerivingVia@
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | A binding group inside a @let@ or @where@ clause.
@@ -1056,7 +1057,7 @@ hole_name      l = Special l (ExprHole l)
 export_name, safe_name, unsafe_name, interruptible_name, threadsafe_name,
   stdcall_name, ccall_name, cplusplus_name, dotnet_name,
   jvm_name, js_name, javascript_name, capi_name, forall_name,
-  family_name, role_name, stock_name, anyclass_name :: l -> Name l
+  family_name, role_name, stock_name, anyclass_name, via_name :: l -> Name l
 export_name     l = Ident l "export"
 safe_name       l = Ident l "safe"
 unsafe_name     l = Ident l "unsafe"
@@ -1075,6 +1076,7 @@ family_name     l = Ident l "family"
 role_name       l = Ident l "role"
 stock_name      l = Ident l "stock"
 anyclass_name   l = Ident l "anyclass"
+via_name        l = Ident l "via"
 
 unit_tycon_name, fun_tycon_name, list_tycon_name, unboxed_singleton_tycon_name :: l -> QName l
 unit_tycon_name l = unit_con_name l
@@ -1253,7 +1255,12 @@ instance Annotated DerivStrategy where
     ann (DerivStock l)    = l
     ann (DerivAnyclass l) = l
     ann (DerivNewtype l)  = l
-    amap = fmap
+    ann (DerivVia l _)    = l
+
+    amap f (DerivStock l)    = DerivStock (f l)
+    amap f (DerivAnyclass l) = DerivAnyclass (f l)
+    amap f (DerivNewtype l)  = DerivNewtype (f l)
+    amap f (DerivVia l t)    = DerivVia (f l) t
 
 instance Annotated TypeEqn where
     ann (TypeEqn l _ _) = l

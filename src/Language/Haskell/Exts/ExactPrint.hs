@@ -1246,6 +1246,9 @@ instance ExactP DerivStrategy where
     printString "anyclass"
   exactP (DerivNewtype _) =
     printString "newtype"
+  exactP (DerivVia _ ty) = do
+    printString "via"
+    exactP ty
 
 instance ExactP ClassDecl where
   exactP cdecl = case cdecl of

@@ -197,6 +197,7 @@ data Token
         | KW_Pattern
         | KW_Stock
         | KW_Anyclass
+        | KW_Via
 
                 -- FFI
         | KW_Foreign
@@ -297,6 +298,7 @@ reserved_ids = [
  ( "pattern",   (KW_Pattern,    Just (Any [PatternSynonyms]))),
  ( "stock",     (KW_Stock,      Nothing)),
  ( "anyclass",  (KW_Anyclass,   Nothing)),
+ ( "via",       (KW_Via,        Nothing)),
 
 -- FFI
  ( "foreign",   (KW_Foreign,    Just (Any [ForeignFunctionInterface])) )
@@ -1446,5 +1448,6 @@ showToken t = case t of
   KW_Pattern    -> "pattern"
   KW_Stock      -> "stock"
   KW_Anyclass   -> "anyclass"
+  KW_Via        -> "via"
 
   EOF           -> "EOF"

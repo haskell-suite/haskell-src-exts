@@ -260,6 +260,7 @@ Reserved Ids
 >       'pattern'       { Loc $$ KW_Pattern }
 >       'stock'         { Loc $$ KW_Stock }    -- for DerivingStrategies extension
 >       'anyclass'      { Loc $$ KW_Anyclass } -- for DerivingStrategies extension
+>       'via'           { Loc $$ KW_Via }      -- for DerivingStrategies extension
 
 Pragmas
 
@@ -645,7 +646,7 @@ This style requires both TypeFamilies and GADTs, the latter is handled in gadtli
 >                        return (InstDecl (nIS $1 <++> ann $3 <+?> minf <** ($1:ss)) $2 ih mis) } }
 
 Requires the StandaloneDeriving extension enabled.
->       | 'deriving' deriv_strategy 'instance' optoverlap ctype
+>       | 'deriving' deriv_standalone_strategy 'instance' optoverlap ctype
 >                {% do { checkEnabled StandaloneDeriving ;
 >                        ih <- checkInstHeader $5;
 >                        let {l = nIS $1 <++> ann $5 <** [$1,$3]};
@@ -1186,15 +1187,15 @@ as qcon and then check separately that they are truly unqualified.
 >       | deriving                      { [$1] }
 
 > deriving :: { Deriving L }
->       : 'deriving' deriv_strategy qtycls1
->                                       { let l = nIS $1 <++> ann $3 <** [$1] in Deriving l $2 [IRule (ann $3) Nothing Nothing $3] }
->       | 'deriving' deriv_strategy '(' ')'
->                                       { Deriving ($1 <^^> $4 <** [$1,$3,$4]) $2 [] }
->       | 'deriving' deriv_strategy '(' dclasses ')'
->                                       { -- Distinguish deriving (Show) from deriving Show (#189)
->                                         case fst $4 of
->                                           [ts] -> Deriving ($1 <^^> $5 <** [$1]) $2 [IParen ($3 <^^> $5 <** [$3,$5]) ts]
->                                           tss  -> Deriving ($1 <^^> $5 <** $1:$3: reverse (snd $4) ++ [$5]) $2 (reverse tss)}
+>       : 'deriving' deriv_clause_types
+>             { let (ihs, last_ss, sss) = $2
+>               in Deriving ($1 <^^> last_ss <** $1:sss) Nothing ihs }
+>       | 'deriving' deriv_strategy_no_via deriv_clause_types
+>             { let (ihs, last_ss, sss) = $3
+>               in Deriving ($1 <^^> last_ss <** $1:sss) (Just $2) ihs }
+>       | 'deriving' deriv_clause_types deriv_strategy_via
+>             { let (ihs, last_ss, sss) = $2
+>               in Deriving ($1 <^^> last_ss <** $1:sss) (Just $3) ihs }
 
 > dclasses :: { ([InstRule L],[S]) }
 >       : types1                        {% checkDeriving (fst $1) >>= \ds -> return (ds, snd $1) }
@@ -1202,6 +1203,12 @@ as qcon and then check separately that they are truly unqualified.
 > qtycls1 :: { InstHead L }
 >       : qconid                        { IHCon (ann $1) $1 }
 
+> deriv_clause_types :: { ([InstRule L], SrcSpan, [SrcSpan]) }
+>       : qtycls1                       { [IRule (ann $1) Nothing Nothing $1], srcInfoSpan (ann $1), [] }
+>       | '(' ')'                       { [], $2, [$1, $2] }
+>       | '(' dclasses ')'              { case fst $2 of
+>                                           [ts] -> ([IParen ($1 <^^> $3 <** [$1,$3]) ts], $3, [])
+>                                           tss  -> (reverse tss, $3, $1: reverse (snd $2) ++ [$3]) }
 
 -----------------------------------------------------------------------------
 Kinds
@@ -2120,15 +2127,24 @@ Pattern Synonyms
 -----------------------------------------------------------------------------
 Deriving strategies
 
-> deriv_strategy :: { Maybe (DerivStrategy L) }
+> deriv_strategy_no_via :: { DerivStrategy L }
 >       : 'stock'               {% do { checkEnabled DerivingStrategies
->                                     ; return (Just (DerivStock (nIS $1))) } }
+>                                     ; return (DerivStock (nIS $1)) } }
 >       | 'anyclass'            {% do { checkEnabled DerivingStrategies
 >                                     ; checkEnabled DeriveAnyClass
->                                     ; return (Just (DerivAnyclass (nIS $1))) } }
+>                                     ; return (DerivAnyclass (nIS $1)) } }
 >       | 'newtype'             {% do { checkEnabled DerivingStrategies
 >                                     ; checkEnabled GeneralizedNewtypeDeriving
->                                     ; return (Just (DerivNewtype (nIS $1))) } }
+>                                     ; return (DerivNewtype (nIS $1)) } }
+
+> deriv_strategy_via :: { DerivStrategy L }
+>       : 'via' truedtype       {% do { checkEnabled DerivingVia
+>                                     ; checkEnabled DerivingStrategies
+>                                     ; return (DerivVia (nIS $1) $2) } }
+
+> deriv_standalone_strategy :: { Maybe (DerivStrategy L) }
+>       : deriv_strategy_no_via { Just $1 }
+>       | deriv_strategy_via    { Just $1 }
 >       | {- empty -}           { Nothing }
 
 -----------------------------------------------------------------------------
