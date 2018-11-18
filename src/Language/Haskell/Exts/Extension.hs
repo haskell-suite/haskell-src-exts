@@ -552,6 +552,10 @@ data KnownExtension =
 
   | StrictData
 
+  -- | Enable deriving instances via types of the same runtime representation.
+  -- Implies 'DerivingStrategies'.
+  | DerivingVia
+
   deriving (Show, Read, Eq, Ord, Enum, Bounded, Data, Typeable)
 
 -- | Certain extensions imply other extensions, and this function
