@@ -2771,7 +2771,7 @@ ParseOk
                      , srcInfoPoints = []
                      }
                    "trans")
-                (KindVar
+                (TyCon
                    SrcSpanInfo
                      { srcInfoSpan = SrcSpan "tests/examples/DerivingVia.hs" 84 30 84 36
                      , srcInfoPoints = []
@@ -3010,7 +3010,7 @@ ParseOk
                               , srcInfoPoints = []
                               }
                             "s")))
-                   (KindVar
+                   (TyCon
                       SrcSpanInfo
                         { srcInfoSpan = SrcSpan "tests/examples/DerivingVia.hs" 87 36 87 42
                         , srcInfoPoints = []
@@ -3378,7 +3378,7 @@ ParseOk
                               , srcInfoPoints = []
                               }
                             "w")))
-                   (KindVar
+                   (TyCon
                       SrcSpanInfo
                         { srcInfoSpan = SrcSpan "tests/examples/DerivingVia.hs" 91 49 91 55
                         , srcInfoPoints = []
@@ -3798,7 +3798,7 @@ ParseOk
                               , srcInfoPoints = []
                               }
                             "trans'")))
-                   (KindVar
+                   (TyCon
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/DerivingVia.hs" 95 94 95 100
@@ -4416,7 +4416,7 @@ ParseOk
                   }
                 "Stack"))
           (Just
-             (KindVar
+             (TyCon
                 SrcSpanInfo
                   { srcInfoSpan = SrcSpan "tests/examples/DerivingVia.hs" 99 18 99 24
                   , srcInfoPoints = []
@@ -5305,7 +5305,7 @@ ParseOk
                      , srcInfoPoints = []
                      }
                    "trans")
-                (KindVar
+                (TyCon
                    SrcSpanInfo
                      { srcInfoSpan =
                          SrcSpan "tests/examples/DerivingVia.hs" 112 26 112 32
@@ -5655,7 +5655,7 @@ ParseOk
                               , srcInfoPoints = []
                               }
                             "r")))
-                   (KindVar
+                   (TyCon
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/DerivingVia.hs" 115 33 115 39
@@ -6245,7 +6245,7 @@ ParseOk
                               , srcInfoPoints = []
                               }
                             "s")))
-                   (KindVar
+                   (TyCon
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/DerivingVia.hs" 119 32 119 38
@@ -6835,7 +6835,7 @@ ParseOk
                               , srcInfoPoints = []
                               }
                             "w")))
-                   (KindVar
+                   (TyCon
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/DerivingVia.hs" 123 33 123 39
@@ -7371,14 +7371,14 @@ ParseOk
                   }
                 "ComposeT"))
           (Just
-             (KindFn
+             (TyFun
                 SrcSpanInfo
                   { srcInfoSpan =
                       SrcSpan "tests/examples/DerivingVia.hs" 128 21 128 47
                   , srcInfoPoints =
                       [ SrcSpan "tests/examples/DerivingVia.hs" 128 28 128 30 ]
                   }
-                (KindVar
+                (TyCon
                    SrcSpanInfo
                      { srcInfoSpan =
                          SrcSpan "tests/examples/DerivingVia.hs" 128 21 128 27
@@ -7397,14 +7397,14 @@ ParseOk
                            , srcInfoPoints = []
                            }
                          "MTrans")))
-                (KindFn
+                (TyFun
                    SrcSpanInfo
                      { srcInfoSpan =
                          SrcSpan "tests/examples/DerivingVia.hs" 128 31 128 47
                      , srcInfoPoints =
                          [ SrcSpan "tests/examples/DerivingVia.hs" 128 38 128 40 ]
                      }
-                   (KindVar
+                   (TyCon
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/DerivingVia.hs" 128 31 128 37
@@ -7423,7 +7423,7 @@ ParseOk
                               , srcInfoPoints = []
                               }
                             "MTrans")))
-                   (KindVar
+                   (TyCon
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/DerivingVia.hs" 128 41 128 47
@@ -28714,14 +28714,14 @@ ParseOk
                          , srcInfoPoints =
                              [ SrcSpan "tests/examples/DerivingVia.hs" 414 15 414 17 ]
                          }
-                       (KindFn
+                       (TyFun
                           SrcSpanInfo
                             { srcInfoSpan =
                                 SrcSpan "tests/examples/DerivingVia.hs" 414 18 414 30
                             , srcInfoPoints =
                                 [ SrcSpan "tests/examples/DerivingVia.hs" 414 23 414 25 ]
                             }
-                          (KindVar
+                          (TyCon
                              SrcSpanInfo
                                { srcInfoSpan =
                                    SrcSpan "tests/examples/DerivingVia.hs" 414 18 414 22
@@ -28740,7 +28740,7 @@ ParseOk
                                      , srcInfoPoints = []
                                      }
                                    "Type")))
-                          (KindVar
+                          (TyCon
                              SrcSpanInfo
                                { srcInfoSpan =
                                    SrcSpan "tests/examples/DerivingVia.hs" 414 26 414 30
@@ -31857,7 +31857,7 @@ ParseOk
                                      , srcInfoPoints = []
                                      }
                                    "b"))
-                             (KindVar
+                             (TyCon
                                 SrcSpanInfo
                                   { srcInfoSpan =
                                       SrcSpan "tests/examples/DerivingVia.hs" 459 27 459 31
