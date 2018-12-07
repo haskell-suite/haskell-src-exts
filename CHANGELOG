@@ -1,3 +1,9 @@
+1.20.3 --> 1.21.0
+=================
+* DerivingVia (#420)
+* TypeInType  (#414)
+* Parse TH-quoted list constructor (#415)
+
 1.20.2 --> 1.20.3
 =================
 * GHC 8.6.1 compatability (MonadFail)
