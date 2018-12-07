@@ -596,6 +596,7 @@ impliesExts = go
                     -- Deprecations
                     RecordPuns          -> [NamedFieldPuns]
                     PatternSignatures   -> [ScopedTypeVariables]
+                    DerivingVia         -> [DerivingStrategies]
                     _                   -> []
 
 -- | The list of extensions enabled by

@@ -2160,7 +2160,6 @@ Deriving strategies
 
 > deriv_strategy_via :: { DerivStrategy L }
 >       : 'via' truedtype       {% do { checkEnabled DerivingVia
->                                     ; checkEnabled DerivingStrategies
 >                                     ; return (DerivVia (nIS $1) $2) } }
 
 > deriv_standalone_strategy :: { Maybe (DerivStrategy L) }

@@ -296,9 +296,9 @@ reserved_ids = [
  ( "where",     (KW_Where,      Nothing) ),
  ( "role",      (KW_Role,       Just (Any [RoleAnnotations]))),
  ( "pattern",   (KW_Pattern,    Just (Any [PatternSynonyms]))),
- ( "stock",     (KW_Stock,      Nothing)),
- ( "anyclass",  (KW_Anyclass,   Nothing)),
- ( "via",       (KW_Via,        Nothing)),
+ ( "stock",     (KW_Stock,      Just (Any [DerivingStrategies]))),
+ ( "anyclass",  (KW_Anyclass,   Just (Any [DerivingStrategies]))),
+ ( "via",       (KW_Via,        Just (Any [DerivingVia]))),
 
 -- FFI
  ( "foreign",   (KW_Foreign,    Just (Any [ForeignFunctionInterface])) )

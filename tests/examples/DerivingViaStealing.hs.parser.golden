@@ -1,0 +1,201 @@
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan =
+            SrcSpan "tests/examples/DerivingViaStealing.hs" 1 1 6 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/DerivingViaStealing.hs" 1 1 1 1
+            , SrcSpan "tests/examples/DerivingViaStealing.hs" 1 1 1 1
+            , SrcSpan "tests/examples/DerivingViaStealing.hs" 3 1 3 1
+            , SrcSpan "tests/examples/DerivingViaStealing.hs" 4 1 4 1
+            , SrcSpan "tests/examples/DerivingViaStealing.hs" 5 1 5 1
+            , SrcSpan "tests/examples/DerivingViaStealing.hs" 6 1 6 1
+            , SrcSpan "tests/examples/DerivingViaStealing.hs" 6 1 6 1
+            ]
+        }
+      (Just
+         (ModuleHead
+            SrcSpanInfo
+              { srcInfoSpan =
+                  SrcSpan "tests/examples/DerivingViaStealing.hs" 1 1 1 33
+              , srcInfoPoints =
+                  [ SrcSpan "tests/examples/DerivingViaStealing.hs" 1 1 1 7
+                  , SrcSpan "tests/examples/DerivingViaStealing.hs" 1 28 1 33
+                  ]
+              }
+            (ModuleName
+               SrcSpanInfo
+                 { srcInfoSpan =
+                     SrcSpan "tests/examples/DerivingViaStealing.hs" 1 8 1 27
+                 , srcInfoPoints = []
+                 }
+               "DerivingViaStealing")
+            Nothing
+            Nothing))
+      []
+      []
+      [ PatBind
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/DerivingViaStealing.hs" 3 1 3 9
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/DerivingViaStealing.hs" 3 1 3 4
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/DerivingViaStealing.hs" 3 1 3 4
+                  , srcInfoPoints = []
+                  }
+                "via"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/DerivingViaStealing.hs" 3 5 3 9
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/DerivingViaStealing.hs" 3 5 3 6 ]
+               }
+             (Con
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/DerivingViaStealing.hs" 3 7 3 9
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/DerivingViaStealing.hs" 3 7 3 8
+                      , SrcSpan "tests/examples/DerivingViaStealing.hs" 3 8 3 9
+                      ]
+                  }
+                (Special
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/DerivingViaStealing.hs" 3 7 3 9
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/DerivingViaStealing.hs" 3 7 3 8
+                         , SrcSpan "tests/examples/DerivingViaStealing.hs" 3 8 3 9
+                         ]
+                     }
+                   (UnitCon
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/DerivingViaStealing.hs" 3 7 3 9
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/DerivingViaStealing.hs" 3 7 3 8
+                            , SrcSpan "tests/examples/DerivingViaStealing.hs" 3 8 3 9
+                            ]
+                        }))))
+          Nothing
+      , PatBind
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/DerivingViaStealing.hs" 4 1 4 11
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/DerivingViaStealing.hs" 4 1 4 6
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/DerivingViaStealing.hs" 4 1 4 6
+                  , srcInfoPoints = []
+                  }
+                "stock"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/DerivingViaStealing.hs" 4 7 4 11
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/DerivingViaStealing.hs" 4 7 4 8 ]
+               }
+             (Con
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/DerivingViaStealing.hs" 4 9 4 11
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/DerivingViaStealing.hs" 4 9 4 10
+                      , SrcSpan "tests/examples/DerivingViaStealing.hs" 4 10 4 11
+                      ]
+                  }
+                (Special
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/DerivingViaStealing.hs" 4 9 4 11
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/DerivingViaStealing.hs" 4 9 4 10
+                         , SrcSpan "tests/examples/DerivingViaStealing.hs" 4 10 4 11
+                         ]
+                     }
+                   (UnitCon
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/DerivingViaStealing.hs" 4 9 4 11
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/DerivingViaStealing.hs" 4 9 4 10
+                            , SrcSpan "tests/examples/DerivingViaStealing.hs" 4 10 4 11
+                            ]
+                        }))))
+          Nothing
+      , PatBind
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/DerivingViaStealing.hs" 5 1 5 14
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/DerivingViaStealing.hs" 5 1 5 9
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/DerivingViaStealing.hs" 5 1 5 9
+                  , srcInfoPoints = []
+                  }
+                "anyclass"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/DerivingViaStealing.hs" 5 10 5 14
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/DerivingViaStealing.hs" 5 10 5 11 ]
+               }
+             (Con
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/DerivingViaStealing.hs" 5 12 5 14
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/DerivingViaStealing.hs" 5 12 5 13
+                      , SrcSpan "tests/examples/DerivingViaStealing.hs" 5 13 5 14
+                      ]
+                  }
+                (Special
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/DerivingViaStealing.hs" 5 12 5 14
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/DerivingViaStealing.hs" 5 12 5 13
+                         , SrcSpan "tests/examples/DerivingViaStealing.hs" 5 13 5 14
+                         ]
+                     }
+                   (UnitCon
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/DerivingViaStealing.hs" 5 12 5 14
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/DerivingViaStealing.hs" 5 12 5 13
+                            , SrcSpan "tests/examples/DerivingViaStealing.hs" 5 13 5 14
+                            ]
+                        }))))
+          Nothing
+      ]
+  , []
+  )
