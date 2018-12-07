@@ -1826,7 +1826,7 @@ TODO: The points can't be added here, must be propagated!
 
 > stmtlist :: { ([Stmt L],L,[S]) }
 >       : '{'  stmts '}'                { (fst $2, $1 <^^> $3, $1:snd $2 ++ [$3])  }
->       | open stmts close              { let l' =  ann . last $ fst $2
+>       | stmtopen stmts close          { let l' =  ann . last $ fst $2
 >                                          in (fst $2, nIS $1 <++> l', $1:snd $2 ++ [$3]) }
 
 > stmts :: { ([Stmt L],[S]) }
@@ -2065,11 +2065,20 @@ Implicit parameter
 -----------------------------------------------------------------------------
 Layout
 
-> open  :: { S }  :       {% pushCurrentContext >> getSrcLoc >>= \s -> return $ mkSrcSpan s s {- >>= \x -> trace (show x) (return x) -} }
+> open  :: { S }  :       {% pushCurrentContext BindLayout >> getZeroSpanByLoc
+>                         {- >>= \x -> trace (show x) (return x) -}
+>                         }
+> stmtopen  :: { S }  :   {% pushCurrentContext StmtLayout >> getZeroSpanByLoc
+>                         {- >>= \x -> trace (show x) (return x) -}
+>                         }
 
 > close :: { S }
->       : vccurly               { $1 {- >>= \x -> trace (show x ++ show x ++ show x) (return x) -} } -- context popped in lexer.
->       | error                 {% popContext >> getSrcLoc >>= \s -> return $ mkSrcSpan s s {- >>= \x -> trace (show x ++ show x) (return x) -} }
+>       : vccurly               {% return $1
+>                               {- >>= \x -> trace (show x ++ show x ++ show x) (return x) -}
+>                               }
+>       | error                 {% popContext >> getZeroSpanByLoc
+>                               {- >>= \x -> trace (show x ++ show x) (return x) -}
+>                               }
 
 -----------------------------------------------------------------------------
 Pattern Synonyms
@@ -2242,5 +2251,8 @@ Exported as partial parsers:
 >     when (not $ null is) $
 >        fail $ "Expected single declaration, found import declaration"
 >     checkSingleDecl ds
+
+> getZeroSpanByLoc :: P SrcSpan
+> getZeroSpanByLoc = getSrcLoc >>= \s -> return $ mkSrcSpan s s
 
 > }

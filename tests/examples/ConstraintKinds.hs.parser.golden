@@ -80,7 +80,7 @@ ParseOk
                 , SrcSpan "tests/examples/ConstraintKinds.hs" 4 13 4 18
                 , SrcSpan "tests/examples/ConstraintKinds.hs" 6 1 6 1
                 , SrcSpan "tests/examples/ConstraintKinds.hs" 6 1 6 1
-                , SrcSpan "tests/examples/ConstraintKinds.hs" 6 0 6 0
+                , SrcSpan "tests/examples/ConstraintKinds.hs" 6 1 6 0
                 ]
             }
           Nothing

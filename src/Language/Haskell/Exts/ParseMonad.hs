@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# OPTIONS_HADDOCK hide #-}
 -----------------------------------------------------------------------------
 -- |
@@ -18,7 +19,7 @@ module Language.Haskell.Exts.ParseMonad(
         -- * Generic Parsing
         Parseable(..),
         -- * Parsing
-        P, ParseResult(..), atSrcLoc, LexContext(..),
+        P, ParseResult(..), atSrcLoc, LexContext(..), LayoutKind(..),
         ParseMode(..), defaultParseMode, fromParseResult,
         runParserWithMode, runParserWithModeComments, runParser,
         getSrcLoc, pushCurrentContext, popContext,
@@ -33,7 +34,7 @@ module Language.Haskell.Exts.ParseMonad(
         -- * Harp/Hsx
         ExtContext(..),
         pushExtContextL, popExtContextL, getExtContext,
-        pullCtxtFlag, flagDo,
+        pullCtxtFlag, flagDo, checkParentContextL,
         getModuleName
     ) where
 
@@ -50,6 +51,10 @@ import Data.Monoid hiding ((<>))
 import Data.Semigroup (Semigroup(..))
 -- To avoid import warnings for Control.Applicative, Data.Monoid, and Data.Semigroup
 import Prelude
+
+#ifdef DEBUG
+import Debug.Trace
+#endif
 
 -- | Class providing function for parsing at many different types.
 --
@@ -115,7 +120,12 @@ instance ( Monoid m , Semigroup m) => Monoid (ParseResult m) where
 data ParseStatus a = Ok ParseState a | Failed SrcLoc String
     deriving Show
 
-data LexContext = NoLayout | Layout Int
+data LayoutKind
+    = BindLayout
+    | StmtLayout
+    deriving (Eq, Ord, Show)
+
+data LexContext = NoLayout | Layout LayoutKind Int
     deriving (Eq,Ord,Show)
 
 data ExtContext = CodeCtxt | HarpCtxt | TagCtxt | ChildCtxt
@@ -123,14 +133,14 @@ data ExtContext = CodeCtxt | HarpCtxt | TagCtxt | ChildCtxt
     deriving (Eq,Ord,Show)
 
 type CtxtFlag = (Bool,Bool)
--- (True,_) = We're in a do context.
--- (_, True)= Next token must be a virtual closing brace.
+-- (True, _) = We're in a do context.
+-- (_, True) = Next token must be a virtual closing brace.
 
 type ParseState = ([LexContext],[[KnownExtension]],[ExtContext],CtxtFlag,[Comment])
 
 indentOfParseState :: ParseState -> Int
-indentOfParseState (Layout n:_,_,_,_,_) = n
-indentOfParseState _                    = 0
+indentOfParseState (Layout _ n:_,_,_,_,_) = n
+indentOfParseState _                      = 0
 
 -- | Static parameters governing a parse.
 --   Note that the various parse functions in "Language.Haskell.Exts.Parser"
@@ -278,30 +288,35 @@ getModuleName = P $ \_i _x _y _l _ch s m ->
 -- (So if the source loc is not to the right of the current indent, an
 -- empty list {} will be inserted.)
 
-pushCurrentContext :: P ()
-pushCurrentContext = do
+pushCurrentContext :: LayoutKind -> P ()
+pushCurrentContext layoutKind = do
     lc <- getSrcLoc
     indent <- currentIndent
     dob <- pullDoStatus
     let loc = srcColumn lc
     when (dob && loc < indent
            || not dob && loc <= indent) pushCtxtFlag
-    pushContext (Layout loc)
+    pushContext (Layout layoutKind loc)
 
 currentIndent :: P Int
 currentIndent = P $ \_r _x _y _ _ stk _mode -> Ok stk (indentOfParseState stk)
 
 pushContext :: LexContext -> P ()
 pushContext ctxt =
---trace ("pushing lexical scope: " ++ show ctxt ++"\n") $
+#ifdef DEBUG
+    trace ("pushing lexical scope: " ++ show ctxt) $
+#endif
     P $ \_i _x _y _l _ (s, exts, e, p, c) _m -> Ok (ctxt:s, exts, e, p, c) ()
 
 popContext :: P ()
 popContext = P $ \_i _x _y loc _ stk _m ->
-      case stk of
-        (_:s, exts, e, p, c) -> --trace ("popping lexical scope, context now "++show s ++ "\n") $
-                          Ok (s, exts, e, p, c) ()
-        ([],_,_,_,_)   -> Failed loc "Unexpected }" -- error "Internal error: empty context in popContext"
+    case stk of
+        (_:s, exts, e, p, c) ->
+#ifdef DEBUG
+            trace ("popping lexical scope, context now " ++ show s) $
+#endif
+            Ok (s, exts, e, p, c) ()
+        ([],_,_,_,_) -> Failed loc "Unexpected }"
 
 {-
 -- HaRP/Hsx
@@ -323,9 +338,13 @@ getExtensions = P $ \_i _x _y _l _ s m ->
 
 pushCtxtFlag :: P ()
 pushCtxtFlag =
-    P $ \_i _x _y _l _ (s, exts, e, (d,c), cs) _m -> case c of
-        False -> Ok (s, exts, e, (d,True), cs) ()
-        _     -> error "Internal error: context flag already pushed"
+    P $ \_i _x _y _l _ (s, exts, e, (d,c), cs) _m ->
+#ifdef DEBUG
+        trace "pushing context switch" $
+#endif
+        case c of
+            False -> Ok (s, exts, e, (d,True), cs) ()
+            _     -> error "Internal error: context flag already pushed"
 
 pullDoStatus :: P Bool
 pullDoStatus = P $ \_i _x _y _l _ (s, exts, e, (d,c), cs) _m -> Ok (s,exts,e,(False,c),cs) d
@@ -363,6 +382,9 @@ instance Fail.MonadFail (Lex r) where
 
 getInput :: Lex r String
 getInput = Lex $ \cont -> P $ \r -> runP (cont r) r
+
+parserL :: P a -> Lex r a
+parserL p = Lex (p >>=)
 
 -- | Discard some input characters (these must not include tabs or newlines).
 
@@ -480,22 +502,29 @@ setSrcLineL y = Lex $ \cont -> P $ \i x _ ->
         runP (cont ()) i x y
 
 pushContextL :: LexContext -> Lex a ()
-pushContextL ctxt = Lex $ \cont -> P $ \r x y loc ch (stk, exts, e, pst, cs) ->
-        runP (cont ()) r x y loc ch (ctxt:stk, exts, e, pst, cs)
+pushContextL = parserL . pushContext
 
 popContextL :: String -> Lex a ()
-popContextL _ = Lex $ \cont -> P $ \r x y loc ch stk m -> case stk of
-        (_:ctxt, exts, e, pst, cs) -> runP (cont ()) r x y loc ch (ctxt, exts, e, pst, cs) m
-        ([], _, _, _, _)           -> Failed loc "Unexpected }"
+popContextL _ = parserL popContext
 
 pullCtxtFlag :: Lex a Bool
 pullCtxtFlag = Lex $ \cont -> P $ \r x y loc ch (ct, exts, e, (d,c), cs) ->
+#ifdef DEBUG
+        trace "pulling context switch" $
+#endif
         runP (cont c) r x y loc ch (ct, exts, e, (d,False), cs)
 
 
 flagDo :: Lex a ()
 flagDo = Lex $ \cont -> P $ \r x y loc ch (ct, exts, e, (_,c), cs) ->
         runP (cont ()) r x y loc ch (ct, exts, e, (True,c), cs)
+
+checkParentContextL :: Lex a Bool
+checkParentContextL = do
+    l <- getSrcLocL
+    parserL $ P $ \_i _x _y _l _ s@(stk, _, _, _, _) _m -> case stk of
+        (_:Layout StmtLayout i:_) | srcColumn l == i -> Ok s True
+        _                                            -> Ok s False
 
 
 -- Harp/Hsx

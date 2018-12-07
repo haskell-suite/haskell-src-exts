@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# OPTIONS_HADDOCK hide #-}
 -----------------------------------------------------------------------------
 -- |
@@ -32,7 +33,10 @@ import Data.Ratio
 import Data.List (intercalate, isPrefixOf)
 import Control.Monad (when)
 
--- import Debug.Trace (trace)
+#ifdef DEBUG
+import Debug.Trace (trace)
+#endif
+
 
 data Token
         = VarId String
@@ -387,13 +391,26 @@ matchChar c msg = do
 
 lexer :: (Loc Token -> P a) -> P a
 lexer = runL topLexer
+#ifdef DEBUG
+    . \f token -> trace (show token) $ f token
+#endif
 
 topLexer :: Lex a (Loc Token)
 topLexer = do
     b <- pullCtxtFlag
-    if b then -- trace (show cf ++ ": " ++ show VRightCurly) $
-              -- the lex context state flags that we must do an empty {} - UGLY
-              setBOL >> getSrcLocL >>= \l -> return (Loc (mkSrcSpan l l) VRightCurly)
+    if b then do
+#ifdef DEBUG
+        trace ("By context flag: " ++ show VRightCurly) $ return ()
+#endif
+        pCtxtFlg <- checkParentContextL
+        when pCtxtFlg $
+            popContextL "lexBOL"
+
+        -- the lex context state flags that we must do an empty {} - UGLY
+        sl <- getSrcLocL
+        setBOL
+        el <- getSrcLocL
+        return $ Loc (mkSrcSpan sl el) VRightCurly
      else do
         bol <- checkBOL
         (bol', ws) <- lexWhiteSpace bol
@@ -514,7 +531,10 @@ lexNestedComment bol str = do
 lexBOL :: Lex a Token
 lexBOL = do
     pos <- getOffside
-    -- trace ("Off: " ++ (show pos)) $ do
+#ifdef DEBUG
+    currentLoc <- getSrcLocL
+    trace ("Off: " ++ show (pos, currentLoc)) $ return ()
+#endif
     case pos of
         LT -> do
                 -- trace "layout: inserting '}'\n" $
@@ -526,7 +546,7 @@ lexBOL = do
             popContextL "lexBOL"
             return VRightCurly
         EQ ->
-            -- trace "layout: inserting ';'\n" $
+            -- trace "layout: inserting ';'" $
             return SemiColon
         GT -> lexToken
 

@@ -23,7 +23,7 @@ ParseOk
                 , SrcSpan "tests/examples/BracketInstanceHead.hs" 1 37 1 42
                 , SrcSpan "tests/examples/BracketInstanceHead.hs" 2 1 2 1
                 , SrcSpan "tests/examples/BracketInstanceHead.hs" 2 1 2 1
-                , SrcSpan "tests/examples/BracketInstanceHead.hs" 2 0 2 0
+                , SrcSpan "tests/examples/BracketInstanceHead.hs" 2 1 2 0
                 ]
             }
           Nothing

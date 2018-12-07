@@ -204,7 +204,7 @@ ParseOk
                 , SrcSpan "tests/examples/DataKinds2.hs" 9 27 9 32
                 , SrcSpan "tests/examples/DataKinds2.hs" 10 1 10 1
                 , SrcSpan "tests/examples/DataKinds2.hs" 10 1 10 1
-                , SrcSpan "tests/examples/DataKinds2.hs" 10 0 10 0
+                , SrcSpan "tests/examples/DataKinds2.hs" 10 1 10 0
                 ]
             }
           Nothing
