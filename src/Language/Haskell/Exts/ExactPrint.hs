@@ -1167,9 +1167,7 @@ printContext ctxt = do
 
 instance ExactP Asst where
   exactP asst = case asst of
-    ClassA _ qn ts -> exactP qn >> mapM_ exactPC ts
-    AppA _ n ns       -> exactPC n >> mapM_ exactPC ns
-    InfixA _ ta qn tb -> exactP ta >> epInfixQName qn >> exactPC tb
+    TypeA _ t -> exactP t
     IParam l ipn t    ->
         case srcInfoPoints l of
          [a] -> do
@@ -1177,13 +1175,6 @@ instance ExactP Asst where
             printStringAt (pos a) "::"
             exactPC t
          _ -> errorEP "ExactP: Asst: IParam is given wrong number of srcInfoPoints"
-    EqualP l t1 t2  ->
-        case srcInfoPoints l of
-         [a] -> do
-            exactP t1
-            printStringAt (pos a) "~"
-            exactPC t2
-         _ -> internalError "Asst -> EqualP"
     ParenA l asst' ->
         case take 2 $ srcInfoPoints l of
          [a,b] -> do
@@ -1191,7 +1182,6 @@ instance ExactP Asst where
             exactPC asst'
             printStringAt (pos b) ")"
          _ -> errorEP "ExactP: Asst: ParenA is given wrong number of srcInfoPoints"
-    WildCardA _ mn -> printString "_" >> maybeEP exactPC mn
 
 instance ExactP Deriving where
   exactP (Deriving l mds ihs) =

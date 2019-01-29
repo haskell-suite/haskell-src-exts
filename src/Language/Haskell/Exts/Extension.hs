@@ -556,6 +556,8 @@ data KnownExtension =
   -- Implies 'DerivingStrategies'.
   | DerivingVia
 
+  | QuantifiedConstraints
+
   deriving (Show, Read, Eq, Ord, Enum, Bounded, Data, Typeable)
 
 -- | Certain extensions imply other extensions, and this function

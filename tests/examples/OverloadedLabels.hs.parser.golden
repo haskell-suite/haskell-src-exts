@@ -425,54 +425,74 @@ ParseOk
                      , srcInfoPoints =
                          [ SrcSpan "tests/examples/OverloadedLabels.hs" 19 23 19 25 ]
                      }
-                   (ClassA
+                   (TypeA
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/OverloadedLabels.hs" 19 6 19 25
                         , srcInfoPoints =
                             [ SrcSpan "tests/examples/OverloadedLabels.hs" 19 23 19 25 ]
                         }
-                      (UnQual
+                      (TyApp
                          SrcSpanInfo
                            { srcInfoSpan =
-                               SrcSpan "tests/examples/OverloadedLabels.hs" 19 6 19 13
-                           , srcInfoPoints = []
+                               SrcSpan "tests/examples/OverloadedLabels.hs" 19 6 19 25
+                           , srcInfoPoints =
+                               [ SrcSpan "tests/examples/OverloadedLabels.hs" 19 23 19 25 ]
                            }
-                         (Ident
+                         (TyApp
                             SrcSpanInfo
                               { srcInfoSpan =
-                                  SrcSpan "tests/examples/OverloadedLabels.hs" 19 6 19 13
+                                  SrcSpan "tests/examples/OverloadedLabels.hs" 19 6 19 25
+                              , srcInfoPoints =
+                                  [ SrcSpan "tests/examples/OverloadedLabels.hs" 19 23 19 25 ]
+                              }
+                            (TyCon
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/OverloadedLabels.hs" 19 6 19 25
+                                 , srcInfoPoints =
+                                     [ SrcSpan "tests/examples/OverloadedLabels.hs" 19 23 19 25 ]
+                                 }
+                               (UnQual
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/OverloadedLabels.hs" 19 6 19 13
+                                    , srcInfoPoints = []
+                                    }
+                                  (Ident
+                                     SrcSpanInfo
+                                       { srcInfoSpan =
+                                           SrcSpan "tests/examples/OverloadedLabels.hs" 19 6 19 13
+                                       , srcInfoPoints = []
+                                       }
+                                     "IsLabel")))
+                            (TyPromoted
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/OverloadedLabels.hs" 19 14 19 20
+                                 , srcInfoPoints = []
+                                 }
+                               (PromotedString
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/OverloadedLabels.hs" 19 14 19 20
+                                    , srcInfoPoints = []
+                                    }
+                                  "true"
+                                  "true")))
+                         (TyVar
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/OverloadedLabels.hs" 19 21 19 22
                               , srcInfoPoints = []
                               }
-                            "IsLabel"))
-                      [ TyPromoted
-                          SrcSpanInfo
-                            { srcInfoSpan =
-                                SrcSpan "tests/examples/OverloadedLabels.hs" 19 14 19 20
-                            , srcInfoPoints = []
-                            }
-                          (PromotedString
-                             SrcSpanInfo
-                               { srcInfoSpan =
-                                   SrcSpan "tests/examples/OverloadedLabels.hs" 19 14 19 20
-                               , srcInfoPoints = []
-                               }
-                             "true"
-                             "true")
-                      , TyVar
-                          SrcSpanInfo
-                            { srcInfoSpan =
-                                SrcSpan "tests/examples/OverloadedLabels.hs" 19 21 19 22
-                            , srcInfoPoints = []
-                            }
-                          (Ident
-                             SrcSpanInfo
-                               { srcInfoSpan =
-                                   SrcSpan "tests/examples/OverloadedLabels.hs" 19 21 19 22
-                               , srcInfoPoints = []
-                               }
-                             "t")
-                      ])))
+                            (Ident
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/OverloadedLabels.hs" 19 21 19 22
+                                 , srcInfoPoints = []
+                                 }
+                               "t"))))))
              (TyVar
                 SrcSpanInfo
                   { srcInfoSpan =

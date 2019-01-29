@@ -335,65 +335,95 @@ ParseOk
                                , srcInfoPoints =
                                    [ SrcSpan "tests/examples/RCategory.hs" 19 6 19 8 ]
                                }
-                             (ClassA
+                             (TypeA
                                 SrcSpanInfo
                                   { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 18 9 19 8
                                   , srcInfoPoints =
                                       [ SrcSpan "tests/examples/RCategory.hs" 19 6 19 8 ]
                                   }
-                                (UnQual
+                                (TyApp
                                    SrcSpanInfo
-                                     { srcInfoSpan =
-                                         SrcSpan "tests/examples/RCategory.hs" 18 9 18 22
-                                     , srcInfoPoints = []
+                                     { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 18 9 19 8
+                                     , srcInfoPoints =
+                                         [ SrcSpan "tests/examples/RCategory.hs" 19 6 19 8 ]
                                      }
-                                   (Ident
+                                   (TyApp
                                       SrcSpanInfo
                                         { srcInfoSpan =
-                                            SrcSpan "tests/examples/RCategory.hs" 18 9 18 22
+                                            SrcSpan "tests/examples/RCategory.hs" 18 9 19 8
+                                        , srcInfoPoints =
+                                            [ SrcSpan "tests/examples/RCategory.hs" 19 6 19 8 ]
+                                        }
+                                      (TyApp
+                                         SrcSpanInfo
+                                           { srcInfoSpan =
+                                               SrcSpan "tests/examples/RCategory.hs" 18 9 19 8
+                                           , srcInfoPoints =
+                                               [ SrcSpan "tests/examples/RCategory.hs" 19 6 19 8 ]
+                                           }
+                                         (TyCon
+                                            SrcSpanInfo
+                                              { srcInfoSpan =
+                                                  SrcSpan "tests/examples/RCategory.hs" 18 9 19 8
+                                              , srcInfoPoints =
+                                                  [ SrcSpan "tests/examples/RCategory.hs" 19 6 19 8
+                                                  ]
+                                              }
+                                            (UnQual
+                                               SrcSpanInfo
+                                                 { srcInfoSpan =
+                                                     SrcSpan
+                                                       "tests/examples/RCategory.hs" 18 9 18 22
+                                                 , srcInfoPoints = []
+                                                 }
+                                               (Ident
+                                                  SrcSpanInfo
+                                                    { srcInfoSpan =
+                                                        SrcSpan
+                                                          "tests/examples/RCategory.hs" 18 9 18 22
+                                                    , srcInfoPoints = []
+                                                    }
+                                                  "RCategoryCtxt")))
+                                         (TyVar
+                                            SrcSpanInfo
+                                              { srcInfoSpan =
+                                                  SrcSpan "tests/examples/RCategory.hs" 18 23 18 26
+                                              , srcInfoPoints = []
+                                              }
+                                            (Ident
+                                               SrcSpanInfo
+                                                 { srcInfoSpan =
+                                                     SrcSpan
+                                                       "tests/examples/RCategory.hs" 18 23 18 26
+                                                 , srcInfoPoints = []
+                                                 }
+                                               "cat")))
+                                      (TyVar
+                                         SrcSpanInfo
+                                           { srcInfoSpan =
+                                               SrcSpan "tests/examples/RCategory.hs" 18 27 18 28
+                                           , srcInfoPoints = []
+                                           }
+                                         (Ident
+                                            SrcSpanInfo
+                                              { srcInfoSpan =
+                                                  SrcSpan "tests/examples/RCategory.hs" 18 27 18 28
+                                              , srcInfoPoints = []
+                                              }
+                                            "a")))
+                                   (TyVar
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/RCategory.hs" 18 29 18 30
                                         , srcInfoPoints = []
                                         }
-                                      "RCategoryCtxt"))
-                                [ TyVar
-                                    SrcSpanInfo
-                                      { srcInfoSpan =
-                                          SrcSpan "tests/examples/RCategory.hs" 18 23 18 26
-                                      , srcInfoPoints = []
-                                      }
-                                    (Ident
-                                       SrcSpanInfo
-                                         { srcInfoSpan =
-                                             SrcSpan "tests/examples/RCategory.hs" 18 23 18 26
-                                         , srcInfoPoints = []
-                                         }
-                                       "cat")
-                                , TyVar
-                                    SrcSpanInfo
-                                      { srcInfoSpan =
-                                          SrcSpan "tests/examples/RCategory.hs" 18 27 18 28
-                                      , srcInfoPoints = []
-                                      }
-                                    (Ident
-                                       SrcSpanInfo
-                                         { srcInfoSpan =
-                                             SrcSpan "tests/examples/RCategory.hs" 18 27 18 28
-                                         , srcInfoPoints = []
-                                         }
-                                       "a")
-                                , TyVar
-                                    SrcSpanInfo
-                                      { srcInfoSpan =
-                                          SrcSpan "tests/examples/RCategory.hs" 18 29 18 30
-                                      , srcInfoPoints = []
-                                      }
-                                    (Ident
-                                       SrcSpanInfo
-                                         { srcInfoSpan =
-                                             SrcSpan "tests/examples/RCategory.hs" 18 29 18 30
-                                         , srcInfoPoints = []
-                                         }
-                                       "a")
-                                ])))
+                                      (Ident
+                                         SrcSpanInfo
+                                           { srcInfoSpan =
+                                               SrcSpan "tests/examples/RCategory.hs" 18 29 18 30
+                                           , srcInfoPoints = []
+                                           }
+                                         "a"))))))
                        (TyApp
                           SrcSpanInfo
                             { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 19 9 19 16
@@ -480,180 +510,258 @@ ParseOk
                                    , SrcSpan "tests/examples/RCategory.hs" 23 7 23 9
                                    ]
                                }
-                             [ ClassA
+                             [ TypeA
                                  SrcSpanInfo
                                    { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 22 11 22 32
                                    , srcInfoPoints = []
                                    }
-                                 (UnQual
+                                 (TyApp
                                     SrcSpanInfo
                                       { srcInfoSpan =
-                                          SrcSpan "tests/examples/RCategory.hs" 22 11 22 24
+                                          SrcSpan "tests/examples/RCategory.hs" 22 11 22 32
                                       , srcInfoPoints = []
                                       }
-                                    (Ident
+                                    (TyApp
                                        SrcSpanInfo
                                          { srcInfoSpan =
-                                             SrcSpan "tests/examples/RCategory.hs" 22 11 22 24
+                                             SrcSpan "tests/examples/RCategory.hs" 22 11 22 32
                                          , srcInfoPoints = []
                                          }
-                                       "RCategoryCtxt"))
-                                 [ TyVar
-                                     SrcSpanInfo
-                                       { srcInfoSpan =
-                                           SrcSpan "tests/examples/RCategory.hs" 22 25 22 28
-                                       , srcInfoPoints = []
-                                       }
-                                     (Ident
-                                        SrcSpanInfo
-                                          { srcInfoSpan =
-                                              SrcSpan "tests/examples/RCategory.hs" 22 25 22 28
-                                          , srcInfoPoints = []
-                                          }
-                                        "cat")
-                                 , TyVar
-                                     SrcSpanInfo
-                                       { srcInfoSpan =
-                                           SrcSpan "tests/examples/RCategory.hs" 22 29 22 30
-                                       , srcInfoPoints = []
-                                       }
-                                     (Ident
-                                        SrcSpanInfo
-                                          { srcInfoSpan =
-                                              SrcSpan "tests/examples/RCategory.hs" 22 29 22 30
-                                          , srcInfoPoints = []
-                                          }
-                                        "b")
-                                 , TyVar
-                                     SrcSpanInfo
-                                       { srcInfoSpan =
-                                           SrcSpan "tests/examples/RCategory.hs" 22 31 22 32
-                                       , srcInfoPoints = []
-                                       }
-                                     (Ident
-                                        SrcSpanInfo
-                                          { srcInfoSpan =
-                                              SrcSpan "tests/examples/RCategory.hs" 22 31 22 32
-                                          , srcInfoPoints = []
-                                          }
-                                        "c")
-                                 ]
-                             , ClassA
+                                       (TyApp
+                                          SrcSpanInfo
+                                            { srcInfoSpan =
+                                                SrcSpan "tests/examples/RCategory.hs" 22 11 22 32
+                                            , srcInfoPoints = []
+                                            }
+                                          (TyCon
+                                             SrcSpanInfo
+                                               { srcInfoSpan =
+                                                   SrcSpan "tests/examples/RCategory.hs" 22 11 22 32
+                                               , srcInfoPoints = []
+                                               }
+                                             (UnQual
+                                                SrcSpanInfo
+                                                  { srcInfoSpan =
+                                                      SrcSpan
+                                                        "tests/examples/RCategory.hs" 22 11 22 24
+                                                  , srcInfoPoints = []
+                                                  }
+                                                (Ident
+                                                   SrcSpanInfo
+                                                     { srcInfoSpan =
+                                                         SrcSpan
+                                                           "tests/examples/RCategory.hs" 22 11 22 24
+                                                     , srcInfoPoints = []
+                                                     }
+                                                   "RCategoryCtxt")))
+                                          (TyVar
+                                             SrcSpanInfo
+                                               { srcInfoSpan =
+                                                   SrcSpan "tests/examples/RCategory.hs" 22 25 22 28
+                                               , srcInfoPoints = []
+                                               }
+                                             (Ident
+                                                SrcSpanInfo
+                                                  { srcInfoSpan =
+                                                      SrcSpan
+                                                        "tests/examples/RCategory.hs" 22 25 22 28
+                                                  , srcInfoPoints = []
+                                                  }
+                                                "cat")))
+                                       (TyVar
+                                          SrcSpanInfo
+                                            { srcInfoSpan =
+                                                SrcSpan "tests/examples/RCategory.hs" 22 29 22 30
+                                            , srcInfoPoints = []
+                                            }
+                                          (Ident
+                                             SrcSpanInfo
+                                               { srcInfoSpan =
+                                                   SrcSpan "tests/examples/RCategory.hs" 22 29 22 30
+                                               , srcInfoPoints = []
+                                               }
+                                             "b")))
+                                    (TyVar
+                                       SrcSpanInfo
+                                         { srcInfoSpan =
+                                             SrcSpan "tests/examples/RCategory.hs" 22 31 22 32
+                                         , srcInfoPoints = []
+                                         }
+                                       (Ident
+                                          SrcSpanInfo
+                                            { srcInfoSpan =
+                                                SrcSpan "tests/examples/RCategory.hs" 22 31 22 32
+                                            , srcInfoPoints = []
+                                            }
+                                          "c")))
+                             , TypeA
                                  SrcSpanInfo
                                    { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 22 34 22 55
                                    , srcInfoPoints = []
                                    }
-                                 (UnQual
+                                 (TyApp
                                     SrcSpanInfo
                                       { srcInfoSpan =
-                                          SrcSpan "tests/examples/RCategory.hs" 22 34 22 47
+                                          SrcSpan "tests/examples/RCategory.hs" 22 34 22 55
                                       , srcInfoPoints = []
                                       }
-                                    (Ident
+                                    (TyApp
                                        SrcSpanInfo
                                          { srcInfoSpan =
-                                             SrcSpan "tests/examples/RCategory.hs" 22 34 22 47
+                                             SrcSpan "tests/examples/RCategory.hs" 22 34 22 55
                                          , srcInfoPoints = []
                                          }
-                                       "RCategoryCtxt"))
-                                 [ TyVar
-                                     SrcSpanInfo
-                                       { srcInfoSpan =
-                                           SrcSpan "tests/examples/RCategory.hs" 22 48 22 51
-                                       , srcInfoPoints = []
-                                       }
-                                     (Ident
-                                        SrcSpanInfo
-                                          { srcInfoSpan =
-                                              SrcSpan "tests/examples/RCategory.hs" 22 48 22 51
-                                          , srcInfoPoints = []
-                                          }
-                                        "cat")
-                                 , TyVar
-                                     SrcSpanInfo
-                                       { srcInfoSpan =
-                                           SrcSpan "tests/examples/RCategory.hs" 22 52 22 53
-                                       , srcInfoPoints = []
-                                       }
-                                     (Ident
-                                        SrcSpanInfo
-                                          { srcInfoSpan =
-                                              SrcSpan "tests/examples/RCategory.hs" 22 52 22 53
-                                          , srcInfoPoints = []
-                                          }
-                                        "a")
-                                 , TyVar
-                                     SrcSpanInfo
-                                       { srcInfoSpan =
-                                           SrcSpan "tests/examples/RCategory.hs" 22 54 22 55
-                                       , srcInfoPoints = []
-                                       }
-                                     (Ident
-                                        SrcSpanInfo
-                                          { srcInfoSpan =
-                                              SrcSpan "tests/examples/RCategory.hs" 22 54 22 55
-                                          , srcInfoPoints = []
-                                          }
-                                        "b")
-                                 ]
-                             , ClassA
+                                       (TyApp
+                                          SrcSpanInfo
+                                            { srcInfoSpan =
+                                                SrcSpan "tests/examples/RCategory.hs" 22 34 22 55
+                                            , srcInfoPoints = []
+                                            }
+                                          (TyCon
+                                             SrcSpanInfo
+                                               { srcInfoSpan =
+                                                   SrcSpan "tests/examples/RCategory.hs" 22 34 22 55
+                                               , srcInfoPoints = []
+                                               }
+                                             (UnQual
+                                                SrcSpanInfo
+                                                  { srcInfoSpan =
+                                                      SrcSpan
+                                                        "tests/examples/RCategory.hs" 22 34 22 47
+                                                  , srcInfoPoints = []
+                                                  }
+                                                (Ident
+                                                   SrcSpanInfo
+                                                     { srcInfoSpan =
+                                                         SrcSpan
+                                                           "tests/examples/RCategory.hs" 22 34 22 47
+                                                     , srcInfoPoints = []
+                                                     }
+                                                   "RCategoryCtxt")))
+                                          (TyVar
+                                             SrcSpanInfo
+                                               { srcInfoSpan =
+                                                   SrcSpan "tests/examples/RCategory.hs" 22 48 22 51
+                                               , srcInfoPoints = []
+                                               }
+                                             (Ident
+                                                SrcSpanInfo
+                                                  { srcInfoSpan =
+                                                      SrcSpan
+                                                        "tests/examples/RCategory.hs" 22 48 22 51
+                                                  , srcInfoPoints = []
+                                                  }
+                                                "cat")))
+                                       (TyVar
+                                          SrcSpanInfo
+                                            { srcInfoSpan =
+                                                SrcSpan "tests/examples/RCategory.hs" 22 52 22 53
+                                            , srcInfoPoints = []
+                                            }
+                                          (Ident
+                                             SrcSpanInfo
+                                               { srcInfoSpan =
+                                                   SrcSpan "tests/examples/RCategory.hs" 22 52 22 53
+                                               , srcInfoPoints = []
+                                               }
+                                             "a")))
+                                    (TyVar
+                                       SrcSpanInfo
+                                         { srcInfoSpan =
+                                             SrcSpan "tests/examples/RCategory.hs" 22 54 22 55
+                                         , srcInfoPoints = []
+                                         }
+                                       (Ident
+                                          SrcSpanInfo
+                                            { srcInfoSpan =
+                                                SrcSpan "tests/examples/RCategory.hs" 22 54 22 55
+                                            , srcInfoPoints = []
+                                            }
+                                          "b")))
+                             , TypeA
                                  SrcSpanInfo
                                    { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 22 57 22 78
                                    , srcInfoPoints = []
                                    }
-                                 (UnQual
+                                 (TyApp
                                     SrcSpanInfo
                                       { srcInfoSpan =
-                                          SrcSpan "tests/examples/RCategory.hs" 22 57 22 70
+                                          SrcSpan "tests/examples/RCategory.hs" 22 57 22 78
                                       , srcInfoPoints = []
                                       }
-                                    (Ident
+                                    (TyApp
                                        SrcSpanInfo
                                          { srcInfoSpan =
-                                             SrcSpan "tests/examples/RCategory.hs" 22 57 22 70
+                                             SrcSpan "tests/examples/RCategory.hs" 22 57 22 78
                                          , srcInfoPoints = []
                                          }
-                                       "RCategoryCtxt"))
-                                 [ TyVar
-                                     SrcSpanInfo
-                                       { srcInfoSpan =
-                                           SrcSpan "tests/examples/RCategory.hs" 22 71 22 74
-                                       , srcInfoPoints = []
-                                       }
-                                     (Ident
-                                        SrcSpanInfo
-                                          { srcInfoSpan =
-                                              SrcSpan "tests/examples/RCategory.hs" 22 71 22 74
-                                          , srcInfoPoints = []
-                                          }
-                                        "cat")
-                                 , TyVar
-                                     SrcSpanInfo
-                                       { srcInfoSpan =
-                                           SrcSpan "tests/examples/RCategory.hs" 22 75 22 76
-                                       , srcInfoPoints = []
-                                       }
-                                     (Ident
-                                        SrcSpanInfo
-                                          { srcInfoSpan =
-                                              SrcSpan "tests/examples/RCategory.hs" 22 75 22 76
-                                          , srcInfoPoints = []
-                                          }
-                                        "a")
-                                 , TyVar
-                                     SrcSpanInfo
-                                       { srcInfoSpan =
-                                           SrcSpan "tests/examples/RCategory.hs" 22 77 22 78
-                                       , srcInfoPoints = []
-                                       }
-                                     (Ident
-                                        SrcSpanInfo
-                                          { srcInfoSpan =
-                                              SrcSpan "tests/examples/RCategory.hs" 22 77 22 78
-                                          , srcInfoPoints = []
-                                          }
-                                        "c")
-                                 ]
+                                       (TyApp
+                                          SrcSpanInfo
+                                            { srcInfoSpan =
+                                                SrcSpan "tests/examples/RCategory.hs" 22 57 22 78
+                                            , srcInfoPoints = []
+                                            }
+                                          (TyCon
+                                             SrcSpanInfo
+                                               { srcInfoSpan =
+                                                   SrcSpan "tests/examples/RCategory.hs" 22 57 22 78
+                                               , srcInfoPoints = []
+                                               }
+                                             (UnQual
+                                                SrcSpanInfo
+                                                  { srcInfoSpan =
+                                                      SrcSpan
+                                                        "tests/examples/RCategory.hs" 22 57 22 70
+                                                  , srcInfoPoints = []
+                                                  }
+                                                (Ident
+                                                   SrcSpanInfo
+                                                     { srcInfoSpan =
+                                                         SrcSpan
+                                                           "tests/examples/RCategory.hs" 22 57 22 70
+                                                     , srcInfoPoints = []
+                                                     }
+                                                   "RCategoryCtxt")))
+                                          (TyVar
+                                             SrcSpanInfo
+                                               { srcInfoSpan =
+                                                   SrcSpan "tests/examples/RCategory.hs" 22 71 22 74
+                                               , srcInfoPoints = []
+                                               }
+                                             (Ident
+                                                SrcSpanInfo
+                                                  { srcInfoSpan =
+                                                      SrcSpan
+                                                        "tests/examples/RCategory.hs" 22 71 22 74
+                                                  , srcInfoPoints = []
+                                                  }
+                                                "cat")))
+                                       (TyVar
+                                          SrcSpanInfo
+                                            { srcInfoSpan =
+                                                SrcSpan "tests/examples/RCategory.hs" 22 75 22 76
+                                            , srcInfoPoints = []
+                                            }
+                                          (Ident
+                                             SrcSpanInfo
+                                               { srcInfoSpan =
+                                                   SrcSpan "tests/examples/RCategory.hs" 22 75 22 76
+                                               , srcInfoPoints = []
+                                               }
+                                             "a")))
+                                    (TyVar
+                                       SrcSpanInfo
+                                         { srcInfoSpan =
+                                             SrcSpan "tests/examples/RCategory.hs" 22 77 22 78
+                                         , srcInfoPoints = []
+                                         }
+                                       (Ident
+                                          SrcSpanInfo
+                                            { srcInfoSpan =
+                                                SrcSpan "tests/examples/RCategory.hs" 22 77 22 78
+                                            , srcInfoPoints = []
+                                            }
+                                          "c")))
                              ]))
                        (TyFun
                           SrcSpanInfo
@@ -1345,184 +1453,269 @@ ParseOk
                          , SrcSpan "tests/examples/RCategory.hs" 39 7 39 9
                          ]
                      }
-                   [ ClassA
+                   [ TypeA
                        SrcSpanInfo
                          { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 11 38 32
                          , srcInfoPoints = []
                          }
-                       (UnQual
+                       (TyApp
                           SrcSpanInfo
-                            { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 11 38 24
+                            { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 11 38 32
                             , srcInfoPoints = []
                             }
-                          (Ident
+                          (TyApp
                              SrcSpanInfo
-                               { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 11 38 24
+                               { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 11 38 32
                                , srcInfoPoints = []
                                }
-                             "RCategoryCtxt"))
-                       [ TyVar
-                           SrcSpanInfo
-                             { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 25 38 28
-                             , srcInfoPoints = []
-                             }
-                           (Ident
-                              SrcSpanInfo
-                                { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 25 38 28
-                                , srcInfoPoints = []
-                                }
-                              "cat")
-                       , TyVar
-                           SrcSpanInfo
-                             { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 29 38 30
-                             , srcInfoPoints = []
-                             }
-                           (Ident
-                              SrcSpanInfo
-                                { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 29 38 30
-                                , srcInfoPoints = []
-                                }
-                              "a")
-                       , TyVar
-                           SrcSpanInfo
-                             { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 31 38 32
-                             , srcInfoPoints = []
-                             }
-                           (Ident
-                              SrcSpanInfo
-                                { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 31 38 32
-                                , srcInfoPoints = []
-                                }
-                              "c")
-                       ]
-                   , ClassA
+                             (TyApp
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 11 38 32
+                                  , srcInfoPoints = []
+                                  }
+                                (TyCon
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/RCategory.hs" 38 11 38 32
+                                     , srcInfoPoints = []
+                                     }
+                                   (UnQual
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/RCategory.hs" 38 11 38 24
+                                        , srcInfoPoints = []
+                                        }
+                                      (Ident
+                                         SrcSpanInfo
+                                           { srcInfoSpan =
+                                               SrcSpan "tests/examples/RCategory.hs" 38 11 38 24
+                                           , srcInfoPoints = []
+                                           }
+                                         "RCategoryCtxt")))
+                                (TyVar
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/RCategory.hs" 38 25 38 28
+                                     , srcInfoPoints = []
+                                     }
+                                   (Ident
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/RCategory.hs" 38 25 38 28
+                                        , srcInfoPoints = []
+                                        }
+                                      "cat")))
+                             (TyVar
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 29 38 30
+                                  , srcInfoPoints = []
+                                  }
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/RCategory.hs" 38 29 38 30
+                                     , srcInfoPoints = []
+                                     }
+                                   "a")))
+                          (TyVar
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 31 38 32
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 31 38 32
+                                  , srcInfoPoints = []
+                                  }
+                                "c")))
+                   , TypeA
                        SrcSpanInfo
                          { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 34 38 55
                          , srcInfoPoints = []
                          }
-                       (UnQual
+                       (TyApp
                           SrcSpanInfo
-                            { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 34 38 47
+                            { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 34 38 55
                             , srcInfoPoints = []
                             }
-                          (Ident
+                          (TyApp
                              SrcSpanInfo
-                               { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 34 38 47
+                               { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 34 38 55
                                , srcInfoPoints = []
                                }
-                             "RCategoryCtxt"))
-                       [ TyVar
-                           SrcSpanInfo
-                             { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 48 38 51
-                             , srcInfoPoints = []
-                             }
-                           (Ident
-                              SrcSpanInfo
-                                { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 48 38 51
-                                , srcInfoPoints = []
-                                }
-                              "cat")
-                       , TyVar
-                           SrcSpanInfo
-                             { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 52 38 53
-                             , srcInfoPoints = []
-                             }
-                           (Ident
-                              SrcSpanInfo
-                                { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 52 38 53
-                                , srcInfoPoints = []
-                                }
-                              "a")
-                       , TyVar
-                           SrcSpanInfo
-                             { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 54 38 55
-                             , srcInfoPoints = []
-                             }
-                           (Ident
-                              SrcSpanInfo
-                                { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 54 38 55
-                                , srcInfoPoints = []
-                                }
-                              "b")
-                       ]
-                   , ClassA
+                             (TyApp
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 34 38 55
+                                  , srcInfoPoints = []
+                                  }
+                                (TyCon
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/RCategory.hs" 38 34 38 55
+                                     , srcInfoPoints = []
+                                     }
+                                   (UnQual
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/RCategory.hs" 38 34 38 47
+                                        , srcInfoPoints = []
+                                        }
+                                      (Ident
+                                         SrcSpanInfo
+                                           { srcInfoSpan =
+                                               SrcSpan "tests/examples/RCategory.hs" 38 34 38 47
+                                           , srcInfoPoints = []
+                                           }
+                                         "RCategoryCtxt")))
+                                (TyVar
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/RCategory.hs" 38 48 38 51
+                                     , srcInfoPoints = []
+                                     }
+                                   (Ident
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/RCategory.hs" 38 48 38 51
+                                        , srcInfoPoints = []
+                                        }
+                                      "cat")))
+                             (TyVar
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 52 38 53
+                                  , srcInfoPoints = []
+                                  }
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/RCategory.hs" 38 52 38 53
+                                     , srcInfoPoints = []
+                                     }
+                                   "a")))
+                          (TyVar
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 54 38 55
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 54 38 55
+                                  , srcInfoPoints = []
+                                  }
+                                "b")))
+                   , TypeA
                        SrcSpanInfo
                          { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 57 38 78
                          , srcInfoPoints = []
                          }
-                       (UnQual
+                       (TyApp
                           SrcSpanInfo
-                            { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 57 38 70
+                            { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 57 38 78
                             , srcInfoPoints = []
                             }
-                          (Ident
+                          (TyApp
                              SrcSpanInfo
-                               { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 57 38 70
+                               { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 57 38 78
                                , srcInfoPoints = []
                                }
-                             "RCategoryCtxt"))
-                       [ TyVar
-                           SrcSpanInfo
-                             { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 71 38 74
-                             , srcInfoPoints = []
-                             }
-                           (Ident
-                              SrcSpanInfo
-                                { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 71 38 74
-                                , srcInfoPoints = []
-                                }
-                              "cat")
-                       , TyVar
-                           SrcSpanInfo
-                             { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 75 38 76
-                             , srcInfoPoints = []
-                             }
-                           (Ident
-                              SrcSpanInfo
-                                { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 75 38 76
-                                , srcInfoPoints = []
-                                }
-                              "b")
-                       , TyVar
-                           SrcSpanInfo
-                             { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 77 38 78
-                             , srcInfoPoints = []
-                             }
-                           (Ident
-                              SrcSpanInfo
-                                { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 77 38 78
-                                , srcInfoPoints = []
-                                }
-                              "c")
-                       ]
-                   , ClassA
+                             (TyApp
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 57 38 78
+                                  , srcInfoPoints = []
+                                  }
+                                (TyCon
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/RCategory.hs" 38 57 38 78
+                                     , srcInfoPoints = []
+                                     }
+                                   (UnQual
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/RCategory.hs" 38 57 38 70
+                                        , srcInfoPoints = []
+                                        }
+                                      (Ident
+                                         SrcSpanInfo
+                                           { srcInfoSpan =
+                                               SrcSpan "tests/examples/RCategory.hs" 38 57 38 70
+                                           , srcInfoPoints = []
+                                           }
+                                         "RCategoryCtxt")))
+                                (TyVar
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/RCategory.hs" 38 71 38 74
+                                     , srcInfoPoints = []
+                                     }
+                                   (Ident
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/RCategory.hs" 38 71 38 74
+                                        , srcInfoPoints = []
+                                        }
+                                      "cat")))
+                             (TyVar
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 75 38 76
+                                  , srcInfoPoints = []
+                                  }
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/RCategory.hs" 38 75 38 76
+                                     , srcInfoPoints = []
+                                     }
+                                   "b")))
+                          (TyVar
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 77 38 78
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 77 38 78
+                                  , srcInfoPoints = []
+                                  }
+                                "c")))
+                   , TypeA
                        SrcSpanInfo
                          { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 80 38 93
                          , srcInfoPoints = []
                          }
-                       (UnQual
+                       (TyApp
                           SrcSpanInfo
-                            { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 80 38 89
+                            { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 80 38 93
                             , srcInfoPoints = []
                             }
-                          (Ident
+                          (TyCon
                              SrcSpanInfo
-                               { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 80 38 89
+                               { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 80 38 93
                                , srcInfoPoints = []
                                }
-                             "RCategory"))
-                       [ TyVar
-                           SrcSpanInfo
-                             { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 90 38 93
-                             , srcInfoPoints = []
-                             }
-                           (Ident
-                              SrcSpanInfo
-                                { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 90 38 93
-                                , srcInfoPoints = []
-                                }
-                              "cat")
-                       ]
+                             (UnQual
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 80 38 89
+                                  , srcInfoPoints = []
+                                  }
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/RCategory.hs" 38 80 38 89
+                                     , srcInfoPoints = []
+                                     }
+                                   "RCategory")))
+                          (TyVar
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 90 38 93
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 38 90 38 93
+                                  , srcInfoPoints = []
+                                  }
+                                "cat")))
                    ]))
              (TyFun
                 SrcSpanInfo
@@ -1752,184 +1945,269 @@ ParseOk
                          , SrcSpan "tests/examples/RCategory.hs" 44 7 44 9
                          ]
                      }
-                   [ ClassA
+                   [ TypeA
                        SrcSpanInfo
                          { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 11 43 32
                          , srcInfoPoints = []
                          }
-                       (UnQual
+                       (TyApp
                           SrcSpanInfo
-                            { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 11 43 24
+                            { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 11 43 32
                             , srcInfoPoints = []
                             }
-                          (Ident
+                          (TyApp
                              SrcSpanInfo
-                               { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 11 43 24
+                               { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 11 43 32
                                , srcInfoPoints = []
                                }
-                             "RCategoryCtxt"))
-                       [ TyVar
-                           SrcSpanInfo
-                             { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 25 43 28
-                             , srcInfoPoints = []
-                             }
-                           (Ident
-                              SrcSpanInfo
-                                { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 25 43 28
-                                , srcInfoPoints = []
-                                }
-                              "cat")
-                       , TyVar
-                           SrcSpanInfo
-                             { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 29 43 30
-                             , srcInfoPoints = []
-                             }
-                           (Ident
-                              SrcSpanInfo
-                                { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 29 43 30
-                                , srcInfoPoints = []
-                                }
-                              "a")
-                       , TyVar
-                           SrcSpanInfo
-                             { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 31 43 32
-                             , srcInfoPoints = []
-                             }
-                           (Ident
-                              SrcSpanInfo
-                                { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 31 43 32
-                                , srcInfoPoints = []
-                                }
-                              "c")
-                       ]
-                   , ClassA
+                             (TyApp
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 11 43 32
+                                  , srcInfoPoints = []
+                                  }
+                                (TyCon
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/RCategory.hs" 43 11 43 32
+                                     , srcInfoPoints = []
+                                     }
+                                   (UnQual
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/RCategory.hs" 43 11 43 24
+                                        , srcInfoPoints = []
+                                        }
+                                      (Ident
+                                         SrcSpanInfo
+                                           { srcInfoSpan =
+                                               SrcSpan "tests/examples/RCategory.hs" 43 11 43 24
+                                           , srcInfoPoints = []
+                                           }
+                                         "RCategoryCtxt")))
+                                (TyVar
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/RCategory.hs" 43 25 43 28
+                                     , srcInfoPoints = []
+                                     }
+                                   (Ident
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/RCategory.hs" 43 25 43 28
+                                        , srcInfoPoints = []
+                                        }
+                                      "cat")))
+                             (TyVar
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 29 43 30
+                                  , srcInfoPoints = []
+                                  }
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/RCategory.hs" 43 29 43 30
+                                     , srcInfoPoints = []
+                                     }
+                                   "a")))
+                          (TyVar
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 31 43 32
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 31 43 32
+                                  , srcInfoPoints = []
+                                  }
+                                "c")))
+                   , TypeA
                        SrcSpanInfo
                          { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 34 43 55
                          , srcInfoPoints = []
                          }
-                       (UnQual
+                       (TyApp
                           SrcSpanInfo
-                            { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 34 43 47
+                            { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 34 43 55
                             , srcInfoPoints = []
                             }
-                          (Ident
+                          (TyApp
                              SrcSpanInfo
-                               { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 34 43 47
+                               { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 34 43 55
                                , srcInfoPoints = []
                                }
-                             "RCategoryCtxt"))
-                       [ TyVar
-                           SrcSpanInfo
-                             { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 48 43 51
-                             , srcInfoPoints = []
-                             }
-                           (Ident
-                              SrcSpanInfo
-                                { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 48 43 51
-                                , srcInfoPoints = []
-                                }
-                              "cat")
-                       , TyVar
-                           SrcSpanInfo
-                             { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 52 43 53
-                             , srcInfoPoints = []
-                             }
-                           (Ident
-                              SrcSpanInfo
-                                { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 52 43 53
-                                , srcInfoPoints = []
-                                }
-                              "a")
-                       , TyVar
-                           SrcSpanInfo
-                             { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 54 43 55
-                             , srcInfoPoints = []
-                             }
-                           (Ident
-                              SrcSpanInfo
-                                { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 54 43 55
-                                , srcInfoPoints = []
-                                }
-                              "b")
-                       ]
-                   , ClassA
+                             (TyApp
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 34 43 55
+                                  , srcInfoPoints = []
+                                  }
+                                (TyCon
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/RCategory.hs" 43 34 43 55
+                                     , srcInfoPoints = []
+                                     }
+                                   (UnQual
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/RCategory.hs" 43 34 43 47
+                                        , srcInfoPoints = []
+                                        }
+                                      (Ident
+                                         SrcSpanInfo
+                                           { srcInfoSpan =
+                                               SrcSpan "tests/examples/RCategory.hs" 43 34 43 47
+                                           , srcInfoPoints = []
+                                           }
+                                         "RCategoryCtxt")))
+                                (TyVar
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/RCategory.hs" 43 48 43 51
+                                     , srcInfoPoints = []
+                                     }
+                                   (Ident
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/RCategory.hs" 43 48 43 51
+                                        , srcInfoPoints = []
+                                        }
+                                      "cat")))
+                             (TyVar
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 52 43 53
+                                  , srcInfoPoints = []
+                                  }
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/RCategory.hs" 43 52 43 53
+                                     , srcInfoPoints = []
+                                     }
+                                   "a")))
+                          (TyVar
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 54 43 55
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 54 43 55
+                                  , srcInfoPoints = []
+                                  }
+                                "b")))
+                   , TypeA
                        SrcSpanInfo
                          { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 57 43 78
                          , srcInfoPoints = []
                          }
-                       (UnQual
+                       (TyApp
                           SrcSpanInfo
-                            { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 57 43 70
+                            { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 57 43 78
                             , srcInfoPoints = []
                             }
-                          (Ident
+                          (TyApp
                              SrcSpanInfo
-                               { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 57 43 70
+                               { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 57 43 78
                                , srcInfoPoints = []
                                }
-                             "RCategoryCtxt"))
-                       [ TyVar
-                           SrcSpanInfo
-                             { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 71 43 74
-                             , srcInfoPoints = []
-                             }
-                           (Ident
-                              SrcSpanInfo
-                                { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 71 43 74
-                                , srcInfoPoints = []
-                                }
-                              "cat")
-                       , TyVar
-                           SrcSpanInfo
-                             { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 75 43 76
-                             , srcInfoPoints = []
-                             }
-                           (Ident
-                              SrcSpanInfo
-                                { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 75 43 76
-                                , srcInfoPoints = []
-                                }
-                              "b")
-                       , TyVar
-                           SrcSpanInfo
-                             { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 77 43 78
-                             , srcInfoPoints = []
-                             }
-                           (Ident
-                              SrcSpanInfo
-                                { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 77 43 78
-                                , srcInfoPoints = []
-                                }
-                              "c")
-                       ]
-                   , ClassA
+                             (TyApp
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 57 43 78
+                                  , srcInfoPoints = []
+                                  }
+                                (TyCon
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/RCategory.hs" 43 57 43 78
+                                     , srcInfoPoints = []
+                                     }
+                                   (UnQual
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/RCategory.hs" 43 57 43 70
+                                        , srcInfoPoints = []
+                                        }
+                                      (Ident
+                                         SrcSpanInfo
+                                           { srcInfoSpan =
+                                               SrcSpan "tests/examples/RCategory.hs" 43 57 43 70
+                                           , srcInfoPoints = []
+                                           }
+                                         "RCategoryCtxt")))
+                                (TyVar
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/RCategory.hs" 43 71 43 74
+                                     , srcInfoPoints = []
+                                     }
+                                   (Ident
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/RCategory.hs" 43 71 43 74
+                                        , srcInfoPoints = []
+                                        }
+                                      "cat")))
+                             (TyVar
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 75 43 76
+                                  , srcInfoPoints = []
+                                  }
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/RCategory.hs" 43 75 43 76
+                                     , srcInfoPoints = []
+                                     }
+                                   "b")))
+                          (TyVar
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 77 43 78
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 77 43 78
+                                  , srcInfoPoints = []
+                                  }
+                                "c")))
+                   , TypeA
                        SrcSpanInfo
                          { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 80 43 93
                          , srcInfoPoints = []
                          }
-                       (UnQual
+                       (TyApp
                           SrcSpanInfo
-                            { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 80 43 89
+                            { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 80 43 93
                             , srcInfoPoints = []
                             }
-                          (Ident
+                          (TyCon
                              SrcSpanInfo
-                               { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 80 43 89
+                               { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 80 43 93
                                , srcInfoPoints = []
                                }
-                             "RCategory"))
-                       [ TyVar
-                           SrcSpanInfo
-                             { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 90 43 93
-                             , srcInfoPoints = []
-                             }
-                           (Ident
-                              SrcSpanInfo
-                                { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 90 43 93
-                                , srcInfoPoints = []
-                                }
-                              "cat")
-                       ]
+                             (UnQual
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 80 43 89
+                                  , srcInfoPoints = []
+                                  }
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/RCategory.hs" 43 80 43 89
+                                     , srcInfoPoints = []
+                                     }
+                                   "RCategory")))
+                          (TyVar
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 90 43 93
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/RCategory.hs" 43 90 43 93
+                                  , srcInfoPoints = []
+                                  }
+                                "cat")))
                    ]))
              (TyFun
                 SrcSpanInfo

@@ -624,39 +624,50 @@ ParseOk
                          , SrcSpan "tests/examples/PatternSynonyms3.hs" 16 34 16 36
                          ]
                      }
-                   (ClassA
+                   (TypeA
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/PatternSynonyms3.hs" 16 26 16 32
                         , srcInfoPoints = []
                         }
-                      (UnQual
+                      (TyApp
                          SrcSpanInfo
                            { srcInfoSpan =
-                               SrcSpan "tests/examples/PatternSynonyms3.hs" 16 26 16 30
+                               SrcSpan "tests/examples/PatternSynonyms3.hs" 16 26 16 32
                            , srcInfoPoints = []
                            }
-                         (Ident
+                         (TyCon
                             SrcSpanInfo
                               { srcInfoSpan =
-                                  SrcSpan "tests/examples/PatternSynonyms3.hs" 16 26 16 30
+                                  SrcSpan "tests/examples/PatternSynonyms3.hs" 16 26 16 32
                               , srcInfoPoints = []
                               }
-                            "Show"))
-                      [ TyVar
-                          SrcSpanInfo
-                            { srcInfoSpan =
-                                SrcSpan "tests/examples/PatternSynonyms3.hs" 16 31 16 32
-                            , srcInfoPoints = []
-                            }
-                          (Ident
-                             SrcSpanInfo
-                               { srcInfoSpan =
-                                   SrcSpan "tests/examples/PatternSynonyms3.hs" 16 31 16 32
-                               , srcInfoPoints = []
-                               }
-                             "a")
-                      ]))))
+                            (UnQual
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/PatternSynonyms3.hs" 16 26 16 30
+                                 , srcInfoPoints = []
+                                 }
+                               (Ident
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/PatternSynonyms3.hs" 16 26 16 30
+                                    , srcInfoPoints = []
+                                    }
+                                  "Show")))
+                         (TyVar
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/PatternSynonyms3.hs" 16 31 16 32
+                              , srcInfoPoints = []
+                              }
+                            (Ident
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/PatternSynonyms3.hs" 16 31 16 32
+                                 , srcInfoPoints = []
+                                 }
+                               "a")))))))
           (TyFun
              SrcSpanInfo
                { srcInfoSpan =
@@ -808,39 +819,50 @@ ParseOk
                             , SrcSpan "tests/examples/PatternSynonyms3.hs" 19 15 19 17
                             ]
                         }
-                      (ClassA
+                      (TypeA
                          SrcSpanInfo
                            { srcInfoSpan =
                                SrcSpan "tests/examples/PatternSynonyms3.hs" 19 7 19 13
                            , srcInfoPoints = []
                            }
-                         (UnQual
+                         (TyApp
                             SrcSpanInfo
                               { srcInfoSpan =
-                                  SrcSpan "tests/examples/PatternSynonyms3.hs" 19 7 19 11
+                                  SrcSpan "tests/examples/PatternSynonyms3.hs" 19 7 19 13
                               , srcInfoPoints = []
                               }
-                            (Ident
+                            (TyCon
                                SrcSpanInfo
                                  { srcInfoSpan =
-                                     SrcSpan "tests/examples/PatternSynonyms3.hs" 19 7 19 11
+                                     SrcSpan "tests/examples/PatternSynonyms3.hs" 19 7 19 13
                                  , srcInfoPoints = []
                                  }
-                               "Show"))
-                         [ TyVar
-                             SrcSpanInfo
-                               { srcInfoSpan =
-                                   SrcSpan "tests/examples/PatternSynonyms3.hs" 19 12 19 13
-                               , srcInfoPoints = []
-                               }
-                             (Ident
-                                SrcSpanInfo
-                                  { srcInfoSpan =
-                                      SrcSpan "tests/examples/PatternSynonyms3.hs" 19 12 19 13
-                                  , srcInfoPoints = []
-                                  }
-                                "a")
-                         ]))))
+                               (UnQual
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/PatternSynonyms3.hs" 19 7 19 11
+                                    , srcInfoPoints = []
+                                    }
+                                  (Ident
+                                     SrcSpanInfo
+                                       { srcInfoSpan =
+                                           SrcSpan "tests/examples/PatternSynonyms3.hs" 19 7 19 11
+                                       , srcInfoPoints = []
+                                       }
+                                     "Show")))
+                            (TyVar
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/PatternSynonyms3.hs" 19 12 19 13
+                                 , srcInfoPoints = []
+                                 }
+                               (Ident
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/PatternSynonyms3.hs" 19 12 19 13
+                                    , srcInfoPoints = []
+                                    }
+                                  "a")))))))
              (TyFun
                 SrcSpanInfo
                   { srcInfoSpan =
@@ -1195,39 +1217,50 @@ ParseOk
                             , SrcSpan "tests/examples/PatternSynonyms3.hs" 25 15 25 17
                             ]
                         }
-                      (ClassA
+                      (TypeA
                          SrcSpanInfo
                            { srcInfoSpan =
                                SrcSpan "tests/examples/PatternSynonyms3.hs" 25 7 25 13
                            , srcInfoPoints = []
                            }
-                         (UnQual
+                         (TyApp
                             SrcSpanInfo
                               { srcInfoSpan =
-                                  SrcSpan "tests/examples/PatternSynonyms3.hs" 25 7 25 11
+                                  SrcSpan "tests/examples/PatternSynonyms3.hs" 25 7 25 13
                               , srcInfoPoints = []
                               }
-                            (Ident
+                            (TyCon
                                SrcSpanInfo
                                  { srcInfoSpan =
-                                     SrcSpan "tests/examples/PatternSynonyms3.hs" 25 7 25 11
+                                     SrcSpan "tests/examples/PatternSynonyms3.hs" 25 7 25 13
                                  , srcInfoPoints = []
                                  }
-                               "Show"))
-                         [ TyVar
-                             SrcSpanInfo
-                               { srcInfoSpan =
-                                   SrcSpan "tests/examples/PatternSynonyms3.hs" 25 12 25 13
-                               , srcInfoPoints = []
-                               }
-                             (Ident
-                                SrcSpanInfo
-                                  { srcInfoSpan =
-                                      SrcSpan "tests/examples/PatternSynonyms3.hs" 25 12 25 13
-                                  , srcInfoPoints = []
-                                  }
-                                "a")
-                         ]))))
+                               (UnQual
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/PatternSynonyms3.hs" 25 7 25 11
+                                    , srcInfoPoints = []
+                                    }
+                                  (Ident
+                                     SrcSpanInfo
+                                       { srcInfoSpan =
+                                           SrcSpan "tests/examples/PatternSynonyms3.hs" 25 7 25 11
+                                       , srcInfoPoints = []
+                                       }
+                                     "Show")))
+                            (TyVar
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/PatternSynonyms3.hs" 25 12 25 13
+                                 , srcInfoPoints = []
+                                 }
+                               (Ident
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/PatternSynonyms3.hs" 25 12 25 13
+                                    , srcInfoPoints = []
+                                    }
+                                  "a")))))))
              (TyFun
                 SrcSpanInfo
                   { srcInfoSpan =
@@ -1850,70 +1883,81 @@ ParseOk
                          , SrcSpan "tests/examples/PatternSynonyms3.hs" 36 31 36 33
                          ]
                      }
-                   (ClassA
+                   (TypeA
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/PatternSynonyms3.hs" 36 15 36 29
                         , srcInfoPoints = []
                         }
-                      (UnQual
+                      (TyApp
                          SrcSpanInfo
                            { srcInfoSpan =
-                               SrcSpan "tests/examples/PatternSynonyms3.hs" 36 15 36 19
+                               SrcSpan "tests/examples/PatternSynonyms3.hs" 36 15 36 29
                            , srcInfoPoints = []
                            }
-                         (Ident
+                         (TyCon
                             SrcSpanInfo
                               { srcInfoSpan =
-                                  SrcSpan "tests/examples/PatternSynonyms3.hs" 36 15 36 19
+                                  SrcSpan "tests/examples/PatternSynonyms3.hs" 36 15 36 29
                               , srcInfoPoints = []
                               }
-                            "Show"))
-                      [ TyTuple
-                          SrcSpanInfo
-                            { srcInfoSpan =
-                                SrcSpan "tests/examples/PatternSynonyms3.hs" 36 20 36 29
-                            , srcInfoPoints =
-                                [ SrcSpan "tests/examples/PatternSynonyms3.hs" 36 20 36 21
-                                , SrcSpan "tests/examples/PatternSynonyms3.hs" 36 22 36 23
-                                , SrcSpan "tests/examples/PatternSynonyms3.hs" 36 28 36 29
-                                ]
-                            }
-                          Boxed
-                          [ TyVar
-                              SrcSpanInfo
-                                { srcInfoSpan =
-                                    SrcSpan "tests/examples/PatternSynonyms3.hs" 36 21 36 22
-                                , srcInfoPoints = []
-                                }
-                              (Ident
-                                 SrcSpanInfo
-                                   { srcInfoSpan =
-                                       SrcSpan "tests/examples/PatternSynonyms3.hs" 36 21 36 22
-                                   , srcInfoPoints = []
-                                   }
-                                 "a")
-                          , TyCon
-                              SrcSpanInfo
-                                { srcInfoSpan =
-                                    SrcSpan "tests/examples/PatternSynonyms3.hs" 36 24 36 28
-                                , srcInfoPoints = []
-                                }
-                              (UnQual
-                                 SrcSpanInfo
-                                   { srcInfoSpan =
-                                       SrcSpan "tests/examples/PatternSynonyms3.hs" 36 24 36 28
-                                   , srcInfoPoints = []
-                                   }
-                                 (Ident
-                                    SrcSpanInfo
-                                      { srcInfoSpan =
-                                          SrcSpan "tests/examples/PatternSynonyms3.hs" 36 24 36 28
-                                      , srcInfoPoints = []
-                                      }
-                                    "Bool"))
-                          ]
-                      ]))))
+                            (UnQual
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/PatternSynonyms3.hs" 36 15 36 19
+                                 , srcInfoPoints = []
+                                 }
+                               (Ident
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/PatternSynonyms3.hs" 36 15 36 19
+                                    , srcInfoPoints = []
+                                    }
+                                  "Show")))
+                         (TyTuple
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/PatternSynonyms3.hs" 36 20 36 29
+                              , srcInfoPoints =
+                                  [ SrcSpan "tests/examples/PatternSynonyms3.hs" 36 20 36 21
+                                  , SrcSpan "tests/examples/PatternSynonyms3.hs" 36 22 36 23
+                                  , SrcSpan "tests/examples/PatternSynonyms3.hs" 36 28 36 29
+                                  ]
+                              }
+                            Boxed
+                            [ TyVar
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/PatternSynonyms3.hs" 36 21 36 22
+                                  , srcInfoPoints = []
+                                  }
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/PatternSynonyms3.hs" 36 21 36 22
+                                     , srcInfoPoints = []
+                                     }
+                                   "a")
+                            , TyCon
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/PatternSynonyms3.hs" 36 24 36 28
+                                  , srcInfoPoints = []
+                                  }
+                                (UnQual
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/PatternSynonyms3.hs" 36 24 36 28
+                                     , srcInfoPoints = []
+                                     }
+                                   (Ident
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/PatternSynonyms3.hs" 36 24 36 28
+                                        , srcInfoPoints = []
+                                        }
+                                      "Bool"))
+                            ]))))))
           Nothing
           Nothing
           (TyFun

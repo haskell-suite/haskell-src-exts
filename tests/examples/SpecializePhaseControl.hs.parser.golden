@@ -331,72 +331,95 @@ ParseOk
                          , SrcSpan "tests/examples/SpecializePhaseControl.hs" 6 26 6 28
                          ]
                      }
-                   [ ClassA
+                   [ TypeA
                        SrcSpanInfo
                          { srcInfoSpan =
                              SrcSpan "tests/examples/SpecializePhaseControl.hs" 6 7 6 12
                          , srcInfoPoints = []
                          }
-                       (UnQual
+                       (TyApp
                           SrcSpanInfo
                             { srcInfoSpan =
-                                SrcSpan "tests/examples/SpecializePhaseControl.hs" 6 7 6 10
+                                SrcSpan "tests/examples/SpecializePhaseControl.hs" 6 7 6 12
                             , srcInfoPoints = []
                             }
-                          (Ident
+                          (TyCon
                              SrcSpanInfo
                                { srcInfoSpan =
-                                   SrcSpan "tests/examples/SpecializePhaseControl.hs" 6 7 6 10
+                                   SrcSpan "tests/examples/SpecializePhaseControl.hs" 6 7 6 12
                                , srcInfoPoints = []
                                }
-                             "Num"))
-                       [ TyVar
-                           SrcSpanInfo
-                             { srcInfoSpan =
-                                 SrcSpan "tests/examples/SpecializePhaseControl.hs" 6 11 6 12
-                             , srcInfoPoints = []
-                             }
-                           (Ident
-                              SrcSpanInfo
-                                { srcInfoSpan =
-                                    SrcSpan "tests/examples/SpecializePhaseControl.hs" 6 11 6 12
-                                , srcInfoPoints = []
-                                }
-                              "a")
-                       ]
-                   , ClassA
+                             (UnQual
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/SpecializePhaseControl.hs" 6 7 6 10
+                                  , srcInfoPoints = []
+                                  }
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/SpecializePhaseControl.hs" 6 7 6 10
+                                     , srcInfoPoints = []
+                                     }
+                                   "Num")))
+                          (TyVar
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/SpecializePhaseControl.hs" 6 11 6 12
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/SpecializePhaseControl.hs" 6 11 6 12
+                                  , srcInfoPoints = []
+                                  }
+                                "a")))
+                   , TypeA
                        SrcSpanInfo
                          { srcInfoSpan =
                              SrcSpan "tests/examples/SpecializePhaseControl.hs" 6 14 6 24
                          , srcInfoPoints = []
                          }
-                       (UnQual
+                       (TyApp
                           SrcSpanInfo
                             { srcInfoSpan =
-                                SrcSpan "tests/examples/SpecializePhaseControl.hs" 6 14 6 22
+                                SrcSpan "tests/examples/SpecializePhaseControl.hs" 6 14 6 24
                             , srcInfoPoints = []
                             }
-                          (Ident
+                          (TyCon
                              SrcSpanInfo
                                { srcInfoSpan =
-                                   SrcSpan "tests/examples/SpecializePhaseControl.hs" 6 14 6 22
+                                   SrcSpan "tests/examples/SpecializePhaseControl.hs" 6 14 6 24
                                , srcInfoPoints = []
                                }
-                             "Integral"))
-                       [ TyVar
-                           SrcSpanInfo
-                             { srcInfoSpan =
-                                 SrcSpan "tests/examples/SpecializePhaseControl.hs" 6 23 6 24
-                             , srcInfoPoints = []
-                             }
-                           (Ident
-                              SrcSpanInfo
-                                { srcInfoSpan =
-                                    SrcSpan "tests/examples/SpecializePhaseControl.hs" 6 23 6 24
-                                , srcInfoPoints = []
-                                }
-                              "b")
-                       ]
+                             (UnQual
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/SpecializePhaseControl.hs" 6 14 6 22
+                                  , srcInfoPoints = []
+                                  }
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan
+                                           "tests/examples/SpecializePhaseControl.hs" 6 14 6 22
+                                     , srcInfoPoints = []
+                                     }
+                                   "Integral")))
+                          (TyVar
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/SpecializePhaseControl.hs" 6 23 6 24
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/SpecializePhaseControl.hs" 6 23 6 24
+                                  , srcInfoPoints = []
+                                  }
+                                "b")))
                    ]))
              (TyFun
                 SrcSpanInfo
@@ -810,72 +833,96 @@ ParseOk
                          , SrcSpan "tests/examples/SpecializePhaseControl.hs" 14 26 14 28
                          ]
                      }
-                   [ ClassA
+                   [ TypeA
                        SrcSpanInfo
                          { srcInfoSpan =
                              SrcSpan "tests/examples/SpecializePhaseControl.hs" 14 7 14 12
                          , srcInfoPoints = []
                          }
-                       (UnQual
+                       (TyApp
                           SrcSpanInfo
                             { srcInfoSpan =
-                                SrcSpan "tests/examples/SpecializePhaseControl.hs" 14 7 14 10
+                                SrcSpan "tests/examples/SpecializePhaseControl.hs" 14 7 14 12
                             , srcInfoPoints = []
                             }
-                          (Ident
+                          (TyCon
                              SrcSpanInfo
                                { srcInfoSpan =
-                                   SrcSpan "tests/examples/SpecializePhaseControl.hs" 14 7 14 10
+                                   SrcSpan "tests/examples/SpecializePhaseControl.hs" 14 7 14 12
                                , srcInfoPoints = []
                                }
-                             "Num"))
-                       [ TyVar
-                           SrcSpanInfo
-                             { srcInfoSpan =
-                                 SrcSpan "tests/examples/SpecializePhaseControl.hs" 14 11 14 12
-                             , srcInfoPoints = []
-                             }
-                           (Ident
-                              SrcSpanInfo
-                                { srcInfoSpan =
-                                    SrcSpan "tests/examples/SpecializePhaseControl.hs" 14 11 14 12
-                                , srcInfoPoints = []
-                                }
-                              "a")
-                       ]
-                   , ClassA
+                             (UnQual
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/SpecializePhaseControl.hs" 14 7 14 10
+                                  , srcInfoPoints = []
+                                  }
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan
+                                           "tests/examples/SpecializePhaseControl.hs" 14 7 14 10
+                                     , srcInfoPoints = []
+                                     }
+                                   "Num")))
+                          (TyVar
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/SpecializePhaseControl.hs" 14 11 14 12
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/SpecializePhaseControl.hs" 14 11 14 12
+                                  , srcInfoPoints = []
+                                  }
+                                "a")))
+                   , TypeA
                        SrcSpanInfo
                          { srcInfoSpan =
                              SrcSpan "tests/examples/SpecializePhaseControl.hs" 14 14 14 24
                          , srcInfoPoints = []
                          }
-                       (UnQual
+                       (TyApp
                           SrcSpanInfo
                             { srcInfoSpan =
-                                SrcSpan "tests/examples/SpecializePhaseControl.hs" 14 14 14 22
+                                SrcSpan "tests/examples/SpecializePhaseControl.hs" 14 14 14 24
                             , srcInfoPoints = []
                             }
-                          (Ident
+                          (TyCon
                              SrcSpanInfo
                                { srcInfoSpan =
-                                   SrcSpan "tests/examples/SpecializePhaseControl.hs" 14 14 14 22
+                                   SrcSpan "tests/examples/SpecializePhaseControl.hs" 14 14 14 24
                                , srcInfoPoints = []
                                }
-                             "Integral"))
-                       [ TyVar
-                           SrcSpanInfo
-                             { srcInfoSpan =
-                                 SrcSpan "tests/examples/SpecializePhaseControl.hs" 14 23 14 24
-                             , srcInfoPoints = []
-                             }
-                           (Ident
-                              SrcSpanInfo
-                                { srcInfoSpan =
-                                    SrcSpan "tests/examples/SpecializePhaseControl.hs" 14 23 14 24
-                                , srcInfoPoints = []
-                                }
-                              "b")
-                       ]
+                             (UnQual
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/SpecializePhaseControl.hs" 14 14 14 22
+                                  , srcInfoPoints = []
+                                  }
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan
+                                           "tests/examples/SpecializePhaseControl.hs" 14 14 14 22
+                                     , srcInfoPoints = []
+                                     }
+                                   "Integral")))
+                          (TyVar
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/SpecializePhaseControl.hs" 14 23 14 24
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/SpecializePhaseControl.hs" 14 23 14 24
+                                  , srcInfoPoints = []
+                                  }
+                                "b")))
                    ]))
              (TyFun
                 SrcSpanInfo

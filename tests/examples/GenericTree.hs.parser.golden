@@ -106,34 +106,46 @@ ParseOk
                             , SrcSpan "tests/examples/GenericTree.hs" 6 24 6 26
                             ]
                         }
-                      (ClassA
+                      (TypeA
                          SrcSpanInfo
                            { srcInfoSpan = SrcSpan "tests/examples/GenericTree.hs" 6 12 6 22
                            , srcInfoPoints = []
                            }
-                         (UnQual
+                         (TyApp
                             SrcSpanInfo
-                              { srcInfoSpan = SrcSpan "tests/examples/GenericTree.hs" 6 12 6 20
+                              { srcInfoSpan = SrcSpan "tests/examples/GenericTree.hs" 6 12 6 22
                               , srcInfoPoints = []
                               }
-                            (Ident
+                            (TyCon
                                SrcSpanInfo
-                                 { srcInfoSpan = SrcSpan "tests/examples/GenericTree.hs" 6 12 6 20
+                                 { srcInfoSpan = SrcSpan "tests/examples/GenericTree.hs" 6 12 6 22
                                  , srcInfoPoints = []
                                  }
-                               "Typeable"))
-                         [ TyVar
-                             SrcSpanInfo
-                               { srcInfoSpan = SrcSpan "tests/examples/GenericTree.hs" 6 21 6 22
-                               , srcInfoPoints = []
-                               }
-                             (Ident
-                                SrcSpanInfo
-                                  { srcInfoSpan = SrcSpan "tests/examples/GenericTree.hs" 6 21 6 22
-                                  , srcInfoPoints = []
-                                  }
-                                "a")
-                         ]))))
+                               (UnQual
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/GenericTree.hs" 6 12 6 20
+                                    , srcInfoPoints = []
+                                    }
+                                  (Ident
+                                     SrcSpanInfo
+                                       { srcInfoSpan =
+                                           SrcSpan "tests/examples/GenericTree.hs" 6 12 6 20
+                                       , srcInfoPoints = []
+                                       }
+                                     "Typeable")))
+                            (TyVar
+                               SrcSpanInfo
+                                 { srcInfoSpan = SrcSpan "tests/examples/GenericTree.hs" 6 21 6 22
+                                 , srcInfoPoints = []
+                                 }
+                               (Ident
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/GenericTree.hs" 6 21 6 22
+                                    , srcInfoPoints = []
+                                    }
+                                  "a")))))))
              (TyFun
                 SrcSpanInfo
                   { srcInfoSpan = SrcSpan "tests/examples/GenericTree.hs" 6 27 6 83
@@ -217,39 +229,51 @@ ParseOk
                                       , SrcSpan "tests/examples/GenericTree.hs" 6 65 6 67
                                       ]
                                   }
-                                (ClassA
+                                (TypeA
                                    SrcSpanInfo
                                      { srcInfoSpan =
                                          SrcSpan "tests/examples/GenericTree.hs" 6 53 6 63
                                      , srcInfoPoints = []
                                      }
-                                   (UnQual
+                                   (TyApp
                                       SrcSpanInfo
                                         { srcInfoSpan =
-                                            SrcSpan "tests/examples/GenericTree.hs" 6 53 6 61
+                                            SrcSpan "tests/examples/GenericTree.hs" 6 53 6 63
                                         , srcInfoPoints = []
                                         }
-                                      (Ident
+                                      (TyCon
                                          SrcSpanInfo
                                            { srcInfoSpan =
-                                               SrcSpan "tests/examples/GenericTree.hs" 6 53 6 61
+                                               SrcSpan "tests/examples/GenericTree.hs" 6 53 6 63
                                            , srcInfoPoints = []
                                            }
-                                         "Typeable"))
-                                   [ TyVar
-                                       SrcSpanInfo
-                                         { srcInfoSpan =
-                                             SrcSpan "tests/examples/GenericTree.hs" 6 62 6 63
-                                         , srcInfoPoints = []
-                                         }
-                                       (Ident
-                                          SrcSpanInfo
-                                            { srcInfoSpan =
-                                                SrcSpan "tests/examples/GenericTree.hs" 6 62 6 63
-                                            , srcInfoPoints = []
-                                            }
-                                          "b")
-                                   ]))))
+                                         (UnQual
+                                            SrcSpanInfo
+                                              { srcInfoSpan =
+                                                  SrcSpan "tests/examples/GenericTree.hs" 6 53 6 61
+                                              , srcInfoPoints = []
+                                              }
+                                            (Ident
+                                               SrcSpanInfo
+                                                 { srcInfoSpan =
+                                                     SrcSpan
+                                                       "tests/examples/GenericTree.hs" 6 53 6 61
+                                                 , srcInfoPoints = []
+                                                 }
+                                               "Typeable")))
+                                      (TyVar
+                                         SrcSpanInfo
+                                           { srcInfoSpan =
+                                               SrcSpan "tests/examples/GenericTree.hs" 6 62 6 63
+                                           , srcInfoPoints = []
+                                           }
+                                         (Ident
+                                            SrcSpanInfo
+                                              { srcInfoSpan =
+                                                  SrcSpan "tests/examples/GenericTree.hs" 6 62 6 63
+                                              , srcInfoPoints = []
+                                              }
+                                            "b")))))))
                        (TyFun
                           SrcSpanInfo
                             { srcInfoSpan = SrcSpan "tests/examples/GenericTree.hs" 6 68 6 82

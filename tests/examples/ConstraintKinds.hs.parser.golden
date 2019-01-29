@@ -342,53 +342,73 @@ ParseOk
                      , srcInfoPoints =
                          [ SrcSpan "tests/examples/ConstraintKinds.hs" 9 20 9 22 ]
                      }
-                   (ClassA
+                   (TypeA
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/ConstraintKinds.hs" 9 8 9 22
                         , srcInfoPoints =
                             [ SrcSpan "tests/examples/ConstraintKinds.hs" 9 20 9 22 ]
                         }
-                      (UnQual
+                      (TyApp
                          SrcSpanInfo
                            { srcInfoSpan =
-                               SrcSpan "tests/examples/ConstraintKinds.hs" 9 8 9 15
-                           , srcInfoPoints = []
+                               SrcSpan "tests/examples/ConstraintKinds.hs" 9 8 9 22
+                           , srcInfoPoints =
+                               [ SrcSpan "tests/examples/ConstraintKinds.hs" 9 20 9 22 ]
                            }
-                         (Ident
+                         (TyApp
                             SrcSpanInfo
                               { srcInfoSpan =
-                                  SrcSpan "tests/examples/ConstraintKinds.hs" 9 8 9 15
+                                  SrcSpan "tests/examples/ConstraintKinds.hs" 9 8 9 22
+                              , srcInfoPoints =
+                                  [ SrcSpan "tests/examples/ConstraintKinds.hs" 9 20 9 22 ]
+                              }
+                            (TyCon
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/ConstraintKinds.hs" 9 8 9 22
+                                 , srcInfoPoints =
+                                     [ SrcSpan "tests/examples/ConstraintKinds.hs" 9 20 9 22 ]
+                                 }
+                               (UnQual
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/ConstraintKinds.hs" 9 8 9 15
+                                    , srcInfoPoints = []
+                                    }
+                                  (Ident
+                                     SrcSpanInfo
+                                       { srcInfoSpan =
+                                           SrcSpan "tests/examples/ConstraintKinds.hs" 9 8 9 15
+                                       , srcInfoPoints = []
+                                       }
+                                     "Bazable")))
+                            (TyVar
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/ConstraintKinds.hs" 9 16 9 17
+                                 , srcInfoPoints = []
+                                 }
+                               (Ident
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/ConstraintKinds.hs" 9 16 9 17
+                                    , srcInfoPoints = []
+                                    }
+                                  "a")))
+                         (TyVar
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/ConstraintKinds.hs" 9 18 9 19
                               , srcInfoPoints = []
                               }
-                            "Bazable"))
-                      [ TyVar
-                          SrcSpanInfo
-                            { srcInfoSpan =
-                                SrcSpan "tests/examples/ConstraintKinds.hs" 9 16 9 17
-                            , srcInfoPoints = []
-                            }
-                          (Ident
-                             SrcSpanInfo
-                               { srcInfoSpan =
-                                   SrcSpan "tests/examples/ConstraintKinds.hs" 9 16 9 17
-                               , srcInfoPoints = []
-                               }
-                             "a")
-                      , TyVar
-                          SrcSpanInfo
-                            { srcInfoSpan =
-                                SrcSpan "tests/examples/ConstraintKinds.hs" 9 18 9 19
-                            , srcInfoPoints = []
-                            }
-                          (Ident
-                             SrcSpanInfo
-                               { srcInfoSpan =
-                                   SrcSpan "tests/examples/ConstraintKinds.hs" 9 18 9 19
-                               , srcInfoPoints = []
-                               }
-                             "b")
-                      ])))
+                            (Ident
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/ConstraintKinds.hs" 9 18 9 19
+                                 , srcInfoPoints = []
+                                 }
+                               "b"))))))
              (TyFun
                 SrcSpanInfo
                   { srcInfoSpan =

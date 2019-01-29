@@ -46,35 +46,46 @@ ParseOk
                             , SrcSpan "tests/examples/CxtWhitespace.hs" 2 18 2 20
                             ]
                         }
-                      (ClassA
+                      (TypeA
                          SrcSpanInfo
                            { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 12 2 16
                            , srcInfoPoints = []
                            }
-                         (UnQual
+                         (TyApp
                             SrcSpanInfo
-                              { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 12 2 14
+                              { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 12 2 16
                               , srcInfoPoints = []
                               }
-                            (Ident
+                            (TyCon
                                SrcSpanInfo
-                                 { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 12 2 14
+                                 { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 12 2 16
                                  , srcInfoPoints = []
                                  }
-                               "Eq"))
-                         [ TyVar
-                             SrcSpanInfo
-                               { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 15 2 16
-                               , srcInfoPoints = []
-                               }
-                             (Ident
-                                SrcSpanInfo
-                                  { srcInfoSpan =
-                                      SrcSpan "tests/examples/CxtWhitespace.hs" 2 15 2 16
-                                  , srcInfoPoints = []
-                                  }
-                                "h")
-                         ]))))
+                               (UnQual
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/CxtWhitespace.hs" 2 12 2 14
+                                    , srcInfoPoints = []
+                                    }
+                                  (Ident
+                                     SrcSpanInfo
+                                       { srcInfoSpan =
+                                           SrcSpan "tests/examples/CxtWhitespace.hs" 2 12 2 14
+                                       , srcInfoPoints = []
+                                       }
+                                     "Eq")))
+                            (TyVar
+                               SrcSpanInfo
+                                 { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 15 2 16
+                                 , srcInfoPoints = []
+                                 }
+                               (Ident
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/CxtWhitespace.hs" 2 15 2 16
+                                    , srcInfoPoints = []
+                                    }
+                                  "h")))))))
              (IHApp
                 SrcSpanInfo
                   { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 2 21 2 25
@@ -132,62 +143,86 @@ ParseOk
                          , SrcSpan "tests/examples/CxtWhitespace.hs" 5 24 5 26
                          ]
                      }
-                   [ ClassA
+                   [ TypeA
                        SrcSpanInfo
                          { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 12 5 16
                          , srcInfoPoints = []
                          }
-                       (UnQual
+                       (TyApp
                           SrcSpanInfo
-                            { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 12 5 14
+                            { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 12 5 16
                             , srcInfoPoints = []
                             }
-                          (Ident
+                          (TyCon
                              SrcSpanInfo
-                               { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 12 5 14
+                               { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 12 5 16
                                , srcInfoPoints = []
                                }
-                             "Eq"))
-                       [ TyVar
-                           SrcSpanInfo
-                             { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 15 5 16
-                             , srcInfoPoints = []
-                             }
-                           (Ident
-                              SrcSpanInfo
-                                { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 15 5 16
-                                , srcInfoPoints = []
-                                }
-                              "h")
-                       ]
-                   , ClassA
+                             (UnQual
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/CxtWhitespace.hs" 5 12 5 14
+                                  , srcInfoPoints = []
+                                  }
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/CxtWhitespace.hs" 5 12 5 14
+                                     , srcInfoPoints = []
+                                     }
+                                   "Eq")))
+                          (TyVar
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 15 5 16
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/CxtWhitespace.hs" 5 15 5 16
+                                  , srcInfoPoints = []
+                                  }
+                                "h")))
+                   , TypeA
                        SrcSpanInfo
                          { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 18 5 22
                          , srcInfoPoints = []
                          }
-                       (UnQual
+                       (TyApp
                           SrcSpanInfo
-                            { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 18 5 20
+                            { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 18 5 22
                             , srcInfoPoints = []
                             }
-                          (Ident
+                          (TyCon
                              SrcSpanInfo
-                               { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 18 5 20
+                               { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 18 5 22
                                , srcInfoPoints = []
                                }
-                             "Eq"))
-                       [ TyVar
-                           SrcSpanInfo
-                             { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 21 5 22
-                             , srcInfoPoints = []
-                             }
-                           (Ident
-                              SrcSpanInfo
-                                { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 21 5 22
-                                , srcInfoPoints = []
-                                }
-                              "h")
-                       ]
+                             (UnQual
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/CxtWhitespace.hs" 5 18 5 20
+                                  , srcInfoPoints = []
+                                  }
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/CxtWhitespace.hs" 5 18 5 20
+                                     , srcInfoPoints = []
+                                     }
+                                   "Eq")))
+                          (TyVar
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/CxtWhitespace.hs" 5 21 5 22
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/CxtWhitespace.hs" 5 21 5 22
+                                  , srcInfoPoints = []
+                                  }
+                                "h")))
                    ]))
              (IHApp
                 SrcSpanInfo
