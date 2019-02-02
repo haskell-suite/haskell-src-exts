@@ -1317,6 +1317,7 @@ instance Pretty (SpecialCon l) where
         pretty (UnitCon {})         = text "()"
         pretty (ListCon {})         = text "[]"
         pretty (FunCon  {})         = text "->"
+        pretty (TyEqCon {})         = text "~"
         pretty (TupleCon _ b n)   = listFun $ foldr (<>) empty (replicate (n-1) comma)
           where listFun = if b == Unboxed then hashParens else parens
         pretty (Cons {})             = text ":"
@@ -1332,6 +1333,7 @@ isSymbolQName (UnQual _ n)       = isSymbolName n
 isSymbolQName (Qual _ _ n)       = isSymbolName n
 isSymbolQName (Special _ (Cons {}))   = True
 isSymbolQName (Special _ (FunCon {})) = True
+isSymbolQName (Special _ (TyEqCon {})) = True
 isSymbolQName _                  = False
 
 --getSpecialName :: QName l -> Maybe (SpecialCon l)

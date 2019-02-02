@@ -1037,6 +1037,7 @@ the (# and #) lexemes. Kinds will be handled at the kind rule.
 >       : otycon_(ostar)                     { $1 }
 >       | '(' ')'                       { unit_tycon_name              ($1 <^^> $2 <** [$1,$2]) }
 >       | '(' '->' ')'                  { fun_tycon_name               ($1 <^^> $3 <** [$1,$2,$3]) }
+>       | '(' '~' ')'                   { tyeq_tycon_name              ($1 <^^> $3 <** [$1,$2,$3]) }
 >       | '[' ']'                       { list_tycon_name              ($1 <^^> $2 <** [$1,$2]) }
 >       | '(' commas ')'                { tuple_tycon_name             ($1 <^^> $3 <** ($1:reverse $2 ++ [$3])) Boxed (length $2) }
 >       | '(#' '#)'                     { unboxed_singleton_tycon_name ($1 <^^> $2 <** [$1,$2]) }

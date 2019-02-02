@@ -106,7 +106,7 @@ module Language.Haskell.Exts.Syntax (
     javascript_name, capi_name, forall_name, family_name, role_name, hole_name,
     stock_name, anyclass_name, via_name,
     -- ** Type constructors
-    unit_tycon_name, fun_tycon_name, list_tycon_name, tuple_tycon_name, unboxed_singleton_tycon_name,
+    unit_tycon_name, fun_tycon_name, tyeq_tycon_name, list_tycon_name, tuple_tycon_name, unboxed_singleton_tycon_name,
     unit_tycon, fun_tycon, list_tycon, tuple_tycon, unboxed_singleton_tycon,
 
     -- * Source coordinates
@@ -136,6 +136,7 @@ data SpecialCon l
     = UnitCon l             -- ^ unit type and data constructor @()@
     | ListCon l             -- ^ list type and data constructor @[]@
     | FunCon  l             -- ^ function type constructor @->@
+    | TyEqCon l             -- ^ type equality constructor @~@
     | TupleCon l Boxed Int  -- ^ /n/-ary tuple type and data
                             --   constructors @(,)@ etc, possibly boxed @(\#,\#)@
     | Cons l                -- ^ list data constructor @(:)@
@@ -1074,10 +1075,11 @@ stock_name      l = Ident l "stock"
 anyclass_name   l = Ident l "anyclass"
 via_name        l = Ident l "via"
 
-unit_tycon_name, fun_tycon_name, list_tycon_name, unboxed_singleton_tycon_name :: l -> QName l
+unit_tycon_name, fun_tycon_name, list_tycon_name, tyeq_tycon_name, unboxed_singleton_tycon_name :: l -> QName l
 unit_tycon_name l = unit_con_name l
 fun_tycon_name  l = Special l (FunCon l)
 list_tycon_name l = Special l (ListCon l)
+tyeq_tycon_name l = Special l (TyEqCon l)
 unboxed_singleton_tycon_name l = Special l (UnboxedSingleCon l)
 
 tuple_tycon_name :: l -> Boxed -> Int -> QName l
@@ -1120,6 +1122,7 @@ instance Annotated SpecialCon where
         UnitCon l   -> l
         ListCon l   -> l
         FunCon  l   -> l
+        TyEqCon l   -> l
         TupleCon l _ _  -> l
         Cons l      -> l
         UnboxedSingleCon l  -> l
