@@ -98,7 +98,7 @@ import Data.Either
 import Control.Monad (when,unless)
 
 #if __GLASGOW_HASKELL__ < 710
-import Control.Applicative (Applicative (..), (<$>))
+import Control.Applicative ((<$>))
 #endif
 
 type L = SrcSpanInfo
