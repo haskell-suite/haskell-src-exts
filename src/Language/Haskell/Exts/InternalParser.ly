@@ -1251,7 +1251,7 @@ Kinds
 >       : kind1                 {% checkEnabled KindSignatures >> return $1 }
 
 > kind1 :: { Kind L }
->       : dtype_(NEVER,'*')     {% checkType $1 }
+>       : ctype_(NEVER,'*')     {% checkType $1 }
 
 > optkind :: { (Maybe (Kind L), [S]) }
 >       : {-empty-}             { (Nothing,[]) }
