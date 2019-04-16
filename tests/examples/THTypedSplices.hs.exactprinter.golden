@@ -1,0 +1,4 @@
+{-# LANGUAGE TemplateHaskell #-}
+import Language.Haskell.TH
+main = ($$([|| Just ||]) :: a -> Maybe a) ($$([||  2 ||]) :: Int)
+
