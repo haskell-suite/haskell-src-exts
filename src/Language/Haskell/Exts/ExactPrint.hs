@@ -1810,27 +1810,9 @@ instance ExactP QualStmt where
 
 instance ExactP Bracket where
   exactP br = case br of
-    ExpBracket l e  ->
-        case srcInfoPoints l of
-         [_,b] -> do
-            printString "[|"
-            exactPC e
-            printStringAt (pos b) "|]"
-         _ -> errorEP "ExactP: Bracket: ExpBracket is given wrong number of srcInfoPoints"
-    PatBracket l p  ->
-        case srcInfoPoints l of
-         [_,b] -> do
-            printString "[p|"
-            exactPC p
-            printStringAt (pos b) "|]"
-         _ -> errorEP "ExactP: Bracket: PatBracket is given wrong number of srcInfoPoints"
-    TypeBracket l t  ->
-        case srcInfoPoints l of
-         [_,b] -> do
-            printString "[t|"
-            exactPC t
-            printStringAt (pos b) "|]"
-         _ -> errorEP "ExactP: Bracket: TypeBracket is given wrong number of srcInfoPoints"
+    ExpBracket l e  -> printBracket "ExpBracket" "[|" "|]" l e
+    PatBracket l p  -> printBracket "PatBracket" "[p|" "|]" l p
+    TypeBracket l t -> printBracket "TypeBracket" "[t|" "|]" l t
     DeclBracket l ds ->
         case srcInfoPoints l of
          pts@(_:_) -> do
@@ -1838,6 +1820,15 @@ instance ExactP Bracket where
             layoutList (init pts) (sepFunBinds ds)
             printStringAt (pos (last pts)) "|]"
          _ -> errorEP "ExactP: Bracket: DeclBracket is given too few srcInfoPoints"
+
+printBracket :: ExactP ast => String -> String -> String -> SrcSpanInfo -> ast SrcSpanInfo -> EP ()
+printBracket con oBracket cBracket l c =
+  case srcInfoPoints l of
+    [_,b] -> do
+      printString oBracket
+      exactPC c
+      printStringAt (pos b) cBracket
+    _ -> errorEP $ "ExactP: Bracket: " ++ con ++ " is given wrong number of srcInfoPoints"
 
 instance ExactP XAttr where
   exactP (XAttr l xn e) =
