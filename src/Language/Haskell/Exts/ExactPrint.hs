@@ -733,6 +733,7 @@ instance ExactP Decl where
             printStringAt (pos (last pts)) ")"
          _ -> errorEP "ExactP: Decl: DefaultDecl is given too few srcInfoPoints"
     SpliceDecl   _ spl  -> exactP spl
+    TSpliceDecl  _ spl  -> exactP spl
     TypeSig      l ns t -> do
         let pts = srcInfoPoints l
         printInterleaved' (zip pts (replicate (length pts - 1) "," ++ ["::"])) ns
@@ -1379,13 +1380,17 @@ instance ExactP Unpackedness where
 
 instance ExactP Splice where
   exactP (IdSplice _ str) = printString $ '$':str
-  exactP (ParenSplice l e) =
+  exactP (ParenSplice l e) = printParen "ParenSplice" "$(" l e
+  exactP (TParenSplice l e) = printParen "TParenSplice" "$$(" l e
+
+printParen :: ExactP ast => String -> String -> SrcSpanInfo -> ast SrcSpanInfo -> EP ()
+printParen con paren l e =
     case srcInfoPoints l of
      [_,b] -> do
-        printString "$("
+        printString paren
         exactPC e
         printStringAt (pos b) ")"
-     _ -> errorEP "ExactP: Splice: ParenSplice is given wrong number of srcInfoPoints"
+     _ -> errorEP $ "ExactP: Splice: " ++ con ++ " is given wrong number of srcInfoPoints"
 
 instance ExactP Exp where
   exactP exp = case exp of
@@ -1811,6 +1816,7 @@ instance ExactP QualStmt where
 instance ExactP Bracket where
   exactP br = case br of
     ExpBracket l e  -> printBracket "ExpBracket" "[|" "|]" l e
+    TExpBracket l e -> printBracket "TExpBracket" "[||" "||]" l e
     PatBracket l p  -> printBracket "PatBracket" "[p|" "|]" l p
     TypeBracket l t -> printBracket "TypeBracket" "[t|" "|]" l t
     DeclBracket l ds ->
