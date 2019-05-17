@@ -1380,6 +1380,7 @@ instance ExactP Unpackedness where
 
 instance ExactP Splice where
   exactP (IdSplice _ str) = printString $ '$':str
+  exactP (TIdSplice _ str) = printString $ "$$" ++ str
   exactP (ParenSplice l e) = printParen "ParenSplice" "$(" l e
   exactP (TParenSplice l e) = printParen "TParenSplice" "$$(" l e
 

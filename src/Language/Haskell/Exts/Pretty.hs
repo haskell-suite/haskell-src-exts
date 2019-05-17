@@ -1124,6 +1124,7 @@ ppBracket o x = myFsep [text o, pretty x, text "|]"]
 
 instance  Pretty (Splice l) where
         pretty (IdSplice _ s) = char '$' <> text s
+        pretty (TIdSplice _ s) = char '$' <> char '$' <> text s
         pretty (TParenSplice _ e) =
                 myFsep [text "$$(", pretty e, char ')']
         pretty (ParenSplice _ e) =

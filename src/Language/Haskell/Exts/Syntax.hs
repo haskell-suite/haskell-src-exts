@@ -836,6 +836,7 @@ data Bracket l
 -- | A template haskell splice expression
 data Splice l
     = IdSplice l String           -- ^ variable splice: @$var@
+    | TIdSplice l String          -- ^ typed variable splice: @$$var@
     | ParenSplice l (Exp l)       -- ^ parenthesised expression splice: @$(/exp/)@
     | TParenSplice l (Exp l)      -- ^ parenthesised typed expression splice: @$$(/exp/)@
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
@@ -1757,9 +1758,11 @@ instance Annotated Bracket where
 
 instance Annotated Splice where
     ann (IdSplice l _)    = l
+    ann (TIdSplice l _)   = l
     ann (ParenSplice l _) = l
     ann (TParenSplice l _) = l
     amap f (IdSplice l s) = IdSplice (f l) s
+    amap f (TIdSplice l s) = TIdSplice (f l) s
     amap f (ParenSplice l e) = ParenSplice (f l) e
     amap f (TParenSplice l e) = TParenSplice (f l) e
 
