@@ -1,10 +1,10 @@
 Name:                   haskell-src-exts
-Version:                1.21.0
+Version:                1.21.1
 License:                BSD3
 License-File:           LICENSE
 Build-Type:             Simple
 Author:                 Niklas Broberg
-Maintainer:             Matthew Pickering <matthewtpickering@gmail.com>
+Maintainer:             Dan Burton <danburton.email@gmail.com>
 Category:               Language
 Synopsis:               Manipulating Haskell source: abstract syntax, lexer, parser, and pretty-printer
 Description:            Haskell-Source with Extensions (HSE, haskell-src-exts)
@@ -14,12 +14,12 @@ Description:            Haskell-Source with Extensions (HSE, haskell-src-exts)
                         Apart from these standard extensions,
                         it also handles regular patterns as per the HaRP extension
                         as well as HSX-style embedded XML syntax.
-Homepage:               https://github.com/haskell-suite/haskell-src-exts
+Homepage:               https://github.com/danburton/haskell-src-exts
+Bug-Reports:            https://github.com/danburton/haskell-src-exts/issues
 Stability:              Stable
 Cabal-Version:          >= 1.10
 Tested-With:
-                          GHC == 7.6.3
-                        , GHC == 7.8.2
+                          GHC == 7.8.2
                         , GHC == 7.10.3
                         , GHC == 8.0.2
                         , GHC == 8.2.2
@@ -83,7 +83,7 @@ Library
 
 Source-Repository head
         Type:           git
-        Location:       https://github.com/haskell-suite/haskell-src-exts.git
+        Location:       https://github.com/danburton/haskell-src-exts.git
 
 Test-Suite test
   type:                exitcode-stdio-1.0
