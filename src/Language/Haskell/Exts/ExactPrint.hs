@@ -25,6 +25,7 @@ import Language.Haskell.Exts.SrcLoc
 import Language.Haskell.Exts.Comments
 
 import Control.Monad (when, liftM, ap, unless)
+import qualified Control.Monad.Fail as Fail
 #if __GLASGOW_HASKELL__ < 710
 import Control.Applicative (Applicative(..))
 #endif
@@ -57,6 +58,9 @@ instance Monad EP where
         EP f = k a
         (b, l2, c2, s2) = f l1 c1
     in (b, l2, c2, s1 . s2)
+
+instance Fail.MonadFail EP where
+  fail = error
 
 runEP :: EP () -> [Comment] -> String
 runEP (EP f) cs = let (_,_,_,s) = f (1,1) cs in s ""
