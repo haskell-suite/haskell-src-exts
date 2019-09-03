@@ -36,3 +36,13 @@ The haskell-src-exts Package is distributed under a derived BSD-style license. I
 derives from several sources, all of which are distributable under
 BSD-style or compatible licenses. See the file LICENSE for the complete
 license text.
+
+
+Maintenance
+--------------
+
+Dan Burton is currently keeping haskell-src-exts on life support.
+If you are interested in more actively making improvements to this package,
+please make your interests known.
+
+You might want to try [ghc-lib-parser](http://hackage.haskell.org/package/ghc-lib-parser) instead.
