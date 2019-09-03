@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# OPTIONS_HADDOCK hide #-}
 -----------------------------------------------------------------------------
 -- |
@@ -96,7 +97,9 @@ instance Applicative ParseResult where
 
 instance Monad ParseResult where
   return = ParseOk
+#if !MIN_VERSION_base(4,13,0)
   fail = Fail.fail
+#endif
   ParseOk x           >>= f = f x
   ParseFailed loc msg >>= _ = ParseFailed loc msg
 instance Fail.MonadFail ParseResult where
@@ -246,7 +249,9 @@ instance Monad P where
         case m i x y l ch s mode of
             Failed loc msg -> Failed loc msg
             Ok s' a -> runP (k a) i x y l ch s' mode
+#if !MIN_VERSION_base(4,13,0)
     fail   = Fail.fail
+#endif
 
 instance Fail.MonadFail P where
     fail s = P $ \_r _col _line loc _ _stk _m -> Failed loc s
@@ -354,7 +359,9 @@ instance Monad (Lex r) where
     return a = Lex $ \k -> k a
     Lex v >>= f = Lex $ \k -> v (\a -> runL (f a) k)
     Lex v >> Lex w = Lex $ \k -> v (\_ -> w k)
+#if !MIN_VERSION_base(4,13,0)
     fail   = Fail.fail
+#endif
 
 instance Fail.MonadFail (Lex r) where
     fail s = Lex $ \_ -> fail s

@@ -39,6 +39,7 @@ import Language.Haskell.Exts.Syntax
 import Language.Haskell.Exts.SrcLoc
 
 import Control.Monad (when, (<=<), liftM, liftM2, liftM3, liftM4)
+import qualified Control.Monad.Fail as Fail
 import Data.Traversable (mapM)
 import Data.Maybe (fromMaybe)
 import Data.Typeable
@@ -59,9 +60,9 @@ class AppFixity ast where
   -- | Tweak any expressions in the element to account for the
   --   fixities given. Assumes that all operator expressions are
   --   fully left associative chains to begin with.
-  applyFixities :: Monad m => [Fixity]      -- ^ The fixities to account for.
-                    -> ast SrcSpanInfo      -- ^ The element to tweak.
-                    -> m (ast SrcSpanInfo)  -- ^ The same element, but with operator expressions updated, or a failure.
+  applyFixities :: Fail.MonadFail m => [Fixity]  -- ^ The fixities to account for.
+                    -> ast SrcSpanInfo           -- ^ The element to tweak.
+                    -> m (ast SrcSpanInfo)       -- ^ The same element, but with operator expressions updated, or a failure.
 
 assocNone, assocLeft, assocRight :: Assoc ()
 assocNone = AssocNone ()
@@ -241,7 +242,7 @@ instance AppFixity PatternSynDirection where
     _ -> return dir
     where fix x = applyFixities fixs x
 
-appFixDecls :: Monad m => Maybe (ModuleName SrcSpanInfo) -> [Fixity] -> [Decl SrcSpanInfo] -> m [Decl SrcSpanInfo]
+appFixDecls :: Fail.MonadFail m => Maybe (ModuleName SrcSpanInfo) -> [Fixity] -> [Decl SrcSpanInfo] -> m [Decl SrcSpanInfo]
 appFixDecls mmdl fixs decls =
     let extraFixs = getFixities mmdl decls
      in mapM (applyFixities (fixs++extraFixs)) decls
@@ -379,7 +380,7 @@ instance AppFixity XAttr where
 -- Recursively fixes the "leaves" of the infix chains,
 -- without yet touching the chain itself. We assume all chains are
 -- left-associate to begin with.
-leafFix :: Monad m => [Fixity] -> Exp SrcSpanInfo -> m (Exp SrcSpanInfo)
+leafFix :: Fail.MonadFail m => [Fixity] -> Exp SrcSpanInfo -> m (Exp SrcSpanInfo)
 leafFix fixs e' = case e' of
     InfixApp l e1 op e2       -> liftM2 (flip (InfixApp l) op) (leafFix fixs e1) (fix e2)
     App l e1 e2               -> liftM2 (App l) (fix e1) (fix e2)
@@ -427,7 +428,7 @@ leafFix fixs e' = case e' of
   where
     fix x = applyFixities fixs x
 
-leafFixP :: Monad m => [Fixity] -> Pat SrcSpanInfo -> m (Pat SrcSpanInfo)
+leafFixP :: Fail.MonadFail m => [Fixity] -> Pat SrcSpanInfo -> m (Pat SrcSpanInfo)
 leafFixP fixs p' = case p' of
         PInfixApp l p1 op p2    -> liftM2 (flip (PInfixApp l) op) (leafFixP fixs p1) (fix p2)
         PApp l n ps             -> liftM (PApp l n) $ mapM fix ps
