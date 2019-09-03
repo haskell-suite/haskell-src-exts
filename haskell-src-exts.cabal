@@ -14,8 +14,8 @@ Description:            Haskell-Source with Extensions (HSE, haskell-src-exts)
                         Apart from these standard extensions,
                         it also handles regular patterns as per the HaRP extension
                         as well as HSX-style embedded XML syntax.
-Homepage:               https://github.com/danburton/haskell-src-exts
-Bug-Reports:            https://github.com/danburton/haskell-src-exts/issues
+Homepage:               https://github.com/haskell-suite/haskell-src-exts
+Bug-Reports:            https://github.com/haskell-suite/haskell-src-exts/issues
 Stability:              Stable
 Cabal-Version:          >= 1.10
 Tested-With:
@@ -83,7 +83,7 @@ Library
 
 Source-Repository head
         Type:           git
-        Location:       https://github.com/danburton/haskell-src-exts.git
+        Location:       https://github.com/haskell-suite/haskell-src-exts.git
 
 Test-Suite test
   type:                exitcode-stdio-1.0
