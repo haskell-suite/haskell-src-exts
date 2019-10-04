@@ -102,12 +102,16 @@ data Token
 
 -- Template Haskell
         | THExpQuote            -- [| or [e|
+        | THTExpQuote           -- [|| or [e||
         | THPatQuote            -- [p|
         | THDecQuote            -- [d|
         | THTypQuote            -- [t|
         | THCloseQuote          -- |]
+        | THTCloseQuote         -- ||]
         | THIdEscape (String)   -- dollar x
         | THParenEscape         -- dollar (
+        | THTIdEscape String    -- dollar dollar x
+        | THTParenEscape        -- double dollar (
         | THVarQuote            -- 'x (but without the x)
         | THTyQuote             -- ''T (but without the T)
         | THQuasiQuote (String,String)  -- [$...|...]
@@ -689,7 +693,16 @@ lexStdToken = do
                      do discard 2
                         return RPCAt -}
 
+
         -- template haskell
+        '[':'|':'|':_ | TemplateHaskell `elem` exts -> do
+                discard 3
+                return THTExpQuote
+
+        '[':'e':'|':'|':_ | TemplateHaskell `elem` exts -> do
+                discard 4
+                return THTExpQuote
+
         '[':'|':_ | TemplateHaskell `elem` exts -> do
                 discard 2
                 return THExpQuote
@@ -714,17 +727,27 @@ lexStdToken = do
                  | isUpper c && QuasiQuotes `elem` exts && case dropWhile isPossiblyQvar s' of { '|':_ -> True;_->False} ->
                         discard 1 >> lexQuasiQuote c
 
+        '|':'|':']':_ | TemplateHaskell `elem` exts -> do
+                        discard 3
+                        return THTCloseQuote
         '|':']':_ | TemplateHaskell `elem` exts -> do
                         discard 2
                         return THCloseQuote
 
-        '$':c:_ | isLower c && TemplateHaskell `elem` exts -> do
+        '$':c1:c2:_ | isLower c1 && TemplateHaskell `elem` exts -> do
                         discard 1
                         id <- lexWhile isIdent
                         return $ THIdEscape id
-                | c == '(' && TemplateHaskell `elem` exts -> do
+                    | c1 == '(' && TemplateHaskell `elem` exts -> do
                         discard 2
                         return THParenEscape
+                    | c1 == '$' && isLower c2 && TemplateHaskell `elem` exts -> do
+                        discard 2
+                        id <- lexWhile isIdent
+                        return $ THTIdEscape id
+                    | c1 == '$' && c2 == '(' && TemplateHaskell `elem` exts -> do
+                        discard 3
+                        return THTParenEscape
         -- end template haskell
 
         -- hsx
@@ -1349,12 +1372,16 @@ showToken t = case t of
   LeftDblArrowTail  -> "-<<"
   RightDblArrowTail -> ">>-"
   THExpQuote        -> "[|"
+  THTExpQuote       -> "[||"
   THPatQuote        -> "[p|"
   THDecQuote        -> "[d|"
   THTypQuote        -> "[t|"
   THCloseQuote      -> "|]"
+  THTCloseQuote     -> "||]"
   THIdEscape s      -> '$':s
   THParenEscape     -> "$("
+  THTIdEscape s     -> "$$" ++ s
+  THTParenEscape    -> "$$("
   THVarQuote        -> "'"
   THTyQuote         -> "''"
   THQuasiQuote (n,q) -> "[$" ++ n ++ "|" ++ q ++ "]"

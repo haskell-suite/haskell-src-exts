@@ -299,6 +299,8 @@ data Decl l
      -- ^ A declaration of default types
      | SpliceDecl   l (Exp l)
      -- ^ A Template Haskell splicing declaration
+     | TSpliceDecl  l (Exp l)
+     -- ^ A typed Template Haskell splicing declaration
      | TypeSig      l [Name l] (Type l)
      -- ^ A type signature declaration
      | PatSynSig    l [Name l] (Maybe [TyVarBind l]) (Maybe (Context l))
@@ -825,6 +827,7 @@ data XAttr l = XAttr l (XName l) (Exp l)
 -- | A template haskell bracket expression.
 data Bracket l
     = ExpBracket l (Exp l)        -- ^ expression bracket: @[| ... |]@
+    | TExpBracket l (Exp l)       -- ^ typed expression bracket: @[|| ... ||]@
     | PatBracket l (Pat l)        -- ^ pattern bracket: @[p| ... |]@
     | TypeBracket l (Type l)      -- ^ type bracket: @[t| ... |]@
     | DeclBracket l [Decl l]      -- ^ declaration bracket: @[d| ... |]@
@@ -833,7 +836,9 @@ data Bracket l
 -- | A template haskell splice expression
 data Splice l
     = IdSplice l String           -- ^ variable splice: @$var@
+    | TIdSplice l String          -- ^ typed variable splice: @$$var@
     | ParenSplice l (Exp l)       -- ^ parenthesised expression splice: @$(/exp/)@
+    | TParenSplice l (Exp l)      -- ^ parenthesised typed expression splice: @$$(/exp/)@
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | The safety of a foreign function call.
@@ -1290,6 +1295,7 @@ instance Annotated Decl where
         InfixDecl    l _ _ _            -> l
         DefaultDecl  l _                -> l
         SpliceDecl   l _                -> l
+        TSpliceDecl  l _                -> l
         TypeSig      l _ _              -> l
         PatSynSig    l _ _ _ _ _ _      -> l
         FunBind      l _                -> l
@@ -1327,6 +1333,7 @@ instance Annotated Decl where
         InfixDecl    l a k ops           -> InfixDecl (f l) a k ops
         DefaultDecl  l ts                -> DefaultDecl (f l) ts
         SpliceDecl   l sp                -> SpliceDecl (f l) sp
+        TSpliceDecl  l sp                -> TSpliceDecl (f l) sp
         TypeSig      l ns t              -> TypeSig (f l) ns t
         PatSynSig    l n dh c1 dh2 c2 t      -> PatSynSig (f l) n dh c1 dh2 c2 t
         FunBind      l ms                -> FunBind (f l) ms
@@ -1739,19 +1746,25 @@ instance Annotated XAttr where
 
 instance Annotated Bracket where
     ann (ExpBracket l _)  = l
+    ann (TExpBracket l _) = l
     ann (PatBracket l _)  = l
     ann (TypeBracket l _) = l
     ann (DeclBracket l _) = l
     amap f (ExpBracket l e) = ExpBracket (f l) e
+    amap f (TExpBracket l e) = TExpBracket (f l) e
     amap f (PatBracket l p) = PatBracket (f l) p
     amap f (TypeBracket l t) = TypeBracket (f l) t
     amap f (DeclBracket l ds) = DeclBracket (f l) ds
 
 instance Annotated Splice where
     ann (IdSplice l _)    = l
+    ann (TIdSplice l _)   = l
     ann (ParenSplice l _) = l
+    ann (TParenSplice l _) = l
     amap f (IdSplice l s) = IdSplice (f l) s
+    amap f (TIdSplice l s) = TIdSplice (f l) s
     amap f (ParenSplice l e) = ParenSplice (f l) e
+    amap f (TParenSplice l e) = TParenSplice (f l) e
 
 instance Annotated Safety where
     ann (PlayRisky l) = l

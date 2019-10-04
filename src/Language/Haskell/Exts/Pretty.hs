@@ -480,6 +480,9 @@ instance  Pretty (Decl l) where
         pretty (SpliceDecl _ splice) =
                 pretty splice
 
+        pretty (TSpliceDecl _ splice) =
+                pretty splice
+
         pretty (TypeSig _ nameList qualType) =
                 mySep ((punctuate comma . map pretty $ nameList)
                       ++ [text "::", pretty qualType])
@@ -1110,6 +1113,7 @@ ppLetExp l b = myFsep [text "let" <+> ppBody letIndent (ppDecls False l),
 
 instance  Pretty (Bracket l) where
         pretty (ExpBracket _ e) = ppBracket "[|" e
+        pretty (TExpBracket _ e) = myFsep [text "[||", pretty e, text "||]"]
         pretty (PatBracket _ p) = ppBracket "[p|" p
         pretty (TypeBracket _ t) = ppBracket "[t|" t
         pretty (DeclBracket _ d) =
@@ -1120,6 +1124,9 @@ ppBracket o x = myFsep [text o, pretty x, text "|]"]
 
 instance  Pretty (Splice l) where
         pretty (IdSplice _ s) = char '$' <> text s
+        pretty (TIdSplice _ s) = char '$' <> char '$' <> text s
+        pretty (TParenSplice _ e) =
+                myFsep [text "$$(", pretty e, char ')']
         pretty (ParenSplice _ e) =
                 myFsep [text "$(", pretty e, char ')']
 
