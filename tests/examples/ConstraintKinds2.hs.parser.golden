@@ -150,21 +150,27 @@ ParseOk
                          , srcInfoPoints =
                              [ SrcSpan "tests/examples/ConstraintKinds2.hs" 6 15 6 17 ]
                          }
-                       (AppA
+                       (TypeA
                           SrcSpanInfo
                             { srcInfoSpan =
                                 SrcSpan "tests/examples/ConstraintKinds2.hs" 6 13 6 17
                             , srcInfoPoints =
                                 [ SrcSpan "tests/examples/ConstraintKinds2.hs" 6 15 6 17 ]
                             }
-                          (Ident
+                          (TyVar
                              SrcSpanInfo
                                { srcInfoSpan =
-                                   SrcSpan "tests/examples/ConstraintKinds2.hs" 6 13 6 14
-                               , srcInfoPoints = []
+                                   SrcSpan "tests/examples/ConstraintKinds2.hs" 6 13 6 17
+                               , srcInfoPoints =
+                                   [ SrcSpan "tests/examples/ConstraintKinds2.hs" 6 15 6 17 ]
                                }
-                             "p")
-                          [])))
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/ConstraintKinds2.hs" 6 13 6 14
+                                  , srcInfoPoints = []
+                                  }
+                                "p")))))
                  (TyApp
                     SrcSpanInfo
                       { srcInfoSpan =

@@ -205,39 +205,53 @@ ParseOk
                                    , SrcSpan "tests/examples/DefaultSignatures.hs" 4 25 4 27
                                    ]
                                }
-                             (ClassA
+                             (TypeA
                                 SrcSpanInfo
                                   { srcInfoSpan =
                                       SrcSpan "tests/examples/DefaultSignatures.hs" 4 19 4 23
                                   , srcInfoPoints = []
                                   }
-                                (UnQual
+                                (TyApp
                                    SrcSpanInfo
                                      { srcInfoSpan =
-                                         SrcSpan "tests/examples/DefaultSignatures.hs" 4 19 4 21
+                                         SrcSpan "tests/examples/DefaultSignatures.hs" 4 19 4 23
                                      , srcInfoPoints = []
                                      }
-                                   (Ident
+                                   (TyCon
                                       SrcSpanInfo
                                         { srcInfoSpan =
-                                            SrcSpan "tests/examples/DefaultSignatures.hs" 4 19 4 21
+                                            SrcSpan "tests/examples/DefaultSignatures.hs" 4 19 4 23
                                         , srcInfoPoints = []
                                         }
-                                      "Eq"))
-                                [ TyVar
-                                    SrcSpanInfo
-                                      { srcInfoSpan =
-                                          SrcSpan "tests/examples/DefaultSignatures.hs" 4 22 4 23
-                                      , srcInfoPoints = []
-                                      }
-                                    (Ident
-                                       SrcSpanInfo
-                                         { srcInfoSpan =
-                                             SrcSpan "tests/examples/DefaultSignatures.hs" 4 22 4 23
-                                         , srcInfoPoints = []
-                                         }
-                                       "a")
-                                ]))))
+                                      (UnQual
+                                         SrcSpanInfo
+                                           { srcInfoSpan =
+                                               SrcSpan
+                                                 "tests/examples/DefaultSignatures.hs" 4 19 4 21
+                                           , srcInfoPoints = []
+                                           }
+                                         (Ident
+                                            SrcSpanInfo
+                                              { srcInfoSpan =
+                                                  SrcSpan
+                                                    "tests/examples/DefaultSignatures.hs" 4 19 4 21
+                                              , srcInfoPoints = []
+                                              }
+                                            "Eq")))
+                                   (TyVar
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/DefaultSignatures.hs" 4 22 4 23
+                                        , srcInfoPoints = []
+                                        }
+                                      (Ident
+                                         SrcSpanInfo
+                                           { srcInfoSpan =
+                                               SrcSpan
+                                                 "tests/examples/DefaultSignatures.hs" 4 22 4 23
+                                           , srcInfoPoints = []
+                                           }
+                                         "a")))))))
                     (TyFun
                        SrcSpanInfo
                          { srcInfoSpan =

@@ -61,47 +61,60 @@ ParseOk
                      { srcInfoSpan =
                          SrcSpan "tests/examples/EqualityConstraints1.hs" 4 8 4 18
                      , srcInfoPoints =
-                         [ SrcSpan "tests/examples/EqualityConstraints1.hs" 4 16 4 18 ]
+                         [ SrcSpan "tests/examples/EqualityConstraints1.hs" 4 10 4 11
+                         , SrcSpan "tests/examples/EqualityConstraints1.hs" 4 16 4 18
+                         ]
                      }
-                   (EqualP
+                   (TypeA
                       SrcSpanInfo
                         { srcInfoSpan =
-                            SrcSpan "tests/examples/EqualityConstraints1.hs" 4 8 4 15
+                            SrcSpan "tests/examples/EqualityConstraints1.hs" 4 8 4 18
                         , srcInfoPoints =
-                            [ SrcSpan "tests/examples/EqualityConstraints1.hs" 4 10 4 11 ]
+                            [ SrcSpan "tests/examples/EqualityConstraints1.hs" 4 10 4 11
+                            , SrcSpan "tests/examples/EqualityConstraints1.hs" 4 16 4 18
+                            ]
                         }
-                      (TyVar
+                      (TyEquals
                          SrcSpanInfo
                            { srcInfoSpan =
-                               SrcSpan "tests/examples/EqualityConstraints1.hs" 4 8 4 9
-                           , srcInfoPoints = []
+                               SrcSpan "tests/examples/EqualityConstraints1.hs" 4 8 4 18
+                           , srcInfoPoints =
+                               [ SrcSpan "tests/examples/EqualityConstraints1.hs" 4 10 4 11
+                               , SrcSpan "tests/examples/EqualityConstraints1.hs" 4 16 4 18
+                               ]
                            }
-                         (Ident
+                         (TyVar
                             SrcSpanInfo
                               { srcInfoSpan =
                                   SrcSpan "tests/examples/EqualityConstraints1.hs" 4 8 4 9
                               , srcInfoPoints = []
                               }
-                            "a"))
-                      (TyCon
-                         SrcSpanInfo
-                           { srcInfoSpan =
-                               SrcSpan "tests/examples/EqualityConstraints1.hs" 4 12 4 15
-                           , srcInfoPoints = []
-                           }
-                         (UnQual
+                            (Ident
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/EqualityConstraints1.hs" 4 8 4 9
+                                 , srcInfoPoints = []
+                                 }
+                               "a"))
+                         (TyCon
                             SrcSpanInfo
                               { srcInfoSpan =
                                   SrcSpan "tests/examples/EqualityConstraints1.hs" 4 12 4 15
                               , srcInfoPoints = []
                               }
-                            (Ident
+                            (UnQual
                                SrcSpanInfo
                                  { srcInfoSpan =
                                      SrcSpan "tests/examples/EqualityConstraints1.hs" 4 12 4 15
                                  , srcInfoPoints = []
                                  }
-                               "Int"))))))
+                               (Ident
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/EqualityConstraints1.hs" 4 12 4 15
+                                    , srcInfoPoints = []
+                                    }
+                                  "Int")))))))
              (TyVar
                 SrcSpanInfo
                   { srcInfoSpan =

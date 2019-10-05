@@ -79,54 +79,67 @@ ParseOk
                      , srcInfoPoints =
                          [ SrcSpan "tests/examples/TypeOperatorsTest.hs" 3 20 3 22 ]
                      }
-                   (ClassA
+                   (TypeA
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/TypeOperatorsTest.hs" 3 6 3 22
                         , srcInfoPoints =
                             [ SrcSpan "tests/examples/TypeOperatorsTest.hs" 3 20 3 22 ]
                         }
-                      (UnQual
+                      (TyApp
                          SrcSpanInfo
                            { srcInfoSpan =
-                               SrcSpan "tests/examples/TypeOperatorsTest.hs" 3 6 3 14
-                           , srcInfoPoints = []
+                               SrcSpan "tests/examples/TypeOperatorsTest.hs" 3 6 3 22
+                           , srcInfoPoints =
+                               [ SrcSpan "tests/examples/TypeOperatorsTest.hs" 3 20 3 22 ]
                            }
-                         (Ident
+                         (TyCon
                             SrcSpanInfo
                               { srcInfoSpan =
-                                  SrcSpan "tests/examples/TypeOperatorsTest.hs" 3 6 3 14
-                              , srcInfoPoints = []
+                                  SrcSpan "tests/examples/TypeOperatorsTest.hs" 3 6 3 22
+                              , srcInfoPoints =
+                                  [ SrcSpan "tests/examples/TypeOperatorsTest.hs" 3 20 3 22 ]
                               }
-                            "ArrowXml"))
-                      [ TyCon
-                          SrcSpanInfo
-                            { srcInfoSpan =
-                                SrcSpan "tests/examples/TypeOperatorsTest.hs" 3 15 3 19
-                            , srcInfoPoints =
-                                [ SrcSpan "tests/examples/TypeOperatorsTest.hs" 3 15 3 16
-                                , SrcSpan "tests/examples/TypeOperatorsTest.hs" 3 16 3 18
-                                , SrcSpan "tests/examples/TypeOperatorsTest.hs" 3 18 3 19
-                                ]
-                            }
-                          (UnQual
-                             SrcSpanInfo
-                               { srcInfoSpan =
-                                   SrcSpan "tests/examples/TypeOperatorsTest.hs" 3 15 3 19
-                               , srcInfoPoints =
-                                   [ SrcSpan "tests/examples/TypeOperatorsTest.hs" 3 15 3 16
-                                   , SrcSpan "tests/examples/TypeOperatorsTest.hs" 3 16 3 18
-                                   , SrcSpan "tests/examples/TypeOperatorsTest.hs" 3 18 3 19
-                                   ]
-                               }
-                             (Symbol
-                                SrcSpanInfo
-                                  { srcInfoSpan =
-                                      SrcSpan "tests/examples/TypeOperatorsTest.hs" 3 16 3 18
-                                  , srcInfoPoints = []
-                                  }
-                                "~>"))
-                      ])))
+                            (UnQual
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/TypeOperatorsTest.hs" 3 6 3 14
+                                 , srcInfoPoints = []
+                                 }
+                               (Ident
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/TypeOperatorsTest.hs" 3 6 3 14
+                                    , srcInfoPoints = []
+                                    }
+                                  "ArrowXml")))
+                         (TyCon
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/TypeOperatorsTest.hs" 3 15 3 19
+                              , srcInfoPoints =
+                                  [ SrcSpan "tests/examples/TypeOperatorsTest.hs" 3 15 3 16
+                                  , SrcSpan "tests/examples/TypeOperatorsTest.hs" 3 16 3 18
+                                  , SrcSpan "tests/examples/TypeOperatorsTest.hs" 3 18 3 19
+                                  ]
+                              }
+                            (UnQual
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/TypeOperatorsTest.hs" 3 15 3 19
+                                 , srcInfoPoints =
+                                     [ SrcSpan "tests/examples/TypeOperatorsTest.hs" 3 15 3 16
+                                     , SrcSpan "tests/examples/TypeOperatorsTest.hs" 3 16 3 18
+                                     , SrcSpan "tests/examples/TypeOperatorsTest.hs" 3 18 3 19
+                                     ]
+                                 }
+                               (Symbol
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/TypeOperatorsTest.hs" 3 16 3 18
+                                    , srcInfoPoints = []
+                                    }
+                                  "~>")))))))
              (TyInfix
                 SrcSpanInfo
                   { srcInfoSpan =

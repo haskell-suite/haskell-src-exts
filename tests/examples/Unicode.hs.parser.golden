@@ -3748,62 +3748,80 @@ ParseOk
                          , SrcSpan "tests/examples/Unicode.hs" 74 28 74 29
                          ]
                      }
-                   [ ClassA
+                   [ TypeA
                        SrcSpanInfo
                          { srcInfoSpan = SrcSpan "tests/examples/Unicode.hs" 74 14 74 19
                          , srcInfoPoints = []
                          }
-                       (UnQual
+                       (TyApp
                           SrcSpanInfo
-                            { srcInfoSpan = SrcSpan "tests/examples/Unicode.hs" 74 14 74 17
+                            { srcInfoSpan = SrcSpan "tests/examples/Unicode.hs" 74 14 74 19
                             , srcInfoPoints = []
                             }
-                          (Ident
+                          (TyCon
                              SrcSpanInfo
-                               { srcInfoSpan = SrcSpan "tests/examples/Unicode.hs" 74 14 74 17
+                               { srcInfoSpan = SrcSpan "tests/examples/Unicode.hs" 74 14 74 19
                                , srcInfoPoints = []
                                }
-                             "Num"))
-                       [ TyVar
-                           SrcSpanInfo
-                             { srcInfoSpan = SrcSpan "tests/examples/Unicode.hs" 74 18 74 19
-                             , srcInfoPoints = []
-                             }
-                           (Ident
-                              SrcSpanInfo
-                                { srcInfoSpan = SrcSpan "tests/examples/Unicode.hs" 74 18 74 19
-                                , srcInfoPoints = []
-                                }
-                              "a")
-                       ]
-                   , ClassA
+                             (UnQual
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/Unicode.hs" 74 14 74 17
+                                  , srcInfoPoints = []
+                                  }
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan = SrcSpan "tests/examples/Unicode.hs" 74 14 74 17
+                                     , srcInfoPoints = []
+                                     }
+                                   "Num")))
+                          (TyVar
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/Unicode.hs" 74 18 74 19
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/Unicode.hs" 74 18 74 19
+                                  , srcInfoPoints = []
+                                  }
+                                "a")))
+                   , TypeA
                        SrcSpanInfo
                          { srcInfoSpan = SrcSpan "tests/examples/Unicode.hs" 74 21 74 26
                          , srcInfoPoints = []
                          }
-                       (UnQual
+                       (TyApp
                           SrcSpanInfo
-                            { srcInfoSpan = SrcSpan "tests/examples/Unicode.hs" 74 21 74 24
+                            { srcInfoSpan = SrcSpan "tests/examples/Unicode.hs" 74 21 74 26
                             , srcInfoPoints = []
                             }
-                          (Ident
+                          (TyCon
                              SrcSpanInfo
-                               { srcInfoSpan = SrcSpan "tests/examples/Unicode.hs" 74 21 74 24
+                               { srcInfoSpan = SrcSpan "tests/examples/Unicode.hs" 74 21 74 26
                                , srcInfoPoints = []
                                }
-                             "Ord"))
-                       [ TyVar
-                           SrcSpanInfo
-                             { srcInfoSpan = SrcSpan "tests/examples/Unicode.hs" 74 25 74 26
-                             , srcInfoPoints = []
-                             }
-                           (Ident
-                              SrcSpanInfo
-                                { srcInfoSpan = SrcSpan "tests/examples/Unicode.hs" 74 25 74 26
-                                , srcInfoPoints = []
-                                }
-                              "a")
-                       ]
+                             (UnQual
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/Unicode.hs" 74 21 74 24
+                                  , srcInfoPoints = []
+                                  }
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan = SrcSpan "tests/examples/Unicode.hs" 74 21 74 24
+                                     , srcInfoPoints = []
+                                     }
+                                   "Ord")))
+                          (TyVar
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/Unicode.hs" 74 25 74 26
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/Unicode.hs" 74 25 74 26
+                                  , srcInfoPoints = []
+                                  }
+                                "a")))
                    ]))
              (TyFun
                 SrcSpanInfo

@@ -72,35 +72,46 @@ ParseOk
                      , srcInfoPoints =
                          [ SrcSpan "tests/examples/MultiCtxt.hs" 5 21 5 23 ]
                      }
-                   (ClassA
+                   (TypeA
                       SrcSpanInfo
                         { srcInfoSpan = SrcSpan "tests/examples/MultiCtxt.hs" 5 16 5 23
                         , srcInfoPoints =
                             [ SrcSpan "tests/examples/MultiCtxt.hs" 5 21 5 23 ]
                         }
-                      (UnQual
+                      (TyApp
                          SrcSpanInfo
-                           { srcInfoSpan = SrcSpan "tests/examples/MultiCtxt.hs" 5 16 5 18
-                           , srcInfoPoints = []
+                           { srcInfoSpan = SrcSpan "tests/examples/MultiCtxt.hs" 5 16 5 23
+                           , srcInfoPoints =
+                               [ SrcSpan "tests/examples/MultiCtxt.hs" 5 21 5 23 ]
                            }
-                         (Ident
+                         (TyCon
                             SrcSpanInfo
-                              { srcInfoSpan = SrcSpan "tests/examples/MultiCtxt.hs" 5 16 5 18
+                              { srcInfoSpan = SrcSpan "tests/examples/MultiCtxt.hs" 5 16 5 23
+                              , srcInfoPoints =
+                                  [ SrcSpan "tests/examples/MultiCtxt.hs" 5 21 5 23 ]
+                              }
+                            (UnQual
+                               SrcSpanInfo
+                                 { srcInfoSpan = SrcSpan "tests/examples/MultiCtxt.hs" 5 16 5 18
+                                 , srcInfoPoints = []
+                                 }
+                               (Ident
+                                  SrcSpanInfo
+                                    { srcInfoSpan = SrcSpan "tests/examples/MultiCtxt.hs" 5 16 5 18
+                                    , srcInfoPoints = []
+                                    }
+                                  "Eq")))
+                         (TyVar
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/MultiCtxt.hs" 5 19 5 20
                               , srcInfoPoints = []
                               }
-                            "Eq"))
-                      [ TyVar
-                          SrcSpanInfo
-                            { srcInfoSpan = SrcSpan "tests/examples/MultiCtxt.hs" 5 19 5 20
-                            , srcInfoPoints = []
-                            }
-                          (Ident
-                             SrcSpanInfo
-                               { srcInfoSpan = SrcSpan "tests/examples/MultiCtxt.hs" 5 19 5 20
-                               , srcInfoPoints = []
-                               }
-                             "a")
-                      ])))
+                            (Ident
+                               SrcSpanInfo
+                                 { srcInfoSpan = SrcSpan "tests/examples/MultiCtxt.hs" 5 19 5 20
+                                 , srcInfoPoints = []
+                                 }
+                               "a"))))))
              (TyParen
                 SrcSpanInfo
                   { srcInfoSpan = SrcSpan "tests/examples/MultiCtxt.hs" 5 24 5 37
@@ -122,35 +133,49 @@ ParseOk
                            , srcInfoPoints =
                                [ SrcSpan "tests/examples/MultiCtxt.hs" 5 32 5 34 ]
                            }
-                         (ClassA
+                         (TypeA
                             SrcSpanInfo
                               { srcInfoSpan = SrcSpan "tests/examples/MultiCtxt.hs" 5 25 5 34
                               , srcInfoPoints =
                                   [ SrcSpan "tests/examples/MultiCtxt.hs" 5 32 5 34 ]
                               }
-                            (UnQual
+                            (TyApp
                                SrcSpanInfo
-                                 { srcInfoSpan = SrcSpan "tests/examples/MultiCtxt.hs" 5 25 5 29
-                                 , srcInfoPoints = []
+                                 { srcInfoSpan = SrcSpan "tests/examples/MultiCtxt.hs" 5 25 5 34
+                                 , srcInfoPoints =
+                                     [ SrcSpan "tests/examples/MultiCtxt.hs" 5 32 5 34 ]
                                  }
-                               (Ident
+                               (TyCon
                                   SrcSpanInfo
-                                    { srcInfoSpan = SrcSpan "tests/examples/MultiCtxt.hs" 5 25 5 29
+                                    { srcInfoSpan = SrcSpan "tests/examples/MultiCtxt.hs" 5 25 5 34
+                                    , srcInfoPoints =
+                                        [ SrcSpan "tests/examples/MultiCtxt.hs" 5 32 5 34 ]
+                                    }
+                                  (UnQual
+                                     SrcSpanInfo
+                                       { srcInfoSpan =
+                                           SrcSpan "tests/examples/MultiCtxt.hs" 5 25 5 29
+                                       , srcInfoPoints = []
+                                       }
+                                     (Ident
+                                        SrcSpanInfo
+                                          { srcInfoSpan =
+                                              SrcSpan "tests/examples/MultiCtxt.hs" 5 25 5 29
+                                          , srcInfoPoints = []
+                                          }
+                                        "Show")))
+                               (TyVar
+                                  SrcSpanInfo
+                                    { srcInfoSpan = SrcSpan "tests/examples/MultiCtxt.hs" 5 30 5 31
                                     , srcInfoPoints = []
                                     }
-                                  "Show"))
-                            [ TyVar
-                                SrcSpanInfo
-                                  { srcInfoSpan = SrcSpan "tests/examples/MultiCtxt.hs" 5 30 5 31
-                                  , srcInfoPoints = []
-                                  }
-                                (Ident
-                                   SrcSpanInfo
-                                     { srcInfoSpan = SrcSpan "tests/examples/MultiCtxt.hs" 5 30 5 31
-                                     , srcInfoPoints = []
-                                     }
-                                   "a")
-                            ])))
+                                  (Ident
+                                     SrcSpanInfo
+                                       { srcInfoSpan =
+                                           SrcSpan "tests/examples/MultiCtxt.hs" 5 30 5 31
+                                       , srcInfoPoints = []
+                                       }
+                                     "a"))))))
                    (TyVar
                       SrcSpanInfo
                         { srcInfoSpan = SrcSpan "tests/examples/MultiCtxt.hs" 5 35 5 36

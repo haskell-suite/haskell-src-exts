@@ -64,7 +64,7 @@ ParseOk
                          [ SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 2 16 2 18
                          ]
                      }
-                   (ClassA
+                   (TypeA
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 2 6 2 18
@@ -72,27 +72,36 @@ ParseOk
                             [ SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 2 16 2 18
                             ]
                         }
-                      (Qual
+                      (TyCon
                          SrcSpanInfo
                            { srcInfoSpan =
-                               SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 2 6 2 15
-                           , srcInfoPoints = []
+                               SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 2 6 2 18
+                           , srcInfoPoints =
+                               [ SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 2 16 2 18
+                               ]
                            }
-                         (ModuleName
+                         (Qual
                             SrcSpanInfo
                               { srcInfoSpan =
                                   SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 2 6 2 15
                               , srcInfoPoints = []
                               }
-                            "Log")
-                         (Ident
-                            SrcSpanInfo
-                              { srcInfoSpan =
-                                  SrcSpan "tests/examples/FlexibleContextsWithoutVars.hs" 2 6 2 15
-                              , srcInfoPoints = []
-                              }
-                            "Stack"))
-                      [])))
+                            (ModuleName
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan
+                                       "tests/examples/FlexibleContextsWithoutVars.hs" 2 6 2 15
+                                 , srcInfoPoints = []
+                                 }
+                               "Log")
+                            (Ident
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan
+                                       "tests/examples/FlexibleContextsWithoutVars.hs" 2 6 2 15
+                                 , srcInfoPoints = []
+                                 }
+                               "Stack"))))))
              (TyFun
                 SrcSpanInfo
                   { srcInfoSpan =

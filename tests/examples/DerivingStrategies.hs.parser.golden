@@ -477,40 +477,53 @@ ParseOk
                      , srcInfoPoints =
                          [ SrcSpan "tests/examples/DerivingStrategies.hs" 16 32 16 34 ]
                      }
-                   (ClassA
+                   (TypeA
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/DerivingStrategies.hs" 16 25 16 34
                         , srcInfoPoints =
                             [ SrcSpan "tests/examples/DerivingStrategies.hs" 16 32 16 34 ]
                         }
-                      (UnQual
+                      (TyApp
                          SrcSpanInfo
                            { srcInfoSpan =
-                               SrcSpan "tests/examples/DerivingStrategies.hs" 16 25 16 29
-                           , srcInfoPoints = []
+                               SrcSpan "tests/examples/DerivingStrategies.hs" 16 25 16 34
+                           , srcInfoPoints =
+                               [ SrcSpan "tests/examples/DerivingStrategies.hs" 16 32 16 34 ]
                            }
-                         (Ident
+                         (TyCon
                             SrcSpanInfo
                               { srcInfoSpan =
-                                  SrcSpan "tests/examples/DerivingStrategies.hs" 16 25 16 29
+                                  SrcSpan "tests/examples/DerivingStrategies.hs" 16 25 16 34
+                              , srcInfoPoints =
+                                  [ SrcSpan "tests/examples/DerivingStrategies.hs" 16 32 16 34 ]
+                              }
+                            (UnQual
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/DerivingStrategies.hs" 16 25 16 29
+                                 , srcInfoPoints = []
+                                 }
+                               (Ident
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/DerivingStrategies.hs" 16 25 16 29
+                                    , srcInfoPoints = []
+                                    }
+                                  "Read")))
+                         (TyVar
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/DerivingStrategies.hs" 16 30 16 31
                               , srcInfoPoints = []
                               }
-                            "Read"))
-                      [ TyVar
-                          SrcSpanInfo
-                            { srcInfoSpan =
-                                SrcSpan "tests/examples/DerivingStrategies.hs" 16 30 16 31
-                            , srcInfoPoints = []
-                            }
-                          (Ident
-                             SrcSpanInfo
-                               { srcInfoSpan =
-                                   SrcSpan "tests/examples/DerivingStrategies.hs" 16 30 16 31
-                               , srcInfoPoints = []
-                               }
-                             "a")
-                      ])))
+                            (Ident
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/DerivingStrategies.hs" 16 30 16 31
+                                 , srcInfoPoints = []
+                                 }
+                               "a"))))))
              (IHApp
                 SrcSpanInfo
                   { srcInfoSpan =
@@ -615,40 +628,53 @@ ParseOk
                      , srcInfoPoints =
                          [ SrcSpan "tests/examples/DerivingStrategies.hs" 17 33 17 35 ]
                      }
-                   (ClassA
+                   (TypeA
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/DerivingStrategies.hs" 17 27 17 35
                         , srcInfoPoints =
                             [ SrcSpan "tests/examples/DerivingStrategies.hs" 17 33 17 35 ]
                         }
-                      (UnQual
+                      (TyApp
                          SrcSpanInfo
                            { srcInfoSpan =
-                               SrcSpan "tests/examples/DerivingStrategies.hs" 17 27 17 30
-                           , srcInfoPoints = []
+                               SrcSpan "tests/examples/DerivingStrategies.hs" 17 27 17 35
+                           , srcInfoPoints =
+                               [ SrcSpan "tests/examples/DerivingStrategies.hs" 17 33 17 35 ]
                            }
-                         (Ident
+                         (TyCon
                             SrcSpanInfo
                               { srcInfoSpan =
-                                  SrcSpan "tests/examples/DerivingStrategies.hs" 17 27 17 30
+                                  SrcSpan "tests/examples/DerivingStrategies.hs" 17 27 17 35
+                              , srcInfoPoints =
+                                  [ SrcSpan "tests/examples/DerivingStrategies.hs" 17 33 17 35 ]
+                              }
+                            (UnQual
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/DerivingStrategies.hs" 17 27 17 30
+                                 , srcInfoPoints = []
+                                 }
+                               (Ident
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/DerivingStrategies.hs" 17 27 17 30
+                                    , srcInfoPoints = []
+                                    }
+                                  "Num")))
+                         (TyVar
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/DerivingStrategies.hs" 17 31 17 32
                               , srcInfoPoints = []
                               }
-                            "Num"))
-                      [ TyVar
-                          SrcSpanInfo
-                            { srcInfoSpan =
-                                SrcSpan "tests/examples/DerivingStrategies.hs" 17 31 17 32
-                            , srcInfoPoints = []
-                            }
-                          (Ident
-                             SrcSpanInfo
-                               { srcInfoSpan =
-                                   SrcSpan "tests/examples/DerivingStrategies.hs" 17 31 17 32
-                               , srcInfoPoints = []
-                               }
-                             "a")
-                      ])))
+                            (Ident
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/DerivingStrategies.hs" 17 31 17 32
+                                 , srcInfoPoints = []
+                                 }
+                               "a"))))))
              (IHApp
                 SrcSpanInfo
                   { srcInfoSpan =

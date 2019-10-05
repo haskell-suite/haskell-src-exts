@@ -872,7 +872,6 @@ instance  Pretty (Type l) where
         prettyPrec _ (TyVar _ name) = pretty name
         prettyPrec _ (TyCon _ name) = pretty name
         prettyPrec _ (TyParen _ t) = parens (pretty t)
---        prettyPrec _ (TyPred asst) = pretty asst
         prettyPrec _ (TyInfix _ a op b) = myFsep [pretty a, pretty op, pretty b]
         prettyPrec _ (TyKind _ t k) = parens (myFsep [pretty t, text "::", pretty k])
         prettyPrec _ (TyPromoted _ p) = pretty p
@@ -1354,15 +1353,10 @@ instance (Pretty (Context l)) where
   pretty (CxSingle _ ctxt)  = pretty ctxt <+> text "=>"
   pretty (CxTuple _ context) = mySep [parenList (map pretty context), text "=>"]
 
--- hacked for multi-parameter type classes
 instance  Pretty (Asst l) where
-        pretty (ClassA _ a ts)   = myFsep $ pretty a : map ppAType ts
-        pretty (AppA _ n ns)     = myFsep $ pretty n : map pretty ns
-        pretty (InfixA _ a op b) = myFsep [pretty a, ppQNameInfix op, pretty b]
+        pretty (TypeA _ t)       = pretty t
         pretty (IParam _ i t)    = myFsep [pretty i, text "::", pretty t]
-        pretty (EqualP _ t1 t2)  = myFsep [pretty t1, text "~", pretty t2]
         pretty (ParenA _ a)      = parens (pretty a)
-        pretty (WildCardA _ mn)  = char  '_' <> maybePP pretty mn
 
 -- Pretty print a source location, useful for printing out error messages
 instance Pretty SrcLoc where
@@ -1673,13 +1667,9 @@ instance SrcInfo loc => Pretty (P.PContext loc) where
         pretty (P.CxTuple _ assts) = myFsep [parenList (map pretty assts), text "=>"]
 
 instance SrcInfo loc => Pretty (P.PAsst loc) where
-        pretty (P.ClassA _ a ts)   = myFsep $ pretty ( a) : map (prettyPrec prec_atype) ts
-        pretty (P.AppA _ n ns)     = myFsep $ pretty n : map (prettyPrec prec_atype) ns
-        pretty (P.InfixA _ a op b) = myFsep [pretty a, ppQNameInfix op, pretty b]
+        pretty (P.TypeA _ t)       = pretty t
         pretty (P.IParam _ i t)    = myFsep [pretty i, text "::", pretty t]
-        pretty (P.EqualP _ t1 t2)  = myFsep [pretty t1, text "~", pretty t2]
         pretty (P.ParenA _ a)      = parens (pretty a)
-        pretty (P.WildCardA _ mn)  = char '_' <> maybePP pretty mn
 
 instance SrcInfo loc => Pretty (P.PType loc) where
         prettyPrec p (P.TyForall _ mtvs ctxt htype) = parensIf (p > 0) $
@@ -1708,6 +1698,7 @@ instance SrcInfo loc => Pretty (P.PType loc) where
         prettyPrec _ (P.TyInfix _ a op b) = myFsep [pretty a, pretty op, pretty b]
         prettyPrec _ (P.TyKind _ t k) = parens (myFsep [pretty t, text "::", pretty k])
         prettyPrec _ (P.TyPromoted _ p) = pretty p
+        prettyPrec _ (P.TyEquals _ a b) = myFsep [pretty a, text "~", pretty b]
         prettyPrec _ (P.TySplice _ s) = pretty s
         prettyPrec _ (P.TyBang _ b u t) = pretty u <+> pretty b <> prettyPrec prec_atype t
         prettyPrec _ (P.TyWildCard _ mn) = char '_' <> maybePP pretty mn
