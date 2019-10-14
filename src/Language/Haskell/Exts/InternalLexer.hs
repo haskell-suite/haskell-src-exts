@@ -802,7 +802,7 @@ lexStdToken = do
 
             | isUpper c -> lexConIdOrQual ""
 
-            | isLower c || c == '_' -> do
+            | isLetter c || c == '_' -> do
                     idents <- lexIdents
                     case idents of
                      [ident] -> case lookup ident (reserved_ids ++ special_varids) of
