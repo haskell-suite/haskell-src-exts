@@ -369,6 +369,10 @@ isHSymbol c = c `elem` ":!#%&*./?@\\-" || ((isSymbol c || isPunctuation c) && no
 
 isPragmaChar c = isAlphaNum c || c == '_'
 
+isIdentStart :: Char -> Bool
+isIdentStart c = isAlphaNum c && not (isUpper c) || c == '_'
+
+
 -- Used in the lexing of type applications
 -- Why is it like this? I don't know exactly but this is how it is in
 -- GHC's parser.
@@ -669,12 +673,12 @@ lexStdToken = do
                         return (con (n, '0':c:str))
 
         -- implicit parameters
-        '?':c:_ | isLower c && ImplicitParams `elem` exts -> do
+        '?':c:_ | isIdentStart c && ImplicitParams `elem` exts -> do
                         discard 1
                         id <- lexWhile isIdent
                         return $ IDupVarId id
 
-        '%':c:_ | isLower c && ImplicitParams `elem` exts -> do
+        '%':c:_ | isIdentStart c && ImplicitParams `elem` exts -> do
                         discard 1
                         id <- lexWhile isIdent
                         return $ ILinVarId id
@@ -719,10 +723,10 @@ lexStdToken = do
                     | c == 't' && TemplateHaskell `elem` exts -> do
                         discard 3
                         return THTypQuote
-        '[':'$':c:_ | isLower c && QuasiQuotes `elem` exts ->
+        '[':'$':c:_ | isIdentStart c && QuasiQuotes `elem` exts ->
                         discard 2 >> lexQuasiQuote c
 
-        '[':c:s' | isLower c && QuasiQuotes `elem` exts && case dropWhile isIdent s' of { '|':_ -> True;_->False} ->
+        '[':c:s' | isIdentStart c && QuasiQuotes `elem` exts && case dropWhile isIdent s' of { '|':_ -> True;_->False} ->
                         discard 1 >> lexQuasiQuote c
                  | isUpper c && QuasiQuotes `elem` exts && case dropWhile isPossiblyQvar s' of { '|':_ -> True;_->False} ->
                         discard 1 >> lexQuasiQuote c
@@ -734,14 +738,14 @@ lexStdToken = do
                         discard 2
                         return THCloseQuote
 
-        '$':c1:c2:_ | isLower c1 && TemplateHaskell `elem` exts -> do
+        '$':c1:c2:_ | isIdentStart c1 && TemplateHaskell `elem` exts -> do
                         discard 1
                         id <- lexWhile isIdent
                         return $ THIdEscape id
                     | c1 == '(' && TemplateHaskell `elem` exts -> do
                         discard 2
                         return THParenEscape
-                    | c1 == '$' && isLower c2 && TemplateHaskell `elem` exts -> do
+                    | c1 == '$' && isIdentStart c2 && TemplateHaskell `elem` exts -> do
                         discard 2
                         id <- lexWhile isIdent
                         return $ THTIdEscape id
@@ -792,7 +796,7 @@ lexStdToken = do
                                                   else discard 1 >> return TApp
 
         '#':c:_ | OverloadedLabels `elem` exts
-                   && isLower c || c == '_' -> do
+                   && isIdentStart c -> do
                                                   discard 1
                                                   [ident] <- lexIdents
                                                   return $ LabelVarId ident
@@ -802,7 +806,7 @@ lexStdToken = do
 
             | isUpper c -> lexConIdOrQual ""
 
-            | isLower c || c == '_' -> do
+            | isIdentStart c -> do
                     idents <- lexIdents
                     case idents of
                      [ident] -> case lookup ident (reserved_ids ++ special_varids) of
@@ -877,7 +881,7 @@ lexStdToken = do
                 body <- lexQQBody
                 return $ THQuasiQuote (ident, body)
                   where lexQuoter
-                         | isLower c = lexWhile isIdent
+                         | isIdentStart c = lexWhile isIdent
                          | otherwise = do
                             qualThing <- lexConIdOrQual ""
                             case qualThing of
@@ -1074,7 +1078,7 @@ lexConIdOrQual qual = do
         exts <- getExtensionsL
         case rest of
           '.':c:_
-             | isLower c || c == '_' -> do  -- qualified varid?
+             | isIdentStart c -> do  -- qualified varid?
                     discard 1
                     ident <- lexWhile isIdent
                     s <- getInput
