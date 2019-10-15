@@ -1,6 +1,7 @@
 1.21.1 --> 1.21.2
 =================
 * Support Template Haskell typed splices and quotations (#432)
+* Fix unicode identifier parsing (#442)
 
 1.21.0 --> 1.21.1
 =================
