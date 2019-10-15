@@ -370,7 +370,7 @@ isHSymbol c = c `elem` ":!#%&*./?@\\-" || ((isSymbol c || isPunctuation c) && no
 isPragmaChar c = isAlphaNum c || c == '_'
 
 isIdentStart :: Char -> Bool
-isIdentStart c = isAlphaNum c && not (isUpper c) || c == '_'
+isIdentStart c = isAlpha c && not (isUpper c) || c == '_'
 
 
 -- Used in the lexing of type applications
