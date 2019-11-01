@@ -172,74 +172,79 @@ ParseOk
                          , SrcSpan "tests/examples/t403.hs" 8 50 8 52
                          ]
                      }
-                   (EqualP
+                   (TypeA
                       SrcSpanInfo
                         { srcInfoSpan = SrcSpan "tests/examples/t403.hs" 8 36 8 48
                         , srcInfoPoints = [ SrcSpan "tests/examples/t403.hs" 8 45 8 46 ]
                         }
-                      (TyParen
+                      (TyEquals
                          SrcSpanInfo
-                           { srcInfoSpan = SrcSpan "tests/examples/t403.hs" 8 36 8 44
-                           , srcInfoPoints =
-                               [ SrcSpan "tests/examples/t403.hs" 8 36 8 37
-                               , SrcSpan "tests/examples/t403.hs" 8 43 8 44
-                               ]
+                           { srcInfoSpan = SrcSpan "tests/examples/t403.hs" 8 36 8 48
+                           , srcInfoPoints = [ SrcSpan "tests/examples/t403.hs" 8 45 8 46 ]
                            }
-                         (TyInfix
+                         (TyParen
                             SrcSpanInfo
-                              { srcInfoSpan = SrcSpan "tests/examples/t403.hs" 8 37 8 43
-                              , srcInfoPoints = []
+                              { srcInfoSpan = SrcSpan "tests/examples/t403.hs" 8 36 8 44
+                              , srcInfoPoints =
+                                  [ SrcSpan "tests/examples/t403.hs" 8 36 8 37
+                                  , SrcSpan "tests/examples/t403.hs" 8 43 8 44
+                                  ]
                               }
-                            (TyVar
+                            (TyInfix
                                SrcSpanInfo
-                                 { srcInfoSpan = SrcSpan "tests/examples/t403.hs" 8 37 8 38
+                                 { srcInfoSpan = SrcSpan "tests/examples/t403.hs" 8 37 8 43
                                  , srcInfoPoints = []
                                  }
-                               (Ident
+                               (TyVar
                                   SrcSpanInfo
                                     { srcInfoSpan = SrcSpan "tests/examples/t403.hs" 8 37 8 38
                                     , srcInfoPoints = []
                                     }
-                                  "k"))
-                            (UnpromotedName
-                               SrcSpanInfo
-                                 { srcInfoSpan = SrcSpan "tests/examples/t403.hs" 8 39 8 41
-                                 , srcInfoPoints = []
-                                 }
-                               (UnQual
+                                  (Ident
+                                     SrcSpanInfo
+                                       { srcInfoSpan = SrcSpan "tests/examples/t403.hs" 8 37 8 38
+                                       , srcInfoPoints = []
+                                       }
+                                     "k"))
+                               (UnpromotedName
                                   SrcSpanInfo
                                     { srcInfoSpan = SrcSpan "tests/examples/t403.hs" 8 39 8 41
                                     , srcInfoPoints = []
                                     }
-                                  (Symbol
+                                  (UnQual
                                      SrcSpanInfo
                                        { srcInfoSpan = SrcSpan "tests/examples/t403.hs" 8 39 8 41
                                        , srcInfoPoints = []
                                        }
-                                     ":+")))
-                            (TyPromoted
-                               SrcSpanInfo
-                                 { srcInfoSpan = SrcSpan "tests/examples/t403.hs" 8 42 8 43
-                                 , srcInfoPoints = []
-                                 }
-                               (PromotedInteger
+                                     (Symbol
+                                        SrcSpanInfo
+                                          { srcInfoSpan = SrcSpan "tests/examples/t403.hs" 8 39 8 41
+                                          , srcInfoPoints = []
+                                          }
+                                        ":+")))
+                               (TyPromoted
                                   SrcSpanInfo
                                     { srcInfoSpan = SrcSpan "tests/examples/t403.hs" 8 42 8 43
                                     , srcInfoPoints = []
                                     }
-                                  1
-                                  "1"))))
-                      (TyVar
-                         SrcSpanInfo
-                           { srcInfoSpan = SrcSpan "tests/examples/t403.hs" 8 47 8 48
-                           , srcInfoPoints = []
-                           }
-                         (Ident
+                                  (PromotedInteger
+                                     SrcSpanInfo
+                                       { srcInfoSpan = SrcSpan "tests/examples/t403.hs" 8 42 8 43
+                                       , srcInfoPoints = []
+                                       }
+                                     1
+                                     "1"))))
+                         (TyVar
                             SrcSpanInfo
                               { srcInfoSpan = SrcSpan "tests/examples/t403.hs" 8 47 8 48
                               , srcInfoPoints = []
                               }
-                            "n"))))))
+                            (Ident
+                               SrcSpanInfo
+                                 { srcInfoSpan = SrcSpan "tests/examples/t403.hs" 8 47 8 48
+                                 , srcInfoPoints = []
+                                 }
+                               "n")))))))
           (TyFun
              SrcSpanInfo
                { srcInfoSpan = SrcSpan "tests/examples/t403.hs" 8 53 8 86

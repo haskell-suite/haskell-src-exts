@@ -363,40 +363,53 @@ ParseOk
                      , srcInfoPoints =
                          [ SrcSpan "tests/examples/ScopedTypeVariables.hs" 11 31 11 33 ]
                      }
-                   (ClassA
+                   (TypeA
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/ScopedTypeVariables.hs" 11 26 11 33
                         , srcInfoPoints =
                             [ SrcSpan "tests/examples/ScopedTypeVariables.hs" 11 31 11 33 ]
                         }
-                      (UnQual
+                      (TyApp
                          SrcSpanInfo
                            { srcInfoSpan =
-                               SrcSpan "tests/examples/ScopedTypeVariables.hs" 11 26 11 28
-                           , srcInfoPoints = []
+                               SrcSpan "tests/examples/ScopedTypeVariables.hs" 11 26 11 33
+                           , srcInfoPoints =
+                               [ SrcSpan "tests/examples/ScopedTypeVariables.hs" 11 31 11 33 ]
                            }
-                         (Ident
+                         (TyCon
                             SrcSpanInfo
                               { srcInfoSpan =
-                                  SrcSpan "tests/examples/ScopedTypeVariables.hs" 11 26 11 28
+                                  SrcSpan "tests/examples/ScopedTypeVariables.hs" 11 26 11 33
+                              , srcInfoPoints =
+                                  [ SrcSpan "tests/examples/ScopedTypeVariables.hs" 11 31 11 33 ]
+                              }
+                            (UnQual
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/ScopedTypeVariables.hs" 11 26 11 28
+                                 , srcInfoPoints = []
+                                 }
+                               (Ident
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/ScopedTypeVariables.hs" 11 26 11 28
+                                    , srcInfoPoints = []
+                                    }
+                                  "Eq")))
+                         (TyVar
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/ScopedTypeVariables.hs" 11 29 11 30
                               , srcInfoPoints = []
                               }
-                            "Eq"))
-                      [ TyVar
-                          SrcSpanInfo
-                            { srcInfoSpan =
-                                SrcSpan "tests/examples/ScopedTypeVariables.hs" 11 29 11 30
-                            , srcInfoPoints = []
-                            }
-                          (Ident
-                             SrcSpanInfo
-                               { srcInfoSpan =
-                                   SrcSpan "tests/examples/ScopedTypeVariables.hs" 11 29 11 30
-                               , srcInfoPoints = []
-                               }
-                             "x")
-                      ])))
+                            (Ident
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/ScopedTypeVariables.hs" 11 29 11 30
+                                 , srcInfoPoints = []
+                                 }
+                               "x"))))))
              (TyFun
                 SrcSpanInfo
                   { srcInfoSpan =

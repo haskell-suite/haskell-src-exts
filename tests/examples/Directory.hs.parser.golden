@@ -25159,7 +25159,7 @@ ParseOk
                                                         "tests/examples/Directory.hs" 766 54 766 56
                                                     ]
                                                 }
-                                              (ClassA
+                                              (TypeA
                                                  SrcSpanInfo
                                                    { srcInfoSpan =
                                                        SrcSpan
@@ -25173,7 +25173,7 @@ ParseOk
                                                            56
                                                        ]
                                                    }
-                                                 (UnQual
+                                                 (TyApp
                                                     SrcSpanInfo
                                                       { srcInfoSpan =
                                                           SrcSpan
@@ -25181,10 +25181,17 @@ ParseOk
                                                             766
                                                             47
                                                             766
-                                                            51
-                                                      , srcInfoPoints = []
+                                                            56
+                                                      , srcInfoPoints =
+                                                          [ SrcSpan
+                                                              "tests/examples/Directory.hs"
+                                                              766
+                                                              54
+                                                              766
+                                                              56
+                                                          ]
                                                       }
-                                                    (Ident
+                                                    (TyCon
                                                        SrcSpanInfo
                                                          { srcInfoSpan =
                                                              SrcSpan
@@ -25192,34 +25199,62 @@ ParseOk
                                                                766
                                                                47
                                                                766
-                                                               51
+                                                               56
+                                                         , srcInfoPoints =
+                                                             [ SrcSpan
+                                                                 "tests/examples/Directory.hs"
+                                                                 766
+                                                                 54
+                                                                 766
+                                                                 56
+                                                             ]
+                                                         }
+                                                       (UnQual
+                                                          SrcSpanInfo
+                                                            { srcInfoSpan =
+                                                                SrcSpan
+                                                                  "tests/examples/Directory.hs"
+                                                                  766
+                                                                  47
+                                                                  766
+                                                                  51
+                                                            , srcInfoPoints = []
+                                                            }
+                                                          (Ident
+                                                             SrcSpanInfo
+                                                               { srcInfoSpan =
+                                                                   SrcSpan
+                                                                     "tests/examples/Directory.hs"
+                                                                     766
+                                                                     47
+                                                                     766
+                                                                     51
+                                                               , srcInfoPoints = []
+                                                               }
+                                                             "Real")))
+                                                    (TyVar
+                                                       SrcSpanInfo
+                                                         { srcInfoSpan =
+                                                             SrcSpan
+                                                               "tests/examples/Directory.hs"
+                                                               766
+                                                               52
+                                                               766
+                                                               53
                                                          , srcInfoPoints = []
                                                          }
-                                                       "Real"))
-                                                 [ TyVar
-                                                     SrcSpanInfo
-                                                       { srcInfoSpan =
-                                                           SrcSpan
-                                                             "tests/examples/Directory.hs"
-                                                             766
-                                                             52
-                                                             766
-                                                             53
-                                                       , srcInfoPoints = []
-                                                       }
-                                                     (Ident
-                                                        SrcSpanInfo
-                                                          { srcInfoSpan =
-                                                              SrcSpan
-                                                                "tests/examples/Directory.hs"
-                                                                766
-                                                                52
-                                                                766
-                                                                53
-                                                          , srcInfoPoints = []
-                                                          }
-                                                        "a")
-                                                 ])))
+                                                       (Ident
+                                                          SrcSpanInfo
+                                                            { srcInfoSpan =
+                                                                SrcSpan
+                                                                  "tests/examples/Directory.hs"
+                                                                  766
+                                                                  52
+                                                                  766
+                                                                  53
+                                                            , srcInfoPoints = []
+                                                            }
+                                                          "a"))))))
                                         (TyFun
                                            SrcSpanInfo
                                              { srcInfoSpan =

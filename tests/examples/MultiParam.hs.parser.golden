@@ -56,46 +56,64 @@ ParseOk
                      , srcInfoPoints =
                          [ SrcSpan "tests/examples/MultiParam.hs" 3 23 3 25 ]
                      }
-                   (ClassA
+                   (TypeA
                       SrcSpanInfo
                         { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 3 8 3 25
                         , srcInfoPoints =
                             [ SrcSpan "tests/examples/MultiParam.hs" 3 23 3 25 ]
                         }
-                      (UnQual
+                      (TyApp
                          SrcSpanInfo
-                           { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 3 8 3 18
-                           , srcInfoPoints = []
+                           { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 3 8 3 25
+                           , srcInfoPoints =
+                               [ SrcSpan "tests/examples/MultiParam.hs" 3 23 3 25 ]
                            }
-                         (Ident
+                         (TyApp
                             SrcSpanInfo
-                              { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 3 8 3 18
+                              { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 3 8 3 25
+                              , srcInfoPoints =
+                                  [ SrcSpan "tests/examples/MultiParam.hs" 3 23 3 25 ]
+                              }
+                            (TyCon
+                               SrcSpanInfo
+                                 { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 3 8 3 25
+                                 , srcInfoPoints =
+                                     [ SrcSpan "tests/examples/MultiParam.hs" 3 23 3 25 ]
+                                 }
+                               (UnQual
+                                  SrcSpanInfo
+                                    { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 3 8 3 18
+                                    , srcInfoPoints = []
+                                    }
+                                  (Ident
+                                     SrcSpanInfo
+                                       { srcInfoSpan =
+                                           SrcSpan "tests/examples/MultiParam.hs" 3 8 3 18
+                                       , srcInfoPoints = []
+                                       }
+                                     "MonadError")))
+                            (TyVar
+                               SrcSpanInfo
+                                 { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 3 19 3 20
+                                 , srcInfoPoints = []
+                                 }
+                               (Ident
+                                  SrcSpanInfo
+                                    { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 3 19 3 20
+                                    , srcInfoPoints = []
+                                    }
+                                  "e")))
+                         (TyVar
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 3 21 3 22
                               , srcInfoPoints = []
                               }
-                            "MonadError"))
-                      [ TyVar
-                          SrcSpanInfo
-                            { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 3 19 3 20
-                            , srcInfoPoints = []
-                            }
-                          (Ident
-                             SrcSpanInfo
-                               { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 3 19 3 20
-                               , srcInfoPoints = []
-                               }
-                             "e")
-                      , TyVar
-                          SrcSpanInfo
-                            { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 3 21 3 22
-                            , srcInfoPoints = []
-                            }
-                          (Ident
-                             SrcSpanInfo
-                               { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 3 21 3 22
-                               , srcInfoPoints = []
-                               }
-                             "m")
-                      ])))
+                            (Ident
+                               SrcSpanInfo
+                                 { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 3 21 3 22
+                                 , srcInfoPoints = []
+                                 }
+                               "m"))))))
              (TyFun
                 SrcSpanInfo
                   { srcInfoSpan = SrcSpan "tests/examples/MultiParam.hs" 3 26 3 35

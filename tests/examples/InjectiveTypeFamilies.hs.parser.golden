@@ -15467,40 +15467,53 @@ ParseOk
                             , SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 254 34 254 36
                             ]
                         }
-                      (ClassA
+                      (TypeA
                          SrcSpanInfo
                            { srcInfoSpan =
                                SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 254 20 254 31
                            , srcInfoPoints = []
                            }
-                         (UnQual
+                         (TyApp
                             SrcSpanInfo
                               { srcInfoSpan =
-                                  SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 254 20 254 29
+                                  SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 254 20 254 31
                               , srcInfoPoints = []
                               }
-                            (Ident
+                            (TyCon
                                SrcSpanInfo
                                  { srcInfoSpan =
-                                     SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 254 20 254 29
+                                     SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 254 20 254 31
                                  , srcInfoPoints = []
                                  }
-                               "Manifold'"))
-                         [ TyVar
-                             SrcSpanInfo
-                               { srcInfoSpan =
-                                   SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 254 30 254 31
-                               , srcInfoPoints = []
-                               }
-                             (Ident
-                                SrcSpanInfo
-                                  { srcInfoSpan =
-                                      SrcSpan
-                                        "tests/examples/InjectiveTypeFamilies.hs" 254 30 254 31
-                                  , srcInfoPoints = []
-                                  }
-                                "a")
-                         ]))))
+                               (UnQual
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan
+                                          "tests/examples/InjectiveTypeFamilies.hs" 254 20 254 29
+                                    , srcInfoPoints = []
+                                    }
+                                  (Ident
+                                     SrcSpanInfo
+                                       { srcInfoSpan =
+                                           SrcSpan
+                                             "tests/examples/InjectiveTypeFamilies.hs" 254 20 254 29
+                                       , srcInfoPoints = []
+                                       }
+                                     "Manifold'")))
+                            (TyVar
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 254 30 254 31
+                                 , srcInfoPoints = []
+                                 }
+                               (Ident
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan
+                                          "tests/examples/InjectiveTypeFamilies.hs" 254 30 254 31
+                                    , srcInfoPoints = []
+                                    }
+                                  "a")))))))
              (TyFun
                 SrcSpanInfo
                   { srcInfoSpan =

@@ -694,17 +694,10 @@ data Context l
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | Class assertions.
---   In Haskell 98, the argument would be a /tyvar/, but this definition
---   allows multiple parameters, and allows them to be /type/s.
---   Also extended with support for implicit parameters and equality constraints.
 data Asst l
-        = ClassA l (QName l) [Type l]           -- ^ ordinary class assertion
-        | AppA l (Name l) [Type l]              -- ^ constraint kind assertion, @Dict :: cxt a => Dict cxt@
-        | InfixA l (Type l) (QName l) (Type l)  -- ^ class assertion where the class name is given infix
+        = TypeA l (Type l)                      -- ^ type assertion
         | IParam l (IPName l) (Type l)          -- ^ implicit parameter assertion
-        | EqualP l (Type l) (Type l)            -- ^ type equality constraint
         | ParenA l (Asst l)                     -- ^ parenthesised class assertion
-        | WildCardA l (Maybe (Name l))          -- ^ Context Wildcard
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | /literal/
@@ -1575,21 +1568,13 @@ instance Annotated Context where
 
 instance Annotated Asst where
     ann asst = case asst of
-        ClassA l _ _     -> l
-        AppA l _ _       -> l
-        InfixA l _ _ _   -> l
+        TypeA l _        -> l
         IParam l _ _     -> l
-        EqualP l _ _     -> l
         ParenA l _       -> l
-        WildCardA l _    -> l
     amap f asst = case asst of
-        ClassA l qn ts      -> ClassA (f l) qn ts
-        AppA   l n ns       -> AppA   (f l) n ns
-        InfixA l ta qn tb   -> InfixA (f l) ta qn tb
+        TypeA l t           -> TypeA (f l) t
         IParam l ipn t      -> IParam (f l) ipn t
-        EqualP l t1 t2      -> EqualP (f l) t1 t2
         ParenA l a          -> ParenA (f l) a
-        WildCardA l mn      -> WildCardA (f l) mn
 
 instance Annotated Literal where
     ann lit = case lit of

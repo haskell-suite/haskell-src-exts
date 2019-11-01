@@ -1,0 +1,222 @@
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan =
+            SrcSpan "tests/examples/QuantifiedConstraints.hs" 1 1 5 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/QuantifiedConstraints.hs" 1 1 1 1
+            , SrcSpan "tests/examples/QuantifiedConstraints.hs" 2 1 2 1
+            , SrcSpan "tests/examples/QuantifiedConstraints.hs" 4 1 4 1
+            , SrcSpan "tests/examples/QuantifiedConstraints.hs" 4 1 4 1
+            , SrcSpan "tests/examples/QuantifiedConstraints.hs" 4 1 4 1
+            , SrcSpan "tests/examples/QuantifiedConstraints.hs" 5 1 5 1
+            , SrcSpan "tests/examples/QuantifiedConstraints.hs" 5 1 5 1
+            ]
+        }
+      Nothing
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/QuantifiedConstraints.hs" 1 1 1 32
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/QuantifiedConstraints.hs" 1 1 1 13
+                , SrcSpan "tests/examples/QuantifiedConstraints.hs" 1 29 1 32
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/QuantifiedConstraints.hs" 1 14 1 28
+                , srcInfoPoints = []
+                }
+              "ExplicitForAll"
+          ]
+      , LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/QuantifiedConstraints.hs" 2 1 2 39
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/QuantifiedConstraints.hs" 2 1 2 13
+                , SrcSpan "tests/examples/QuantifiedConstraints.hs" 2 36 2 39
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/QuantifiedConstraints.hs" 2 14 2 35
+                , srcInfoPoints = []
+                }
+              "QuantifiedConstraints"
+          ]
+      ]
+      []
+      [ ClassDecl
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/QuantifiedConstraints.hs" 4 1 4 34
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/QuantifiedConstraints.hs" 4 1 4 6 ]
+            }
+          (Just
+             (CxSingle
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/QuantifiedConstraints.hs" 4 7 4 30
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/QuantifiedConstraints.hs" 4 7 4 8
+                      , SrcSpan "tests/examples/QuantifiedConstraints.hs" 4 26 4 27
+                      , SrcSpan "tests/examples/QuantifiedConstraints.hs" 4 28 4 30
+                      ]
+                  }
+                (ParenA
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/QuantifiedConstraints.hs" 4 7 4 30
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/QuantifiedConstraints.hs" 4 7 4 8
+                         , SrcSpan "tests/examples/QuantifiedConstraints.hs" 4 26 4 27
+                         , SrcSpan "tests/examples/QuantifiedConstraints.hs" 4 28 4 30
+                         ]
+                     }
+                   (TypeA
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/QuantifiedConstraints.hs" 4 8 4 26
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/QuantifiedConstraints.hs" 4 8 4 14
+                            , SrcSpan "tests/examples/QuantifiedConstraints.hs" 4 16 4 17
+                            ]
+                        }
+                      (TyForall
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/QuantifiedConstraints.hs" 4 8 4 26
+                           , srcInfoPoints =
+                               [ SrcSpan "tests/examples/QuantifiedConstraints.hs" 4 8 4 14
+                               , SrcSpan "tests/examples/QuantifiedConstraints.hs" 4 16 4 17
+                               ]
+                           }
+                         (Just
+                            [ UnkindedVar
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/QuantifiedConstraints.hs" 4 15 4 16
+                                  , srcInfoPoints = []
+                                  }
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/QuantifiedConstraints.hs" 4 15 4 16
+                                     , srcInfoPoints = []
+                                     }
+                                   "a")
+                            ])
+                         Nothing
+                         (TyApp
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/QuantifiedConstraints.hs" 4 18 4 26
+                              , srcInfoPoints = []
+                              }
+                            (TyCon
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/QuantifiedConstraints.hs" 4 18 4 20
+                                 , srcInfoPoints = []
+                                 }
+                               (UnQual
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/QuantifiedConstraints.hs" 4 18 4 20
+                                    , srcInfoPoints = []
+                                    }
+                                  (Ident
+                                     SrcSpanInfo
+                                       { srcInfoSpan =
+                                           SrcSpan
+                                             "tests/examples/QuantifiedConstraints.hs" 4 18 4 20
+                                       , srcInfoPoints = []
+                                       }
+                                     "Eq")))
+                            (TyParen
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/QuantifiedConstraints.hs" 4 21 4 26
+                                 , srcInfoPoints =
+                                     [ SrcSpan "tests/examples/QuantifiedConstraints.hs" 4 21 4 22
+                                     , SrcSpan "tests/examples/QuantifiedConstraints.hs" 4 25 4 26
+                                     ]
+                                 }
+                               (TyApp
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/QuantifiedConstraints.hs" 4 22 4 25
+                                    , srcInfoPoints = []
+                                    }
+                                  (TyVar
+                                     SrcSpanInfo
+                                       { srcInfoSpan =
+                                           SrcSpan
+                                             "tests/examples/QuantifiedConstraints.hs" 4 22 4 23
+                                       , srcInfoPoints = []
+                                       }
+                                     (Ident
+                                        SrcSpanInfo
+                                          { srcInfoSpan =
+                                              SrcSpan
+                                                "tests/examples/QuantifiedConstraints.hs" 4 22 4 23
+                                          , srcInfoPoints = []
+                                          }
+                                        "f"))
+                                  (TyVar
+                                     SrcSpanInfo
+                                       { srcInfoSpan =
+                                           SrcSpan
+                                             "tests/examples/QuantifiedConstraints.hs" 4 24 4 25
+                                       , srcInfoPoints = []
+                                       }
+                                     (Ident
+                                        SrcSpanInfo
+                                          { srcInfoSpan =
+                                              SrcSpan
+                                                "tests/examples/QuantifiedConstraints.hs" 4 24 4 25
+                                          , srcInfoPoints = []
+                                          }
+                                        "a"))))))))))
+          (DHApp
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/QuantifiedConstraints.hs" 4 31 4 34
+               , srcInfoPoints = []
+               }
+             (DHead
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/QuantifiedConstraints.hs" 4 31 4 32
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/QuantifiedConstraints.hs" 4 31 4 32
+                     , srcInfoPoints = []
+                     }
+                   "C"))
+             (UnkindedVar
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/QuantifiedConstraints.hs" 4 33 4 34
+                  , srcInfoPoints = []
+                  }
+                (Ident
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/QuantifiedConstraints.hs" 4 33 4 34
+                     , srcInfoPoints = []
+                     }
+                   "f")))
+          []
+          Nothing
+      ]
+  , []
+  )

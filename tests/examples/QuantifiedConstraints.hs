@@ -1,0 +1,4 @@
+{-# LANGUAGE ExplicitForAll #-}
+{-# LANGUAGE QuantifiedConstraints #-}
+
+class (forall a. Eq (f a)) => C f

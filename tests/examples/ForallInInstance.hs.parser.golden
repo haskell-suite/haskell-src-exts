@@ -95,40 +95,53 @@ ParseOk
                      , srcInfoPoints =
                          [ SrcSpan "tests/examples/ForallInInstance.hs" 4 30 4 32 ]
                      }
-                   (ClassA
+                   (TypeA
                       SrcSpanInfo
                         { srcInfoSpan =
                             SrcSpan "tests/examples/ForallInInstance.hs" 4 20 4 32
                         , srcInfoPoints =
                             [ SrcSpan "tests/examples/ForallInInstance.hs" 4 30 4 32 ]
                         }
-                      (UnQual
+                      (TyApp
                          SrcSpanInfo
                            { srcInfoSpan =
-                               SrcSpan "tests/examples/ForallInInstance.hs" 4 20 4 27
-                           , srcInfoPoints = []
+                               SrcSpan "tests/examples/ForallInInstance.hs" 4 20 4 32
+                           , srcInfoPoints =
+                               [ SrcSpan "tests/examples/ForallInInstance.hs" 4 30 4 32 ]
                            }
-                         (Ident
+                         (TyCon
                             SrcSpanInfo
                               { srcInfoSpan =
-                                  SrcSpan "tests/examples/ForallInInstance.hs" 4 20 4 27
+                                  SrcSpan "tests/examples/ForallInInstance.hs" 4 20 4 32
+                              , srcInfoPoints =
+                                  [ SrcSpan "tests/examples/ForallInInstance.hs" 4 30 4 32 ]
+                              }
+                            (UnQual
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/ForallInInstance.hs" 4 20 4 27
+                                 , srcInfoPoints = []
+                                 }
+                               (Ident
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/ForallInInstance.hs" 4 20 4 27
+                                    , srcInfoPoints = []
+                                    }
+                                  "MyClass")))
+                         (TyVar
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/ForallInInstance.hs" 4 28 4 29
                               , srcInfoPoints = []
                               }
-                            "MyClass"))
-                      [ TyVar
-                          SrcSpanInfo
-                            { srcInfoSpan =
-                                SrcSpan "tests/examples/ForallInInstance.hs" 4 28 4 29
-                            , srcInfoPoints = []
-                            }
-                          (Ident
-                             SrcSpanInfo
-                               { srcInfoSpan =
-                                   SrcSpan "tests/examples/ForallInInstance.hs" 4 28 4 29
-                               , srcInfoPoints = []
-                               }
-                             "a")
-                      ])))
+                            (Ident
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/ForallInInstance.hs" 4 28 4 29
+                                 , srcInfoPoints = []
+                                 }
+                               "a"))))))
              (IHApp
                 SrcSpanInfo
                   { srcInfoSpan =

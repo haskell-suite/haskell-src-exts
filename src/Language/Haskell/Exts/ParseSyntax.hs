@@ -314,6 +314,7 @@ data PType l
      | TyInfix l (PType l) (MaybePromotedName l) (PType l)  -- ^ infix type constructor
      | TyKind  l (PType l) (Kind l)             -- ^ type with explicit kind signature
      | TyPromoted l (S.Promoted l)              -- ^ promoted data type
+     | TyEquals l (PType l) (PType l)           -- ^ type equality constraint
      | TySplice l (Splice l)                    -- ^ template haskell splice type
      | TyBang l (BangType l) (Unpackedness l) (PType l) -- ^ Strict type marked with \"@!@\" or type marked with UNPACK pragma.
      | TyWildCard l (Maybe (Name l))            -- ^ Type wildcard
@@ -336,6 +337,7 @@ instance Annotated PType where
       TyInfix l _ _ _               -> l
       TyKind  l _ _                 -> l
       TyPromoted l   _              -> l
+      TyEquals l _ _                 -> l
       TyPred l _                    -> l
       TySplice l _                  -> l
       TyBang  l _ _ _                 -> l
@@ -356,6 +358,7 @@ instance Annotated PType where
       TyInfix l ta qn tb            -> TyInfix (f l) ta qn tb
       TyKind  l t k                 -> TyKind (f l) t k
       TyPromoted l   p              -> TyPromoted (f l)   p
+      TyEquals l t1 t2              -> TyEquals (f l) t1 t2
       TyPred l asst                 -> TyPred (f l) asst
       TySplice l s                  -> TySplice (f l) s
       TyBang  l b u t                 -> TyBang (f l) b u t
@@ -363,29 +366,17 @@ instance Annotated PType where
       TyQuasiQuote l n s            -> TyQuasiQuote (f l) n s
 
 data PAsst l
-    = ClassA l (QName l) [PType l]
-    | AppA l (Name l) [PType l]
-    | InfixA l (PType l) (QName l) (PType l)
+    = TypeA l (PType l)
     | IParam l (IPName l) (PType l)
-    | EqualP l (PType l)  (PType l)
     | ParenA l (PAsst l)
-    | WildCardA l (Maybe (Name l))
   deriving (Eq, Show, Functor)
 
 instance Annotated PAsst where
     ann asst = case asst of
-        ClassA l _ _        -> l
-        AppA l _ _          -> l
-        InfixA l _ _ _      -> l
+        TypeA l _           -> l
         IParam l _ _        -> l
-        EqualP l _ _        -> l
         ParenA l _          -> l
-        WildCardA l _       -> l
     amap f asst = case asst of
-        ClassA l qn ts      -> ClassA (f l) qn ts
-        AppA l t ts         -> AppA (f l) t ts
-        InfixA l ta qn tb   -> InfixA (f l) ta qn tb
+        TypeA l t           -> TypeA (f l) t
         IParam l ipn t      -> IParam (f l) ipn t
-        EqualP l t1 t2      -> EqualP (f l) t1 t2
         ParenA l a          -> ParenA (f l) a
-        WildCardA l mn      -> WildCardA (f l) mn
