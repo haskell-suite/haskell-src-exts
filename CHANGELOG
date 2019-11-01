@@ -1,6 +1,7 @@
-1.21.1 --> 1.21.2
+1.21.1 --> 1.22.0
 =================
 * Support Template Haskell typed splices and quotations (#432)
+  - Breaking change: new constructors on Token data type
 * Fix unicode identifier parsing (#442)
 
 1.21.0 --> 1.21.1
