@@ -1,0 +1,541 @@
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 1 1 9 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/ArrowBrackets.hs" 1 1 1 1
+            , SrcSpan "tests/examples/ArrowBrackets.hs" 2 1 2 1
+            , SrcSpan "tests/examples/ArrowBrackets.hs" 2 1 2 1
+            , SrcSpan "tests/examples/ArrowBrackets.hs" 4 1 4 1
+            , SrcSpan "tests/examples/ArrowBrackets.hs" 6 1 6 1
+            , SrcSpan "tests/examples/ArrowBrackets.hs" 9 1 9 1
+            , SrcSpan "tests/examples/ArrowBrackets.hs" 9 1 9 1
+            ]
+        }
+      (Just
+         (ModuleHead
+            SrcSpanInfo
+              { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 2 1 2 27
+              , srcInfoPoints =
+                  [ SrcSpan "tests/examples/ArrowBrackets.hs" 2 1 2 7
+                  , SrcSpan "tests/examples/ArrowBrackets.hs" 2 22 2 27
+                  ]
+              }
+            (ModuleName
+               SrcSpanInfo
+                 { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 2 8 2 21
+                 , srcInfoPoints = []
+                 }
+               "ArrowBrackets")
+            Nothing
+            Nothing))
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 1 1 1 24
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/ArrowBrackets.hs" 1 1 1 13
+                , SrcSpan "tests/examples/ArrowBrackets.hs" 1 21 1 24
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 1 14 1 20
+                , srcInfoPoints = []
+                }
+              "Arrows"
+          ]
+      ]
+      []
+      [ PatBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 4 1 4 40
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 4 1 4 4
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 4 1 4 4
+                  , srcInfoPoints = []
+                  }
+                "foo"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 4 5 4 40
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/ArrowBrackets.hs" 4 5 4 6 ]
+               }
+             (Proc
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 4 7 4 40
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/ArrowBrackets.hs" 4 7 4 11
+                      , SrcSpan "tests/examples/ArrowBrackets.hs" 4 19 4 21
+                      ]
+                  }
+                (PTuple
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 4 12 4 18
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/ArrowBrackets.hs" 4 12 4 13
+                         , SrcSpan "tests/examples/ArrowBrackets.hs" 4 14 4 15
+                         , SrcSpan "tests/examples/ArrowBrackets.hs" 4 17 4 18
+                         ]
+                     }
+                   Boxed
+                   [ PVar
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 4 13 4 14
+                         , srcInfoPoints = []
+                         }
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 4 13 4 14
+                            , srcInfoPoints = []
+                            }
+                          "x")
+                   , PVar
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 4 16 4 17
+                         , srcInfoPoints = []
+                         }
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 4 16 4 17
+                            , srcInfoPoints = []
+                            }
+                          "y")
+                   ])
+                (App
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 4 22 4 40
+                     , srcInfoPoints = []
+                     }
+                   (ArrOp
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 4 22 4 38
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/ArrowBrackets.hs" 4 22 4 24
+                            , SrcSpan "tests/examples/ArrowBrackets.hs" 4 36 4 38
+                            ]
+                        }
+                      (App
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 4 25 4 35
+                           , srcInfoPoints = []
+                           }
+                         (Var
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 4 25 4 26
+                              , srcInfoPoints = []
+                              }
+                            (UnQual
+                               SrcSpanInfo
+                                 { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 4 25 4 26
+                                 , srcInfoPoints = []
+                                 }
+                               (Ident
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/ArrowBrackets.hs" 4 25 4 26
+                                    , srcInfoPoints = []
+                                    }
+                                  "f")))
+                         (Paren
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 4 27 4 35
+                              , srcInfoPoints =
+                                  [ SrcSpan "tests/examples/ArrowBrackets.hs" 4 27 4 28
+                                  , SrcSpan "tests/examples/ArrowBrackets.hs" 4 34 4 35
+                                  ]
+                              }
+                            (LeftArrApp
+                               SrcSpanInfo
+                                 { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 4 28 4 34
+                                 , srcInfoPoints =
+                                     [ SrcSpan "tests/examples/ArrowBrackets.hs" 4 30 4 32 ]
+                                 }
+                               (Var
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/ArrowBrackets.hs" 4 28 4 29
+                                    , srcInfoPoints = []
+                                    }
+                                  (UnQual
+                                     SrcSpanInfo
+                                       { srcInfoSpan =
+                                           SrcSpan "tests/examples/ArrowBrackets.hs" 4 28 4 29
+                                       , srcInfoPoints = []
+                                       }
+                                     (Ident
+                                        SrcSpanInfo
+                                          { srcInfoSpan =
+                                              SrcSpan "tests/examples/ArrowBrackets.hs" 4 28 4 29
+                                          , srcInfoPoints = []
+                                          }
+                                        "g")))
+                               (Var
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/ArrowBrackets.hs" 4 33 4 34
+                                    , srcInfoPoints = []
+                                    }
+                                  (UnQual
+                                     SrcSpanInfo
+                                       { srcInfoSpan =
+                                           SrcSpan "tests/examples/ArrowBrackets.hs" 4 33 4 34
+                                       , srcInfoPoints = []
+                                       }
+                                     (Ident
+                                        SrcSpanInfo
+                                          { srcInfoSpan =
+                                              SrcSpan "tests/examples/ArrowBrackets.hs" 4 33 4 34
+                                          , srcInfoPoints = []
+                                          }
+                                        "x")))))))
+                   (Var
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 4 39 4 40
+                        , srcInfoPoints = []
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 4 39 4 40
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 4 39 4 40
+                              , srcInfoPoints = []
+                              }
+                            "y"))))))
+          Nothing
+      , PatBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 6 1 8 21
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 6 1 6 4
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 6 1 6 4
+                  , srcInfoPoints = []
+                  }
+                "bar"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 6 5 8 21
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/ArrowBrackets.hs" 6 5 6 6 ]
+               }
+             (Proc
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 6 7 8 21
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/ArrowBrackets.hs" 6 7 6 11
+                      , SrcSpan "tests/examples/ArrowBrackets.hs" 6 19 6 21
+                      ]
+                  }
+                (PTuple
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 6 12 6 18
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/ArrowBrackets.hs" 6 12 6 13
+                         , SrcSpan "tests/examples/ArrowBrackets.hs" 6 14 6 15
+                         , SrcSpan "tests/examples/ArrowBrackets.hs" 6 17 6 18
+                         ]
+                     }
+                   Boxed
+                   [ PVar
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 6 13 6 14
+                         , srcInfoPoints = []
+                         }
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 6 13 6 14
+                            , srcInfoPoints = []
+                            }
+                          "x")
+                   , PVar
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 6 16 6 17
+                         , srcInfoPoints = []
+                         }
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 6 16 6 17
+                            , srcInfoPoints = []
+                            }
+                          "y")
+                   ])
+                (Do
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 6 22 8 21
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/ArrowBrackets.hs" 6 22 6 24
+                         , SrcSpan "tests/examples/ArrowBrackets.hs" 7 3 7 3
+                         , SrcSpan "tests/examples/ArrowBrackets.hs" 8 3 8 3
+                         , SrcSpan "tests/examples/ArrowBrackets.hs" 9 1 9 0
+                         ]
+                     }
+                   [ Generator
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 7 3 7 26
+                         , srcInfoPoints =
+                             [ SrcSpan "tests/examples/ArrowBrackets.hs" 7 5 7 7 ]
+                         }
+                       (PVar
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 7 3 7 4
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 7 3 7 4
+                               , srcInfoPoints = []
+                               }
+                             "z"))
+                       (App
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 7 8 7 26
+                            , srcInfoPoints = []
+                            }
+                          (ArrOp
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 7 8 7 24
+                               , srcInfoPoints =
+                                   [ SrcSpan "tests/examples/ArrowBrackets.hs" 7 8 7 10
+                                   , SrcSpan "tests/examples/ArrowBrackets.hs" 7 22 7 24
+                                   ]
+                               }
+                             (App
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/ArrowBrackets.hs" 7 11 7 21
+                                  , srcInfoPoints = []
+                                  }
+                                (Var
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/ArrowBrackets.hs" 7 11 7 12
+                                     , srcInfoPoints = []
+                                     }
+                                   (UnQual
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/ArrowBrackets.hs" 7 11 7 12
+                                        , srcInfoPoints = []
+                                        }
+                                      (Ident
+                                         SrcSpanInfo
+                                           { srcInfoSpan =
+                                               SrcSpan "tests/examples/ArrowBrackets.hs" 7 11 7 12
+                                           , srcInfoPoints = []
+                                           }
+                                         "f")))
+                                (Paren
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/ArrowBrackets.hs" 7 13 7 21
+                                     , srcInfoPoints =
+                                         [ SrcSpan "tests/examples/ArrowBrackets.hs" 7 13 7 14
+                                         , SrcSpan "tests/examples/ArrowBrackets.hs" 7 20 7 21
+                                         ]
+                                     }
+                                   (LeftArrApp
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/ArrowBrackets.hs" 7 14 7 20
+                                        , srcInfoPoints =
+                                            [ SrcSpan "tests/examples/ArrowBrackets.hs" 7 16 7 18 ]
+                                        }
+                                      (Var
+                                         SrcSpanInfo
+                                           { srcInfoSpan =
+                                               SrcSpan "tests/examples/ArrowBrackets.hs" 7 14 7 15
+                                           , srcInfoPoints = []
+                                           }
+                                         (UnQual
+                                            SrcSpanInfo
+                                              { srcInfoSpan =
+                                                  SrcSpan
+                                                    "tests/examples/ArrowBrackets.hs" 7 14 7 15
+                                              , srcInfoPoints = []
+                                              }
+                                            (Ident
+                                               SrcSpanInfo
+                                                 { srcInfoSpan =
+                                                     SrcSpan
+                                                       "tests/examples/ArrowBrackets.hs" 7 14 7 15
+                                                 , srcInfoPoints = []
+                                                 }
+                                               "g")))
+                                      (Var
+                                         SrcSpanInfo
+                                           { srcInfoSpan =
+                                               SrcSpan "tests/examples/ArrowBrackets.hs" 7 19 7 20
+                                           , srcInfoPoints = []
+                                           }
+                                         (UnQual
+                                            SrcSpanInfo
+                                              { srcInfoSpan =
+                                                  SrcSpan
+                                                    "tests/examples/ArrowBrackets.hs" 7 19 7 20
+                                              , srcInfoPoints = []
+                                              }
+                                            (Ident
+                                               SrcSpanInfo
+                                                 { srcInfoSpan =
+                                                     SrcSpan
+                                                       "tests/examples/ArrowBrackets.hs" 7 19 7 20
+                                                 , srcInfoPoints = []
+                                                 }
+                                               "x")))))))
+                          (Var
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 7 25 7 26
+                               , srcInfoPoints = []
+                               }
+                             (UnQual
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/ArrowBrackets.hs" 7 25 7 26
+                                  , srcInfoPoints = []
+                                  }
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/ArrowBrackets.hs" 7 25 7 26
+                                     , srcInfoPoints = []
+                                     }
+                                   "y"))))
+                   , Qualifier
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 8 3 8 21
+                         , srcInfoPoints = []
+                         }
+                       (App
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 8 3 8 21
+                            , srcInfoPoints = []
+                            }
+                          (ArrOp
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 8 3 8 19
+                               , srcInfoPoints =
+                                   [ SrcSpan "tests/examples/ArrowBrackets.hs" 8 3 8 5
+                                   , SrcSpan "tests/examples/ArrowBrackets.hs" 8 17 8 19
+                                   ]
+                               }
+                             (App
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 8 6 8 16
+                                  , srcInfoPoints = []
+                                  }
+                                (Var
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/ArrowBrackets.hs" 8 6 8 7
+                                     , srcInfoPoints = []
+                                     }
+                                   (UnQual
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/ArrowBrackets.hs" 8 6 8 7
+                                        , srcInfoPoints = []
+                                        }
+                                      (Ident
+                                         SrcSpanInfo
+                                           { srcInfoSpan =
+                                               SrcSpan "tests/examples/ArrowBrackets.hs" 8 6 8 7
+                                           , srcInfoPoints = []
+                                           }
+                                         "f")))
+                                (Paren
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/ArrowBrackets.hs" 8 8 8 16
+                                     , srcInfoPoints =
+                                         [ SrcSpan "tests/examples/ArrowBrackets.hs" 8 8 8 9
+                                         , SrcSpan "tests/examples/ArrowBrackets.hs" 8 15 8 16
+                                         ]
+                                     }
+                                   (LeftArrApp
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/ArrowBrackets.hs" 8 9 8 15
+                                        , srcInfoPoints =
+                                            [ SrcSpan "tests/examples/ArrowBrackets.hs" 8 11 8 13 ]
+                                        }
+                                      (Var
+                                         SrcSpanInfo
+                                           { srcInfoSpan =
+                                               SrcSpan "tests/examples/ArrowBrackets.hs" 8 9 8 10
+                                           , srcInfoPoints = []
+                                           }
+                                         (UnQual
+                                            SrcSpanInfo
+                                              { srcInfoSpan =
+                                                  SrcSpan "tests/examples/ArrowBrackets.hs" 8 9 8 10
+                                              , srcInfoPoints = []
+                                              }
+                                            (Ident
+                                               SrcSpanInfo
+                                                 { srcInfoSpan =
+                                                     SrcSpan
+                                                       "tests/examples/ArrowBrackets.hs" 8 9 8 10
+                                                 , srcInfoPoints = []
+                                                 }
+                                               "h")))
+                                      (Var
+                                         SrcSpanInfo
+                                           { srcInfoSpan =
+                                               SrcSpan "tests/examples/ArrowBrackets.hs" 8 14 8 15
+                                           , srcInfoPoints = []
+                                           }
+                                         (UnQual
+                                            SrcSpanInfo
+                                              { srcInfoSpan =
+                                                  SrcSpan
+                                                    "tests/examples/ArrowBrackets.hs" 8 14 8 15
+                                              , srcInfoPoints = []
+                                              }
+                                            (Ident
+                                               SrcSpanInfo
+                                                 { srcInfoSpan =
+                                                     SrcSpan
+                                                       "tests/examples/ArrowBrackets.hs" 8 14 8 15
+                                                 , srcInfoPoints = []
+                                                 }
+                                               "z")))))))
+                          (Var
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/ArrowBrackets.hs" 8 20 8 21
+                               , srcInfoPoints = []
+                               }
+                             (UnQual
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/ArrowBrackets.hs" 8 20 8 21
+                                  , srcInfoPoints = []
+                                  }
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/ArrowBrackets.hs" 8 20 8 21
+                                     , srcInfoPoints = []
+                                     }
+                                   "y"))))
+                   ])))
+          Nothing
+      ]
+  , []
+  )
