@@ -99,6 +99,8 @@ data Token
         | RightArrowTail        -- >-
         | LeftDblArrowTail      -- -<<
         | RightDblArrowTail     -- >>-
+        | OpenArrowBracket      -- (|
+        | CloseArrowBracket     -- |)
 
 -- Template Haskell
         | THExpQuote            -- [| or [e|
@@ -685,13 +687,12 @@ lexStdToken = do
         -- end implicit parameters
 
         -- harp
---        '(':'|':c:_  | isHSymbol c -> discard 1 >> return LeftParen
         '(':'|':c:_ | RegularPatterns `elem` exts && not (isHSymbol c) ->
-                     do discard 2
-                        return RPGuardOpen
-        '|':')':_ | RegularPatterns `elem` exts ->
-                     do discard 2
-                        return RPGuardClose
+                        discard 2 >> return RPGuardOpen
+                    | Arrows `elem` exts && not (isHSymbol c) ->
+                        discard 2 >> return OpenArrowBracket
+        '|':')':_ | RegularPatterns `elem` exts -> discard 2 >> return RPGuardClose
+                  | Arrows `elem` exts -> discard 2 >> return CloseArrowBracket
         {- This is handled by the reserved_ops above.
         '@':':':_ | RegularPatterns `elem` exts ->
                      do discard 2
@@ -1375,6 +1376,8 @@ showToken t = case t of
   RightArrowTail    -> ">-"
   LeftDblArrowTail  -> "-<<"
   RightDblArrowTail -> ">>-"
+  OpenArrowBracket  -> "(|"
+  CloseArrowBracket -> "|)"
   THExpQuote        -> "[|"
   THTExpQuote       -> "[||"
   THPatQuote        -> "[p|"

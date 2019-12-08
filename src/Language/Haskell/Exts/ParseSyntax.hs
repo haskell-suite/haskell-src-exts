@@ -101,6 +101,7 @@ data PExp l
     | RightArrApp     l (PExp l) (PExp l)   -- ^ e >- e
     | LeftArrHighApp  l (PExp l) (PExp l)   -- ^ e -<< e
     | RightArrHighApp l (PExp l) (PExp l)   -- ^ e >>- e
+    | ArrOp l (PExp l)                      -- ^ (| e |)
 
 -- LambdaCase
     | LCase l [Alt l]                       -- ^ @\case@ /alts/
@@ -183,6 +184,7 @@ instance Annotated PExp where
         RightArrApp     l _ _   -> l
         LeftArrHighApp  l _ _   -> l
         RightArrHighApp l _ _   -> l
+        ArrOp           l _     -> l
 
         LCase l _               -> l
         MultiIf l _             -> l
@@ -255,6 +257,7 @@ instance Annotated PExp where
         RightArrApp     l e1 e2 -> RightArrApp     (f l) e1 e2
         LeftArrHighApp  l e1 e2 -> LeftArrHighApp  (f l) e1 e2
         RightArrHighApp l e1 e2 -> RightArrHighApp (f l) e1 e2
+        ArrOp           l e     -> ArrOp           (f l) e
 
         LCase l alts -> LCase (f l) alts
         MultiIf l alts -> MultiIf (f l) alts

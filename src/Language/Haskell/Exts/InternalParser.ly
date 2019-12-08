@@ -172,11 +172,13 @@ Arrows
 >       '>-'    { Loc $$ RightArrowTail }
 >       '-<<'   { Loc $$ LeftDblArrowTail }
 >       '>>-'   { Loc $$ RightDblArrowTail }
+>       '(|'    { Loc $$ OpenArrowBracket }
+>       '|)'    { Loc $$ CloseArrowBracket }
 
 Harp
 
->       '(|'    { Loc $$ RPGuardOpen }
->       '|)'    { Loc $$ RPGuardClose }
+>       '(/'    { Loc $$ RPGuardOpen }
+>       '/)'    { Loc $$ RPGuardClose }
 >       '@:'    { Loc $$ RPCAt }
 
 Template Haskell
@@ -1538,8 +1540,9 @@ thing we need to look at here is the erpats that use no non-standard lexemes.
 >       | '[' list ']'                  { amap (\l -> l <** [$3]) $ $2 ($1 <^^> $3 <** [$1]) }
 >       | '[:' parr ':]'                { amap (\l -> l <** [$3]) $ $2 ($1 <^^> $3 <** [$1]) }
 >       | '(' erpats ')'                {% checkEnabled RegularPatterns >> return (Paren ($1 <^^> $3 <** [$1,$3]) $2) }
->       | '(|' sexps '|)'               { SeqRP ($1 <^^> $3 <** ($1:reverse (snd $2) ++ [$3])) $ reverse (fst $2) }
->       | '(|' exp '|' quals '|)'       { GuardRP ($1 <^^> $5 <** ($1:$3 : snd $4 ++ [$5])) $2 $ (reverse $ fst $4) }
+>       | '(|' exp '|)'                 { ArrOp ($1 <^^> $3 <** [$1,$3]) $2 }
+>       | '(/' sexps '/)'               { SeqRP ($1 <^^> $3 <** ($1:reverse (snd $2) ++ [$3])) $ reverse (fst $2) }
+>       | '(/' exp '|' quals '/)'       { GuardRP ($1 <^^> $5 <** ($1:$3 : snd $4 ++ [$5])) $2 $ (reverse $ fst $4) }
 >       | xml                           { $1 }
 
 

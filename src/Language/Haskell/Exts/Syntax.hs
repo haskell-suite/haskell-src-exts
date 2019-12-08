@@ -800,6 +800,7 @@ data Exp l
     | RightArrApp     l (Exp l) (Exp l)     -- ^ arrow application (from right): /exp/ @>-@ /exp/
     | LeftArrHighApp  l (Exp l) (Exp l)     -- ^ higher-order arrow application (from left): /exp/ @-<<@ /exp/
     | RightArrHighApp l (Exp l) (Exp l)     -- ^ higher-order arrow application (from right): /exp/ @>>-@ /exp/
+    | ArrOp           l (Exp l)             -- ^ arrow control operators: @(| /exp/ |)@
 
 -- LambdaCase
     | LCase l [Alt l]                       -- ^ @\case@ /alts/
@@ -1655,6 +1656,7 @@ instance Annotated Exp where
         RightArrApp     l _ _  -> l
         LeftArrHighApp  l _ _  -> l
         RightArrHighApp l _ _  -> l
+        ArrOp           l _    -> l
 
         LCase l _              -> l
 
@@ -1715,6 +1717,7 @@ instance Annotated Exp where
         RightArrApp     l e1' e2 -> RightArrApp     (f l) e1' e2
         LeftArrHighApp  l e1' e2 -> LeftArrHighApp  (f l) e1' e2
         RightArrHighApp l e1' e2 -> RightArrHighApp (f l) e1' e2
+        ArrOp           l e      -> ArrOp           (f l) e
 
         LCase l alts -> LCase (f l) alts
         MultiIf l alts -> MultiIf (f l) alts
