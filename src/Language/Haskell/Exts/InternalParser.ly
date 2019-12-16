@@ -1431,6 +1431,11 @@ mangle them into the correct form depending on context.
 >       | exp10b                        { $1 }
 
 > exp10a :: { PExp L }
+>       : expblocka                     { $1 }
+>       | fexp expblocka                {% checkEnabled BlockArguments >>
+>                                          return (App ($1 <> $2) $1 $2) }
+
+> expblocka :: { PExp L }
 >       : '\\' apats '->' exp             { Lambda (nIS $1 <++> ann $4 <** [$1,$3]) (reverse $2) $4 }
 A let may bind implicit parameters
 >       | 'let' binds 'in' exp            { Let    (nIS $1 <++> ann $4 <** [$1,$3])    $2 $4 }
@@ -1455,14 +1460,17 @@ We won't come here unless XmlSyntax is already checked.
 mdo blocks require the RecursiveDo extension enabled, but the lexer handles that.
 
 > exp10b :: { PExp L }
+>       : expblockb                     { $1 }
+>       | '-' fexp                      { NegApp (nIS $1 <++> ann $2 <** [$1]) $2 }
+>       | fexp                          { $1 }
+
+> expblockb :: { PExp L }
 >       : 'case' exp 'of' altslist      { let (als, inf, ss) = $4 in Case (nIS $1 <++> inf <** ($1:$3:ss)) $2 als }
 >       | '\\' 'case' altslist          {% do { checkEnabled LambdaCase ;
 >                                               let { (als, inf, ss) = $3 } ;
 >                                               return (LCase (nIS $1 <++> inf <** ($1:$2:ss)) als) } }
->       | '-' fexp                      { NegApp (nIS $1 <++> ann $2 <** [$1]) $2 }
 >       | 'do'  stmtlist                { let (sts, inf, ss) = $2 in Do   (nIS $1 <++> inf <** $1:ss) sts }
 >       | 'mdo' stmtlist                { let (sts, inf, ss) = $2 in MDo  (nIS $1 <++> inf <** $1:ss) sts }
->       | fexp                          { $1 }
 
 > exppragma :: { PExp L }
 >       : '{-# CORE' STRING '#-}' exp   { let Loc l (StringTok (s,_)) = $2 in CorePragma (nIS $1 <++> ann $4 <** [l,$3]) s $4 }
@@ -1479,6 +1487,8 @@ mdo blocks require the RecursiveDo extension enabled, but the lexer handles that
 
 > fexp :: { PExp L }
 >       : fexp aexp                     { App ($1 <> $2) $1 $2 }
+>       | fexp expblockb                {% checkEnabled BlockArguments >>
+>                                          return (App ($1 <> $2) $1 $2) }
 >       | aexp                          { $1 }
 
 > apats :: { [Pat L] }
