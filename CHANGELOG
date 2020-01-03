@@ -1,3 +1,10 @@
+1.22.0 --> 1.23.0
+=================
+* Add support for BlockArguments (#444)
+  - Technically breaking change: KnownExtension gained a new constructor BlockArguments
+* Add support for Arrow Brackets (#445)
+  - Tecnically breaking change: Exp gained new constructor ArrOp
+
 1.21.1 --> 1.22.0
 =================
 * Support QuantifiedConstraints (#427)
