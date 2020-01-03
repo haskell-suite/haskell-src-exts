@@ -737,6 +737,7 @@ checkExpr e' = case e' of
     RightArrApp l e1 e2     -> check2Exprs e1 e2 (S.RightArrApp l)
     LeftArrHighApp l e1 e2  -> check2Exprs e1 e2 (S.LeftArrHighApp l)
     RightArrHighApp l e1 e2 -> check2Exprs e1 e2 (S.RightArrHighApp l)
+    ArrOp l e               -> S.ArrOp l <$> checkExpr e
 
     -- LamdaCase
     LCase l alts -> return $ S.LCase l alts

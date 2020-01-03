@@ -1727,6 +1727,13 @@ instance ExactP Exp where
             exactPC e2
          _ -> errorEP "ExactP: Exp: RightArrHighApp is given wrong number of srcInfoPoints"
 
+    ArrOp l e -> case srcInfoPoints l of
+      [a, b] -> do
+        printStringAt (pos a) "(|"
+        exactPC e
+        printStringAt (pos b) "|)"
+      _ -> errorEP "ExactP: Exp: ArrOp is given wrong number of srcInfoPoints"
+
     LCase l alts   ->
         case srcInfoPoints l of
          _:b:pts -> do

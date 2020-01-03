@@ -1081,6 +1081,7 @@ instance  Pretty (Exp l) where
         prettyPrec p (RightArrApp _ l r)     = parensIf (p > 0) $ myFsep [pretty l, text ">-",  pretty r]
         prettyPrec p (LeftArrHighApp _ l r)  = parensIf (p > 0) $ myFsep [pretty l, text "-<<", pretty r]
         prettyPrec p (RightArrHighApp _ l r) = parensIf (p > 0) $ myFsep [pretty l, text ">>-", pretty r]
+        prettyPrec _ (ArrOp _ e) = myFsep [text "(|", pretty e, text "|)"]
 
         -- LamdaCase
         prettyPrec p (LCase _ altList) = parensIf (p > 1) $
@@ -1626,6 +1627,7 @@ instance SrcInfo loc => Pretty (P.PExp loc) where
         pretty (P.RightArrApp _ l r)     = myFsep [pretty l, text ">-",  pretty r]
         pretty (P.LeftArrHighApp _ l r)  = myFsep [pretty l, text "-<<", pretty r]
         pretty (P.RightArrHighApp _ l r) = myFsep [pretty l, text ">>-", pretty r]
+        pretty (P.ArrOp _ e) = myFsep [text "(|", pretty e, text "|)"]
         pretty (P.AsPat _ name (P.IrrPat _ pat)) =
                 myFsep [pretty name <> char '@', char '~' <> pretty pat]
         pretty (P.AsPat _ name pat) =
