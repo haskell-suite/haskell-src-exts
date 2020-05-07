@@ -753,6 +753,7 @@ Parsing the body of a closed type family, partially stolen from the source of GH
 >         : ty_fam_inst_eqns ';' ty_fam_inst_eqn   { $1 ++ [$3] }
 >         | ty_fam_inst_eqns ';'                   { $1 }
 >         | ty_fam_inst_eqn                        { [$1] }
+>         |                                        { [] }
 
 > ty_fam_inst_eqn :: { TypeEqn L }
 >         : truectype '=' truectype

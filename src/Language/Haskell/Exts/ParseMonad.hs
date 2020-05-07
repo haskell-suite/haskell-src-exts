@@ -48,7 +48,9 @@ import Control.Applicative
 import Control.Monad (when, liftM, ap)
 import qualified Control.Monad.Fail as Fail
 import Data.Monoid hiding ((<>))
+#if !MIN_VERSION_base(4,13,0)
 import Data.Semigroup (Semigroup(..))
+#endif
 -- To avoid import warnings for Control.Applicative, Data.Monoid, and Data.Semigroup
 import Prelude
 
