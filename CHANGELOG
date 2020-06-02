@@ -1,3 +1,9 @@
+1.23.0 --> 1.23.1
+=================
+* show instance for SrcLoc and SrcSpan renders "(-1)" instead of "-1"
+* Allow empty closed type families (#452)
+
+
 1.22.0 --> 1.23.0
 =================
 * Add support for BlockArguments (#444)
