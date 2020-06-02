@@ -53,6 +53,7 @@ ParseOk
                , srcInfoPoints = []
                }
              Nothing
+             InvisibleQuantification
              (Just
                 (CxSingle
                    SrcSpanInfo

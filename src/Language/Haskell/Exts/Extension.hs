@@ -560,6 +560,8 @@ data KnownExtension =
 
   | BlockArguments
 
+  | StandaloneKindSignatures
+
   deriving (Show, Read, Eq, Ord, Enum, Bounded, Data, Typeable)
 
 -- | Certain extensions imply other extensions, and this function

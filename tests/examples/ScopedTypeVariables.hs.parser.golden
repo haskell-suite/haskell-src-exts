@@ -355,6 +355,7 @@ ParseOk
                          }
                        "x")
                 ])
+             InvisibleQuantification
              (Just
                 (CxSingle
                    SrcSpanInfo

@@ -65,7 +65,7 @@ module Language.Haskell.Exts.Syntax (
     -- * Class Assertions and Contexts
     Context(..), FunDep(..), Asst(..),
     -- * Types
-    Type(..), Boxed(..), Kind, TyVarBind(..), Promoted(..),
+    Type(..), Boxed(..), QuantVisibility(..), Kind, TyVarBind(..), Promoted(..),
     TypeEqn (..),
     -- * Expressions
     Exp(..), Stmt(..), QualStmt(..), FieldUpdate(..),
@@ -303,6 +303,8 @@ data Decl l
      -- ^ A typed Template Haskell splicing declaration
      | TypeSig      l [Name l] (Type l)
      -- ^ A type signature declaration
+     | TypeKindSig  l [Name l] (Type l)
+     -- ^ A stand-alone kind signature declaration of one or more type
      | PatSynSig    l [Name l] (Maybe [TyVarBind l]) (Maybe (Context l))
                                (Maybe [TyVarBind l]) (Maybe (Context l))
                                                      (Type l)
@@ -629,6 +631,7 @@ data GuardedRhs l
 data Type l
      = TyForall l
         (Maybe [TyVarBind l])
+        QuantVisibility
         (Maybe (Context l))
         (Type l)                                -- ^ qualified type
      | TyStar  l                                -- ^ @*@, the type of types
@@ -669,6 +672,11 @@ data Promoted l
 -- | Flag denoting whether a tuple is boxed or unboxed.
 data Boxed = Boxed | Unboxed
   deriving (Eq,Ord,Show,Typeable,Data,Generic)
+
+data QuantVisibility
+    = InvisibleQuantification
+    | VisibleQuantification
+    deriving (Eq,Ord,Show,Typeable,Data,Generic)
 
 -- | A type variable declaration, optionally with an explicit kind annotation.
 data TyVarBind l
@@ -1291,6 +1299,7 @@ instance Annotated Decl where
         SpliceDecl   l _                -> l
         TSpliceDecl  l _                -> l
         TypeSig      l _ _              -> l
+        TypeKindSig  l _ _              -> l
         PatSynSig    l _ _ _ _ _ _      -> l
         FunBind      l _                -> l
         PatBind      l _ _ _            -> l
@@ -1329,6 +1338,7 @@ instance Annotated Decl where
         SpliceDecl   l sp                -> SpliceDecl (f l) sp
         TSpliceDecl  l sp                -> TSpliceDecl (f l) sp
         TypeSig      l ns t              -> TypeSig (f l) ns t
+        TypeKindSig  l ns t              -> TypeKindSig (f l) ns t
         PatSynSig    l n dh c1 dh2 c2 t      -> PatSynSig (f l) n dh c1 dh2 c2 t
         FunBind      l ms                -> FunBind (f l) ms
         PatBind      l p rhs bs          -> PatBind (f l) p rhs bs
@@ -1501,7 +1511,7 @@ instance Annotated GuardedRhs where
 
 instance Annotated Type where
     ann t = case t of
-      TyForall l _ _ _              -> l
+      TyForall l _ _ _ _            -> l
       TyStar  l                     -> l
       TyFun   l _ _                 -> l
       TyTuple l _ _                 -> l
@@ -1521,7 +1531,7 @@ instance Annotated Type where
       TyWildCard l _                -> l
       TyQuasiQuote l _ _            -> l
     amap f t1 = case t1 of
-      TyForall l mtvs mcx t         -> TyForall (f l) mtvs mcx t
+      TyForall l mtvs q mcx t       -> TyForall (f l) mtvs q mcx t
       TyStar  l                     -> TyStar (f l)
       TyFun   l t1' t2              -> TyFun (f l) t1' t2
       TyTuple l b ts                -> TyTuple (f l) b ts

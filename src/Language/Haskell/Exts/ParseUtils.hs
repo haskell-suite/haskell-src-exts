@@ -298,7 +298,7 @@ checkAsst asst =
 
 
 checkDataHeader :: PType L -> P (Maybe (S.Context L), DeclHead L)
-checkDataHeader (TyForall _ Nothing cs t) = do
+checkDataHeader (TyForall _ Nothing _ cs t) = do
     dh <- checkSimple "data/newtype" t
     cs' <- checkContext cs
     return (cs',dh)
@@ -307,7 +307,7 @@ checkDataHeader t = do
     return (Nothing,dh)
 
 checkClassHeader :: PType L -> P (Maybe (S.Context L), DeclHead L)
-checkClassHeader (TyForall _ Nothing cs t) = do
+checkClassHeader (TyForall _ Nothing _ cs t) = do
     checkMultiParam t
     dh <- checkSimple "class" t
     cs' <- checkSContext cs
@@ -360,7 +360,7 @@ toTyVarBind (TyKind l (TyVar _ n) k) = KindedVar l n k
 
 checkInstHeader :: PType L -> P (InstRule L)
 checkInstHeader (TyParen l t) = checkInstHeader t >>= return . IParen l
-checkInstHeader (TyForall l mtvs cs t) = do
+checkInstHeader (TyForall l mtvs _ cs t) = do
     cs' <- checkSContext cs
     checkMultiParam t
     checkInsts (Just l) mtvs cs' t
@@ -1084,14 +1084,14 @@ checkType t = checkT t False
 
 checkT :: PType L -> Bool -> P (S.Type L)
 checkT t simple = case t of
-    TyForall l Nothing cs pt    -> do
+    TyForall l Nothing q cs pt    -> do
             when simple $ checkEnabled ExplicitForAll
             ctxt <- checkContext cs
-            check1Type pt (S.TyForall l Nothing ctxt)
-    TyForall l tvs cs pt -> do
+            check1Type pt (S.TyForall l Nothing q ctxt)
+    TyForall l tvs q cs pt -> do
             checkEnabled ExplicitForAll
             ctxt <- checkContext cs
-            check1Type pt (S.TyForall l tvs ctxt)
+            check1Type pt (S.TyForall l tvs q ctxt)
     TyStar  l         -> return $ S.TyStar l
     TyFun   l at rt   -> check2Types at rt (S.TyFun l)
     TyTuple l b pts   -> checkTypes pts >>= return . S.TyTuple l b
@@ -1198,11 +1198,11 @@ mkDVar = intercalate "-"
 --
 -- A valid type must have one for-all at the top of the type, or of the fn arg types
 
-mkTyForall :: L -> Maybe [TyVarBind L] -> Maybe (PContext L) -> PType L -> PType L
-mkTyForall l mtvs ctxt ty =
+mkTyForall :: L -> Maybe [TyVarBind L] -> QuantVisibility -> Maybe (PContext L) -> PType L -> PType L
+mkTyForall l mtvs qv ctxt ty =
     case (ctxt, ty) of
-        (Nothing, TyForall _ Nothing ctxt2 ty2) -> TyForall l mtvs ctxt2 ty2
-        _                                       -> TyForall l mtvs ctxt ty
+        (Nothing, TyForall _ Nothing qv2 ctxt2 ty2) -> TyForall l mtvs qv2 ctxt2 ty2
+        _                                           -> TyForall l mtvs qv ctxt ty
 
 -- Make a role annotation
 

@@ -2159,6 +2159,7 @@ ParseOk
                          }
                        "b")
                 ])
+             InvisibleQuantification
              Nothing
              (TyFun
                 SrcSpanInfo
@@ -2194,6 +2195,7 @@ ParseOk
                                   }
                                 "a")
                          ])
+                      InvisibleQuantification
                       Nothing
                       (TyFun
                          SrcSpanInfo
@@ -2587,6 +2589,7 @@ ParseOk
                          }
                        "a")
                 ])
+             InvisibleQuantification
              Nothing
              (TyFun
                 SrcSpanInfo
@@ -2633,6 +2636,7 @@ ParseOk
                                   }
                                 "b")
                          ])
+                      InvisibleQuantification
                       Nothing
                       (TyFun
                          SrcSpanInfo
@@ -3146,6 +3150,7 @@ ParseOk
                          }
                        "a")
                 ])
+             InvisibleQuantification
              (Just
                 (CxSingle
                    SrcSpanInfo
@@ -3210,6 +3215,7 @@ ParseOk
                             }
                           "b")
                    ])
+                InvisibleQuantification
                 Nothing
                 (TyFun
                    SrcSpanInfo
@@ -3420,6 +3426,7 @@ ParseOk
                                            }
                                          "a")
                                   ])
+                               InvisibleQuantification
                                (Just
                                   (CxSingle
                                      SrcSpanInfo
@@ -3498,6 +3505,7 @@ ParseOk
                                               }
                                             "b")
                                      ])
+                                  InvisibleQuantification
                                   Nothing
                                   (TyFun
                                      SrcSpanInfo
@@ -4865,6 +4873,7 @@ ParseOk
                                     }
                                   "a")
                            ])
+                        InvisibleQuantification
                         (Just
                            (CxSingle
                               SrcSpanInfo
@@ -5147,6 +5156,7 @@ ParseOk
                             , srcInfoPoints = []
                             }))
                 ])
+             InvisibleQuantification
              Nothing
              (TyFun
                 SrcSpanInfo

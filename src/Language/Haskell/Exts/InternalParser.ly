@@ -580,12 +580,23 @@ shift/reduce-conflict, so we don't handle this case here, but in bodyaux.
 >       : topdecls1 semis topdecl       { ($3 : fst $1, snd $1 ++ reverse $2) }
 >       | topdecl                       { ([$1],[]) }
 
+> gtycons :: { [QName L] }
+>       : gtycon                        { [$1] }
+>       | gtycon ',' gtycons            { ($1 : $3) }
+
 > topdecl :: { Decl L }
 >       : role_annot                    {% checkEnabled RoleAnnotations >> return $1 }
 >       | 'type' dtype '=' truectype
 >                {% do { dh <- checkSimpleType $2;
 >                        let {l = nIS $1 <++> ann $4 <** [$1,$3]};
 >                        return (TypeDecl l dh $4) } }
+
+Requires the StandaloneKindSignatures extension.
+>       | 'type' gtycons '::' truectype
+>                {% do { checkEnabled StandaloneKindSignatures;
+>                        names <- mapM checkUnQual $2;
+>                        let {l = nIS $1 <++> ann $4 <** [$1,$3]};
+>                        return (TypeKindSig l names $4) } }
 
 Requires the TypeFamilies extension enabled, but the lexer will handle
 that through the 'family' keyword.
@@ -819,7 +830,7 @@ Parsing the body of a closed type family, partially stolen from the source of GH
 >       | sigtype ',' sigtypes              { ($1 : fst $3, $2 : snd $3) }
 
 > sigtype :: { Type L }
->       : ctype                             {% checkType $ mkTyForall (ann $1) Nothing Nothing $1 }
+>       : ctype                             {% checkType $ mkTyForall (ann $1) Nothing InvisibleQuantification Nothing $1 }
 
 > name_boolformula :: { Maybe (BooleanFormula L) }
 >        : name_boolformula1         { Just $1 }
@@ -1086,9 +1097,13 @@ is any of the keyword-enabling ones, except ExistentialQuantification.
 > ctype :: { PType L }
 >       : ctype_('*',NEVER)             { $1 }
 
+> quantvis :: { (QuantVisibility,S) }
+>       : '.'                           { (InvisibleQuantification, $1) }
+>       | '->'                          { (VisibleQuantification, $1) }
+
 > ctype_(ostar,kstar) :: { PType L }
->       : 'forall' ktyvars '.' ctype_(ostar,kstar)      { mkTyForall (nIS $1 <++> ann $4 <** [$1,$3]) (Just (reverse (fst $2))) Nothing $4 }
->       | context_(ostar,kstar) ctype_(ostar,kstar)     { mkTyForall ($1 <> $2) Nothing (Just $1) $2 }
+>       : 'forall' ktyvars quantvis ctype_(ostar,kstar) { mkTyForall (nIS $1 <++> ann $4 <** [$1,snd $3]) (Just (reverse (fst $2))) (fst $3) Nothing $4 }
+>       | context_(ostar,kstar) ctype_(ostar,kstar)     { mkTyForall ($1 <> $2) Nothing InvisibleQuantification (Just $1) $2 }
 >       | type_(ostar,kstar)                            { $1 }
 
 Equality constraints require the TypeFamilies extension.

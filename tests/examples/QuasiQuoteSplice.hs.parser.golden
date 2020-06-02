@@ -351,6 +351,7 @@ ParseOk
                                            }
                                          "m")
                                   ])
+                               InvisibleQuantification
                                Nothing
                                (TyApp
                                   SrcSpanInfo
