@@ -487,14 +487,17 @@ instance  Pretty (Decl l) where
                 mySep ((punctuate comma . map pretty $ nameList)
                       ++ [text "::", pretty qualType])
 
+        pretty (TypeKindSig _ ns qualType) =
+                mySep ([text "type"] ++ punctuate comma (map pretty ns) ++ [text "::", pretty qualType])
+
         --  Req can be ommitted if it is empty
         --  We must print prov if req is nonempty
         pretty (PatSynSig _ ns mtvs prov mtvs2 req t) =
-                let contexts = [maybePP pretty prov, ppForall mtvs2, maybePP pretty req]
+                let contexts = [maybePP pretty prov, ppForall mtvs2 InvisibleQuantification, maybePP pretty req]
                  in
                   mySep ( [text "pattern" ]
                            ++ punctuate comma (map pretty ns)
-                           ++ [ text "::", ppForall mtvs] ++
+                           ++ [ text "::", ppForall mtvs InvisibleQuantification] ++
                           contexts ++ [pretty t] )
 
 
@@ -578,7 +581,7 @@ instance  Pretty (Decl l) where
 
 instance Pretty (InstRule l) where
     pretty (IRule _ tvs mctxt qn)  =
-            mySep [ppForall tvs
+            mySep [ppForall tvs InvisibleQuantification
                   , maybePP pretty mctxt, pretty qn]
     pretty (IParen _ ih)        = parens (pretty ih)
 
@@ -769,7 +772,7 @@ instance Pretty Tool where
 ------------------------- Data & Newtype Bodies -------------------------
 instance  Pretty (QualConDecl l) where
         pretty (QualConDecl _pos tvs ctxt con) =
-                myFsep [ppForall tvs, maybePP pretty ctxt, pretty con]
+                myFsep [ppForall tvs InvisibleQuantification, maybePP pretty ctxt, pretty con]
 
 instance  Pretty (GadtDecl l) where
         pretty (GadtDecl _pos name tvs ctxt names ty) =
@@ -777,7 +780,7 @@ instance  Pretty (GadtDecl l) where
                 Nothing ->
                     myFsep [pretty name, text "::", pretty ty]
                 Just ts' ->
-                    myFsep [pretty name, text "::" , ppForall tvs, maybePP pretty ctxt,
+                    myFsep [pretty name, text "::" , ppForall tvs InvisibleQuantification, maybePP pretty ctxt,
                          braceList . map pretty $ ts', text "->", pretty ty]
 
 instance  Pretty (ConDecl l) where
@@ -850,8 +853,8 @@ prec_btype = 1  -- left argument of ->,
 prec_atype = 2  -- argument of type or data constructor, or of a class
 
 instance  Pretty (Type l) where
-        prettyPrec p (TyForall _ mtvs ctxt htype) = parensIf (p > 0) $
-                myFsep [ppForall mtvs, maybePP pretty ctxt, pretty htype]
+        prettyPrec p (TyForall _ mtvs q ctxt htype) = parensIf (p > 0) $
+                myFsep [ppForall mtvs q, maybePP pretty ctxt, pretty htype]
         prettyPrec _ (TyStar _) = text "*"
         prettyPrec p (TyFun _ a b) = parensIf (p > 0) $
                 myFsep [ppBType a, text "->", pretty b]
@@ -906,10 +909,14 @@ instance  Pretty (TyVarBind l) where
         pretty (KindedVar _ var kind) = parens $ myFsep [pretty var, text "::", pretty kind]
         pretty (UnkindedVar _ var)    = pretty var
 
-ppForall :: Maybe [TyVarBind l] -> Doc
-ppForall Nothing   = empty
-ppForall (Just []) = empty
-ppForall (Just vs) =    myFsep (text "forall" : map pretty vs ++ [char '.'])
+ppForall :: Maybe [TyVarBind l] -> QuantVisibility -> Doc
+ppForall Nothing _  = empty
+ppForall (Just []) _ = empty
+ppForall (Just vs) q =    myFsep (text "forall" : map pretty vs ++ [ppQuantVisibility q])
+
+ppQuantVisibility :: QuantVisibility -> Doc
+ppQuantVisibility InvisibleQuantification = text "."
+ppQuantVisibility VisibleQuantification = text " ->"
 
 ---------------------------- Kinds ----------------------------
 
@@ -1674,8 +1681,8 @@ instance SrcInfo loc => Pretty (P.PAsst loc) where
         pretty (P.ParenA _ a)      = parens (pretty a)
 
 instance SrcInfo loc => Pretty (P.PType loc) where
-        prettyPrec p (P.TyForall _ mtvs ctxt htype) = parensIf (p > 0) $
-                myFsep [ppForall mtvs, maybePP pretty ctxt, pretty htype]
+        prettyPrec p (P.TyForall _ mtvs q ctxt htype) = parensIf (p > 0) $
+                myFsep [ppForall mtvs q, maybePP pretty ctxt, pretty htype]
         prettyPrec _ (P.TyStar _) = text "*"
         prettyPrec p (P.TyFun _ a b) = parensIf (p > 0) $
                 myFsep [prettyPrec prec_btype a, text "->", pretty b]

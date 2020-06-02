@@ -795,6 +795,7 @@ ParseOk
                          }
                        "xx")
                 ])
+             InvisibleQuantification
              Nothing
              (TyFun
                 SrcSpanInfo
@@ -2283,6 +2284,7 @@ ParseOk
                    , srcInfoPoints = []
                    }
                  Nothing
+                 InvisibleQuantification
                  (Just
                     (CxSingle
                        SrcSpanInfo
@@ -2425,6 +2427,7 @@ ParseOk
                           , srcInfoPoints = []
                           }
                         Nothing
+                        InvisibleQuantification
                         (Just
                            (CxSingle
                               SrcSpanInfo
@@ -2538,6 +2541,7 @@ ParseOk
                , srcInfoPoints = []
                }
              Nothing
+             InvisibleQuantification
              (Just
                 (CxSingle
                    SrcSpanInfo
@@ -2583,6 +2587,7 @@ ParseOk
                         , srcInfoPoints = []
                         }
                       Nothing
+                      InvisibleQuantification
                       (Just
                          (CxSingle
                             SrcSpanInfo
@@ -3942,6 +3947,7 @@ ParseOk
                                    }
                                  "m")
                           ])
+                       InvisibleQuantification
                        Nothing
                        (TyInfix
                           SrcSpanInfo
@@ -5437,6 +5443,7 @@ ParseOk
                          , srcInfoPoints = []
                          }
                        Nothing
+                       InvisibleQuantification
                        (Just
                           (CxSingle
                              SrcSpanInfo
@@ -5801,6 +5808,7 @@ ParseOk
                          , srcInfoPoints = []
                          }
                        Nothing
+                       InvisibleQuantification
                        (Just
                           (CxSingle
                              SrcSpanInfo
@@ -6406,6 +6414,7 @@ ParseOk
                          , srcInfoPoints = []
                          }
                        Nothing
+                       InvisibleQuantification
                        (Just
                           (CxSingle
                              SrcSpanInfo
@@ -7011,6 +7020,7 @@ ParseOk
                          , srcInfoPoints = []
                          }
                        Nothing
+                       InvisibleQuantification
                        (Just
                           (CxSingle
                              SrcSpanInfo
@@ -8201,6 +8211,7 @@ ParseOk
                                    }
                                  "m")
                           ])
+                       InvisibleQuantification
                        (Just
                           (CxSingle
                              SrcSpanInfo
@@ -8922,6 +8933,7 @@ ParseOk
                                    }
                                  "m'")
                           ])
+                       InvisibleQuantification
                        (Just
                           (CxSingle
                              SrcSpanInfo
@@ -25754,6 +25766,7 @@ ParseOk
                          , srcInfoPoints = []
                          }
                        Nothing
+                       InvisibleQuantification
                        (Just
                           (CxSingle
                              SrcSpanInfo
@@ -25875,6 +25888,7 @@ ParseOk
                          , srcInfoPoints = []
                          }
                        Nothing
+                       InvisibleQuantification
                        (Just
                           (CxSingle
                              SrcSpanInfo
@@ -26161,6 +26175,7 @@ ParseOk
                          , srcInfoPoints = []
                          }
                        Nothing
+                       InvisibleQuantification
                        (Just
                           (CxSingle
                              SrcSpanInfo
@@ -29455,6 +29470,7 @@ ParseOk
                          , srcInfoPoints = []
                          }
                        Nothing
+                       InvisibleQuantification
                        (Just
                           (CxSingle
                              SrcSpanInfo
@@ -29680,6 +29696,7 @@ ParseOk
                          , srcInfoPoints = []
                          }
                        Nothing
+                       InvisibleQuantification
                        (Just
                           (CxSingle
                              SrcSpanInfo
@@ -29905,6 +29922,7 @@ ParseOk
                          , srcInfoPoints = []
                          }
                        Nothing
+                       InvisibleQuantification
                        (Just
                           (CxSingle
                              SrcSpanInfo

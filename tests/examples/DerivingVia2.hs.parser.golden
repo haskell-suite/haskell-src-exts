@@ -1819,6 +1819,7 @@ ParseOk
                                   }
                                 "a")
                          ])
+                      InvisibleQuantification
                       Nothing
                       (TyApp
                          SrcSpanInfo
@@ -2185,6 +2186,7 @@ ParseOk
                                   }
                                 "a")
                          ])
+                      InvisibleQuantification
                       Nothing
                       (TyApp
                          SrcSpanInfo

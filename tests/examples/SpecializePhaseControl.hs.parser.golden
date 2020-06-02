@@ -64,6 +64,7 @@ ParseOk
                     [ SrcSpan "tests/examples/SpecializePhaseControl.hs" 2 17 2 19 ]
                 }
               Nothing
+              InvisibleQuantification
               Nothing
               (TyFun
                  SrcSpanInfo
@@ -144,6 +145,7 @@ ParseOk
                     [ SrcSpan "tests/examples/SpecializePhaseControl.hs" 3 17 3 19 ]
                 }
               Nothing
+              InvisibleQuantification
               Nothing
               (TyFun
                  SrcSpanInfo
@@ -224,6 +226,7 @@ ParseOk
                     [ SrcSpan "tests/examples/SpecializePhaseControl.hs" 4 13 4 15 ]
                 }
               Nothing
+              InvisibleQuantification
               Nothing
               (TyFun
                  SrcSpanInfo
@@ -319,6 +322,7 @@ ParseOk
                , srcInfoPoints = []
                }
              Nothing
+             InvisibleQuantification
              (Just
                 (CxTuple
                    SrcSpanInfo
@@ -566,6 +570,7 @@ ParseOk
                     [ SrcSpan "tests/examples/SpecializePhaseControl.hs" 10 17 10 19 ]
                 }
               Nothing
+              InvisibleQuantification
               Nothing
               (TyFun
                  SrcSpanInfo
@@ -646,6 +651,7 @@ ParseOk
                     [ SrcSpan "tests/examples/SpecializePhaseControl.hs" 11 17 11 19 ]
                 }
               Nothing
+              InvisibleQuantification
               Nothing
               (TyFun
                  SrcSpanInfo
@@ -726,6 +732,7 @@ ParseOk
                     [ SrcSpan "tests/examples/SpecializePhaseControl.hs" 12 13 12 15 ]
                 }
               Nothing
+              InvisibleQuantification
               Nothing
               (TyFun
                  SrcSpanInfo
@@ -821,6 +828,7 @@ ParseOk
                , srcInfoPoints = []
                }
              Nothing
+             InvisibleQuantification
              (Just
                 (CxTuple
                    SrcSpanInfo

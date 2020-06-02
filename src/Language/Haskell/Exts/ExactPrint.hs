@@ -738,6 +738,13 @@ instance ExactP Decl where
         let pts = srcInfoPoints l
         printInterleaved' (zip pts (replicate (length pts - 1) "," ++ ["::"])) ns
         exactPC t
+    TypeKindSig     l ns t      ->
+        case srcInfoPoints l of
+         (a:pts) -> do
+            printStringAt (pos a) "type"
+            printInterleaved' (zip pts (replicate (length pts - 1) "," ++ ["::"])) ns
+            exactPC t
+         _ -> errorEP "ExactP: Decl: TypeKindSig is given wrong number of srcInfoPoints"
     PatSynSig l ns dh c1 _ c2 t -> do
         let (pat:pts) = srcInfoPoints l
         printStringAt (pos pat) "pattern"
@@ -1042,9 +1049,13 @@ instance ExactP TyVarBind where
                  [] -> exactPC n
                  _ -> errorEP "ExactP: TyVarBind: UnkindedVar is given wrong number of srcInfoPoints"
 
+exactQuantVisibility :: QuantVisibility -> String
+exactQuantVisibility InvisibleQuantification = "."
+exactQuantVisibility VisibleQuantification = "->"
+
 instance ExactP Type where
   exactP t' = case t' of
-    TyForall l mtvs mctxt t -> do
+    TyForall l mtvs q mctxt t -> do
         let pts = srcInfoPoints l
         _ <- case mtvs of
                 Nothing -> return pts
@@ -1053,7 +1064,7 @@ instance ExactP Type where
                      _:b:pts' -> do
                         printString "forall"
                         mapM_ exactPC tvs
-                        printStringAt (pos b) "."
+                        printStringAt (pos b) (exactQuantVisibility q)
                         return pts'
                      _ -> errorEP "ExactP: Type: TyForall is given too few srcInfoPoints"
         maybeEP exactPC mctxt
