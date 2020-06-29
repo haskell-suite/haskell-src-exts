@@ -560,6 +560,9 @@ data KnownExtension =
 
   | BlockArguments
 
+  -- | HexFloatLiterals syntax ex 0xFF.FFp-12
+  | HexFloatLiterals
+
   deriving (Show, Read, Eq, Ord, Enum, Bounded, Data, Typeable)
 
 -- | Certain extensions imply other extensions, and this function

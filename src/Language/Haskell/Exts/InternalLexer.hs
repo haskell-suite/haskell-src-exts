@@ -668,6 +668,9 @@ lexStdToken = do
                         (n, str) <- lexBinary
                         con <- intHash
                         return (con (n, '0':c:str))
+                  | toLower c == 'x' && isHexDigit d && HexFloatLiterals `elem` exts -> do
+                        discard 2
+                        lexHexadecimalFloat c
                   | toLower c == 'x' && isHexDigit d -> do
                         discard 2
                         (n, str) <- lexHexadecimal
@@ -1036,22 +1039,50 @@ lexDecimalOrFloat = do
         '#':_     | MagicHash `elem` exts -> discard 1 >> return (IntTokHash  (parseInteger 10 ds, ds))
         _         ->              return (IntTok      (parseInteger 10 ds, ds))
 
-    where
-    lexExponent :: Lex a (Integer, String)
-    lexExponent = do
-        (e:r) <- getInput
-        discard 1   -- 'e' or 'E'
-        case r of
-         '+':d:_ | isDigit d -> do
+lexExponent :: Lex a (Integer, String)
+lexExponent = do
+    (e:r) <- getInput
+    discard 1   -- discard ex notation
+    case r of
+        '+':d:_ | isDigit d -> do
             discard 1
             (n, str) <- lexDecimal
             return (n, e:'+':str)
-         '-':d:_ | isDigit d -> do
+        '-':d:_ | isDigit d -> do
             discard 1
             (n, str) <- lexDecimal
             return (negate n, e:'-':str)
-         d:_ | isDigit d -> lexDecimal >>= \(n,str) -> return (n, e:str)
-         _ -> fail "Float with missing exponent"
+        d:_ | isDigit d -> lexDecimal >>= \(n,str) -> return (n, e:str)
+        _ -> fail "Float with missing exponent"
+
+lexHexadecimalFloat :: Char -> Lex a Token
+lexHexadecimalFloat c = do
+    ds <- lexWhile isHexDigit
+    rest <- getInput
+    exts <- getExtensionsL
+    case rest of
+        ('.':d:_) | isHexDigit d -> do
+                discard 1
+                frac <- lexWhile isHexDigit
+                let num = parseInteger 16 ds
+                    numFrac = parseFrac frac
+                (exponent, estr) <- do
+                    rest2 <- getInput
+                    case rest2 of
+                        'p':_ -> lexExponent
+                        'P':_ -> lexExponent
+                        _         -> return (0,"")
+                con <- lexHash FloatTok FloatTokHash (Right DoubleTokHash)
+                return $ con (((num%1) + numFrac) * 2^^(exponent), '0':c:ds ++ '.':frac ++ estr)
+        e:_ | toLower e == 'p' -> do
+                (exponent, estr) <- lexExponent
+                con <- lexHash FloatTok FloatTokHash (Right DoubleTokHash)
+                return $ con (((parseInteger 16 ds)%1) * 2^^exponent, '0':c:ds ++ estr)
+        _         ->              return (IntTok      (parseInteger 16 ds, '0':c:ds))
+    where
+    parseFrac :: String -> Rational
+    parseFrac ds =
+        foldl (\n (dp, d) -> n + (d / (16 ^^ dp))) (0 % 1) $ zip [1..] (map ((% 1) . toInteger . digitToInt) ds)
 
 lexHash :: (b -> Token) -> (b -> Token) -> Either String (b -> Token) -> Lex a (b -> Token)
 lexHash a b c = do
