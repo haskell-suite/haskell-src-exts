@@ -1,0 +1,3 @@
+ParseFailed
+  (SrcLoc "tests/examples/HexFloatLiteralsBad.hs" 4 1)
+  "Parse error in pattern: f"
