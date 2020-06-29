@@ -1,0 +1,959 @@
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan =
+            SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 1 1 23 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 1 1 1 1
+            , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 3 1 3 1
+            , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 3 1 3 1
+            , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 3 1 3 1
+            , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 5 1 5 1
+            , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 23 1 23 1
+            , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 23 1 23 1
+            ]
+        }
+      Nothing
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 1 1 1 34
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 1 1 1 13
+                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 1 31 1 34
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 1 14 1 30
+                , srcInfoPoints = []
+                }
+              "HexFloatLiterals"
+          ]
+      ]
+      [ ImportDecl
+          { importAnn =
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 3 1 3 17
+                , srcInfoPoints =
+                    [ SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 3 1 3 7 ]
+                }
+          , importModule =
+              ModuleName
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 3 8 3 17
+                  , srcInfoPoints = []
+                  }
+                "GHC.Types"
+          , importQualified = False
+          , importSrc = False
+          , importSafe = False
+          , importPkg = Nothing
+          , importAs = Nothing
+          , importSpecs = Nothing
+          }
+      ]
+      [ PatBind
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 5 1 22 12
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 5 1 5 5
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 5 1 5 5
+                  , srcInfoPoints = []
+                  }
+                "main"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 5 6 22 12
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 5 6 5 7 ]
+               }
+             (Do
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 5 8 22 12
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 5 8 5 10
+                      , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 6 5 6 5
+                      , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 18 5 18 5
+                      , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 23 1 23 0
+                      ]
+                  }
+                [ Qualifier
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 6 5 16 12
+                      , srcInfoPoints = []
+                      }
+                    (App
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 6 5 16 12
+                         , srcInfoPoints = []
+                         }
+                       (Var
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 6 5 6 10
+                            , srcInfoPoints = []
+                            }
+                          (UnQual
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 6 5 6 10
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 6 5 6 10
+                                  , srcInfoPoints = []
+                                  }
+                                "print")))
+                       (List
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 6 11 16 12
+                            , srcInfoPoints =
+                                [ SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 6 11 6 12
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 6 16 6 17
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 6 22 6 23
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 6 27 6 28
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 7 11 7 12
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 7 16 7 17
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 7 22 7 23
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 7 27 7 28
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 8 11 8 12
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 9 11 9 12
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 10 11 10 12
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 11 11 11 12
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 12 11 12 12
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 12 21 12 22
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 13 11 13 12
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 13 21 13 22
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 14 11 14 12
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 14 24 14 25
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 15 11 15 12
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 15 25 15 26
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 16 11 16 12
+                                ]
+                            }
+                          [ Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 6 13 6 16
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 6 13 6 16
+                                   , srcInfoPoints = []
+                                   }
+                                 0
+                                 "0x0")
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 6 18 6 22
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 6 18 6 19 ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 6 19 6 22
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 6 19 6 22
+                                      , srcInfoPoints = []
+                                      }
+                                    0
+                                    "0x0"))
+                          , Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 6 24 6 27
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 6 24 6 27
+                                   , srcInfoPoints = []
+                                   }
+                                 1
+                                 "0x1")
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 6 29 6 33
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 6 29 6 30 ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 6 30 6 33
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 6 30 6 33
+                                      , srcInfoPoints = []
+                                      }
+                                    1
+                                    "0x1"))
+                          , Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 7 13 7 16
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 7 13 7 16
+                                   , srcInfoPoints = []
+                                   }
+                                 15
+                                 "0xF")
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 7 18 7 22
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 7 18 7 19 ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 7 19 7 22
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 7 19 7 22
+                                      , srcInfoPoints = []
+                                      }
+                                    15
+                                    "0xF"))
+                          , Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 7 24 7 27
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 7 24 7 27
+                                   , srcInfoPoints = []
+                                   }
+                                 15
+                                 "0xF")
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 7 29 7 33
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 7 29 7 30 ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 7 30 7 33
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 7 30 7 33
+                                      , srcInfoPoints = []
+                                      }
+                                    15
+                                    "0xF"))
+                          , Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 8 13 8 92
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 8 13 8 92
+                                   , srcInfoPoints = []
+                                   }
+                                 1
+                                 "0x00000000000000000000000000000000000000000000000000000000000000000000000000001")
+                          , Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 9 13 9 92
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 9 13 9 92
+                                   , srcInfoPoints = []
+                                   }
+                                 15
+                                 "0x0000000000000000000000000000000000000000000000000000000000000000000000000000F")
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 10 13 10 93
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 10 13 10 14 ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 10 14 10 93
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/HexFloatLiteralsGood.hs" 10 14 10 93
+                                      , srcInfoPoints = []
+                                      }
+                                    1
+                                    "0x00000000000000000000000000000000000000000000000000000000000000000000000000001"))
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 11 13 11 93
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 11 13 11 14 ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 11 14 11 93
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/HexFloatLiteralsGood.hs" 11 14 11 93
+                                      , srcInfoPoints = []
+                                      }
+                                    15
+                                    "0x0000000000000000000000000000000000000000000000000000000000000000000000000000F"))
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 12 13 12 21
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 12 13 12 14 ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 12 14 12 21
+                                   , srcInfoPoints = []
+                                   }
+                                 (Frac
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/HexFloatLiteralsGood.hs" 12 14 12 21
+                                      , srcInfoPoints = []
+                                      }
+                                    (4369 % 256)
+                                    "0x11.11"))
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 12 23 12 31
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 12 23 12 24 ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 12 24 12 31
+                                   , srcInfoPoints = []
+                                   }
+                                 (Frac
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/HexFloatLiteralsGood.hs" 12 24 12 31
+                                      , srcInfoPoints = []
+                                      }
+                                    (4369 % 256)
+                                    "0x11.11"))
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 13 13 13 21
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 13 13 13 14 ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 13 14 13 21
+                                   , srcInfoPoints = []
+                                   }
+                                 (Frac
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/HexFloatLiteralsGood.hs" 13 14 13 21
+                                      , srcInfoPoints = []
+                                      }
+                                    (65535 % 256)
+                                    "0xFF.FF"))
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 13 23 13 31
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 13 23 13 24 ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 13 24 13 31
+                                   , srcInfoPoints = []
+                                   }
+                                 (Frac
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/HexFloatLiteralsGood.hs" 13 24 13 31
+                                      , srcInfoPoints = []
+                                      }
+                                    (65535 % 256)
+                                    "0xFF.FF"))
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 14 13 14 24
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 14 13 14 14 ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 14 14 14 24
+                                   , srcInfoPoints = []
+                                   }
+                                 (Frac
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/HexFloatLiteralsGood.hs" 14 14 14 24
+                                      , srcInfoPoints = []
+                                      }
+                                    (1048560 % 1)
+                                    "0xFF.FFp12"))
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 14 26 14 37
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 14 26 14 27 ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 14 27 14 37
+                                   , srcInfoPoints = []
+                                   }
+                                 (Frac
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/HexFloatLiteralsGood.hs" 14 27 14 37
+                                      , srcInfoPoints = []
+                                      }
+                                    (1048560 % 1)
+                                    "0xFF.FFp12"))
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 15 13 15 25
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 15 13 15 14 ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 15 14 15 25
+                                   , srcInfoPoints = []
+                                   }
+                                 (Frac
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/HexFloatLiteralsGood.hs" 15 14 15 25
+                                      , srcInfoPoints = []
+                                      }
+                                    (65535 % 1048576)
+                                    "0xFF.FFp-12"))
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 15 27 15 39
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 15 27 15 28 ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 15 28 15 39
+                                   , srcInfoPoints = []
+                                   }
+                                 (Frac
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/HexFloatLiteralsGood.hs" 15 28 15 39
+                                      , srcInfoPoints = []
+                                      }
+                                    (65535 % 1048576)
+                                    "0xFF.FFp-12"))
+                          ]))
+                , Qualifier
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 18 5 22 12
+                      , srcInfoPoints = []
+                      }
+                    (App
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 18 5 22 12
+                         , srcInfoPoints = []
+                         }
+                       (Var
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 18 5 18 10
+                            , srcInfoPoints = []
+                            }
+                          (UnQual
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 18 5 18 10
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 18 5 18 10
+                                  , srcInfoPoints = []
+                                  }
+                                "print")))
+                       (List
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 18 11 22 12
+                            , srcInfoPoints =
+                                [ SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 18 11 18 12
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 18 16 18 17
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 18 21 18 22
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 18 27 18 28
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 18 33 18 34
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 18 40 18 41
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 18 47 18 48
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 18 54 18 55
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 19 11 19 12
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 19 17 19 18
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 19 23 19 24
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 19 30 19 31
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 19 37 19 38
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 19 45 19 46
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 19 53 19 54
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 19 61 19 62
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 20 11 20 12
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 21 11 21 12
+                                , SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 22 11 22 12
+                                ]
+                            }
+                          [ Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 18 13 18 16
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 18 13 18 16
+                                   , srcInfoPoints = []
+                                   }
+                                 0
+                                 "0x0")
+                          , Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 18 18 18 21
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 18 18 18 21
+                                   , srcInfoPoints = []
+                                   }
+                                 1
+                                 "0x1")
+                          , Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 18 23 18 27
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 18 23 18 27
+                                   , srcInfoPoints = []
+                                   }
+                                 16
+                                 "0x10")
+                          , Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 18 29 18 33
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 18 29 18 33
+                                   , srcInfoPoints = []
+                                   }
+                                 17
+                                 "0x11")
+                          , Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 18 35 18 40
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 18 35 18 40
+                                   , srcInfoPoints = []
+                                   }
+                                 256
+                                 "0x100")
+                          , Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 18 42 18 47
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 18 42 18 47
+                                   , srcInfoPoints = []
+                                   }
+                                 257
+                                 "0x101")
+                          , Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 18 49 18 54
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 18 49 18 54
+                                   , srcInfoPoints = []
+                                   }
+                                 272
+                                 "0x110")
+                          , ExpTypeSig
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 18 56 18 72
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 18 62 18 64 ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 18 56 18 61
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/HexFloatLiteralsGood.hs" 18 56 18 61
+                                      , srcInfoPoints = []
+                                      }
+                                    273
+                                    "0x111"))
+                              (TyCon
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 18 65 18 72
+                                   , srcInfoPoints = []
+                                   }
+                                 (UnQual
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/HexFloatLiteralsGood.hs" 18 65 18 72
+                                      , srcInfoPoints = []
+                                      }
+                                    (Ident
+                                       SrcSpanInfo
+                                         { srcInfoSpan =
+                                             SrcSpan
+                                               "tests/examples/HexFloatLiteralsGood.hs" 18 65 18 72
+                                         , srcInfoPoints = []
+                                         }
+                                       "Integer")))
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 19 13 19 17
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 19 13 19 14 ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 19 14 19 17
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/HexFloatLiteralsGood.hs" 19 14 19 17
+                                      , srcInfoPoints = []
+                                      }
+                                    0
+                                    "0x0"))
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 19 19 19 23
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 19 19 19 20 ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 19 20 19 23
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/HexFloatLiteralsGood.hs" 19 20 19 23
+                                      , srcInfoPoints = []
+                                      }
+                                    1
+                                    "0x1"))
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 19 25 19 30
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 19 25 19 26 ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 19 26 19 30
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/HexFloatLiteralsGood.hs" 19 26 19 30
+                                      , srcInfoPoints = []
+                                      }
+                                    16
+                                    "0x10"))
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 19 32 19 37
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 19 32 19 33 ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 19 33 19 37
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/HexFloatLiteralsGood.hs" 19 33 19 37
+                                      , srcInfoPoints = []
+                                      }
+                                    17
+                                    "0x11"))
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 19 39 19 45
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 19 39 19 40 ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 19 40 19 45
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/HexFloatLiteralsGood.hs" 19 40 19 45
+                                      , srcInfoPoints = []
+                                      }
+                                    256
+                                    "0x100"))
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 19 47 19 53
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 19 47 19 48 ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 19 48 19 53
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/HexFloatLiteralsGood.hs" 19 48 19 53
+                                      , srcInfoPoints = []
+                                      }
+                                    257
+                                    "0x101"))
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 19 55 19 61
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 19 55 19 56 ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 19 56 19 61
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/HexFloatLiteralsGood.hs" 19 56 19 61
+                                      , srcInfoPoints = []
+                                      }
+                                    272
+                                    "0x110"))
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 19 63 19 69
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 19 63 19 64 ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 19 64 19 69
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/HexFloatLiteralsGood.hs" 19 64 19 69
+                                      , srcInfoPoints = []
+                                      }
+                                    273
+                                    "0x111"))
+                          , Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 20 13 20 143
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 20 13 20 143
+                                   , srcInfoPoints = []
+                                   }
+                                 893853861996173139971601666547056408498624388039492891848237429581450935338236465120124953211126895179335457212432403390250258854129771329762243267072273
+                                 "0x11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111")
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 21 13 21 144
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 21 13 21 14 ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/HexFloatLiteralsGood.hs" 21 14 21 144
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/HexFloatLiteralsGood.hs" 21 14 21 144
+                                      , srcInfoPoints = []
+                                      }
+                                    893853861996173139971601666547056408498624388039492891848237429581450935338236465120124953211126895179335457212432403390250258854129771329762243267072273
+                                    "0x11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"))
+                          ]))
+                ]))
+          Nothing
+      ]
+  , []
+  )
