@@ -660,20 +660,20 @@ lexStdToken = do
 
         '0':c:d:_ | toLower c == 'o' && isOctDigit d -> do
                         discard 2
-                        (n, str) <- lexOctal
+                        (n, str) <- lexOctal $ numUnderscoresEnabled exts
                         con <- intHash
                         return (con (n, '0':c:str))
                   | toLower c == 'b' && isBinDigit d && BinaryLiterals `elem` exts -> do
                         discard 2
-                        (n, str) <- lexBinary
+                        (n, str) <- lexBinary $ numUnderscoresEnabled exts
                         con <- intHash
                         return (con (n, '0':c:str))
                   | toLower c == 'x' && isHexDigit d && HexFloatLiterals `elem` exts -> do
                         discard 2
-                        lexHexadecimalFloat c
+                        lexHexadecimalFloat (numUnderscoresEnabled exts) c
                   | toLower c == 'x' && isHexDigit d -> do
                         discard 2
-                        (n, str) <- lexHexadecimal
+                        (n, str) <- lexHexadecimal $ numUnderscoresEnabled exts
                         con <- intHash
                         return (con (n, '0':c:str))
 
@@ -806,7 +806,7 @@ lexStdToken = do
                                                   return $ LabelVarId ident
 
 
-        c:_ | isDigit c -> lexDecimalOrFloat
+        c:_ | isDigit c -> lexDecimalOrFloat $ numUnderscoresEnabled exts
 
             | isUpper c -> lexConIdOrQual ""
 
@@ -1012,77 +1012,76 @@ lexRawPragma = lexRawPragmaAux
             rpr' <- lexRawPragma
             return $ rpr ++ '#':rpr'
 
-lexDecimalOrFloat :: Lex a Token
-lexDecimalOrFloat = do
-    ds <- lexWhile isDigit
+lexDecimalOrFloat :: NumericUnderscoresAllowed -> Lex a Token
+lexDecimalOrFloat underAllowed = do
+    (n, raw) <- lexHandleUnderAllowed underAllowed isDigit
     rest <- getInput
     exts <- getExtensionsL
     case rest of
         ('.':d:_) | isDigit d -> do
                 discard 1
-                frac <- lexWhile isDigit
-                let num = parseInteger 10 (ds ++ frac)
+                (frac, fracRaw) <- lexHandleUnderAllowed underAllowed isDigit
+                let num = parseInteger 10 (n ++ frac)
                     decimals = toInteger (length frac)
                 (exponent, estr) <- do
                     rest2 <- getInput
                     case rest2 of
-                        'e':_ -> lexExponent
-                        'E':_ -> lexExponent
+                        'e':_ -> lexExponent underAllowed
+                        'E':_ -> lexExponent underAllowed
                         _     -> return (0,"")
                 con <- lexHash FloatTok FloatTokHash (Right DoubleTokHash)
-                return $ con ((num%1) * 10^^(exponent - decimals), ds ++ '.':frac ++ estr)
+                return $ con ((num%1) * 10^^(exponent - decimals), raw ++ '.':fracRaw ++ estr)
         e:_ | toLower e == 'e' -> do
-                (exponent, estr) <- lexExponent
+                (exponent, estr) <- lexExponent underAllowed
                 con <- lexHash FloatTok FloatTokHash (Right DoubleTokHash)
-                return $ con ((parseInteger 10 ds%1) * 10^^exponent, ds ++ estr)
-        '#':'#':_ | MagicHash `elem` exts -> discard 2 >> return (WordTokHash (parseInteger 10 ds, ds))
-        '#':_     | MagicHash `elem` exts -> discard 1 >> return (IntTokHash  (parseInteger 10 ds, ds))
-        _         ->              return (IntTok      (parseInteger 10 ds, ds))
+                return $ con ((parseInteger 10 n%1) * 10^^exponent, raw ++ estr)
+        '#':'#':_ | MagicHash `elem` exts -> discard 2 >> return (WordTokHash (parseInteger 10 n, raw))
+        '#':_     | MagicHash `elem` exts -> discard 1 >> return (IntTokHash  (parseInteger 10 n, raw))
+        _         ->              return (IntTok      (parseInteger 10 n, raw))
 
-lexExponent :: Lex a (Integer, String)
-lexExponent = do
+lexExponent :: NumericUnderscoresAllowed -> Lex a (Integer, String)
+lexExponent underAllowed = do
     (e:r) <- getInput
     discard 1   -- discard ex notation
     case r of
         '+':d:_ | isDigit d -> do
             discard 1
-            (n, str) <- lexDecimal
+            (n, str) <- lexDecimal underAllowed
             return (n, e:'+':str)
         '-':d:_ | isDigit d -> do
             discard 1
-            (n, str) <- lexDecimal
+            (n, str) <- lexDecimal underAllowed
             return (negate n, e:'-':str)
-        d:_ | isDigit d -> lexDecimal >>= \(n,str) -> return (n, e:str)
+        d:_ | isDigit d -> lexDecimal underAllowed >>= \(n,str) -> return (n, e:str)
         _ -> fail "Float with missing exponent"
 
-lexHexadecimalFloat :: Char -> Lex a Token
-lexHexadecimalFloat c = do
-    ds <- lexWhile isHexDigit
+lexHexadecimalFloat :: NumericUnderscoresAllowed -> Char -> Lex a Token
+lexHexadecimalFloat underAllowed c = do
+    (n, raw) <- lexHandleUnderAllowed underAllowed isHexDigit
     rest <- getInput
-    exts <- getExtensionsL
     case rest of
         ('.':d:_) | isHexDigit d -> do
                 discard 1
-                frac <- lexWhile isHexDigit
-                let num = parseInteger 16 ds
+                (frac, fracRaw) <- lexHandleUnderAllowed underAllowed isHexDigit
+                let num = parseInteger 16 n
                     numFrac = parseFrac frac
                 (exponent, estr) <- do
                     rest2 <- getInput
                     case rest2 of
-                        'p':_ -> lexExponent
-                        'P':_ -> lexExponent
+                        'p':_ -> lexExponent underAllowed
+                        'P':_ -> lexExponent underAllowed
                         _         -> return (0,"")
                 con <- lexHash FloatTok FloatTokHash (Right DoubleTokHash)
-                return $ con (((num%1) + numFrac) * 2^^(exponent), '0':c:ds ++ '.':frac ++ estr)
+                return $ con (((num%1) + numFrac) * 2^^(exponent), '0':c:raw ++ '.':fracRaw ++ estr)
         e:_ | toLower e == 'p' -> do
-                (exponent, estr) <- lexExponent
+                (exponent, estr) <- lexExponent underAllowed
                 con <- lexHash FloatTok FloatTokHash (Right DoubleTokHash)
-                return $ con (((parseInteger 16 ds)%1) * 2^^exponent, '0':c:ds ++ estr)
-        _         ->              return (IntTok      (parseInteger 16 ds, '0':c:ds))
+                return $ con (((parseInteger 16 n)%1) * 2^^exponent, '0':c:raw ++ estr)
+        _         ->              return (IntTok      (parseInteger 16 n, '0':c:raw))
     where
     parseFrac :: String -> Rational
     parseFrac ds =
-        foldl (\n (dp, d) -> n + (d / (16 ^^ dp))) (0 % 1) $ zip [1..] (map ((% 1) . toInteger . digitToInt) ds)
+        foldl (\n (dp, d) -> n + (d / (16 ^^ dp))) (0 % 1) $ zip [(1 :: Integer) ..] (map ((% 1) . toInteger . digitToInt) ds)
 
 lexHash :: (b -> Token) -> (b -> Token) -> Either String (b -> Token) -> Lex a (b -> Token)
 lexHash a b c = do
@@ -1281,16 +1280,16 @@ lexEscape = do
 
         'o':c:_ | isOctDigit c -> do
                     discard 1
-                    (n, raw) <- lexOctal
+                    (n, raw) <- lexOctal NoUnderscoresAllowedInNumeric
                     n' <- checkChar n
                     return (n', 'o':raw)
         'x':c:_ | isHexDigit c -> do
                     discard 1
-                    (n, raw) <- lexHexadecimal
+                    (n, raw) <- lexHexadecimal NoUnderscoresAllowedInNumeric
                     n' <- checkChar n
                     return (n', 'x':raw)
         c:_ | isDigit c -> do
-                    (n, raw) <- lexDecimal
+                    (n, raw) <- lexDecimal NoUnderscoresAllowedInNumeric
                     n' <- checkChar n
                     return (n', raw)
 
@@ -1307,28 +1306,28 @@ lexEscape = do
     cntrl _                        = fail "Illegal control character"
 
 -- assumes at least one octal digit
-lexOctal :: Lex a (Integer, String)
-lexOctal = do
-    ds <- lexWhile isOctDigit
-    return (parseInteger 8 ds, ds)
+lexOctal :: NumericUnderscoresAllowed -> Lex a (Integer, String)
+lexOctal underAllowed = do
+    (n, raw) <- lexHandleUnderAllowed underAllowed isOctDigit
+    return (parseInteger 8 n, raw)
 
 -- assumes at least one binary digit
-lexBinary :: Lex a (Integer, String)
-lexBinary = do
-    ds <- lexWhile isBinDigit
-    return (parseInteger 2 ds, ds)
+lexBinary :: NumericUnderscoresAllowed -> Lex a (Integer, String)
+lexBinary underAllowed = do
+    (n, raw) <- lexHandleUnderAllowed underAllowed isBinDigit
+    return (parseInteger 2 n, raw)
 
 -- assumes at least one hexadecimal digit
-lexHexadecimal :: Lex a (Integer, String)
-lexHexadecimal = do
-    ds <- lexWhile isHexDigit
-    return (parseInteger 16 ds, ds)
+lexHexadecimal :: NumericUnderscoresAllowed -> Lex a (Integer, String)
+lexHexadecimal underAllowed = do
+    (n, raw) <- lexHandleUnderAllowed underAllowed isHexDigit
+    return (parseInteger 16 n, raw)
 
 -- assumes at least one decimal digit
-lexDecimal :: Lex a (Integer, String)
-lexDecimal = do
-    ds <- lexWhile isDigit
-    return (parseInteger 10 ds, ds)
+lexDecimal :: NumericUnderscoresAllowed -> Lex a (Integer, String)
+lexDecimal underAllowed = do
+    (n, raw) <- lexHandleUnderAllowed underAllowed isDigit
+    return (parseInteger 10 n, raw)
 
 -- Stolen from Hugs's Prelude
 parseInteger :: Integer -> String -> Integer
@@ -1340,6 +1339,30 @@ flagKW t =
   when (t `elem` [KW_Do, KW_MDo]) $ do
        exts <- getExtensionsL
        when (NondecreasingIndentation `elem` exts) flagDo
+
+data NumericUnderscoresAllowed = UnderscoresAllowedInNumeric | NoUnderscoresAllowedInNumeric
+  deriving Show
+
+numUnderscoresEnabled :: [KnownExtension] -> NumericUnderscoresAllowed
+numUnderscoresEnabled exts = if (NumericUnderscores `elem` exts)
+                                then UnderscoresAllowedInNumeric
+                                else NoUnderscoresAllowedInNumeric
+
+lexHandleUnderAllowed :: NumericUnderscoresAllowed -> (Char -> Bool) -> Lex a (String, String)
+lexHandleUnderAllowed NoUnderscoresAllowedInNumeric p = do
+  ds <- lexWhile p
+  return (ds, ds)
+lexHandleUnderAllowed UnderscoresAllowedInNumeric p = do
+  s <- getInput
+  case s of
+      c:_ | p c -> do
+          raw <- lexWhile (\ic -> p ic || ic == '_')
+          if (not  $ null raw) && last raw == '_'
+             then fail $ "lexHandleUnderAllowed: numeric must not end with _: " ++ show raw
+             else return (filter (/= '_') raw, raw)
+      c:_ -> fail $ "lexHandleUnderAllowed: numeric must start with proper digit: " ++ show c
+      _ -> fail $ "lexHandleUnderAllowed: token stream exhausted"
+
 
 -- | Selects ASCII binary digits, i.e. @\'0\'@..@\'1\'@.
 isBinDigit :: Char -> Bool

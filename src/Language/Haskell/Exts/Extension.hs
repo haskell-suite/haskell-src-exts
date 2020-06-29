@@ -563,6 +563,9 @@ data KnownExtension =
   -- | HexFloatLiterals syntax ex 0xFF.FFp-12
   | HexFloatLiterals
 
+  -- | NumericUnderscores num literal syntax ex 1_000_000 or 0xF_F.F_Fp-12 or 0b11_11_11 or 1_000e+23
+  | NumericUnderscores
+
   deriving (Show, Read, Eq, Ord, Enum, Bounded, Data, Typeable)
 
 -- | Certain extensions imply other extensions, and this function
