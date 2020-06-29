@@ -1,0 +1,107 @@
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan =
+            SrcSpan "tests/examples/MultilineLanguagePragma.hs" 1 1 9 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/MultilineLanguagePragma.hs" 1 1 1 1
+            , SrcSpan "tests/examples/MultilineLanguagePragma.hs" 8 1 8 1
+            , SrcSpan "tests/examples/MultilineLanguagePragma.hs" 8 1 8 1
+            , SrcSpan "tests/examples/MultilineLanguagePragma.hs" 8 1 8 1
+            , SrcSpan "tests/examples/MultilineLanguagePragma.hs" 9 1 9 1
+            , SrcSpan "tests/examples/MultilineLanguagePragma.hs" 9 1 9 1
+            ]
+        }
+      Nothing
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/MultilineLanguagePragma.hs" 1 1 6 6
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/MultilineLanguagePragma.hs" 1 1 1 13
+                , SrcSpan "tests/examples/MultilineLanguagePragma.hs" 2 13 2 14
+                , SrcSpan "tests/examples/MultilineLanguagePragma.hs" 4 1 4 2
+                , SrcSpan "tests/examples/MultilineLanguagePragma.hs" 5 1 5 2
+                , SrcSpan "tests/examples/MultilineLanguagePragma.hs" 6 3 6 6
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/MultilineLanguagePragma.hs" 2 1 2 13
+                , srcInfoPoints = []
+                }
+              "BangPatterns"
+          , Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/MultilineLanguagePragma.hs" 3 1 3 10
+                , srcInfoPoints = []
+                }
+              "MagicHash"
+          , Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/MultilineLanguagePragma.hs" 4 2 4 19
+                , srcInfoPoints = []
+                }
+              "OverloadedStrings"
+          , Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/MultilineLanguagePragma.hs" 5 4 5 14
+                , srcInfoPoints = []
+                }
+              "LambdaCase"
+          ]
+      ]
+      []
+      [ PatBind
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/MultilineLanguagePragma.hs" 8 1 8 17
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/MultilineLanguagePragma.hs" 8 1 8 5
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/MultilineLanguagePragma.hs" 8 1 8 5
+                  , srcInfoPoints = []
+                  }
+                "main"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/MultilineLanguagePragma.hs" 8 6 8 17
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/MultilineLanguagePragma.hs" 8 6 8 7 ]
+               }
+             (Var
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/MultilineLanguagePragma.hs" 8 8 8 17
+                  , srcInfoPoints = []
+                  }
+                (UnQual
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/MultilineLanguagePragma.hs" 8 8 8 17
+                     , srcInfoPoints = []
+                     }
+                   (Ident
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/MultilineLanguagePragma.hs" 8 8 8 17
+                        , srcInfoPoints = []
+                        }
+                      "undefined"))))
+          Nothing
+      ]
+  , []
+  )
