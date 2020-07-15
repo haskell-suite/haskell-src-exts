@@ -252,6 +252,9 @@ instance ExactP SpecialCon where
     FunCon  l   -> case srcInfoPoints l of
                     [_,b,_] -> printStringAt (pos b) "->"
                     _ -> errorEP "ExactP: SpecialCon is given wrong number of srcInfoPoints"
+    TyEqCon l   -> case srcInfoPoints l of
+                    [_,b,_] -> printStringAt (pos b) "~"
+                    _ -> errorEP "ExactP: SpecialCon is given wrong number of srcInfoPoints"
     TupleCon l b n -> printPoints l $
         case b of
          Unboxed -> "(#": replicate (n-1) "," ++ ["#)"]
@@ -269,6 +272,7 @@ isSymbolQName (UnQual _ n)         = isSymbolName n
 isSymbolQName (Qual _ _ n)         = isSymbolName n
 isSymbolQName (Special _ Cons{})   = True
 isSymbolQName (Special _ FunCon{}) = True
+isSymbolQName (Special _ TyEqCon{}) = True
 isSymbolQName _                    = False
 
 instance ExactP QName where
