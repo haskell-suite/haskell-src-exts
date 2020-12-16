@@ -160,7 +160,8 @@ readUTF8File :: FilePath -> IO String
 readUTF8File fp = do
   h <- openFile fp ReadMode
   hSetEncoding h utf8
-  hGetContents h
+  c <- hGetContents h
+  close h
 
 -- | Converts a parse result with comments to a parse result with comments and
 --   unknown pragmas.
