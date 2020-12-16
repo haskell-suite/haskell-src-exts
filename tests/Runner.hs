@@ -180,7 +180,9 @@ commentsTests dir = testGroup "Comments tests" $ do
 readUTF8File :: FilePath -> IO String
 readUTF8File fp = openFile fp ReadMode >>= \h -> do
         hSetEncoding h utf8
-        hGetContents h
+        c <- hGetContents h >>= \s -> length s `seq` return s
+        hClose h
+        return c
 
 parseUTF8FileWithComments :: ParseMode -> FilePath -> IO (ParseResult (Module SrcSpanInfo, [Comment]))
 parseUTF8FileWithComments p fp = readUTF8File fp >>= (return . parseFileContentsWithComments p)
