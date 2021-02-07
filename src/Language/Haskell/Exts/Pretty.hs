@@ -894,13 +894,24 @@ instance  Pretty (Promoted l) where
       PromotedCon _ hasQuote qn ->
         addQuote hasQuote (pretty qn)
       PromotedList _ hasQuote list ->
-        addQuote hasQuote $ bracketList . punctuate comma . map pretty $ list
+        addQuote hasQuote $ brackets . addSpace list . prettyList $ list
       PromotedTuple _ list ->
-        addQuote True $ parenList $ map pretty list
+        addQuote True $ parens . addSpace list . prettyList $ list
       PromotedUnit {} -> addQuote True $ text "()"
     where
       addQuote True doc = char '\'' <> doc
       addQuote False doc = doc
+
+      checkQuote (PromotedCon _ q _) = q
+      checkQuote (PromotedList _ q _) = q
+      checkQuote (PromotedTuple _ _) = True
+      checkQuote _ = False
+
+      addSpace (TyPromoted _ l0:_) | checkQuote l0 = (space <>)
+      addSpace _ = id
+
+      prettyList = myFsepSimple . punctuate comma . map pretty
+
 
 instance  Pretty (TyVarBind l) where
         pretty (KindedVar _ var kind) = parens $ myFsep [pretty var, text "::", pretty kind]
