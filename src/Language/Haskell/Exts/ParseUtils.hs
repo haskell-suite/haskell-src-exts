@@ -98,7 +98,7 @@ import Data.Either
 import Control.Monad (when,unless)
 
 #if __GLASGOW_HASKELL__ < 710
-import Control.Applicative (Applicative (..), (<$>))
+import Control.Applicative ((<$>))
 #endif
 
 type L = SrcSpanInfo
@@ -177,9 +177,9 @@ checkPContext (TyCon l (Special _ (UnitCon _))) =
 checkPContext (TyParen l t) = do
     c <- checkAssertion t
     return $ CxSingle l (ParenA l c)
-checkPContext (TyPred tp p@(EqualP {})) = do
+checkPContext t@(TyEquals tp _ _) = do
   checkEnabledOneOf [TypeFamilies, GADTs]
-  return $ CxSingle tp p
+  return $ CxSingle tp $ TypeA tp t
 
 checkPContext t = do
     c <- checkAssertion t
@@ -194,32 +194,45 @@ checkAssertion :: PType L -> P (PAsst L)
 checkAssertion (TyParen l asst) = do
     asst' <- checkAssertion asst
     return $ ParenA l asst'
-checkAssertion (TyPred _ p@(IParam _ _ _)) = return p
+checkAssertion (TyPred _ p) = checkAAssertion p
 -- We cannot even get here unless TypeFamilies or GADTs is enabled.
 -- N.B.: this is called only when the equality assertion is part of a
 -- tuple
-checkAssertion (TyPred _ p@(EqualP _ _ _)) = return p
-checkAssertion t' = checkAssertion' id [] t'
+checkAssertion t' = do
+        t'' <- checkAssertion' id [] t'
+        return $ TypeA (ann t'') t''
     where   -- class assertions must have at least one argument
+            checkAssertion' _ _ t@(TyEquals _ _ _) = return t
             checkAssertion' fl ts (TyCon l c) = do
                 when (length ts < 1) $ checkEnabled FlexibleContexts
                 checkAndWarnTypeOperators c
-                return $ ClassA (fl l) c ts
+                return $ tyApps (fl l) (TyCon (fl l) c) ts
             checkAssertion' fl ts (TyApp l a t) =
                 -- no check on t at this stage
                 checkAssertion' (const (fl l)) (t:ts) a
             checkAssertion' fl _ (TyInfix l a op b) = do
                 -- infix operators require TypeOperators
                 checkAndWarnTypeOperators (getMaybePromotedQName op)
-                return $ InfixA (fl l) a (getMaybePromotedQName op) b
+                return $ TyInfix (fl l) a op b
             checkAssertion' fl ts (TyParen l t) =
                 checkAssertion' (const (fl l)) ts t
             checkAssertion' fl ts (TyVar l t) = do -- Dict :: cxt => Dict cxt
                 checkEnabled ConstraintKinds
-                return $ AppA (fl l) t ts
-            checkAssertion' _ _ (TyWildCard l wc) =
-                return $ WildCardA l wc
-            checkAssertion' _ _ _ = fail "Illegal class assertion"
+                return $ tyApps (fl l) (TyVar (fl l) t) ts
+            checkAssertion' _ _ t@(TyWildCard _ _) = return t
+            checkAssertion' _ _ t = do
+                checkEnabled QuantifiedConstraints -- anything goes
+                return t
+            tyApps :: L -> PType L -> [PType L] -> PType L
+            tyApps _ c [] = c
+            tyApps l c (a:aa) = tyApps l (TyApp l c a) aa
+
+checkAAssertion :: PAsst L -> P (PAsst L)
+checkAAssertion (TypeA _ t) = checkAssertion t
+checkAAssertion (ParenA l a) = do
+    a' <- checkAAssertion a
+    return $ ParenA l a'
+checkAAssertion p = return p
 
 -- Check class/instance declaration for multiparams
 checkMultiParam :: PType L -> P ()
@@ -252,8 +265,8 @@ checkAndWarnTypeOperators c =
 checkSContext :: Maybe (PContext L) -> P (Maybe (S.Context L))
 checkSContext (Just ctxt) = case ctxt of
     CxEmpty l -> return $ Just $ S.CxEmpty l
-    CxSingle l a -> checkAsst True a >>= return . Just . S.CxSingle l
-    CxTuple l as -> mapM (checkAsst True) as >>= return . Just . S.CxTuple l
+    CxSingle l a -> checkAsst a >>= return . Just . S.CxSingle l
+    CxTuple l as -> mapM checkAsst as >>= return . Just . S.CxTuple l
 checkSContext _ = return Nothing
 
 -- Checks ordinary contexts for sigtypes and data type
@@ -263,51 +276,22 @@ checkSContext _ = return Nothing
 checkContext :: Maybe (PContext L) -> P (Maybe (S.Context L))
 checkContext (Just ctxt) = case ctxt of
     CxEmpty l -> return $ Just $ S.CxEmpty l
-    CxSingle l a -> checkAsst False a >>= return . Just . S.CxSingle l
-    CxTuple l as -> mapM (checkAsst False) as >>= return . Just . S.CxTuple l
+    CxSingle l a -> checkAsst a >>= return . Just . S.CxSingle l
+    CxTuple l as -> mapM checkAsst as >>= return . Just . S.CxTuple l
 checkContext _ = return Nothing
 
-checkAsst :: Bool -> PAsst L -> P (S.Asst L)
-checkAsst isSimple asst =
+checkAsst :: PAsst L -> P (S.Asst L)
+checkAsst asst =
     case asst of
-      ClassA l qn pts -> do
-                ts <- mapM (checkAsstParam isSimple) pts
-                return $ S.ClassA l qn ts
-      AppA l n pts    -> do
-                ts <- mapM (checkAsstParam isSimple) pts
-                return $ S.AppA l n ts
-      InfixA l a op b -> do
-                [a',b'] <- mapM (checkAsstParam isSimple) [a,b]
-                return $ S.InfixA l a' op b'
+      TypeA l pt -> do
+                t <- checkType pt
+                return $ S.TypeA l t
       IParam l ipn pt -> do
                 t <- checkType pt
                 return $ S.IParam l ipn t
-      EqualP l pa pb  -> do
-                a <- checkType pa
-                b <- checkType pb
-                return $ S.EqualP l a b
       ParenA l a      -> do
-                a' <- checkAsst isSimple a
+                a' <- checkAsst a
                 return $ S.ParenA l a'
-      WildCardA l a ->
-        if isSimple then fail "Malformed Context: WildCards not allowed in simple contexts"
-                    else return $ S.WildCardA l a
-
-checkAsstParam :: Bool -> PType L -> P (S.Type L)
-checkAsstParam isSimple t = do
-        exts <- getExtensions
-        if FlexibleContexts `elem` exts
-         then checkType t
-         else case t of
-                TyVar l n     -> return $ S.TyVar l n
-                TyWildCard l mn ->  return $ S.TyWildCard l mn
-                TyParen l t1  -> do t1' <- checkAsstParam isSimple t1
-                                    return $ S.TyParen l t1'
-                TyApp l pf pt | not isSimple    -> do
-                        f <- checkAsstParam isSimple pf
-                        t' <- checkType pt
-                        return $ S.TyApp l f t'
-                _       -> fail "Malformed context: FlexibleContexts is not enabled"
 
 -----------------------------------------------------------------------------
 -- Checking Headers
@@ -753,6 +737,7 @@ checkExpr e' = case e' of
     RightArrApp l e1 e2     -> check2Exprs e1 e2 (S.RightArrApp l)
     LeftArrHighApp l e1 e2  -> check2Exprs e1 e2 (S.LeftArrHighApp l)
     RightArrHighApp l e1 e2 -> check2Exprs e1 e2 (S.RightArrHighApp l)
+    ArrOp l e               -> S.ArrOp l <$> checkExpr e
 
     -- LamdaCase
     LCase l alts -> return $ S.LCase l alts
@@ -1125,14 +1110,8 @@ checkT t simple = case t of
                            >> check2Types at bt (flip (S.TyInfix l) op)
     TyKind  l pt k    -> check1Type pt (flip (S.TyKind l) k)
 
-     -- TyPred can be a valid type if ConstraintKinds is enabled, unless it is an implicit parameter, which is not a valid type
-    TyPred _ (ClassA l className cvars) -> mapM checkType cvars >>= \vars -> return (foldl1 (S.TyApp l) (S.TyCon l className:vars))
-    TyPred _ (InfixA l t0 op t1)        -> S.TyInfix l <$> checkType t0 <*> pure (UnpromotedName (ann op) op) <*> checkType t1
-    TyPred _ (EqualP l t0    t1)        -> do
-      checkEnabledOneOf [TypeFamilies, GADTs]
-      S.TyEquals l <$> checkType t0 <*> checkType t1
-
     TyPromoted l p -> return $ S.TyPromoted l p -- ??
+    TyEquals l at bt   -> check2Types at bt (S.TyEquals l)
     TySplice l s        -> do
                               checkEnabled TemplateHaskell
                               return $ S.TySplice l s
@@ -1287,11 +1266,11 @@ splitTilde :: PType L -> PType L
 splitTilde t = go t
   where go (TyApp loc t1 t2)
           | TyBang _ (LazyTy eqloc) (NoUnpackPragma _) t2' <- t2
-          = TyPred loc (EqualP (loc <** [srcInfoSpan eqloc]) (go t1) t2')
+          = TyEquals (loc <** [srcInfoSpan eqloc]) (go t1) t2'
           | otherwise
           = case go t1 of
-              (TyPred _ (EqualP eqloc tl tr)) ->
-                TyPred loc (EqualP (eqloc <++> ann t2 <** srcInfoPoints eqloc) tl (TyApp (ann tr <++> ann t2) tr t2))
+              TyEquals eqloc tl tr ->
+                TyEquals (eqloc <++> ann t2 <** srcInfoPoints eqloc) tl (TyApp (ann tr <++> ann t2) tr t2)
               t' -> TyApp loc t' t2
 
         go t' = t'

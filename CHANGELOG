@@ -1,3 +1,29 @@
+1.23.0 --> 1.23.1
+=================
+* show instance for SrcLoc and SrcSpan renders "(-1)" instead of "-1"
+* Allow empty closed type families (#452)
+
+
+1.22.0 --> 1.23.0
+=================
+* Add support for BlockArguments (#444)
+  - Technically breaking change: KnownExtension gained a new constructor BlockArguments
+* Add support for Arrow Brackets (#445)
+  - Tecnically breaking change: Exp gained new constructor ArrOp
+
+1.21.1 --> 1.22.0
+=================
+* Support QuantifiedConstraints (#427)
+  - Breaking change: constructors for PAsst changed
+  - Technically breaking change: KnownExtention gained a new constructor QuantifiedConstraints
+* Support Template Haskell typed splices and quotations (#432)
+  - Breaking change: new constructors on Token data type
+* Fix unicode identifier parsing (#442)
+
+1.21.0 --> 1.21.1
+=================
+* GHC 8.8.1 compatibility (MonadFail)
+
 1.20.3 --> 1.21.0
 =================
 * DerivingVia (#420)

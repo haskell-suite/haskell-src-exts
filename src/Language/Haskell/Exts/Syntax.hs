@@ -299,6 +299,8 @@ data Decl l
      -- ^ A declaration of default types
      | SpliceDecl   l (Exp l)
      -- ^ A Template Haskell splicing declaration
+     | TSpliceDecl  l (Exp l)
+     -- ^ A typed Template Haskell splicing declaration
      | TypeSig      l [Name l] (Type l)
      -- ^ A type signature declaration
      | PatSynSig    l [Name l] (Maybe [TyVarBind l]) (Maybe (Context l))
@@ -692,17 +694,10 @@ data Context l
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | Class assertions.
---   In Haskell 98, the argument would be a /tyvar/, but this definition
---   allows multiple parameters, and allows them to be /type/s.
---   Also extended with support for implicit parameters and equality constraints.
 data Asst l
-        = ClassA l (QName l) [Type l]           -- ^ ordinary class assertion
-        | AppA l (Name l) [Type l]              -- ^ constraint kind assertion, @Dict :: cxt a => Dict cxt@
-        | InfixA l (Type l) (QName l) (Type l)  -- ^ class assertion where the class name is given infix
+        = TypeA l (Type l)                      -- ^ type assertion
         | IParam l (IPName l) (Type l)          -- ^ implicit parameter assertion
-        | EqualP l (Type l) (Type l)            -- ^ type equality constraint
         | ParenA l (Asst l)                     -- ^ parenthesised class assertion
-        | WildCardA l (Maybe (Name l))          -- ^ Context Wildcard
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | /literal/
@@ -805,6 +800,7 @@ data Exp l
     | RightArrApp     l (Exp l) (Exp l)     -- ^ arrow application (from right): /exp/ @>-@ /exp/
     | LeftArrHighApp  l (Exp l) (Exp l)     -- ^ higher-order arrow application (from left): /exp/ @-<<@ /exp/
     | RightArrHighApp l (Exp l) (Exp l)     -- ^ higher-order arrow application (from right): /exp/ @>>-@ /exp/
+    | ArrOp           l (Exp l)             -- ^ arrow control operators: @(| /exp/ |)@
 
 -- LambdaCase
     | LCase l [Alt l]                       -- ^ @\case@ /alts/
@@ -825,6 +821,7 @@ data XAttr l = XAttr l (XName l) (Exp l)
 -- | A template haskell bracket expression.
 data Bracket l
     = ExpBracket l (Exp l)        -- ^ expression bracket: @[| ... |]@
+    | TExpBracket l (Exp l)       -- ^ typed expression bracket: @[|| ... ||]@
     | PatBracket l (Pat l)        -- ^ pattern bracket: @[p| ... |]@
     | TypeBracket l (Type l)      -- ^ type bracket: @[t| ... |]@
     | DeclBracket l [Decl l]      -- ^ declaration bracket: @[d| ... |]@
@@ -833,7 +830,9 @@ data Bracket l
 -- | A template haskell splice expression
 data Splice l
     = IdSplice l String           -- ^ variable splice: @$var@
+    | TIdSplice l String          -- ^ typed variable splice: @$$var@
     | ParenSplice l (Exp l)       -- ^ parenthesised expression splice: @$(/exp/)@
+    | TParenSplice l (Exp l)      -- ^ parenthesised typed expression splice: @$$(/exp/)@
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | The safety of a foreign function call.
@@ -1290,6 +1289,7 @@ instance Annotated Decl where
         InfixDecl    l _ _ _            -> l
         DefaultDecl  l _                -> l
         SpliceDecl   l _                -> l
+        TSpliceDecl  l _                -> l
         TypeSig      l _ _              -> l
         PatSynSig    l _ _ _ _ _ _      -> l
         FunBind      l _                -> l
@@ -1327,6 +1327,7 @@ instance Annotated Decl where
         InfixDecl    l a k ops           -> InfixDecl (f l) a k ops
         DefaultDecl  l ts                -> DefaultDecl (f l) ts
         SpliceDecl   l sp                -> SpliceDecl (f l) sp
+        TSpliceDecl  l sp                -> TSpliceDecl (f l) sp
         TypeSig      l ns t              -> TypeSig (f l) ns t
         PatSynSig    l n dh c1 dh2 c2 t      -> PatSynSig (f l) n dh c1 dh2 c2 t
         FunBind      l ms                -> FunBind (f l) ms
@@ -1568,21 +1569,13 @@ instance Annotated Context where
 
 instance Annotated Asst where
     ann asst = case asst of
-        ClassA l _ _     -> l
-        AppA l _ _       -> l
-        InfixA l _ _ _   -> l
+        TypeA l _        -> l
         IParam l _ _     -> l
-        EqualP l _ _     -> l
         ParenA l _       -> l
-        WildCardA l _    -> l
     amap f asst = case asst of
-        ClassA l qn ts      -> ClassA (f l) qn ts
-        AppA   l n ns       -> AppA   (f l) n ns
-        InfixA l ta qn tb   -> InfixA (f l) ta qn tb
+        TypeA l t           -> TypeA (f l) t
         IParam l ipn t      -> IParam (f l) ipn t
-        EqualP l t1 t2      -> EqualP (f l) t1 t2
         ParenA l a          -> ParenA (f l) a
-        WildCardA l mn      -> WildCardA (f l) mn
 
 instance Annotated Literal where
     ann lit = case lit of
@@ -1663,6 +1656,7 @@ instance Annotated Exp where
         RightArrApp     l _ _  -> l
         LeftArrHighApp  l _ _  -> l
         RightArrHighApp l _ _  -> l
+        ArrOp           l _    -> l
 
         LCase l _              -> l
 
@@ -1723,6 +1717,7 @@ instance Annotated Exp where
         RightArrApp     l e1' e2 -> RightArrApp     (f l) e1' e2
         LeftArrHighApp  l e1' e2 -> LeftArrHighApp  (f l) e1' e2
         RightArrHighApp l e1' e2 -> RightArrHighApp (f l) e1' e2
+        ArrOp           l e      -> ArrOp           (f l) e
 
         LCase l alts -> LCase (f l) alts
         MultiIf l alts -> MultiIf (f l) alts
@@ -1739,19 +1734,25 @@ instance Annotated XAttr where
 
 instance Annotated Bracket where
     ann (ExpBracket l _)  = l
+    ann (TExpBracket l _) = l
     ann (PatBracket l _)  = l
     ann (TypeBracket l _) = l
     ann (DeclBracket l _) = l
     amap f (ExpBracket l e) = ExpBracket (f l) e
+    amap f (TExpBracket l e) = TExpBracket (f l) e
     amap f (PatBracket l p) = PatBracket (f l) p
     amap f (TypeBracket l t) = TypeBracket (f l) t
     amap f (DeclBracket l ds) = DeclBracket (f l) ds
 
 instance Annotated Splice where
     ann (IdSplice l _)    = l
+    ann (TIdSplice l _)   = l
     ann (ParenSplice l _) = l
+    ann (TParenSplice l _) = l
     amap f (IdSplice l s) = IdSplice (f l) s
+    amap f (TIdSplice l s) = TIdSplice (f l) s
     amap f (ParenSplice l e) = ParenSplice (f l) e
+    amap f (TParenSplice l e) = TParenSplice (f l) e
 
 instance Annotated Safety where
     ann (PlayRisky l) = l

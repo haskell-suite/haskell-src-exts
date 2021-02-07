@@ -67,39 +67,50 @@ ParseOk
                          , SrcSpan "tests/examples/TypeEqualityParen.hs" 2 26 2 28
                          ]
                      }
-                   [ ClassA
+                   [ TypeA
                        SrcSpanInfo
                          { srcInfoSpan =
                              SrcSpan "tests/examples/TypeEqualityParen.hs" 2 8 2 12
                          , srcInfoPoints = []
                          }
-                       (UnQual
+                       (TyApp
                           SrcSpanInfo
                             { srcInfoSpan =
-                                SrcSpan "tests/examples/TypeEqualityParen.hs" 2 8 2 10
+                                SrcSpan "tests/examples/TypeEqualityParen.hs" 2 8 2 12
                             , srcInfoPoints = []
                             }
-                          (Ident
+                          (TyCon
                              SrcSpanInfo
                                { srcInfoSpan =
-                                   SrcSpan "tests/examples/TypeEqualityParen.hs" 2 8 2 10
+                                   SrcSpan "tests/examples/TypeEqualityParen.hs" 2 8 2 12
                                , srcInfoPoints = []
                                }
-                             "Eq"))
-                       [ TyVar
-                           SrcSpanInfo
-                             { srcInfoSpan =
-                                 SrcSpan "tests/examples/TypeEqualityParen.hs" 2 11 2 12
-                             , srcInfoPoints = []
-                             }
-                           (Ident
-                              SrcSpanInfo
-                                { srcInfoSpan =
-                                    SrcSpan "tests/examples/TypeEqualityParen.hs" 2 11 2 12
-                                , srcInfoPoints = []
-                                }
-                              "a")
-                       ]
+                             (UnQual
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/TypeEqualityParen.hs" 2 8 2 10
+                                  , srcInfoPoints = []
+                                  }
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/TypeEqualityParen.hs" 2 8 2 10
+                                     , srcInfoPoints = []
+                                     }
+                                   "Eq")))
+                          (TyVar
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/TypeEqualityParen.hs" 2 11 2 12
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/TypeEqualityParen.hs" 2 11 2 12
+                                  , srcInfoPoints = []
+                                  }
+                                "a")))
                    , ParenA
                        SrcSpanInfo
                          { srcInfoSpan =
@@ -109,45 +120,52 @@ ParseOk
                              , SrcSpan "tests/examples/TypeEqualityParen.hs" 2 22 2 23
                              ]
                          }
-                       (EqualP
+                       (TypeA
                           SrcSpanInfo
                             { srcInfoSpan =
                                 SrcSpan "tests/examples/TypeEqualityParen.hs" 2 15 2 22
                             , srcInfoPoints =
                                 [ SrcSpan "tests/examples/TypeEqualityParen.hs" 2 17 2 18 ]
                             }
-                          (TyVar
+                          (TyEquals
                              SrcSpanInfo
                                { srcInfoSpan =
-                                   SrcSpan "tests/examples/TypeEqualityParen.hs" 2 15 2 16
-                               , srcInfoPoints = []
+                                   SrcSpan "tests/examples/TypeEqualityParen.hs" 2 15 2 22
+                               , srcInfoPoints =
+                                   [ SrcSpan "tests/examples/TypeEqualityParen.hs" 2 17 2 18 ]
                                }
-                             (Ident
+                             (TyVar
                                 SrcSpanInfo
                                   { srcInfoSpan =
                                       SrcSpan "tests/examples/TypeEqualityParen.hs" 2 15 2 16
                                   , srcInfoPoints = []
                                   }
-                                "a"))
-                          (TyCon
-                             SrcSpanInfo
-                               { srcInfoSpan =
-                                   SrcSpan "tests/examples/TypeEqualityParen.hs" 2 19 2 22
-                               , srcInfoPoints = []
-                               }
-                             (UnQual
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/TypeEqualityParen.hs" 2 15 2 16
+                                     , srcInfoPoints = []
+                                     }
+                                   "a"))
+                             (TyCon
                                 SrcSpanInfo
                                   { srcInfoSpan =
                                       SrcSpan "tests/examples/TypeEqualityParen.hs" 2 19 2 22
                                   , srcInfoPoints = []
                                   }
-                                (Ident
+                                (UnQual
                                    SrcSpanInfo
                                      { srcInfoSpan =
                                          SrcSpan "tests/examples/TypeEqualityParen.hs" 2 19 2 22
                                      , srcInfoPoints = []
                                      }
-                                   "Int"))))
+                                   (Ident
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/TypeEqualityParen.hs" 2 19 2 22
+                                        , srcInfoPoints = []
+                                        }
+                                      "Int")))))
                    ]))
              (TyFun
                 SrcSpanInfo

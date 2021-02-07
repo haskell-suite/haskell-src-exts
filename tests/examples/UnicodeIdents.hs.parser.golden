@@ -1,0 +1,155 @@
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/UnicodeIdents.hs" 1 1 3 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/UnicodeIdents.hs" 1 1 1 1
+            , SrcSpan "tests/examples/UnicodeIdents.hs" 1 1 1 1
+            , SrcSpan "tests/examples/UnicodeIdents.hs" 1 1 1 1
+            , SrcSpan "tests/examples/UnicodeIdents.hs" 2 1 2 1
+            , SrcSpan "tests/examples/UnicodeIdents.hs" 3 1 3 1
+            , SrcSpan "tests/examples/UnicodeIdents.hs" 3 1 3 1
+            ]
+        }
+      Nothing
+      []
+      []
+      [ PatBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/UnicodeIdents.hs" 1 1 1 7
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/UnicodeIdents.hs" 1 1 1 2
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/UnicodeIdents.hs" 1 1 1 2
+                  , srcInfoPoints = []
+                  }
+                "\29483"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/UnicodeIdents.hs" 1 3 1 7
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/UnicodeIdents.hs" 1 3 1 4 ]
+               }
+             (Con
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/UnicodeIdents.hs" 1 5 1 7
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/UnicodeIdents.hs" 1 5 1 6
+                      , SrcSpan "tests/examples/UnicodeIdents.hs" 1 6 1 7
+                      ]
+                  }
+                (Special
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/UnicodeIdents.hs" 1 5 1 7
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/UnicodeIdents.hs" 1 5 1 6
+                         , SrcSpan "tests/examples/UnicodeIdents.hs" 1 6 1 7
+                         ]
+                     }
+                   (UnitCon
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/UnicodeIdents.hs" 1 5 1 7
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/UnicodeIdents.hs" 1 5 1 6
+                            , SrcSpan "tests/examples/UnicodeIdents.hs" 1 6 1 7
+                            ]
+                        }))))
+          Nothing
+      , FunBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/UnicodeIdents.hs" 2 1 2 13
+            , srcInfoPoints = []
+            }
+          [ Match
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/UnicodeIdents.hs" 2 1 2 13
+                , srcInfoPoints = []
+                }
+              (Ident
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/UnicodeIdents.hs" 2 1 2 3
+                   , srcInfoPoints = []
+                   }
+                 "\33258\20055")
+              [ PVar
+                  SrcSpanInfo
+                    { srcInfoSpan = SrcSpan "tests/examples/UnicodeIdents.hs" 2 4 2 5
+                    , srcInfoPoints = []
+                    }
+                  (Ident
+                     SrcSpanInfo
+                       { srcInfoSpan = SrcSpan "tests/examples/UnicodeIdents.hs" 2 4 2 5
+                       , srcInfoPoints = []
+                       }
+                     "x")
+              ]
+              (UnGuardedRhs
+                 SrcSpanInfo
+                   { srcInfoSpan = SrcSpan "tests/examples/UnicodeIdents.hs" 2 6 2 13
+                   , srcInfoPoints =
+                       [ SrcSpan "tests/examples/UnicodeIdents.hs" 2 6 2 7 ]
+                   }
+                 (InfixApp
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/UnicodeIdents.hs" 2 8 2 13
+                      , srcInfoPoints = []
+                      }
+                    (Var
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/UnicodeIdents.hs" 2 8 2 9
+                         , srcInfoPoints = []
+                         }
+                       (UnQual
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/UnicodeIdents.hs" 2 8 2 9
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/UnicodeIdents.hs" 2 8 2 9
+                               , srcInfoPoints = []
+                               }
+                             "x")))
+                    (QVarOp
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/UnicodeIdents.hs" 2 10 2 11
+                         , srcInfoPoints = []
+                         }
+                       (UnQual
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/UnicodeIdents.hs" 2 10 2 11
+                            , srcInfoPoints = []
+                            }
+                          (Symbol
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/UnicodeIdents.hs" 2 10 2 11
+                               , srcInfoPoints = []
+                               }
+                             "*")))
+                    (Var
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/UnicodeIdents.hs" 2 12 2 13
+                         , srcInfoPoints = []
+                         }
+                       (UnQual
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/UnicodeIdents.hs" 2 12 2 13
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/UnicodeIdents.hs" 2 12 2 13
+                               , srcInfoPoints = []
+                               }
+                             "x")))))
+              Nothing
+          ]
+      ]
+  , []
+  )

@@ -1,0 +1,1099 @@
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/BlockArguments.hs" 1 1 17 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/BlockArguments.hs" 1 1 1 1
+            , SrcSpan "tests/examples/BlockArguments.hs" 2 1 2 1
+            , SrcSpan "tests/examples/BlockArguments.hs" 2 1 2 1
+            , SrcSpan "tests/examples/BlockArguments.hs" 4 1 4 1
+            , SrcSpan "tests/examples/BlockArguments.hs" 8 1 8 1
+            , SrcSpan "tests/examples/BlockArguments.hs" 10 1 10 1
+            , SrcSpan "tests/examples/BlockArguments.hs" 17 1 17 1
+            , SrcSpan "tests/examples/BlockArguments.hs" 17 1 17 1
+            ]
+        }
+      (Just
+         (ModuleHead
+            SrcSpanInfo
+              { srcInfoSpan = SrcSpan "tests/examples/BlockArguments.hs" 2 1 2 28
+              , srcInfoPoints =
+                  [ SrcSpan "tests/examples/BlockArguments.hs" 2 1 2 7
+                  , SrcSpan "tests/examples/BlockArguments.hs" 2 23 2 28
+                  ]
+              }
+            (ModuleName
+               SrcSpanInfo
+                 { srcInfoSpan = SrcSpan "tests/examples/BlockArguments.hs" 2 8 2 22
+                 , srcInfoPoints = []
+                 }
+               "BlockArguments")
+            Nothing
+            Nothing))
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/BlockArguments.hs" 1 1 1 32
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/BlockArguments.hs" 1 1 1 13
+                , SrcSpan "tests/examples/BlockArguments.hs" 1 29 1 32
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/BlockArguments.hs" 1 14 1 28
+                , srcInfoPoints = []
+                }
+              "BlockArguments"
+          ]
+      ]
+      []
+      [ PatBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/BlockArguments.hs" 4 1 6 14
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/BlockArguments.hs" 4 1 4 4
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/BlockArguments.hs" 4 1 4 4
+                  , srcInfoPoints = []
+                  }
+                "foo"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/BlockArguments.hs" 4 5 6 14
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/BlockArguments.hs" 4 5 4 6 ]
+               }
+             (App
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/BlockArguments.hs" 4 7 6 14
+                  , srcInfoPoints = []
+                  }
+                (App
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/BlockArguments.hs" 4 7 4 19
+                     , srcInfoPoints = []
+                     }
+                   (Var
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/BlockArguments.hs" 4 7 4 11
+                        , srcInfoPoints = []
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/BlockArguments.hs" 4 7 4 11
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/BlockArguments.hs" 4 7 4 11
+                              , srcInfoPoints = []
+                              }
+                            "when")))
+                   (Paren
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/BlockArguments.hs" 4 12 4 19
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/BlockArguments.hs" 4 12 4 13
+                            , SrcSpan "tests/examples/BlockArguments.hs" 4 18 4 19
+                            ]
+                        }
+                      (InfixApp
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/BlockArguments.hs" 4 13 4 18
+                           , srcInfoPoints = []
+                           }
+                         (Var
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/BlockArguments.hs" 4 13 4 14
+                              , srcInfoPoints = []
+                              }
+                            (UnQual
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/BlockArguments.hs" 4 13 4 14
+                                 , srcInfoPoints = []
+                                 }
+                               (Ident
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/BlockArguments.hs" 4 13 4 14
+                                    , srcInfoPoints = []
+                                    }
+                                  "x")))
+                         (QVarOp
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/BlockArguments.hs" 4 15 4 16
+                              , srcInfoPoints = []
+                              }
+                            (UnQual
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/BlockArguments.hs" 4 15 4 16
+                                 , srcInfoPoints = []
+                                 }
+                               (Symbol
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/BlockArguments.hs" 4 15 4 16
+                                    , srcInfoPoints = []
+                                    }
+                                  ">")))
+                         (Lit
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/BlockArguments.hs" 4 17 4 18
+                              , srcInfoPoints = []
+                              }
+                            (Int
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/BlockArguments.hs" 4 17 4 18
+                                 , srcInfoPoints = []
+                                 }
+                               0
+                               "0")))))
+                (Do
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/BlockArguments.hs" 4 20 6 14
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/BlockArguments.hs" 4 20 4 22
+                         , SrcSpan "tests/examples/BlockArguments.hs" 5 3 5 3
+                         , SrcSpan "tests/examples/BlockArguments.hs" 6 3 6 3
+                         , SrcSpan "tests/examples/BlockArguments.hs" 8 1 8 0
+                         ]
+                     }
+                   [ Qualifier
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/BlockArguments.hs" 5 3 5 10
+                         , srcInfoPoints = []
+                         }
+                       (App
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/BlockArguments.hs" 5 3 5 10
+                            , srcInfoPoints = []
+                            }
+                          (Var
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/BlockArguments.hs" 5 3 5 8
+                               , srcInfoPoints = []
+                               }
+                             (UnQual
+                                SrcSpanInfo
+                                  { srcInfoSpan = SrcSpan "tests/examples/BlockArguments.hs" 5 3 5 8
+                                  , srcInfoPoints = []
+                                  }
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/BlockArguments.hs" 5 3 5 8
+                                     , srcInfoPoints = []
+                                     }
+                                   "print")))
+                          (Var
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/BlockArguments.hs" 5 9 5 10
+                               , srcInfoPoints = []
+                               }
+                             (UnQual
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/BlockArguments.hs" 5 9 5 10
+                                  , srcInfoPoints = []
+                                  }
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/BlockArguments.hs" 5 9 5 10
+                                     , srcInfoPoints = []
+                                     }
+                                   "x"))))
+                   , Qualifier
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/BlockArguments.hs" 6 3 6 14
+                         , srcInfoPoints = []
+                         }
+                       (Var
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/BlockArguments.hs" 6 3 6 14
+                            , srcInfoPoints = []
+                            }
+                          (UnQual
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/BlockArguments.hs" 6 3 6 14
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/BlockArguments.hs" 6 3 6 14
+                                  , srcInfoPoints = []
+                                  }
+                                "exitFailure")))
+                   ])))
+          Nothing
+      , PatBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/BlockArguments.hs" 8 1 8 56
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/BlockArguments.hs" 8 1 8 4
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/BlockArguments.hs" 8 1 8 4
+                  , srcInfoPoints = []
+                  }
+                "bar"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/BlockArguments.hs" 8 5 8 56
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/BlockArguments.hs" 8 5 8 6 ]
+               }
+             (App
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/BlockArguments.hs" 8 7 8 56
+                  , srcInfoPoints = []
+                  }
+                (App
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/BlockArguments.hs" 8 7 8 26
+                     , srcInfoPoints = []
+                     }
+                   (Var
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/BlockArguments.hs" 8 7 8 21
+                        , srcInfoPoints = []
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/BlockArguments.hs" 8 7 8 21
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/BlockArguments.hs" 8 7 8 21
+                              , srcInfoPoints = []
+                              }
+                            "withForeignPtr")))
+                   (Var
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/BlockArguments.hs" 8 22 8 26
+                        , srcInfoPoints = []
+                        }
+                      (UnQual
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/BlockArguments.hs" 8 22 8 26
+                           , srcInfoPoints = []
+                           }
+                         (Ident
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/BlockArguments.hs" 8 22 8 26
+                              , srcInfoPoints = []
+                              }
+                            "fptr"))))
+                (Lambda
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/BlockArguments.hs" 8 27 8 56
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/BlockArguments.hs" 8 27 8 28
+                         , SrcSpan "tests/examples/BlockArguments.hs" 8 32 8 34
+                         ]
+                     }
+                   [ PVar
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/BlockArguments.hs" 8 28 8 31
+                         , srcInfoPoints = []
+                         }
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/BlockArguments.hs" 8 28 8 31
+                            , srcInfoPoints = []
+                            }
+                          "ptr")
+                   ]
+                   (App
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/BlockArguments.hs" 8 35 8 56
+                        , srcInfoPoints = []
+                        }
+                      (App
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/BlockArguments.hs" 8 35 8 51
+                           , srcInfoPoints = []
+                           }
+                         (App
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/BlockArguments.hs" 8 35 8 47
+                              , srcInfoPoints = []
+                              }
+                            (Var
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/BlockArguments.hs" 8 35 8 43
+                                 , srcInfoPoints = []
+                                 }
+                               (UnQual
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/BlockArguments.hs" 8 35 8 43
+                                    , srcInfoPoints = []
+                                    }
+                                  (Ident
+                                     SrcSpanInfo
+                                       { srcInfoSpan =
+                                           SrcSpan "tests/examples/BlockArguments.hs" 8 35 8 43
+                                       , srcInfoPoints = []
+                                       }
+                                     "c_memcpy")))
+                            (Var
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/BlockArguments.hs" 8 44 8 47
+                                 , srcInfoPoints = []
+                                 }
+                               (UnQual
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/BlockArguments.hs" 8 44 8 47
+                                    , srcInfoPoints = []
+                                    }
+                                  (Ident
+                                     SrcSpanInfo
+                                       { srcInfoSpan =
+                                           SrcSpan "tests/examples/BlockArguments.hs" 8 44 8 47
+                                       , srcInfoPoints = []
+                                       }
+                                     "buf"))))
+                         (Var
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/BlockArguments.hs" 8 48 8 51
+                              , srcInfoPoints = []
+                              }
+                            (UnQual
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/BlockArguments.hs" 8 48 8 51
+                                 , srcInfoPoints = []
+                                 }
+                               (Ident
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/BlockArguments.hs" 8 48 8 51
+                                    , srcInfoPoints = []
+                                    }
+                                  "ptr"))))
+                      (Var
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/BlockArguments.hs" 8 52 8 56
+                           , srcInfoPoints = []
+                           }
+                         (UnQual
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/BlockArguments.hs" 8 52 8 56
+                              , srcInfoPoints = []
+                              }
+                            (Ident
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/BlockArguments.hs" 8 52 8 56
+                                 , srcInfoPoints = []
+                                 }
+                               "size")))))))
+          Nothing
+      , FunBind
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/BlockArguments.hs" 10 1 16 32
+            , srcInfoPoints = []
+            }
+          [ Match
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/BlockArguments.hs" 10 1 16 32
+                , srcInfoPoints = []
+                }
+              (Ident
+                 SrcSpanInfo
+                   { srcInfoSpan =
+                       SrcSpan "tests/examples/BlockArguments.hs" 10 1 10 4
+                   , srcInfoPoints = []
+                   }
+                 "baz")
+              [ PVar
+                  SrcSpanInfo
+                    { srcInfoSpan =
+                        SrcSpan "tests/examples/BlockArguments.hs" 10 5 10 9
+                    , srcInfoPoints = []
+                    }
+                  (Ident
+                     SrcSpanInfo
+                       { srcInfoSpan =
+                           SrcSpan "tests/examples/BlockArguments.hs" 10 5 10 9
+                       , srcInfoPoints = []
+                       }
+                     "arg1")
+              , PVar
+                  SrcSpanInfo
+                    { srcInfoSpan =
+                        SrcSpan "tests/examples/BlockArguments.hs" 10 10 10 14
+                    , srcInfoPoints = []
+                    }
+                  (Ident
+                     SrcSpanInfo
+                       { srcInfoSpan =
+                           SrcSpan "tests/examples/BlockArguments.hs" 10 10 10 14
+                       , srcInfoPoints = []
+                       }
+                     "arg2")
+              , PVar
+                  SrcSpanInfo
+                    { srcInfoSpan =
+                        SrcSpan "tests/examples/BlockArguments.hs" 10 15 10 19
+                    , srcInfoPoints = []
+                    }
+                  (Ident
+                     SrcSpanInfo
+                       { srcInfoSpan =
+                           SrcSpan "tests/examples/BlockArguments.hs" 10 15 10 19
+                       , srcInfoPoints = []
+                       }
+                     "arg3")
+              , PVar
+                  SrcSpanInfo
+                    { srcInfoSpan =
+                        SrcSpan "tests/examples/BlockArguments.hs" 10 20 10 24
+                    , srcInfoPoints = []
+                    }
+                  (Ident
+                     SrcSpanInfo
+                       { srcInfoSpan =
+                           SrcSpan "tests/examples/BlockArguments.hs" 10 20 10 24
+                       , srcInfoPoints = []
+                       }
+                     "arg4")
+              ]
+              (UnGuardedRhs
+                 SrcSpanInfo
+                   { srcInfoSpan =
+                       SrcSpan "tests/examples/BlockArguments.hs" 10 25 16 32
+                   , srcInfoPoints =
+                       [ SrcSpan "tests/examples/BlockArguments.hs" 10 25 10 26 ]
+                   }
+                 (InfixApp
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/BlockArguments.hs" 10 27 16 32
+                      , srcInfoPoints = []
+                      }
+                    (InfixApp
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/BlockArguments.hs" 10 27 11 29
+                         , srcInfoPoints = []
+                         }
+                       (Var
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/BlockArguments.hs" 10 27 10 39
+                            , srcInfoPoints = []
+                            }
+                          (UnQual
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/BlockArguments.hs" 10 27 10 39
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/BlockArguments.hs" 10 27 10 39
+                                  , srcInfoPoints = []
+                                  }
+                                "initialValue")))
+                       (QVarOp
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/BlockArguments.hs" 11 3 11 4
+                            , srcInfoPoints = []
+                            }
+                          (UnQual
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/BlockArguments.hs" 11 3 11 4
+                               , srcInfoPoints = []
+                               }
+                             (Symbol
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/BlockArguments.hs" 11 3 11 4
+                                  , srcInfoPoints = []
+                                  }
+                                "&")))
+                       (App
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/BlockArguments.hs" 11 7 11 29
+                            , srcInfoPoints = []
+                            }
+                          (App
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/BlockArguments.hs" 11 7 11 24
+                               , srcInfoPoints = []
+                               }
+                             (Var
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/BlockArguments.hs" 11 7 11 19
+                                  , srcInfoPoints = []
+                                  }
+                                (UnQual
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/BlockArguments.hs" 11 7 11 19
+                                     , srcInfoPoints = []
+                                     }
+                                   (Ident
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/BlockArguments.hs" 11 7 11 19
+                                        , srcInfoPoints = []
+                                        }
+                                      "someFunction")))
+                             (Var
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/BlockArguments.hs" 11 20 11 24
+                                  , srcInfoPoints = []
+                                  }
+                                (UnQual
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/BlockArguments.hs" 11 20 11 24
+                                     , srcInfoPoints = []
+                                     }
+                                   (Ident
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/BlockArguments.hs" 11 20 11 24
+                                        , srcInfoPoints = []
+                                        }
+                                      "arg1"))))
+                          (Var
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/BlockArguments.hs" 11 25 11 29
+                               , srcInfoPoints = []
+                               }
+                             (UnQual
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/BlockArguments.hs" 11 25 11 29
+                                  , srcInfoPoints = []
+                                  }
+                                (Ident
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/BlockArguments.hs" 11 25 11 29
+                                     , srcInfoPoints = []
+                                     }
+                                   "arg2")))))
+                    (QVarOp
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/BlockArguments.hs" 12 3 12 6
+                         , srcInfoPoints = []
+                         }
+                       (UnQual
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/BlockArguments.hs" 12 3 12 6
+                            , srcInfoPoints = []
+                            }
+                          (Symbol
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/BlockArguments.hs" 12 3 12 6
+                               , srcInfoPoints = []
+                               }
+                             ">>=")))
+                    (App
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/BlockArguments.hs" 12 7 16 32
+                         , srcInfoPoints = []
+                         }
+                       (Var
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/BlockArguments.hs" 12 7 12 15
+                            , srcInfoPoints = []
+                            }
+                          (UnQual
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/BlockArguments.hs" 12 7 12 15
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/BlockArguments.hs" 12 7 12 15
+                                  , srcInfoPoints = []
+                                  }
+                                "traverse")))
+                       (Lambda
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/BlockArguments.hs" 12 16 16 32
+                            , srcInfoPoints =
+                                [ SrcSpan "tests/examples/BlockArguments.hs" 12 16 12 17
+                                , SrcSpan "tests/examples/BlockArguments.hs" 12 24 12 26
+                                ]
+                            }
+                          [ PTuple
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/BlockArguments.hs" 12 17 12 23
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/BlockArguments.hs" 12 17 12 18
+                                    , SrcSpan "tests/examples/BlockArguments.hs" 12 19 12 20
+                                    , SrcSpan "tests/examples/BlockArguments.hs" 12 22 12 23
+                                    ]
+                                }
+                              Boxed
+                              [ PVar
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/BlockArguments.hs" 12 18 12 19
+                                    , srcInfoPoints = []
+                                    }
+                                  (Ident
+                                     SrcSpanInfo
+                                       { srcInfoSpan =
+                                           SrcSpan "tests/examples/BlockArguments.hs" 12 18 12 19
+                                       , srcInfoPoints = []
+                                       }
+                                     "x")
+                              , PVar
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/BlockArguments.hs" 12 21 12 22
+                                    , srcInfoPoints = []
+                                    }
+                                  (Ident
+                                     SrcSpanInfo
+                                       { srcInfoSpan =
+                                           SrcSpan "tests/examples/BlockArguments.hs" 12 21 12 22
+                                       , srcInfoPoints = []
+                                       }
+                                     "y")
+                              ]
+                          ]
+                          (InfixApp
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/BlockArguments.hs" 12 27 16 32
+                               , srcInfoPoints = []
+                               }
+                             (Do
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/BlockArguments.hs" 12 27 15 14
+                                  , srcInfoPoints =
+                                      [ SrcSpan "tests/examples/BlockArguments.hs" 12 27 12 29
+                                      , SrcSpan "tests/examples/BlockArguments.hs" 13 9 13 9
+                                      , SrcSpan "tests/examples/BlockArguments.hs" 14 9 14 9
+                                      , SrcSpan "tests/examples/BlockArguments.hs" 15 9 15 9
+                                      , SrcSpan "tests/examples/BlockArguments.hs" 16 3 16 0
+                                      ]
+                                  }
+                                [ Generator
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan "tests/examples/BlockArguments.hs" 13 9 13 17
+                                      , srcInfoPoints =
+                                          [ SrcSpan "tests/examples/BlockArguments.hs" 13 11 13 13 ]
+                                      }
+                                    (PVar
+                                       SrcSpanInfo
+                                         { srcInfoSpan =
+                                             SrcSpan "tests/examples/BlockArguments.hs" 13 9 13 10
+                                         , srcInfoPoints = []
+                                         }
+                                       (Ident
+                                          SrcSpanInfo
+                                            { srcInfoSpan =
+                                                SrcSpan
+                                                  "tests/examples/BlockArguments.hs" 13 9 13 10
+                                            , srcInfoPoints = []
+                                            }
+                                          "a"))
+                                    (App
+                                       SrcSpanInfo
+                                         { srcInfoSpan =
+                                             SrcSpan "tests/examples/BlockArguments.hs" 13 14 13 17
+                                         , srcInfoPoints = []
+                                         }
+                                       (Var
+                                          SrcSpanInfo
+                                            { srcInfoSpan =
+                                                SrcSpan
+                                                  "tests/examples/BlockArguments.hs" 13 14 13 15
+                                            , srcInfoPoints = []
+                                            }
+                                          (UnQual
+                                             SrcSpanInfo
+                                               { srcInfoSpan =
+                                                   SrcSpan
+                                                     "tests/examples/BlockArguments.hs" 13 14 13 15
+                                               , srcInfoPoints = []
+                                               }
+                                             (Ident
+                                                SrcSpanInfo
+                                                  { srcInfoSpan =
+                                                      SrcSpan
+                                                        "tests/examples/BlockArguments.hs"
+                                                        13
+                                                        14
+                                                        13
+                                                        15
+                                                  , srcInfoPoints = []
+                                                  }
+                                                "f")))
+                                       (Var
+                                          SrcSpanInfo
+                                            { srcInfoSpan =
+                                                SrcSpan
+                                                  "tests/examples/BlockArguments.hs" 13 16 13 17
+                                            , srcInfoPoints = []
+                                            }
+                                          (UnQual
+                                             SrcSpanInfo
+                                               { srcInfoSpan =
+                                                   SrcSpan
+                                                     "tests/examples/BlockArguments.hs" 13 16 13 17
+                                               , srcInfoPoints = []
+                                               }
+                                             (Ident
+                                                SrcSpanInfo
+                                                  { srcInfoSpan =
+                                                      SrcSpan
+                                                        "tests/examples/BlockArguments.hs"
+                                                        13
+                                                        16
+                                                        13
+                                                        17
+                                                  , srcInfoPoints = []
+                                                  }
+                                                "x"))))
+                                , Generator
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan "tests/examples/BlockArguments.hs" 14 9 14 17
+                                      , srcInfoPoints =
+                                          [ SrcSpan "tests/examples/BlockArguments.hs" 14 11 14 13 ]
+                                      }
+                                    (PVar
+                                       SrcSpanInfo
+                                         { srcInfoSpan =
+                                             SrcSpan "tests/examples/BlockArguments.hs" 14 9 14 10
+                                         , srcInfoPoints = []
+                                         }
+                                       (Ident
+                                          SrcSpanInfo
+                                            { srcInfoSpan =
+                                                SrcSpan
+                                                  "tests/examples/BlockArguments.hs" 14 9 14 10
+                                            , srcInfoPoints = []
+                                            }
+                                          "b"))
+                                    (App
+                                       SrcSpanInfo
+                                         { srcInfoSpan =
+                                             SrcSpan "tests/examples/BlockArguments.hs" 14 14 14 17
+                                         , srcInfoPoints = []
+                                         }
+                                       (Var
+                                          SrcSpanInfo
+                                            { srcInfoSpan =
+                                                SrcSpan
+                                                  "tests/examples/BlockArguments.hs" 14 14 14 15
+                                            , srcInfoPoints = []
+                                            }
+                                          (UnQual
+                                             SrcSpanInfo
+                                               { srcInfoSpan =
+                                                   SrcSpan
+                                                     "tests/examples/BlockArguments.hs" 14 14 14 15
+                                               , srcInfoPoints = []
+                                               }
+                                             (Ident
+                                                SrcSpanInfo
+                                                  { srcInfoSpan =
+                                                      SrcSpan
+                                                        "tests/examples/BlockArguments.hs"
+                                                        14
+                                                        14
+                                                        14
+                                                        15
+                                                  , srcInfoPoints = []
+                                                  }
+                                                "g")))
+                                       (Var
+                                          SrcSpanInfo
+                                            { srcInfoSpan =
+                                                SrcSpan
+                                                  "tests/examples/BlockArguments.hs" 14 16 14 17
+                                            , srcInfoPoints = []
+                                            }
+                                          (UnQual
+                                             SrcSpanInfo
+                                               { srcInfoSpan =
+                                                   SrcSpan
+                                                     "tests/examples/BlockArguments.hs" 14 16 14 17
+                                               , srcInfoPoints = []
+                                               }
+                                             (Ident
+                                                SrcSpanInfo
+                                                  { srcInfoSpan =
+                                                      SrcSpan
+                                                        "tests/examples/BlockArguments.hs"
+                                                        14
+                                                        16
+                                                        14
+                                                        17
+                                                  , srcInfoPoints = []
+                                                  }
+                                                "y"))))
+                                , Qualifier
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan "tests/examples/BlockArguments.hs" 15 9 15 14
+                                      , srcInfoPoints = []
+                                      }
+                                    (App
+                                       SrcSpanInfo
+                                         { srcInfoSpan =
+                                             SrcSpan "tests/examples/BlockArguments.hs" 15 9 15 14
+                                         , srcInfoPoints = []
+                                         }
+                                       (App
+                                          SrcSpanInfo
+                                            { srcInfoSpan =
+                                                SrcSpan
+                                                  "tests/examples/BlockArguments.hs" 15 9 15 12
+                                            , srcInfoPoints = []
+                                            }
+                                          (Var
+                                             SrcSpanInfo
+                                               { srcInfoSpan =
+                                                   SrcSpan
+                                                     "tests/examples/BlockArguments.hs" 15 9 15 10
+                                               , srcInfoPoints = []
+                                               }
+                                             (UnQual
+                                                SrcSpanInfo
+                                                  { srcInfoSpan =
+                                                      SrcSpan
+                                                        "tests/examples/BlockArguments.hs"
+                                                        15
+                                                        9
+                                                        15
+                                                        10
+                                                  , srcInfoPoints = []
+                                                  }
+                                                (Ident
+                                                   SrcSpanInfo
+                                                     { srcInfoSpan =
+                                                         SrcSpan
+                                                           "tests/examples/BlockArguments.hs"
+                                                           15
+                                                           9
+                                                           15
+                                                           10
+                                                     , srcInfoPoints = []
+                                                     }
+                                                   "h")))
+                                          (Var
+                                             SrcSpanInfo
+                                               { srcInfoSpan =
+                                                   SrcSpan
+                                                     "tests/examples/BlockArguments.hs" 15 11 15 12
+                                               , srcInfoPoints = []
+                                               }
+                                             (UnQual
+                                                SrcSpanInfo
+                                                  { srcInfoSpan =
+                                                      SrcSpan
+                                                        "tests/examples/BlockArguments.hs"
+                                                        15
+                                                        11
+                                                        15
+                                                        12
+                                                  , srcInfoPoints = []
+                                                  }
+                                                (Ident
+                                                   SrcSpanInfo
+                                                     { srcInfoSpan =
+                                                         SrcSpan
+                                                           "tests/examples/BlockArguments.hs"
+                                                           15
+                                                           11
+                                                           15
+                                                           12
+                                                     , srcInfoPoints = []
+                                                     }
+                                                   "a"))))
+                                       (Var
+                                          SrcSpanInfo
+                                            { srcInfoSpan =
+                                                SrcSpan
+                                                  "tests/examples/BlockArguments.hs" 15 13 15 14
+                                            , srcInfoPoints = []
+                                            }
+                                          (UnQual
+                                             SrcSpanInfo
+                                               { srcInfoSpan =
+                                                   SrcSpan
+                                                     "tests/examples/BlockArguments.hs" 15 13 15 14
+                                               , srcInfoPoints = []
+                                               }
+                                             (Ident
+                                                SrcSpanInfo
+                                                  { srcInfoSpan =
+                                                      SrcSpan
+                                                        "tests/examples/BlockArguments.hs"
+                                                        15
+                                                        13
+                                                        15
+                                                        14
+                                                  , srcInfoPoints = []
+                                                  }
+                                                "b"))))
+                                ])
+                             (QVarOp
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/BlockArguments.hs" 16 3 16 6
+                                  , srcInfoPoints = []
+                                  }
+                                (UnQual
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/BlockArguments.hs" 16 3 16 6
+                                     , srcInfoPoints = []
+                                     }
+                                   (Symbol
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/BlockArguments.hs" 16 3 16 6
+                                        , srcInfoPoints = []
+                                        }
+                                      ">>=")))
+                             (App
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/BlockArguments.hs" 16 7 16 32
+                                  , srcInfoPoints = []
+                                  }
+                                (App
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/BlockArguments.hs" 16 7 16 27
+                                     , srcInfoPoints = []
+                                     }
+                                   (Var
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/BlockArguments.hs" 16 7 16 22
+                                        , srcInfoPoints = []
+                                        }
+                                      (UnQual
+                                         SrcSpanInfo
+                                           { srcInfoSpan =
+                                               SrcSpan "tests/examples/BlockArguments.hs" 16 7 16 22
+                                           , srcInfoPoints = []
+                                           }
+                                         (Ident
+                                            SrcSpanInfo
+                                              { srcInfoSpan =
+                                                  SrcSpan
+                                                    "tests/examples/BlockArguments.hs" 16 7 16 22
+                                              , srcInfoPoints = []
+                                              }
+                                            "anotherFunction")))
+                                   (Var
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/BlockArguments.hs" 16 23 16 27
+                                        , srcInfoPoints = []
+                                        }
+                                      (UnQual
+                                         SrcSpanInfo
+                                           { srcInfoSpan =
+                                               SrcSpan
+                                                 "tests/examples/BlockArguments.hs" 16 23 16 27
+                                           , srcInfoPoints = []
+                                           }
+                                         (Ident
+                                            SrcSpanInfo
+                                              { srcInfoSpan =
+                                                  SrcSpan
+                                                    "tests/examples/BlockArguments.hs" 16 23 16 27
+                                              , srcInfoPoints = []
+                                              }
+                                            "arg3"))))
+                                (Var
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/BlockArguments.hs" 16 28 16 32
+                                     , srcInfoPoints = []
+                                     }
+                                   (UnQual
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/BlockArguments.hs" 16 28 16 32
+                                        , srcInfoPoints = []
+                                        }
+                                      (Ident
+                                         SrcSpanInfo
+                                           { srcInfoSpan =
+                                               SrcSpan
+                                                 "tests/examples/BlockArguments.hs" 16 28 16 32
+                                           , srcInfoPoints = []
+                                           }
+                                         "arg4")))))))))
+              Nothing
+          ]
+      ]
+  , []
+  )

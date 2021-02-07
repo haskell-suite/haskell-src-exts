@@ -99,15 +99,21 @@ data Token
         | RightArrowTail        -- >-
         | LeftDblArrowTail      -- -<<
         | RightDblArrowTail     -- >>-
+        | OpenArrowBracket      -- (|
+        | CloseArrowBracket     -- |)
 
 -- Template Haskell
         | THExpQuote            -- [| or [e|
+        | THTExpQuote           -- [|| or [e||
         | THPatQuote            -- [p|
         | THDecQuote            -- [d|
         | THTypQuote            -- [t|
         | THCloseQuote          -- |]
+        | THTCloseQuote         -- ||]
         | THIdEscape (String)   -- dollar x
         | THParenEscape         -- dollar (
+        | THTIdEscape String    -- dollar dollar x
+        | THTParenEscape        -- double dollar (
         | THVarQuote            -- 'x (but without the x)
         | THTyQuote             -- ''T (but without the T)
         | THQuasiQuote (String,String)  -- [$...|...]
@@ -364,6 +370,10 @@ isIdent   c = isAlphaNum c || c == '\'' || c == '_'
 isHSymbol c = c `elem` ":!#%&*./?@\\-" || ((isSymbol c || isPunctuation c) && not (c `elem` "(),;[]`{}_\"'"))
 
 isPragmaChar c = isAlphaNum c || c == '_'
+
+isIdentStart :: Char -> Bool
+isIdentStart c = isAlpha c && not (isUpper c) || c == '_'
+
 
 -- Used in the lexing of type applications
 -- Why is it like this? I don't know exactly but this is how it is in
@@ -665,31 +675,39 @@ lexStdToken = do
                         return (con (n, '0':c:str))
 
         -- implicit parameters
-        '?':c:_ | isLower c && ImplicitParams `elem` exts -> do
+        '?':c:_ | isIdentStart c && ImplicitParams `elem` exts -> do
                         discard 1
                         id <- lexWhile isIdent
                         return $ IDupVarId id
 
-        '%':c:_ | isLower c && ImplicitParams `elem` exts -> do
+        '%':c:_ | isIdentStart c && ImplicitParams `elem` exts -> do
                         discard 1
                         id <- lexWhile isIdent
                         return $ ILinVarId id
         -- end implicit parameters
 
         -- harp
---        '(':'|':c:_  | isHSymbol c -> discard 1 >> return LeftParen
         '(':'|':c:_ | RegularPatterns `elem` exts && not (isHSymbol c) ->
-                     do discard 2
-                        return RPGuardOpen
-        '|':')':_ | RegularPatterns `elem` exts ->
-                     do discard 2
-                        return RPGuardClose
+                        discard 2 >> return RPGuardOpen
+                    | Arrows `elem` exts && not (isHSymbol c) ->
+                        discard 2 >> return OpenArrowBracket
+        '|':')':_ | RegularPatterns `elem` exts -> discard 2 >> return RPGuardClose
+                  | Arrows `elem` exts -> discard 2 >> return CloseArrowBracket
         {- This is handled by the reserved_ops above.
         '@':':':_ | RegularPatterns `elem` exts ->
                      do discard 2
                         return RPCAt -}
 
+
         -- template haskell
+        '[':'|':'|':_ | TemplateHaskell `elem` exts -> do
+                discard 3
+                return THTExpQuote
+
+        '[':'e':'|':'|':_ | TemplateHaskell `elem` exts -> do
+                discard 4
+                return THTExpQuote
+
         '[':'|':_ | TemplateHaskell `elem` exts -> do
                 discard 2
                 return THExpQuote
@@ -706,25 +724,35 @@ lexStdToken = do
                     | c == 't' && TemplateHaskell `elem` exts -> do
                         discard 3
                         return THTypQuote
-        '[':'$':c:_ | isLower c && QuasiQuotes `elem` exts ->
+        '[':'$':c:_ | isIdentStart c && QuasiQuotes `elem` exts ->
                         discard 2 >> lexQuasiQuote c
 
-        '[':c:s' | isLower c && QuasiQuotes `elem` exts && case dropWhile isIdent s' of { '|':_ -> True;_->False} ->
+        '[':c:s' | isIdentStart c && QuasiQuotes `elem` exts && case dropWhile isIdent s' of { '|':_ -> True;_->False} ->
                         discard 1 >> lexQuasiQuote c
                  | isUpper c && QuasiQuotes `elem` exts && case dropWhile isPossiblyQvar s' of { '|':_ -> True;_->False} ->
                         discard 1 >> lexQuasiQuote c
 
+        '|':'|':']':_ | TemplateHaskell `elem` exts -> do
+                        discard 3
+                        return THTCloseQuote
         '|':']':_ | TemplateHaskell `elem` exts -> do
                         discard 2
                         return THCloseQuote
 
-        '$':c:_ | isLower c && TemplateHaskell `elem` exts -> do
+        '$':c1:c2:_ | isIdentStart c1 && TemplateHaskell `elem` exts -> do
                         discard 1
                         id <- lexWhile isIdent
                         return $ THIdEscape id
-                | c == '(' && TemplateHaskell `elem` exts -> do
+                    | c1 == '(' && TemplateHaskell `elem` exts -> do
                         discard 2
                         return THParenEscape
+                    | c1 == '$' && isIdentStart c2 && TemplateHaskell `elem` exts -> do
+                        discard 2
+                        id <- lexWhile isIdent
+                        return $ THTIdEscape id
+                    | c1 == '$' && c2 == '(' && TemplateHaskell `elem` exts -> do
+                        discard 3
+                        return THTParenEscape
         -- end template haskell
 
         -- hsx
@@ -769,7 +797,7 @@ lexStdToken = do
                                                   else discard 1 >> return TApp
 
         '#':c:_ | OverloadedLabels `elem` exts
-                   && isLower c || c == '_' -> do
+                   && isIdentStart c -> do
                                                   discard 1
                                                   [ident] <- lexIdents
                                                   return $ LabelVarId ident
@@ -779,7 +807,7 @@ lexStdToken = do
 
             | isUpper c -> lexConIdOrQual ""
 
-            | isLower c || c == '_' -> do
+            | isIdentStart c -> do
                     idents <- lexIdents
                     case idents of
                      [ident] -> case lookup ident (reserved_ids ++ special_varids) of
@@ -854,7 +882,7 @@ lexStdToken = do
                 body <- lexQQBody
                 return $ THQuasiQuote (ident, body)
                   where lexQuoter
-                         | isLower c = lexWhile isIdent
+                         | isIdentStart c = lexWhile isIdent
                          | otherwise = do
                             qualThing <- lexConIdOrQual ""
                             case qualThing of
@@ -1051,7 +1079,7 @@ lexConIdOrQual qual = do
         exts <- getExtensionsL
         case rest of
           '.':c:_
-             | isLower c || c == '_' -> do  -- qualified varid?
+             | isIdentStart c -> do  -- qualified varid?
                     discard 1
                     ident <- lexWhile isIdent
                     s <- getInput
@@ -1348,13 +1376,19 @@ showToken t = case t of
   RightArrowTail    -> ">-"
   LeftDblArrowTail  -> "-<<"
   RightDblArrowTail -> ">>-"
+  OpenArrowBracket  -> "(|"
+  CloseArrowBracket -> "|)"
   THExpQuote        -> "[|"
+  THTExpQuote       -> "[||"
   THPatQuote        -> "[p|"
   THDecQuote        -> "[d|"
   THTypQuote        -> "[t|"
   THCloseQuote      -> "|]"
+  THTCloseQuote     -> "||]"
   THIdEscape s      -> '$':s
   THParenEscape     -> "$("
+  THTIdEscape s     -> "$$" ++ s
+  THTParenEscape    -> "$$("
   THVarQuote        -> "'"
   THTyQuote         -> "''"
   THQuasiQuote (n,q) -> "[$" ++ n ++ "|" ++ q ++ "]"

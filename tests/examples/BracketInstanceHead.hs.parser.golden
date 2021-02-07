@@ -51,40 +51,53 @@ ParseOk
                         , srcInfoPoints =
                             [ SrcSpan "tests/examples/BracketInstanceHead.hs" 1 21 1 23 ]
                         }
-                      (ClassA
+                      (TypeA
                          SrcSpanInfo
                            { srcInfoSpan =
                                SrcSpan "tests/examples/BracketInstanceHead.hs" 1 11 1 23
                            , srcInfoPoints =
                                [ SrcSpan "tests/examples/BracketInstanceHead.hs" 1 21 1 23 ]
                            }
-                         (UnQual
+                         (TyApp
                             SrcSpanInfo
                               { srcInfoSpan =
-                                  SrcSpan "tests/examples/BracketInstanceHead.hs" 1 11 1 18
-                              , srcInfoPoints = []
+                                  SrcSpan "tests/examples/BracketInstanceHead.hs" 1 11 1 23
+                              , srcInfoPoints =
+                                  [ SrcSpan "tests/examples/BracketInstanceHead.hs" 1 21 1 23 ]
                               }
-                            (Ident
+                            (TyCon
                                SrcSpanInfo
                                  { srcInfoSpan =
-                                     SrcSpan "tests/examples/BracketInstanceHead.hs" 1 11 1 18
+                                     SrcSpan "tests/examples/BracketInstanceHead.hs" 1 11 1 23
+                                 , srcInfoPoints =
+                                     [ SrcSpan "tests/examples/BracketInstanceHead.hs" 1 21 1 23 ]
+                                 }
+                               (UnQual
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/BracketInstanceHead.hs" 1 11 1 18
+                                    , srcInfoPoints = []
+                                    }
+                                  (Ident
+                                     SrcSpanInfo
+                                       { srcInfoSpan =
+                                           SrcSpan "tests/examples/BracketInstanceHead.hs" 1 11 1 18
+                                       , srcInfoPoints = []
+                                       }
+                                     "Bounded")))
+                            (TyVar
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/BracketInstanceHead.hs" 1 19 1 20
                                  , srcInfoPoints = []
                                  }
-                               "Bounded"))
-                         [ TyVar
-                             SrcSpanInfo
-                               { srcInfoSpan =
-                                   SrcSpan "tests/examples/BracketInstanceHead.hs" 1 19 1 20
-                               , srcInfoPoints = []
-                               }
-                             (Ident
-                                SrcSpanInfo
-                                  { srcInfoSpan =
-                                      SrcSpan "tests/examples/BracketInstanceHead.hs" 1 19 1 20
-                                  , srcInfoPoints = []
-                                  }
-                                "a")
-                         ])))
+                               (Ident
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/BracketInstanceHead.hs" 1 19 1 20
+                                    , srcInfoPoints = []
+                                    }
+                                  "a"))))))
                 (IHApp
                    SrcSpanInfo
                      { srcInfoSpan =

@@ -1,0 +1,8 @@
+{-# LANGUAGE TemplateHaskell #-}
+
+module Language.Haskell.TH.Defs where
+
+import Language.Haskell.TH
+
+justTH :: Q (TExp (Int -> Maybe Int))
+justTH = [|| Just ||]

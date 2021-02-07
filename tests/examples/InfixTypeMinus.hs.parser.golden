@@ -186,88 +186,98 @@ ParseOk
                                 , SrcSpan "tests/examples/InfixTypeMinus.hs" 5 50 5 52
                                 ]
                             }
-                          (EqualP
+                          (TypeA
                              SrcSpanInfo
                                { srcInfoSpan =
                                    SrcSpan "tests/examples/InfixTypeMinus.hs" 5 39 5 48
                                , srcInfoPoints =
                                    [ SrcSpan "tests/examples/InfixTypeMinus.hs" 5 41 5 42 ]
                                }
-                             (TyVar
+                             (TyEquals
                                 SrcSpanInfo
                                   { srcInfoSpan =
-                                      SrcSpan "tests/examples/InfixTypeMinus.hs" 5 39 5 40
-                                  , srcInfoPoints = []
+                                      SrcSpan "tests/examples/InfixTypeMinus.hs" 5 39 5 48
+                                  , srcInfoPoints =
+                                      [ SrcSpan "tests/examples/InfixTypeMinus.hs" 5 41 5 42 ]
                                   }
-                                (Ident
+                                (TyVar
                                    SrcSpanInfo
                                      { srcInfoSpan =
                                          SrcSpan "tests/examples/InfixTypeMinus.hs" 5 39 5 40
                                      , srcInfoPoints = []
                                      }
-                                   "m"))
-                             (TyParen
-                                SrcSpanInfo
-                                  { srcInfoSpan =
-                                      SrcSpan "tests/examples/InfixTypeMinus.hs" 5 43 5 48
-                                  , srcInfoPoints =
-                                      [ SrcSpan "tests/examples/InfixTypeMinus.hs" 5 43 5 44
-                                      , SrcSpan "tests/examples/InfixTypeMinus.hs" 5 47 5 48
-                                      ]
-                                  }
-                                (TyInfix
-                                   SrcSpanInfo
-                                     { srcInfoSpan =
-                                         SrcSpan "tests/examples/InfixTypeMinus.hs" 5 44 5 47
-                                     , srcInfoPoints = []
-                                     }
-                                   (TyVar
+                                   (Ident
                                       SrcSpanInfo
                                         { srcInfoSpan =
-                                            SrcSpan "tests/examples/InfixTypeMinus.hs" 5 44 5 45
+                                            SrcSpan "tests/examples/InfixTypeMinus.hs" 5 39 5 40
                                         , srcInfoPoints = []
                                         }
-                                      (Ident
+                                      "m"))
+                                (TyParen
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/InfixTypeMinus.hs" 5 43 5 48
+                                     , srcInfoPoints =
+                                         [ SrcSpan "tests/examples/InfixTypeMinus.hs" 5 43 5 44
+                                         , SrcSpan "tests/examples/InfixTypeMinus.hs" 5 47 5 48
+                                         ]
+                                     }
+                                   (TyInfix
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/InfixTypeMinus.hs" 5 44 5 47
+                                        , srcInfoPoints = []
+                                        }
+                                      (TyVar
                                          SrcSpanInfo
                                            { srcInfoSpan =
                                                SrcSpan "tests/examples/InfixTypeMinus.hs" 5 44 5 45
                                            , srcInfoPoints = []
                                            }
-                                         "n"))
-                                   (UnpromotedName
-                                      SrcSpanInfo
-                                        { srcInfoSpan =
-                                            SrcSpan "tests/examples/InfixTypeMinus.hs" 5 45 5 46
-                                        , srcInfoPoints = []
-                                        }
-                                      (UnQual
+                                         (Ident
+                                            SrcSpanInfo
+                                              { srcInfoSpan =
+                                                  SrcSpan
+                                                    "tests/examples/InfixTypeMinus.hs" 5 44 5 45
+                                              , srcInfoPoints = []
+                                              }
+                                            "n"))
+                                      (UnpromotedName
                                          SrcSpanInfo
                                            { srcInfoSpan =
                                                SrcSpan "tests/examples/InfixTypeMinus.hs" 5 45 5 46
                                            , srcInfoPoints = []
                                            }
-                                         (Symbol
+                                         (UnQual
                                             SrcSpanInfo
                                               { srcInfoSpan =
                                                   SrcSpan
                                                     "tests/examples/InfixTypeMinus.hs" 5 45 5 46
                                               , srcInfoPoints = []
                                               }
-                                            "-")))
-                                   (TyPromoted
-                                      SrcSpanInfo
-                                        { srcInfoSpan =
-                                            SrcSpan "tests/examples/InfixTypeMinus.hs" 5 46 5 47
-                                        , srcInfoPoints = []
-                                        }
-                                      (PromotedInteger
+                                            (Symbol
+                                               SrcSpanInfo
+                                                 { srcInfoSpan =
+                                                     SrcSpan
+                                                       "tests/examples/InfixTypeMinus.hs" 5 45 5 46
+                                                 , srcInfoPoints = []
+                                                 }
+                                               "-")))
+                                      (TyPromoted
                                          SrcSpanInfo
                                            { srcInfoSpan =
                                                SrcSpan "tests/examples/InfixTypeMinus.hs" 5 46 5 47
                                            , srcInfoPoints = []
                                            }
-                                         1
-                                         "1"))))))))
+                                         (PromotedInteger
+                                            SrcSpanInfo
+                                              { srcInfoSpan =
+                                                  SrcSpan
+                                                    "tests/examples/InfixTypeMinus.hs" 5 46 5 47
+                                              , srcInfoPoints = []
+                                              }
+                                            1
+                                            "1")))))))))
                  (TyFun
                     SrcSpanInfo
                       { srcInfoSpan =
@@ -492,88 +502,98 @@ ParseOk
                                 , SrcSpan "tests/examples/InfixTypeMinus.hs" 6 50 6 52
                                 ]
                             }
-                          (EqualP
+                          (TypeA
                              SrcSpanInfo
                                { srcInfoSpan =
                                    SrcSpan "tests/examples/InfixTypeMinus.hs" 6 39 6 48
                                , srcInfoPoints =
                                    [ SrcSpan "tests/examples/InfixTypeMinus.hs" 6 45 6 46 ]
                                }
-                             (TyParen
+                             (TyEquals
                                 SrcSpanInfo
                                   { srcInfoSpan =
-                                      SrcSpan "tests/examples/InfixTypeMinus.hs" 6 39 6 44
+                                      SrcSpan "tests/examples/InfixTypeMinus.hs" 6 39 6 48
                                   , srcInfoPoints =
-                                      [ SrcSpan "tests/examples/InfixTypeMinus.hs" 6 39 6 40
-                                      , SrcSpan "tests/examples/InfixTypeMinus.hs" 6 43 6 44
-                                      ]
+                                      [ SrcSpan "tests/examples/InfixTypeMinus.hs" 6 45 6 46 ]
                                   }
-                                (TyInfix
+                                (TyParen
                                    SrcSpanInfo
                                      { srcInfoSpan =
-                                         SrcSpan "tests/examples/InfixTypeMinus.hs" 6 40 6 43
-                                     , srcInfoPoints = []
+                                         SrcSpan "tests/examples/InfixTypeMinus.hs" 6 39 6 44
+                                     , srcInfoPoints =
+                                         [ SrcSpan "tests/examples/InfixTypeMinus.hs" 6 39 6 40
+                                         , SrcSpan "tests/examples/InfixTypeMinus.hs" 6 43 6 44
+                                         ]
                                      }
-                                   (TyVar
+                                   (TyInfix
                                       SrcSpanInfo
                                         { srcInfoSpan =
-                                            SrcSpan "tests/examples/InfixTypeMinus.hs" 6 40 6 41
+                                            SrcSpan "tests/examples/InfixTypeMinus.hs" 6 40 6 43
                                         , srcInfoPoints = []
                                         }
-                                      (Ident
+                                      (TyVar
                                          SrcSpanInfo
                                            { srcInfoSpan =
                                                SrcSpan "tests/examples/InfixTypeMinus.hs" 6 40 6 41
                                            , srcInfoPoints = []
                                            }
-                                         "n"))
-                                   (UnpromotedName
-                                      SrcSpanInfo
-                                        { srcInfoSpan =
-                                            SrcSpan "tests/examples/InfixTypeMinus.hs" 6 41 6 42
-                                        , srcInfoPoints = []
-                                        }
-                                      (UnQual
+                                         (Ident
+                                            SrcSpanInfo
+                                              { srcInfoSpan =
+                                                  SrcSpan
+                                                    "tests/examples/InfixTypeMinus.hs" 6 40 6 41
+                                              , srcInfoPoints = []
+                                              }
+                                            "n"))
+                                      (UnpromotedName
                                          SrcSpanInfo
                                            { srcInfoSpan =
                                                SrcSpan "tests/examples/InfixTypeMinus.hs" 6 41 6 42
                                            , srcInfoPoints = []
                                            }
-                                         (Symbol
+                                         (UnQual
                                             SrcSpanInfo
                                               { srcInfoSpan =
                                                   SrcSpan
                                                     "tests/examples/InfixTypeMinus.hs" 6 41 6 42
                                               , srcInfoPoints = []
                                               }
-                                            "-")))
-                                   (TyPromoted
-                                      SrcSpanInfo
-                                        { srcInfoSpan =
-                                            SrcSpan "tests/examples/InfixTypeMinus.hs" 6 42 6 43
-                                        , srcInfoPoints = []
-                                        }
-                                      (PromotedInteger
+                                            (Symbol
+                                               SrcSpanInfo
+                                                 { srcInfoSpan =
+                                                     SrcSpan
+                                                       "tests/examples/InfixTypeMinus.hs" 6 41 6 42
+                                                 , srcInfoPoints = []
+                                                 }
+                                               "-")))
+                                      (TyPromoted
                                          SrcSpanInfo
                                            { srcInfoSpan =
                                                SrcSpan "tests/examples/InfixTypeMinus.hs" 6 42 6 43
                                            , srcInfoPoints = []
                                            }
-                                         1
-                                         "1"))))
-                             (TyVar
-                                SrcSpanInfo
-                                  { srcInfoSpan =
-                                      SrcSpan "tests/examples/InfixTypeMinus.hs" 6 47 6 48
-                                  , srcInfoPoints = []
-                                  }
-                                (Ident
+                                         (PromotedInteger
+                                            SrcSpanInfo
+                                              { srcInfoSpan =
+                                                  SrcSpan
+                                                    "tests/examples/InfixTypeMinus.hs" 6 42 6 43
+                                              , srcInfoPoints = []
+                                              }
+                                            1
+                                            "1"))))
+                                (TyVar
                                    SrcSpanInfo
                                      { srcInfoSpan =
                                          SrcSpan "tests/examples/InfixTypeMinus.hs" 6 47 6 48
                                      , srcInfoPoints = []
                                      }
-                                   "m"))))))
+                                   (Ident
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/InfixTypeMinus.hs" 6 47 6 48
+                                        , srcInfoPoints = []
+                                        }
+                                      "m")))))))
                  (TyFun
                     SrcSpanInfo
                       { srcInfoSpan =
@@ -798,88 +818,98 @@ ParseOk
                                 , SrcSpan "tests/examples/InfixTypeMinus.hs" 7 50 7 52
                                 ]
                             }
-                          (EqualP
+                          (TypeA
                              SrcSpanInfo
                                { srcInfoSpan =
                                    SrcSpan "tests/examples/InfixTypeMinus.hs" 7 39 7 48
                                , srcInfoPoints =
                                    [ SrcSpan "tests/examples/InfixTypeMinus.hs" 7 45 7 46 ]
                                }
-                             (TyParen
+                             (TyEquals
                                 SrcSpanInfo
                                   { srcInfoSpan =
-                                      SrcSpan "tests/examples/InfixTypeMinus.hs" 7 39 7 44
+                                      SrcSpan "tests/examples/InfixTypeMinus.hs" 7 39 7 48
                                   , srcInfoPoints =
-                                      [ SrcSpan "tests/examples/InfixTypeMinus.hs" 7 39 7 40
-                                      , SrcSpan "tests/examples/InfixTypeMinus.hs" 7 43 7 44
-                                      ]
+                                      [ SrcSpan "tests/examples/InfixTypeMinus.hs" 7 45 7 46 ]
                                   }
-                                (TyInfix
+                                (TyParen
                                    SrcSpanInfo
                                      { srcInfoSpan =
-                                         SrcSpan "tests/examples/InfixTypeMinus.hs" 7 40 7 43
-                                     , srcInfoPoints = []
+                                         SrcSpan "tests/examples/InfixTypeMinus.hs" 7 39 7 44
+                                     , srcInfoPoints =
+                                         [ SrcSpan "tests/examples/InfixTypeMinus.hs" 7 39 7 40
+                                         , SrcSpan "tests/examples/InfixTypeMinus.hs" 7 43 7 44
+                                         ]
                                      }
-                                   (TyVar
+                                   (TyInfix
                                       SrcSpanInfo
                                         { srcInfoSpan =
-                                            SrcSpan "tests/examples/InfixTypeMinus.hs" 7 40 7 41
+                                            SrcSpan "tests/examples/InfixTypeMinus.hs" 7 40 7 43
                                         , srcInfoPoints = []
                                         }
-                                      (Ident
+                                      (TyVar
                                          SrcSpanInfo
                                            { srcInfoSpan =
                                                SrcSpan "tests/examples/InfixTypeMinus.hs" 7 40 7 41
                                            , srcInfoPoints = []
                                            }
-                                         "m"))
-                                   (UnpromotedName
-                                      SrcSpanInfo
-                                        { srcInfoSpan =
-                                            SrcSpan "tests/examples/InfixTypeMinus.hs" 7 41 7 42
-                                        , srcInfoPoints = []
-                                        }
-                                      (UnQual
+                                         (Ident
+                                            SrcSpanInfo
+                                              { srcInfoSpan =
+                                                  SrcSpan
+                                                    "tests/examples/InfixTypeMinus.hs" 7 40 7 41
+                                              , srcInfoPoints = []
+                                              }
+                                            "m"))
+                                      (UnpromotedName
                                          SrcSpanInfo
                                            { srcInfoSpan =
                                                SrcSpan "tests/examples/InfixTypeMinus.hs" 7 41 7 42
                                            , srcInfoPoints = []
                                            }
-                                         (Symbol
+                                         (UnQual
                                             SrcSpanInfo
                                               { srcInfoSpan =
                                                   SrcSpan
                                                     "tests/examples/InfixTypeMinus.hs" 7 41 7 42
                                               , srcInfoPoints = []
                                               }
-                                            "+")))
-                                   (TyPromoted
-                                      SrcSpanInfo
-                                        { srcInfoSpan =
-                                            SrcSpan "tests/examples/InfixTypeMinus.hs" 7 42 7 43
-                                        , srcInfoPoints = []
-                                        }
-                                      (PromotedInteger
+                                            (Symbol
+                                               SrcSpanInfo
+                                                 { srcInfoSpan =
+                                                     SrcSpan
+                                                       "tests/examples/InfixTypeMinus.hs" 7 41 7 42
+                                                 , srcInfoPoints = []
+                                                 }
+                                               "+")))
+                                      (TyPromoted
                                          SrcSpanInfo
                                            { srcInfoSpan =
                                                SrcSpan "tests/examples/InfixTypeMinus.hs" 7 42 7 43
                                            , srcInfoPoints = []
                                            }
-                                         1
-                                         "1"))))
-                             (TyVar
-                                SrcSpanInfo
-                                  { srcInfoSpan =
-                                      SrcSpan "tests/examples/InfixTypeMinus.hs" 7 47 7 48
-                                  , srcInfoPoints = []
-                                  }
-                                (Ident
+                                         (PromotedInteger
+                                            SrcSpanInfo
+                                              { srcInfoSpan =
+                                                  SrcSpan
+                                                    "tests/examples/InfixTypeMinus.hs" 7 42 7 43
+                                              , srcInfoPoints = []
+                                              }
+                                            1
+                                            "1"))))
+                                (TyVar
                                    SrcSpanInfo
                                      { srcInfoSpan =
                                          SrcSpan "tests/examples/InfixTypeMinus.hs" 7 47 7 48
                                      , srcInfoPoints = []
                                      }
-                                   "n"))))))
+                                   (Ident
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/InfixTypeMinus.hs" 7 47 7 48
+                                        , srcInfoPoints = []
+                                        }
+                                      "n")))))))
                  (TyFun
                     SrcSpanInfo
                       { srcInfoSpan =
@@ -1104,88 +1134,98 @@ ParseOk
                                 , SrcSpan "tests/examples/InfixTypeMinus.hs" 8 50 8 52
                                 ]
                             }
-                          (EqualP
+                          (TypeA
                              SrcSpanInfo
                                { srcInfoSpan =
                                    SrcSpan "tests/examples/InfixTypeMinus.hs" 8 39 8 48
                                , srcInfoPoints =
                                    [ SrcSpan "tests/examples/InfixTypeMinus.hs" 8 41 8 42 ]
                                }
-                             (TyVar
+                             (TyEquals
                                 SrcSpanInfo
                                   { srcInfoSpan =
-                                      SrcSpan "tests/examples/InfixTypeMinus.hs" 8 39 8 40
-                                  , srcInfoPoints = []
+                                      SrcSpan "tests/examples/InfixTypeMinus.hs" 8 39 8 48
+                                  , srcInfoPoints =
+                                      [ SrcSpan "tests/examples/InfixTypeMinus.hs" 8 41 8 42 ]
                                   }
-                                (Ident
+                                (TyVar
                                    SrcSpanInfo
                                      { srcInfoSpan =
                                          SrcSpan "tests/examples/InfixTypeMinus.hs" 8 39 8 40
                                      , srcInfoPoints = []
                                      }
-                                   "n"))
-                             (TyParen
-                                SrcSpanInfo
-                                  { srcInfoSpan =
-                                      SrcSpan "tests/examples/InfixTypeMinus.hs" 8 43 8 48
-                                  , srcInfoPoints =
-                                      [ SrcSpan "tests/examples/InfixTypeMinus.hs" 8 43 8 44
-                                      , SrcSpan "tests/examples/InfixTypeMinus.hs" 8 47 8 48
-                                      ]
-                                  }
-                                (TyInfix
-                                   SrcSpanInfo
-                                     { srcInfoSpan =
-                                         SrcSpan "tests/examples/InfixTypeMinus.hs" 8 44 8 47
-                                     , srcInfoPoints = []
-                                     }
-                                   (TyVar
+                                   (Ident
                                       SrcSpanInfo
                                         { srcInfoSpan =
-                                            SrcSpan "tests/examples/InfixTypeMinus.hs" 8 44 8 45
+                                            SrcSpan "tests/examples/InfixTypeMinus.hs" 8 39 8 40
                                         , srcInfoPoints = []
                                         }
-                                      (Ident
+                                      "n"))
+                                (TyParen
+                                   SrcSpanInfo
+                                     { srcInfoSpan =
+                                         SrcSpan "tests/examples/InfixTypeMinus.hs" 8 43 8 48
+                                     , srcInfoPoints =
+                                         [ SrcSpan "tests/examples/InfixTypeMinus.hs" 8 43 8 44
+                                         , SrcSpan "tests/examples/InfixTypeMinus.hs" 8 47 8 48
+                                         ]
+                                     }
+                                   (TyInfix
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/InfixTypeMinus.hs" 8 44 8 47
+                                        , srcInfoPoints = []
+                                        }
+                                      (TyVar
                                          SrcSpanInfo
                                            { srcInfoSpan =
                                                SrcSpan "tests/examples/InfixTypeMinus.hs" 8 44 8 45
                                            , srcInfoPoints = []
                                            }
-                                         "m"))
-                                   (UnpromotedName
-                                      SrcSpanInfo
-                                        { srcInfoSpan =
-                                            SrcSpan "tests/examples/InfixTypeMinus.hs" 8 45 8 46
-                                        , srcInfoPoints = []
-                                        }
-                                      (UnQual
+                                         (Ident
+                                            SrcSpanInfo
+                                              { srcInfoSpan =
+                                                  SrcSpan
+                                                    "tests/examples/InfixTypeMinus.hs" 8 44 8 45
+                                              , srcInfoPoints = []
+                                              }
+                                            "m"))
+                                      (UnpromotedName
                                          SrcSpanInfo
                                            { srcInfoSpan =
                                                SrcSpan "tests/examples/InfixTypeMinus.hs" 8 45 8 46
                                            , srcInfoPoints = []
                                            }
-                                         (Symbol
+                                         (UnQual
                                             SrcSpanInfo
                                               { srcInfoSpan =
                                                   SrcSpan
                                                     "tests/examples/InfixTypeMinus.hs" 8 45 8 46
                                               , srcInfoPoints = []
                                               }
-                                            "+")))
-                                   (TyPromoted
-                                      SrcSpanInfo
-                                        { srcInfoSpan =
-                                            SrcSpan "tests/examples/InfixTypeMinus.hs" 8 46 8 47
-                                        , srcInfoPoints = []
-                                        }
-                                      (PromotedInteger
+                                            (Symbol
+                                               SrcSpanInfo
+                                                 { srcInfoSpan =
+                                                     SrcSpan
+                                                       "tests/examples/InfixTypeMinus.hs" 8 45 8 46
+                                                 , srcInfoPoints = []
+                                                 }
+                                               "+")))
+                                      (TyPromoted
                                          SrcSpanInfo
                                            { srcInfoSpan =
                                                SrcSpan "tests/examples/InfixTypeMinus.hs" 8 46 8 47
                                            , srcInfoPoints = []
                                            }
-                                         1
-                                         "1"))))))))
+                                         (PromotedInteger
+                                            SrcSpanInfo
+                                              { srcInfoSpan =
+                                                  SrcSpan
+                                                    "tests/examples/InfixTypeMinus.hs" 8 46 8 47
+                                              , srcInfoPoints = []
+                                              }
+                                            1
+                                            "1")))))))))
                  (TyFun
                     SrcSpanInfo
                       { srcInfoSpan =

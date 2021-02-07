@@ -40,67 +40,80 @@ ParseOk
                      , srcInfoPoints =
                          [ SrcSpan "tests/examples/ClassContext.hs" 1 18 1 20 ]
                      }
-                   (ClassA
+                   (TypeA
                       SrcSpanInfo
                         { srcInfoSpan = SrcSpan "tests/examples/ClassContext.hs" 1 6 1 20
                         , srcInfoPoints =
                             [ SrcSpan "tests/examples/ClassContext.hs" 1 18 1 20 ]
                         }
-                      (UnQual
+                      (TyApp
                          SrcSpanInfo
-                           { srcInfoSpan = SrcSpan "tests/examples/ClassContext.hs" 1 6 1 9
-                           , srcInfoPoints = []
+                           { srcInfoSpan = SrcSpan "tests/examples/ClassContext.hs" 1 6 1 20
+                           , srcInfoPoints =
+                               [ SrcSpan "tests/examples/ClassContext.hs" 1 18 1 20 ]
                            }
-                         (Ident
+                         (TyCon
                             SrcSpanInfo
-                              { srcInfoSpan = SrcSpan "tests/examples/ClassContext.hs" 1 6 1 9
-                              , srcInfoPoints = []
+                              { srcInfoSpan = SrcSpan "tests/examples/ClassContext.hs" 1 6 1 20
+                              , srcInfoPoints =
+                                  [ SrcSpan "tests/examples/ClassContext.hs" 1 18 1 20 ]
                               }
-                            "Ord"))
-                      [ TyParen
-                          SrcSpanInfo
-                            { srcInfoSpan = SrcSpan "tests/examples/ClassContext.hs" 1 10 1 17
-                            , srcInfoPoints =
-                                [ SrcSpan "tests/examples/ClassContext.hs" 1 10 1 11
-                                , SrcSpan "tests/examples/ClassContext.hs" 1 16 1 17
-                                ]
-                            }
-                          (TyApp
-                             SrcSpanInfo
-                               { srcInfoSpan = SrcSpan "tests/examples/ClassContext.hs" 1 11 1 16
-                               , srcInfoPoints = []
-                               }
-                             (TyVar
-                                SrcSpanInfo
-                                  { srcInfoSpan = SrcSpan "tests/examples/ClassContext.hs" 1 11 1 12
-                                  , srcInfoPoints = []
-                                  }
-                                (Ident
-                                   SrcSpanInfo
-                                     { srcInfoSpan =
-                                         SrcSpan "tests/examples/ClassContext.hs" 1 11 1 12
-                                     , srcInfoPoints = []
-                                     }
-                                   "i"))
-                             (TyCon
-                                SrcSpanInfo
-                                  { srcInfoSpan = SrcSpan "tests/examples/ClassContext.hs" 1 13 1 16
-                                  , srcInfoPoints = []
-                                  }
-                                (UnQual
-                                   SrcSpanInfo
-                                     { srcInfoSpan =
-                                         SrcSpan "tests/examples/ClassContext.hs" 1 13 1 16
-                                     , srcInfoPoints = []
-                                     }
-                                   (Ident
-                                      SrcSpanInfo
-                                        { srcInfoSpan =
-                                            SrcSpan "tests/examples/ClassContext.hs" 1 13 1 16
-                                        , srcInfoPoints = []
-                                        }
-                                      "Int"))))
-                      ])))
+                            (UnQual
+                               SrcSpanInfo
+                                 { srcInfoSpan = SrcSpan "tests/examples/ClassContext.hs" 1 6 1 9
+                                 , srcInfoPoints = []
+                                 }
+                               (Ident
+                                  SrcSpanInfo
+                                    { srcInfoSpan = SrcSpan "tests/examples/ClassContext.hs" 1 6 1 9
+                                    , srcInfoPoints = []
+                                    }
+                                  "Ord")))
+                         (TyParen
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/ClassContext.hs" 1 10 1 17
+                              , srcInfoPoints =
+                                  [ SrcSpan "tests/examples/ClassContext.hs" 1 10 1 11
+                                  , SrcSpan "tests/examples/ClassContext.hs" 1 16 1 17
+                                  ]
+                              }
+                            (TyApp
+                               SrcSpanInfo
+                                 { srcInfoSpan = SrcSpan "tests/examples/ClassContext.hs" 1 11 1 16
+                                 , srcInfoPoints = []
+                                 }
+                               (TyVar
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/ClassContext.hs" 1 11 1 12
+                                    , srcInfoPoints = []
+                                    }
+                                  (Ident
+                                     SrcSpanInfo
+                                       { srcInfoSpan =
+                                           SrcSpan "tests/examples/ClassContext.hs" 1 11 1 12
+                                       , srcInfoPoints = []
+                                       }
+                                     "i"))
+                               (TyCon
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/ClassContext.hs" 1 13 1 16
+                                    , srcInfoPoints = []
+                                    }
+                                  (UnQual
+                                     SrcSpanInfo
+                                       { srcInfoSpan =
+                                           SrcSpan "tests/examples/ClassContext.hs" 1 13 1 16
+                                       , srcInfoPoints = []
+                                       }
+                                     (Ident
+                                        SrcSpanInfo
+                                          { srcInfoSpan =
+                                              SrcSpan "tests/examples/ClassContext.hs" 1 13 1 16
+                                          , srcInfoPoints = []
+                                          }
+                                        "Int")))))))))
              (TyFun
                 SrcSpanInfo
                   { srcInfoSpan = SrcSpan "tests/examples/ClassContext.hs" 1 21 1 35

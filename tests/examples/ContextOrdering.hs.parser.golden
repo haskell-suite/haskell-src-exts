@@ -92,46 +92,63 @@ ParseOk
                             , SrcSpan "tests/examples/ContextOrdering.hs" 4 16 4 18
                             ]
                         }
-                      (AppA
+                      (TypeA
                          SrcSpanInfo
                            { srcInfoSpan =
                                SrcSpan "tests/examples/ContextOrdering.hs" 4 9 4 14
                            , srcInfoPoints = []
                            }
-                         (Ident
+                         (TyApp
                             SrcSpanInfo
                               { srcInfoSpan =
-                                  SrcSpan "tests/examples/ContextOrdering.hs" 4 9 4 10
+                                  SrcSpan "tests/examples/ContextOrdering.hs" 4 9 4 14
                               , srcInfoPoints = []
                               }
-                            "x")
-                         [ TyVar
-                             SrcSpanInfo
-                               { srcInfoSpan =
-                                   SrcSpan "tests/examples/ContextOrdering.hs" 4 11 4 12
-                               , srcInfoPoints = []
-                               }
-                             (Ident
-                                SrcSpanInfo
-                                  { srcInfoSpan =
-                                      SrcSpan "tests/examples/ContextOrdering.hs" 4 11 4 12
-                                  , srcInfoPoints = []
-                                  }
-                                "m")
-                         , TyVar
-                             SrcSpanInfo
-                               { srcInfoSpan =
-                                   SrcSpan "tests/examples/ContextOrdering.hs" 4 13 4 14
-                               , srcInfoPoints = []
-                               }
-                             (Ident
-                                SrcSpanInfo
-                                  { srcInfoSpan =
-                                      SrcSpan "tests/examples/ContextOrdering.hs" 4 13 4 14
-                                  , srcInfoPoints = []
-                                  }
-                                "a")
-                         ]))))
+                            (TyApp
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/ContextOrdering.hs" 4 9 4 14
+                                 , srcInfoPoints = []
+                                 }
+                               (TyVar
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/ContextOrdering.hs" 4 9 4 14
+                                    , srcInfoPoints = []
+                                    }
+                                  (Ident
+                                     SrcSpanInfo
+                                       { srcInfoSpan =
+                                           SrcSpan "tests/examples/ContextOrdering.hs" 4 9 4 10
+                                       , srcInfoPoints = []
+                                       }
+                                     "x"))
+                               (TyVar
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/ContextOrdering.hs" 4 11 4 12
+                                    , srcInfoPoints = []
+                                    }
+                                  (Ident
+                                     SrcSpanInfo
+                                       { srcInfoSpan =
+                                           SrcSpan "tests/examples/ContextOrdering.hs" 4 11 4 12
+                                       , srcInfoPoints = []
+                                       }
+                                     "m")))
+                            (TyVar
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/ContextOrdering.hs" 4 13 4 14
+                                 , srcInfoPoints = []
+                                 }
+                               (Ident
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/ContextOrdering.hs" 4 13 4 14
+                                    , srcInfoPoints = []
+                                    }
+                                  "a")))))))
              (TyCon
                 SrcSpanInfo
                   { srcInfoSpan =

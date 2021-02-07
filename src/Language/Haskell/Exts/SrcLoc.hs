@@ -18,6 +18,10 @@ module Language.Haskell.Exts.SrcLoc where
 import Data.Data
 import GHC.Generics (Generic)
 
+showInt :: Int -> String
+showInt i | i < 0 = "(" ++ show i ++ ")"
+showInt i = show i
+
 -- | A single position in the source.
 data SrcLoc = SrcLoc
     { srcFilename :: String
@@ -29,7 +33,7 @@ data SrcLoc = SrcLoc
 instance Show SrcLoc where
   showsPrec n (SrcLoc fn sl sc) =
     showParen (n >= 11) $
-      showString $ "SrcLoc " ++ show fn ++ " " ++ unwords (map show [sl,sc])
+      showString $ "SrcLoc " ++ show fn ++ " " ++ unwords (map showInt [sl,sc])
 
 noLoc :: SrcLoc
 noLoc = SrcLoc "" (-1) (-1)
@@ -47,7 +51,7 @@ data SrcSpan = SrcSpan
 instance Show SrcSpan where
   showsPrec n (SrcSpan fn sl sc el ec) =
     showParen (n >= 11) $
-      showString $ "SrcSpan " ++ show fn ++ " " ++ unwords (map show [sl,sc,el,ec])
+      showString $ "SrcSpan " ++ show fn ++ " " ++ unwords (map showInt [sl,sc,el,ec])
 
 
 -- | Returns 'srcSpanStartLine' and 'srcSpanStartColumn' in a pair.

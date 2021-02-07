@@ -25,6 +25,7 @@ import Language.Haskell.Exts.SrcLoc
 import Language.Haskell.Exts.Comments
 
 import Control.Monad (when, liftM, ap, unless)
+import qualified Control.Monad.Fail as Fail
 #if __GLASGOW_HASKELL__ < 710
 import Control.Applicative (Applicative(..))
 #endif
@@ -57,6 +58,9 @@ instance Monad EP where
         EP f = k a
         (b, l2, c2, s2) = f l1 c1
     in (b, l2, c2, s1 . s2)
+
+instance Fail.MonadFail EP where
+  fail = error
 
 runEP :: EP () -> [Comment] -> String
 runEP (EP f) cs = let (_,_,_,s) = f (1,1) cs in s ""
@@ -729,6 +733,7 @@ instance ExactP Decl where
             printStringAt (pos (last pts)) ")"
          _ -> errorEP "ExactP: Decl: DefaultDecl is given too few srcInfoPoints"
     SpliceDecl   _ spl  -> exactP spl
+    TSpliceDecl  _ spl  -> exactP spl
     TypeSig      l ns t -> do
         let pts = srcInfoPoints l
         printInterleaved' (zip pts (replicate (length pts - 1) "," ++ ["::"])) ns
@@ -1167,9 +1172,7 @@ printContext ctxt = do
 
 instance ExactP Asst where
   exactP asst = case asst of
-    ClassA _ qn ts -> exactP qn >> mapM_ exactPC ts
-    AppA _ n ns       -> exactPC n >> mapM_ exactPC ns
-    InfixA _ ta qn tb -> exactP ta >> epInfixQName qn >> exactPC tb
+    TypeA _ t -> exactP t
     IParam l ipn t    ->
         case srcInfoPoints l of
          [a] -> do
@@ -1177,13 +1180,6 @@ instance ExactP Asst where
             printStringAt (pos a) "::"
             exactPC t
          _ -> errorEP "ExactP: Asst: IParam is given wrong number of srcInfoPoints"
-    EqualP l t1 t2  ->
-        case srcInfoPoints l of
-         [a] -> do
-            exactP t1
-            printStringAt (pos a) "~"
-            exactPC t2
-         _ -> internalError "Asst -> EqualP"
     ParenA l asst' ->
         case take 2 $ srcInfoPoints l of
          [a,b] -> do
@@ -1191,7 +1187,6 @@ instance ExactP Asst where
             exactPC asst'
             printStringAt (pos b) ")"
          _ -> errorEP "ExactP: Asst: ParenA is given wrong number of srcInfoPoints"
-    WildCardA _ mn -> printString "_" >> maybeEP exactPC mn
 
 instance ExactP Deriving where
   exactP (Deriving l mds ihs) =
@@ -1375,13 +1370,18 @@ instance ExactP Unpackedness where
 
 instance ExactP Splice where
   exactP (IdSplice _ str) = printString $ '$':str
-  exactP (ParenSplice l e) =
+  exactP (TIdSplice _ str) = printString $ "$$" ++ str
+  exactP (ParenSplice l e) = printParen "ParenSplice" "$(" l e
+  exactP (TParenSplice l e) = printParen "TParenSplice" "$$(" l e
+
+printParen :: ExactP ast => String -> String -> SrcSpanInfo -> ast SrcSpanInfo -> EP ()
+printParen con paren l e =
     case srcInfoPoints l of
      [_,b] -> do
-        printString "$("
+        printString paren
         exactPC e
         printStringAt (pos b) ")"
-     _ -> errorEP "ExactP: Splice: ParenSplice is given wrong number of srcInfoPoints"
+     _ -> errorEP $ "ExactP: Splice: " ++ con ++ " is given wrong number of srcInfoPoints"
 
 instance ExactP Exp where
   exactP exp = case exp of
@@ -1727,6 +1727,13 @@ instance ExactP Exp where
             exactPC e2
          _ -> errorEP "ExactP: Exp: RightArrHighApp is given wrong number of srcInfoPoints"
 
+    ArrOp l e -> case srcInfoPoints l of
+      [a, b] -> do
+        printStringAt (pos a) "(|"
+        exactPC e
+        printStringAt (pos b) "|)"
+      _ -> errorEP "ExactP: Exp: ArrOp is given wrong number of srcInfoPoints"
+
     LCase l alts   ->
         case srcInfoPoints l of
          _:b:pts -> do
@@ -1806,27 +1813,10 @@ instance ExactP QualStmt where
 
 instance ExactP Bracket where
   exactP br = case br of
-    ExpBracket l e  ->
-        case srcInfoPoints l of
-         [_,b] -> do
-            printString "[|"
-            exactPC e
-            printStringAt (pos b) "|]"
-         _ -> errorEP "ExactP: Bracket: ExpBracket is given wrong number of srcInfoPoints"
-    PatBracket l p  ->
-        case srcInfoPoints l of
-         [_,b] -> do
-            printString "[p|"
-            exactPC p
-            printStringAt (pos b) "|]"
-         _ -> errorEP "ExactP: Bracket: PatBracket is given wrong number of srcInfoPoints"
-    TypeBracket l t  ->
-        case srcInfoPoints l of
-         [_,b] -> do
-            printString "[t|"
-            exactPC t
-            printStringAt (pos b) "|]"
-         _ -> errorEP "ExactP: Bracket: TypeBracket is given wrong number of srcInfoPoints"
+    ExpBracket l e  -> printBracket "ExpBracket" "[|" "|]" l e
+    TExpBracket l e -> printBracket "TExpBracket" "[||" "||]" l e
+    PatBracket l p  -> printBracket "PatBracket" "[p|" "|]" l p
+    TypeBracket l t -> printBracket "TypeBracket" "[t|" "|]" l t
     DeclBracket l ds ->
         case srcInfoPoints l of
          pts@(_:_) -> do
@@ -1834,6 +1824,15 @@ instance ExactP Bracket where
             layoutList (init pts) (sepFunBinds ds)
             printStringAt (pos (last pts)) "|]"
          _ -> errorEP "ExactP: Bracket: DeclBracket is given too few srcInfoPoints"
+
+printBracket :: ExactP ast => String -> String -> String -> SrcSpanInfo -> ast SrcSpanInfo -> EP ()
+printBracket con oBracket cBracket l c =
+  case srcInfoPoints l of
+    [_,b] -> do
+      printString oBracket
+      exactPC c
+      printStringAt (pos b) cBracket
+    _ -> errorEP $ "ExactP: Bracket: " ++ con ++ " is given wrong number of srcInfoPoints"
 
 instance ExactP XAttr where
   exactP (XAttr l xn e) =

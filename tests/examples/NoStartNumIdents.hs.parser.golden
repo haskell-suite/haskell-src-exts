@@ -1,0 +1,3 @@
+ParseFailed
+  (SrcLoc "tests/examples/NoStartNumIdents.hs" 2 1)
+  "Parse error in pattern: 1"

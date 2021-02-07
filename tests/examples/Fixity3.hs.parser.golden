@@ -88,37 +88,51 @@ ParseOk
                                { srcInfoSpan = SrcSpan "tests/examples/Fixity3.hs" 2 12 2 28
                                , srcInfoPoints = [ SrcSpan "tests/examples/Fixity3.hs" 2 26 2 28 ]
                                }
-                             (ClassA
+                             (TypeA
                                 SrcSpanInfo
                                   { srcInfoSpan = SrcSpan "tests/examples/Fixity3.hs" 2 12 2 28
                                   , srcInfoPoints =
                                       [ SrcSpan "tests/examples/Fixity3.hs" 2 26 2 28 ]
                                   }
-                                (UnQual
+                                (TyApp
                                    SrcSpanInfo
-                                     { srcInfoSpan = SrcSpan "tests/examples/Fixity3.hs" 2 12 2 23
-                                     , srcInfoPoints = []
+                                     { srcInfoSpan = SrcSpan "tests/examples/Fixity3.hs" 2 12 2 28
+                                     , srcInfoPoints =
+                                         [ SrcSpan "tests/examples/Fixity3.hs" 2 26 2 28 ]
                                      }
-                                   (Ident
+                                   (TyCon
                                       SrcSpanInfo
                                         { srcInfoSpan =
-                                            SrcSpan "tests/examples/Fixity3.hs" 2 12 2 23
+                                            SrcSpan "tests/examples/Fixity3.hs" 2 12 2 28
+                                        , srcInfoPoints =
+                                            [ SrcSpan "tests/examples/Fixity3.hs" 2 26 2 28 ]
+                                        }
+                                      (UnQual
+                                         SrcSpanInfo
+                                           { srcInfoSpan =
+                                               SrcSpan "tests/examples/Fixity3.hs" 2 12 2 23
+                                           , srcInfoPoints = []
+                                           }
+                                         (Ident
+                                            SrcSpanInfo
+                                              { srcInfoSpan =
+                                                  SrcSpan "tests/examples/Fixity3.hs" 2 12 2 23
+                                              , srcInfoPoints = []
+                                              }
+                                            "Applicative")))
+                                   (TyVar
+                                      SrcSpanInfo
+                                        { srcInfoSpan =
+                                            SrcSpan "tests/examples/Fixity3.hs" 2 24 2 25
                                         , srcInfoPoints = []
                                         }
-                                      "Applicative"))
-                                [ TyVar
-                                    SrcSpanInfo
-                                      { srcInfoSpan = SrcSpan "tests/examples/Fixity3.hs" 2 24 2 25
-                                      , srcInfoPoints = []
-                                      }
-                                    (Ident
-                                       SrcSpanInfo
-                                         { srcInfoSpan =
-                                             SrcSpan "tests/examples/Fixity3.hs" 2 24 2 25
-                                         , srcInfoPoints = []
-                                         }
-                                       "f")
-                                ])))
+                                      (Ident
+                                         SrcSpanInfo
+                                           { srcInfoSpan =
+                                               SrcSpan "tests/examples/Fixity3.hs" 2 24 2 25
+                                           , srcInfoPoints = []
+                                           }
+                                         "f"))))))
                        (TyFun
                           SrcSpanInfo
                             { srcInfoSpan = SrcSpan "tests/examples/Fixity3.hs" 2 29 2 53

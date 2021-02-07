@@ -1,0 +1,177 @@
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/THTypedSplices.hs" 1 1 7 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/THTypedSplices.hs" 1 1 1 1
+            , SrcSpan "tests/examples/THTypedSplices.hs" 2 1 2 1
+            , SrcSpan "tests/examples/THTypedSplices.hs" 2 1 2 1
+            , SrcSpan "tests/examples/THTypedSplices.hs" 2 1 2 1
+            , SrcSpan "tests/examples/THTypedSplices.hs" 4 1 4 1
+            , SrcSpan "tests/examples/THTypedSplices.hs" 6 1 6 1
+            , SrcSpan "tests/examples/THTypedSplices.hs" 7 1 7 1
+            , SrcSpan "tests/examples/THTypedSplices.hs" 7 1 7 1
+            ]
+        }
+      Nothing
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/THTypedSplices.hs" 1 1 1 33
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/THTypedSplices.hs" 1 1 1 13
+                , SrcSpan "tests/examples/THTypedSplices.hs" 1 30 1 33
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/THTypedSplices.hs" 1 14 1 29
+                , srcInfoPoints = []
+                }
+              "TemplateHaskell"
+          ]
+      ]
+      [ ImportDecl
+          { importAnn =
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/THTypedSplices.hs" 2 1 2 27
+                , srcInfoPoints =
+                    [ SrcSpan "tests/examples/THTypedSplices.hs" 2 1 2 7 ]
+                }
+          , importModule =
+              ModuleName
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/THTypedSplices.hs" 2 8 2 27
+                  , srcInfoPoints = []
+                  }
+                "Language.Haskell.TH"
+          , importQualified = False
+          , importSrc = False
+          , importSafe = False
+          , importPkg = Nothing
+          , importAs = Nothing
+          , importSpecs = Nothing
+          }
+      , ImportDecl
+          { importAnn =
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/THTypedSplices.hs" 4 1 4 27
+                , srcInfoPoints =
+                    [ SrcSpan "tests/examples/THTypedSplices.hs" 4 1 4 7 ]
+                }
+          , importModule =
+              ModuleName
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/THTypedSplices.hs" 4 8 4 27
+                  , srcInfoPoints = []
+                  }
+                "THTypedSplices.Defs"
+          , importQualified = False
+          , importSrc = False
+          , importSafe = False
+          , importPkg = Nothing
+          , importAs = Nothing
+          , importSpecs = Nothing
+          }
+      ]
+      [ PatBind
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/THTypedSplices.hs" 6 1 6 33
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/THTypedSplices.hs" 6 1 6 5
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/THTypedSplices.hs" 6 1 6 5
+                  , srcInfoPoints = []
+                  }
+                "main"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/THTypedSplices.hs" 6 6 6 33
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/THTypedSplices.hs" 6 6 6 7 ]
+               }
+             (App
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/THTypedSplices.hs" 6 8 6 33
+                  , srcInfoPoints = []
+                  }
+                (SpliceExp
+                   SrcSpanInfo
+                     { srcInfoSpan = SrcSpan "tests/examples/THTypedSplices.hs" 6 8 6 16
+                     , srcInfoPoints = []
+                     }
+                   (TIdSplice
+                      SrcSpanInfo
+                        { srcInfoSpan = SrcSpan "tests/examples/THTypedSplices.hs" 6 8 6 16
+                        , srcInfoPoints = []
+                        }
+                      "justTH"))
+                (Paren
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/THTypedSplices.hs" 6 17 6 33
+                     , srcInfoPoints =
+                         [ SrcSpan "tests/examples/THTypedSplices.hs" 6 17 6 18
+                         , SrcSpan "tests/examples/THTypedSplices.hs" 6 32 6 33
+                         ]
+                     }
+                   (SpliceExp
+                      SrcSpanInfo
+                        { srcInfoSpan =
+                            SrcSpan "tests/examples/THTypedSplices.hs" 6 18 6 32
+                        , srcInfoPoints =
+                            [ SrcSpan "tests/examples/THTypedSplices.hs" 6 18 6 21
+                            , SrcSpan "tests/examples/THTypedSplices.hs" 6 31 6 32
+                            ]
+                        }
+                      (TParenSplice
+                         SrcSpanInfo
+                           { srcInfoSpan =
+                               SrcSpan "tests/examples/THTypedSplices.hs" 6 18 6 32
+                           , srcInfoPoints =
+                               [ SrcSpan "tests/examples/THTypedSplices.hs" 6 18 6 21
+                               , SrcSpan "tests/examples/THTypedSplices.hs" 6 31 6 32
+                               ]
+                           }
+                         (BracketExp
+                            SrcSpanInfo
+                              { srcInfoSpan =
+                                  SrcSpan "tests/examples/THTypedSplices.hs" 6 21 6 31
+                              , srcInfoPoints =
+                                  [ SrcSpan "tests/examples/THTypedSplices.hs" 6 21 6 25
+                                  , SrcSpan "tests/examples/THTypedSplices.hs" 6 28 6 31
+                                  ]
+                              }
+                            (TExpBracket
+                               SrcSpanInfo
+                                 { srcInfoSpan =
+                                     SrcSpan "tests/examples/THTypedSplices.hs" 6 21 6 31
+                                 , srcInfoPoints =
+                                     [ SrcSpan "tests/examples/THTypedSplices.hs" 6 21 6 25
+                                     , SrcSpan "tests/examples/THTypedSplices.hs" 6 28 6 31
+                                     ]
+                                 }
+                               (Lit
+                                  SrcSpanInfo
+                                    { srcInfoSpan =
+                                        SrcSpan "tests/examples/THTypedSplices.hs" 6 26 6 27
+                                    , srcInfoPoints = []
+                                    }
+                                  (Int
+                                     SrcSpanInfo
+                                       { srcInfoSpan =
+                                           SrcSpan "tests/examples/THTypedSplices.hs" 6 26 6 27
+                                       , srcInfoPoints = []
+                                       }
+                                     2
+                                     "2")))))))))
+          Nothing
+      ]
+  , []
+  )

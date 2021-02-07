@@ -94,13 +94,13 @@ Conflicts: 7 shift/reduce
         might be the start of the declaration with the activation being
         empty. Resolving with shift means the declaration cannot start with '['.
 
-1 for ambiguity in '{-# RULES "name" forall = ... #-}' 	[State 544]
-	since 'forall' is a valid variable name, we don't know whether
-	to treat a forall on the input as the beginning of a quantifier
-	or the beginning of the rule itself.  Resolving to shift means
-	it's always treated as a quantifier, hence the above is disallowed.
-	This saves explicitly defining a grammar for the rule lhs that
-	doesn't include 'forall'.
+1 for ambiguity in '{-# RULES "name" forall = ... #-}'  [State 544]
+        since 'forall' is a valid variable name, we don't know whether
+        to treat a forall on the input as the beginning of a quantifier
+        or the beginning of the rule itself.  Resolving to shift means
+        it's always treated as a quantifier, hence the above is disallowed.
+        This saves explicitly defining a grammar for the rule lhs that
+        doesn't include 'forall'.
 
 -----------------------------------------------------------------------------
 
@@ -172,22 +172,28 @@ Arrows
 >       '>-'    { Loc $$ RightArrowTail }
 >       '-<<'   { Loc $$ LeftDblArrowTail }
 >       '>>-'   { Loc $$ RightDblArrowTail }
+>       '(|'    { Loc $$ OpenArrowBracket }
+>       '|)'    { Loc $$ CloseArrowBracket }
 
 Harp
 
->       '(|'    { Loc $$ RPGuardOpen }
->       '|)'    { Loc $$ RPGuardClose }
+>       '(/'    { Loc $$ RPGuardOpen }
+>       '/)'    { Loc $$ RPGuardClose }
 >       '@:'    { Loc $$ RPCAt }
 
 Template Haskell
 
 >       IDSPLICE        { Loc _ (THIdEscape _) }   -- $x
+>       TIDSPLICE       { Loc _ (THTIdEscape _) }  -- $$x
 >       '$('            { Loc $$ THParenEscape } -- 60
+>       '$$('           { Loc $$ THTParenEscape }
 >       '[|'            { Loc $$ THExpQuote }
+>       '[||'           { Loc $$ THTExpQuote }
 >       '[p|'           { Loc $$ THPatQuote }
 >       '[t|'           { Loc $$ THTypQuote }
 >       '[d|'           { Loc $$ THDecQuote }
 >       '|]'            { Loc $$ THCloseQuote }
+>       '||]'           { Loc $$ THTCloseQuote }
 >       VARQUOTE        { Loc $$ THVarQuote }      -- 'x
 >       TYPQUOTE        { Loc $$ THTyQuote }       -- ''T
 >       QUASIQUOTE      { Loc _ (THQuasiQuote _) }
@@ -666,6 +672,7 @@ CHANGE: Arbitrary top-level expressions are considered implicit splices
 >                  }
 
        | '$(' trueexp ')'  { let l = $1 <^^> $3 <** [$1,$3] in SpliceDecl l $ ParenSplice l $2 }
+       | '$$(' trueexp ')' { let l = $1 <^^> $3 <** [$1,$3] in TSpliceDecl l $ TParenSplice l $2 }
 
 These require the ForeignFunctionInterface extension, handled by the
 lexer through the 'foreign' (and 'export') keyword.
@@ -746,6 +753,7 @@ Parsing the body of a closed type family, partially stolen from the source of GH
 >         : ty_fam_inst_eqns ';' ty_fam_inst_eqn   { $1 ++ [$3] }
 >         | ty_fam_inst_eqns ';'                   { $1 }
 >         | ty_fam_inst_eqn                        { [$1] }
+>         |                                        { [] }
 
 > ty_fam_inst_eqn :: { TypeEqn L }
 >         : truectype '=' truectype
@@ -1000,7 +1008,9 @@ the (# and #) lexemes. Kinds will be handled at the kind rule.
 >       | '(' ctype_(ostar,kstar) ')'                   { TyParen ($1 <^^> $3 <** [$1,$3]) $2 }
 >       | '(' ctype_(ostar,kstar) '::' kind ')'         { TyKind  ($1 <^^> $5 <** [$1,$3,$5]) $2 $4 }
 >       | '$(' trueexp ')'              { let l = ($1 <^^> $3 <** [$1,$3]) in TySplice l $ ParenSplice l $2 }
+>       | '$$(' trueexp ')'             { let l = ($1 <^^> $3 <** [$1,$3]) in TySplice l $ TParenSplice l $2 }
 >       | IDSPLICE                      { let Loc l (THIdEscape s) = $1 in TySplice (nIS l) $ IdSplice (nIS l) s }
+>       | TIDSPLICE                     { let Loc l (THTIdEscape s) = $1 in TySplice (nIS l) $ TIdSplice (nIS l) s }
 >       | '_'                           { TyWildCard (nIS $1) Nothing }
 >       | QUASIQUOTE                    { let Loc l (THQuasiQuote (n,q)) = $1 in TyQuasiQuote (nIS l) n q }
 >       | ptype_(ostar,kstar)           { % checkEnabled DataKinds >> return (TyPromoted (ann $1) $1) }
@@ -1251,7 +1261,7 @@ Kinds
 >       : kind1                 {% checkEnabled KindSignatures >> return $1 }
 
 > kind1 :: { Kind L }
->       : dtype_(NEVER,'*')     {% checkType $1 }
+>       : ctype_(NEVER,'*')     {% checkType $1 }
 
 > optkind :: { (Maybe (Kind L), [S]) }
 >       : {-empty-}             { (Nothing,[]) }
@@ -1424,6 +1434,11 @@ mangle them into the correct form depending on context.
 >       | exp10b                        { $1 }
 
 > exp10a :: { PExp L }
+>       : expblocka                     { $1 }
+>       | fexp expblocka                {% checkEnabled BlockArguments >>
+>                                          return (App ($1 <> $2) $1 $2) }
+
+> expblocka :: { PExp L }
 >       : '\\' apats '->' exp             { Lambda (nIS $1 <++> ann $4 <** [$1,$3]) (reverse $2) $4 }
 A let may bind implicit parameters
 >       | 'let' binds 'in' exp            { Let    (nIS $1 <++> ann $4 <** [$1,$3])    $2 $4 }
@@ -1436,26 +1451,29 @@ A let may bind implicit parameters
 >       | exppragma                       { $1 }
 
 > optlayoutsemi :: { [S] }
-> 	: ';'				  {% checkEnabled DoAndIfThenElse >> return [$1] }
+>       : ';'				  {% checkEnabled DoAndIfThenElse >> return [$1] }
 >	| {- empty -}			  { [] }
 
 We won't come here unless XmlSyntax is already checked.
 > opthsxsemi :: { [S] }
-> 	: ';'				  { [$1] }
+>       : ';'				  { [$1] }
 >	| {- empty -}			  { [] }
 
 
 mdo blocks require the RecursiveDo extension enabled, but the lexer handles that.
 
 > exp10b :: { PExp L }
+>       : expblockb                     { $1 }
+>       | '-' fexp                      { NegApp (nIS $1 <++> ann $2 <** [$1]) $2 }
+>       | fexp                          { $1 }
+
+> expblockb :: { PExp L }
 >       : 'case' exp 'of' altslist      { let (als, inf, ss) = $4 in Case (nIS $1 <++> inf <** ($1:$3:ss)) $2 als }
 >       | '\\' 'case' altslist          {% do { checkEnabled LambdaCase ;
 >                                               let { (als, inf, ss) = $3 } ;
 >                                               return (LCase (nIS $1 <++> inf <** ($1:$2:ss)) als) } }
->       | '-' fexp                      { NegApp (nIS $1 <++> ann $2 <** [$1]) $2 }
 >       | 'do'  stmtlist                { let (sts, inf, ss) = $2 in Do   (nIS $1 <++> inf <** $1:ss) sts }
 >       | 'mdo' stmtlist                { let (sts, inf, ss) = $2 in MDo  (nIS $1 <++> inf <** $1:ss) sts }
->       | fexp                          { $1 }
 
 > exppragma :: { PExp L }
 >       : '{-# CORE' STRING '#-}' exp   { let Loc l (StringTok (s,_)) = $2 in CorePragma (nIS $1 <++> ann $4 <** [l,$3]) s $4 }
@@ -1472,6 +1490,8 @@ mdo blocks require the RecursiveDo extension enabled, but the lexer handles that
 
 > fexp :: { PExp L }
 >       : fexp aexp                     { App ($1 <> $2) $1 $2 }
+>       | fexp expblockb                {% checkEnabled BlockArguments >>
+>                                          return (App ($1 <> $2) $1 $2) }
 >       | aexp                          { $1 }
 
 > apats :: { [Pat L] }
@@ -1531,15 +1551,19 @@ thing we need to look at here is the erpats that use no non-standard lexemes.
 >       | '[' list ']'                  { amap (\l -> l <** [$3]) $ $2 ($1 <^^> $3 <** [$1]) }
 >       | '[:' parr ':]'                { amap (\l -> l <** [$3]) $ $2 ($1 <^^> $3 <** [$1]) }
 >       | '(' erpats ')'                {% checkEnabled RegularPatterns >> return (Paren ($1 <^^> $3 <** [$1,$3]) $2) }
->       | '(|' sexps '|)'               { SeqRP ($1 <^^> $3 <** ($1:reverse (snd $2) ++ [$3])) $ reverse (fst $2) }
->       | '(|' exp '|' quals '|)'       { GuardRP ($1 <^^> $5 <** ($1:$3 : snd $4 ++ [$5])) $2 $ (reverse $ fst $4) }
+>       | '(|' exp '|)'                 { ArrOp ($1 <^^> $3 <** [$1,$3]) $2 }
+>       | '(/' sexps '/)'               { SeqRP ($1 <^^> $3 <** ($1:reverse (snd $2) ++ [$3])) $ reverse (fst $2) }
+>       | '(/' exp '|' quals '/)'       { GuardRP ($1 <^^> $5 <** ($1:$3 : snd $4 ++ [$5])) $2 $ (reverse $ fst $4) }
 >       | xml                           { $1 }
 
 
 Template Haskell - all this is enabled in the lexer.
 >       | IDSPLICE                      { let Loc l (THIdEscape s) = $1 in SpliceExp (nIS l) $ IdSplice (nIS l) s }
+>       | TIDSPLICE                     { let Loc l (THTIdEscape s) = $1 in SpliceExp (nIS l) $ TIdSplice (nIS l) s }
 >       | '$(' trueexp ')'              { let l = ($1 <^^> $3 <** [$1,$3]) in SpliceExp l $ ParenSplice l $2 }
+>       | '$$(' trueexp ')'             { let l = ($1 <^^> $3 <** [$1,$3]) in SpliceExp l $ TParenSplice l $2 }
 >       | '[|' trueexp '|]'             { let l = ($1 <^^> $3 <** [$1,$3]) in BracketExp l $ ExpBracket l $2 }
+>       | '[||' trueexp '||]'           { let l = ($1 <^^> $3 <** [$1,$3]) in BracketExp l $ TExpBracket l $2 }
 >       | '[p|' exp0 '|]'               {% do { p <- checkPattern $2;
 >                                               let {l = ($1 <^^> $3 <** [$1,$3]) };
 >                                               return $ BracketExp l $ PatBracket l p } }
@@ -1996,8 +2020,8 @@ Identifiers and Symbols
 >       | 'unsafe'              { unsafe_name     (nIS $1) }
 >       | 'interruptible'       { interruptible_name (nIS $1) }
 >       | 'threadsafe'          { threadsafe_name (nIS $1) }
->	      | 'forall'		          { forall_name	  (nIS $1) }
->	      | 'family'		          { family_name     (nIS $1) }
+>	      | 'forall'                          { forall_name	  (nIS $1) }
+>	      | 'family'                          { family_name     (nIS $1) }
 >       | 'role'                { role_name  (nIS $1) }
 
 
@@ -2188,8 +2212,8 @@ Miscellaneous (mostly renamings)
 >       | 'safe'                { safe_name       (nIS $1) }
 >       | 'unsafe'              { unsafe_name     (nIS $1) }
 >       | 'threadsafe'          { threadsafe_name (nIS $1) }
-	| 'forall'		{ forall_name	  (nIS $1) }
-	| 'family'		{ family_name     (nIS $1) }
+        | 'forall'		{ forall_name	  (nIS $1) }
+        | 'family'		{ family_name     (nIS $1) }
 
 > qtyvarop_(ostar) :: { QName L }
 > qtyvarop_ : '`' tyvar '`'     { UnQual ($1 <^^> $3 <** [$1, srcInfoSpan (ann $2), $3]) $2 }

@@ -3152,34 +3152,43 @@ ParseOk
                      { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 55 22 55 30
                      , srcInfoPoints = [ SrcSpan "tests/examples/Vta1.hs" 55 28 55 30 ]
                      }
-                   (ClassA
+                   (TypeA
                       SrcSpanInfo
                         { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 55 22 55 30
                         , srcInfoPoints = [ SrcSpan "tests/examples/Vta1.hs" 55 28 55 30 ]
                         }
-                      (UnQual
+                      (TyApp
                          SrcSpanInfo
-                           { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 55 22 55 25
-                           , srcInfoPoints = []
+                           { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 55 22 55 30
+                           , srcInfoPoints = [ SrcSpan "tests/examples/Vta1.hs" 55 28 55 30 ]
                            }
-                         (Ident
+                         (TyCon
                             SrcSpanInfo
-                              { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 55 22 55 25
+                              { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 55 22 55 30
+                              , srcInfoPoints = [ SrcSpan "tests/examples/Vta1.hs" 55 28 55 30 ]
+                              }
+                            (UnQual
+                               SrcSpanInfo
+                                 { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 55 22 55 25
+                                 , srcInfoPoints = []
+                                 }
+                               (Ident
+                                  SrcSpanInfo
+                                    { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 55 22 55 25
+                                    , srcInfoPoints = []
+                                    }
+                                  "Num")))
+                         (TyVar
+                            SrcSpanInfo
+                              { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 55 26 55 27
                               , srcInfoPoints = []
                               }
-                            "Num"))
-                      [ TyVar
-                          SrcSpanInfo
-                            { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 55 26 55 27
-                            , srcInfoPoints = []
-                            }
-                          (Ident
-                             SrcSpanInfo
-                               { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 55 26 55 27
-                               , srcInfoPoints = []
-                               }
-                             "a")
-                      ])))
+                            (Ident
+                               SrcSpanInfo
+                                 { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 55 26 55 27
+                                 , srcInfoPoints = []
+                                 }
+                               "a"))))))
              (TyForall
                 SrcSpanInfo
                   { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 55 31 55 52
@@ -3418,40 +3427,54 @@ ParseOk
                                        , srcInfoPoints =
                                            [ SrcSpan "tests/examples/Vta1.hs" 58 32 58 34 ]
                                        }
-                                     (ClassA
+                                     (TypeA
                                         SrcSpanInfo
                                           { srcInfoSpan =
                                               SrcSpan "tests/examples/Vta1.hs" 58 26 58 34
                                           , srcInfoPoints =
                                               [ SrcSpan "tests/examples/Vta1.hs" 58 32 58 34 ]
                                           }
-                                        (UnQual
+                                        (TyApp
                                            SrcSpanInfo
                                              { srcInfoSpan =
-                                                 SrcSpan "tests/examples/Vta1.hs" 58 26 58 29
-                                             , srcInfoPoints = []
+                                                 SrcSpan "tests/examples/Vta1.hs" 58 26 58 34
+                                             , srcInfoPoints =
+                                                 [ SrcSpan "tests/examples/Vta1.hs" 58 32 58 34 ]
                                              }
-                                           (Ident
+                                           (TyCon
                                               SrcSpanInfo
                                                 { srcInfoSpan =
-                                                    SrcSpan "tests/examples/Vta1.hs" 58 26 58 29
+                                                    SrcSpan "tests/examples/Vta1.hs" 58 26 58 34
+                                                , srcInfoPoints =
+                                                    [ SrcSpan "tests/examples/Vta1.hs" 58 32 58 34 ]
+                                                }
+                                              (UnQual
+                                                 SrcSpanInfo
+                                                   { srcInfoSpan =
+                                                       SrcSpan "tests/examples/Vta1.hs" 58 26 58 29
+                                                   , srcInfoPoints = []
+                                                   }
+                                                 (Ident
+                                                    SrcSpanInfo
+                                                      { srcInfoSpan =
+                                                          SrcSpan
+                                                            "tests/examples/Vta1.hs" 58 26 58 29
+                                                      , srcInfoPoints = []
+                                                      }
+                                                    "Num")))
+                                           (TyVar
+                                              SrcSpanInfo
+                                                { srcInfoSpan =
+                                                    SrcSpan "tests/examples/Vta1.hs" 58 30 58 31
                                                 , srcInfoPoints = []
                                                 }
-                                              "Num"))
-                                        [ TyVar
-                                            SrcSpanInfo
-                                              { srcInfoSpan =
-                                                  SrcSpan "tests/examples/Vta1.hs" 58 30 58 31
-                                              , srcInfoPoints = []
-                                              }
-                                            (Ident
-                                               SrcSpanInfo
-                                                 { srcInfoSpan =
-                                                     SrcSpan "tests/examples/Vta1.hs" 58 30 58 31
-                                                 , srcInfoPoints = []
-                                                 }
-                                               "a")
-                                        ])))
+                                              (Ident
+                                                 SrcSpanInfo
+                                                   { srcInfoSpan =
+                                                       SrcSpan "tests/examples/Vta1.hs" 58 30 58 31
+                                                   , srcInfoPoints = []
+                                                   }
+                                                 "a"))))))
                                (TyForall
                                   SrcSpanInfo
                                     { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 58 35 58 56
@@ -4848,37 +4871,51 @@ ParseOk
                                 { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 85 38 85 47
                                 , srcInfoPoints = [ SrcSpan "tests/examples/Vta1.hs" 85 45 85 47 ]
                                 }
-                              (ClassA
+                              (TypeA
                                  SrcSpanInfo
                                    { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 85 38 85 47
                                    , srcInfoPoints =
                                        [ SrcSpan "tests/examples/Vta1.hs" 85 45 85 47 ]
                                    }
-                                 (UnQual
+                                 (TyApp
                                     SrcSpanInfo
-                                      { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 85 38 85 42
-                                      , srcInfoPoints = []
+                                      { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 85 38 85 47
+                                      , srcInfoPoints =
+                                          [ SrcSpan "tests/examples/Vta1.hs" 85 45 85 47 ]
                                       }
-                                    (Ident
+                                    (TyCon
                                        SrcSpanInfo
                                          { srcInfoSpan =
-                                             SrcSpan "tests/examples/Vta1.hs" 85 38 85 42
+                                             SrcSpan "tests/examples/Vta1.hs" 85 38 85 47
+                                         , srcInfoPoints =
+                                             [ SrcSpan "tests/examples/Vta1.hs" 85 45 85 47 ]
+                                         }
+                                       (UnQual
+                                          SrcSpanInfo
+                                            { srcInfoSpan =
+                                                SrcSpan "tests/examples/Vta1.hs" 85 38 85 42
+                                            , srcInfoPoints = []
+                                            }
+                                          (Ident
+                                             SrcSpanInfo
+                                               { srcInfoSpan =
+                                                   SrcSpan "tests/examples/Vta1.hs" 85 38 85 42
+                                               , srcInfoPoints = []
+                                               }
+                                             "Show")))
+                                    (TyVar
+                                       SrcSpanInfo
+                                         { srcInfoSpan =
+                                             SrcSpan "tests/examples/Vta1.hs" 85 43 85 44
                                          , srcInfoPoints = []
                                          }
-                                       "Show"))
-                                 [ TyVar
-                                     SrcSpanInfo
-                                       { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 85 43 85 44
-                                       , srcInfoPoints = []
-                                       }
-                                     (Ident
-                                        SrcSpanInfo
-                                          { srcInfoSpan =
-                                              SrcSpan "tests/examples/Vta1.hs" 85 43 85 44
-                                          , srcInfoPoints = []
-                                          }
-                                        "a")
-                                 ])))
+                                       (Ident
+                                          SrcSpanInfo
+                                            { srcInfoSpan =
+                                                SrcSpan "tests/examples/Vta1.hs" 85 43 85 44
+                                            , srcInfoPoints = []
+                                            }
+                                          "a"))))))
                         (TyFun
                            SrcSpanInfo
                              { srcInfoSpan = SrcSpan "tests/examples/Vta1.hs" 85 48 85 59
