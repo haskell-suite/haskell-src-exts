@@ -849,6 +849,7 @@ data CallConv l
     | CPlusPlus l
     | DotNet l
     | Jvm l
+    | Java l
     | Js l
     | JavaScript l
     | CApi l
@@ -1766,6 +1767,7 @@ instance Annotated CallConv where
     ann (CPlusPlus l) = l
     ann (DotNet l) = l
     ann (Jvm l) = l
+    ann (Java l) = l
     ann (Js l) = l
     ann (JavaScript l) = l
     ann (CApi l) = l

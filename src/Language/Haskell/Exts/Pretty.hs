@@ -709,6 +709,7 @@ instance  Pretty (CallConv l) where
         pretty CPlusPlus {}  = text "cplusplus"
         pretty DotNet {}     = text "dotnet"
         pretty Jvm {}        = text "jvm"
+        pretty Java {}       = text "java"
         pretty Js {}         = text "js"
         pretty JavaScript {} = text "javascript"
         pretty CApi {}       = text "capi"
