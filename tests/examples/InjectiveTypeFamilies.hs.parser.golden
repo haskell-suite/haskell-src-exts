@@ -15831,7 +15831,7 @@ ParseOk
     , Comment
         False
         (SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 230 1 230 80)
-        " this has bare variable in the RHS but all LHS varaiables are also bare so it"
+        " this has bare variable in the RHS but all LHS variables are also bare so it"
     , Comment
         False
         (SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 231 1 231 22)

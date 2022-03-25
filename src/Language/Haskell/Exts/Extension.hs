@@ -714,7 +714,7 @@ readMay s = case [x | (x,t) <- reads s, ("","") <- lex t] of
                 _ -> Nothing
 
 {-------------------------------------------
- -- Transform a 'Language', and possibly a modifying set of'Extension's, into a list
+ -- Transform a 'Language', and possibly a modifying set of 'Extension's, into a list
  -- of 'KnownExtension's, to be interpreted as modifying the language you get
  -- when all known extensions are disabled.
  -- Extensions are interpreted in a right-biased fashion, so the last instance

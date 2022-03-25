@@ -29199,7 +29199,7 @@ ParseOk
     , Comment
         False
         (SrcSpan "tests/examples/Directory.hs" 636 9 636 71)
-        " we needn't worry about empty directories: adirectory always"
+        " we needn't worry about empty directories: a directory always"
     , Comment
         False
         (SrcSpan "tests/examples/Directory.hs" 637 9 637 45)

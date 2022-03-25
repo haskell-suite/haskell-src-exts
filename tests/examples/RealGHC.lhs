@@ -6,7 +6,7 @@
 \begin{code}
 {-# OPTIONS -w #-}
 {-# LANGUAGE PatternGuards #-}
--- The above warning supression flag is a temporary kludge.
+-- The above warning suppression flag is a temporary kludge.
 -- While working on this module you are encouraged to remove it and fix
 -- any warnings in the module. See
 --     http://hackage.haskell.org/trac/ghc/wiki/Commentary/CodingStyle#Warnings
@@ -551,7 +551,7 @@ match menv subst e1 (Var v2)
 -- but ended up doing the straightforward thing, which is to
 -- clone the binders if they are in scope.  It's tiresome, and
 -- potentially inefficient, because of the calls to substExpr,
--- but I don't think it'll happen much in pracice.
+-- but I don't think it'll happen much in practice.
 
 {-  Cases to think about
     (let x=y+1 in \x. (x,x))

@@ -38682,7 +38682,7 @@ ParseOk
   , [ Comment
         False
         (SrcSpan "tests/examples/RealGHC.lhs" 9 1 9 60)
-        " The above warning supression flag is a temporary kludge."
+        " The above warning suppression flag is a temporary kludge."
     , Comment
         False
         (SrcSpan "tests/examples/RealGHC.lhs" 10 1 10 72)
@@ -39352,7 +39352,7 @@ ParseOk
     , Comment
         False
         (SrcSpan "tests/examples/RealGHC.lhs" 554 1 554 51)
-        " but I don't think it'll happen much in pracice."
+        " but I don't think it'll happen much in practice."
     , Comment
         True
         (SrcSpan "tests/examples/RealGHC.lhs" 556 1 569 69)

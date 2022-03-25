@@ -633,7 +633,7 @@ getDirectoryContents path =
      (\(h,_) -> Win32.findClose h)
      (\(h,fdat) -> loop h fdat [])
   where
-        -- we needn't worry about empty directories: adirectory always
+        -- we needn't worry about empty directories: a directory always
         -- has at least "." and ".." entries
     loop :: Win32.HANDLE -> Win32.FindData -> [FilePath] -> IO [FilePath]
     loop h fdat acc = do
