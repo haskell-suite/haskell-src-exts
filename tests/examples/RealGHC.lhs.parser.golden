@@ -39148,7 +39148,7 @@ ParseOk
     , Comment
         False
         (SrcSpan "tests/examples/RealGHC.lhs" 486 1 486 44)
-        " second expresion.  The RnEnv2 does that."
+        " second expression.  The RnEnv2 does that."
     , Comment
         False (SrcSpan "tests/examples/RealGHC.lhs" 487 1 487 3) ""
     , Comment

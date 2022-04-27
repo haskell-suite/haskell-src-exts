@@ -89,7 +89,7 @@ data Token
         | LeftArrow
         | RightArrow
         | At
-        | TApp -- '@' but have to check for preceeding whitespace
+        | TApp -- '@' but have to check for preceding whitespace
         | Tilde
         | DoubleArrow
         | Minus
@@ -410,7 +410,7 @@ topLexer = do
         -- take care of whitespace in PCDATA
         ec <- getExtContext
         case ec of
-         -- if there was no linebreak, and we are lexing PCDATA,
+         -- if there was no line break, and we are lexing PCDATA,
          -- then we want to care about the whitespace.
          -- We don't bother to test for XmlSyntax, since we
          -- couldn't end up in ChildCtxt otherwise.

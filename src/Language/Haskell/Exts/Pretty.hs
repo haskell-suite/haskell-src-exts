@@ -487,7 +487,7 @@ instance  Pretty (Decl l) where
                 mySep ((punctuate comma . map pretty $ nameList)
                       ++ [text "::", pretty qualType])
 
-        --  Req can be ommitted if it is empty
+        --  Req can be omitted if it is empty
         --  We must print prov if req is nonempty
         pretty (PatSynSig _ ns mtvs prov mtvs2 req t) =
                 let contexts = [maybePP pretty prov, ppForall mtvs2, maybePP pretty req]

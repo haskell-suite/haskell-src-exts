@@ -993,7 +993,7 @@ data QualStmt l
 
 -- | An /fbind/ in a labeled construction or update expression.
 data FieldUpdate l
-    = FieldUpdate l (QName l) (Exp l)    -- ^ ordinary label-expresion pair
+    = FieldUpdate l (QName l) (Exp l)    -- ^ ordinary label-expression pair
     | FieldPun l (QName l)               -- ^ record field pun
     | FieldWildcard l                    -- ^ record field wildcard
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)

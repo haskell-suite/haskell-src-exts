@@ -15783,7 +15783,7 @@ ParseOk
     , Comment
         False
         (SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 146 1 146 79)
-        " permiting variables to appear in different order than the one in which they"
+        " permitting variables to appear in different order than the one in which they"
     , Comment
         False
         (SrcSpan "tests/examples/InjectiveTypeFamilies.hs" 147 1 147 18)

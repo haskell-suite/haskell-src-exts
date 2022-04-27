@@ -947,7 +947,7 @@ Pragmas
 -----------------------------------------------------------------------------
 Types
 
-Type equality contraints need the TypeFamilies extension.
+Type equality constraints need the TypeFamilies extension.
 
 > truedtype :: { Type L }
 >       : dtype                         {% checkType $1 }

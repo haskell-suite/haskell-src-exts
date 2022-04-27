@@ -718,7 +718,7 @@ readMay s = case [x | (x,t) <- reads s, ("","") <- lex t] of
  -- of 'KnownExtension's, to be interpreted as modifying the language you get
  -- when all known extensions are disabled.
  -- Extensions are interpreted in a right-biased fashion, so the last instance
- -- of an occurence of 'EnableExtension' or 'DisableExtension' for a given
+ -- of an occurrence of 'EnableExtension' or 'DisableExtension' for a given
  -- 'KnownExtension' takes precedence.
  -------------------------------------------}
 

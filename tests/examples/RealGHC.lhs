@@ -436,7 +436,7 @@ On reflection, this case probably does just work, but this might not
     Target:    f (\y.y)
 Here we want to clone when we find the \x, but to know that x must be in scope
 
-To achive this, we use rnBndrL to rename the template variables if
+To achieve this, we use rnBndrL to rename the template variables if
 necessary; the renamed ones are the tmpl_vars'
 
 
@@ -483,7 +483,7 @@ match :: MatchEnv
 -- Consider matching
 --  \x->f      against    \f->f
 -- When we meet the lambdas we must remember to rename f to f' in the
--- second expresion.  The RnEnv2 does that.
+-- second expression.  The RnEnv2 does that.
 --
 -- Consider matching
 --  forall a. \b->b    against   \a->3
