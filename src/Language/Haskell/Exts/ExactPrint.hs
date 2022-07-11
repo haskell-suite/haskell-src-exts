@@ -1,5 +1,5 @@
-{-# LANGUAGE DeriveFunctor #-}
-{-# LANGUAGE CPP #-}
+{-# LANGUAGE CPP, DeriveFunctor, Safe #-}
+
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Language.Haskell.Exts.Annotated.ExactPrint

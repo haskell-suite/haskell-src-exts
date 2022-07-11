@@ -1,4 +1,5 @@
-{-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DeriveDataTypeable, Safe #-}
+
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Language.Haskell.Exts.Comments

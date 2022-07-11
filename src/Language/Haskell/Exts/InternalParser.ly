@@ -1,6 +1,7 @@
 > {
 > {-# LANGUAGE CPP #-}
 > {-# OPTIONS_HADDOCK hide #-}
+> 
 > -----------------------------------------------------------------------------
 > -- |
 > -- Module      :  Language.Haskell.Exts.Annotated.Parser
