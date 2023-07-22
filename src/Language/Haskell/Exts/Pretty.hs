@@ -367,12 +367,18 @@ instance Pretty (ImportSpecList l) where
             (if b then text "hiding" else empty)
                 <+> parenList (map pretty ispecs)
 
-instance  Pretty (ImportSpec l) where
+instance Pretty (ImportSpec l) where
         pretty (IVar _ name  )              = pretty name
         pretty (IAbs _ ns name)             = pretty ns <+> pretty name
-        pretty (IThingAll _ name)           = pretty name <> text "(..)"
-        pretty (IThingWith _ name nameList) =
-                pretty name <> (parenList . map pretty $ nameList)
+        pretty (IThingAll _ name) = let rest = pretty name <> text "(..)" in
+          case name of
+            -- if it's a symbol, append a "type" prefix to the beginning
+            (Symbol _ _)                     -> pretty (TypeNamespace {}) <+> rest
+            (Ident  _ _)                     -> rest
+        pretty (IThingWith _ name nameList) = let rest = pretty name <> (parenList . map pretty $ nameList) in
+          case name of
+            (Symbol _ _)                     -> pretty (TypeNamespace {}) <+> rest
+            (Ident  _ _)                     -> rest
 
 instance  Pretty (TypeEqn l) where
         pretty (TypeEqn _ pat eqn) = mySep [pretty pat, equals, pretty eqn]
