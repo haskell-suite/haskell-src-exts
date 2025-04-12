@@ -1,0 +1,89 @@
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan =
+            SrcSpan "tests/examples/ImportQualifiedPost.hs" 1 1 5 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/ImportQualifiedPost.hs" 1 1 1 1
+            , SrcSpan "tests/examples/ImportQualifiedPost.hs" 2 1 2 1
+            , SrcSpan "tests/examples/ImportQualifiedPost.hs" 2 1 2 1
+            , SrcSpan "tests/examples/ImportQualifiedPost.hs" 4 1 4 1
+            , SrcSpan "tests/examples/ImportQualifiedPost.hs" 5 1 5 1
+            , SrcSpan "tests/examples/ImportQualifiedPost.hs" 5 1 5 1
+            ]
+        }
+      (Just
+         (ModuleHead
+            SrcSpanInfo
+              { srcInfoSpan =
+                  SrcSpan "tests/examples/ImportQualifiedPost.hs" 2 1 2 33
+              , srcInfoPoints =
+                  [ SrcSpan "tests/examples/ImportQualifiedPost.hs" 2 1 2 7
+                  , SrcSpan "tests/examples/ImportQualifiedPost.hs" 2 28 2 33
+                  ]
+              }
+            (ModuleName
+               SrcSpanInfo
+                 { srcInfoSpan =
+                     SrcSpan "tests/examples/ImportQualifiedPost.hs" 2 8 2 27
+                 , srcInfoPoints = []
+                 }
+               "ImportQualifiedPost")
+            Nothing
+            Nothing))
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/ImportQualifiedPost.hs" 1 1 1 37
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/ImportQualifiedPost.hs" 1 1 1 13
+                , SrcSpan "tests/examples/ImportQualifiedPost.hs" 1 34 1 37
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/ImportQualifiedPost.hs" 1 14 1 33
+                , srcInfoPoints = []
+                }
+              "ImportQualifiedPost"
+          ]
+      ]
+      [ ImportDecl
+          { importAnn =
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/ImportQualifiedPost.hs" 4 1 4 32
+                , srcInfoPoints =
+                    [ SrcSpan "tests/examples/ImportQualifiedPost.hs" 4 1 4 7
+                    , SrcSpan "tests/examples/ImportQualifiedPost.hs" 4 18 4 27
+                    , SrcSpan "tests/examples/ImportQualifiedPost.hs" 4 28 4 30
+                    ]
+                }
+          , importModule =
+              ModuleName
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/ImportQualifiedPost.hs" 4 8 4 17
+                  , srcInfoPoints = []
+                  }
+                "Data.List"
+          , importQualified = True
+          , importSrc = False
+          , importSafe = False
+          , importPkg = Nothing
+          , importAs =
+              Just
+                (ModuleName
+                   SrcSpanInfo
+                     { srcInfoSpan =
+                         SrcSpan "tests/examples/ImportQualifiedPost.hs" 4 31 4 32
+                     , srcInfoPoints = []
+                     }
+                   "L")
+          , importSpecs = Nothing
+          }
+      ]
+      []
+  , []
+  )

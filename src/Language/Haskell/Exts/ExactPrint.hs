@@ -414,13 +414,18 @@ instance ExactP ImportDecl where
                      return pts'
                   _ -> errorEP "ExactP: ImportDecl is given too few srcInfoPoints"
                 else return pts1
-        pts3 <- if qf then
-                 case pts2 of
-                  x:pts' -> do
+
+        -- Try to determine if qualified is post-positioned only if we have enough points
+        let isPostQual = (qf && not (null pts2)) && safeIsPostQualified pts2
+
+        pts3 <- if qf && not isPostQual then
+                  case pts2 of
+                   x:pts' -> do
                      printStringAt (pos x) "qualified"
                      return pts'
-                  _ -> errorEP "ExactP: ImportDecl is given too few srcInfoPoints"
+                   _ -> errorEP "ExactP: ImportDecl is given too few srcInfoPoints"
                 else return pts2
+
         pts4 <- case mpkg of
                 Just pkg ->
                   case pts3 of
@@ -429,20 +434,44 @@ instance ExactP ImportDecl where
                       return pts'
                    _ -> errorEP "ExactP: ImportDecl is given too few srcInfoPoints"
                 _ -> return pts3
+
         exactPC mn
-        _ <- case mas of
-                Just as ->
+
+        -- Only try post-qualified if we determined it's actually post-qualified
+        pts5 <- if qf && isPostQual then
                  case pts4 of
                   x:pts' -> do
+                     printStringAt (pos x) "qualified"
+                     return pts'
+                  _ -> errorEP "ExactP: ImportDecl is given too few srcInfoPoints"
+                else return pts4
+
+        _ <- case mas of
+               Just as ->
+                 case pts5 of
+                   x:pts' -> do
                      printStringAt (pos x) "as"
                      exactPC as
                      return pts'
-                  _ -> errorEP "ExactP: ImportDecl is given too few srcInfoPoints"
-                _ -> return pts4
+                   _ -> errorEP "ExactP: ImportDecl is given too few srcInfoPoints"
+               _ -> return pts5
+
         case mispecs of
          Nothing -> return ()
          Just ispecs -> exactPC ispecs
      _ -> errorEP "ExactP: ImportDecl is given too few srcInfoPoints"
+    where safeIsPostQualified pts =
+            case pts of
+              (p:_) ->
+                let modSpan = srcInfoSpan (ann mn)
+                    -- Only consider it post-qualified if we have valid spans to compare
+                in ((isValidSpan modSpan && isValidSpan p) &&
+                    (srcSpanEnd modSpan <= srcSpanStart p))
+              _ -> False
+            where
+              isValidSpan s =
+                srcSpanStartLine s > 0 && srcSpanEndLine s > 0 &&
+                srcSpanStartColumn s >= 0 && srcSpanEndColumn s >= 0
 
 instance ExactP Module where
   exactP mdl = case mdl of
