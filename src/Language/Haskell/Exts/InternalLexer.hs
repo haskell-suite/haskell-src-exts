@@ -1,3 +1,4 @@
+{-# LANGUAGE BangPatterns #-}
 {-# OPTIONS_HADDOCK hide #-}
 -----------------------------------------------------------------------------
 -- |
@@ -1143,23 +1144,23 @@ lexCharacter = do   -- We need to keep track of not only character constants but
 
 
 lexString :: Lex a Token
-lexString = loop ("","")
+lexString = loop [] []
     where
-    loop (s,raw) = do
+    loop !s !raw = do
         r <- getInput
         exts <- getExtensionsL
         case r of
             '\\':'&':_ -> do
                     discard 2
-                    loop (s, '&':'\\':raw)
+                    loop s ('&':'\\':raw)
             '\\':c:_ | isSpace c -> do
                         discard 1
                         wcs <- lexWhiteChars
                         matchChar '\\' "Illegal character in string gap"
-                        loop (s, '\\':reverse wcs ++ '\\':raw)
+                        loop s ('\\':revAppend wcs ('\\':raw))
                      | otherwise -> do
                         (ce, str) <- lexEscape
-                        loop (ce:s, reverse str ++ '\\':raw)
+                        loop (ce `seq` ce : s) (revAppend str ('\\':raw))
             '"':'#':_ | MagicHash `elem` exts -> do
                         discard 2
                         return (StringHash (reverse s, reverse raw))
@@ -1168,8 +1169,12 @@ lexString = loop ("","")
                 return (StringTok (reverse s, reverse raw))
             c:_ | c /= '\n' -> do
                 discard 1
-                loop (c:s, c:raw)
+                loop (c:s) (c:raw)
             _ ->   fail "Improperly terminated string"
+
+    revAppend :: [a] -> [a] -> [a]
+    revAppend []     ys = ys
+    revAppend (x:xs) ys = revAppend xs (x:ys)
 
     lexWhiteChars :: Lex a String
     lexWhiteChars = do
@@ -1301,8 +1306,10 @@ lexDecimal = do
 
 -- Stolen from Hugs's Prelude
 parseInteger :: Integer -> String -> Integer
-parseInteger radix ds =
-    foldl1 (\n d -> n * radix + d) (map (toInteger . digitToInt) ds)
+parseInteger radix = go 0
+  where
+    go !acc []     = acc
+    go !acc (d:ds) = go (acc * radix + toInteger (digitToInt d)) ds
 
 flagKW :: Token -> Lex a ()
 flagKW t =
