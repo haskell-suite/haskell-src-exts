@@ -31,7 +31,7 @@ import Language.Haskell.Exts.ExtScheme
 import Prelude hiding (id, exponent)
 import Data.Char
 import Data.Ratio
-import Data.List (intercalate, isPrefixOf)
+import Data.List (intercalate)
 import Control.Monad (when)
 import qualified Data.Text as T
 import Data.Text (Text)
@@ -228,7 +228,7 @@ data Token
         | EOF
         deriving (Eq,Show)
 
-reserved_ops :: [(String,(Token, Maybe ExtScheme))]
+reserved_ops :: [(Text,(Token, Maybe ExtScheme))]
 reserved_ops = [
  ( "..", (DotDot,       Nothing) ),
  ( ":",  (Colon,        Nothing) ),
@@ -264,7 +264,7 @@ reserved_ops = [
  ( "\x2200",    (KW_Forall,         Just (All [UnicodeSyntax, ExplicitForAll])) )
  ]
 
-special_varops :: [(String,(Token, Maybe ExtScheme))]
+special_varops :: [(Text,(Token, Maybe ExtScheme))]
 special_varops = [
  -- the dot is only a special symbol together with forall, but can still be used as function composition
  ( ".",  (Dot,          Just (Any [ExplicitForAll, ExistentialQuantification])) ),
@@ -272,7 +272,7 @@ special_varops = [
  ( "!",  (Exclamation,  Nothing) )
  ]
 
-reserved_ids :: [(String,(Token, Maybe ExtScheme))]
+reserved_ids :: [(Text,(Token, Maybe ExtScheme))]
 reserved_ids = [
  ( "_",         (Underscore,    Nothing) ),
  ( "by",        (KW_By,         Just (Any [TransformListComp])) ),
@@ -315,7 +315,7 @@ reserved_ids = [
  ]
 
 
-special_varids :: [(String,(Token, Maybe ExtScheme))]
+special_varids :: [(Text,(Token, Maybe ExtScheme))]
 special_varids = [
  ( "as",        (KW_As,         Nothing) ),
  ( "qualified", (KW_Qualified,  Nothing) ),
@@ -337,7 +337,7 @@ special_varids = [
  ( "capi",          (KW_CApi,          Just (Any [CApiFFI])) )
  ]
 
-pragmas :: [(String,Token)]
+pragmas :: [(Text,Token)]
 pragmas = [
  ( "rules",             RULES           ),
  ( "inline",            INLINE True     ),
@@ -481,7 +481,7 @@ lexWhiteSpace_ bol =  do _ <- lexWhiteSpace bol
                          return ()
 
 isRecognisedPragma, isLinePragma :: String -> Bool
-isRecognisedPragma str = let pragma = takeWhile isPragmaChar . dropWhile isSpace $ str
+isRecognisedPragma str = let pragma = T.pack . takeWhile isPragmaChar . dropWhile isSpace $ str
                           in case lookupKnownPragma pragma of
                               Nothing -> False
                               _       -> True
@@ -666,17 +666,17 @@ lexStdToken = do
                         discard 2
                         (n, str) <- lexOctal
                         con <- intHash
-                        return (con (n, T.pack ('0':c:str)))
+                        return (con (n, T.cons '0' (T.cons c str)))
                   | toLower c == 'b' && isBinDigit d && BinaryLiterals `elem` exts -> do
                         discard 2
                         (n, str) <- lexBinary
                         con <- intHash
-                        return (con (n, T.pack ('0':c:str)))
+                        return (con (n, T.cons '0' (T.cons c str)))
                   | toLower c == 'x' && isHexDigit d -> do
                         discard 2
                         (n, str) <- lexHexadecimal
                         con <- intHash
-                        return (con (n, T.pack ('0':c:str)))
+                        return (con (n, T.cons '0' (T.cons c str)))
 
         -- implicit parameters
         '?':c:_ | isIdentStart c && ImplicitParams `elem` exts -> do
@@ -804,12 +804,12 @@ lexStdToken = do
                    && isIdentStart c -> do
                                                   discard 1
                                                   [ident] <- lexIdents
-                                                  return $ LabelVarId (T.pack ident)
+                                                  return $ LabelVarId ident
 
 
         c:_ | isDigit c -> lexDecimalOrFloat
 
-            | isUpper c -> lexConIdOrQual ""
+            | isUpper c -> lexConIdOrQual T.empty
 
             | isIdentStart c -> do
                     idents <- lexIdents
@@ -819,23 +819,23 @@ lexStdToken = do
                                     -- check if an extension keyword is enabled
                                     if isEnabled scheme exts
                                      then flagKW keyword >> return keyword
-                                     else return $ VarId (T.pack ident)
-                                 Nothing -> return $ VarId (T.pack ident)
-                     _ -> return $ DVarId (map T.pack idents)
+                                     else return $ VarId ident
+                                 Nothing -> return $ VarId ident
+                     _ -> return $ DVarId idents
 
             | isHSymbol c -> do
-                    sym <- lexWhile isHSymbol
+                    sym <- lexWhileT isHSymbol
                     return $ case lookup sym (reserved_ops ++ special_varops) of
                               Just (t , scheme) ->
                                 -- check if an extension op is enabled
                                 if isEnabled scheme exts
                                  then t
                                  else case c of
-                                        ':' -> ConSym (T.pack sym)
-                                        _   -> VarSym (T.pack sym)
+                                        ':' -> ConSym sym
+                                        _   -> VarSym sym
                               Nothing -> case c of
-                                          ':' -> ConSym (T.pack sym)
-                                          _   -> VarSym (T.pack sym)
+                                          ':' -> ConSym sym
+                                          _   -> VarSym sym
 
             | otherwise -> do
                     discard 1
@@ -861,9 +861,9 @@ lexStdToken = do
 
                         _ ->    fail ("Illegal character \'" ++ show c ++ "\'\n")
 
-      where lexIdents :: Lex a [String]
+      where lexIdents :: Lex a [Text]
             lexIdents = do
-                ident <- lexWhile isIdent
+                ident <- lexWhileT isIdent
                 s <- getInput
                 exts <- getExtensionsL
                 case s of
@@ -874,8 +874,8 @@ lexStdToken = do
                         idents <- lexIdents
                         return $ ident : idents
                  '#':_ | MagicHash `elem` exts -> do
-                        hashes <- lexWhile (== '#')
-                        return [ident ++ hashes]
+                        hashes <- lexWhileT (== '#')
+                        return [ident <> hashes]
                  _ -> return [ident]
 
             lexQuasiQuote :: Char -> Lex a Token
@@ -929,17 +929,17 @@ unboxed exts = UnboxedSums `elem` exts || UnboxedTuples `elem` exts
 -- with our representation: the thing after the underscore is a parameter.
 -- Strip off the parameters to option pragmas by hand here, everything else
 -- sits in the pragmas map.
-lookupKnownPragma :: String -> Maybe Token
+lookupKnownPragma :: Text -> Maybe Token
 lookupKnownPragma s =
-    case map toLower s of
-      x | "options_" `isPrefixOf` x -> Just $ OPTIONS (Just $ T.pack $ drop 8 s, undefined)
-        | "options" == x            -> Just $ OPTIONS (Nothing, undefined)
-        | otherwise                 -> lookup x pragmas
+    case T.toLower s of
+      x | "options_" `T.isPrefixOf` x -> Just $ OPTIONS (Just $ T.drop 8 s, undefined)
+        | "options" == x              -> Just $ OPTIONS (Nothing, undefined)
+        | otherwise                   -> lookup x pragmas
 
 lexPragmaStart :: Lex a Token
 lexPragmaStart = do
     lexWhile_ isSpace
-    pr <- lexWhile isPragmaChar
+    pr <- lexWhileT isPragmaChar
     case lookupKnownPragma pr of
      Just (INLINE True) -> do
             s <- getInput
@@ -969,19 +969,20 @@ lexPragmaStart = do
             -- We do not want to store necessary whitespace in the datatype
             -- but if the pragma starts with a newline then we must keep
             -- it to differentiate the two cases.
-            let dropIfSpace (' ':xs) = xs
-                dropIfSpace xs       = xs
+            let dropIfSpace t = case T.uncons t of
+                                  Just (' ', xs) -> xs
+                                  _              -> t
              in
               case fst opt of
                 Just opt' -> do
                   rest <- lexRawPragma
-                  return $ OPTIONS (Just opt', T.pack (dropIfSpace rest))
+                  return $ OPTIONS (Just opt', dropIfSpace rest)
                 Nothing -> do
                   s <- getInput
                   case s of
                     x:_ | isSpace x -> do
                       rest <- lexRawPragma
-                      return $ OPTIONS (Nothing, T.pack (dropIfSpace rest))
+                      return $ OPTIONS (Nothing, dropIfSpace rest)
                     _  -> fail "Malformed Options pragma"
      Just RULES -> do -- Rules enable ScopedTypeVariables locally.
             addExtensionL ScopedTypeVariables
@@ -1000,10 +1001,10 @@ lexPragmaStart = do
                   -- discard 3 -- #-}
                   -- topLexer -- we just discard it as a comment for now and restart -}
 
-lexRawPragma :: Lex a String
+lexRawPragma :: Lex a Text
 lexRawPragma = lexRawPragmaAux
  where lexRawPragmaAux = do
-        rpr <- lexWhile (/='#')
+        rpr <- lexWhileT (/='#')
         s <- getInput
         case s of
          '#':'-':'}':_  -> return rpr
@@ -1011,37 +1012,37 @@ lexRawPragma = lexRawPragmaAux
          _ -> do
             discard 1
             rpr' <- lexRawPragma
-            return $ rpr ++ '#':rpr'
+            return $ rpr <> T.cons '#' rpr'
 
 lexDecimalOrFloat :: Lex a Token
 lexDecimalOrFloat = do
-    ds <- lexWhile isDigit
+    ds <- lexWhileT isDigit
     rest <- getInput
     exts <- getExtensionsL
     case rest of
         ('.':d:_) | isDigit d -> do
                 discard 1
-                frac <- lexWhile isDigit
-                let num = parseInteger 10 (ds ++ frac)
-                    decimals = toInteger (length frac)
+                frac <- lexWhileT isDigit
+                let num = parseInteger 10 (ds <> frac)
+                    decimals = toInteger (T.length frac)
                 (exponent, estr) <- do
                     rest2 <- getInput
                     case rest2 of
                         'e':_ -> lexExponent
                         'E':_ -> lexExponent
-                        _     -> return (0,"")
+                        _     -> return (0, T.empty)
                 con <- lexHash FloatTok FloatTokHash (Right DoubleTokHash)
-                return $ con ((num%1) * 10^^(exponent - decimals), T.pack (ds ++ '.':frac ++ estr))
+                return $ con ((num%1) * 10^^(exponent - decimals), ds <> T.cons '.' frac <> estr)
         e:_ | toLower e == 'e' -> do
                 (exponent, estr) <- lexExponent
                 con <- lexHash FloatTok FloatTokHash (Right DoubleTokHash)
-                return $ con ((parseInteger 10 ds%1) * 10^^exponent, T.pack (ds ++ estr))
-        '#':'#':_ | MagicHash `elem` exts -> discard 2 >> return (WordTokHash (parseInteger 10 ds, T.pack ds))
-        '#':_     | MagicHash `elem` exts -> discard 1 >> return (IntTokHash  (parseInteger 10 ds, T.pack ds))
-        _         ->              return (IntTok      (parseInteger 10 ds, T.pack ds))
+                return $ con ((parseInteger 10 ds%1) * 10^^exponent, ds <> estr)
+        '#':'#':_ | MagicHash `elem` exts -> discard 2 >> return (WordTokHash (parseInteger 10 ds, ds))
+        '#':_     | MagicHash `elem` exts -> discard 1 >> return (IntTokHash  (parseInteger 10 ds, ds))
+        _         ->              return (IntTok      (parseInteger 10 ds, ds))
 
     where
-    lexExponent :: Lex a (Integer, String)
+    lexExponent :: Lex a (Integer, Text)
     lexExponent = do
         (e:r) <- getInput
         discard 1   -- 'e' or 'E'
@@ -1049,12 +1050,12 @@ lexDecimalOrFloat = do
          '+':d:_ | isDigit d -> do
             discard 1
             (n, str) <- lexDecimal
-            return (n, e:'+':str)
+            return (n, T.cons e (T.cons '+' str))
          '-':d:_ | isDigit d -> do
             discard 1
             (n, str) <- lexDecimal
-            return (negate n, e:'-':str)
-         d:_ | isDigit d -> lexDecimal >>= \(n,str) -> return (n, e:str)
+            return (negate n, T.cons e (T.cons '-' str))
+         d:_ | isDigit d -> lexDecimal >>= \(n,str) -> return (n, T.cons e str)
          _ -> fail "Float with missing exponent"
 
 lexHash :: (b -> Token) -> (b -> Token) -> Either String (b -> Token) -> Lex a (b -> Token)
@@ -1071,13 +1072,13 @@ lexHash a b c = do
          _         ->              return a
      else return a
 
-lexConIdOrQual :: String -> Lex a Token
+lexConIdOrQual :: Text -> Lex a Token
 lexConIdOrQual qual = do
-        con <- lexWhile isIdent
-        let conid | null qual = ConId (T.pack con)
-                  | otherwise = QConId (T.pack qual, T.pack con)
-            qual' | null qual = con
-                  | otherwise = qual ++ '.':con
+        con <- lexWhileT isIdent
+        let conid | T.null qual = ConId con
+                  | otherwise   = QConId (qual, con)
+            qual' | T.null qual = con
+                  | otherwise   = qual <> T.cons '.' con
         just_a_conid <- alternative (return conid)
         rest <- getInput
         exts <- getExtensionsL
@@ -1085,16 +1086,16 @@ lexConIdOrQual qual = do
           '.':c:_
              | isIdentStart c -> do  -- qualified varid?
                     discard 1
-                    ident <- lexWhile isIdent
+                    ident <- lexWhileT isIdent
                     s <- getInput
                     exts' <- getExtensionsL
                     ident' <- case s of
-                               '#':_ | MagicHash `elem` exts' -> discard 1 >> return (ident ++ "#")
+                               '#':_ | MagicHash `elem` exts' -> discard 1 >> return (ident <> T.singleton '#')
                                _ -> return ident
                     case lookup ident' reserved_ids of
                        -- cannot qualify a reserved word
                        Just (_,scheme) | isEnabled scheme exts'  -> just_a_conid
-                       _ -> return (QVarId (T.pack qual', T.pack ident'))
+                       _ -> return (QVarId (qual', ident'))
 
              | isUpper c -> do      -- qualified conid?
                     discard 1
@@ -1102,14 +1103,14 @@ lexConIdOrQual qual = do
 
              | isHSymbol c -> do    -- qualified symbol?
                     discard 1
-                    sym <- lexWhile isHSymbol
+                    sym <- lexWhileT isHSymbol
                     exts' <- getExtensionsL
                     case lookup sym reserved_ops of
                         -- cannot qualify a reserved operator
                         Just (_,scheme) | isEnabled scheme exts' -> just_a_conid
                         _        -> return $ case c of
-                                              ':' -> QConSym (T.pack qual', T.pack sym)
-                                              _   -> QVarSym (T.pack qual', T.pack sym)
+                                              ':' -> QConSym (qual', sym)
+                                              _   -> QVarSym (qual', sym)
 
           '#':cs
             | null cs ||
@@ -1134,7 +1135,7 @@ lexCharacter = do   -- We need to keep track of not only character constants but
                     matchQuote
                     con <- lexHash Character CharacterHash
                             (Left "Double hash not available for character literals")
-                    return (con (c, T.pack ('\\':raw)))
+                    return (con (c, T.cons '\\' raw))
          c:'\'':_ -> do
                     discard 2
                     con <- lexHash Character CharacterHash
@@ -1149,7 +1150,7 @@ lexCharacter = do   -- We need to keep track of not only character constants but
 lexString :: Lex a Token
 lexString = loop ("","")
     where
-    loop (s,raw) = do
+    loop (s, raw) = do
         r <- getInput
         exts <- getExtensionsL
         case r of
@@ -1163,7 +1164,7 @@ lexString = loop ("","")
                         loop (s, '\\':reverse wcs ++ '\\':raw)
                      | otherwise -> do
                         (ce, str) <- lexEscape
-                        loop (ce:s, reverse str ++ '\\':raw)
+                        loop (ce:s, reverse (T.unpack str) ++ '\\':raw)
             '"':'#':_ | MagicHash `elem` exts -> do
                         discard 2
                         return (StringHash (T.pack (reverse s), T.pack (reverse raw)))
@@ -1193,7 +1194,7 @@ lexString = loop ("","")
                     return $ c:wcs
             _ -> return ""
 
-lexEscape :: Lex a (Char, String)
+lexEscape :: Lex a (Char, Text)
 lexEscape = do
     discard 1
     r <- getInput
@@ -1256,12 +1257,12 @@ lexEscape = do
                     discard 1
                     (n, raw) <- lexOctal
                     n' <- checkChar n
-                    return (n', 'o':raw)
+                    return (n', T.cons 'o' raw)
         'x':c:_ | isHexDigit c -> do
                     discard 1
                     (n, raw) <- lexHexadecimal
                     n' <- checkChar n
-                    return (n', 'x':raw)
+                    return (n', T.cons 'x' raw)
         c:_ | isDigit c -> do
                     (n, raw) <- lexDecimal
                     n' <- checkChar n
@@ -1275,38 +1276,38 @@ lexEscape = do
 
 -- Production cntrl from section B.2
 
-    cntrl :: Char -> Lex a (Char, String)
-    cntrl c | c >= '@' && c <= '_' = return (chr (ord c - ord '@'), '^':c:[])
+    cntrl :: Char -> Lex a (Char, Text)
+    cntrl c | c >= '@' && c <= '_' = return (chr (ord c - ord '@'), T.pack ('^':c:[]))
     cntrl _                        = fail "Illegal control character"
 
 -- assumes at least one octal digit
-lexOctal :: Lex a (Integer, String)
+lexOctal :: Lex a (Integer, Text)
 lexOctal = do
-    ds <- lexWhile isOctDigit
+    ds <- lexWhileT isOctDigit
     return (parseInteger 8 ds, ds)
 
 -- assumes at least one binary digit
-lexBinary :: Lex a (Integer, String)
+lexBinary :: Lex a (Integer, Text)
 lexBinary = do
-    ds <- lexWhile isBinDigit
+    ds <- lexWhileT isBinDigit
     return (parseInteger 2 ds, ds)
 
 -- assumes at least one hexadecimal digit
-lexHexadecimal :: Lex a (Integer, String)
+lexHexadecimal :: Lex a (Integer, Text)
 lexHexadecimal = do
-    ds <- lexWhile isHexDigit
+    ds <- lexWhileT isHexDigit
     return (parseInteger 16 ds, ds)
 
 -- assumes at least one decimal digit
-lexDecimal :: Lex a (Integer, String)
+lexDecimal :: Lex a (Integer, Text)
 lexDecimal = do
-    ds <- lexWhile isDigit
+    ds <- lexWhileT isDigit
     return (parseInteger 10 ds, ds)
 
 -- Stolen from Hugs's Prelude
-parseInteger :: Integer -> String -> Integer
+parseInteger :: Integer -> Text -> Integer
 parseInteger radix ds =
-    foldl1 (\n d -> n * radix + d) (map (toInteger . digitToInt) ds)
+    T.foldl' (\n c -> n * radix + toInteger (digitToInt c)) 0 ds
 
 flagKW :: Token -> Lex a ()
 flagKW t =
