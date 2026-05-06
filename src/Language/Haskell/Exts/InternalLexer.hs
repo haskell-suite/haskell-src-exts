@@ -39,28 +39,28 @@ import Data.Text (Text)
 -- import Debug.Trace (trace)
 
 data Token
-        = VarId Text
-        | LabelVarId Text
-        | QVarId (Text,Text)
-        | IDupVarId (Text)        -- duplicable implicit parameter
-        | ILinVarId (Text)        -- linear implicit parameter
-        | ConId Text
-        | QConId (Text,Text)
-        | DVarId [Text]       -- to enable varid's with '-' in them
-        | VarSym Text
-        | ConSym Text
-        | QVarSym (Text,Text)
-        | QConSym (Text,Text)
-        | IntTok (Integer, Text)
-        | FloatTok (Rational, Text)
-        | Character (Char, Text)
-        | StringTok (Text, Text)
-        | IntTokHash (Integer, Text)        -- 1#
-        | WordTokHash (Integer, Text)       -- 1##
-        | FloatTokHash (Rational, Text)     -- 1.0#
-        | DoubleTokHash (Rational, Text)    -- 1.0##
-        | CharacterHash (Char, Text)        -- c#
-        | StringHash (Text, Text)         -- "Hello world!"#
+        = VarId          !Text
+        | LabelVarId     !Text
+        | QVarId         !(Text,Text)
+        | IDupVarId      !Text        -- duplicable implicit parameter
+        | ILinVarId      !Text        -- linear implicit parameter
+        | ConId          !Text
+        | QConId         !(Text,Text)
+        | DVarId         ![Text]      -- to enable varid's with '-' in them
+        | VarSym         !Text
+        | ConSym         !Text
+        | QVarSym        !(Text,Text)
+        | QConSym        !(Text,Text)
+        | IntTok         !(Integer, Text)
+        | FloatTok       !(Rational, Text)
+        | Character      !(Char, Text)
+        | StringTok      !(Text, Text)
+        | IntTokHash     !(Integer, Text)        -- 1#
+        | WordTokHash    !(Integer, Text)        -- 1##
+        | FloatTokHash   !(Rational, Text)       -- 1.0#
+        | DoubleTokHash  !(Rational, Text)       -- 1.0##
+        | CharacterHash  !(Char, Text)           -- c#
+        | StringHash     !(Text, Text)           -- "Hello world!"#
 
 -- Symbols
 
@@ -879,48 +879,42 @@ lexStdToken = do
                  _ -> return [ident]
 
             lexQuasiQuote :: Char -> Lex a Token
-            lexQuasiQuote c = do
-                -- We've seen and dropped [$ already
-                ident <- lexQuoter
-                matchChar '|' "Malformed quasi-quote quoter"
-                body <- lexQQBody
-                return $ THQuasiQuote (ident, T.pack body)
+            lexQuasiQuote c = do ident <- lexQuoter   -- We've seen and dropped [$
+                                 matchChar '|' "Malformed quasi-quote quoter"
+                                 body <- lexQQBody
+                                 return $ THQuasiQuote (ident, T.pack body)
                   where lexQuoter
                          | isIdentStart c = lexWhileT isIdent
-                         | otherwise = do
-                            qualThing <- lexConIdOrQual ""
-                            case qualThing of
-                                QVarId (s1,s2) -> return $ s1 <> T.cons '.' s2
-                                QVarSym (s1, s2) -> return $ s1 <> T.cons '.' s2
-                                _                -> fail "Malformed quasi-quote quoter"
+                         | otherwise = do qualThing <- lexConIdOrQual ""
+                                          case qualThing of
+                                            QVarId  (s1,s2) -> return $ s1 <> T.cons '.' s2
+                                            QVarSym (s1,s2) -> return $ s1 <> T.cons '.' s2
+                                            _               -> fail "Malformed quasi-quote quoter"
 
+            -- [Char]-cons accumulator (same rationale as lexString): per-char
+            -- cons is cheaper than per-char T.singleton, and the body dies
+            -- when the THQuasiQuote token is yielded.
             lexQQBody :: Lex a String
-            lexQQBody = do
-                s <- getInput
-                case s of
-                  '\\':']':_ -> do discard 2
-                                   str <- lexQQBody
-                                   return (']':str)
-                  '\\':'|':_ -> do discard 2
-                                   str <- lexQQBody
-                                   return ('|':str)
-                  '|':']':_  -> discard 2 >> return ""
-                  '|':_ -> do discard 1
-                              str <- lexQQBody
-                              return ('|':str)
-                  ']':_ -> do discard 1
-                              str <- lexQQBody
-                              return (']':str)
-                  '\\':_ -> do discard 1
-                               str <- lexQQBody
-                               return ('\\':str)
-                  '\n':_ -> do lexNewline
-                               str <- lexQQBody
-                               return ('\n':str)
-                  []     -> fail "Unexpected end of input while lexing quasi-quoter"
-                  _ -> do str <- lexWhile (not . (`elem` ("\\|\n" :: String)))
-                          rest <- lexQQBody
-                          return (str++rest)
+            lexQQBody = do s <- getInput
+                           case s of
+                             '\\':']':_ -> do discard   2
+                                              fmap (']' :) lexQQBody
+                             '\\':'|':_ -> do discard   2
+                                              fmap ('|' :) lexQQBody
+                             '|':']':_  -> do discard   2
+                                              return ""
+                             '|':_      -> do discard   1
+                                              fmap ('|' :) lexQQBody
+                             ']':_      -> do discard   1
+                                              fmap (']' :) lexQQBody
+                             '\\':_     -> do discard   1
+                                              fmap ('\\':) lexQQBody
+                             '\n':_     -> do lexNewline
+                                              fmap ('\n':) lexQQBody
+                             []         -> fail "Unexpected end of input while lexing quasi-quoter"
+                             _          -> do str  <- lexWhile (not . (`elem` ("\\|\n" :: String)))
+                                              rest <- lexQQBody
+                                              return (str ++ rest)
 
 unboxed :: [KnownExtension] -> Bool
 unboxed exts = UnboxedSums `elem` exts || UnboxedTuples `elem` exts
@@ -1147,52 +1141,46 @@ lexCharacter = do   -- We need to keep track of not only character constants but
     where matchQuote = matchChar '\'' "Improperly terminated character constant"
 
 
+-- The accumulator is a reversed [Char] list rather than [Text]/Builder:
+-- a [Char] cons cell is ~16 B vs ~48 B + ByteArray for T.singleton, and
+-- the literal's cons list dies as soon as the token is yielded (the
+-- single 'T.pack . reverse' at the end materializes the strict 'Text'
+-- payload), so per-literal residency is already bounded.
 lexString :: Lex a Token
 lexString = loop ("","")
     where
-    loop (s, raw) = do
-        r <- getInput
-        exts <- getExtensionsL
-        case r of
-            '\\':'&':_ -> do
-                    discard 2
-                    loop (s, '&':'\\':raw)
-            '\\':c:_ | isSpace c -> do
-                        discard 1
-                        wcs <- lexWhiteChars
-                        matchChar '\\' "Illegal character in string gap"
-                        loop (s, '\\':reverse wcs ++ '\\':raw)
-                     | otherwise -> do
-                        (ce, str) <- lexEscape
-                        loop (ce:s, reverse (T.unpack str) ++ '\\':raw)
-            '"':'#':_ | MagicHash `elem` exts -> do
-                        discard 2
-                        return (StringHash (T.pack (reverse s), T.pack (reverse raw)))
-            '"':_ -> do
-                discard 1
-                return (StringTok (T.pack (reverse s), T.pack (reverse raw)))
-            c:_ | c /= '\n' -> do
-                discard 1
-                loop (c:s, c:raw)
-            _ ->   fail "Improperly terminated string"
+    loop (s, raw) = do r    <- getInput
+                       exts <- getExtensionsL
+                       case r of
+                         '\\':'&':_ -> do discard 2
+                                          loop (s, '&':'\\':raw)
+                         '\\':c:_
+                           | isSpace c -> do discard 1
+                                             wcs <- lexWhiteChars
+                                             matchChar '\\' "Illegal character in string gap"
+                                             loop (s, '\\':reverse wcs ++ '\\':raw)
+                           | otherwise -> do (ce, str) <- lexEscape
+                                             loop (ce:s, reverse (T.unpack str) ++ '\\':raw)
+                         '"':'#':_
+                           | MagicHash `elem` exts -> do discard 2
+                                                         return (StringHash (T.pack (reverse s), T.pack (reverse raw)))
+                         '"':_ -> do discard 1
+                                     return (StringTok (T.pack (reverse s), T.pack (reverse raw)))
+                         c:_
+                           | c /= '\n' -> do discard 1
+                                             loop (c:s, c:raw)
+                         _ -> fail "Improperly terminated string"
 
     lexWhiteChars :: Lex a String
-    lexWhiteChars = do
-        s <- getInput
-        case s of
-            '\n':_ -> do
-                    lexNewline
-                    wcs <- lexWhiteChars
-                    return $ '\n':wcs
-            '\t':_ -> do
-                    lexTab
-                    wcs <- lexWhiteChars
-                    return $ '\t':wcs
-            c:_ | isSpace c -> do
-                    discard 1
-                    wcs <- lexWhiteChars
-                    return $ c:wcs
-            _ -> return ""
+    lexWhiteChars = do s <- getInput
+                       case s of
+                         '\n':_          -> do lexNewline
+                                               fmap ('\n':) lexWhiteChars
+                         '\t':_          -> do lexTab
+                                               fmap ('\t':) lexWhiteChars
+                         c:_ | isSpace c -> do discard 1
+                                               fmap (c:) lexWhiteChars
+                         _               -> return ""
 
 lexEscape :: Lex a (Char, Text)
 lexEscape = do
