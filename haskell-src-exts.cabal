@@ -50,6 +50,7 @@ Library
   Build-Tools:          happy >= 1.19
   Build-Depends:        array >= 0.1, pretty >= 1.0,
                         base >= 4.5 && < 5,
+                        text >= 1.2,
                         -- this is needed to access GHC.Generics on GHC 7.4
                         ghc-prim
   -- this is needed to access Data.Semigroup and Control.Monad.Fail on GHCs
@@ -70,6 +71,7 @@ Library
                         Language.Haskell.Exts.Fixity,
                         Language.Haskell.Exts.ExactPrint,
                         Language.Haskell.Exts.Parser,
+                        Language.Haskell.Exts.Parser.Text,
                         Language.Haskell.Exts.Comments
 
   Other-modules:        Language.Haskell.Exts.ExtScheme,

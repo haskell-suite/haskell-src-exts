@@ -41,6 +41,7 @@
 > import Control.Monad ( liftM, (<=<), when )
 > import Control.Applicative ( (<$>) )
 > import Data.Maybe
+> import qualified Data.Text as T
 > #if MIN_VERSION_base(4,11,0)
 > import Prelude hiding ((<>))
 > #endif
@@ -367,7 +368,7 @@ TODO: Yuck, this is messy, needs fixing in the AST!
 > toppragma :: { ModulePragma L }
 >           : '{-# LANGUAGE' conids optsemis '#-}'   { LanguagePragma ($1 <^^> $4 <** ($1:snd $2 ++ reverse $3 ++ [$4])) (fst $2) }
 >           | '{-# OPTIONS' optsemis '#-}'           { let Loc l (OPTIONS (mc, s)) = $1
->                                                       in OptionsPragma (l <^^> $3 <** (l:reverse $2 ++ [$3])) (readTool mc) s }
+>                                                       in OptionsPragma (l <^^> $3 <** (l:reverse $2 ++ [$3])) (readTool (fmap T.unpack mc)) (T.unpack s) }
 >           | '{-# ANN' annotation '#-}'             { AnnModulePragma ($1 <^^> $3 <** [$1,$3]) $2 }
 
 
@@ -388,8 +389,8 @@ Module Header
 >       | {- empty -}                                           { Nothing }
 
 > maybemodwarning ::  { Maybe (WarningText L) }
->       : '{-# DEPRECATED' STRING '#-}'         { let Loc l (StringTok (s,_)) = $2 in Just $ DeprText ($1 <^^> $3 <** [$1,l,$3]) s }
->       | '{-# WARNING'    STRING '#-}'         { let Loc l (StringTok (s,_)) = $2 in Just $ WarnText ($1 <^^> $3 <** [$1,l,$3]) s }
+>       : '{-# DEPRECATED' STRING '#-}'         { let Loc l (StringTok (s,_)) = $2 in Just $ DeprText ($1 <^^> $3 <** [$1,l,$3]) (T.unpack s) }
+>       | '{-# WARNING'    STRING '#-}'         { let Loc l (StringTok (s,_)) = $2 in Just $ WarnText ($1 <^^> $3 <** [$1,l,$3]) (T.unpack s) }
 >       | {- empty -}                           { Nothing }
 
 > body :: { ([ImportDecl L],[Decl L],[S],L) }
@@ -487,7 +488,7 @@ Requires the PackageImports extension enabled.
 > maybepkg :: { (Maybe String,[S]) }
 >       : STRING                                {% do { checkEnabled PackageImports ;
 >                                                       let { Loc l (StringTok (s,_)) = $1 } ;
->                                                       return $ (Just s,[l]) } }
+>                                                       return $ (Just (T.unpack s),[l]) } }
 >       | {- empty -}                           { (Nothing,[]) }
 
 > maybeas :: { (Maybe (ModuleName L),[S],Maybe L) }
@@ -726,7 +727,7 @@ Role annotations
 
 > -- read it in as a varid for better error messages
 > role :: { (Maybe String, L) }
-> role : VARID             { let (VarId v) = unLoc $1 in (Just v, nIS $ loc $1) }
+> role : VARID             { let (VarId v) = unLoc $1 in (Just (T.unpack v), nIS $ loc $1) }
 >      | '_'               { (Nothing, nIS $1) }
 
 
@@ -888,7 +889,7 @@ so no need to check for extensions.
 >        | {- empty -}                  { Nothing }
 
 > fspec :: { (Maybe String, Name L, Type L, [S]) }
->       : STRING var_no_safety '::' truedtype               { let Loc l (StringTok (s,_)) = $1 in (Just s, $2, $4, [l,$3]) }
+>       : STRING var_no_safety '::' truedtype               { let Loc l (StringTok (s,_)) = $1 in (Just (T.unpack s), $2, $4, [l,$3]) }
 >       |        var_no_safety '::' truedtype               { (Nothing, $1, $3, [$2]) }
 
 -----------------------------------------------------------------------------
@@ -903,7 +904,7 @@ Pragmas
 > rule :: { Rule L }
 >      : STRING activation ruleforall exp0 '=' trueexp      {% do { let {Loc l (StringTok (s,_)) = $1};
 >                                                                   e <- checkRuleExpr $4;
->                                                                   return $ Rule (nIS l <++> ann $6 <** l:snd $3 ++ [$5]) s $2 (fst $3) e $6 } }
+>                                                                   return $ Rule (nIS l <++> ann $6 <** l:snd $3 ++ [$5]) (T.unpack s) $2 (fst $3) e $6 } }
 
 > activation :: { Maybe (Activation L) }
 >        : {- empty -}          { Nothing }
@@ -929,7 +930,7 @@ Pragmas
 >   | {- empty -}                       { ([],[]) }
 
 > warndepr :: { (([Name L], String),[S]) }
->       : namevars STRING               { let Loc l (StringTok (s,_)) = $2 in ((fst $1,s),snd $1 ++ [l]) }
+>       : namevars STRING               { let Loc l (StringTok (s,_)) = $2 in ((fst $1, T.unpack s),snd $1 ++ [l]) }
 
 > namevars :: { ([Name L],[S]) }
 >           : namevar                   { ([$1],[]) }
@@ -1009,10 +1010,10 @@ the (# and #) lexemes. Kinds will be handled at the kind rule.
 >       | '(' ctype_(ostar,kstar) '::' kind ')'         { TyKind  ($1 <^^> $5 <** [$1,$3,$5]) $2 $4 }
 >       | '$(' trueexp ')'              { let l = ($1 <^^> $3 <** [$1,$3]) in TySplice l $ ParenSplice l $2 }
 >       | '$$(' trueexp ')'             { let l = ($1 <^^> $3 <** [$1,$3]) in TySplice l $ TParenSplice l $2 }
->       | IDSPLICE                      { let Loc l (THIdEscape s) = $1 in TySplice (nIS l) $ IdSplice (nIS l) s }
->       | TIDSPLICE                     { let Loc l (THTIdEscape s) = $1 in TySplice (nIS l) $ TIdSplice (nIS l) s }
+>       | IDSPLICE                      { let Loc l (THIdEscape s) = $1 in TySplice (nIS l) $ IdSplice (nIS l) (T.unpack s) }
+>       | TIDSPLICE                     { let Loc l (THTIdEscape s) = $1 in TySplice (nIS l) $ TIdSplice (nIS l) (T.unpack s) }
 >       | '_'                           { TyWildCard (nIS $1) Nothing }
->       | QUASIQUOTE                    { let Loc l (THQuasiQuote (n,q)) = $1 in TyQuasiQuote (nIS l) n q }
+>       | QUASIQUOTE                    { let Loc l (THQuasiQuote (n,q)) = $1 in TyQuasiQuote (nIS l) (T.unpack n) (T.unpack q) }
 >       | ptype_(ostar,kstar)           { % checkEnabled DataKinds >> return (TyPromoted (ann $1) $1) }
 
 > ptype_(ostar,kstar) :: { Promoted L }
@@ -1022,8 +1023,8 @@ the (# and #) lexemes. Kinds will be handled at the kind rule.
 >       | VARQUOTE '[' ']'              { PromotedList  ($1 <^^> $3 <** [$1, $3]) True [] }
        | '[' ']'                       {% PromotedList  ($1 <^^> $2 <** [$1, $2]) False [] }
 >       | VARQUOTE '(' types1 ')'       {% PromotedTuple ($1 <^^> $4 <** ($1:reverse($4:snd $3))) . reverse <\$> mapM checkType (fst $3) }
->       | INT                           { let Loc l (IntTok  (i,raw)) = $1 in PromotedInteger (nIS l) i raw }
->       | STRING                        { let Loc l (StringTok (s,raw)) = $1 in PromotedString (nIS l) s raw }
+>       | INT                           { let Loc l (IntTok  (i,raw)) = $1 in PromotedInteger (nIS l) i (T.unpack raw) }
+>       | STRING                        { let Loc l (StringTok (s,raw)) = $1 in PromotedString (nIS l) (T.unpack s) (T.unpack raw) }
 
 
 > strict_mark :: { (Maybe (L -> BangType L,S), Maybe (Unpackedness L)) }
@@ -1476,8 +1477,8 @@ mdo blocks require the RecursiveDo extension enabled, but the lexer handles that
 >       | 'mdo' stmtlist                { let (sts, inf, ss) = $2 in MDo  (nIS $1 <++> inf <** $1:ss) sts }
 
 > exppragma :: { PExp L }
->       : '{-# CORE' STRING '#-}' exp   { let Loc l (StringTok (s,_)) = $2 in CorePragma (nIS $1 <++> ann $4 <** [l,$3]) s $4 }
->       | '{-# SCC'  STRING '#-}' exp   { let Loc l (StringTok (s,_)) = $2 in SCCPragma  (nIS $1 <++> ann $4 <** [l,$3]) s $4 }
+>       : '{-# CORE' STRING '#-}' exp   { let Loc l (StringTok (s,_)) = $2 in CorePragma (nIS $1 <++> ann $4 <** [l,$3]) (T.unpack s) $4 }
+>       | '{-# SCC'  STRING '#-}' exp   { let Loc l (StringTok (s,_)) = $2 in SCCPragma  (nIS $1 <++> ann $4 <** [l,$3]) (T.unpack s) $4 }
 >       | '{-# GENERATED' STRING INT ':' INT '-' INT ':' INT '#-}' exp
 >                                           { let { Loc l0 (StringTok (s,_)) = $2;
 >                                                   Loc l1 (IntTok (i1,_))   = $3;
@@ -1485,7 +1486,7 @@ mdo blocks require the RecursiveDo extension enabled, but the lexer handles that
 >                                                   Loc l3 (IntTok (i3,_))   = $7;
 >                                                   Loc l4 (IntTok (i4,_))   = $9}
 >                                              in GenPragma (nIS $1 <++> ann $11 <** [$1,l0,l1,$4,l2,$6,l3,$8,l4,$10])
->                                                       s (fromInteger i1, fromInteger i2)
+>                                                       (T.unpack s) (fromInteger i1, fromInteger i2)
 >                                                         (fromInteger i3, fromInteger i4) $11 }
 
 > fexp :: { PExp L }
@@ -1558,8 +1559,8 @@ thing we need to look at here is the erpats that use no non-standard lexemes.
 
 
 Template Haskell - all this is enabled in the lexer.
->       | IDSPLICE                      { let Loc l (THIdEscape s) = $1 in SpliceExp (nIS l) $ IdSplice (nIS l) s }
->       | TIDSPLICE                     { let Loc l (THTIdEscape s) = $1 in SpliceExp (nIS l) $ TIdSplice (nIS l) s }
+>       | IDSPLICE                      { let Loc l (THIdEscape s) = $1 in SpliceExp (nIS l) $ IdSplice (nIS l) (T.unpack s) }
+>       | TIDSPLICE                     { let Loc l (THTIdEscape s) = $1 in SpliceExp (nIS l) $ TIdSplice (nIS l) (T.unpack s) }
 >       | '$(' trueexp ')'              { let l = ($1 <^^> $3 <** [$1,$3]) in SpliceExp l $ ParenSplice l $2 }
 >       | '$$(' trueexp ')'             { let l = ($1 <^^> $3 <** [$1,$3]) in SpliceExp l $ TParenSplice l $2 }
 >       | '[|' trueexp '|]'             { let l = ($1 <^^> $3 <** [$1,$3]) in BracketExp l $ ExpBracket l $2 }
@@ -1580,7 +1581,7 @@ Template Haskell - all this is enabled in the lexer.
 >       | VARQUOTE qcon                 { VarQuote (nIS $1 <++> ann $2 <** [$1]) $2 }
 >       | TYPQUOTE tyvar                { TypQuote (nIS $1 <++> ann $2 <** [$1]) (UnQual (ann $2) $2) }
 >       | TYPQUOTE gtycon               { TypQuote (nIS $1 <++> ann $2 <** [$1]) $2 }
->       | QUASIQUOTE                    { let Loc l (THQuasiQuote (n,q)) = $1 in QuasiQuote (nIS l) n q }
+>       | QUASIQUOTE                    { let Loc l (THQuasiQuote (n,q)) = $1 in QuasiQuote (nIS l) (T.unpack n) (T.unpack q) }
 End Template Haskell
 
 > tup_exprs :: { ([S], SumOrTuple L) }
@@ -1646,7 +1647,7 @@ Hsx Extensions - requires XmlSyntax, but the lexer handles all that.
 >       | {- empty -}                   { [] }
 
 > child :: { PExp L }
->       : PCDATA                        { let Loc l (XPCDATA pcd) = $1 in XPcdata (nIS l) pcd }
+>       : PCDATA                        { let Loc l (XPCDATA pcd) = $1 in XPcdata (nIS l) (T.unpack pcd) }
 >       | '<[' sexps ']>'               { XRPats ($1 <^^> $3 <** (snd $2 ++ [$1,$3])) $ reverse (fst $2) }
 >       | xml                           { $1 }
 
@@ -1656,9 +1657,9 @@ Hsx Extensions - requires XmlSyntax, but the lexer handles all that.
 >       | xmlname                       { let Loc l str = $1 in XName (nIS l) str }
 
 > xmlname :: { Loc String }
->       : VARID                         { let Loc l (VarId  s) = $1 in Loc l s }
->       | CONID                         { let Loc l (ConId  s) = $1 in Loc l s }
->       | DVARID                        { let Loc l (DVarId s) = $1 in Loc l $ mkDVar s }
+>       : VARID                         { let Loc l (VarId  s) = $1 in Loc l (T.unpack s) }
+>       | CONID                         { let Loc l (ConId  s) = $1 in Loc l (T.unpack s) }
+>       | DVARID                        { let Loc l (DVarId s) = $1 in Loc l $ mkDVar (map T.unpack s) }
 >       | xmlkeyword                    { $1 }
 
 > xmlkeyword :: { Loc String }
@@ -1986,7 +1987,7 @@ Implicit parameter
 
 > overloaded_label :: { PExp L }
 >       : LABELVARID            { let Loc l (LabelVarId v) = $1 in OverloadedLabel
->                                                                      (nIS l) v }
+>                                                                      (nIS l) (T.unpack v) }
 
 -----------------------------------------------------------------------------
 Identifiers and Symbols
@@ -1994,11 +1995,11 @@ Identifiers and Symbols
 > qvarid :: { QName L }
 >       : varid                 { UnQual (ann $1) $1 }
 >       | QVARID                { let {Loc l (QVarId q) = $1; nis = nIS l}
->                                  in Qual nis (ModuleName nis (fst q)) (Ident nis (snd q)) }
+>                                  in Qual nis (ModuleName nis (T.unpack (fst q))) (Ident nis (T.unpack (snd q))) }
 >       | '_'                   { hole_name       (nIS $1) }
 
 > varid_no_safety :: { Name L }
->       : VARID                 { let Loc l (VarId v) = $1 in Ident (nIS l) v }
+>       : VARID                 { let Loc l (VarId v) = $1 in Ident (nIS l) (T.unpack v) }
 >       | 'as'                  { as_name         (nIS $1) }
 >       | 'qualified'           { qualified_name  (nIS $1) }
 >       | 'hiding'              { hiding_name     (nIS $1) }
@@ -2027,22 +2028,22 @@ Identifiers and Symbols
 
 Implicit parameter
 > ivarid :: { IPName L }
->       : IDUPID                { let Loc l (IDupVarId i) = $1 in IPDup (nIS l) i }
->       | ILINID                { let Loc l (ILinVarId i) = $1 in IPLin (nIS l) i }
+>       : IDUPID                { let Loc l (IDupVarId i) = $1 in IPDup (nIS l) (T.unpack i) }
+>       | ILINID                { let Loc l (ILinVarId i) = $1 in IPLin (nIS l) (T.unpack i) }
 
 > qconid :: { QName L }
 >       : conid                 { UnQual (ann $1) $1 }
->       | QCONID                { let {Loc l (QConId q) = $1; nis = nIS l} in Qual nis (ModuleName nis (fst q)) (Ident nis (snd q)) }
+>       | QCONID                { let {Loc l (QConId q) = $1; nis = nIS l} in Qual nis (ModuleName nis (T.unpack (fst q))) (Ident nis (T.unpack (snd q))) }
 
 > conid :: { Name L }
->       : CONID                 { let Loc l (ConId c) = $1 in Ident (nIS l) c }
+>       : CONID                 { let Loc l (ConId c) = $1 in Ident (nIS l) (T.unpack c) }
 
 > qconsym :: { QName L }
 >       : consym                { UnQual (ann $1) $1 }
->       | QCONSYM               { let {Loc l (QConSym q) = $1; nis = nIS l} in Qual nis (ModuleName nis (fst q)) (Symbol nis (snd q)) }
+>       | QCONSYM               { let {Loc l (QConSym q) = $1; nis = nIS l} in Qual nis (ModuleName nis (T.unpack (fst q))) (Symbol nis (T.unpack (snd q))) }
 
 > consym :: { Name L }
->       : CONSYM                { let Loc l (ConSym c) = $1 in Symbol (nIS l) c }
+>       : CONSYM                { let Loc l (ConSym c) = $1 in Symbol (nIS l) (T.unpack c) }
 
 > qvarsym :: { QName L }
 >       : qvarsym_('*')         { $1 }
@@ -2066,25 +2067,25 @@ Implicit parameter
 >       : varsymm_('*')         { $1 }
 
 > varsymm_(ostar) :: { Name L } -- varsym not including '-'
->       : VARSYM                { let Loc l (VarSym v) = $1 in Symbol (nIS l) v }
+>       : VARSYM                { let Loc l (VarSym v) = $1 in Symbol (nIS l) (T.unpack v) }
 >       | '!'                   { bang_name (nIS $1) }
 >       | '.'                   { dot_name  (nIS $1) }
 >       | ostar                 { star_name (nIS $1) }
 
 > qvarsym1 :: { QName L }
->       : QVARSYM               { let {Loc l (QVarSym q) = $1; nis = nIS l} in Qual nis (ModuleName nis (fst q)) (Symbol nis (snd q)) }
+>       : QVARSYM               { let {Loc l (QVarSym q) = $1; nis = nIS l} in Qual nis (ModuleName nis (T.unpack (fst q))) (Symbol nis (T.unpack (snd q))) }
 
 > literal :: { Literal L }
->       : INT                   { let Loc l (IntTok        (i,raw)) = $1 in Int        (nIS l) i raw }
->       | CHAR                  { let Loc l (Character     (c,raw)) = $1 in Char       (nIS l) c raw }
->       | RATIONAL              { let Loc l (FloatTok      (r,raw)) = $1 in Frac       (nIS l) r raw }
->       | STRING                { let Loc l (StringTok     (s,raw)) = $1 in String     (nIS l) s raw }
->       | PRIMINT               { let Loc l (IntTokHash    (i,raw)) = $1 in PrimInt    (nIS l) i raw }
->       | PRIMWORD              { let Loc l (WordTokHash   (w,raw)) = $1 in PrimWord   (nIS l) w raw }
->       | PRIMFLOAT             { let Loc l (FloatTokHash  (f,raw)) = $1 in PrimFloat  (nIS l) f raw }
->       | PRIMDOUBLE            { let Loc l (DoubleTokHash (d,raw)) = $1 in PrimDouble (nIS l) d raw }
->       | PRIMCHAR              { let Loc l (CharacterHash (c,raw)) = $1 in PrimChar   (nIS l) c raw }
->       | PRIMSTRING            { let Loc l (StringHash    (s,raw)) = $1 in PrimString (nIS l) s raw }
+>       : INT                   { let Loc l (IntTok        (i,raw)) = $1 in Int        (nIS l) i (T.unpack raw) }
+>       | CHAR                  { let Loc l (Character     (c,raw)) = $1 in Char       (nIS l) c (T.unpack raw) }
+>       | RATIONAL              { let Loc l (FloatTok      (r,raw)) = $1 in Frac       (nIS l) r (T.unpack raw) }
+>       | STRING                { let Loc l (StringTok     (s,raw)) = $1 in String     (nIS l) (T.unpack s) (T.unpack raw) }
+>       | PRIMINT               { let Loc l (IntTokHash    (i,raw)) = $1 in PrimInt    (nIS l) i (T.unpack raw) }
+>       | PRIMWORD              { let Loc l (WordTokHash   (w,raw)) = $1 in PrimWord   (nIS l) w (T.unpack raw) }
+>       | PRIMFLOAT             { let Loc l (FloatTokHash  (f,raw)) = $1 in PrimFloat  (nIS l) f (T.unpack raw) }
+>       | PRIMDOUBLE            { let Loc l (DoubleTokHash (d,raw)) = $1 in PrimDouble (nIS l) d (T.unpack raw) }
+>       | PRIMCHAR              { let Loc l (CharacterHash (c,raw)) = $1 in PrimChar   (nIS l) c (T.unpack raw) }
+>       | PRIMSTRING            { let Loc l (StringHash    (s,raw)) = $1 in PrimString (nIS l) (T.unpack s) (T.unpack raw) }
 
 -----------------------------------------------------------------------------
 Layout
@@ -2195,8 +2196,8 @@ Deriving strategies
 Miscellaneous (mostly renamings)
 
 > modid :: { ModuleName L }
->       : CONID                 { let Loc l (ConId  n) = $1 in ModuleName (nIS l) n }
->       | QCONID                { let Loc l (QConId n) = $1 in ModuleName (nIS l) (fst n ++ '.':snd n) }
+>       : CONID                 { let Loc l (ConId  n) = $1 in ModuleName (nIS l) (T.unpack n) }
+>       | QCONID                { let Loc l (QConId n) = $1 in ModuleName (nIS l) (T.unpack (fst n) ++ '.':T.unpack (snd n)) }
 
 > tyconorcls :: { Name L }
 >       : con                   { $1 }
@@ -2220,7 +2221,7 @@ Miscellaneous (mostly renamings)
 >          | tyvarsym_(ostar)   { UnQual (ann $1) $1 }
 
 > tyvarsym_(ostar) :: { Name L }
-> tyvarsym : VARSYM              { let Loc l (VarSym x) = $1 in Symbol (nIS l) x }
+> tyvarsym : VARSYM              { let Loc l (VarSym x) = $1 in Symbol (nIS l) (T.unpack x) }
 >          | '-'                 { Symbol (nIS $1) "-" }
 >          | ostar                   { Symbol (nIS $1) "*" }
 

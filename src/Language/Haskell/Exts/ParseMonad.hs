@@ -22,11 +22,12 @@ module Language.Haskell.Exts.ParseMonad(
         P, ParseResult(..), atSrcLoc, LexContext(..),
         ParseMode(..), defaultParseMode, fromParseResult,
         runParserWithMode, runParserWithModeComments, runParser,
+        runParserWithModeCommentsText,
         getSrcLoc, pushCurrentContext, popContext,
         getExtensions, getIgnoreFunctionArity,
         -- * Lexing
-        Lex(runL), getInput, discard, getLastChar, lexNewline,
-        lexTab, lexWhile, lexWhile_,
+        Lex(runL), getInput, getInputT, discard, getLastChar, lexNewline,
+        lexTab, lexWhile, lexWhile_, lexWhileT,
         alternative, checkBOL, setBOL, startToken, getOffside,
         pushContextL, popContextL, getExtensionsL, addExtensionL,
         saveExtensionsL, restoreExtensionsL, pushComment,
@@ -44,6 +45,8 @@ import Language.Haskell.Exts.Comments
 import Language.Haskell.Exts.Extension -- (Extension, impliesExts, haskell2010)
 
 import Data.List (intercalate)
+import Data.Text (Text)
+import qualified Data.Text as T
 import Control.Applicative
 import Control.Monad (when, liftM, ap)
 import qualified Control.Monad.Fail as Fail
@@ -70,6 +73,13 @@ class Parseable ast where
   --   with the AST.
   parseWithComments :: ParseMode -> String -> ParseResult (ast, [Comment])
   parseWithComments mode = runParserWithModeComments mode . parser $ fixities mode
+  -- | 'Text'-input variant of 'parseWithMode'.  Avoids the eager
+  --   'T.pack'\/'T.unpack' cycle when the caller already has 'Text'.
+  parseTextWithMode :: ParseMode -> Text -> ParseResult ast
+  parseTextWithMode mode = fmap fst . parseTextWithComments mode
+  -- | 'Text'-input variant of 'parseWithComments'.
+  parseTextWithComments :: ParseMode -> Text -> ParseResult (ast, [Comment])
+  parseTextWithComments mode = runParserWithModeCommentsText mode . parser $ fixities mode
   -- | Internal parser, used to provide default definitions for the others.
   parser :: Maybe [Fixity] -> P ast
 
@@ -199,7 +209,7 @@ toInternalParseMode (ParseMode pf bLang exts _ilang iline _fx farity) =
 -- | Monad for parsing
 
 newtype P a = P { runP ::
-                String              -- input string
+                Text                -- input text
              -> Int                 -- current column
              -> Int                 -- current line
              -> SrcLoc              -- location of last token read
@@ -225,7 +235,13 @@ runParser :: P a -> String -> ParseResult a
 runParser = runParserWithMode defaultParseMode
 
 runParserWithModeComments :: ParseMode -> P a -> String -> ParseResult (a, [Comment])
-runParserWithModeComments mode = let mode2 = toInternalParseMode mode in \(P m) s ->
+runParserWithModeComments mode pm s = runParserWithModeCommentsText mode pm (T.pack s)
+
+-- | 'Text'-input variant of 'runParserWithModeComments'.  Avoids the
+-- intermediate 'String' allocation when the caller already has the source
+-- as 'Text'.
+runParserWithModeCommentsText :: ParseMode -> P a -> Text -> ParseResult (a, [Comment])
+runParserWithModeCommentsText mode = let mode2 = toInternalParseMode mode in \(P m) s ->
   case m s 0 1 start '\n' ([],[],[],(False,False),[]) mode2 of
     Ok (_,_,_,_,cs) a -> ParseOk (a, reverse cs)
     Failed loc msg    -> ParseFailed loc msg
@@ -370,14 +386,28 @@ instance Fail.MonadFail (Lex r) where
 
 -- Operations on this monad
 
+-- | Lazy-'String' view of the remaining input.  Kept for compatibility —
+-- pattern matching on the result forces only as many characters as examined,
+-- so short lookaheads are cheap.  The hot loops use 'getInputT' instead.
 getInput :: Lex r String
-getInput = Lex $ \cont -> P $ \r -> runP (cont r) r
+getInput = Lex $ \cont -> P $ \r -> runP (cont (T.unpack r)) r
+
+-- | 'Text' view of the remaining input.  Preferred for productions that
+-- bulk-consume a run of characters (e.g. string literals), because the
+-- backing storage is an O(1) slice of the source buffer.
+getInputT :: Lex r Text
+getInputT = Lex $ \cont -> P $ \r -> runP (cont r) r
 
 -- | Discard some input characters (these must not include tabs or newlines).
 
 discard :: Int -> Lex r ()
 discard n = Lex $ \cont -> P $ \r x y loc ch
-                        -> let (newCh:rest)= if n > 0 then drop (n-1) r else (ch:r)
+                        -> let rest   = T.drop n r
+                               newCh  = if n > 0
+                                          then case T.uncons (T.drop (n-1) r) of
+                                                 Just (c,_) -> c
+                                                 Nothing    -> ch
+                                          else ch
                            in runP (cont ()) rest (x+n) y loc newCh
 
 -- | Get the last discarded character.
@@ -391,14 +421,14 @@ getLastChar = Lex $ \cont -> P $ \r x y loc ch -> runP (cont ch) r x y loc ch
 
 lexNewline :: Lex a ()
 lexNewline = Lex $ \cont -> P $ \rs _x y loc  ->
-  case rs of
-    (_:r) -> runP (cont ()) r 1 (y+1) loc
-    []    -> \_ _ _ -> Failed loc "Lexer: expected newline."
+  case T.uncons rs of
+    Just (_,r) -> runP (cont ()) r 1 (y+1) loc
+    Nothing    -> \_ _ _ -> Failed loc "Lexer: expected newline."
 
 -- | Discard the next character, which must be a tab.
 
 lexTab :: Lex a ()
-lexTab = Lex $ \cont -> P $ \(_:r) x -> runP (cont ()) r (nextTab x)
+lexTab = Lex $ \cont -> P $ \rs x -> runP (cont ()) (T.drop 1 rs) (nextTab x)
 
 nextTab :: Int -> Int
 nextTab x = x + (tAB_LENGTH - (x-1) `mod` tAB_LENGTH)
@@ -409,10 +439,15 @@ tAB_LENGTH = 8
 -- Consume and return the largest string of characters satisfying p
 
 lexWhile :: (Char -> Bool) -> Lex a String
-lexWhile p = Lex $ \cont -> P $ \rss c l loc char ->
-  case rss of
-    [] -> runP (cont []) [] c l loc char
-    (r:rs) ->
+lexWhile p = T.unpack <$> lexWhileT p
+
+-- | 'Text'-producing variant of 'lexWhile'.  Avoids the intermediate 'String'
+-- allocation when the caller is happy with a 'Text' span.
+lexWhileT :: (Char -> Bool) -> Lex a Text
+lexWhileT p = Lex $ \cont -> P $ \rss c l loc char ->
+  case T.uncons rss of
+    Nothing -> runP (cont T.empty) rss c l loc char
+    Just (r,rs) ->
       let
         l' = case r of
               '\n' -> l + 1
@@ -421,12 +456,12 @@ lexWhile p = Lex $ \cont -> P $ \rss c l loc char ->
               '\n' -> 1
               _    -> c + 1
        in if p r
-            then runP (runL ((r:) <$> lexWhile p) cont) rs c' l' loc r
-            else runP (cont []) (r:rs) c l loc char
+            then runP (runL (T.cons r <$> lexWhileT p) cont) rs c' l' loc r
+            else runP (cont T.empty) rss c l loc char
 
 -- | lexWhile without the return value.
 lexWhile_ :: (Char -> Bool) -> Lex a ()
-lexWhile_ p = do _ <- lexWhile p
+lexWhile_ p = do _ <- lexWhileT p
                  return ()
 
 -- An alternative scan, to which we can return if subsequent scanning
