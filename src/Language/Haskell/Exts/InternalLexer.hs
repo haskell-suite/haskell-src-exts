@@ -1141,73 +1141,72 @@ lexCharacter = do   -- We need to keep track of not only character constants but
     where matchQuote = matchChar '\'' "Improperly terminated character constant"
 
 
--- Fast path: scan the input 'Text' with 'T.span' for the longest run
--- of characters that are neither escape introducers nor terminators
--- nor newlines, and slice it directly.  Most string literals have no
--- escapes, so this avoids building any intermediate '[Char]' or
--- 'Text' for the body and emits a 'Text' that shares the input
--- 'ByteArray'.  When an escape or string-gap is encountered the
--- function falls back to the cons-list 'loop' implementation.
+-- Scan-and-splice: walk the input 'Text' looking for the longest run
+-- of "plain" characters (not '"', '\\', '\n'), slice it as a single
+-- 'Text' chunk that shares the input 'ByteArray', then handle the
+-- terminator or escape.  Per-token allocation is O(escapes), not
+-- O(chars) -- a literal with no escapes allocates a single 'Text'
+-- record; one with K escapes allocates O(K) chunks plus K
+-- 'T.singleton' values for the parsed escape characters.
 --
--- The cons-list fallback uses a reversed [Char] accumulator: a [Char]
--- cons cell is ~16 B vs ~48 B + ByteArray for T.singleton, and the
--- literal's cons list dies as soon as the token is yielded.
+-- The accumulators are reverse-ordered chunk lists (newest chunk
+-- first); we 'T.concat . reverse' once at the end to materialize the
+-- final strict 'Text' payload.
 lexString :: Lex a Token
-lexString = do
-    inp <- getInputT
-    let (taken, rest) = T.span isPlain inp
-    case T.uncons rest of
-        Just ('"', after) -> do
-            -- Fast path: simple literal closed with '"'.
-            discard (T.length taken + 1)
-            exts <- getExtensionsL
-            case T.uncons after of
-                Just ('#', _) | MagicHash `elem` exts -> do
-                    discard 1
-                    return (StringHash (taken, taken))
-                _ -> return (StringTok (taken, taken))
-        _ ->
-            -- Slow path: escape, newline, or EOF in the body.  Hand
-            -- off the prefix we have so far (reversed for the loop's
-            -- accumulator convention) and continue char-by-char.
-            let !rs = reverse (T.unpack taken)
-            in do discard (T.length taken)
-                  loop (rs, rs)
+lexString = loop [] []
   where
     isPlain c = c /= '"' && c /= '\\' && c /= '\n'
 
-    loop (s, raw) = do r    <- getInput
-                       exts <- getExtensionsL
-                       case r of
-                         '\\':'&':_ -> do discard 2
-                                          loop (s, '&':'\\':raw)
-                         '\\':c:_
-                           | isSpace c -> do discard 1
-                                             wcs <- lexWhiteChars
-                                             matchChar '\\' "Illegal character in string gap"
-                                             loop (s, '\\':reverse wcs ++ '\\':raw)
-                           | otherwise -> do (ce, str) <- lexEscape
-                                             loop (ce:s, reverse (T.unpack str) ++ '\\':raw)
-                         '"':'#':_
-                           | MagicHash `elem` exts -> do discard 2
-                                                         return (StringHash (T.pack (reverse s), T.pack (reverse raw)))
-                         '"':_ -> do discard 1
-                                     return (StringTok (T.pack (reverse s), T.pack (reverse raw)))
-                         c:_
-                           | c /= '\n' -> do discard 1
-                                             loop (c:s, c:raw)
-                         _ -> fail "Improperly terminated string"
+    -- Fast-merge for the very common case of a literal with no escapes.
+    -- 's' and 'raw' would both be a single chunk, so we'd otherwise
+    -- 'T.concat [taken]' which is identity but still allocates.  Skip.
+    finish [taken] = taken
+    finish chunks  = T.concat (reverse chunks)
 
-    lexWhiteChars :: Lex a String
-    lexWhiteChars = do s <- getInput
-                       case s of
-                         '\n':_          -> do lexNewline
-                                               fmap ('\n':) lexWhiteChars
-                         '\t':_          -> do lexTab
-                                               fmap ('\t':) lexWhiteChars
-                         c:_ | isSpace c -> do discard 1
-                                               fmap (c:) lexWhiteChars
-                         _               -> return ""
+    loop sChunks rawChunks = do
+      inp <- getInputT
+      let (taken, rest) = T.span isPlain inp
+      let !sChunks'   = if T.null taken then sChunks   else taken : sChunks
+      let !rawChunks' = if T.null taken then rawChunks else taken : rawChunks
+      discard (T.length taken)
+      exts <- getExtensionsL
+      case T.uncons rest of
+        Just ('"', after) -> do
+          discard 1
+          case T.uncons after of
+            Just ('#', _) | MagicHash `elem` exts -> do
+              discard 1
+              return (StringHash (finish sChunks', finish rawChunks'))
+            _ -> return (StringTok (finish sChunks', finish rawChunks'))
+        Just ('\\', _) -> do
+          inp2 <- getInputT
+          case T.unpack (T.take 2 inp2) of
+            "\\&" -> do
+              discard 2
+              loop sChunks' (T.pack "\\&" : rawChunks')
+            '\\':c:[] | isSpace c -> do
+              discard 1
+              wcs <- lexWhiteChars
+              matchChar '\\' "Illegal character in string gap"
+              -- Raw rep: '\' + wcs + '\'
+              loop sChunks' (T.singleton '\\' : wcs : T.singleton '\\' : rawChunks')
+            _ -> do
+              (ce, str) <- lexEscape
+              loop (T.singleton ce : sChunks') (str : T.singleton '\\' : rawChunks')
+        _ -> fail "Improperly terminated string"
+
+    lexWhiteChars :: Lex a Text
+    lexWhiteChars = T.concat . reverse <$> go []
+      where
+      go acc = do s <- getInput
+                  case s of
+                    '\n':_          -> do lexNewline
+                                          go (T.singleton '\n' : acc)
+                    '\t':_          -> do lexTab
+                                          go (T.singleton '\t' : acc)
+                    c:_ | isSpace c -> do discard 1
+                                          go (T.singleton c : acc)
+                    _               -> return acc
 
 lexEscape :: Lex a (Char, Text)
 lexEscape = do
