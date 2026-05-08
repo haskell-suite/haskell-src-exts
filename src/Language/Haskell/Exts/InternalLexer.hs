@@ -1141,14 +1141,41 @@ lexCharacter = do   -- We need to keep track of not only character constants but
     where matchQuote = matchChar '\'' "Improperly terminated character constant"
 
 
--- The accumulator is a reversed [Char] list rather than [Text]/Builder:
--- a [Char] cons cell is ~16 B vs ~48 B + ByteArray for T.singleton, and
--- the literal's cons list dies as soon as the token is yielded (the
--- single 'T.pack . reverse' at the end materializes the strict 'Text'
--- payload), so per-literal residency is already bounded.
+-- Fast path: scan the input 'Text' with 'T.span' for the longest run
+-- of characters that are neither escape introducers nor terminators
+-- nor newlines, and slice it directly.  Most string literals have no
+-- escapes, so this avoids building any intermediate '[Char]' or
+-- 'Text' for the body and emits a 'Text' that shares the input
+-- 'ByteArray'.  When an escape or string-gap is encountered the
+-- function falls back to the cons-list 'loop' implementation.
+--
+-- The cons-list fallback uses a reversed [Char] accumulator: a [Char]
+-- cons cell is ~16 B vs ~48 B + ByteArray for T.singleton, and the
+-- literal's cons list dies as soon as the token is yielded.
 lexString :: Lex a Token
-lexString = loop ("","")
-    where
+lexString = do
+    inp <- getInputT
+    let (taken, rest) = T.span isPlain inp
+    case T.uncons rest of
+        Just ('"', after) -> do
+            -- Fast path: simple literal closed with '"'.
+            discard (T.length taken + 1)
+            exts <- getExtensionsL
+            case T.uncons after of
+                Just ('#', _) | MagicHash `elem` exts -> do
+                    discard 1
+                    return (StringHash (taken, taken))
+                _ -> return (StringTok (taken, taken))
+        _ ->
+            -- Slow path: escape, newline, or EOF in the body.  Hand
+            -- off the prefix we have so far (reversed for the loop's
+            -- accumulator convention) and continue char-by-char.
+            let !rs = reverse (T.unpack taken)
+            in do discard (T.length taken)
+                  loop (rs, rs)
+  where
+    isPlain c = c /= '"' && c /= '\\' && c /= '\n'
+
     loop (s, raw) = do r    <- getInput
                        exts <- getExtensionsL
                        case r of
