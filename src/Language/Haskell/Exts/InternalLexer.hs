@@ -1306,8 +1306,8 @@ lexDecimal = do
 
 -- Stolen from Hugs's Prelude
 parseInteger :: Integer -> Text -> Integer
-parseInteger radix ds =
-    T.foldl' (\n c -> n * radix + toInteger (digitToInt c)) 0 ds
+parseInteger radix =
+    T.foldl' (\n c -> n * radix + toInteger (digitToInt c)) 0
 
 flagKW :: Token -> Lex a ()
 flagKW t =

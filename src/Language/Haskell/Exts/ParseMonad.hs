@@ -1,3 +1,4 @@
+{-# LANGUAGE BangPatterns #-}
 {-# LANGUAGE CPP #-}
 {-# OPTIONS_HADDOCK hide #-}
 -----------------------------------------------------------------------------
@@ -402,8 +403,8 @@ getInputT = Lex $ \cont -> P $ \r -> runP (cont r) r
 
 discard :: Int -> Lex r ()
 discard n = Lex $ \cont -> P $ \r x y loc ch
-                        -> let rest   = T.drop n r
-                               newCh  = if n > 0
+                        -> let !rest   = T.drop n r
+                               !newCh  = if n > 0
                                           then case T.uncons (T.drop (n-1) r) of
                                                  Just (c,_) -> c
                                                  Nothing    -> ch
@@ -442,22 +443,20 @@ lexWhile :: (Char -> Bool) -> Lex a String
 lexWhile p = T.unpack <$> lexWhileT p
 
 -- | 'Text'-producing variant of 'lexWhile'.  Avoids the intermediate 'String'
--- allocation when the caller is happy with a 'Text' span.
+-- allocation when the caller is happy with a 'Text' span.  Implemented as a
+-- single 'T.span' so the result shares the underlying input buffer and we
+-- pay no per-char allocation; column/line counters are advanced in one pass.
 lexWhileT :: (Char -> Bool) -> Lex a Text
 lexWhileT p = Lex $ \cont -> P $ \rss c l loc char ->
-  case T.uncons rss of
-    Nothing -> runP (cont T.empty) rss c l loc char
-    Just (r,rs) ->
-      let
-        l' = case r of
-              '\n' -> l + 1
-              _    -> l
-        c' = case r of
-              '\n' -> 1
-              _    -> c + 1
-       in if p r
-            then runP (runL (T.cons r <$> lexWhileT p) cont) rs c' l' loc r
-            else runP (cont T.empty) rss c l loc char
+  let (taken, rest) = T.span p rss
+  in if T.null taken
+       then runP (cont T.empty) rss c l loc char
+       else let !lastCh = T.last taken
+                (!l', !c') = T.foldl' advance (l, c) taken
+                advance (!ln, !cn) ch = case ch of
+                  '\n' -> (ln + 1, 1)
+                  _    -> (ln, cn + 1)
+            in runP (cont taken) rest c' l' loc lastCh
 
 -- | lexWhile without the return value.
 lexWhile_ :: (Char -> Bool) -> Lex a ()

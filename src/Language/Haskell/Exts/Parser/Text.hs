@@ -8,10 +8,8 @@
 --
 -- 'Text'-input variants of the parser entry points in
 -- "Language.Haskell.Exts.Parser".  These skip the eager 'T.pack' that
--- the 'String' entry points do at the boundary.  The returned AST is
--- the existing 'String'-valued 'Syntax' AST; 'Syntax.Text' exists as a
--- separate module for users who wish to represent the AST in 'Text'
--- as well.
+-- the 'String' entry points do at the boundary; the returned AST is
+-- still the existing 'String'-valued 'Syntax' AST.
 --
 -----------------------------------------------------------------------------
 module Language.Haskell.Exts.Parser.Text
