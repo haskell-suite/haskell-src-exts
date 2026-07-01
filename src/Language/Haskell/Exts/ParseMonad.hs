@@ -113,7 +113,6 @@ instance Semigroup m => Semigroup (ParseResult m) where
 
 instance ( Monoid m , Semigroup m) => Monoid (ParseResult m) where
   mempty = ParseOk mempty
-  mappend = (<>)
 
 -- internal version
 data ParseStatus a = Ok ParseState a | Failed SrcLoc String
