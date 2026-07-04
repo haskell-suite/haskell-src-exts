@@ -1,3 +1,58 @@
+1.23.1 --> 1.23.2
+=================
+Performance: lexer/parser internals are now Text-native (Phase 1).
+The Syntax AST stays String-valued, so this is a non-breaking change
+for AST consumers.  Phase 2 (Text-valued AST + lazy String compat
+shim) is a separate later change.
+
+What changed:
+* Lexer input tape, all Token payloads, the keyword/operator/pragma
+  lookup tables, and the numeric/identifier/escape/raw-pragma lex
+  workers operate on Data.Text directly.
+* Strict 'discard' and a single-pass 'lexWhileT' (using T.span +
+  foldl' for line/column) replace the previous lazy formulations,
+  removing a per-character thunk chain in the tokenizer hot loop.
+* Token payload fields are strict (!Text), so the [Char]-cons
+  accumulator inside lexString is materialized to a strict Text and
+  freed at token yield rather than being kept alive by the token
+  stream.
+* lexString uses a scan-and-splice strategy: each plain run is
+  sliced from the input Text via T.span, and only the parsed
+  escape characters allocate new Text records.  Per-token
+  allocation is O(escapes), not O(chars).
+
+What's new:
+* Language.Haskell.Exts.Parser.Text exposing Text-input parser
+  entry points (parseModuleText, parseExpText, ...) that skip the
+  eager Data.Text.pack at the String boundary.
+* lexTokenStreamText / lexTokenStreamTextWithMode in
+  Language.Haskell.Exts.Lexer, the lexer-only counterparts.
+
+Measurements (15-trial bench-mutex 2σ-gated, GHC 9.10, -O), Text
+API vs master parseModule:
+
+  Issue #478 stress (1 x 3 MB string literal):
+    master:     234 MB residency, 1156 MB allocated, 1.0 s
+    Text API:    52 KB residency,    7 MB allocated, 13 ms
+    delta:      -99.98% / -99.40% / -98.71%
+
+  Multi-literal stress (200 x 50 kB literals, 9.6 MB):
+    master:     628 MB residency, 3858 MB allocated, 2.9 s
+    Text API:     6 MB residency,   30 MB allocated, 47 ms
+    delta:      -99.05% / -99.22% / -98.39%
+
+  Identifier-heavy stress (5.1 MB, 1M ids / 100 unique):
+    no measurable change (the AST scaffolding dominates).
+    Atom table at lex time would address this; not in this PR.
+
+  Real haskell-src-exts library files via the Text API:
+    InternalLexer.hs (58 kB):  resid -74%, alloc -27%, time -51%
+    ParseSyntax.hs   (17 kB):  resid -54%, alloc +13% (small file
+                                T.unpack overhead at AST construction;
+                                eliminated by Phase 2)
+    Build.hs, Comments.hs, SrcLoc.hs (small): resid neutral to -38%,
+    alloc +11-13% (same small-file T.unpack overhead).
+
 1.23.0 --> 1.23.1
 =================
 * show instance for SrcLoc and SrcSpan renders "(-1)" instead of "-1"

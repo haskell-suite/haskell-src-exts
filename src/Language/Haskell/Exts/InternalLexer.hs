@@ -1,3 +1,5 @@
+{-# LANGUAGE BangPatterns #-}
+{-# LANGUAGE OverloadedStrings #-}
 {-# OPTIONS_HADDOCK hide #-}
 -----------------------------------------------------------------------------
 -- |
@@ -29,34 +31,36 @@ import Language.Haskell.Exts.ExtScheme
 import Prelude hiding (id, exponent)
 import Data.Char
 import Data.Ratio
-import Data.List (intercalate, isPrefixOf)
+import Data.List (intercalate)
 import Control.Monad (when)
+import qualified Data.Text as T
+import Data.Text (Text)
 
 -- import Debug.Trace (trace)
 
 data Token
-        = VarId String
-        | LabelVarId String
-        | QVarId (String,String)
-        | IDupVarId (String)        -- duplicable implicit parameter
-        | ILinVarId (String)        -- linear implicit parameter
-        | ConId String
-        | QConId (String,String)
-        | DVarId [String]       -- to enable varid's with '-' in them
-        | VarSym String
-        | ConSym String
-        | QVarSym (String,String)
-        | QConSym (String,String)
-        | IntTok (Integer, String)
-        | FloatTok (Rational, String)
-        | Character (Char, String)
-        | StringTok (String, String)
-        | IntTokHash (Integer, String)        -- 1#
-        | WordTokHash (Integer, String)       -- 1##
-        | FloatTokHash (Rational, String)     -- 1.0#
-        | DoubleTokHash (Rational, String)    -- 1.0##
-        | CharacterHash (Char, String)        -- c#
-        | StringHash (String, String)         -- "Hello world!"#
+        = VarId          !Text
+        | LabelVarId     !Text
+        | QVarId         !(Text,Text)
+        | IDupVarId      !Text        -- duplicable implicit parameter
+        | ILinVarId      !Text        -- linear implicit parameter
+        | ConId          !Text
+        | QConId         !(Text,Text)
+        | DVarId         ![Text]      -- to enable varid's with '-' in them
+        | VarSym         !Text
+        | ConSym         !Text
+        | QVarSym        !(Text,Text)
+        | QConSym        !(Text,Text)
+        | IntTok         !(Integer, Text)
+        | FloatTok       !(Rational, Text)
+        | Character      !(Char, Text)
+        | StringTok      !(Text, Text)
+        | IntTokHash     !(Integer, Text)        -- 1#
+        | WordTokHash    !(Integer, Text)        -- 1##
+        | FloatTokHash   !(Rational, Text)       -- 1.0#
+        | DoubleTokHash  !(Rational, Text)       -- 1.0##
+        | CharacterHash  !(Char, Text)           -- c#
+        | StringHash     !(Text, Text)           -- "Hello world!"#
 
 -- Symbols
 
@@ -110,13 +114,13 @@ data Token
         | THTypQuote            -- [t|
         | THCloseQuote          -- |]
         | THTCloseQuote         -- ||]
-        | THIdEscape (String)   -- dollar x
+        | THIdEscape (Text)   -- dollar x
         | THParenEscape         -- dollar (
-        | THTIdEscape String    -- dollar dollar x
+        | THTIdEscape Text    -- dollar dollar x
         | THTParenEscape        -- double dollar (
         | THVarQuote            -- 'x (but without the x)
         | THTyQuote             -- ''T (but without the T)
-        | THQuasiQuote (String,String)  -- [$...|...]
+        | THQuasiQuote (Text,Text)  -- [$...|...]
 
 -- HaRP
         | RPGuardOpen       -- (|
@@ -131,7 +135,7 @@ data Token
         | XCloseTagOpen     -- </
         | XEmptyTagClose    -- />
         | XChildTagOpen     -- <%> (note that close doesn't exist, it's XCloseTagOpen followed by XCodeTagClose)
-        | XPCDATA String
+        | XPCDATA Text
         | XRPatOpen             -- <[
         | XRPatClose            -- ]>
 
@@ -151,7 +155,7 @@ data Token
         | CORE
         | UNPACK
         | NOUNPACK
-        | OPTIONS (Maybe String,String)
+        | OPTIONS (Maybe Text,Text)
 --        | CFILES  String
 --        | INCLUDE String
         | LANGUAGE
@@ -224,7 +228,7 @@ data Token
         | EOF
         deriving (Eq,Show)
 
-reserved_ops :: [(String,(Token, Maybe ExtScheme))]
+reserved_ops :: [(Text,(Token, Maybe ExtScheme))]
 reserved_ops = [
  ( "..", (DotDot,       Nothing) ),
  ( ":",  (Colon,        Nothing) ),
@@ -260,7 +264,7 @@ reserved_ops = [
  ( "\x2200",    (KW_Forall,         Just (All [UnicodeSyntax, ExplicitForAll])) )
  ]
 
-special_varops :: [(String,(Token, Maybe ExtScheme))]
+special_varops :: [(Text,(Token, Maybe ExtScheme))]
 special_varops = [
  -- the dot is only a special symbol together with forall, but can still be used as function composition
  ( ".",  (Dot,          Just (Any [ExplicitForAll, ExistentialQuantification])) ),
@@ -268,7 +272,7 @@ special_varops = [
  ( "!",  (Exclamation,  Nothing) )
  ]
 
-reserved_ids :: [(String,(Token, Maybe ExtScheme))]
+reserved_ids :: [(Text,(Token, Maybe ExtScheme))]
 reserved_ids = [
  ( "_",         (Underscore,    Nothing) ),
  ( "by",        (KW_By,         Just (Any [TransformListComp])) ),
@@ -311,7 +315,7 @@ reserved_ids = [
  ]
 
 
-special_varids :: [(String,(Token, Maybe ExtScheme))]
+special_varids :: [(Text,(Token, Maybe ExtScheme))]
 special_varids = [
  ( "as",        (KW_As,         Nothing) ),
  ( "qualified", (KW_Qualified,  Nothing) ),
@@ -333,7 +337,7 @@ special_varids = [
  ( "capi",          (KW_CApi,          Just (Any [CApiFFI])) )
  ]
 
-pragmas :: [(String,Token)]
+pragmas :: [(Text,Token)]
 pragmas = [
  ( "rules",             RULES           ),
  ( "inline",            INLINE True     ),
@@ -367,7 +371,7 @@ pragmas = [
 isIdent, isHSymbol, isPragmaChar :: Char -> Bool
 isIdent   c = isAlphaNum c || c == '\'' || c == '_'
 
-isHSymbol c = c `elem` ":!#%&*./?@\\-" || ((isSymbol c || isPunctuation c) && not (c `elem` "(),;[]`{}_\"'"))
+isHSymbol c = c `elem` (":!#%&*./?@\\-" :: String) || ((isSymbol c || isPunctuation c) && not (c `elem` ("(),;[]`{}_\"'" :: String)))
 
 isPragmaChar c = isAlphaNum c || c == '_'
 
@@ -379,7 +383,7 @@ isIdentStart c = isAlpha c && not (isUpper c) || c == '_'
 -- Why is it like this? I don't know exactly but this is how it is in
 -- GHC's parser.
 isOpSymbol :: Char -> Bool
-isOpSymbol c = c `elem` "!#$%&*+./<=>?@\\^|-~"
+isOpSymbol c = c `elem` ("!#$%&*+./<=>?@\\^|-~" :: String)
 
 -- | Checks whether the character would be legal in some position of a qvar.
 --   Means that '..' and "AAA" will pass the test.
@@ -477,7 +481,7 @@ lexWhiteSpace_ bol =  do _ <- lexWhiteSpace bol
                          return ()
 
 isRecognisedPragma, isLinePragma :: String -> Bool
-isRecognisedPragma str = let pragma = takeWhile isPragmaChar . dropWhile isSpace $ str
+isRecognisedPragma str = let pragma = T.pack . takeWhile isPragmaChar . dropWhile isSpace $ str
                           in case lookupKnownPragma pragma of
                               Nothing -> False
                               _       -> True
@@ -500,7 +504,7 @@ lexLinePragma = do
     fn <- lexWhile (/= '"')
     matchChar '"' "Impossible - lexLinePragma"
     lexWhile_ isSpace
-    mapM_ (flip matchChar "Improperly formatted LINE pragma") "#-}"
+    mapM_ (flip matchChar "Improperly formatted LINE pragma") ("#-}" :: String)
     lexNewline
     return (read i, fn)
 
@@ -589,16 +593,16 @@ lexPCDATA = do
             '\n':_ -> do
                 x <- lexNewline >> lexPCDATA
                 case x of
-                 XPCDATA p -> return $ XPCDATA $ '\n':p
+                 XPCDATA p -> return $ XPCDATA $ T.cons '\n' p
                  EOF -> return EOF
                  _ -> fail $ "lexPCDATA: unexpected token: " ++ show x
             '<':_ -> return $ XPCDATA ""
-            _ -> do let pcd = takeWhile (\c -> c `notElem` "<\n") s
+            _ -> do let pcd = takeWhile (\c -> c `notElem` ("<\n" :: String)) s
                         l = length pcd
                     discard l
                     x <- lexPCDATA
                     case x of
-                     XPCDATA pcd' -> return $ XPCDATA $ pcd ++ pcd'
+                     XPCDATA pcd' -> return $ XPCDATA $ T.pack pcd <> pcd'
                      EOF -> return EOF
                      _ -> fail $ "lexPCDATA: unexpected token: " ++ show x
 
@@ -662,27 +666,27 @@ lexStdToken = do
                         discard 2
                         (n, str) <- lexOctal
                         con <- intHash
-                        return (con (n, '0':c:str))
+                        return (con (n, T.cons '0' (T.cons c str)))
                   | toLower c == 'b' && isBinDigit d && BinaryLiterals `elem` exts -> do
                         discard 2
                         (n, str) <- lexBinary
                         con <- intHash
-                        return (con (n, '0':c:str))
+                        return (con (n, T.cons '0' (T.cons c str)))
                   | toLower c == 'x' && isHexDigit d -> do
                         discard 2
                         (n, str) <- lexHexadecimal
                         con <- intHash
-                        return (con (n, '0':c:str))
+                        return (con (n, T.cons '0' (T.cons c str)))
 
         -- implicit parameters
         '?':c:_ | isIdentStart c && ImplicitParams `elem` exts -> do
                         discard 1
-                        id <- lexWhile isIdent
+                        id <- lexWhileT isIdent
                         return $ IDupVarId id
 
         '%':c:_ | isIdentStart c && ImplicitParams `elem` exts -> do
                         discard 1
-                        id <- lexWhile isIdent
+                        id <- lexWhileT isIdent
                         return $ ILinVarId id
         -- end implicit parameters
 
@@ -741,14 +745,14 @@ lexStdToken = do
 
         '$':c1:c2:_ | isIdentStart c1 && TemplateHaskell `elem` exts -> do
                         discard 1
-                        id <- lexWhile isIdent
+                        id <- lexWhileT isIdent
                         return $ THIdEscape id
                     | c1 == '(' && TemplateHaskell `elem` exts -> do
                         discard 2
                         return THParenEscape
                     | c1 == '$' && isIdentStart c2 && TemplateHaskell `elem` exts -> do
                         discard 2
-                        id <- lexWhile isIdent
+                        id <- lexWhileT isIdent
                         return $ THTIdEscape id
                     | c1 == '$' && c2 == '(' && TemplateHaskell `elem` exts -> do
                         discard 3
@@ -805,7 +809,7 @@ lexStdToken = do
 
         c:_ | isDigit c -> lexDecimalOrFloat
 
-            | isUpper c -> lexConIdOrQual ""
+            | isUpper c -> lexConIdOrQual T.empty
 
             | isIdentStart c -> do
                     idents <- lexIdents
@@ -820,7 +824,7 @@ lexStdToken = do
                      _ -> return $ DVarId idents
 
             | isHSymbol c -> do
-                    sym <- lexWhile isHSymbol
+                    sym <- lexWhileT isHSymbol
                     return $ case lookup sym (reserved_ops ++ special_varops) of
                               Just (t , scheme) ->
                                 -- check if an extension op is enabled
@@ -857,9 +861,9 @@ lexStdToken = do
 
                         _ ->    fail ("Illegal character \'" ++ show c ++ "\'\n")
 
-      where lexIdents :: Lex a [String]
+      where lexIdents :: Lex a [Text]
             lexIdents = do
-                ident <- lexWhile isIdent
+                ident <- lexWhileT isIdent
                 s <- getInput
                 exts <- getExtensionsL
                 case s of
@@ -870,53 +874,47 @@ lexStdToken = do
                         idents <- lexIdents
                         return $ ident : idents
                  '#':_ | MagicHash `elem` exts -> do
-                        hashes <- lexWhile (== '#')
-                        return [ident ++ hashes]
+                        hashes <- lexWhileT (== '#')
+                        return [ident <> hashes]
                  _ -> return [ident]
 
             lexQuasiQuote :: Char -> Lex a Token
-            lexQuasiQuote c = do
-                -- We've seen and dropped [$ already
-                ident <- lexQuoter
-                matchChar '|' "Malformed quasi-quote quoter"
-                body <- lexQQBody
-                return $ THQuasiQuote (ident, body)
+            lexQuasiQuote c = do ident <- lexQuoter   -- We've seen and dropped [$
+                                 matchChar '|' "Malformed quasi-quote quoter"
+                                 body <- lexQQBody
+                                 return $ THQuasiQuote (ident, T.pack body)
                   where lexQuoter
-                         | isIdentStart c = lexWhile isIdent
-                         | otherwise = do
-                            qualThing <- lexConIdOrQual ""
-                            case qualThing of
-                                QVarId (s1,s2) -> return $ s1 ++ '.':s2
-                                QVarSym (s1, s2) -> return $ s1 ++ '.':s2
-                                _                -> fail "Malformed quasi-quote quoter"
+                         | isIdentStart c = lexWhileT isIdent
+                         | otherwise = do qualThing <- lexConIdOrQual ""
+                                          case qualThing of
+                                            QVarId  (s1,s2) -> return $ s1 <> T.cons '.' s2
+                                            QVarSym (s1,s2) -> return $ s1 <> T.cons '.' s2
+                                            _               -> fail "Malformed quasi-quote quoter"
 
+            -- [Char]-cons accumulator (same rationale as lexString): per-char
+            -- cons is cheaper than per-char T.singleton, and the body dies
+            -- when the THQuasiQuote token is yielded.
             lexQQBody :: Lex a String
-            lexQQBody = do
-                s <- getInput
-                case s of
-                  '\\':']':_ -> do discard 2
-                                   str <- lexQQBody
-                                   return (']':str)
-                  '\\':'|':_ -> do discard 2
-                                   str <- lexQQBody
-                                   return ('|':str)
-                  '|':']':_  -> discard 2 >> return ""
-                  '|':_ -> do discard 1
-                              str <- lexQQBody
-                              return ('|':str)
-                  ']':_ -> do discard 1
-                              str <- lexQQBody
-                              return (']':str)
-                  '\\':_ -> do discard 1
-                               str <- lexQQBody
-                               return ('\\':str)
-                  '\n':_ -> do lexNewline
-                               str <- lexQQBody
-                               return ('\n':str)
-                  []     -> fail "Unexpected end of input while lexing quasi-quoter"
-                  _ -> do str <- lexWhile (not . (`elem` "\\|\n"))
-                          rest <- lexQQBody
-                          return (str++rest)
+            lexQQBody = do s <- getInput
+                           case s of
+                             '\\':']':_ -> do discard   2
+                                              fmap (']' :) lexQQBody
+                             '\\':'|':_ -> do discard   2
+                                              fmap ('|' :) lexQQBody
+                             '|':']':_  -> do discard   2
+                                              return ""
+                             '|':_      -> do discard   1
+                                              fmap ('|' :) lexQQBody
+                             ']':_      -> do discard   1
+                                              fmap (']' :) lexQQBody
+                             '\\':_     -> do discard   1
+                                              fmap ('\\':) lexQQBody
+                             '\n':_     -> do lexNewline
+                                              fmap ('\n':) lexQQBody
+                             []         -> fail "Unexpected end of input while lexing quasi-quoter"
+                             _          -> do str  <- lexWhile (not . (`elem` ("\\|\n" :: String)))
+                                              rest <- lexQQBody
+                                              return (str ++ rest)
 
 unboxed :: [KnownExtension] -> Bool
 unboxed exts = UnboxedSums `elem` exts || UnboxedTuples `elem` exts
@@ -925,17 +923,17 @@ unboxed exts = UnboxedSums `elem` exts || UnboxedTuples `elem` exts
 -- with our representation: the thing after the underscore is a parameter.
 -- Strip off the parameters to option pragmas by hand here, everything else
 -- sits in the pragmas map.
-lookupKnownPragma :: String -> Maybe Token
+lookupKnownPragma :: Text -> Maybe Token
 lookupKnownPragma s =
-    case map toLower s of
-      x | "options_" `isPrefixOf` x -> Just $ OPTIONS (Just $ drop 8 s, undefined)
-        | "options" == x            -> Just $ OPTIONS (Nothing, undefined)
-        | otherwise                 -> lookup x pragmas
+    case T.toLower s of
+      x | "options_" `T.isPrefixOf` x -> Just $ OPTIONS (Just $ T.drop 8 s, undefined)
+        | "options" == x              -> Just $ OPTIONS (Nothing, undefined)
+        | otherwise                   -> lookup x pragmas
 
 lexPragmaStart :: Lex a Token
 lexPragmaStart = do
     lexWhile_ isSpace
-    pr <- lexWhile isPragmaChar
+    pr <- lexWhileT isPragmaChar
     case lookupKnownPragma pr of
      Just (INLINE True) -> do
             s <- getInput
@@ -965,8 +963,9 @@ lexPragmaStart = do
             -- We do not want to store necessary whitespace in the datatype
             -- but if the pragma starts with a newline then we must keep
             -- it to differentiate the two cases.
-            let dropIfSpace (' ':xs) = xs
-                dropIfSpace xs       = xs
+            let dropIfSpace t = case T.uncons t of
+                                  Just (' ', xs) -> xs
+                                  _              -> t
              in
               case fst opt of
                 Just opt' -> do
@@ -996,10 +995,10 @@ lexPragmaStart = do
                   -- discard 3 -- #-}
                   -- topLexer -- we just discard it as a comment for now and restart -}
 
-lexRawPragma :: Lex a String
+lexRawPragma :: Lex a Text
 lexRawPragma = lexRawPragmaAux
  where lexRawPragmaAux = do
-        rpr <- lexWhile (/='#')
+        rpr <- lexWhileT (/='#')
         s <- getInput
         case s of
          '#':'-':'}':_  -> return rpr
@@ -1007,37 +1006,37 @@ lexRawPragma = lexRawPragmaAux
          _ -> do
             discard 1
             rpr' <- lexRawPragma
-            return $ rpr ++ '#':rpr'
+            return $ rpr <> T.cons '#' rpr'
 
 lexDecimalOrFloat :: Lex a Token
 lexDecimalOrFloat = do
-    ds <- lexWhile isDigit
+    ds <- lexWhileT isDigit
     rest <- getInput
     exts <- getExtensionsL
     case rest of
         ('.':d:_) | isDigit d -> do
                 discard 1
-                frac <- lexWhile isDigit
-                let num = parseInteger 10 (ds ++ frac)
-                    decimals = toInteger (length frac)
+                frac <- lexWhileT isDigit
+                let num = parseInteger 10 (ds <> frac)
+                    decimals = toInteger (T.length frac)
                 (exponent, estr) <- do
                     rest2 <- getInput
                     case rest2 of
                         'e':_ -> lexExponent
                         'E':_ -> lexExponent
-                        _     -> return (0,"")
+                        _     -> return (0, T.empty)
                 con <- lexHash FloatTok FloatTokHash (Right DoubleTokHash)
-                return $ con ((num%1) * 10^^(exponent - decimals), ds ++ '.':frac ++ estr)
+                return $ con ((num%1) * 10^^(exponent - decimals), ds <> T.cons '.' frac <> estr)
         e:_ | toLower e == 'e' -> do
                 (exponent, estr) <- lexExponent
                 con <- lexHash FloatTok FloatTokHash (Right DoubleTokHash)
-                return $ con ((parseInteger 10 ds%1) * 10^^exponent, ds ++ estr)
+                return $ con ((parseInteger 10 ds%1) * 10^^exponent, ds <> estr)
         '#':'#':_ | MagicHash `elem` exts -> discard 2 >> return (WordTokHash (parseInteger 10 ds, ds))
         '#':_     | MagicHash `elem` exts -> discard 1 >> return (IntTokHash  (parseInteger 10 ds, ds))
         _         ->              return (IntTok      (parseInteger 10 ds, ds))
 
     where
-    lexExponent :: Lex a (Integer, String)
+    lexExponent :: Lex a (Integer, Text)
     lexExponent = do
         (e:r) <- getInput
         discard 1   -- 'e' or 'E'
@@ -1045,12 +1044,12 @@ lexDecimalOrFloat = do
          '+':d:_ | isDigit d -> do
             discard 1
             (n, str) <- lexDecimal
-            return (n, e:'+':str)
+            return (n, T.cons e (T.cons '+' str))
          '-':d:_ | isDigit d -> do
             discard 1
             (n, str) <- lexDecimal
-            return (negate n, e:'-':str)
-         d:_ | isDigit d -> lexDecimal >>= \(n,str) -> return (n, e:str)
+            return (negate n, T.cons e (T.cons '-' str))
+         d:_ | isDigit d -> lexDecimal >>= \(n,str) -> return (n, T.cons e str)
          _ -> fail "Float with missing exponent"
 
 lexHash :: (b -> Token) -> (b -> Token) -> Either String (b -> Token) -> Lex a (b -> Token)
@@ -1067,13 +1066,13 @@ lexHash a b c = do
          _         ->              return a
      else return a
 
-lexConIdOrQual :: String -> Lex a Token
+lexConIdOrQual :: Text -> Lex a Token
 lexConIdOrQual qual = do
-        con <- lexWhile isIdent
-        let conid | null qual = ConId con
-                  | otherwise = QConId (qual,con)
-            qual' | null qual = con
-                  | otherwise = qual ++ '.':con
+        con <- lexWhileT isIdent
+        let conid | T.null qual = ConId con
+                  | otherwise   = QConId (qual, con)
+            qual' | T.null qual = con
+                  | otherwise   = qual <> T.cons '.' con
         just_a_conid <- alternative (return conid)
         rest <- getInput
         exts <- getExtensionsL
@@ -1081,11 +1080,11 @@ lexConIdOrQual qual = do
           '.':c:_
              | isIdentStart c -> do  -- qualified varid?
                     discard 1
-                    ident <- lexWhile isIdent
+                    ident <- lexWhileT isIdent
                     s <- getInput
                     exts' <- getExtensionsL
                     ident' <- case s of
-                               '#':_ | MagicHash `elem` exts' -> discard 1 >> return (ident ++ "#")
+                               '#':_ | MagicHash `elem` exts' -> discard 1 >> return (ident <> T.singleton '#')
                                _ -> return ident
                     case lookup ident' reserved_ids of
                        -- cannot qualify a reserved word
@@ -1098,7 +1097,7 @@ lexConIdOrQual qual = do
 
              | isHSymbol c -> do    -- qualified symbol?
                     discard 1
-                    sym <- lexWhile isHSymbol
+                    sym <- lexWhileT isHSymbol
                     exts' <- getExtensionsL
                     case lookup sym reserved_ops of
                         -- cannot qualify a reserved operator
@@ -1113,8 +1112,8 @@ lexConIdOrQual qual = do
               not (isIdent $ head cs) && MagicHash `elem` exts -> do
                 discard 1
                 case conid of
-                 ConId con' -> return $ ConId $ con' ++ "#"
-                 QConId (q,con') -> return $ QConId (q,con' ++ "#")
+                 ConId con' -> return $ ConId $ con' <> "#"
+                 QConId (q,con') -> return $ QConId (q, con' <> "#")
                  _ -> fail $ "lexConIdOrQual: unexpected token: " ++ show conid
           _ ->  return conid -- not a qualified thing
 
@@ -1130,66 +1129,86 @@ lexCharacter = do   -- We need to keep track of not only character constants but
                     matchQuote
                     con <- lexHash Character CharacterHash
                             (Left "Double hash not available for character literals")
-                    return (con (c, '\\':raw))
+                    return (con (c, T.cons '\\' raw))
          c:'\'':_ -> do
                     discard 2
                     con <- lexHash Character CharacterHash
                             (Left "Double hash not available for character literals")
-                    return (con (c, [c]))
+                    return (con (c, T.singleton c))
          _ | any (`elem` exts) [TemplateHaskell, DataKinds] -> return THVarQuote
          _ -> fail "Improper character constant or misplaced \'"
 
     where matchQuote = matchChar '\'' "Improperly terminated character constant"
 
 
+-- Scan-and-splice: walk the input 'Text' looking for the longest run
+-- of "plain" characters (not '"', '\\', '\n'), slice it as a single
+-- 'Text' chunk that shares the input 'ByteArray', then handle the
+-- terminator or escape.  Per-token allocation is O(escapes), not
+-- O(chars) -- a literal with no escapes allocates a single 'Text'
+-- record; one with K escapes allocates O(K) chunks plus K
+-- 'T.singleton' values for the parsed escape characters.
+--
+-- The accumulators are reverse-ordered chunk lists (newest chunk
+-- first); we 'T.concat . reverse' once at the end to materialize the
+-- final strict 'Text' payload.
 lexString :: Lex a Token
-lexString = loop ("","")
-    where
-    loop (s,raw) = do
-        r <- getInput
-        exts <- getExtensionsL
-        case r of
-            '\\':'&':_ -> do
-                    discard 2
-                    loop (s, '&':'\\':raw)
-            '\\':c:_ | isSpace c -> do
-                        discard 1
-                        wcs <- lexWhiteChars
-                        matchChar '\\' "Illegal character in string gap"
-                        loop (s, '\\':reverse wcs ++ '\\':raw)
-                     | otherwise -> do
-                        (ce, str) <- lexEscape
-                        loop (ce:s, reverse str ++ '\\':raw)
-            '"':'#':_ | MagicHash `elem` exts -> do
-                        discard 2
-                        return (StringHash (reverse s, reverse raw))
-            '"':_ -> do
-                discard 1
-                return (StringTok (reverse s, reverse raw))
-            c:_ | c /= '\n' -> do
-                discard 1
-                loop (c:s, c:raw)
-            _ ->   fail "Improperly terminated string"
+lexString = loop [] []
+  where
+    isPlain c = c /= '"' && c /= '\\' && c /= '\n'
 
-    lexWhiteChars :: Lex a String
-    lexWhiteChars = do
-        s <- getInput
-        case s of
-            '\n':_ -> do
-                    lexNewline
-                    wcs <- lexWhiteChars
-                    return $ '\n':wcs
-            '\t':_ -> do
-                    lexTab
-                    wcs <- lexWhiteChars
-                    return $ '\t':wcs
-            c:_ | isSpace c -> do
-                    discard 1
-                    wcs <- lexWhiteChars
-                    return $ c:wcs
-            _ -> return ""
+    -- Fast-merge for the very common case of a literal with no escapes.
+    -- 's' and 'raw' would both be a single chunk, so we'd otherwise
+    -- 'T.concat [taken]' which is identity but still allocates.  Skip.
+    finish [taken] = taken
+    finish chunks  = T.concat (reverse chunks)
 
-lexEscape :: Lex a (Char, String)
+    loop sChunks rawChunks = do
+      inp <- getInputT
+      let (taken, rest) = T.span isPlain inp
+      let !sChunks'   = if T.null taken then sChunks   else taken : sChunks
+      let !rawChunks' = if T.null taken then rawChunks else taken : rawChunks
+      discard (T.length taken)
+      exts <- getExtensionsL
+      case T.uncons rest of
+        Just ('"', after) -> do
+          discard 1
+          case T.uncons after of
+            Just ('#', _) | MagicHash `elem` exts -> do
+              discard 1
+              return (StringHash (finish sChunks', finish rawChunks'))
+            _ -> return (StringTok (finish sChunks', finish rawChunks'))
+        Just ('\\', _) -> do
+          inp2 <- getInputT
+          case T.unpack (T.take 2 inp2) of
+            "\\&" -> do
+              discard 2
+              loop sChunks' (T.pack "\\&" : rawChunks')
+            '\\':c:[] | isSpace c -> do
+              discard 1
+              wcs <- lexWhiteChars
+              matchChar '\\' "Illegal character in string gap"
+              -- Raw rep: '\' + wcs + '\'
+              loop sChunks' (T.singleton '\\' : wcs : T.singleton '\\' : rawChunks')
+            _ -> do
+              (ce, str) <- lexEscape
+              loop (T.singleton ce : sChunks') (str : T.singleton '\\' : rawChunks')
+        _ -> fail "Improperly terminated string"
+
+    lexWhiteChars :: Lex a Text
+    lexWhiteChars = T.concat . reverse <$> go []
+      where
+      go acc = do s <- getInput
+                  case s of
+                    '\n':_          -> do lexNewline
+                                          go (T.singleton '\n' : acc)
+                    '\t':_          -> do lexTab
+                                          go (T.singleton '\t' : acc)
+                    c:_ | isSpace c -> do discard 1
+                                          go (T.singleton c : acc)
+                    _               -> return acc
+
+lexEscape :: Lex a (Char, Text)
 lexEscape = do
     discard 1
     r <- getInput
@@ -1252,12 +1271,12 @@ lexEscape = do
                     discard 1
                     (n, raw) <- lexOctal
                     n' <- checkChar n
-                    return (n', 'o':raw)
+                    return (n', T.cons 'o' raw)
         'x':c:_ | isHexDigit c -> do
                     discard 1
                     (n, raw) <- lexHexadecimal
                     n' <- checkChar n
-                    return (n', 'x':raw)
+                    return (n', T.cons 'x' raw)
         c:_ | isDigit c -> do
                     (n, raw) <- lexDecimal
                     n' <- checkChar n
@@ -1271,38 +1290,38 @@ lexEscape = do
 
 -- Production cntrl from section B.2
 
-    cntrl :: Char -> Lex a (Char, String)
-    cntrl c | c >= '@' && c <= '_' = return (chr (ord c - ord '@'), '^':c:[])
+    cntrl :: Char -> Lex a (Char, Text)
+    cntrl c | c >= '@' && c <= '_' = return (chr (ord c - ord '@'), T.pack ('^':c:[]))
     cntrl _                        = fail "Illegal control character"
 
 -- assumes at least one octal digit
-lexOctal :: Lex a (Integer, String)
+lexOctal :: Lex a (Integer, Text)
 lexOctal = do
-    ds <- lexWhile isOctDigit
+    ds <- lexWhileT isOctDigit
     return (parseInteger 8 ds, ds)
 
 -- assumes at least one binary digit
-lexBinary :: Lex a (Integer, String)
+lexBinary :: Lex a (Integer, Text)
 lexBinary = do
-    ds <- lexWhile isBinDigit
+    ds <- lexWhileT isBinDigit
     return (parseInteger 2 ds, ds)
 
 -- assumes at least one hexadecimal digit
-lexHexadecimal :: Lex a (Integer, String)
+lexHexadecimal :: Lex a (Integer, Text)
 lexHexadecimal = do
-    ds <- lexWhile isHexDigit
+    ds <- lexWhileT isHexDigit
     return (parseInteger 16 ds, ds)
 
 -- assumes at least one decimal digit
-lexDecimal :: Lex a (Integer, String)
+lexDecimal :: Lex a (Integer, Text)
 lexDecimal = do
-    ds <- lexWhile isDigit
+    ds <- lexWhileT isDigit
     return (parseInteger 10 ds, ds)
 
 -- Stolen from Hugs's Prelude
-parseInteger :: Integer -> String -> Integer
-parseInteger radix ds =
-    foldl1 (\n d -> n * radix + d) (map (toInteger . digitToInt) ds)
+parseInteger :: Integer -> Text -> Integer
+parseInteger radix =
+    T.foldl' (\n c -> n * radix + toInteger (digitToInt c)) 0
 
 flagKW :: Token -> Lex a ()
 flagKW t =
@@ -1318,28 +1337,28 @@ isBinDigit c =  c >= '0' && c <= '1'
 
 showToken :: Token -> String
 showToken t = case t of
-  VarId s           -> s
-  LabelVarId s      -> '#':s
-  QVarId (q,s)      -> q ++ '.':s
-  IDupVarId s       -> '?':s
-  ILinVarId s       -> '%':s
-  ConId s           -> s
-  QConId (q,s)      -> q ++ '.':s
-  DVarId ss         -> intercalate "-" ss
-  VarSym s          -> s
-  ConSym s          -> s
-  QVarSym (q,s)     -> q ++ '.':s
-  QConSym (q,s)     -> q ++ '.':s
-  IntTok (_, s)         -> s
-  FloatTok (_, s)       -> s
-  Character (_, s)      -> '\'':s ++ "'"
-  StringTok (_, s)      -> '"':s ++ "\""
-  IntTokHash (_, s)     -> s ++ "#"
-  WordTokHash (_, s)    -> s ++ "##"
-  FloatTokHash (_, s)   -> s ++ "#"
-  DoubleTokHash (_, s)  -> s ++ "##"
-  CharacterHash (_, s)  -> '\'':s ++ "'#"
-  StringHash (_, s)     -> '"':s ++ "\"#"
+  VarId s           -> T.unpack s
+  LabelVarId s      -> '#' : T.unpack s
+  QVarId (q,s)      -> T.unpack q ++ '.' : T.unpack s
+  IDupVarId s       -> '?' : T.unpack s
+  ILinVarId s       -> '%' : T.unpack s
+  ConId s           -> T.unpack s
+  QConId (q,s)      -> T.unpack q ++ '.' : T.unpack s
+  DVarId ss         -> intercalate "-" (map T.unpack ss)
+  VarSym s          -> T.unpack s
+  ConSym s          -> T.unpack s
+  QVarSym (q,s)     -> T.unpack q ++ '.' : T.unpack s
+  QConSym (q,s)     -> T.unpack q ++ '.' : T.unpack s
+  IntTok (_, s)         -> T.unpack s
+  FloatTok (_, s)       -> T.unpack s
+  Character (_, s)      -> '\'' : T.unpack s ++ "'"
+  StringTok (_, s)      -> '"' : T.unpack s ++ "\""
+  IntTokHash (_, s)     -> T.unpack s ++ "#"
+  WordTokHash (_, s)    -> T.unpack s ++ "##"
+  FloatTokHash (_, s)   -> T.unpack s ++ "#"
+  DoubleTokHash (_, s)  -> T.unpack s ++ "##"
+  CharacterHash (_, s)  -> '\'' : T.unpack s ++ "'#"
+  StringHash (_, s)     -> '"' : T.unpack s ++ "\"#"
   LeftParen         -> "("
   RightParen        -> ")"
   LeftHashParen     -> "(#"
@@ -1385,13 +1404,13 @@ showToken t = case t of
   THTypQuote        -> "[t|"
   THCloseQuote      -> "|]"
   THTCloseQuote     -> "||]"
-  THIdEscape s      -> '$':s
+  THIdEscape s      -> '$' : T.unpack s
   THParenEscape     -> "$("
-  THTIdEscape s     -> "$$" ++ s
+  THTIdEscape s     -> "$$" ++ T.unpack s
   THTParenEscape    -> "$$("
   THVarQuote        -> "'"
   THTyQuote         -> "''"
-  THQuasiQuote (n,q) -> "[$" ++ n ++ "|" ++ q ++ "]"
+  THQuasiQuote (n,q) -> "[$" ++ T.unpack n ++ "|" ++ T.unpack q ++ "]"
   RPGuardOpen       -> "(|"
   RPGuardClose      -> "|)"
   RPCAt             -> "@:"
@@ -1401,7 +1420,7 @@ showToken t = case t of
   XStdTagClose      -> ">"
   XCloseTagOpen     -> "</"
   XEmptyTagClose    -> "/>"
-  XPCDATA s         -> "PCDATA " ++ s
+  XPCDATA s         -> "PCDATA " ++ T.unpack s
   XRPatOpen         -> "<["
   XRPatClose        -> "]>"
   PragmaEnd         -> "#-}"
@@ -1418,7 +1437,7 @@ showToken t = case t of
   CORE              -> "{-# CORE"
   UNPACK            -> "{-# UNPACK"
   NOUNPACK          -> "{-# NOUNPACK"
-  OPTIONS (mt,_)    -> "{-# OPTIONS" ++ maybe "" (':':) mt ++ " ..."
+  OPTIONS (mt,_)    -> "{-# OPTIONS" ++ maybe "" ((':':) . T.unpack) mt ++ " ..."
 --  CFILES  s         -> "{-# CFILES ..."
 --  INCLUDE s         -> "{-# INCLUDE ..."
   LANGUAGE          -> "{-# LANGUAGE"
