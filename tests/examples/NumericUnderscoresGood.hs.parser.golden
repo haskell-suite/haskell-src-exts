@@ -1,0 +1,2523 @@
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan =
+            SrcSpan "tests/examples/NumericUnderscoresGood.hs" 1 1 53 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 1 1 1 1
+            , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 2 1 2 1
+            , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 4 1 4 1
+            , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 4 1 4 1
+            , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 4 1 4 1
+            , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 6 1 6 1
+            , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 53 1 53 1
+            , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 53 1 53 1
+            ]
+        }
+      Nothing
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/NumericUnderscoresGood.hs" 1 1 1 36
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 1 1 1 13
+                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 1 33 1 36
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 1 14 1 32
+                , srcInfoPoints = []
+                }
+              "NumericUnderscores"
+          ]
+      , LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/NumericUnderscoresGood.hs" 2 1 2 27
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 2 1 2 13
+                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 2 24 2 27
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 2 14 2 23
+                , srcInfoPoints = []
+                }
+              "MagicHash"
+          ]
+      ]
+      [ ImportDecl
+          { importAnn =
+              SrcSpanInfo
+                { srcInfoSpan =
+                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 4 1 4 17
+                , srcInfoPoints =
+                    [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 4 1 4 7 ]
+                }
+          , importModule =
+              ModuleName
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/NumericUnderscoresGood.hs" 4 8 4 17
+                  , srcInfoPoints = []
+                  }
+                "GHC.Types"
+          , importQualified = False
+          , importSrc = False
+          , importSafe = False
+          , importPkg = Nothing
+          , importAs = Nothing
+          , importSpecs = Nothing
+          }
+      ]
+      [ PatBind
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/NumericUnderscoresGood.hs" 6 1 52 12
+            , srcInfoPoints = []
+            }
+          (PVar
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/NumericUnderscoresGood.hs" 6 1 6 5
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/NumericUnderscoresGood.hs" 6 1 6 5
+                  , srcInfoPoints = []
+                  }
+                "main"))
+          (UnGuardedRhs
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/NumericUnderscoresGood.hs" 6 6 52 12
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 6 6 6 7 ]
+               }
+             (Do
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/NumericUnderscoresGood.hs" 6 8 52 12
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 6 8 6 10
+                      , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 7 5 7 5
+                      , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 14 5 14 5
+                      , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 18 5 18 5
+                      , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 22 5 22 5
+                      , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 24 5 24 5
+                      , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 32 5 32 5
+                      , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 40 5 40 5
+                      , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 48 5 48 5
+                      , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 53 1 53 0
+                      ]
+                  }
+                [ Qualifier
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/NumericUnderscoresGood.hs" 7 5 13 12
+                      , srcInfoPoints = []
+                      }
+                    (App
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/NumericUnderscoresGood.hs" 7 5 13 12
+                         , srcInfoPoints = []
+                         }
+                       (Var
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/NumericUnderscoresGood.hs" 7 5 7 10
+                            , srcInfoPoints = []
+                            }
+                          (UnQual
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/NumericUnderscoresGood.hs" 7 5 7 10
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/NumericUnderscoresGood.hs" 7 5 7 10
+                                  , srcInfoPoints = []
+                                  }
+                                "print")))
+                       (List
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/NumericUnderscoresGood.hs" 7 11 13 12
+                            , srcInfoPoints =
+                                [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 7 11 7 12
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 7 17 7 18
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 7 24 7 25
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 7 30 7 31
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 8 11 8 12
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 9 11 9 12
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 10 11 10 12
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 11 11 11 12
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 12 11 12 12
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 13 11 13 12
+                                ]
+                            }
+                          [ Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 7 13 7 17
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/NumericUnderscoresGood.hs" 7 13 7 17
+                                   , srcInfoPoints = []
+                                   }
+                                 0
+                                 "0_00")
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 7 19 7 24
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 7 19 7 20 ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/NumericUnderscoresGood.hs" 7 20 7 24
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 7 20 7 24
+                                      , srcInfoPoints = []
+                                      }
+                                    0
+                                    "0_00"))
+                          , Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 7 26 7 30
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/NumericUnderscoresGood.hs" 7 26 7 30
+                                   , srcInfoPoints = []
+                                   }
+                                 100
+                                 "1_00")
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 7 32 7 38
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 7 32 7 33 ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/NumericUnderscoresGood.hs" 7 33 7 38
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 7 33 7 38
+                                      , srcInfoPoints = []
+                                      }
+                                    1000
+                                    "1_000"))
+                          , Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 8 13 8 115
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/NumericUnderscoresGood.hs" 8 13 8 115
+                                   , srcInfoPoints = []
+                                   }
+                                 1
+                                 "000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_01")
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 9 13 9 116
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 9 13 9 14 ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/NumericUnderscoresGood.hs" 9 14 9 116
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 9 14 9 116
+                                      , srcInfoPoints = []
+                                      }
+                                    1
+                                    "000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_01"))
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 10 13 10 122
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 10 13 10 14
+                                    ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 10 14 10 122
+                                   , srcInfoPoints = []
+                                   }
+                                 (Frac
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 10 14 10 122
+                                      , srcInfoPoints = []
+                                      }
+                                    (1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 %
+                                       1)
+                                    "000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_01e12_00"))
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 11 13 11 123
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 11 13 11 14
+                                    ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 11 14 11 123
+                                   , srcInfoPoints = []
+                                   }
+                                 (Frac
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 11 14 11 123
+                                      , srcInfoPoints = []
+                                      }
+                                    (1 %
+                                       1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000)
+                                    "000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_01e-12_00"))
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 12 13 12 123
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 12 13 12 14
+                                    ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 12 14 12 123
+                                   , srcInfoPoints = []
+                                   }
+                                 (Frac
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 12 14 12 123
+                                      , srcInfoPoints = []
+                                      }
+                                    (1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 %
+                                       1)
+                                    "000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_01e+12_00"))
+                          ]))
+                , Qualifier
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/NumericUnderscoresGood.hs" 14 5 17 12
+                      , srcInfoPoints = []
+                      }
+                    (App
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/NumericUnderscoresGood.hs" 14 5 17 12
+                         , srcInfoPoints = []
+                         }
+                       (Var
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/NumericUnderscoresGood.hs" 14 5 14 10
+                            , srcInfoPoints = []
+                            }
+                          (UnQual
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/NumericUnderscoresGood.hs" 14 5 14 10
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/NumericUnderscoresGood.hs" 14 5 14 10
+                                  , srcInfoPoints = []
+                                  }
+                                "print")))
+                       (List
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/NumericUnderscoresGood.hs" 14 11 17 12
+                            , srcInfoPoints =
+                                [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 14 11 14 12
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 14 21 14 22
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 14 32 14 33
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 14 42 14 43
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 15 11 15 12
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 16 11 16 12
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 17 11 17 12
+                                ]
+                            }
+                          [ App
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 14 13 14 21
+                                , srcInfoPoints = []
+                                }
+                              (Con
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 14 13 14 15
+                                   , srcInfoPoints = []
+                                   }
+                                 (UnQual
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 14 13 14 15
+                                      , srcInfoPoints = []
+                                      }
+                                    (Ident
+                                       SrcSpanInfo
+                                         { srcInfoSpan =
+                                             SrcSpan
+                                               "tests/examples/NumericUnderscoresGood.hs"
+                                               14
+                                               13
+                                               14
+                                               15
+                                         , srcInfoPoints = []
+                                         }
+                                       "I#")))
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 14 16 14 21
+                                   , srcInfoPoints = []
+                                   }
+                                 (PrimInt
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 14 16 14 21
+                                      , srcInfoPoints = []
+                                      }
+                                    0
+                                    "0_00"))
+                          , InfixApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 14 23 14 32
+                                , srcInfoPoints = []
+                                }
+                              (Con
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 14 23 14 25
+                                   , srcInfoPoints = []
+                                   }
+                                 (UnQual
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 14 23 14 25
+                                      , srcInfoPoints = []
+                                      }
+                                    (Ident
+                                       SrcSpanInfo
+                                         { srcInfoSpan =
+                                             SrcSpan
+                                               "tests/examples/NumericUnderscoresGood.hs"
+                                               14
+                                               23
+                                               14
+                                               25
+                                         , srcInfoPoints = []
+                                         }
+                                       "I#")))
+                              (QVarOp
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 14 26 14 27
+                                   , srcInfoPoints = []
+                                   }
+                                 (UnQual
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 14 26 14 27
+                                      , srcInfoPoints = []
+                                      }
+                                    (Symbol
+                                       SrcSpanInfo
+                                         { srcInfoSpan =
+                                             SrcSpan
+                                               "tests/examples/NumericUnderscoresGood.hs"
+                                               14
+                                               26
+                                               14
+                                               27
+                                         , srcInfoPoints = []
+                                         }
+                                       "-")))
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 14 27 14 32
+                                   , srcInfoPoints = []
+                                   }
+                                 (PrimInt
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 14 27 14 32
+                                      , srcInfoPoints = []
+                                      }
+                                    0
+                                    "0_00"))
+                          , App
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 14 34 14 42
+                                , srcInfoPoints = []
+                                }
+                              (Con
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 14 34 14 36
+                                   , srcInfoPoints = []
+                                   }
+                                 (UnQual
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 14 34 14 36
+                                      , srcInfoPoints = []
+                                      }
+                                    (Ident
+                                       SrcSpanInfo
+                                         { srcInfoSpan =
+                                             SrcSpan
+                                               "tests/examples/NumericUnderscoresGood.hs"
+                                               14
+                                               34
+                                               14
+                                               36
+                                         , srcInfoPoints = []
+                                         }
+                                       "I#")))
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 14 37 14 42
+                                   , srcInfoPoints = []
+                                   }
+                                 (PrimInt
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 14 37 14 42
+                                      , srcInfoPoints = []
+                                      }
+                                    100
+                                    "1_00"))
+                          , InfixApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 14 44 14 54
+                                , srcInfoPoints = []
+                                }
+                              (Con
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 14 44 14 46
+                                   , srcInfoPoints = []
+                                   }
+                                 (UnQual
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 14 44 14 46
+                                      , srcInfoPoints = []
+                                      }
+                                    (Ident
+                                       SrcSpanInfo
+                                         { srcInfoSpan =
+                                             SrcSpan
+                                               "tests/examples/NumericUnderscoresGood.hs"
+                                               14
+                                               44
+                                               14
+                                               46
+                                         , srcInfoPoints = []
+                                         }
+                                       "I#")))
+                              (QVarOp
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 14 47 14 48
+                                   , srcInfoPoints = []
+                                   }
+                                 (UnQual
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 14 47 14 48
+                                      , srcInfoPoints = []
+                                      }
+                                    (Symbol
+                                       SrcSpanInfo
+                                         { srcInfoSpan =
+                                             SrcSpan
+                                               "tests/examples/NumericUnderscoresGood.hs"
+                                               14
+                                               47
+                                               14
+                                               48
+                                         , srcInfoPoints = []
+                                         }
+                                       "-")))
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 14 48 14 54
+                                   , srcInfoPoints = []
+                                   }
+                                 (PrimInt
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 14 48 14 54
+                                      , srcInfoPoints = []
+                                      }
+                                    1000
+                                    "1_000"))
+                          , App
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 15 13 15 119
+                                , srcInfoPoints = []
+                                }
+                              (Con
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 15 13 15 15
+                                   , srcInfoPoints = []
+                                   }
+                                 (UnQual
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 15 13 15 15
+                                      , srcInfoPoints = []
+                                      }
+                                    (Ident
+                                       SrcSpanInfo
+                                         { srcInfoSpan =
+                                             SrcSpan
+                                               "tests/examples/NumericUnderscoresGood.hs"
+                                               15
+                                               13
+                                               15
+                                               15
+                                         , srcInfoPoints = []
+                                         }
+                                       "I#")))
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 15 16 15 119
+                                   , srcInfoPoints = []
+                                   }
+                                 (PrimInt
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 15 16 15 119
+                                      , srcInfoPoints = []
+                                      }
+                                    1
+                                    "000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_01"))
+                          , InfixApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 16 13 16 120
+                                , srcInfoPoints = []
+                                }
+                              (Con
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 16 13 16 15
+                                   , srcInfoPoints = []
+                                   }
+                                 (UnQual
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 16 13 16 15
+                                      , srcInfoPoints = []
+                                      }
+                                    (Ident
+                                       SrcSpanInfo
+                                         { srcInfoSpan =
+                                             SrcSpan
+                                               "tests/examples/NumericUnderscoresGood.hs"
+                                               16
+                                               13
+                                               16
+                                               15
+                                         , srcInfoPoints = []
+                                         }
+                                       "I#")))
+                              (QVarOp
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 16 16 16 17
+                                   , srcInfoPoints = []
+                                   }
+                                 (UnQual
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 16 16 16 17
+                                      , srcInfoPoints = []
+                                      }
+                                    (Symbol
+                                       SrcSpanInfo
+                                         { srcInfoSpan =
+                                             SrcSpan
+                                               "tests/examples/NumericUnderscoresGood.hs"
+                                               16
+                                               16
+                                               16
+                                               17
+                                         , srcInfoPoints = []
+                                         }
+                                       "-")))
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 16 17 16 120
+                                   , srcInfoPoints = []
+                                   }
+                                 (PrimInt
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 16 17 16 120
+                                      , srcInfoPoints = []
+                                      }
+                                    1
+                                    "000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_01"))
+                          ]))
+                , Qualifier
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/NumericUnderscoresGood.hs" 18 5 20 12
+                      , srcInfoPoints = []
+                      }
+                    (App
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/NumericUnderscoresGood.hs" 18 5 20 12
+                         , srcInfoPoints = []
+                         }
+                       (Var
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/NumericUnderscoresGood.hs" 18 5 18 10
+                            , srcInfoPoints = []
+                            }
+                          (UnQual
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/NumericUnderscoresGood.hs" 18 5 18 10
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/NumericUnderscoresGood.hs" 18 5 18 10
+                                  , srcInfoPoints = []
+                                  }
+                                "print")))
+                       (List
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/NumericUnderscoresGood.hs" 18 11 20 12
+                            , srcInfoPoints =
+                                [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 18 11 18 12
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 18 22 18 23
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 18 33 18 34
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 18 49 18 50
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 18 65 18 66
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 19 11 19 12
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 20 11 20 12
+                                ]
+                            }
+                          [ App
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 18 13 18 22
+                                , srcInfoPoints = []
+                                }
+                              (Con
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 18 13 18 15
+                                   , srcInfoPoints = []
+                                   }
+                                 (UnQual
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 18 13 18 15
+                                      , srcInfoPoints = []
+                                      }
+                                    (Ident
+                                       SrcSpanInfo
+                                         { srcInfoSpan =
+                                             SrcSpan
+                                               "tests/examples/NumericUnderscoresGood.hs"
+                                               18
+                                               13
+                                               18
+                                               15
+                                         , srcInfoPoints = []
+                                         }
+                                       "W#")))
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 18 16 18 22
+                                   , srcInfoPoints = []
+                                   }
+                                 (PrimWord
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 18 16 18 22
+                                      , srcInfoPoints = []
+                                      }
+                                    0
+                                    "0_00"))
+                          , App
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 18 24 18 33
+                                , srcInfoPoints = []
+                                }
+                              (Con
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 18 24 18 26
+                                   , srcInfoPoints = []
+                                   }
+                                 (UnQual
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 18 24 18 26
+                                      , srcInfoPoints = []
+                                      }
+                                    (Ident
+                                       SrcSpanInfo
+                                         { srcInfoSpan =
+                                             SrcSpan
+                                               "tests/examples/NumericUnderscoresGood.hs"
+                                               18
+                                               24
+                                               18
+                                               26
+                                         , srcInfoPoints = []
+                                         }
+                                       "W#")))
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 18 27 18 33
+                                   , srcInfoPoints = []
+                                   }
+                                 (PrimWord
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 18 27 18 33
+                                      , srcInfoPoints = []
+                                      }
+                                    100
+                                    "1_00"))
+                          , App
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 18 35 18 49
+                                , srcInfoPoints = []
+                                }
+                              (Con
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 18 35 18 37
+                                   , srcInfoPoints = []
+                                   }
+                                 (UnQual
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 18 35 18 37
+                                      , srcInfoPoints = []
+                                      }
+                                    (Ident
+                                       SrcSpanInfo
+                                         { srcInfoSpan =
+                                             SrcSpan
+                                               "tests/examples/NumericUnderscoresGood.hs"
+                                               18
+                                               35
+                                               18
+                                               37
+                                         , srcInfoPoints = []
+                                         }
+                                       "W#")))
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 18 38 18 49
+                                   , srcInfoPoints = []
+                                   }
+                                 (PrimWord
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 18 38 18 49
+                                      , srcInfoPoints = []
+                                      }
+                                    1000000
+                                    "1_000_000"))
+                          , App
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 18 51 18 65
+                                , srcInfoPoints = []
+                                }
+                              (Con
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 18 51 18 53
+                                   , srcInfoPoints = []
+                                   }
+                                 (UnQual
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 18 51 18 53
+                                      , srcInfoPoints = []
+                                      }
+                                    (Ident
+                                       SrcSpanInfo
+                                         { srcInfoSpan =
+                                             SrcSpan
+                                               "tests/examples/NumericUnderscoresGood.hs"
+                                               18
+                                               51
+                                               18
+                                               53
+                                         , srcInfoPoints = []
+                                         }
+                                       "W#")))
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 18 54 18 65
+                                   , srcInfoPoints = []
+                                   }
+                                 (PrimWord
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 18 54 18 65
+                                      , srcInfoPoints = []
+                                      }
+                                    1111111
+                                    "1_111_111"))
+                          , App
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 18 67 18 79
+                                , srcInfoPoints = []
+                                }
+                              (Con
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 18 67 18 69
+                                   , srcInfoPoints = []
+                                   }
+                                 (UnQual
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 18 67 18 69
+                                      , srcInfoPoints = []
+                                      }
+                                    (Ident
+                                       SrcSpanInfo
+                                         { srcInfoSpan =
+                                             SrcSpan
+                                               "tests/examples/NumericUnderscoresGood.hs"
+                                               18
+                                               67
+                                               18
+                                               69
+                                         , srcInfoPoints = []
+                                         }
+                                       "W#")))
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 18 70 18 79
+                                   , srcInfoPoints = []
+                                   }
+                                 (PrimWord
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 18 70 18 79
+                                      , srcInfoPoints = []
+                                      }
+                                    1111
+                                    "1_1_1_1"))
+                          , App
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 19 13 19 120
+                                , srcInfoPoints = []
+                                }
+                              (Con
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 19 13 19 15
+                                   , srcInfoPoints = []
+                                   }
+                                 (UnQual
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 19 13 19 15
+                                      , srcInfoPoints = []
+                                      }
+                                    (Ident
+                                       SrcSpanInfo
+                                         { srcInfoSpan =
+                                             SrcSpan
+                                               "tests/examples/NumericUnderscoresGood.hs"
+                                               19
+                                               13
+                                               19
+                                               15
+                                         , srcInfoPoints = []
+                                         }
+                                       "W#")))
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 19 16 19 120
+                                   , srcInfoPoints = []
+                                   }
+                                 (PrimWord
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 19 16 19 120
+                                      , srcInfoPoints = []
+                                      }
+                                    1
+                                    "000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_01"))
+                          ]))
+                , Qualifier
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/NumericUnderscoresGood.hs" 22 5 22 48
+                      , srcInfoPoints = []
+                      }
+                    (App
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/NumericUnderscoresGood.hs" 22 5 22 48
+                         , srcInfoPoints = []
+                         }
+                       (Var
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/NumericUnderscoresGood.hs" 22 5 22 10
+                            , srcInfoPoints = []
+                            }
+                          (UnQual
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/NumericUnderscoresGood.hs" 22 5 22 10
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/NumericUnderscoresGood.hs" 22 5 22 10
+                                  , srcInfoPoints = []
+                                  }
+                                "print")))
+                       (List
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/NumericUnderscoresGood.hs" 22 11 22 48
+                            , srcInfoPoints =
+                                [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 22 11 22 12
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 22 29 22 30
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 22 47 22 48
+                                ]
+                            }
+                          [ InfixApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 22 13 22 29
+                                , srcInfoPoints = []
+                                }
+                              (Con
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 22 13 22 16
+                                   , srcInfoPoints = []
+                                   }
+                                 (UnQual
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 22 13 22 16
+                                      , srcInfoPoints = []
+                                      }
+                                    (Ident
+                                       SrcSpanInfo
+                                         { srcInfoSpan =
+                                             SrcSpan
+                                               "tests/examples/NumericUnderscoresGood.hs"
+                                               22
+                                               13
+                                               22
+                                               16
+                                         , srcInfoPoints = []
+                                         }
+                                       "I8#")))
+                              (QVarOp
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 22 17 22 18
+                                   , srcInfoPoints = []
+                                   }
+                                 (UnQual
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 22 17 22 18
+                                      , srcInfoPoints = []
+                                      }
+                                    (Symbol
+                                       SrcSpanInfo
+                                         { srcInfoSpan =
+                                             SrcSpan
+                                               "tests/examples/NumericUnderscoresGood.hs"
+                                               22
+                                               17
+                                               22
+                                               18
+                                         , srcInfoPoints = []
+                                         }
+                                       "-")))
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 22 18 22 29
+                                   , srcInfoPoints = []
+                                   }
+                                 (PrimInt
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 22 18 22 29
+                                      , srcInfoPoints = []
+                                      }
+                                    0
+                                    "0_00_00_00"))
+                          , App
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 22 31 22 46
+                                , srcInfoPoints = []
+                                }
+                              (Con
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 22 31 22 34
+                                   , srcInfoPoints = []
+                                   }
+                                 (UnQual
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 22 31 22 34
+                                      , srcInfoPoints = []
+                                      }
+                                    (Ident
+                                       SrcSpanInfo
+                                         { srcInfoSpan =
+                                             SrcSpan
+                                               "tests/examples/NumericUnderscoresGood.hs"
+                                               22
+                                               31
+                                               22
+                                               34
+                                         , srcInfoPoints = []
+                                         }
+                                       "I8#")))
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 22 35 22 46
+                                   , srcInfoPoints = []
+                                   }
+                                 (PrimInt
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 22 35 22 46
+                                      , srcInfoPoints = []
+                                      }
+                                    1000000
+                                    "1_00_00_00"))
+                          ]))
+                , Qualifier
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/NumericUnderscoresGood.hs" 24 5 30 12
+                      , srcInfoPoints = []
+                      }
+                    (App
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/NumericUnderscoresGood.hs" 24 5 30 12
+                         , srcInfoPoints = []
+                         }
+                       (Var
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/NumericUnderscoresGood.hs" 24 5 24 10
+                            , srcInfoPoints = []
+                            }
+                          (UnQual
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/NumericUnderscoresGood.hs" 24 5 24 10
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/NumericUnderscoresGood.hs" 24 5 24 10
+                                  , srcInfoPoints = []
+                                  }
+                                "print")))
+                       (List
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/NumericUnderscoresGood.hs" 24 11 30 12
+                            , srcInfoPoints =
+                                [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 24 11 24 12
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 24 23 24 24
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 24 36 24 37
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 24 48 24 49
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 25 11 25 12
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 26 11 26 12
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 27 11 27 12
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 28 11 28 12
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 29 11 29 12
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 30 11 30 12
+                                ]
+                            }
+                          [ Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 24 13 24 23
+                                , srcInfoPoints = []
+                                }
+                              (Frac
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 24 13 24 23
+                                   , srcInfoPoints = []
+                                   }
+                                 (0 % 1)
+                                 "0_00.00_00")
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 24 25 24 36
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 24 25 24 26
+                                    ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 24 26 24 36
+                                   , srcInfoPoints = []
+                                   }
+                                 (Frac
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 24 26 24 36
+                                      , srcInfoPoints = []
+                                      }
+                                    (0 % 1)
+                                    "0_00.00_00"))
+                          , Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 24 38 24 48
+                                , srcInfoPoints = []
+                                }
+                              (Frac
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 24 38 24 48
+                                   , srcInfoPoints = []
+                                   }
+                                 (100 % 1)
+                                 "1_00.00_00")
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 24 50 24 62
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 24 50 24 51
+                                    ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 24 51 24 62
+                                   , srcInfoPoints = []
+                                   }
+                                 (Frac
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 24 51 24 62
+                                      , srcInfoPoints = []
+                                      }
+                                    (1000 % 1)
+                                    "1_000.00_00"))
+                          , Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 25 13 25 133
+                                , srcInfoPoints = []
+                                }
+                              (Frac
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 25 13 25 133
+                                   , srcInfoPoints = []
+                                   }
+                                 (100000000000011 % 100000000000000)
+                                 "000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_01.00_00000_000_0011")
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 26 13 26 134
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 26 13 26 14
+                                    ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 26 14 26 134
+                                   , srcInfoPoints = []
+                                   }
+                                 (Frac
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 26 14 26 134
+                                      , srcInfoPoints = []
+                                      }
+                                    (100000000000011 % 100000000000000)
+                                    "000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_01.00_00000_000_0011"))
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 27 13 27 140
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 27 13 27 14
+                                    ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 27 14 27 140
+                                   , srcInfoPoints = []
+                                   }
+                                 (Frac
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 27 14 27 140
+                                      , srcInfoPoints = []
+                                      }
+                                    (1000000000000110000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 %
+                                       1)
+                                    "000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_01.00_00000_000_0011e12_00"))
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 28 13 28 141
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 28 13 28 14
+                                    ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 28 14 28 141
+                                   , srcInfoPoints = []
+                                   }
+                                 (Frac
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 28 14 28 141
+                                      , srcInfoPoints = []
+                                      }
+                                    (100000000000011 %
+                                       100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000)
+                                    "000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_01.00_00000_000_0011e-12_00"))
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 29 13 29 141
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 29 13 29 14
+                                    ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 29 14 29 141
+                                   , srcInfoPoints = []
+                                   }
+                                 (Frac
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 29 14 29 141
+                                      , srcInfoPoints = []
+                                      }
+                                    (1000000000000110000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 %
+                                       1)
+                                    "000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_01.00_00000_000_0011e+12_00"))
+                          ]))
+                , Qualifier
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/NumericUnderscoresGood.hs" 32 5 38 12
+                      , srcInfoPoints = []
+                      }
+                    (App
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/NumericUnderscoresGood.hs" 32 5 38 12
+                         , srcInfoPoints = []
+                         }
+                       (Var
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/NumericUnderscoresGood.hs" 32 5 32 10
+                            , srcInfoPoints = []
+                            }
+                          (UnQual
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/NumericUnderscoresGood.hs" 32 5 32 10
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/NumericUnderscoresGood.hs" 32 5 32 10
+                                  , srcInfoPoints = []
+                                  }
+                                "print")))
+                       (List
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/NumericUnderscoresGood.hs" 32 11 38 12
+                            , srcInfoPoints =
+                                [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 32 11 32 12
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 32 18 32 19
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 32 26 32 27
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 32 33 32 34
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 33 11 33 12
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 33 18 33 19
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 33 26 33 27
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 33 33 33 34
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 34 11 34 12
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 35 11 35 12
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 36 11 36 12
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 37 11 37 12
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 38 11 38 12
+                                ]
+                            }
+                          [ Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 32 13 32 18
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 32 13 32 18
+                                   , srcInfoPoints = []
+                                   }
+                                 0
+                                 "0x0_0")
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 32 20 32 26
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 32 20 32 21
+                                    ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 32 21 32 26
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 32 21 32 26
+                                      , srcInfoPoints = []
+                                      }
+                                    0
+                                    "0x0_0"))
+                          , Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 32 28 32 33
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 32 28 32 33
+                                   , srcInfoPoints = []
+                                   }
+                                 16
+                                 "0x1_0")
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 32 35 32 41
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 32 35 32 36
+                                    ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 32 36 32 41
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 32 36 32 41
+                                      , srcInfoPoints = []
+                                      }
+                                    16
+                                    "0x1_0"))
+                          , Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 33 13 33 18
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 33 13 33 18
+                                   , srcInfoPoints = []
+                                   }
+                                 255
+                                 "0xF_F")
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 33 20 33 26
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 33 20 33 21
+                                    ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 33 21 33 26
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 33 21 33 26
+                                      , srcInfoPoints = []
+                                      }
+                                    255
+                                    "0xF_F"))
+                          , Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 33 28 33 33
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 33 28 33 33
+                                   , srcInfoPoints = []
+                                   }
+                                 240
+                                 "0xF_0")
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 33 35 33 41
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 33 35 33 36
+                                    ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 33 36 33 41
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 33 36 33 41
+                                      , srcInfoPoints = []
+                                      }
+                                    240
+                                    "0xF_0"))
+                          , Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 34 13 34 117
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 34 13 34 117
+                                   , srcInfoPoints = []
+                                   }
+                                 1
+                                 "0x000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_01")
+                          , Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 35 13 35 117
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 35 13 35 117
+                                   , srcInfoPoints = []
+                                   }
+                                 15
+                                 "0x000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_0F")
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 36 13 36 118
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 36 13 36 14
+                                    ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 36 14 36 118
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 36 14 36 118
+                                      , srcInfoPoints = []
+                                      }
+                                    1
+                                    "0x000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_01"))
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 37 13 37 118
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 37 13 37 14
+                                    ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 37 14 37 118
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 37 14 37 118
+                                      , srcInfoPoints = []
+                                      }
+                                    15
+                                    "0x000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_0F"))
+                          ]))
+                , Qualifier
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/NumericUnderscoresGood.hs" 40 5 46 12
+                      , srcInfoPoints = []
+                      }
+                    (App
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/NumericUnderscoresGood.hs" 40 5 46 12
+                         , srcInfoPoints = []
+                         }
+                       (Var
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/NumericUnderscoresGood.hs" 40 5 40 10
+                            , srcInfoPoints = []
+                            }
+                          (UnQual
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/NumericUnderscoresGood.hs" 40 5 40 10
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/NumericUnderscoresGood.hs" 40 5 40 10
+                                  , srcInfoPoints = []
+                                  }
+                                "print")))
+                       (List
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/NumericUnderscoresGood.hs" 40 11 46 12
+                            , srcInfoPoints =
+                                [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 40 11 40 12
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 40 18 40 19
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 40 26 40 27
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 40 33 40 34
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 41 11 41 12
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 41 18 41 19
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 41 26 41 27
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 41 33 41 34
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 42 11 42 12
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 43 11 43 12
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 44 11 44 12
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 45 11 45 12
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 46 11 46 12
+                                ]
+                            }
+                          [ Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 40 13 40 18
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 40 13 40 18
+                                   , srcInfoPoints = []
+                                   }
+                                 0
+                                 "0o0_0")
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 40 20 40 26
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 40 20 40 21
+                                    ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 40 21 40 26
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 40 21 40 26
+                                      , srcInfoPoints = []
+                                      }
+                                    0
+                                    "0o0_0"))
+                          , Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 40 28 40 33
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 40 28 40 33
+                                   , srcInfoPoints = []
+                                   }
+                                 8
+                                 "0o1_0")
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 40 35 40 41
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 40 35 40 36
+                                    ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 40 36 40 41
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 40 36 40 41
+                                      , srcInfoPoints = []
+                                      }
+                                    8
+                                    "0o1_0"))
+                          , Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 41 13 41 18
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 41 13 41 18
+                                   , srcInfoPoints = []
+                                   }
+                                 63
+                                 "0o7_7")
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 41 20 41 26
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 41 20 41 21
+                                    ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 41 21 41 26
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 41 21 41 26
+                                      , srcInfoPoints = []
+                                      }
+                                    63
+                                    "0o7_7"))
+                          , Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 41 28 41 33
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 41 28 41 33
+                                   , srcInfoPoints = []
+                                   }
+                                 56
+                                 "0o7_0")
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 41 35 41 41
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 41 35 41 36
+                                    ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 41 36 41 41
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 41 36 41 41
+                                      , srcInfoPoints = []
+                                      }
+                                    56
+                                    "0o7_0"))
+                          , Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 42 13 42 117
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 42 13 42 117
+                                   , srcInfoPoints = []
+                                   }
+                                 1
+                                 "0o000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_01")
+                          , Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 43 13 43 117
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 43 13 43 117
+                                   , srcInfoPoints = []
+                                   }
+                                 7
+                                 "0o000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_07")
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 44 13 44 118
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 44 13 44 14
+                                    ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 44 14 44 118
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 44 14 44 118
+                                      , srcInfoPoints = []
+                                      }
+                                    1
+                                    "0o000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_01"))
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 45 13 45 118
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 45 13 45 14
+                                    ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 45 14 45 118
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 45 14 45 118
+                                      , srcInfoPoints = []
+                                      }
+                                    7
+                                    "0o000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_07"))
+                          ]))
+                , Qualifier
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/NumericUnderscoresGood.hs" 48 5 52 12
+                      , srcInfoPoints = []
+                      }
+                    (App
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/NumericUnderscoresGood.hs" 48 5 52 12
+                         , srcInfoPoints = []
+                         }
+                       (Var
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/NumericUnderscoresGood.hs" 48 5 48 10
+                            , srcInfoPoints = []
+                            }
+                          (UnQual
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/NumericUnderscoresGood.hs" 48 5 48 10
+                               , srcInfoPoints = []
+                               }
+                             (Ident
+                                SrcSpanInfo
+                                  { srcInfoSpan =
+                                      SrcSpan "tests/examples/NumericUnderscoresGood.hs" 48 5 48 10
+                                  , srcInfoPoints = []
+                                  }
+                                "print")))
+                       (List
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/NumericUnderscoresGood.hs" 48 11 52 12
+                            , srcInfoPoints =
+                                [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 48 11 48 12
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 48 16 48 17
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 48 21 48 22
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 48 27 48 28
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 48 33 48 34
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 48 40 48 41
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 48 47 48 48
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 48 54 48 55
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 49 11 49 12
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 49 17 49 18
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 49 23 49 24
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 49 30 49 31
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 49 37 49 38
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 49 45 49 46
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 49 53 49 54
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 49 61 49 62
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 50 11 50 12
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 51 11 51 12
+                                , SrcSpan "tests/examples/NumericUnderscoresGood.hs" 52 11 52 12
+                                ]
+                            }
+                          [ Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 48 13 48 16
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 48 13 48 16
+                                   , srcInfoPoints = []
+                                   }
+                                 0
+                                 "0x0")
+                          , Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 48 18 48 21
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 48 18 48 21
+                                   , srcInfoPoints = []
+                                   }
+                                 1
+                                 "0x1")
+                          , Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 48 23 48 27
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 48 23 48 27
+                                   , srcInfoPoints = []
+                                   }
+                                 16
+                                 "0x10")
+                          , Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 48 29 48 33
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 48 29 48 33
+                                   , srcInfoPoints = []
+                                   }
+                                 17
+                                 "0x11")
+                          , Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 48 35 48 40
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 48 35 48 40
+                                   , srcInfoPoints = []
+                                   }
+                                 256
+                                 "0x100")
+                          , Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 48 42 48 47
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 48 42 48 47
+                                   , srcInfoPoints = []
+                                   }
+                                 257
+                                 "0x101")
+                          , Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 48 49 48 54
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 48 49 48 54
+                                   , srcInfoPoints = []
+                                   }
+                                 272
+                                 "0x110")
+                          , ExpTypeSig
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 48 56 48 72
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 48 62 48 64
+                                    ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 48 56 48 61
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 48 56 48 61
+                                      , srcInfoPoints = []
+                                      }
+                                    273
+                                    "0x111"))
+                              (TyCon
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 48 65 48 72
+                                   , srcInfoPoints = []
+                                   }
+                                 (UnQual
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 48 65 48 72
+                                      , srcInfoPoints = []
+                                      }
+                                    (Ident
+                                       SrcSpanInfo
+                                         { srcInfoSpan =
+                                             SrcSpan
+                                               "tests/examples/NumericUnderscoresGood.hs"
+                                               48
+                                               65
+                                               48
+                                               72
+                                         , srcInfoPoints = []
+                                         }
+                                       "Integer")))
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 49 13 49 17
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 49 13 49 14
+                                    ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 49 14 49 17
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 49 14 49 17
+                                      , srcInfoPoints = []
+                                      }
+                                    0
+                                    "0x0"))
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 49 19 49 23
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 49 19 49 20
+                                    ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 49 20 49 23
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 49 20 49 23
+                                      , srcInfoPoints = []
+                                      }
+                                    1
+                                    "0x1"))
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 49 25 49 30
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 49 25 49 26
+                                    ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 49 26 49 30
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 49 26 49 30
+                                      , srcInfoPoints = []
+                                      }
+                                    16
+                                    "0x10"))
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 49 32 49 37
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 49 32 49 33
+                                    ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 49 33 49 37
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 49 33 49 37
+                                      , srcInfoPoints = []
+                                      }
+                                    17
+                                    "0x11"))
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 49 39 49 45
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 49 39 49 40
+                                    ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 49 40 49 45
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 49 40 49 45
+                                      , srcInfoPoints = []
+                                      }
+                                    256
+                                    "0x100"))
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 49 47 49 53
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 49 47 49 48
+                                    ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 49 48 49 53
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 49 48 49 53
+                                      , srcInfoPoints = []
+                                      }
+                                    257
+                                    "0x101"))
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 49 55 49 61
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 49 55 49 56
+                                    ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 49 56 49 61
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 49 56 49 61
+                                      , srcInfoPoints = []
+                                      }
+                                    272
+                                    "0x110"))
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 49 63 49 69
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 49 63 49 64
+                                    ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 49 64 49 69
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 49 64 49 69
+                                      , srcInfoPoints = []
+                                      }
+                                    273
+                                    "0x111"))
+                          , Lit
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 50 13 50 184
+                                , srcInfoPoints = []
+                                }
+                              (Int
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 50 13 50 184
+                                   , srcInfoPoints = []
+                                   }
+                                 893853861996173139971601666547056408498624388039492891848237429581450935338236465120124953211126895179335457212432403390250258854129771329762243267072273
+                                 "0x111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_11111")
+                          , NegApp
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/NumericUnderscoresGood.hs" 51 13 51 186
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/NumericUnderscoresGood.hs" 51 13 51 14
+                                    ]
+                                }
+                              (Lit
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan
+                                         "tests/examples/NumericUnderscoresGood.hs" 51 14 51 186
+                                   , srcInfoPoints = []
+                                   }
+                                 (Int
+                                    SrcSpanInfo
+                                      { srcInfoSpan =
+                                          SrcSpan
+                                            "tests/examples/NumericUnderscoresGood.hs" 51 14 51 186
+                                      , srcInfoPoints = []
+                                      }
+                                    893853861996173139971601666547056408498624388039492891848237429581450935338236465120124953211126895179335457212432403390250258854129771329762243267072273
+                                    "0x111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_111_11"))
+                          ]))
+                ]))
+          Nothing
+      ]
+  , []
+  )
