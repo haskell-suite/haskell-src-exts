@@ -1,3 +1,16 @@
+1.23.1 --> 1.24.0
+=================
+* Support ImportQualifiedPost (#477)
+  - Technically breaking change: KnownExtension gained a new constructor ImportQualifiedPost
+* Fix pretty printing of promoted list/tuple with space padding (#423)
+* Fix lexing of operator symbols like @: when TypeApplications is enabled (#430)
+* Read files strictly before closing to prevent resource leaks (#460)
+* Add Safe Haskell annotations to many modules (#465)
+* Remove noncanonical return and mappend definitions (#481)
+* Solve some compiler warnings (#464)
+* Performance optimization: use strict accumulators in lexString and parseInteger (#479)
+
+
 1.23.0 --> 1.23.1
 =================
 * show instance for SrcLoc and SrcSpan renders "(-1)" instead of "-1"
