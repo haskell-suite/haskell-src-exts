@@ -375,6 +375,8 @@ data KnownExtension =
   -- > import "network" Network.Socket
   | PackageImports
 
+  | ImportQualifiedPost
+
   | LambdaCase
 
   -- | [GHC &#xa7; 7.3.20] Allow case expressions with no alternatives.
