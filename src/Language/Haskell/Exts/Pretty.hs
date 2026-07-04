@@ -117,7 +117,6 @@ instance Applicative (DocM s) where
 instance Monad (DocM s) where
         (>>=) = thenDocM
         (>>) = then_DocM
-        return = retDocM
 
 {-# INLINE thenDocM #-}
 {-# INLINE then_DocM #-}

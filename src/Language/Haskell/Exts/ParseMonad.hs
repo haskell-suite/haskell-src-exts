@@ -98,7 +98,6 @@ instance Applicative ParseResult where
   ParseFailed loc msg <*> _ = ParseFailed loc msg
 
 instance Monad ParseResult where
-  return = ParseOk
 #if !MIN_VERSION_base(4,13,0)
   fail = Fail.fail
 #endif
@@ -114,7 +113,6 @@ instance Semigroup m => Semigroup (ParseResult m) where
 
 instance ( Monoid m , Semigroup m) => Monoid (ParseResult m) where
   mempty = ParseOk mempty
-  mappend = (<>)
 
 -- internal version
 data ParseStatus a = Ok ParseState a | Failed SrcLoc String
@@ -242,11 +240,10 @@ instance Functor P where
   fmap = liftM
 
 instance Applicative P where
-  pure = return
+  pure a = P $ \_i _x _y _l _ch s _m -> Ok s a
   (<*>) = ap
 
 instance Monad P where
-    return a = P $ \_i _x _y _l _ch s _m -> Ok s a
     P m >>= k = P $ \i x y l ch s mode ->
         case m i x y l ch s mode of
             Failed loc msg -> Failed loc msg
@@ -354,11 +351,10 @@ instance Functor (Lex r) where
     fmap = liftM
 
 instance Applicative (Lex r) where
-    pure = return
+    pure a = Lex $ \k -> k a
     (<*>) = ap
 
 instance Monad (Lex r) where
-    return a = Lex $ \k -> k a
     Lex v >>= f = Lex $ \k -> v (\a -> runL (f a) k)
     Lex v >> Lex w = Lex $ \k -> v (\_ -> w k)
 #if !MIN_VERSION_base(4,13,0)

@@ -47,11 +47,10 @@ instance Functor EP where
   fmap = liftM
 
 instance Applicative EP where
-  pure = return
+  pure x = EP $ \l cs -> (x, l, cs, id)
   (<*>) = ap
 
 instance Monad EP where
-  return x = EP $ \l cs -> (x, l, cs, id)
 
   EP m >>= k = EP $ \l0 c0 -> let
         (a, l1, c1, s1) = m l0 c0
