@@ -1,5 +1,7 @@
+{-# LANGUAGE Safe #-}
 {-# LANGUAGE BangPatterns #-}
 {-# OPTIONS_HADDOCK hide #-}
+
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Language.Haskell.Exts.Annotated.InternalLexer

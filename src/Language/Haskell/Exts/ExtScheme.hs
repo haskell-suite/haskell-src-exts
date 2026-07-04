@@ -1,4 +1,6 @@
+{-# LANGUAGE Safe #-}
 {-# OPTIONS_HADDOCK hide #-}
+
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Language.Haskell.Exts.ExtScheme

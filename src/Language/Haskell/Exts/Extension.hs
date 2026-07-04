@@ -1,5 +1,5 @@
-{-# LANGUAGE DeriveDataTypeable #-}
-{-# LANGUAGE CPP #-}
+{-# LANGUAGE CPP, DeriveDataTypeable, Safe #-}
+
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Language.Haskell.Exts.Extension
