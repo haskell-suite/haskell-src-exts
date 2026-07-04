@@ -122,6 +122,7 @@ ParseOk
                                   }
                                 "a")
                          ])
+                      InvisibleQuantification
                       Nothing
                       (TyFun
                          SrcSpanInfo
@@ -546,6 +547,7 @@ ParseOk
                                   }
                                 "a")
                          ])
+                      InvisibleQuantification
                       Nothing
                       (TyFun
                          SrcSpanInfo

@@ -581,6 +581,7 @@ ParseOk
                          }
                        "a")
                 ])
+             InvisibleQuantification
              Nothing
              (TyFun
                 SrcSpanInfo

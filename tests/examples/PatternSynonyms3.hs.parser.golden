@@ -798,6 +798,7 @@ ParseOk
                , srcInfoPoints = []
                }
              Nothing
+             InvisibleQuantification
              (Just
                 (CxSingle
                    SrcSpanInfo
@@ -1196,6 +1197,7 @@ ParseOk
                , srcInfoPoints = []
                }
              Nothing
+             InvisibleQuantification
              (Just
                 (CxSingle
                    SrcSpanInfo
