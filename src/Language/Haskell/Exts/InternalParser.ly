@@ -224,6 +224,7 @@ FFI
 >       'cplusplus'     { Loc $$ KW_CPlusPlus }
 >       'dotnet'        { Loc $$ KW_DotNet }
 >       'jvm'           { Loc $$ KW_Jvm }
+>       'java'          { Loc $$ KW_Java }
 >       'js'            { Loc $$ KW_Js }          -- 90
 >       'javascript'    { Loc $$ KW_JavaScript }
 >       'capi'          { Loc $$ KW_CApi }
@@ -875,6 +876,7 @@ so no need to check for extensions.
 >          | 'cplusplus'                { CPlusPlus  (nIS $1) }
 >          | 'dotnet'                   { DotNet     (nIS $1) }
 >          | 'jvm'                      { Jvm        (nIS $1) }
+>          | 'java'                     { Java       (nIS $1) }
 >          | 'js'                       { Js         (nIS $1) }
 >          | 'javascript'               { JavaScript (nIS $1) }
 >          | 'capi'                     { CApi       (nIS $1) }
@@ -888,8 +890,8 @@ so no need to check for extensions.
 >        | {- empty -}                  { Nothing }
 
 > fspec :: { (Maybe String, Name L, Type L, [S]) }
->       : STRING var_no_safety '::' truedtype               { let Loc l (StringTok (s,_)) = $1 in (Just s, $2, $4, [l,$3]) }
->       |        var_no_safety '::' truedtype               { (Nothing, $1, $3, [$2]) }
+>       : STRING var_no_safety '::' truectype               { let Loc l (StringTok (s,_)) = $1 in (Just s, $2, $4, [l,$3]) }
+>       |        var_no_safety '::' truectype               { (Nothing, $1, $3, [$2]) }
 
 -----------------------------------------------------------------------------
 Pragmas

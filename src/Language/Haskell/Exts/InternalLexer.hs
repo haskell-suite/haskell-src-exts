@@ -217,6 +217,7 @@ data Token
         | KW_CPlusPlus
         | KW_DotNet
         | KW_Jvm
+        | KW_Java
         | KW_Js
         | KW_JavaScript
         | KW_CApi
@@ -328,6 +329,7 @@ special_varids = [
  ( "cplusplus",     (KW_CPlusPlus,     Just (Any [ForeignFunctionInterface])) ),
  ( "dotnet",        (KW_DotNet,        Just (Any [ForeignFunctionInterface])) ),
  ( "jvm",           (KW_Jvm,           Just (Any [ForeignFunctionInterface])) ),
+ ( "java",          (KW_Java,          Just (Any [ForeignFunctionInterface])) ),
  ( "js",            (KW_Js,            Just (Any [ForeignFunctionInterface])) ),
  ( "javascript",    (KW_JavaScript,    Just (Any [ForeignFunctionInterface])) ),
  ( "capi",          (KW_CApi,          Just (Any [CApiFFI])) )
@@ -1475,6 +1477,7 @@ showToken t = case t of
   KW_CPlusPlus  -> "cplusplus"
   KW_DotNet     -> "dotnet"
   KW_Jvm        -> "jvm"
+  KW_Java       -> "java"
   KW_Js         -> "js"
   KW_JavaScript -> "javascript"
   KW_CApi       -> "capi"
