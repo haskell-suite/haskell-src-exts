@@ -1,0 +1,14 @@
+{-# LANGUAGE DataKinds #-}
+module PromotedSpace where
+
+type PL1 = '[ 'True]
+
+type PL2 = '[ '[Int]]
+
+type PL3 = '[ '(Int, Bool)]
+
+type PT1 = '( 'True, False)
+
+type PT2 = '( '[Int], Bool)
+
+type PT3 = '( '(Int, Bool), Char)

@@ -1,0 +1,617 @@
+ParseOk
+  ( Module
+      SrcSpanInfo
+        { srcInfoSpan = SrcSpan "tests/examples/PromotedSpace.hs" 1 1 21 1
+        , srcInfoPoints =
+            [ SrcSpan "tests/examples/PromotedSpace.hs" 1 1 1 1
+            , SrcSpan "tests/examples/PromotedSpace.hs" 2 1 2 1
+            , SrcSpan "tests/examples/PromotedSpace.hs" 2 1 2 1
+            , SrcSpan "tests/examples/PromotedSpace.hs" 5 1 5 1
+            , SrcSpan "tests/examples/PromotedSpace.hs" 8 1 8 1
+            , SrcSpan "tests/examples/PromotedSpace.hs" 11 1 11 1
+            , SrcSpan "tests/examples/PromotedSpace.hs" 14 1 14 1
+            , SrcSpan "tests/examples/PromotedSpace.hs" 17 1 17 1
+            , SrcSpan "tests/examples/PromotedSpace.hs" 20 1 20 1
+            , SrcSpan "tests/examples/PromotedSpace.hs" 21 1 21 1
+            , SrcSpan "tests/examples/PromotedSpace.hs" 21 1 21 1
+            ]
+        }
+      (Just
+         (ModuleHead
+            SrcSpanInfo
+              { srcInfoSpan = SrcSpan "tests/examples/PromotedSpace.hs" 2 1 2 27
+              , srcInfoPoints =
+                  [ SrcSpan "tests/examples/PromotedSpace.hs" 2 1 2 7
+                  , SrcSpan "tests/examples/PromotedSpace.hs" 2 22 2 27
+                  ]
+              }
+            (ModuleName
+               SrcSpanInfo
+                 { srcInfoSpan = SrcSpan "tests/examples/PromotedSpace.hs" 2 8 2 21
+                 , srcInfoPoints = []
+                 }
+               "PromotedSpace")
+            Nothing
+            Nothing))
+      [ LanguagePragma
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/PromotedSpace.hs" 1 1 1 27
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/PromotedSpace.hs" 1 1 1 13
+                , SrcSpan "tests/examples/PromotedSpace.hs" 1 24 1 27
+                ]
+            }
+          [ Ident
+              SrcSpanInfo
+                { srcInfoSpan = SrcSpan "tests/examples/PromotedSpace.hs" 1 14 1 23
+                , srcInfoPoints = []
+                }
+              "DataKinds"
+          ]
+      ]
+      []
+      [ TypeDecl
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/PromotedSpace.hs" 5 1 5 22
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/PromotedSpace.hs" 5 1 5 5
+                , SrcSpan "tests/examples/PromotedSpace.hs" 5 10 5 11
+                ]
+            }
+          (DHead
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/PromotedSpace.hs" 5 6 5 9
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/PromotedSpace.hs" 5 6 5 9
+                  , srcInfoPoints = []
+                  }
+                "PL1"))
+          (TyPromoted
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/PromotedSpace.hs" 5 12 5 22
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/PromotedSpace.hs" 5 12 5 13
+                   , SrcSpan "tests/examples/PromotedSpace.hs" 5 21 5 22
+                   ]
+               }
+             (PromotedList
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/PromotedSpace.hs" 5 12 5 22
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/PromotedSpace.hs" 5 12 5 13
+                      , SrcSpan "tests/examples/PromotedSpace.hs" 5 21 5 22
+                      ]
+                  }
+                True
+                [ TyPromoted
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/PromotedSpace.hs" 5 15 5 20
+                      , srcInfoPoints =
+                          [ SrcSpan "tests/examples/PromotedSpace.hs" 5 15 5 16 ]
+                      }
+                    (PromotedCon
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/PromotedSpace.hs" 5 15 5 20
+                         , srcInfoPoints =
+                             [ SrcSpan "tests/examples/PromotedSpace.hs" 5 15 5 16 ]
+                         }
+                       True
+                       (UnQual
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/PromotedSpace.hs" 5 16 5 20
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan = SrcSpan "tests/examples/PromotedSpace.hs" 5 16 5 20
+                               , srcInfoPoints = []
+                               }
+                             "True")))
+                ]))
+      , TypeDecl
+          SrcSpanInfo
+            { srcInfoSpan = SrcSpan "tests/examples/PromotedSpace.hs" 8 1 8 23
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/PromotedSpace.hs" 8 1 8 5
+                , SrcSpan "tests/examples/PromotedSpace.hs" 8 10 8 11
+                ]
+            }
+          (DHead
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/PromotedSpace.hs" 8 6 8 9
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/PromotedSpace.hs" 8 6 8 9
+                  , srcInfoPoints = []
+                  }
+                "PL2"))
+          (TyPromoted
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/PromotedSpace.hs" 8 12 8 23
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/PromotedSpace.hs" 8 12 8 13
+                   , SrcSpan "tests/examples/PromotedSpace.hs" 8 22 8 23
+                   ]
+               }
+             (PromotedList
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/PromotedSpace.hs" 8 12 8 23
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/PromotedSpace.hs" 8 12 8 13
+                      , SrcSpan "tests/examples/PromotedSpace.hs" 8 22 8 23
+                      ]
+                  }
+                True
+                [ TyPromoted
+                    SrcSpanInfo
+                      { srcInfoSpan = SrcSpan "tests/examples/PromotedSpace.hs" 8 15 8 21
+                      , srcInfoPoints =
+                          [ SrcSpan "tests/examples/PromotedSpace.hs" 8 15 8 16
+                          , SrcSpan "tests/examples/PromotedSpace.hs" 8 20 8 21
+                          ]
+                      }
+                    (PromotedList
+                       SrcSpanInfo
+                         { srcInfoSpan = SrcSpan "tests/examples/PromotedSpace.hs" 8 15 8 21
+                         , srcInfoPoints =
+                             [ SrcSpan "tests/examples/PromotedSpace.hs" 8 15 8 16
+                             , SrcSpan "tests/examples/PromotedSpace.hs" 8 20 8 21
+                             ]
+                         }
+                       True
+                       [ TyCon
+                           SrcSpanInfo
+                             { srcInfoSpan = SrcSpan "tests/examples/PromotedSpace.hs" 8 17 8 20
+                             , srcInfoPoints = []
+                             }
+                           (UnQual
+                              SrcSpanInfo
+                                { srcInfoSpan = SrcSpan "tests/examples/PromotedSpace.hs" 8 17 8 20
+                                , srcInfoPoints = []
+                                }
+                              (Ident
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/PromotedSpace.hs" 8 17 8 20
+                                   , srcInfoPoints = []
+                                   }
+                                 "Int"))
+                       ])
+                ]))
+      , TypeDecl
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/PromotedSpace.hs" 11 1 11 29
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/PromotedSpace.hs" 11 1 11 5
+                , SrcSpan "tests/examples/PromotedSpace.hs" 11 10 11 11
+                ]
+            }
+          (DHead
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/PromotedSpace.hs" 11 6 11 9
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/PromotedSpace.hs" 11 6 11 9
+                  , srcInfoPoints = []
+                  }
+                "PL3"))
+          (TyPromoted
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/PromotedSpace.hs" 11 12 11 29
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/PromotedSpace.hs" 11 12 11 13
+                   , SrcSpan "tests/examples/PromotedSpace.hs" 11 28 11 29
+                   ]
+               }
+             (PromotedList
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/PromotedSpace.hs" 11 12 11 29
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/PromotedSpace.hs" 11 12 11 13
+                      , SrcSpan "tests/examples/PromotedSpace.hs" 11 28 11 29
+                      ]
+                  }
+                True
+                [ TyPromoted
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/PromotedSpace.hs" 11 15 11 27
+                      , srcInfoPoints =
+                          [ SrcSpan "tests/examples/PromotedSpace.hs" 11 15 11 16
+                          , SrcSpan "tests/examples/PromotedSpace.hs" 11 20 11 21
+                          , SrcSpan "tests/examples/PromotedSpace.hs" 11 26 11 27
+                          ]
+                      }
+                    (PromotedTuple
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/PromotedSpace.hs" 11 15 11 27
+                         , srcInfoPoints =
+                             [ SrcSpan "tests/examples/PromotedSpace.hs" 11 15 11 16
+                             , SrcSpan "tests/examples/PromotedSpace.hs" 11 20 11 21
+                             , SrcSpan "tests/examples/PromotedSpace.hs" 11 26 11 27
+                             ]
+                         }
+                       [ TyCon
+                           SrcSpanInfo
+                             { srcInfoSpan =
+                                 SrcSpan "tests/examples/PromotedSpace.hs" 11 17 11 20
+                             , srcInfoPoints = []
+                             }
+                           (UnQual
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/PromotedSpace.hs" 11 17 11 20
+                                , srcInfoPoints = []
+                                }
+                              (Ident
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/PromotedSpace.hs" 11 17 11 20
+                                   , srcInfoPoints = []
+                                   }
+                                 "Int"))
+                       , TyCon
+                           SrcSpanInfo
+                             { srcInfoSpan =
+                                 SrcSpan "tests/examples/PromotedSpace.hs" 11 22 11 26
+                             , srcInfoPoints = []
+                             }
+                           (UnQual
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/PromotedSpace.hs" 11 22 11 26
+                                , srcInfoPoints = []
+                                }
+                              (Ident
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/PromotedSpace.hs" 11 22 11 26
+                                   , srcInfoPoints = []
+                                   }
+                                 "Bool"))
+                       ])
+                ]))
+      , TypeDecl
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/PromotedSpace.hs" 14 1 14 29
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/PromotedSpace.hs" 14 1 14 5
+                , SrcSpan "tests/examples/PromotedSpace.hs" 14 10 14 11
+                ]
+            }
+          (DHead
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/PromotedSpace.hs" 14 6 14 9
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/PromotedSpace.hs" 14 6 14 9
+                  , srcInfoPoints = []
+                  }
+                "PT1"))
+          (TyPromoted
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/PromotedSpace.hs" 14 12 14 29
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/PromotedSpace.hs" 14 12 14 13
+                   , SrcSpan "tests/examples/PromotedSpace.hs" 14 20 14 21
+                   , SrcSpan "tests/examples/PromotedSpace.hs" 14 28 14 29
+                   ]
+               }
+             (PromotedTuple
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/PromotedSpace.hs" 14 12 14 29
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/PromotedSpace.hs" 14 12 14 13
+                      , SrcSpan "tests/examples/PromotedSpace.hs" 14 20 14 21
+                      , SrcSpan "tests/examples/PromotedSpace.hs" 14 28 14 29
+                      ]
+                  }
+                [ TyPromoted
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/PromotedSpace.hs" 14 15 14 20
+                      , srcInfoPoints =
+                          [ SrcSpan "tests/examples/PromotedSpace.hs" 14 15 14 16 ]
+                      }
+                    (PromotedCon
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/PromotedSpace.hs" 14 15 14 20
+                         , srcInfoPoints =
+                             [ SrcSpan "tests/examples/PromotedSpace.hs" 14 15 14 16 ]
+                         }
+                       True
+                       (UnQual
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/PromotedSpace.hs" 14 16 14 20
+                            , srcInfoPoints = []
+                            }
+                          (Ident
+                             SrcSpanInfo
+                               { srcInfoSpan =
+                                   SrcSpan "tests/examples/PromotedSpace.hs" 14 16 14 20
+                               , srcInfoPoints = []
+                               }
+                             "True")))
+                , TyCon
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/PromotedSpace.hs" 14 22 14 27
+                      , srcInfoPoints = []
+                      }
+                    (UnQual
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/PromotedSpace.hs" 14 22 14 27
+                         , srcInfoPoints = []
+                         }
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/PromotedSpace.hs" 14 22 14 27
+                            , srcInfoPoints = []
+                            }
+                          "False"))
+                ]))
+      , TypeDecl
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/PromotedSpace.hs" 17 1 17 29
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/PromotedSpace.hs" 17 1 17 5
+                , SrcSpan "tests/examples/PromotedSpace.hs" 17 10 17 11
+                ]
+            }
+          (DHead
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/PromotedSpace.hs" 17 6 17 9
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/PromotedSpace.hs" 17 6 17 9
+                  , srcInfoPoints = []
+                  }
+                "PT2"))
+          (TyPromoted
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/PromotedSpace.hs" 17 12 17 29
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/PromotedSpace.hs" 17 12 17 13
+                   , SrcSpan "tests/examples/PromotedSpace.hs" 17 21 17 22
+                   , SrcSpan "tests/examples/PromotedSpace.hs" 17 28 17 29
+                   ]
+               }
+             (PromotedTuple
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/PromotedSpace.hs" 17 12 17 29
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/PromotedSpace.hs" 17 12 17 13
+                      , SrcSpan "tests/examples/PromotedSpace.hs" 17 21 17 22
+                      , SrcSpan "tests/examples/PromotedSpace.hs" 17 28 17 29
+                      ]
+                  }
+                [ TyPromoted
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/PromotedSpace.hs" 17 15 17 21
+                      , srcInfoPoints =
+                          [ SrcSpan "tests/examples/PromotedSpace.hs" 17 15 17 16
+                          , SrcSpan "tests/examples/PromotedSpace.hs" 17 20 17 21
+                          ]
+                      }
+                    (PromotedList
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/PromotedSpace.hs" 17 15 17 21
+                         , srcInfoPoints =
+                             [ SrcSpan "tests/examples/PromotedSpace.hs" 17 15 17 16
+                             , SrcSpan "tests/examples/PromotedSpace.hs" 17 20 17 21
+                             ]
+                         }
+                       True
+                       [ TyCon
+                           SrcSpanInfo
+                             { srcInfoSpan =
+                                 SrcSpan "tests/examples/PromotedSpace.hs" 17 17 17 20
+                             , srcInfoPoints = []
+                             }
+                           (UnQual
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/PromotedSpace.hs" 17 17 17 20
+                                , srcInfoPoints = []
+                                }
+                              (Ident
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/PromotedSpace.hs" 17 17 17 20
+                                   , srcInfoPoints = []
+                                   }
+                                 "Int"))
+                       ])
+                , TyCon
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/PromotedSpace.hs" 17 23 17 27
+                      , srcInfoPoints = []
+                      }
+                    (UnQual
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/PromotedSpace.hs" 17 23 17 27
+                         , srcInfoPoints = []
+                         }
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/PromotedSpace.hs" 17 23 17 27
+                            , srcInfoPoints = []
+                            }
+                          "Bool"))
+                ]))
+      , TypeDecl
+          SrcSpanInfo
+            { srcInfoSpan =
+                SrcSpan "tests/examples/PromotedSpace.hs" 20 1 20 35
+            , srcInfoPoints =
+                [ SrcSpan "tests/examples/PromotedSpace.hs" 20 1 20 5
+                , SrcSpan "tests/examples/PromotedSpace.hs" 20 10 20 11
+                ]
+            }
+          (DHead
+             SrcSpanInfo
+               { srcInfoSpan = SrcSpan "tests/examples/PromotedSpace.hs" 20 6 20 9
+               , srcInfoPoints = []
+               }
+             (Ident
+                SrcSpanInfo
+                  { srcInfoSpan = SrcSpan "tests/examples/PromotedSpace.hs" 20 6 20 9
+                  , srcInfoPoints = []
+                  }
+                "PT3"))
+          (TyPromoted
+             SrcSpanInfo
+               { srcInfoSpan =
+                   SrcSpan "tests/examples/PromotedSpace.hs" 20 12 20 35
+               , srcInfoPoints =
+                   [ SrcSpan "tests/examples/PromotedSpace.hs" 20 12 20 13
+                   , SrcSpan "tests/examples/PromotedSpace.hs" 20 27 20 28
+                   , SrcSpan "tests/examples/PromotedSpace.hs" 20 34 20 35
+                   ]
+               }
+             (PromotedTuple
+                SrcSpanInfo
+                  { srcInfoSpan =
+                      SrcSpan "tests/examples/PromotedSpace.hs" 20 12 20 35
+                  , srcInfoPoints =
+                      [ SrcSpan "tests/examples/PromotedSpace.hs" 20 12 20 13
+                      , SrcSpan "tests/examples/PromotedSpace.hs" 20 27 20 28
+                      , SrcSpan "tests/examples/PromotedSpace.hs" 20 34 20 35
+                      ]
+                  }
+                [ TyPromoted
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/PromotedSpace.hs" 20 15 20 27
+                      , srcInfoPoints =
+                          [ SrcSpan "tests/examples/PromotedSpace.hs" 20 15 20 16
+                          , SrcSpan "tests/examples/PromotedSpace.hs" 20 20 20 21
+                          , SrcSpan "tests/examples/PromotedSpace.hs" 20 26 20 27
+                          ]
+                      }
+                    (PromotedTuple
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/PromotedSpace.hs" 20 15 20 27
+                         , srcInfoPoints =
+                             [ SrcSpan "tests/examples/PromotedSpace.hs" 20 15 20 16
+                             , SrcSpan "tests/examples/PromotedSpace.hs" 20 20 20 21
+                             , SrcSpan "tests/examples/PromotedSpace.hs" 20 26 20 27
+                             ]
+                         }
+                       [ TyCon
+                           SrcSpanInfo
+                             { srcInfoSpan =
+                                 SrcSpan "tests/examples/PromotedSpace.hs" 20 17 20 20
+                             , srcInfoPoints = []
+                             }
+                           (UnQual
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/PromotedSpace.hs" 20 17 20 20
+                                , srcInfoPoints = []
+                                }
+                              (Ident
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/PromotedSpace.hs" 20 17 20 20
+                                   , srcInfoPoints = []
+                                   }
+                                 "Int"))
+                       , TyCon
+                           SrcSpanInfo
+                             { srcInfoSpan =
+                                 SrcSpan "tests/examples/PromotedSpace.hs" 20 22 20 26
+                             , srcInfoPoints = []
+                             }
+                           (UnQual
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/PromotedSpace.hs" 20 22 20 26
+                                , srcInfoPoints = []
+                                }
+                              (Ident
+                                 SrcSpanInfo
+                                   { srcInfoSpan =
+                                       SrcSpan "tests/examples/PromotedSpace.hs" 20 22 20 26
+                                   , srcInfoPoints = []
+                                   }
+                                 "Bool"))
+                       ])
+                , TyCon
+                    SrcSpanInfo
+                      { srcInfoSpan =
+                          SrcSpan "tests/examples/PromotedSpace.hs" 20 29 20 33
+                      , srcInfoPoints = []
+                      }
+                    (UnQual
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/PromotedSpace.hs" 20 29 20 33
+                         , srcInfoPoints = []
+                         }
+                       (Ident
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/PromotedSpace.hs" 20 29 20 33
+                            , srcInfoPoints = []
+                            }
+                          "Char"))
+                ]))
+      ]
+  , [ Comment
+        False
+        (SrcSpan "tests/examples/PromotedSpace.hs" 4 1 4 60)
+        " Promoted list containing promoted constructor with quote"
+    , Comment
+        False
+        (SrcSpan "tests/examples/PromotedSpace.hs" 7 1 7 42)
+        " Promoted list containing promoted list"
+    , Comment
+        False
+        (SrcSpan "tests/examples/PromotedSpace.hs" 10 1 10 43)
+        " Promoted list containing promoted tuple"
+    , Comment
+        False
+        (SrcSpan "tests/examples/PromotedSpace.hs" 13 1 13 61)
+        " Promoted tuple containing promoted constructor with quote"
+    , Comment
+        False
+        (SrcSpan "tests/examples/PromotedSpace.hs" 16 1 16 43)
+        " Promoted tuple containing promoted list"
+    , Comment
+        False
+        (SrcSpan "tests/examples/PromotedSpace.hs" 19 1 19 44)
+        " Promoted tuple containing promoted tuple"
+    ]
+  )
