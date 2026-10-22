@@ -1,0 +1,1 @@
+ParseFailed (SrcLoc "tests/examples/StandardInfixImportExport.hs" 6 1) "TypeOperators language extension is not enabled. Please add {-# LANGUAGE TypeOperators #-} pragma at the top of your module."

@@ -357,7 +357,7 @@ instance ExactP ExportSpec where
   exactP espec = case espec of
      EVar _ qn    -> exactPC qn
      EAbs _ ns qn -> exactP ns >> exactPC qn
-     EThingWith l wc qn cns    ->
+     EThingWith l ns wc qn cns    ->
          let names = case wc of
                         NoWildcard {} -> cns
                         EWildcard wcl n  ->
@@ -365,7 +365,7 @@ instance ExactP ExportSpec where
                               wildcardName = VarName wcl (Ident wcl "..")
                           in before ++ [wildcardName] ++ after
              k = length (srcInfoPoints l)
-         in exactP qn >> printInterleaved (zip (srcInfoPoints l) $ "(":replicate (k-2) "," ++ [")"]) names
+         in exactP ns >> exactPC qn >> printInterleaved (zip (srcInfoPoints l) $ "(":replicate (k-2) "," ++ [")"]) names
      EModuleContents _ mn -> printString "module" >> exactPC mn
 
 instance ExactP ExportSpecList where
@@ -386,12 +386,12 @@ instance ExactP ImportSpecList where
 
 instance ExactP ImportSpec where
   exactP ispec = case ispec of
-    IVar _ qn       -> exactPC qn
-    IAbs _ ns n     -> exactP ns >> exactPC n
-    IThingAll l n   -> exactP n >> printPoints l ["(","..",")"]
-    IThingWith l n cns    ->
+    IVar _ qn          -> exactPC qn
+    IAbs _ ns n        -> exactP ns >> exactPC n
+    IThingAll l ns n   -> exactP ns >> exactPC n >> printPoints l ["(","..",")"]
+    IThingWith l ns n cns    ->
         let k = length (srcInfoPoints l)
-         in exactP n >> printInterleaved (zip (srcInfoPoints l) $ "(":replicate (k-2) "," ++ [")"]) cns
+         in exactP ns >> exactPC n >> printInterleaved (zip (srcInfoPoints l) $ "(":replicate (k-2) "," ++ [")"]) cns
 
 instance ExactP ImportDecl where
   exactP (ImportDecl l mn qf src safe mpkg mas mispecs) = do

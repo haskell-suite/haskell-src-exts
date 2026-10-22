@@ -57,6 +57,7 @@ module Language.Haskell.Exts.ParseUtils (
     , mkRoleAnnotDecl       --
     , mkAssocType
     , mkEThingWith
+    , cnameToName
     , splitTilde
     -- HaRP
     , checkRPattern         -- PExp -> P RPat
@@ -1276,10 +1277,10 @@ splitTilde t = go t
         go t' = t'
 
 -- Expects the arguments in the right order
-mkEThingWith :: L -> QName L -> [Either S (CName L)] -> P (ExportSpec L)
-mkEThingWith loc qn mcns = do
+mkEThingWith :: L -> Namespace L -> QName L -> [Either S (CName L)] -> P (ExportSpec L)
+mkEThingWith loc ns qn mcns = do
   when (isWc wc && not (null cnames)) (checkEnabled PatternSynonyms)
-  return $ EThingWith loc wc qn cnames
+  return $ EThingWith loc ns wc qn cnames
   where
     isWc (NoWildcard {}) = False
     isWc _ = True
@@ -1300,6 +1301,10 @@ mkEThingWith loc qn mcns = do
     findWithIndex n p (x:xs)
       | p x = Just (n, x)
       | otherwise = findWithIndex (n + 1) p xs
+
+cnameToName :: CName l -> Name l
+cnameToName (VarName _ n) = n
+cnameToName (ConName _ n) = n
 
 data SumOrTuple l = SSum Int Int (PExp l)
                   | STuple [Maybe (PExp l)]

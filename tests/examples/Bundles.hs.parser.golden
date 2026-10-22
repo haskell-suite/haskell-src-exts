@@ -47,6 +47,11 @@ ParseOk
                             , SrcSpan "tests/examples/Bundles.hs" 2 22 2 23
                             ]
                         }
+                      (NoNamespace
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 2 16 2 19
+                           , srcInfoPoints = []
+                           })
                       (EWildcard
                          SrcSpanInfo
                            { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 2 20 2 22
@@ -74,6 +79,11 @@ ParseOk
                             , SrcSpan "tests/examples/Bundles.hs" 2 33 2 34
                             ]
                         }
+                      (NoNamespace
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 2 25 2 28
+                           , srcInfoPoints = []
+                           })
                       (EWildcard
                          SrcSpanInfo
                            { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 2 29 2 31
@@ -112,6 +122,11 @@ ParseOk
                             , SrcSpan "tests/examples/Bundles.hs" 2 44 2 45
                             ]
                         }
+                      (NoNamespace
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 2 36 2 39
+                           , srcInfoPoints = []
+                           })
                       (EWildcard
                          SrcSpanInfo
                            { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 2 42 2 44
@@ -151,6 +166,11 @@ ParseOk
                             , SrcSpan "tests/examples/Bundles.hs" 2 57 2 58
                             ]
                         }
+                      (NoNamespace
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 2 47 2 50
+                           , srcInfoPoints = []
+                           })
                       (EWildcard
                          SrcSpanInfo
                            { srcInfoSpan = SrcSpan "tests/examples/Bundles.hs" 2 53 2 55

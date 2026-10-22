@@ -474,6 +474,11 @@ ParseOk
                             , SrcSpan "tests/examples/Directory.hs" 61 7 61 8
                             ]
                         }
+                      (NoNamespace
+                         SrcSpanInfo
+                           { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 55 7 55 18
+                           , srcInfoPoints = []
+                           })
                       (NoWildcard
                          SrcSpanInfo
                            { srcInfoSpan = SrcSpan "" (-1) (-1) (-1) (-1)
@@ -1042,6 +1047,11 @@ ParseOk
                              , SrcSpan "tests/examples/Directory.hs" 88 46 88 47
                              ]
                          }
+                       (NoNamespace
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 88 34 88 43
+                            , srcInfoPoints = []
+                            })
                        (Ident
                           SrcSpanInfo
                             { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 88 34 88 43
@@ -1091,6 +1101,11 @@ ParseOk
                              , SrcSpan "tests/examples/Directory.hs" 90 41 90 42
                              ]
                          }
+                       (NoNamespace
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 90 27 90 38
+                            , srcInfoPoints = []
+                            })
                        (Ident
                           SrcSpanInfo
                             { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 90 27 90 38
@@ -1106,6 +1121,11 @@ ParseOk
                              , SrcSpan "tests/examples/Directory.hs" 90 58 90 59
                              ]
                          }
+                       (NoNamespace
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 90 44 90 55
+                            , srcInfoPoints = []
+                            })
                        (Ident
                           SrcSpanInfo
                             { srcInfoSpan = SrcSpan "tests/examples/Directory.hs" 90 44 90 55
