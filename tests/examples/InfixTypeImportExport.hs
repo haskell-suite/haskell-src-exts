@@ -1,0 +1,7 @@
+{-# LANGUAGE ExplicitNamespaces #-}
+{-# LANGUAGE TypeOperators #-}
+module InfixTypeImportExport ((:+:)(..)) where
+
+import TypeOperatorDefinitions ((:+:)(..))
+
+data a :+: b = a :*: b
