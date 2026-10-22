@@ -34,6 +34,8 @@ Extra-Source-Files:
                         tests/examples/*.lhs.prettyprinter.golden
                         tests/examples/*.hs.prettyparser.golden
                         tests/examples/*.lhs.prettyparser.golden
+                        tests/examples/*.hs.prettycomments.golden
+                        tests/examples/GeneratedComments.golden
                         tests/Runner.hs
                         tests/Extensions.hs
 
@@ -55,6 +57,7 @@ Library
   Exposed-modules:      Language.Haskell.Exts,
                         Language.Haskell.Exts.Lexer,
                         Language.Haskell.Exts.Pretty,
+                        Language.Haskell.Exts.Pretty.WithComments,
                         Language.Haskell.Exts.Extension,
                         Language.Haskell.Exts.Build,
                         Language.Haskell.Exts.SrcLoc,

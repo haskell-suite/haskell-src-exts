@@ -19,6 +19,7 @@ module Language.Haskell.Exts (
     , module Language.Haskell.Exts.Build
     , module Language.Haskell.Exts.Lexer
     , module Language.Haskell.Exts.Pretty
+    , module Language.Haskell.Exts.Pretty.WithComments
     , module Language.Haskell.Exts.Fixity
     , module Language.Haskell.Exts.ExactPrint
     , module Language.Haskell.Exts.SrcLoc
@@ -45,6 +46,7 @@ import Language.Haskell.Exts.Parser
 import Language.Haskell.Exts.Syntax
 import Language.Haskell.Exts.Lexer ( lexTokenStream, lexTokenStreamWithMode, Token(..) )
 import Language.Haskell.Exts.Pretty
+import Language.Haskell.Exts.Pretty.WithComments
 import Language.Haskell.Exts.Fixity
 import Language.Haskell.Exts.ExactPrint
 import Language.Haskell.Exts.SrcLoc
