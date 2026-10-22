@@ -16,7 +16,7 @@
 
 module Language.Haskell.Exts.Pretty (
                 -- * Pretty printing
-                Pretty,
+                Pretty(..),
                 prettyPrintStyleMode, prettyPrintWithMode, prettyPrint,
                 -- * Pretty-printing styles (from "Text.PrettyPrint.HughesPJ")
                 P.Style(..), P.style, P.Mode(..),
@@ -24,6 +24,9 @@ module Language.Haskell.Exts.Pretty (
                 PPHsMode(..), Indent, PPLayout(..), defaultMode
                 -- * Primitive Printers
                 , prettyPrim, prettyPrimWithMode
+                -- * Combinators and layout utilities
+                , Doc, empty, text, vcat, myVcat, myFsep, ($$$), topLevel, blankline
+                , renderStyleMode, ppDecls, condBlankline, PrettyDeclLike(..)
                 ) where
 
 import Language.Haskell.Exts.Syntax

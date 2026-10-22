@@ -1,0 +1,13 @@
+-- | Top-level module documentation
+-- Second line of module doc
+module GeneratedModule where
+import Data.List
+
+-- | Documentation for foo
+foo :: Int
+{- Implementation of foo -}
+foo = 42
+
+bar :: Bool
+---
+ParseOK

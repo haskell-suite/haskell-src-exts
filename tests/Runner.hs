@@ -25,6 +25,7 @@ main = do
     , prettyParserTests sources
     , extensionProperties
     , commentsTests examplesDir
+    , prettyWithCommentsTests examplesDir
     ]
 
 -- | Where all the tests are to be found
@@ -175,6 +176,59 @@ commentsTests dir = testGroup "Comments tests" $ do
                         ParseFailed sloc msg -> ParseFailed sloc msg
             writeBinaryFile out $ show withC ++ "\n"
     return $ goldenVsFile (takeBaseName file) golden out run
+
+prettyWithCommentsTests :: FilePath -> TestTree
+prettyWithCommentsTests dir = testGroup "Pretty with comments tests"
+    [ testGenerated
+    , testParsedHaddock
+    ]
+  where
+    dummySpan = SrcSpan "" 0 0 0 0
+
+    testGenerated =
+      let file = dir ++ "/GeneratedComments"
+          out = file <.> "out"
+          golden = file <.> "golden"
+          run = do
+            let modu = Module
+                  [ Comment False dummySpan " | Top-level module documentation"
+                  , Comment False dummySpan " Second line of module doc"
+                  ]
+                  (Just (ModuleHead []
+                                    (ModuleName [] "GeneratedModule") Nothing Nothing))
+                  []
+                  [ ImportDecl [] (ModuleName [] "Data.List") False False False Nothing Nothing Nothing ]
+                  [ TypeSig [Comment False dummySpan " | Documentation for foo"]
+                            [Ident [] "foo"]
+                            (TyCon [] (UnQual [] (Ident [] "Int")))
+                  , FunBind [Comment True dummySpan " Implementation of foo "]
+                            [Match [] (Ident [] "foo") [] (UnGuardedRhs [] (Lit [] (Int [] 42 "42"))) Nothing]
+                  , TypeSig [] [Ident [] "bar"] (TyCon [] (UnQual [] (Ident [] "Bool")))
+                  ]
+                printed = prettyPrintModuleWithComments modu
+                parseCheck = case parseModuleWithComments defaultParseMode printed of
+                  ParseOk _ -> "ParseOK\n"
+                  ParseFailed ploc msg -> "ParseFailed at " ++ show ploc ++ ": " ++ msg ++ "\n"
+            writeBinaryFile out (printed ++ "\n---\n" ++ parseCheck)
+      in goldenVsFile "GeneratedAST" golden out run
+
+    testParsedHaddock =
+      let file = dir ++ "/HaddockComments.hs"
+          out = file <.> "prettycomments" <.> "out"
+          golden = file <.> "prettycomments" <.> "golden"
+          run = do
+            contents <- readUTF8File file
+            let parseRes = parseFileContentsWithComments (defaultParseMode { parseFilename = file }) contents
+            case parseRes of
+              ParseFailed ploc msg -> writeBinaryFile out $ "ParseFailed at " ++ show ploc ++ ": " ++ msg ++ "\n"
+              ParseOk (m, cs) -> do
+                let mWithC = associateHaddock (m, cs)
+                    printed = prettyPrintModuleWithComments mWithC
+                    parseCheck = case parseModuleWithComments defaultParseMode printed of
+                      ParseOk _ -> "ParseOK\n"
+                      ParseFailed ploc' msg -> "ParseFailed at " ++ show ploc' ++ ": " ++ msg ++ "\n"
+                writeBinaryFile out (printed ++ "\n---\n" ++ parseCheck)
+      in goldenVsFile "HaddockRoundTrip" golden out run
 
 -- UTF8 utils {{{
 readUTF8File :: FilePath -> IO String

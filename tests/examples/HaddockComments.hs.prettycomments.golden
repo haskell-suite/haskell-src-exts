@@ -1,0 +1,43 @@
+{-|
+Module      : W
+Description : Short description
+Copyright   : (c) Some Guy, 2013
+                  Someone Else, 2014
+License     : GPL-3
+Maintainer  : sample@email.com
+Stability   : experimental
+Portability : POSIX
+
+Here is a longer description of this module, containing some
+commentary with @some markup@.
+-}
+module HaddockComments where
+
+-- | Function1 comment
+fun1 :: Int -> Float -> IO ()
+fun1 = undefined
+fun2 = undefined
+
+-- ^ Function3 comment
+fun3 :: Int -> Int
+fun3 = undefined
+
+{-|
+  The 'square' function squares an integer.
+  It takes one argument, of type 'Int'.
+-}
+square :: Int -> Int
+square x = x * x
+
+class C a where
+        f :: a -> Int
+        
+        g :: Int -> a
+
+-- | Data type comment
+-- With a second line
+data MyData = Cons1{cons1Field1 :: Int, cons1Field2 :: Int,
+                    cons1Field3 :: String}
+            | Cons2 Int
+---
+ParseOK
