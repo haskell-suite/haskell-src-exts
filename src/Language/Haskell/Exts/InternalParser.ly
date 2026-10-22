@@ -437,6 +437,10 @@ The Export List
 >       :  qvar                                 { EVar (ann $1) $1 }
 >       |  'type' qcname                          {% do { checkEnabled ExplicitNamespaces;
 >                                                       return (EAbs (nIS $1 <++> ann $2 <** [$1, srcInfoSpan (ann $2)]) (TypeNamespace (nIS $1 <** [$1])) $2) } }
+>       |  'type' qtyconorcls '(' ')'             {% do { checkEnabled ExplicitNamespaces;
+>                                                       return (EThingWith (nIS $1 <++> ann $2 <++> nIS $4 <** [$3,$4]) (NoWildcard noSrcSpan) $2 []) } }
+>       |  'type' qtyconorcls '(' export_names ')' {% do { checkEnabled ExplicitNamespaces;
+>                                                       mkEThingWith (nIS $1 <++> ann $2 <++> nIS $5 <** ($3:reverse (snd $4) ++ [$5])) $2 (reverse $ fst $4) } }
 >       |  qtyconorcls                          { EAbs (ann $1) (NoNamespace (ann $1)) $1 }
 >       |  qtyconorcls '(' ')'                  { EThingWith (ann $1 <++> nIS $3 <** [$2,$3])    (NoWildcard noSrcSpan) $1 [] }
 >       |  qtyconorcls '(' export_names ')'     {% mkEThingWith (ann $1 <++> nIS $4 <** ($2:reverse (snd $3) ++ [$4])) $1 (reverse $ fst $3) }
@@ -524,6 +528,12 @@ Requires the PackageImports extension enabled.
 >       :  var                                  { IVar (ann $1) $1 }
 >       |  'type' var                           {% do { checkEnabled ExplicitNamespaces;
 >                                                       return (IAbs (nIS $1 <++> ann $2 <** [$1, srcInfoSpan (ann $2)]) (TypeNamespace (nIS $1 <** [$1])) $2) } }
+>       |  'type' tyconorcls '(' '..' ')'        {% do { checkEnabled ExplicitNamespaces;
+>                                                       return (IThingAll (nIS $1 <++> ann $2 <++> nIS $5 <** [$3,$4,$5]) $2) } }
+>       |  'type' tyconorcls '(' ')'             {% do { checkEnabled ExplicitNamespaces;
+>                                                       return (IThingWith (nIS $1 <++> ann $2 <++> nIS $4 <** [$3,$4]) $2 []) } }
+>       |  'type' tyconorcls '(' import_names ')' {% do { checkEnabled ExplicitNamespaces;
+>                                                       return (IThingWith (nIS $1 <++> ann $2 <++> nIS $5 <** ($3:reverse (snd $4) ++ [$5])) $2 (reverse $ fst $4)) } }
 >       |  'pattern' con                        {% do { checkEnabled PatternSynonyms;
 >                                                       return (IAbs (nIS $1 <++> ann $2 <** [$1, srcInfoSpan (ann $2)]) (PatternNamespace (nIS $1 <** [$1])) $2) } }
 >       |  tyconorcls                           { IAbs (ann $1) (NoNamespace (ann $1)) $1 }

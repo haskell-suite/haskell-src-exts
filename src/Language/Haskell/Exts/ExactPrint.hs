@@ -365,7 +365,7 @@ instance ExactP ExportSpec where
                               wildcardName = VarName wcl (Ident wcl "..")
                           in before ++ [wildcardName] ++ after
              k = length (srcInfoPoints l)
-         in exactP qn >> printInterleaved (zip (srcInfoPoints l) $ "(":replicate (k-2) "," ++ [")"]) names
+         in printTypePrefix l (ann qn) >> exactP qn >> printInterleaved (zip (srcInfoPoints l) $ "(":replicate (k-2) "," ++ [")"]) names
      EModuleContents _ mn -> printString "module" >> exactPC mn
 
 instance ExactP ExportSpecList where
@@ -388,10 +388,18 @@ instance ExactP ImportSpec where
   exactP ispec = case ispec of
     IVar _ qn       -> exactPC qn
     IAbs _ ns n     -> exactP ns >> exactPC n
-    IThingAll l n   -> exactP n >> printPoints l ["(","..",")"]
+    IThingAll l n   -> printTypePrefix l (ann n) >> exactP n >> printPoints l ["(","..",")"]
     IThingWith l n cns    ->
         let k = length (srcInfoPoints l)
-         in exactP n >> printInterleaved (zip (srcInfoPoints l) $ "(":replicate (k-2) "," ++ [")"]) cns
+         in printTypePrefix l (ann n) >> exactP n >> printInterleaved (zip (srcInfoPoints l) $ "(":replicate (k-2) "," ++ [")"]) cns
+
+-- A type namespace on a bundled import/export is represented by the start of
+-- the whole item's span. The bundled AST nodes do not have a namespace field.
+printTypePrefix :: SrcInfo loc => loc -> loc -> EP ()
+printTypePrefix item name =
+  when (pos item < pos name) $ do
+    printStringAt (pos item) "type"
+    printWhitespace (pos name)
 
 instance ExactP ImportDecl where
   exactP (ImportDecl l mn qf src safe mpkg mas mispecs) = do

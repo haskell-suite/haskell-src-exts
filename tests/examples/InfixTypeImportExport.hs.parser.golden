@@ -18,10 +18,10 @@ ParseOk
          (ModuleHead
             SrcSpanInfo
               { srcInfoSpan =
-                  SrcSpan "tests/examples/InfixTypeImportExport.hs" 3 1 3 47
+                  SrcSpan "tests/examples/InfixTypeImportExport.hs" 3 1 3 52
               , srcInfoPoints =
                   [ SrcSpan "tests/examples/InfixTypeImportExport.hs" 3 1 3 7
-                  , SrcSpan "tests/examples/InfixTypeImportExport.hs" 3 42 3 47
+                  , SrcSpan "tests/examples/InfixTypeImportExport.hs" 3 47 3 52
                   ]
               }
             (ModuleName
@@ -36,42 +36,42 @@ ParseOk
                (ExportSpecList
                   SrcSpanInfo
                     { srcInfoSpan =
-                        SrcSpan "tests/examples/InfixTypeImportExport.hs" 3 30 3 41
+                        SrcSpan "tests/examples/InfixTypeImportExport.hs" 3 30 3 46
                     , srcInfoPoints =
                         [ SrcSpan "tests/examples/InfixTypeImportExport.hs" 3 30 3 31
-                        , SrcSpan "tests/examples/InfixTypeImportExport.hs" 3 40 3 41
+                        , SrcSpan "tests/examples/InfixTypeImportExport.hs" 3 45 3 46
                         ]
                     }
                   [ EThingWith
                       SrcSpanInfo
                         { srcInfoSpan =
-                            SrcSpan "tests/examples/InfixTypeImportExport.hs" 3 31 3 40
+                            SrcSpan "tests/examples/InfixTypeImportExport.hs" 3 31 3 45
                         , srcInfoPoints =
-                            [ SrcSpan "tests/examples/InfixTypeImportExport.hs" 3 36 3 37
-                            , SrcSpan "tests/examples/InfixTypeImportExport.hs" 3 39 3 40
+                            [ SrcSpan "tests/examples/InfixTypeImportExport.hs" 3 41 3 42
+                            , SrcSpan "tests/examples/InfixTypeImportExport.hs" 3 44 3 45
                             ]
                         }
                       (EWildcard
                          SrcSpanInfo
                            { srcInfoSpan =
-                               SrcSpan "tests/examples/InfixTypeImportExport.hs" 3 37 3 39
+                               SrcSpan "tests/examples/InfixTypeImportExport.hs" 3 42 3 44
                            , srcInfoPoints = []
                            }
                          0)
                       (UnQual
                          SrcSpanInfo
                            { srcInfoSpan =
-                               SrcSpan "tests/examples/InfixTypeImportExport.hs" 3 31 3 36
+                               SrcSpan "tests/examples/InfixTypeImportExport.hs" 3 36 3 41
                            , srcInfoPoints =
-                               [ SrcSpan "tests/examples/InfixTypeImportExport.hs" 3 31 3 32
-                               , SrcSpan "tests/examples/InfixTypeImportExport.hs" 3 32 3 35
-                               , SrcSpan "tests/examples/InfixTypeImportExport.hs" 3 35 3 36
+                               [ SrcSpan "tests/examples/InfixTypeImportExport.hs" 3 36 3 37
+                               , SrcSpan "tests/examples/InfixTypeImportExport.hs" 3 37 3 40
+                               , SrcSpan "tests/examples/InfixTypeImportExport.hs" 3 40 3 41
                                ]
                            }
                          (Symbol
                             SrcSpanInfo
                               { srcInfoSpan =
-                                  SrcSpan "tests/examples/InfixTypeImportExport.hs" 3 32 3 35
+                                  SrcSpan "tests/examples/InfixTypeImportExport.hs" 3 37 3 40
                               , srcInfoPoints = []
                               }
                             ":+:"))
@@ -116,7 +116,7 @@ ParseOk
           { importAnn =
               SrcSpanInfo
                 { srcInfoSpan =
-                    SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 1 5 43
+                    SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 1 5 67
                 , srcInfoPoints =
                     [ SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 1 5 7 ]
                 }
@@ -138,41 +138,84 @@ ParseOk
                 (ImportSpecList
                    SrcSpanInfo
                      { srcInfoSpan =
-                         SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 32 5 43
+                         SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 32 5 67
                      , srcInfoPoints =
                          [ SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 32 5 33
-                         , SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 42 5 43
+                         , SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 47 5 48
+                         , SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 66 5 67
                          ]
                      }
                    False
                    [ IThingAll
                        SrcSpanInfo
                          { srcInfoSpan =
-                             SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 33 5 42
+                             SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 33 5 47
                          , srcInfoPoints =
-                             [ SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 38 5 39
-                             , SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 39 5 41
-                             , SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 41 5 42
+                             [ SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 43 5 44
+                             , SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 44 5 46
+                             , SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 46 5 47
                              ]
                          }
                        (Symbol
                           SrcSpanInfo
                             { srcInfoSpan =
-                                SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 33 5 38
+                                SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 38 5 43
                             , srcInfoPoints =
-                                [ SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 33 5 34
-                                , SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 34 5 37
-                                , SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 37 5 38
+                                [ SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 38 5 39
+                                , SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 39 5 42
+                                , SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 42 5 43
                                 ]
                             }
                           ":+:")
+                   , IThingWith
+                       SrcSpanInfo
+                         { srcInfoSpan =
+                             SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 49 5 66
+                         , srcInfoPoints =
+                             [ SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 59 5 60
+                             , SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 65 5 66
+                             ]
+                         }
+                       (Symbol
+                          SrcSpanInfo
+                            { srcInfoSpan =
+                                SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 54 5 59
+                            , srcInfoPoints =
+                                [ SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 54 5 55
+                                , SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 55 5 58
+                                , SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 58 5 59
+                                ]
+                            }
+                          ":+:")
+                       [ ConName
+                           SrcSpanInfo
+                             { srcInfoSpan =
+                                 SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 60 5 65
+                             , srcInfoPoints =
+                                 [ SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 60 5 61
+                                 , SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 61 5 64
+                                 , SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 64 5 65
+                                 ]
+                             }
+                           (Symbol
+                              SrcSpanInfo
+                                { srcInfoSpan =
+                                    SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 60 5 65
+                                , srcInfoPoints =
+                                    [ SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 60 5 61
+                                    , SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 61 5 64
+                                    , SrcSpan "tests/examples/InfixTypeImportExport.hs" 5 64 5 65
+                                    ]
+                                }
+                              ":*:")
+                       ]
                    ])
           }
       ]
       [ DataDecl
           SrcSpanInfo
             { srcInfoSpan =
-                SrcSpan "tests/examples/InfixTypeImportExport.hs" 7 1 7 23
+                SrcSpan "tests/examples/InfixTypeImportExport.hs" 7 1 7 22
             , srcInfoPoints =
                 [ SrcSpan "tests/examples/InfixTypeImportExport.hs" 7 14 7 15 ]
             }
@@ -231,50 +274,51 @@ ParseOk
           [ QualConDecl
               SrcSpanInfo
                 { srcInfoSpan =
-                    SrcSpan "tests/examples/InfixTypeImportExport.hs" 7 16 7 23
+                    SrcSpan "tests/examples/InfixTypeImportExport.hs" 7 16 7 22
                 , srcInfoPoints = []
                 }
               Nothing
               Nothing
-              (InfixConDecl
+              (ConDecl
                  SrcSpanInfo
                    { srcInfoSpan =
-                       SrcSpan "tests/examples/InfixTypeImportExport.hs" 7 16 7 23
+                       SrcSpan "tests/examples/InfixTypeImportExport.hs" 7 16 7 22
                    , srcInfoPoints = []
                    }
-                 (TyVar
+                 (Ident
                     SrcSpanInfo
                       { srcInfoSpan =
-                          SrcSpan "tests/examples/InfixTypeImportExport.hs" 7 16 7 17
+                          SrcSpan "tests/examples/InfixTypeImportExport.hs" 7 16 7 18
                       , srcInfoPoints = []
                       }
-                    (Ident
-                       SrcSpanInfo
-                         { srcInfoSpan =
-                             SrcSpan "tests/examples/InfixTypeImportExport.hs" 7 16 7 17
-                         , srcInfoPoints = []
-                         }
-                       "a"))
-                 (Symbol
-                    SrcSpanInfo
-                      { srcInfoSpan =
-                          SrcSpan "tests/examples/InfixTypeImportExport.hs" 7 18 7 21
-                      , srcInfoPoints = []
-                      }
-                    ":*:")
-                 (TyVar
-                    SrcSpanInfo
-                      { srcInfoSpan =
-                          SrcSpan "tests/examples/InfixTypeImportExport.hs" 7 22 7 23
-                      , srcInfoPoints = []
-                      }
-                    (Ident
-                       SrcSpanInfo
-                         { srcInfoSpan =
-                             SrcSpan "tests/examples/InfixTypeImportExport.hs" 7 22 7 23
-                         , srcInfoPoints = []
-                         }
-                       "b")))
+                    "Mk")
+                 [ TyVar
+                     SrcSpanInfo
+                       { srcInfoSpan =
+                           SrcSpan "tests/examples/InfixTypeImportExport.hs" 7 19 7 20
+                       , srcInfoPoints = []
+                       }
+                     (Ident
+                        SrcSpanInfo
+                          { srcInfoSpan =
+                              SrcSpan "tests/examples/InfixTypeImportExport.hs" 7 19 7 20
+                          , srcInfoPoints = []
+                          }
+                        "a")
+                 , TyVar
+                     SrcSpanInfo
+                       { srcInfoSpan =
+                           SrcSpan "tests/examples/InfixTypeImportExport.hs" 7 21 7 22
+                       , srcInfoPoints = []
+                       }
+                     (Ident
+                        SrcSpanInfo
+                          { srcInfoSpan =
+                              SrcSpan "tests/examples/InfixTypeImportExport.hs" 7 21 7 22
+                          , srcInfoPoints = []
+                          }
+                        "b")
+                 ])
           ]
           []
       ]

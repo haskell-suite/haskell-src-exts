@@ -1,10 +1,1 @@
-Failed to parse output of pretty-printer:
-ParseFailed (SrcLoc "<unknown>.hs" 3 41) "Parse error: ("
-The pretty-printer output follows.
-
-{-# LANGUAGE ExplicitNamespaces #-}
-{-# LANGUAGE TypeOperators #-}
-module InfixTypeImportExport (type (:+:)(..)) where
-import TypeOperatorDefinitions (type (:+:)(..))
-
-data a :+: b = a :*: b
+Match
