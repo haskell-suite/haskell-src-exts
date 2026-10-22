@@ -347,7 +347,10 @@ instance  Pretty (ExportSpec l) where
                         EWildcard _ n  ->
                           let (before,after) = splitAt n prettyNames
                           in before ++ [text ".."] ++ after
-           in pretty name <> (parenList names)
+              -- if it's a symbol, append a "type" prefix to the beginning
+              typePrefix | isSymbolQName name = pretty $ TypeNamespace ()
+                         | otherwise = empty
+           in typePrefix <+> pretty name <> parenList names
         pretty (EModuleContents _ m)        = text "module" <+> pretty m
 
 instance  Pretty (ImportDecl l) where
@@ -366,12 +369,19 @@ instance Pretty (ImportSpecList l) where
             (if b then text "hiding" else empty)
                 <+> parenList (map pretty ispecs)
 
-instance  Pretty (ImportSpec l) where
+instance Pretty (ImportSpec l) where
         pretty (IVar _ name  )              = pretty name
         pretty (IAbs _ ns name)             = pretty ns <+> pretty name
-        pretty (IThingAll _ name)           = pretty name <> text "(..)"
+        pretty (IThingAll _ name) =
+            -- if it's a symbol, append a "type" prefix to the beginning
+            let typePrefix | isSymbolName name = pretty $ TypeNamespace ()
+                           | otherwise = empty
+            in typePrefix <+> pretty name <> text "(..)"
         pretty (IThingWith _ name nameList) =
-                pretty name <> (parenList . map pretty $ nameList)
+            -- if it's a symbol, append a "type" prefix to the beginning
+            let typePrefix | isSymbolName name = pretty $ TypeNamespace ()
+                           | otherwise = empty
+            in typePrefix <+> pretty name <> (parenList . map pretty $ nameList)
 
 instance  Pretty (TypeEqn l) where
         pretty (TypeEqn _ pat eqn) = mySep [pretty pat, equals, pretty eqn]
