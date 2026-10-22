@@ -347,7 +347,11 @@ instance  Pretty (ExportSpec l) where
                         EWildcard _ n  ->
                           let (before,after) = splitAt n prettyNames
                           in before ++ [text ".."] ++ after
-           in pretty name <> (parenList names)
+              rest = pretty name <> parenList names
+           in -- if it's a symbol, append a "type" prefix to the beginning
+              if isSymbolQName name
+                then pretty (TypeNamespace ()) <+> rest
+                else rest
         pretty (EModuleContents _ m)        = text "module" <+> pretty m
 
 instance  Pretty (ImportDecl l) where
