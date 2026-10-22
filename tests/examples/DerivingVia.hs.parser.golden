@@ -656,6 +656,11 @@ ParseOk
                              , SrcSpan "tests/examples/DerivingVia.hs" 30 51 30 52
                              ]
                          }
+                       (NoNamespace
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/DerivingVia.hs" 30 36 30 48
+                            , srcInfoPoints = []
+                            })
                        (Ident
                           SrcSpanInfo
                             { srcInfoSpan = SrcSpan "tests/examples/DerivingVia.hs" 30 36 30 48

@@ -981,6 +981,11 @@ ParseOk
                              , SrcSpan "tests/examples/RealGHC.lhs" 50 42 50 43
                              ]
                          }
+                       (NoNamespace
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/RealGHC.lhs" 50 23 50 31
+                            , srcInfoPoints = []
+                            })
                        (Ident
                           SrcSpanInfo
                             { srcInfoSpan = SrcSpan "tests/examples/RealGHC.lhs" 50 23 50 31
@@ -1147,6 +1152,11 @@ ParseOk
                              , SrcSpan "tests/examples/RealGHC.lhs" 54 38 54 39
                              ]
                          }
+                       (NoNamespace
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/RealGHC.lhs" 54 25 54 35
+                            , srcInfoPoints = []
+                            })
                        (Ident
                           SrcSpanInfo
                             { srcInfoSpan = SrcSpan "tests/examples/RealGHC.lhs" 54 25 54 35
@@ -1227,6 +1237,11 @@ ParseOk
                              , SrcSpan "tests/examples/RealGHC.lhs" 56 48 56 49
                              ]
                          }
+                       (NoNamespace
+                          SrcSpanInfo
+                            { srcInfoSpan = SrcSpan "tests/examples/RealGHC.lhs" 56 37 56 45
+                            , srcInfoPoints = []
+                            })
                        (Ident
                           SrcSpanInfo
                             { srcInfoSpan = SrcSpan "tests/examples/RealGHC.lhs" 56 37 56 45

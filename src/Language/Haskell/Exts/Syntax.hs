@@ -209,7 +209,7 @@ data ExportSpec l
      | EAbs l (Namespace l) (QName l)   -- ^ @T@:
                                         --   a class or datatype exported abstractly,
                                         --   or a type synonym.
-     | EThingWith l (EWildcard l) (QName l) [CName l] -- ^ @T(C_1,...,C_n)@:
+     | EThingWith l (Namespace l) (EWildcard l) (QName l) [CName l] -- ^ @T(C_1,...,C_n)@:
                                         --   a class exported with some of its methods, or
                                         --   a datatype exported with some of its constructors.
      | EModuleContents l (ModuleName l) -- ^ @module M@:
@@ -252,10 +252,10 @@ data ImportSpec l
      = IVar l (Name l)                  -- ^ variable
      | IAbs l (Namespace l) (Name l)    -- ^ @T@:
                                         --   the name of a class, datatype or type synonym.
-     | IThingAll l (Name l)             -- ^ @T(..)@:
+     | IThingAll l (Namespace l) (Name l)             -- ^ @T(..)@:
                                         --   a class imported with all of its methods, or
                                         --   a datatype imported with all of its constructors.
-     | IThingWith l (Name l) [CName l]  -- ^ @T(C_1,...,C_n)@:
+     | IThingWith l (Namespace l) (Name l) [CName l]  -- ^ @T(C_1,...,C_n)@:
                                         --   a class imported with some of its methods, or
                                         --   a datatype imported with some of its constructors.
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
@@ -1187,12 +1187,12 @@ instance Annotated ExportSpec where
     ann es = case es of
         EVar l _            -> l
         EAbs l _ _          -> l
-        EThingWith l _ _ _    -> l
+        EThingWith l _ _ _ _  -> l
         EModuleContents l _ -> l
     amap f es = case es of
         EVar l qn     -> EVar (f l) qn
         EAbs l n qn       -> EAbs (f l) n qn
-        EThingWith l wc qn cns -> EThingWith (f l) wc qn cns
+        EThingWith l ns wc qn cns -> EThingWith (f l) (amap f ns) wc qn cns
         EModuleContents l mn    -> EModuleContents (f l) mn
 
 instance Annotated EWildcard where
@@ -1226,15 +1226,15 @@ instance Annotated ImportSpecList where
 
 instance Annotated ImportSpec where
     ann is = case is of
-        IVar l _         -> l
-        IAbs l _ _       -> l
-        IThingAll l _    -> l
-        IThingWith l _ _ -> l
+        IVar l _           -> l
+        IAbs l _ _         -> l
+        IThingAll l _ _    -> l
+        IThingWith l _ _ _ -> l
     amap f is = case is of
-        IVar l n        -> IVar (f l) n
-        IAbs l ns n     -> IAbs (f l) ns n
-        IThingAll l n   -> IThingAll (f l) n
-        IThingWith l n cns  -> IThingWith (f l) n cns
+        IVar l n          -> IVar (f l) n
+        IAbs l ns n       -> IAbs (f l) ns n
+        IThingAll l ns n  -> IThingAll (f l) (amap f ns) n
+        IThingWith l ns n cns -> IThingWith (f l) (amap f ns) n cns
 
 instance Annotated Assoc where
     ann (AssocNone  l) = l

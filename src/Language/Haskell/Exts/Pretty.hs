@@ -340,14 +340,14 @@ instance  Pretty (Namespace l) where
 instance  Pretty (ExportSpec l) where
         pretty (EVar _ name)                = pretty name
         pretty (EAbs _ ns name)             = pretty ns <+> pretty name
-        pretty (EThingWith _ wc name nameList) =
+        pretty (EThingWith _ ns wc name nameList) =
           let prettyNames = map pretty nameList
               names = case wc of
                         NoWildcard {} -> prettyNames
                         EWildcard _ n  ->
                           let (before,after) = splitAt n prettyNames
                           in before ++ [text ".."] ++ after
-           in pretty name <> (parenList names)
+           in pretty ns <+> pretty name <> (parenList names)
         pretty (EModuleContents _ m)        = text "module" <+> pretty m
 
 instance  Pretty (ImportDecl l) where
@@ -369,9 +369,9 @@ instance Pretty (ImportSpecList l) where
 instance  Pretty (ImportSpec l) where
         pretty (IVar _ name  )              = pretty name
         pretty (IAbs _ ns name)             = pretty ns <+> pretty name
-        pretty (IThingAll _ name)           = pretty name <> text "(..)"
-        pretty (IThingWith _ name nameList) =
-                pretty name <> (parenList . map pretty $ nameList)
+        pretty (IThingAll _ ns name)        = pretty ns <+> pretty name <> text "(..)"
+        pretty (IThingWith _ ns name nameList) =
+                pretty ns <+> pretty name <> (parenList . map pretty $ nameList)
 
 instance  Pretty (TypeEqn l) where
         pretty (TypeEqn _ pat eqn) = mySep [pretty pat, equals, pretty eqn]
